@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, jsonb, date } from "drizzle-orm/pg-core";
 import { businessTypeEnum, stateEnum, industryEnum, gstRegistrationEnum, moduleEnum, setByEnum } from "./enums.js";
 
 export const tenants = pgTable("tenants", {
@@ -12,6 +12,10 @@ export const tenants = pgTable("tenants", {
   state: stateEnum("state").notNull(),
   industry: industryEnum("industry"),
   gstRegistration: gstRegistrationEnum("gst_registration"),
+  onboardingStatus: text("onboarding_status").notNull().default("in_progress"),
+  dateOfIncorporation: date("date_of_incorporation"),
+  onboardingData: jsonb("onboarding_data").default({}).notNull(),
+  gstConfig: jsonb("gst_config").default({}).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

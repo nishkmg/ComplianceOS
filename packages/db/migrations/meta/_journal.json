@@ -15,6 +15,13 @@
       "when": 1776673346950,
       "tag": "0001_tearful_pride",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745174400000,
+      "tag": "0003_add_tenants_onboarding",
+      "breakpoints": true
     }
   ]
 }
