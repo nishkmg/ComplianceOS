@@ -56,7 +56,7 @@ export const referenceTypeEnum = pgEnum("reference_type", [
 export const jeStatusEnum = pgEnum("je_status", ["draft", "posted", "voided"]);
 
 export const aggregateTypeEnum = pgEnum("aggregate_type", [
-  "journal_entry", "account", "fiscal_year",
+  "journal_entry", "account", "fiscal_year", "invoice", "credit_note", "payment",
 ]);
 
 export const eventTypeEnum = pgEnum("event_type", [
@@ -65,6 +65,10 @@ export const eventTypeEnum = pgEnum("event_type", [
   "account_created", "account_modified", "account_deactivated",
   "fiscal_year_created", "fiscal_year_closed",
   "narration_corrected",
+  "invoice_created", "invoice_modified", "invoice_deleted",
+  "invoice_posted", "invoice_voided", "invoice_sent",
+  "credit_note_created", "credit_note_modified", "credit_note_issued", "credit_note_voided",
+  "payment_recorded", "payment_voided",
 ]);
 
 export const cashFlowCategoryEnum = pgEnum("cash_flow_category", [

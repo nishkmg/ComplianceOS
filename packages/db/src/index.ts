@@ -55,4 +55,12 @@ export const {
   // Events
   eventStore,
   snapshots,
+  // Invoices
+  invoices,
+  invoiceLines,
+  invoiceView,
+  creditNotes,
+  invoiceConfig,
+  // Receivables
+  receivablesSummary,
 } = schema;

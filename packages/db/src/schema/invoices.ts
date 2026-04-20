@@ -7,6 +7,38 @@ import { invoiceStatusEnum, creditNoteStatusEnum } from "./enums.js";
 import { users } from "./users.js";
 import { accounts } from "./accounts.js";
 
+export const invoiceView = pgTable("invoice_view", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  tenantId: uuid("tenant_id").notNull(),
+  invoiceId: uuid("invoice_id").notNull(),
+  invoiceNumber: text("invoice_number").notNull(),
+  date: date("date").notNull(),
+  dueDate: date("due_date").notNull(),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email"),
+  customerGstin: text("customer_gstin"),
+  customerState: text("customer_state"),
+  status: text("status").notNull(),
+  subtotal: numeric("subtotal", { precision: 18, scale: 2 }).notNull(),
+  cgstTotal: numeric("cgst_total", { precision: 18, scale: 2 }).notNull(),
+  sgstTotal: numeric("sgst_total", { precision: 18, scale: 2 }).notNull(),
+  igstTotal: numeric("igst_total", { precision: 18, scale: 2 }).notNull(),
+  discountTotal: numeric("discount_total", { precision: 18, scale: 2 }).notNull(),
+  grandTotal: numeric("grand_total", { precision: 18, scale: 2 }).notNull(),
+  fiscalYear: text("fiscal_year").notNull(),
+  createdBy: uuid("created_by").notNull(),
+  sentAt: timestamp("sent_at", { withTimezone: true }),
+  paidAt: timestamp("paid_at", { withTimezone: true }),
+  pdfUrl: text("pdf_url"),
+  daysOverdue: numeric("days_overdue", { precision: 5, scale: 0 }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("invoice_view_tenant_id_invoice_id_unique").on(table.tenantId, table.invoiceId),
+  index("invoice_view_tenant_id_status_idx").on(table.tenantId, table.status),
+  index("invoice_view_tenant_id_customer_name_idx").on(table.tenantId, table.customerName),
+]);
+
 export const invoices = pgTable("invoices", {
   id: uuid("id").defaultRandom().primaryKey(),
   tenantId: uuid("tenant_id").notNull(),
