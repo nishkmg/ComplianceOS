@@ -5,7 +5,7 @@ import { db } from "@complianceos/db";
 import { users } from "@complianceos/db";
 import { eq } from "drizzle-orm";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const nextAuth = NextAuth({
   adapter: DrizzleAdapter(db),
   providers: [
     Credentials({
@@ -31,3 +31,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
 });
+
+export const handlers = nextAuth.handlers as any;
+export const auth = nextAuth.auth as any;
+export const signIn = nextAuth.signIn as any;
+export const signOut = nextAuth.signOut as any;

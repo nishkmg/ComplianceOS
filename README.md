@@ -36,15 +36,15 @@ Double-entry accounting engine with event sourcing for multi-tenant compliance m
 pnpm install
 
 # Copy environment variables
-cp .env.example .env
-# Edit .env with your DATABASE_URL and REDIS_URL
+cp apps/web/.env.example apps/web/.env.local 2>/dev/null || true
+# Edit apps/web/.env.local with your DATABASE_URL and REDIS_URL
 
 # Run database migrations
 pnpm db:generate
 pnpm db:migrate
 
 # Seed default data
-pnpm db:seed
+pnpm --filter @complianceos/db db:seed
 
 # Start development
 pnpm dev
@@ -77,13 +77,56 @@ docker run -p 3000:3000 complianceos-web
 ## Project Structure
 
 ```
-apps/
-  web/                    # Next.js frontend + tRPC API
+apps/web/                  # Next.js 15 frontend + tRPC API + NextAuth
 packages/
   db/                     # Drizzle schema, migrations, seeds
   server/                 # Command handlers, projectors, tRPC routers
-  shared/                 # Types, Zod schemas, constants
+  shared/                 # Types, Zod schemas, event types, GST constants
 ```
+
+## Environment Variables
+
+```bash
+# apps/web/.env.local
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
+NEXTAUTH_SECRET=...
+AUTH_SECRET=...
+```
+
+## Database
+
+```bash
+# Generate + migrate
+pnpm db:generate
+pnpm db:migrate
+
+# Seed CoA templates + default data (from packages/db)
+pnpm --filter @complianceos/db db:seed
+```
+
+## Deployment
+
+ Railway CLI (`railway login` required):
+
+```bash
+railway login
+railway init
+railway up
+```
+
+Or with Docker:
+
+```bash
+docker build -f apps/web/Dockerfile -t complianceos-web .
+docker run -p 3000:3000 --env-file apps/web/.env.local complianceos-web
+```
+
+## Setup Notes
+
+- ESLint is not yet configured — run `pnpm --filter @complianceos/web lint` after setup
+- Projector worker runs separately: `pnpm --filter @complianceos/server dev:projector`
+- See `docs/superpowers/plans/2026-04-20-core-accounting-engine.md` for full implementation plan
 
 ## License
 
