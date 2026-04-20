@@ -90,3 +90,5 @@ export const paymentStatusEnum = pgEnum("payment_status", ["recorded", "voided"]
 export const creditNoteStatusEnum = pgEnum("credit_note_status", [
   "draft", "issued", "voided",
 ]);
+
+export const ocrStatusEnum = pgEnum("ocr_status", ["pending", "processing", "completed", "failed", "converted"]);

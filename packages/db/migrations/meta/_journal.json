@@ -19,8 +19,15 @@
     {
       "idx": 2,
       "version": "7",
-      "when": 1745174400000,
+      "when": 1776673400000,
       "tag": "0004_add_invoicing",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776690445053,
+      "tag": "0003_bouncy_puff_adder",
       "breakpoints": true
     }
   ]
