@@ -1,0 +1,758 @@
+[
+  {
+    "code": "1",
+    "name": "Share Capital",
+    "kind": "Equity",
+    "subType": "Capital",
+    "tags": ["share-capital", "equity"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "1-001",
+        "name": "Authorised Share Capital",
+        "kind": "Equity",
+        "subType": "Capital",
+        "tags": ["authorised", "share-capital"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "1-002",
+        "name": "Issued & Subscribed Share Capital",
+        "kind": "Equity",
+        "subType": "Capital",
+        "tags": ["issued", "subscribed", "share-capital"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "2",
+    "name": "Reserves & Surplus",
+    "kind": "Equity",
+    "subType": "Reserves",
+    "tags": ["reserves", "surplus"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "2-001",
+        "name": "General Reserve",
+        "kind": "Equity",
+        "subType": "Reserves",
+        "tags": ["general-reserve"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "2-002",
+        "name": "Profit & Loss Account (Balance)",
+        "kind": "Equity",
+        "subType": "Reserves",
+        "tags": ["retained-earnings", "profit-loss"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "2-003",
+        "name": "Capital Reserve",
+        "kind": "Equity",
+        "subType": "Reserves",
+        "tags": ["capital-reserve"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "3",
+    "name": "Bank Accounts",
+    "kind": "Asset",
+    "subType": "Bank",
+    "tags": ["liquid", "bank"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "3-001",
+        "name": "State Bank of India - CC Account",
+        "kind": "Asset",
+        "subType": "Bank",
+        "tags": ["bank", "cash-credit"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "3-002",
+        "name": "HDFC Bank - Current Account",
+        "kind": "Asset",
+        "subType": "Bank",
+        "tags": ["bank", "current-account"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "4",
+    "name": "Cash in Hand",
+    "kind": "Asset",
+    "subType": "Cash",
+    "tags": ["liquid", "cash"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "4-001",
+        "name": "Petty Cash - Factory",
+        "kind": "Asset",
+        "subType": "Cash",
+        "tags": ["cash", "factory"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "4-002",
+        "name": "Petty Cash - Office",
+        "kind": "Asset",
+        "subType": "Cash",
+        "tags": ["cash", "office"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "5",
+    "name": "Sundry Debtors",
+    "kind": "Asset",
+    "subType": "CurrentAsset",
+    "tags": ["receivable", "debtors"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "6",
+    "name": "Sundry Creditors",
+    "kind": "Liability",
+    "subType": "CurrentLiability",
+    "tags": ["payable", "creditors"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "7",
+    "name": "Sales",
+    "kind": "Revenue",
+    "subType": "OperatingRevenue",
+    "tags": ["income", "sales"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "7-001",
+        "name": "Sales - Finished Goods (Local)",
+        "kind": "Revenue",
+        "subType": "OperatingRevenue",
+        "tags": ["sales", "finished-goods", "local"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "7-002",
+        "name": "Sales - Finished Goods (Interstate)",
+        "kind": "Revenue",
+        "subType": "OperatingRevenue",
+        "tags": ["sales", "finished-goods", "interstate"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "7-003",
+        "name": "Sales - Export",
+        "kind": "Revenue",
+        "subType": "OperatingRevenue",
+        "tags": ["sales", "export"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "8",
+    "name": "Sales Returns",
+    "kind": "Revenue",
+    "subType": "OperatingRevenue",
+    "tags": ["contra-revenue", "sales-return"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "9",
+    "name": "Raw Material Purchases",
+    "kind": "Expense",
+    "subType": "DirectExpense",
+    "tags": ["purchase", "raw-material", "cogs"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "9-001",
+        "name": "Raw Material Purchases - Local",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["raw-material", "local"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "9-002",
+        "name": "Raw Material Purchases - Import",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["raw-material", "import"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "10",
+    "name": "Purchase Returns",
+    "kind": "Expense",
+    "subType": "DirectExpense",
+    "tags": ["contra-purchase", "purchase-return"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "11",
+    "name": "Inventory",
+    "kind": "Asset",
+    "subType": "Inventory",
+    "tags": ["inventory", "stock"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "11-001",
+        "name": "Raw Materials",
+        "kind": "Asset",
+        "subType": "Inventory",
+        "tags": ["inventory", "raw-material"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "11-002",
+        "name": "Work in Progress (WIP)",
+        "kind": "Asset",
+        "subType": "Inventory",
+        "tags": ["inventory", "wip", "work-in-progress"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "11-003",
+        "name": "Finished Goods",
+        "kind": "Asset",
+        "subType": "Inventory",
+        "tags": ["inventory", "finished-goods"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "11-004",
+        "name": "Packing Materials",
+        "kind": "Asset",
+        "subType": "Inventory",
+        "tags": ["inventory", "packing"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "11-005",
+        "name": "Consumables & Stores",
+        "kind": "Asset",
+        "subType": "Inventory",
+        "tags": ["inventory", "consumables", "stores"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "12",
+    "name": "Manufacturing Expenses",
+    "kind": "Expense",
+    "subType": "DirectExpense",
+    "tags": ["manufacturing", "direct-expense", "factory"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "12-001",
+        "name": "Factory Wages",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["wages", "factory", "direct"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "12-002",
+        "name": "Power & Fuel",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["power", "fuel", "factory"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "12-003",
+        "name": "Repairs & Maintenance - Plant",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["repairs", "maintenance", "plant"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "12-004",
+        "name": "Factory Rent",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["rent", "factory"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "12-005",
+        "name": "Quality Control Expenses",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["quality-control", "qc"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "12-006",
+        "name": "Packing Charges",
+        "kind": "Expense",
+        "subType": "DirectExpense",
+        "tags": ["packing", "direct"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "13",
+    "name": "GST Input Tax Credit",
+    "kind": "Asset",
+    "subType": "CurrentAsset",
+    "tags": ["gst", "input-tax", "tax"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "13-001",
+        "name": "CGST Input",
+        "kind": "Asset",
+        "subType": "CurrentAsset",
+        "tags": ["gst", "cgst", "input-tax"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "13-002",
+        "name": "SGST Input",
+        "kind": "Asset",
+        "subType": "CurrentAsset",
+        "tags": ["gst", "sgst", "input-tax"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "13-003",
+        "name": "IGST Input",
+        "kind": "Asset",
+        "subType": "CurrentAsset",
+        "tags": ["gst", "igst", "input-tax"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "14",
+    "name": "GST Output Tax Payable",
+    "kind": "Liability",
+    "subType": "CurrentLiability",
+    "tags": ["gst", "output-tax", "tax"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "14-001",
+        "name": "CGST Output",
+        "kind": "Liability",
+        "subType": "CurrentLiability",
+        "tags": ["gst", "cgst", "output-tax"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "14-002",
+        "name": "SGST Output",
+        "kind": "Liability",
+        "subType": "CurrentLiability",
+        "tags": ["gst", "sgst", "output-tax"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "14-003",
+        "name": "IGST Output",
+        "kind": "Liability",
+        "subType": "CurrentLiability",
+        "tags": ["gst", "igst", "output-tax"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "15",
+    "name": "Freight Inward",
+    "kind": "Expense",
+    "subType": "DirectExpense",
+    "tags": ["freight", "inward", "direct-expense"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "16",
+    "name": "Freight Outward",
+    "kind": "Expense",
+    "subType": "IndirectExpense",
+    "tags": ["freight", "outward", "indirect-expense"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "17",
+    "name": "Fixed Assets",
+    "kind": "Asset",
+    "subType": "FixedAsset",
+    "tags": ["fixed-asset", "tangible"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "17-001",
+        "name": "Land & Building",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["fixed-asset", "land", "building"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "17-002",
+        "name": "Plant & Machinery",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["fixed-asset", "plant-machinery"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "17-003",
+        "name": "Factory Equipment",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["fixed-asset", "equipment"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "17-004",
+        "name": "Vehicles",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["fixed-asset", "vehicles"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "17-005",
+        "name": "Furniture & Fixtures",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["fixed-asset", "furniture"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "17-006",
+        "name": "Computer & Peripherals",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["fixed-asset", "computer"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "18",
+    "name": "Accumulated Depreciation",
+    "kind": "Asset",
+    "subType": "FixedAsset",
+    "tags": ["accumulated-depreciation", "contra-asset"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "18-001",
+        "name": "Accumulated Dep - Plant & Machinery",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["accumulated-depreciation", "plant-machinery"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "18-002",
+        "name": "Accumulated Dep - Vehicles",
+        "kind": "Asset",
+        "subType": "FixedAsset",
+        "tags": ["accumulated-depreciation", "vehicles"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "19",
+    "name": "Depreciation",
+    "kind": "Expense",
+    "subType": "IndirectExpense",
+    "tags": ["depreciation", "non-cash"],
+    "isSystem": false,
+    "children": []
+  },
+  {
+    "code": "20",
+    "name": "Salaries & Staff Expenses",
+    "kind": "Expense",
+    "subType": "IndirectExpense",
+    "tags": ["salary", "staff", "payroll"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "20-001",
+        "name": "Salaries - Management",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["salary", "management"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "20-002",
+        "name": "Salaries - Office Staff",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["salary", "office"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "20-003",
+        "name": "PF & ESI Contribution - Employer",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["pf", "esi", "employer-contribution"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "21",
+    "name": "Long-Term Borrowings",
+    "kind": "Liability",
+    "subType": "LongTermLiability",
+    "tags": ["loans", "long-term", "borrowings"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "21-001",
+        "name": "Term Loan - SBI",
+        "kind": "Liability",
+        "subType": "LongTermLiability",
+        "tags": ["term-loan", "sbi"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "21-002",
+        "name": "Debentures",
+        "kind": "Liability",
+        "subType": "LongTermLiability",
+        "tags": ["debentures"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "22",
+    "name": "Short-Term Borrowings",
+    "kind": "Liability",
+    "subType": "CurrentLiability",
+    "tags": ["loans", "short-term", "cc"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "22-001",
+        "name": "Cash Credit - SBI",
+        "kind": "Liability",
+        "subType": "CurrentLiability",
+        "tags": ["cash-credit", "sbi"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "23",
+    "name": "Provision for Tax",
+    "kind": "Liability",
+    "subType": "CurrentLiability",
+    "tags": ["tax", "provision", "income-tax"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "23-001",
+        "name": "Provision for Income Tax",
+        "kind": "Liability",
+        "subType": "CurrentLiability",
+        "tags": ["income-tax", "provision"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "23-002",
+        "name": "Advance Tax Paid",
+        "kind": "Asset",
+        "subType": "CurrentAsset",
+        "tags": ["advance-tax", "income-tax"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "23-003",
+        "name": "TDS Receivable",
+        "kind": "Asset",
+        "subType": "CurrentAsset",
+        "tags": ["tds", "receivable"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "24",
+    "name": "Other Income",
+    "kind": "Revenue",
+    "subType": "OtherRevenue",
+    "tags": ["other-income", "non-operating"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "24-001",
+        "name": "Interest Income",
+        "kind": "Revenue",
+        "subType": "OtherRevenue",
+        "tags": ["interest", "income"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "24-002",
+        "name": "Scrap Sales",
+        "kind": "Revenue",
+        "subType": "OtherRevenue",
+        "tags": ["scrap", "by-product"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  },
+  {
+    "code": "25",
+    "name": "Administrative Expenses",
+    "kind": "Expense",
+    "subType": "IndirectExpense",
+    "tags": ["admin", "overheads", "indirect"],
+    "isSystem": false,
+    "children": [
+      {
+        "code": "25-001",
+        "name": "Rent - Office",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["rent", "office"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "25-002",
+        "name": "Professional Fees",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["professional", "audit", "legal"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "25-003",
+        "name": "Director Remuneration",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["director", "remuneration"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "25-004",
+        "name": "Telephone & Internet",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["telephone", "internet"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "25-005",
+        "name": "Printing & Stationery",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["printing", "stationery"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "25-006",
+        "name": "Insurance",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["insurance"],
+        "isSystem": false,
+        "children": []
+      },
+      {
+        "code": "25-007",
+        "name": "Bank Charges & Finance Cost",
+        "kind": "Expense",
+        "subType": "IndirectExpense",
+        "tags": ["bank", "finance-cost"],
+        "isSystem": false,
+        "children": []
+      }
+    ]
+  }
+]
