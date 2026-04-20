@@ -61,6 +61,9 @@ export const {
   invoiceView,
   creditNotes,
   invoiceConfig,
+  // Payments
+  payments,
+  paymentAllocations,
   // Receivables
   receivablesSummary,
 } = schema;
