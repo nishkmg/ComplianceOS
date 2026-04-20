@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { db } from "@complianceos/db";
-import { users } from "@complianceos/db";
+import { users, userTenants, tenants } from "@complianceos/db";
 import { eq } from "drizzle-orm";
 
 const nextAuth = NextAuth({
@@ -24,6 +24,29 @@ const nextAuth = NextAuth({
   callbacks: {
     async session({ session, user }: any) {
       session.user.id = user.id;
+
+      // Look up tenant + onboarding_status for the user
+      const ut = await db
+        .select({ tenantId: userTenants.tenantId })
+        .from(userTenants)
+        .where(eq(userTenants.userId, user.id))
+        .limit(1);
+
+      if (ut[0]) {
+        session.user.tenantId = ut[0].tenantId;
+
+        const t = await db
+          .select({ onboardingStatus: tenants.onboardingStatus })
+          .from(tenants)
+          .where(eq(tenants.id, ut[0].tenantId))
+          .limit(1);
+
+        session.user.onboardingComplete = t[0]?.onboardingStatus === "complete";
+      } else {
+        session.user.tenantId = undefined;
+        session.user.onboardingComplete = false;
+      }
+
       return session;
     },
   },
