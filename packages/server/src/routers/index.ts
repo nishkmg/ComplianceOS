@@ -4,7 +4,8 @@ import { journalEntriesRouter } from "./journal-entries";
 import { balancesRouter } from "./balances";
 import { fiscalYearsRouter } from "./fiscal-years";
 import { onboardingRouter } from "./onboarding";
-import { invoicesRouter } from "./invoices";
+import { paymentsRouter } from "./payments";
+import { receivablesRouter } from "./receivables";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -12,7 +13,8 @@ export const appRouter = router({
   balances: balancesRouter,
   fiscalYears: fiscalYearsRouter,
   onboarding: onboardingRouter,
-  invoices: invoicesRouter,
+  payments: paymentsRouter,
+  receivables: receivablesRouter,
 });
 
 export type AppRouter = typeof appRouter;
