@@ -66,4 +66,6 @@ export const {
   paymentAllocations,
   // Receivables
   receivablesSummary,
+  // Email Queue
+  emailQueue,
 } = schema;

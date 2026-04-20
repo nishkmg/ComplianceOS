@@ -11,3 +11,4 @@ export * from "./invoices.js";
 export * from "./payments.js";
 export * from "./invoice-config.js";
 export * from "./receivables-summary.js";
+export * from "./email-queue.js";
