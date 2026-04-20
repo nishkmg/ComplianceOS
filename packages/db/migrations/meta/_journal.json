@@ -20,7 +20,7 @@
       "idx": 2,
       "version": "7",
       "when": 1745174400000,
-      "tag": "0003_add_tenants_onboarding",
+      "tag": "0004_add_invoicing",
       "breakpoints": true
     }
   ]

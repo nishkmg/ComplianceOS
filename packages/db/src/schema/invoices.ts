@@ -1,0 +1,96 @@
+import { sql } from "drizzle-orm";
+import {
+  pgTable, uuid, text, date, numeric, timestamp,
+  foreignKey, check, index, uniqueIndex,
+} from "drizzle-orm/pg-core";
+import { invoiceStatusEnum, creditNoteStatusEnum } from "./enums.js";
+import { users } from "./users.js";
+import { accounts } from "./accounts.js";
+
+export const invoices = pgTable("invoices", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  tenantId: uuid("tenant_id").notNull(),
+  invoiceNumber: text("invoice_number").notNull(),
+  date: date("date").notNull(),
+  dueDate: date("due_date").notNull(),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email"),
+  customerGstin: text("customer_gstin"),
+  customerAddress: text("customer_address"),
+  customerState: text("customer_state"),
+  status: invoiceStatusEnum("status").notNull().default("draft"),
+  subtotal: numeric("subtotal", { precision: 18, scale: 2 }).notNull(),
+  cgstTotal: numeric("cgst_total", { precision: 18, scale: 2 }).notNull(),
+  sgstTotal: numeric("sgst_total", { precision: 18, scale: 2 }).notNull(),
+  igstTotal: numeric("igst_total", { precision: 18, scale: 2 }).notNull(),
+  discountTotal: numeric("discount_total", { precision: 18, scale: 2 }).notNull(),
+  grandTotal: numeric("grand_total", { precision: 18, scale: 2 }).notNull(),
+  currency: text("currency").notNull().default("INR"),
+  notes: text("notes"),
+  terms: text("terms"),
+  fiscalYear: text("fiscal_year").notNull(),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  sentAt: timestamp("sent_at", { withTimezone: true }),
+  paidAt: timestamp("paid_at", { withTimezone: true }),
+  pdfUrl: text("pdf_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("invoices_tenant_id_invoice_number_unique").on(table.tenantId, table.invoiceNumber),
+  index("invoices_tenant_id_status_idx").on(table.tenantId, table.status),
+  index("invoices_tenant_id_customer_name_idx").on(table.tenantId, table.customerName),
+  check("subtotal_non_negative", sql`${table.subtotal} >= 0`),
+  check("grand_total_non_negative", sql`${table.grandTotal} >= 0`),
+]);
+
+export const invoiceLines = pgTable("invoice_lines", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  invoiceId: uuid("invoice_id").notNull().references(() => invoices.id),
+  accountId: uuid("account_id").notNull().references(() => accounts.id),
+  description: text("description").notNull(),
+  quantity: numeric("quantity", { precision: 10, scale: 2 }).notNull(),
+  unitPrice: numeric("unit_price", { precision: 18, scale: 2 }).notNull(),
+  amount: numeric("amount", { precision: 18, scale: 2 }).notNull(),
+  gstRate: numeric("gst_rate", { precision: 5, scale: 2 }).notNull(),
+  cgstAmount: numeric("cgst_amount", { precision: 18, scale: 2 }).notNull(),
+  sgstAmount: numeric("sgst_amount", { precision: 18, scale: 2 }).notNull(),
+  igstAmount: numeric("igst_amount", { precision: 18, scale: 2 }).notNull(),
+  discountPercent: numeric("discount_percent", { precision: 5, scale: 2 }).default("0").notNull(),
+  discountAmount: numeric("discount_amount", { precision: 18, scale: 2 }).default("0").notNull(),
+}, (table) => [
+  check("quantity_non_negative", sql`${table.quantity} >= 0`),
+  check("unit_price_non_negative", sql`${table.unitPrice} >= 0`),
+  check("gst_rate_non_negative", sql`${table.gstRate} >= 0`),
+]);
+
+export const creditNotes = pgTable("credit_notes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  tenantId: uuid("tenant_id").notNull(),
+  invoiceNumber: text("invoice_number").notNull(),
+  date: date("date").notNull(),
+  dueDate: date("due_date"),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email"),
+  customerGstin: text("customer_gstin"),
+  customerAddress: text("customer_address"),
+  customerState: text("customer_state"),
+  status: creditNoteStatusEnum("status").notNull().default("draft"),
+  subtotal: numeric("subtotal", { precision: 18, scale: 2 }).notNull(),
+  cgstTotal: numeric("cgst_total", { precision: 18, scale: 2 }).notNull(),
+  sgstTotal: numeric("sgst_total", { precision: 18, scale: 2 }).notNull(),
+  igstTotal: numeric("igst_total", { precision: 18, scale: 2 }).notNull(),
+  discountTotal: numeric("discount_total", { precision: 18, scale: 2 }).notNull(),
+  grandTotal: numeric("grand_total", { precision: 18, scale: 2 }).notNull(),
+  currency: text("currency").notNull().default("INR"),
+  notes: text("notes"),
+  terms: text("terms"),
+  fiscalYear: text("fiscal_year").notNull(),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  originalInvoiceId: uuid("original_invoice_id").references(() => invoices.id),
+  reason: text("reason"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("credit_notes_tenant_id_invoice_number_unique").on(table.tenantId, table.invoiceNumber),
+  index("credit_notes_tenant_id_customer_name_idx").on(table.tenantId, table.customerName),
+]);

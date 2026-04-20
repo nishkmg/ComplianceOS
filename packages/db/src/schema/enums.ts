@@ -72,3 +72,17 @@ export const cashFlowCategoryEnum = pgEnum("cash_flow_category", [
 ]);
 
 export const fyStatusEnum = pgEnum("fy_status", ["open", "closed"]);
+
+export const invoiceStatusEnum = pgEnum("invoice_status", [
+  "draft", "sent", "partially_paid", "paid", "voided",
+]);
+
+export const paymentMethodEnum = pgEnum("payment_method", [
+  "cash", "bank", "online", "cheque",
+]);
+
+export const paymentStatusEnum = pgEnum("payment_status", ["recorded", "voided"]);
+
+export const creditNoteStatusEnum = pgEnum("credit_note_status", [
+  "draft", "issued", "voided",
+]);
