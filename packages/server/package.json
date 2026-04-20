@@ -1,0 +1,20 @@
+{
+  "name": "@complianceos/server",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev:projector": "tsx watch src/projectors/worker.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@complianceos/db": "workspace:*",
+    "@complianceos/shared": "workspace:*",
+    "drizzle-orm": "^0.38.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

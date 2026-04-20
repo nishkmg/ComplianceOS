@@ -1,0 +1,1 @@
+/Users/nishant/.config/opencode/agents/advisor.md

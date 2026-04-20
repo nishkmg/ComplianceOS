@@ -1,0 +1,45 @@
+{
+  "projectPath": "/Volumes/CrucialSSD/Projects/ComplianceOS",
+  "projectName": "ComplianceOS",
+  "created": "2026-04-19T14:16:39.021Z",
+  "updated": "2026-04-20T13:00:00.000Z",
+  "version": "0.0.1",
+  "description": "Double-entry accounting engine with event sourcing for multi-tenant compliance management",
+  "spec": "docs/superpowers/specs/2026-04-20-core-accounting-engine-design-V1.1.md",
+  "specVersion": "V1.2",
+  "specStatus": "All 5 remaining issues fixed",
+  "techStack": {
+    "frontend": "Next.js 15 + React 19 + TypeScript",
+    "backend": "tRPC v11 + Drizzle ORM",
+    "database": "PostgreSQL 16 with RLS",
+    "cache": "Redis 7",
+    "auth": "NextAuth.js v5",
+    "infra": "Railway"
+  },
+  "agentsLinked": [
+    "advisor",
+    "builder",
+    "reviewer",
+    "coordinator"
+  ],
+  "plan": "docs/superpowers/plans/2026-04-20-core-accounting-engine.md",
+  "keyModules": [
+    "apps/web - Next.js frontend + tRPC API",
+    "packages/db - Drizzle schema, migrations, seed data",
+    "packages/server - Command handlers, projectors",
+    "packages/shared - Types, Zod schemas, constants"
+  ],
+  "phase": "Task 1: Monorepo Scaffolding",
+  "subProjectScope": {
+    "index": 1,
+    "name": "Core Accounting Engine",
+    "totalSubProjects": 8,
+    "dependencies": "Foundation for all other modules (Invoicing, Inventory, Payroll, GST, ITR)"
+  },
+  "keyPatterns": {
+    "eventSourcing": "Append-only event store with projectors",
+    "multiTenancy": "PostgreSQL RLS with tenant_id on all tables",
+    "commandHandlers": "Validate → Decision → Event Append flow",
+    "projectorWorker": "Node.js long-running process with SKIP LOCKED"
+  }
+}
