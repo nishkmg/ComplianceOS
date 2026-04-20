@@ -29,8 +29,10 @@ export const {
   fyStatusEnum,
   // Tenants
   tenants,
+  tenantModuleConfig,
   // Users
   users,
+  userTenants,
   // Accounts
   accounts,
   accountTags,
