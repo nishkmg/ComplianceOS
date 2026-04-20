@@ -49,4 +49,8 @@ export const {
   entryNumberCounters,
   // Projector State
   projectorState,
+  reportCacheVersions,
+  // Events
+  eventStore,
+  snapshots,
 } = schema;

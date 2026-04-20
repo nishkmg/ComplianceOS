@@ -100,9 +100,15 @@ importers:
       '@complianceos/shared':
         specifier: workspace:*
         version: link:../shared
+      '@trpc/server':
+        specifier: ^11.0.0
+        version: 11.16.0(typescript@5.9.3)
       drizzle-orm:
         specifier: ^0.38.0
         version: 0.38.4(@types/react@19.2.14)(postgres@3.4.9)(react@19.2.5)
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
     devDependencies:
       '@types/node':
         specifier: ^25.6.0
