@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import BusinessProfileStep from "./step-business-profile";
 
 const STEPS = [
   { id: 1, label: "Business Profile" },
@@ -13,6 +14,7 @@ const STEPS = [
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
+  const [tenantId, setTenantId] = useState<string | undefined>(undefined);
   const router = useRouter();
 
   return (
@@ -38,50 +40,12 @@ export default function OnboardingPage() {
         </div>
 
         <div className="bg-white rounded-lg shadow p-8">
-          {step === 1 && <BusinessProfileStep onNext={() => setStep(2)} />}
+          {step === 1 && <BusinessProfileStep onNext={(id) => { setTenantId(id); setStep(2); }} />}
           {step === 2 && <ModuleActivationStep onNext={() => setStep(3)} onBack={() => setStep(1)} />}
           {step === 3 && <CoAStep onNext={() => setStep(4)} onBack={() => setStep(2)} />}
           {step === 4 && <FYGstStep onNext={() => setStep(5)} onBack={() => setStep(3)} />}
           {step === 5 && <OpeningBalancesStep onComplete={() => router.push("/dashboard")} onBack={() => setStep(4)} />}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function BusinessProfileStep({ onNext }: { onNext: () => void }) {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Business Profile</h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Business Name</label>
-          <input type="text" className="w-full px-3 py-2 border rounded" placeholder="My Business" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Business Type</label>
-          <select className="w-full px-3 py-2 border rounded">
-            <option>Sole Proprietorship</option>
-            <option>Partnership</option>
-            <option>Private Limited</option>
-            <option>LLP</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">PAN</label>
-          <input type="text" className="w-full px-3 py-2 border rounded" placeholder="AAAAA9999A" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">State</label>
-          <select className="w-full px-3 py-2 border rounded">
-            <option>Maharashtra</option>
-            <option>Delhi</option>
-            <option>Karnataka</option>
-          </select>
-        </div>
-      </div>
-      <div className="flex justify-end pt-4">
-        <button onClick={onNext} className="px-6 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Continue →</button>
       </div>
     </div>
   );
