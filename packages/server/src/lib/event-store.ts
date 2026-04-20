@@ -9,7 +9,7 @@ export type DbOrTx = Database | Tx;
 export async function appendEvent(
   db: DbOrTx,
   tenantId: string,
-  aggregateType: "journal_entry" | "account" | "fiscal_year",
+  aggregateType: "journal_entry" | "account" | "fiscal_year" | "invoice" | "credit_note" | "payment",
   aggregateId: string,
   eventType: string,
   payload: Record<string, unknown>,
