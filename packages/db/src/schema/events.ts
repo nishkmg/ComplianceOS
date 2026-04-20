@@ -2,8 +2,8 @@ import {
   pgTable, uuid, text, jsonb, bigint, timestamp,
   uniqueIndex, index,
 } from "drizzle-orm/pg-core";
-import { aggregateTypeEnum, eventTypeEnum } from "./enums";
-import { users } from "./users";
+import { aggregateTypeEnum, eventTypeEnum } from "./enums.js";
+import { users } from "./users.js";
 
 export const eventStore = pgTable("event_store", {
   id: uuid("id").defaultRandom().primaryKey(),

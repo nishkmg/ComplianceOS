@@ -5,7 +5,7 @@ import {
 import {
   accountKindEnum, accountSubTypeEnum, tagEnum,
   reconciliationAccountEnum, cashFlowCategoryEnum,
-} from "./enums";
+} from "./enums.js";
 
 export const accounts = pgTable("accounts", {
   id: uuid("id").defaultRandom().primaryKey(),

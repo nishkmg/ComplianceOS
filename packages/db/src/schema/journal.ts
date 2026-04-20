@@ -3,9 +3,9 @@ import {
   pgTable, uuid, text, date, numeric, timestamp,
   foreignKey, check, index, uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { referenceTypeEnum, jeStatusEnum } from "./enums";
-import { users } from "./users";
-import { accounts } from "./accounts";
+import { referenceTypeEnum, jeStatusEnum } from "./enums.js";
+import { users } from "./users.js";
+import { accounts } from "./accounts.js";
 
 export const journalEntries = pgTable("journal_entries", {
   id: uuid("id").defaultRandom().primaryKey(),

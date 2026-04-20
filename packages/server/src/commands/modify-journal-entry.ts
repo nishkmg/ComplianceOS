@@ -49,7 +49,6 @@ export async function modifyJournalEntry(
     }
 
     await appendEvent(tx, tenantId, "journal_entry", entryId, "journal_entry_modified", {
-      entryId,
       ...validated,
     }, actorId);
   });

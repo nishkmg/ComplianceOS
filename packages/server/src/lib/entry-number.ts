@@ -18,21 +18,22 @@ export async function getNextEntryNumber(
       .for("update");
 
     if (counter.length === 0) {
-      const nextVal = 1n;
       await tx.insert(entryNumberCounters).values({
         tenantId,
         fiscalYear,
-        nextVal: nextVal + 1n,
+        nextVal: "2",
       });
-      return `JE-${fiscalYear}-${String(nextVal).padStart(3, "0")}`;
+      return `JE-${fiscalYear}-001`;
     }
 
     const current = counter[0];
+    const currentNum = parseInt(current.nextVal, 10);
+    const nextNum = currentNum + 1;
+
     await tx.update(entryNumberCounters)
-      .set({ nextVal: sql`${entryNumberCounters.nextVal} + 1` })
+      .set({ nextVal: String(nextNum) })
       .where(eq(entryNumberCounters.id, current.id));
 
-    const num = current.nextVal;
-    return `JE-${fiscalYear}-${String(num).padStart(3, "0")}`;
+    return `JE-${fiscalYear}-${String(currentNum).padStart(3, "0")}`;
   });
 }

@@ -30,7 +30,7 @@ export async function getAggregateEvents(
 ) {
   return db.select().from(eventStore).where(
     and(
-      gt(eventStore.aggregateId, aggregateId),
+      eq(eventStore.aggregateId, aggregateId),
       gt(eventStore.sequence, afterSequence),
     ),
   ).orderBy(eventStore.sequence);

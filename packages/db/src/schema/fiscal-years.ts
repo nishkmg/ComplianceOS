@@ -2,7 +2,7 @@ import {
   pgTable, uuid, text, date, timestamp,
   uniqueIndex, index,
 } from "drizzle-orm/pg-core";
-import { fyStatusEnum } from "./enums";
+import { fyStatusEnum } from "./enums.js";
 
 export const fiscalYears = pgTable("fiscal_years", {
   id: uuid("id").defaultRandom().primaryKey(),
