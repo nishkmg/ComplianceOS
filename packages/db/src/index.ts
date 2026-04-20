@@ -68,4 +68,6 @@ export const {
   receivablesSummary,
   // Email Queue
   emailQueue,
+  // OCR
+  ocrScanResults,
 } = schema;

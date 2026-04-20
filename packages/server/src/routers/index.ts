@@ -7,6 +7,7 @@ import { onboardingRouter } from "./onboarding";
 import { paymentsRouter } from "./payments";
 import { receivablesRouter } from "./receivables";
 import { invoiceConfigRouter } from "./invoice-config";
+import { ocrScanRouter } from "./ocr-scan";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   payments: paymentsRouter,
   receivables: receivablesRouter,
   invoiceConfig: invoiceConfigRouter,
+  ocrScan: ocrScanRouter,
 });
 
 export type AppRouter = typeof appRouter;
