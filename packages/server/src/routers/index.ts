@@ -6,6 +6,7 @@ import { fiscalYearsRouter } from "./fiscal-years";
 import { onboardingRouter } from "./onboarding";
 import { paymentsRouter } from "./payments";
 import { receivablesRouter } from "./receivables";
+import { invoiceConfigRouter } from "./invoice-config";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
   onboarding: onboardingRouter,
   payments: paymentsRouter,
   receivables: receivablesRouter,
+  invoiceConfig: invoiceConfigRouter,
 });
 
 export type AppRouter = typeof appRouter;

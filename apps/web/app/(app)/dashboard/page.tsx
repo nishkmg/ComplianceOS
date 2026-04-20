@@ -1,9 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
+interface DashboardData {
+  totalOutstanding: number;
+  overdueCount: number;
+  topCustomers: Array<{ customerName: string; outstanding: number }>;
+}
+
 export default function DashboardPage() {
+  const [receivables, setReceivables] = useState<DashboardData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/trpc/receivables.dashboard")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result?.data) {
+          setReceivables(data.result.data);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -26,6 +45,47 @@ export default function DashboardPage() {
             <p className="text-xs text-gray-400 mt-1">{kpi.note}</p>
           </div>
         ))}
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Receivables</h2>
+          <Link href="/receivables" className="text-sm text-blue-600 hover:text-blue-700">
+            View All →
+          </Link>
+        </div>
+        {receivables ? (
+          <>
+            <div className="mb-4">
+              <p className="text-sm text-gray-500">Total Outstanding</p>
+              <p className="text-3xl font-bold text-gray-900">
+                ₹{receivables.totalOutstanding.toLocaleString("en-IN")}
+              </p>
+              {receivables.overdueCount > 0 && (
+                <p className="text-sm text-red-600 mt-1">
+                  {receivables.overdueCount} overdue
+                </p>
+              )}
+            </div>
+            {receivables.topCustomers.length > 0 ? (
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Top Customers</p>
+                {receivables.topCustomers.map((c) => (
+                  <div key={c.customerName} className="flex justify-between text-sm">
+                    <span className="text-gray-700">{c.customerName}</span>
+                    <span className="text-gray-900 font-medium">
+                      ₹{c.outstanding.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No outstanding receivables</p>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-gray-500">Loading...</p>
+        )}
       </div>
 
       <div className="bg-white rounded-lg shadow">

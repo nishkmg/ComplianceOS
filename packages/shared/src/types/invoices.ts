@@ -92,3 +92,22 @@ export const CreateCreditNoteInputSchema = z.object({
   reason: z.string().min(1),
   lines: z.array(InvoiceLineInputSchema).min(1),
 });
+
+export const BankDetailsSchema = z.object({
+  accountName: z.string().optional(),
+  accountNumber: z.string().optional(),
+  ifscCode: z.string().optional(),
+  bankName: z.string().optional(),
+});
+
+export const InvoiceConfigInputSchema = z.object({
+  prefix: z.string().min(1).max(10),
+  logoUrl: z.string().optional(),
+  companyName: z.string().optional(),
+  companyAddress: z.string().optional(),
+  companyGstin: z.string().optional(),
+  paymentTerms: z.string().optional(),
+  bankDetails: BankDetailsSchema.optional(),
+  notes: z.string().optional(),
+  terms: z.string().optional(),
+});
