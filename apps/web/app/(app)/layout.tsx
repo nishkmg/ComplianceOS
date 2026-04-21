@@ -6,6 +6,10 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/employees", label: "Employees" },
+  { href: "/payroll", label: "Payroll" },
+  { href: "/payroll/process", label: "Process", indent: true },
+  { href: "/payroll-reports", label: "Reports", indent: true },
   { href: "/invoices", label: "Invoices" },
   { href: "/invoices/scan", label: "Scan Invoice", indent: true },
   { href: "/receivables", label: "Receivables" },
