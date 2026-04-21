@@ -9,6 +9,8 @@ export * from "./types/inventory";
 export * from "./types/employees";
 export * from "./types/payroll";
 export * from "./types/payroll-commands";
+export * from "./types/gst-returns";
+export * from "./types/gst-ledger";
 export * from "./validation/journal";
 export * from "./validation/account";
 export * from "./validation/fiscal-year";
