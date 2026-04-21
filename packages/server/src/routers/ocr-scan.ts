@@ -1,10 +1,12 @@
+// packages/server/src/routers/ocr-scan.ts
 import { z } from "zod";
-import { eq, desc } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { router, protectedProcedure } from "../index";
 import { ocrScanResults } from "@complianceos/db";
 import { processImageOcr } from "../services/ocr-processor";
-import { parseInvoiceText } from "../services/invoice-parser";
+import { parseInvoiceTextResult, parseReceiptTextResult } from "../services/ocr-parser";
 import { createInvoice } from "../commands/create-invoice";
+import { createExpenseFromReceipt } from "../commands/create-expense-from-receipt";
 
 export const ocrScanRouter = router({
   upload: protectedProcedure
@@ -12,11 +14,12 @@ export const ocrScanRouter = router({
       fileUrl: z.string(),
       fileName: z.string(),
       fileSize: z.number().optional(),
+      scanType: z.enum(["invoice", "receipt"]).default("invoice"),
     }))
     .mutation(async ({ ctx, input }) => {
       const { tenantId } = ctx.session.user;
       const userId = ctx.session.user.id;
-      const { fileUrl, fileName, fileSize } = input;
+      const { fileUrl, fileName, fileSize, scanType } = input;
 
       const [result] = await ctx.db.insert(ocrScanResults).values({
         tenantId,
@@ -24,31 +27,50 @@ export const ocrScanRouter = router({
         fileName,
         fileUrl,
         fileSize: String(fileSize ?? 0),
+        scanType,
         status: "processing",
       }).returning();
 
       // Fire-and-forget OCR processing
       processImageOcr(fileUrl)
         .then(({ rawText, confidence }) => {
-          const parsed = parseInvoiceText(rawText, confidence);
-          return ctx.db.update(ocrScanResults)
-            .set({
-              rawText,
-              parsedVendorName: parsed.vendorName,
-              parsedInvoiceNumber: parsed.invoiceNumber,
-              parsedInvoiceDate: parsed.invoiceDate,
-              parsedDueDate: parsed.dueDate,
-              parsedSubtotal: parsed.subtotal ? String(parsed.subtotal) : null,
-              parsedCgstTotal: parsed.cgstTotal ? String(parsed.cgstTotal) : null,
-              parsedSgstTotal: parsed.sgstTotal ? String(parsed.sgstTotal) : null,
-              parsedIgstTotal: parsed.igstTotal ? String(parsed.igstTotal) : null,
-              parsedTotal: parsed.total ? String(parsed.total) : null,
-              parsedLineItems: JSON.stringify(parsed.lineItems),
-              confidenceScore: String(confidence),
-              status: "completed",
-              updatedAt: new Date(),
-            })
-            .where(eq(ocrScanResults.id, result.id));
+          if (scanType === "receipt") {
+            const parsed = parseReceiptTextResult(rawText, confidence);
+            return ctx.db.update(ocrScanResults)
+              .set({
+                rawText,
+                parsedVendorName: parsed.vendorName,
+                parsedVendorAddress: parsed.vendorAddress,
+                parsedVendorGstin: parsed.vendorGstin,
+                parsedInvoiceDate: parsed.receiptDate,
+                parsedTotal: parsed.total ? String(parsed.total) : null,
+                parsedExpenseCategory: parsed.expenseCategory,
+                confidenceScore: String(confidence),
+                status: "completed",
+                updatedAt: new Date(),
+              })
+              .where(eq(ocrScanResults.id, result.id));
+          } else {
+            const parsed = parseInvoiceTextResult(rawText, confidence);
+            return ctx.db.update(ocrScanResults)
+              .set({
+                rawText,
+                parsedVendorName: parsed.vendorName,
+                parsedInvoiceNumber: parsed.invoiceNumber,
+                parsedInvoiceDate: parsed.invoiceDate,
+                parsedDueDate: parsed.dueDate,
+                parsedSubtotal: parsed.subtotal ? String(parsed.subtotal) : null,
+                parsedCgstTotal: parsed.cgstTotal ? String(parsed.cgstTotal) : null,
+                parsedSgstTotal: parsed.sgstTotal ? String(parsed.sgstTotal) : null,
+                parsedIgstTotal: parsed.igstTotal ? String(parsed.igstTotal) : null,
+                parsedTotal: parsed.total ? String(parsed.total) : null,
+                parsedLineItems: JSON.stringify(parsed.lineItems),
+                confidenceScore: String(confidence),
+                status: "completed",
+                updatedAt: new Date(),
+              })
+              .where(eq(ocrScanResults.id, result.id));
+          }
         })
         .catch(() => {
           return ctx.db.update(ocrScanResults)
@@ -72,14 +94,22 @@ export const ocrScanRouter = router({
     }),
 
   list: protectedProcedure
-    .input(z.object({ page: z.number().default(1), pageSize: z.number().default(20) }))
+    .input(z.object({
+      page: z.number().default(1),
+      pageSize: z.number().default(20),
+      scanType: z.enum(["invoice", "receipt"]).optional(),
+    }))
     .query(async ({ ctx, input }) => {
       const { tenantId } = ctx.session.user;
       const offset = (input.page - 1) * input.pageSize;
+      const conditions = [eq(ocrScanResults.tenantId, tenantId)];
+      if (input.scanType) {
+        conditions.push(eq(ocrScanResults.scanType, input.scanType));
+      }
       const rows = await ctx.db
         .select()
         .from(ocrScanResults)
-        .where(eq(ocrScanResults.tenantId, tenantId))
+        .where(and(...conditions))
         .orderBy(desc(ocrScanResults.createdAt))
         .limit(input.pageSize)
         .offset(offset);
@@ -89,7 +119,6 @@ export const ocrScanRouter = router({
   delete: protectedProcedure
     .input(z.object({ scanId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      const { tenantId } = ctx.session.user;
       await ctx.db.delete(ocrScanResults)
         .where(eq(ocrScanResults.id, input.scanId));
       return { success: true };
@@ -136,5 +165,37 @@ export const ocrScanRouter = router({
         .where(eq(ocrScanResults.id, input.scanId));
 
       return invoice;
+    }),
+
+  createExpenseFromScan: protectedProcedure
+    .input(z.object({
+      scanId: z.string().uuid(),
+      vendorName: z.string(),
+      vendorGstin: z.string().optional(),
+      date: z.string(),
+      total: z.number(),
+      expenseAccountId: z.string().uuid(),
+      payableAccountId: z.string().uuid(),
+      narration: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { tenantId } = ctx.session.user;
+      const userId = ctx.session.user.id;
+
+      const entry = await createExpenseFromReceipt(ctx.db, tenantId, userId, {
+        date: input.date,
+        vendorName: input.vendorName,
+        vendorGstin: input.vendorGstin,
+        total: input.total,
+        expenseAccountId: input.expenseAccountId,
+        payableAccountId: input.payableAccountId,
+        narration: input.narration,
+      });
+
+      await ctx.db.update(ocrScanResults)
+        .set({ status: "converted", linkedJournalEntryId: entry.entryId, updatedAt: new Date() })
+        .where(eq(ocrScanResults.id, input.scanId));
+
+      return entry;
     }),
 });

@@ -10,6 +10,7 @@ const navItems = [
   { href: "/invoices/scan", label: "Scan Invoice", indent: true },
   { href: "/receivables", label: "Receivables" },
   { href: "/payments", label: "Payments" },
+  { href: "/receipts/scan", label: "Scan Receipt", indent: true },
   { href: "/journal", label: "Journal" },
   { href: "/accounts", label: "Accounts" },
   { href: "/reports", label: "Reports" },
