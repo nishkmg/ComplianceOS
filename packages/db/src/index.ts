@@ -74,6 +74,7 @@ export const {
   inventoryLayers,
   stockMovements,
   warehouseStock,
+  inventoryConfig,
   // Products
   products,
   productTaxCategories,
