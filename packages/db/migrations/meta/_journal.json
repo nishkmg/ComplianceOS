@@ -43,6 +43,13 @@
       "when": 1776754100841,
       "tag": "0005_condemned_alex_wilder",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776755506308,
+      "tag": "0006_shocking_stranger",
+      "breakpoints": true
     }
   ]
 }

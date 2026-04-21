@@ -37,6 +37,12 @@ export const payrollConfig = pgTable("payroll_config", {
     ],
   }),
   paymentDate: numeric("payment_date", { precision: 2, scale: 0 }).default("1"),
+  salaryExpenseAccountId: uuid("salary_expense_account_id"),
+  pfPayableAccountId: uuid("pf_payable_account_id"),
+  esiPayableAccountId: uuid("esi_payable_account_id"),
+  tdsPayableAccountId: uuid("tds_payable_account_id"),
+  ptPayableAccountId: uuid("pt_payable_account_id"),
+  employeePayableAccountId: uuid("employee_payable_account_id"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
