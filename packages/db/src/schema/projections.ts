@@ -2,9 +2,9 @@ import {
   pgTable, uuid, text, numeric, integer, timestamp,
   uniqueIndex, index, foreignKey,
 } from "drizzle-orm/pg-core";
-import { referenceTypeEnum, jeStatusEnum } from "./enums.js";
-import { accounts } from "./accounts.js";
-import { journalEntries } from "./journal.js";
+import { referenceTypeEnum, jeStatusEnum } from "./enums";
+import { accounts } from "./accounts";
+import { journalEntries } from "./journal";
 
 export const accountBalances = pgTable("account_balances", {
   id: uuid("id").defaultRandom().primaryKey(),

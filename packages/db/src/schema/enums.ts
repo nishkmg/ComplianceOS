@@ -94,3 +94,13 @@ export const creditNoteStatusEnum = pgEnum("credit_note_status", [
 ]);
 
 export const ocrStatusEnum = pgEnum("ocr_status", ["pending", "processing", "completed", "failed", "converted"]);
+
+export const stockMovementTypeEnum = pgEnum("stock_movement_type", [
+  "purchase_receipt",
+  "sales_delivery",
+  "stock_adjustment",
+  "warehouse_transfer",
+  "opening_balance",
+]);
+
+export const valuationMethodEnum = pgEnum("valuation_method", ["fifo", "weighted_average"]);

@@ -3,9 +3,9 @@ import {
   pgTable, uuid, text, date, numeric, timestamp,
   foreignKey, check, index, uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { invoiceStatusEnum, creditNoteStatusEnum } from "./enums.js";
-import { users } from "./users.js";
-import { accounts } from "./accounts.js";
+import { invoiceStatusEnum, creditNoteStatusEnum } from "./enums";
+import { users } from "./users";
+import { accounts } from "./accounts";
 
 export const invoiceView = pgTable("invoice_view", {
   id: uuid("id").defaultRandom().primaryKey(),
