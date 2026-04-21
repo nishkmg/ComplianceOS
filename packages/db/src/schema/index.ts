@@ -20,3 +20,6 @@ export * from "./employees";
 export * from "./salary-structure";
 export * from "./payroll";
 export * from "./payroll-config";
+export * from "./gst-returns";
+export * from "./gst-ledgers";
+export * from "./gst-config";

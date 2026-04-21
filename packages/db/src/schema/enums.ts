@@ -135,3 +135,8 @@ export const documentTypeEnum = pgEnum("document_type", [
   "pan_card", "aadhaar_card", "photo", "bank_proof", "uan_card", "esi_card",
   "address_proof", "qualification_certificate", "experience_letter",
 ]);
+
+export const gstReturnTypeEnum = pgEnum("gst_return_type", ["gstr1", "gstr2b", "gstr3b", "gstr9", "gstr4"]);
+export const gstReturnStatusEnum = pgEnum("gst_return_status", ["draft", "generated", "filed", "amended"]);
+export const gstTaxTypeEnum = pgEnum("gst_tax_type", ["igst", "cgst", "sgst", "cess"]);
+export const gstTransactionTypeEnum = pgEnum("gst_transaction_type", ["payment", "interest", "penalty", "refund", "itc_utilization"]);
