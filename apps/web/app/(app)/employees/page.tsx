@@ -63,7 +63,7 @@ export default function EmployeesPage() {
             </tr>
           </thead>
           <tbody>
-            {employees?.map((emp) => (
+            {employees?.map((emp: any) => (
               <tr key={emp.id} className="hover:bg-gray-50">
                 <td className="border px-4 py-2">{emp.employeeCode}</td>
                 <td className="border px-4 py-2">{emp.firstName} {emp.lastName}</td>

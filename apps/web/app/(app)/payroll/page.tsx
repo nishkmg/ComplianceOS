@@ -75,7 +75,7 @@ export default function PayrollPage() {
             </tr>
           </thead>
           <tbody>
-            {payrollRuns?.map((run) => (
+            {payrollRuns?.map((run: any) => (
               <tr key={run.id} className="hover:bg-gray-50">
                 <td className="border px-4 py-2">{run.payrollNumber}</td>
                 <td className="border px-4 py-2">{run.employeeName}</td>

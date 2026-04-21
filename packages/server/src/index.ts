@@ -1,6 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { Database } from "@complianceos/db";
 export { uploadFile, getFilePath } from "./services/file-upload";
+export { appRouter } from "./routers/index";
+export type { AppRouter } from "./routers/index";
 
 export interface Context {
   db: Database;

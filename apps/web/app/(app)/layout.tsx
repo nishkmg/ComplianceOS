@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { TRPCProvider } from "@/components/trpc-provider";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -30,6 +31,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
+    <TRPCProvider>
     <div className="flex min-h-screen bg-gray-50">
       <aside className="w-64 bg-slate-900 text-white p-4">
         <h1 className="text-xl font-bold mb-8 px-2">ComplianceOS</h1>
@@ -51,5 +53,6 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       </aside>
       <main className="flex-1 p-8">{children}</main>
     </div>
+    </TRPCProvider>
   );
 }

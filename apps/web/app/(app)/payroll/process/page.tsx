@@ -12,7 +12,7 @@ export default function ProcessPayrollPage() {
 
   const { data: pendingEmployees } = api.payroll.pending.useQuery();
   const processPayroll = api.payroll.process.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       router.push(`/payroll/${data.payrollRunId}`);
     },
   });
@@ -36,7 +36,7 @@ export default function ProcessPayrollPage() {
             className="w-full border rounded px-3 py-2"
           >
             <option value="">Select Employee</option>
-            {pendingEmployees?.map((emp) => (
+            {pendingEmployees?.map((emp: any) => (
               <option key={emp.id} value={emp.id}>
                 {emp.employeeCode} - {emp.firstName} {emp.lastName}
               </option>
@@ -95,7 +95,7 @@ export default function ProcessPayrollPage() {
         <div className="mt-8">
           <h2 className="text-lg font-semibold mb-2">Pending for {month}/{year}</h2>
           <ul className="space-y-2">
-            {pendingEmployees.map((emp) => (
+            {pendingEmployees.map((emp: any) => (
               <li key={emp.id} className="flex justify-between items-center border p-2 rounded">
                 <span>{emp.employeeCode} - {emp.firstName} {emp.lastName}</span>
                 <button

@@ -37,16 +37,16 @@ export default function PayrollReportsPage() {
         <div className="border rounded p-4">
           <h3 className="text-sm font-medium text-gray-600">PF Payable</h3>
           <p className="text-2xl font-bold">₹{totalPF.toLocaleString("en-IN")}</p>
-          {pfChallan?.payableByDate && (
-            <p className="text-xs text-gray-500">Due: {pfChallan.payableByDate}</p>
+          {(pfChallan as any)?.payableByDate && (
+            <p className="text-xs text-gray-500">Due: {(pfChallan as any).payableByDate}</p>
           )}
         </div>
 
         <div className="border rounded p-4">
           <h3 className="text-sm font-medium text-gray-600">ESI Payable</h3>
           <p className="text-2xl font-bold">₹{totalESI.toLocaleString("en-IN")}</p>
-          {esiChallan?.payableByDate && (
-            <p className="text-xs text-gray-500">Due: {esiChallan.payableByDate}</p>
+          {(esiChallan as any)?.payableByDate && (
+            <p className="text-xs text-gray-500">Due: {(esiChallan as any).payableByDate}</p>
           )}
         </div>
       </div>
@@ -69,7 +69,7 @@ export default function PayrollReportsPage() {
             </tr>
           </thead>
           <tbody>
-            {register?.map((entry) => (
+            {register?.map((entry: any) => (
               <tr key={entry.employeeId} className="hover:bg-gray-50">
                 <td className="border px-4 py-2">{entry.employeeName}</td>
                 <td className="border px-4 py-2">{entry.employeeCode}</td>
