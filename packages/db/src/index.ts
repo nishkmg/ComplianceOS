@@ -70,4 +70,10 @@ export const {
   emailQueue,
   // OCR
   ocrScanResults,
+  // Inventory
+  inventoryLayers,
+  stockMovements,
+  warehouseStock,
+  // Products
+  products,
 } = schema;
