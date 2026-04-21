@@ -9,6 +9,9 @@ import { InvoiceViewProjector } from "./invoice-view.js";
 import { ReceivablesProjector } from "./receivables-summary.js";
 import { payrollSummaryProjector } from "./payroll-summary.js";
 import { statutoryLiabilitiesProjector } from "./statutory-liabilities.js";
+import { gstLiabilityProjector } from "./gst-liability.js";
+import { gstItcAvailableProjector } from "./gst-itc-available.js";
+import { gstCashBalanceProjector } from "./gst-cash-balance.js";
 import type { Projector } from "./types.js";
 
 const projectors: Projector[] = [
@@ -20,6 +23,9 @@ const projectors: Projector[] = [
   ReceivablesProjector,
   payrollSummaryProjector,
   statutoryLiabilitiesProjector,
+  gstLiabilityProjector,
+  gstItcAvailableProjector,
+  gstCashBalanceProjector,
 ];
 
 const POLL_INTERVAL_MS = 500;
