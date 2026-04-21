@@ -17,6 +17,9 @@ import { payrollRouter } from "./payroll";
 import { advancesRouter } from "./advances";
 import { payslipsRouter } from "./payslips";
 import { payrollReportsRouter } from "./payroll-reports";
+import { gstLedgerRouter } from "./gst-ledger";
+import { gstReconciliationRouter } from "./gst-reconciliation";
+import { gstPaymentRouter } from "./gst-payment";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -37,6 +40,9 @@ export const appRouter = router({
   advances: advancesRouter,
   payslips: payslipsRouter,
   payrollReports: payrollReportsRouter,
+  gstLedger: gstLedgerRouter,
+  gstReconciliation: gstReconciliationRouter,
+  gstPayment: gstPaymentRouter,
 });
 
 export type AppRouter = typeof appRouter;
