@@ -201,7 +201,7 @@ export async function generateGSTR2B(
         cgst: String(cgst),
         sgst: String(sgst),
         cess: "0",
-        placeOfSupply: invoice.customerState,
+        placeOfSupply: invoice.customerState ?? "IN",
         reverseCharge: false,
       });
     } else {
@@ -217,7 +217,7 @@ export async function generateGSTR2B(
         cgst: String(cgst),
         sgst: String(sgst),
         cess: "0",
-        placeOfSupply: invoice.customerState,
+        placeOfSupply: invoice.customerState ?? "IN",
       });
     }
 
