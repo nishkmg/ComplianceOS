@@ -4,6 +4,8 @@ export * from "./types/reports";
 export * from "./types/onboarding";
 export * from "./types/invoices";
 export * from "./types/payments";
+export * from "./types/products";
+export * from "./types/inventory";
 export * from "./validation/journal";
 export * from "./validation/account";
 export * from "./validation/fiscal-year";
