@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
+import type { Database } from "./index";
 
 /**
  * Row-Level Security policies for payroll tables

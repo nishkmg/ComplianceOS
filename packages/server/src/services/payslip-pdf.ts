@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-import { html } from "hono/html";
 
 interface PayslipData {
   employeeName: string;
@@ -15,7 +14,7 @@ interface PayslipData {
 
 export async function generatePayslipPDF(data: PayslipData): Promise<Buffer> {
   const browser = await puppeteer.launch({
-    headless: "new",
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 

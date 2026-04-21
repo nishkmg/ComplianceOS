@@ -154,8 +154,8 @@ export async function generatePayslip(
   const pdfBuffer = await generatePayslipPDF({
     employeeName: `${employee.employees.firstName} ${employee.employees.lastName ?? ""}`,
     employeeCode: employee.employees.employeeCode,
-    periodMonth: payrollRun.month,
-    periodYear: payrollRun.year,
+    periodMonth: parseInt(payrollRun.month),
+    periodYear: parseInt(payrollRun.year),
     earnings,
     deductions,
     grossSalary: parseFloat(payrollRun.grossEarnings),

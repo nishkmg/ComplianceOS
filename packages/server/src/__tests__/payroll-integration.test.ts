@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { db, tenants, users } from "@complianceos/db";
-import { eq } from "drizzle-orm";
+import { db, tenants, users, userTenants } from "@complianceos/db";
+import { eq, and } from "drizzle-orm";
 import { createEmployee } from "../commands/create-employee";
 import { createSalaryStructure } from "../commands/create-salary-structure";
 import { processPayroll } from "../commands/process-payroll";
@@ -13,21 +13,28 @@ async function createTestTenant() {
   const userId = randomUUID();
 
   await db.insert(tenants).values({
-    id: tenantId,
     name: `Test Tenant ${tenantId.slice(0, 8)}`,
+    pan: `AAAPT${tenantId.slice(0, 5).toUpperCase()}P`,
+    address: "Test Address",
+    state: "karnataka",
   });
 
   await db.insert(users).values({
     id: userId,
-    tenantId,
     email: `test-${tenantId.slice(0, 8)}@example.com`,
+  });
+
+  await db.insert(userTenants).values({
+    userId,
+    tenantId,
+    role: "owner",
   });
 
   return { tenantId, userId };
 }
 
 async function cleanupTestTenant(tenantId: string) {
-  await db.delete(users).where(eq(users.tenantId, tenantId));
+  await db.delete(userTenants).where(eq(userTenants.tenantId, tenantId));
   await db.delete(tenants).where(eq(tenants.id, tenantId));
 }
 
@@ -78,24 +85,22 @@ describe("Payroll Integration Flow", () => {
       ],
     });
 
-    expect(salaryResult.success).toBe(true);
+    expect(salaryResult.structureId).toBeDefined();
 
     // Step 3: Process payroll for April 2024
     const processResult = await processPayroll(db, tenantId, actorId, {
-      periodMonth: 4,
-      periodYear: 2024,
+      employeeId: employeeResult.employeeId,
+      month: "4",
+      year: "2024",
       paymentDate: "2024-05-01",
-      employeeIds: [employeeResult.employeeId],
     });
 
     expect(processResult.payrollRunId).toBeDefined();
 
     // Step 4: Finalize payroll
-    const finalizeResult = await finalizePayroll(db, tenantId, actorId, {
-      payrollRunId: processResult.payrollRunId,
-    });
+    const finalizeResult = await finalizePayroll(db, tenantId, actorId, processResult.payrollRunId);
 
-    expect(finalizeResult.success).toBe(true);
+    expect(finalizeResult.journalEntryId).toBeDefined();
 
     // Step 5: Generate payslip
     const payslipResult = await generatePayslip(db, tenantId, actorId, processResult.payrollRunId);
@@ -136,18 +141,15 @@ describe("Payroll Integration Flow", () => {
     });
 
     const processResult = await processPayroll(db, tenantId, actorId, {
-      periodMonth: 4,
-      periodYear: 2024,
+      employeeId: employeeResult.employeeId,
+      month: "4",
+      year: "2024",
       paymentDate: "2024-05-01",
-      employeeIds: [employeeResult.employeeId],
     });
 
-    const finalizeResult = await finalizePayroll(db, tenantId, actorId, {
-      payrollRunId: processResult.payrollRunId,
-    });
+    const finalizeResult = await finalizePayroll(db, tenantId, actorId, processResult.payrollRunId);
 
-    expect(finalizeResult.success).toBe(true);
-    // Assertions for statutory amounts would go here after querying payroll_lines
+    expect(finalizeResult.journalEntryId).toBeDefined();
   });
 
   afterEach(async () => {

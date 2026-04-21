@@ -7,7 +7,7 @@ export default function MyPayslipsPage() {
 
   if (isLoading) return <div className="p-8">Loading...</div>;
 
-  const payslips = data?.payslips ?? [];
+  const payslips = data ?? [];
 
   return (
     <div className="space-y-4">
@@ -32,7 +32,7 @@ export default function MyPayslipsPage() {
               {payslips.map((payslip: any) => (
                 <tr key={payslip.id} className="hover:bg-gray-50">
                   <td className="border px-4 py-2">
-                    {new Date(payslip.payrollRun.periodYear, payslip.payrollRun.periodMonth - 1).toLocaleString("default", { month: "long", year: "numeric" })}
+                    {new Date(parseInt(payslip.year), parseInt(payslip.month) - 1).toLocaleString("default", { month: "long", year: "numeric" })}
                   </td>
                   <td className="border px-4 py-2">
                     {new Date(payslip.createdAt).toLocaleDateString()}

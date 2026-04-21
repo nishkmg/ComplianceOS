@@ -30,7 +30,7 @@ export default function PayrollRunDetailPage() {
 
   const handleFinalize = () => {
     if (confirm("Finalize this payroll run? This will lock all entries and generate journal entries.")) {
-      finalize.mutate({ payrollRunId: runId });
+      finalize.mutate(runId);
     }
   };
 
@@ -48,7 +48,7 @@ export default function PayrollRunDetailPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Payroll Run - {run.periodMonth}/{run.periodYear}</h1>
+          <h1 className="text-2xl font-bold">Payroll Run - {run.month}/{run.year}</h1>
           <p className="text-gray-600 text-sm">Created: {new Date(run.createdAt).toLocaleDateString()}</p>
         </div>
         <div className="flex gap-2">
