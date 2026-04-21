@@ -5,6 +5,7 @@ import {
   gstReturns,
   gstReturnLines,
   invoices,
+  invoiceLines,
 } from "@complianceos/db";
 
 export const gstReconciliationRouter = router({
@@ -54,14 +55,13 @@ export const gstReconciliationRouter = router({
       }
 
       // Calculate outward supplies from invoice lines
-      const invoiceLines = await ctx.db
+      const il = await ctx.db
         .select({
           invoiceId: invoiceLines.invoiceId,
           taxableValue: invoiceLines.amount,
           igstAmount: invoiceLines.igstAmount,
           cgstAmount: invoiceLines.cgstAmount,
           sgstAmount: invoiceLines.sgstAmount,
-          cessAmount: invoiceLines.cessAmount,
         })
         .from(invoiceLines)
         .innerJoin(invoices, eq(invoices.id, invoiceLines.invoiceId))
@@ -72,9 +72,9 @@ export const gstReconciliationRouter = router({
           ),
         );
 
-      const totalOutward = invoiceLines.reduce((sum, line) => sum + Number(line.taxableValue), 0);
-      const totalTaxPayable = invoiceLines.reduce((sum, line) => 
-        sum + Number(line.igstAmount) + Number(line.cgstAmount) + Number(line.sgstAmount) + Number(line.cessAmount),
+      const totalOutward = il.reduce((sum, line) => sum + Number(line.taxableValue), 0);
+      const totalTaxPayable = il.reduce((sum, line) => 
+        sum + Number(line.igstAmount) + Number(line.cgstAmount) + Number(line.sgstAmount),
         0
       );
 
@@ -88,25 +88,6 @@ export const gstReconciliationRouter = router({
         })
         .where(eq(gstReturns.id, returnRecord.id));
 
-      // Create return lines for each invoice line
-      const invoicesWithLines = await ctx.db
-        .select({
-          id: invoices.id,
-          invoiceNumber: invoices.invoiceNumber,
-          date: invoices.date,
-          customerGstin: invoices.customerGstin,
-          customerName: invoices.customerName,
-          customerState: invoices.customerState,
-        })
-        .from(invoices)
-        .innerJoin(invoiceLines, eq(invoiceLines.invoiceId, invoices.id))
-        .where(
-          and(
-            eq(invoices.tenantId, ctx.tenantId),
-            eq(invoices.status, "sent"),
-          ),
-        );
-
       // Delete existing lines for this period
       await ctx.db
         .delete(gstReturnLines)
@@ -117,26 +98,28 @@ export const gstReconciliationRouter = router({
           ),
         );
 
-      // Insert new return lines
-      if (invoicesWithLines.length > 0) {
-        const returnLineValues = invoicesWithLines.map((inv) => ({
+      // Insert new return lines from invoice lines
+      if (il.length > 0) {
+        const returnLineValues = il.map((line) => ({
           gstReturnId: returnRecord.id,
           tableNumber: "3.1",
           tableDescription: "Outward supplies",
           transactionType: "outward",
-          placeOfSupply: inv.customerState ? "inter_state" : "intra_state",
-          taxableValue: "0",
-          igstAmount: "0",
-          cgstAmount: "0",
-          sgstAmount: "0",
+          placeOfSupply: "intra_state",
+          taxableValue: line.taxableValue,
+          igstAmount: line.igstAmount,
+          cgstAmount: line.cgstAmount,
+          sgstAmount: line.sgstAmount,
           cessAmount: "0",
-          totalTaxAmount: "0",
-          sourceDocumentId: inv.id,
+          totalTaxAmount: String(
+            Number(line.igstAmount) + Number(line.cgstAmount) + Number(line.sgstAmount)
+          ),
+          sourceDocumentId: line.invoiceId,
           sourceDocumentType: "invoice",
-          sourceDocumentNumber: inv.invoiceNumber,
-          sourceDocumentDate: inv.date,
-          gstin: inv.customerGstin,
-          partyName: inv.customerName,
+          sourceDocumentNumber: "",
+          sourceDocumentDate: null,
+          gstin: null,
+          partyName: null,
         }));
 
         await ctx.db.insert(gstReturnLines).values(returnLineValues);
@@ -148,7 +131,7 @@ export const gstReconciliationRouter = router({
         returnNumber: returnRecord.returnNumber,
         totalOutwardSupplies: totalOutward,
         totalTaxPayable,
-        invoiceCount: invoiceLines.length,
+        invoiceCount: il.length,
       };
     }),
 
@@ -196,20 +179,18 @@ export const gstReconciliationRouter = router({
       // Compare outward supplies between books and returns
       const bookOutward = await ctx.db
         .select({
-          totalTaxableValue: sum(invoices.taxableValue),
+          totalTaxableValue: sum(invoiceLines.amount),
           totalTax: sql<number>`
-            COALESCE(SUM(${invoices.igstAmount}), 0) +
-            COALESCE(SUM(${invoices.cgstAmount}), 0) +
-            COALESCE(SUM(${invoices.sgstAmount}), 0) +
-            COALESCE(SUM(${invoices.cessAmount}), 0)
+            COALESCE(SUM(${invoiceLines.igstAmount}), 0) +
+            COALESCE(SUM(${invoiceLines.cgstAmount}), 0) +
+            COALESCE(SUM(${invoiceLines.sgstAmount}), 0)
           `,
         })
-        .from(invoices)
+        .from(invoiceLines)
+        .innerJoin(invoices, eq(invoices.id, invoiceLines.invoiceId))
         .where(
           and(
             eq(invoices.tenantId, ctx.tenantId),
-            eq(invoices.invoiceMonth, monthStr),
-            eq(invoices.invoiceYear, yearStr),
             eq(invoices.status, "sent"),
           ),
         );

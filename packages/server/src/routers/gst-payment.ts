@@ -207,7 +207,7 @@ export const gstPaymentRouter = router({
         challanId: input.challanId,
         paymentDate,
         mode: input.mode,
-        cin: input.cin,
+        cin: input.cin ?? undefined,
       };
     }),
 
@@ -239,8 +239,8 @@ export const gstPaymentRouter = router({
     const challanMap = new Map<string, any>();
 
     for (const payment of payments) {
-      if (!challanMap.has(payment.challanNumber)) {
-        challanMap.set(payment.challanNumber, {
+      if (!challanMap.has(payment.challanNumber!)) {
+        challanMap.set(payment.challanNumber!, {
           challanNumber: payment.challanNumber,
           challanDate: payment.challanDate,
           bankName: payment.bankName,
@@ -251,7 +251,7 @@ export const gstPaymentRouter = router({
         });
       }
 
-      const challan = challanMap.get(payment.challanNumber);
+      const challan = challanMap.get(payment.challanNumber!);
       challan.totalAmount += Number(payment.amount);
       challan.taxBreakdown.push({
         taxType: payment.taxType,
@@ -259,8 +259,8 @@ export const gstPaymentRouter = router({
       });
     }
 
-    return Array.from(challanMap.values()).sort((a, b) => {
-      return new Date(b.challanDate).getTime() - new Date(a.challanDate).getTime();
+    return Array.from(challanMap.values()).filter(c => c.challanDate).sort((a, b) => {
+      return new Date(b.challanDate!).getTime() - new Date(a.challanDate!).getTime();
     });
   }),
 });
