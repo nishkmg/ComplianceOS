@@ -24,6 +24,11 @@ const navItems = [
   { href: "/inventory/products/new", label: "New", indent: true, subIndent: true },
   { href: "/inventory/stock", label: "Stock", indent: true },
   { href: "/inventory/reports", label: "Reports", indent: true },
+  { href: "/gst", label: "GST" },
+  { href: "/gst/returns", label: "Returns", indent: true },
+  { href: "/gst/reconciliation", label: "Reconciliation", indent: true },
+  { href: "/gst/ledger", label: "Ledger", indent: true },
+  { href: "/gst/payment", label: "Payment", indent: true },
   { href: "/reports", label: "Reports" },
   { href: "/settings", label: "Settings" },
 ];

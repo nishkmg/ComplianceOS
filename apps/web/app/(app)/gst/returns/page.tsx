@@ -7,10 +7,10 @@ import { api } from "@/lib/api";
 interface GSTReturn {
   id: string;
   returnNumber: string;
-  returnType: "gstr1" | "gstr2b" | "gstr3b";
+  returnType: "gstr1" | "gstr2b" | "gstr3b" | "gstr9" | "gstr4" | "itc_reconciliation";
   taxPeriodMonth: string;
   taxPeriodYear: string;
-  status: "draft" | "generated" | "filed" | "amended";
+  status: "draft" | "generated" | "filed" | "amended" | "completed";
   totalOutwardSupplies: string;
   totalEligibleItc: string;
   totalTaxPayable: string;
@@ -24,6 +24,7 @@ const statusConfig: Record<GSTReturn["status"], { bg: string; label: string }> =
   generated: { bg: "bg-blue-100 text-blue-800", label: "Generated" },
   filed: { bg: "bg-green-100 text-green-800", label: "Filed" },
   amended: { bg: "bg-yellow-100 text-yellow-800", label: "Amended" },
+  completed: { bg: "bg-green-100 text-green-800", label: "Completed" },
 };
 
 const returnTypes = ["all", "gstr1", "gstr2b", "gstr3b"] as const;
@@ -60,7 +61,7 @@ export default function GSTReturnsPage() {
 
   const filteredReturns = returns ?? [];
 
-  const handleGenerate = async (month: number, year: number, type: "gstr1" | "gstr2b" | "gstr3b") => {
+  const handleGenerate = async (month: number, year: number, type: GSTReturn["returnType"]) => {
     try {
       if (type === "gstr1") {
         await api.gstReturns.generateGSTR1.mutate({ periodMonth: month, periodYear: year });

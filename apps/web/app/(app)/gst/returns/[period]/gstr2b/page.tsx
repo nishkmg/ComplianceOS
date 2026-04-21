@@ -30,8 +30,8 @@ interface GSTR2BData {
     cgstAmount: string;
     sgstAmount: string;
     cessAmount: string;
-    eligibleI tc: string;
-    ineligibleI tc: string;
+    eligibleItc: string;
+    ineligibleItc: string;
   }>;
   purchasesServices: Array<{
     gstin: string;
@@ -43,8 +43,8 @@ interface GSTR2BData {
     cgstAmount: string;
     sgstAmount: string;
     cessAmount: string;
-    eligibleI tc: string;
-    ineligibleI tc: string;
+    eligibleItc: string;
+    ineligibleItc: string;
   }>;
   imports: Array<{
     importType: "goods" | "services";
@@ -54,7 +54,7 @@ interface GSTR2BData {
     taxableValue: string;
     igstAmount: string;
     cessAmount: string;
-    eligibleI tc: string;
+    eligibleItc: string;
   }>;
   itcEligible: {
     totalEligible: string;
@@ -91,8 +91,8 @@ export default function GSTR2BDetailPage() {
         cgstAmount: "9000",
         sgstAmount: "9000",
         cessAmount: "0",
-        eligibleI tc: "18000",
-        ineligibleI tc: "0",
+        eligibleItc: "18000",
+        ineligibleItc: "0",
       },
       {
         gstin: "29AABCT1234R1Z5",
@@ -104,8 +104,8 @@ export default function GSTR2BDetailPage() {
         cgstAmount: "0",
         sgstAmount: "0",
         cessAmount: "0",
-        eligibleI tc: "9000",
-        ineligibleI tc: "0",
+        eligibleItc: "9000",
+        ineligibleItc: "0",
       },
     ],
     purchasesServices: [
@@ -119,8 +119,8 @@ export default function GSTR2BDetailPage() {
         cgstAmount: "0",
         sgstAmount: "0",
         cessAmount: "0",
-        eligibleI tc: "4500",
-        ineligibleI tc: "0",
+        eligibleItc: "4500",
+        ineligibleItc: "0",
       },
     ],
     imports: [
@@ -132,7 +132,7 @@ export default function GSTR2BDetailPage() {
         taxableValue: "500000",
         igstAmount: "90000",
         cessAmount: "5000",
-        eligibleI tc: "95000",
+        eligibleItc: "95000",
       },
     ],
     itcEligible: {
@@ -221,8 +221,8 @@ export default function GSTR2BDetailPage() {
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.igstAmount).toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.cgstAmount).toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.sgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-green-600 font-medium">₹{Number(item.eligibleI tc).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-red-600">₹{Number(item.ineligibleI tc).toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 text-right text-green-600 font-medium">₹{Number(item.eligibleItc).toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 text-right text-red-600">₹{Number(item.ineligibleItc).toLocaleString("en-IN")}</td>
                 </tr>
               ))}
             </tbody>
@@ -256,8 +256,8 @@ export default function GSTR2BDetailPage() {
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.igstAmount).toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.cgstAmount).toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.sgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-green-600 font-medium">₹{Number(item.eligibleI tc).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-red-600">₹{Number(item.ineligibleI tc).toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 text-right text-green-600 font-medium">₹{Number(item.eligibleItc).toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 text-right text-red-600">₹{Number(item.ineligibleItc).toLocaleString("en-IN")}</td>
                 </tr>
               ))}
             </tbody>
@@ -288,7 +288,7 @@ export default function GSTR2BDetailPage() {
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.taxableValue).toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.igstAmount).toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-right text-gray-600">₹{Number(item.cessAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-green-600 font-medium">₹{Number(item.eligibleI tc).toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 text-right text-green-600 font-medium">₹{Number(item.eligibleItc).toLocaleString("en-IN")}</td>
                 </tr>
               ))}
             </tbody>

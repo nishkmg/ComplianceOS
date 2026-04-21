@@ -18,6 +18,7 @@ import { advancesRouter } from "./advances";
 import { payslipsRouter } from "./payslips";
 import { payrollReportsRouter } from "./payroll-reports";
 import { gstLedgerRouter } from "./gst-ledger";
+import { gstReturnsRouter } from "./gst-returns";
 import { gstReconciliationRouter } from "./gst-reconciliation";
 import { gstPaymentRouter } from "./gst-payment";
 
@@ -41,6 +42,7 @@ export const appRouter = router({
   payslips: payslipsRouter,
   payrollReports: payrollReportsRouter,
   gstLedger: gstLedgerRouter,
+  gstReturns: gstReturnsRouter,
   gstReconciliation: gstReconciliationRouter,
   gstPayment: gstPaymentRouter,
 });
