@@ -10,6 +10,7 @@ import { invoiceConfigRouter } from "./invoice-config";
 import { ocrScanRouter } from "./ocr-scan";
 import { productsRouter } from "./products";
 import { inventoryRouter } from "./inventory";
+import { stockReportsRouter } from "./stock-reports";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -23,6 +24,7 @@ export const appRouter = router({
   ocrScan: ocrScanRouter,
   products: productsRouter,
   inventory: inventoryRouter,
+  stockReports: stockReportsRouter,
 });
 
 export type AppRouter = typeof appRouter;
