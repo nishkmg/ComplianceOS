@@ -13,6 +13,11 @@ const navItems = [
   { href: "/receipts/scan", label: "Scan Receipt", indent: true },
   { href: "/journal", label: "Journal" },
   { href: "/accounts", label: "Accounts" },
+  { href: "/inventory", label: "Inventory" },
+  { href: "/inventory/products", label: "Products", indent: true },
+  { href: "/inventory/products/new", label: "New", indent: true, subIndent: true },
+  { href: "/inventory/stock", label: "Stock", indent: true },
+  { href: "/inventory/reports", label: "Reports", indent: true },
   { href: "/reports", label: "Reports" },
   { href: "/settings", label: "Settings" },
 ];
