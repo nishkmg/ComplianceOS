@@ -76,4 +76,5 @@ export const {
   warehouseStock,
   // Products
   products,
+  productTaxCategories,
 } = schema;
