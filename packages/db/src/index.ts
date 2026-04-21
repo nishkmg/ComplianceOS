@@ -78,4 +78,21 @@ export const {
   // Products
   products,
   productTaxCategories,
+  // Employees
+  employees,
+  employeeDocuments,
+  taxPreferences,
+  // Salary Structure
+  salaryComponents,
+  employeeSalaryStructures,
+  // Payroll
+  payrollRuns,
+  payrollLines,
+  payrollAdvances,
+  payslips,
+  // Payroll Config
+  payrollConfig,
+  statutoryConfig,
+  payrollSummary,
+  statutoryLiabilities,
 } = schema;
