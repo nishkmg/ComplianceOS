@@ -95,4 +95,13 @@ export const {
   statutoryConfig,
   payrollSummary,
   statutoryLiabilities,
+  // GST Ledgers
+  gstCashLedger,
+  gstItcLedger,
+  gstLiabilityLedger,
+  // GST Returns
+  gstReturns,
+  gstrTableMappings,
+  // GST Config
+  gstConfig,
 } = schema;
