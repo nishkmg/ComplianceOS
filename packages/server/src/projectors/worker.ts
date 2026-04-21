@@ -7,6 +7,8 @@ import { snapshotProjector } from "./snapshot.js";
 import { fySummaryProjector } from "./fy-summary.js";
 import { InvoiceViewProjector } from "./invoice-view.js";
 import { ReceivablesProjector } from "./receivables-summary.js";
+import { payrollSummaryProjector } from "./payroll-summary.js";
+import { statutoryLiabilitiesProjector } from "./statutory-liabilities.js";
 import type { Projector } from "./types.js";
 
 const projectors: Projector[] = [
@@ -16,6 +18,8 @@ const projectors: Projector[] = [
   fySummaryProjector,
   InvoiceViewProjector,
   ReceivablesProjector,
+  payrollSummaryProjector,
+  statutoryLiabilitiesProjector,
 ];
 
 const POLL_INTERVAL_MS = 500;
