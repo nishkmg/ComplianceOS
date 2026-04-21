@@ -11,6 +11,7 @@ const navItems = [
   { href: "/payroll", label: "Payroll" },
   { href: "/payroll/process", label: "Process", indent: true },
   { href: "/payroll-reports", label: "Reports", indent: true },
+  { href: "/my-payslips", label: "My Payslips" },
   { href: "/invoices", label: "Invoices" },
   { href: "/invoices/scan", label: "Scan Invoice", indent: true },
   { href: "/receivables", label: "Receivables" },

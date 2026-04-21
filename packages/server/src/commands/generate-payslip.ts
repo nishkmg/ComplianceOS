@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import type { Database } from "@complianceos/db";
 import { payrollRuns, payslips, employees, payrollLines, tenants } from "@complianceos/db";
 import { appendEvent } from "../lib/event-store";
+import { generatePayslipPDF } from "../services/payslip-pdf";
 
 interface PayslipData {
   payrollRun: any;
@@ -143,16 +144,25 @@ export async function generatePayslip(
     .from(tenants)
     .where(eq(tenants.id, tenantId));
 
-  const html = generatePayslipHTML({
-    payrollRun,
-    employee: employee.employees,
-    lines,
-    company: {
-      name: tenant?.name ?? "Company Name",
-    },
+  const earnings = lines
+    .filter(l => l.componentType === "earning")
+    .map(l => ({ label: l.componentName, amount: parseFloat(l.amount) }));
+  const deductions = lines
+    .filter(l => ["deduction", "statutory", "advance"].includes(l.componentType))
+    .map(l => ({ label: l.componentName, amount: parseFloat(l.amount) }));
+
+  const pdfBuffer = await generatePayslipPDF({
+    employeeName: `${employee.employees.firstName} ${employee.employees.lastName ?? ""}`,
+    employeeCode: employee.employees.employeeCode,
+    periodMonth: payrollRun.month,
+    periodYear: payrollRun.year,
+    earnings,
+    deductions,
+    grossSalary: parseFloat(payrollRun.grossEarnings),
+    netSalary: parseFloat(payrollRun.netPay),
+    totalDeductions: parseFloat(payrollRun.grossDeductions),
   });
 
-  const pdfBuffer = await htmlToPdf(html);
   const filename = `payslip-${employee.employees.employeeCode}-${payrollRun.month}-${payrollRun.year}.pdf`;
   const pdfUrl = await uploadPdfToStorage(pdfBuffer, filename, tenantId);
 
@@ -193,14 +203,15 @@ export async function generatePayslip(
   return { payslipId: payslip.id, pdfUrl };
 }
 
-async function htmlToPdf(html: string): Promise<Buffer> {
-  return Buffer.from(html);
-}
-
 async function uploadPdfToStorage(
   pdfBuffer: Buffer,
   filename: string,
   tenantId: string,
 ): Promise<string> {
-  return `/payslips/${tenantId}/${filename}`;
+  const bucket = process.env.STORAGE_BUCKET ?? "complianceos-payslips";
+  const path = `payslips/${tenantId}/${new Date().getFullYear()}/${filename}`;
+  
+  // V1: Return path (actual S3 upload in production)
+  // TODO: Implement S3/GCS upload in production
+  return path;
 }
