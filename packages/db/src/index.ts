@@ -101,6 +101,7 @@ export const {
   gstLiabilityLedger,
   // GST Returns
   gstReturns,
+  gstReturnLines,
   gstrTableMappings,
   // GST Config
   gstConfig,

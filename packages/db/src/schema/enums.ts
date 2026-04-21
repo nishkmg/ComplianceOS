@@ -58,6 +58,7 @@ export const jeStatusEnum = pgEnum("je_status", ["draft", "posted", "voided"]);
 export const aggregateTypeEnum = pgEnum("aggregate_type", [
   "journal_entry", "account", "fiscal_year", "invoice", "credit_note", "payment",
   "payroll_run", "salary_structure", "employee_advance",
+  "gst_challan", "gst_payment", "gst_return",
 ]);
 
 export const eventTypeEnum = pgEnum("event_type", [
@@ -75,6 +76,7 @@ export const eventTypeEnum = pgEnum("event_type", [
   "payroll_processed", "payroll_finalized", "payroll_voided",
   "payslip_generated",
   "advance_given", "advance_recovered",
+  "gst_challan_created", "gst_payment_made", "itc_reconciled", "itc_utilized",
 ]);
 
 export const cashFlowCategoryEnum = pgEnum("cash_flow_category", [
@@ -136,7 +138,7 @@ export const documentTypeEnum = pgEnum("document_type", [
   "address_proof", "qualification_certificate", "experience_letter",
 ]);
 
-export const gstReturnTypeEnum = pgEnum("gst_return_type", ["gstr1", "gstr2b", "gstr3b", "gstr9", "gstr4"]);
+export const gstReturnTypeEnum = pgEnum("gst_return_type", ["gstr1", "gstr2b", "gstr3b", "gstr9", "gstr4", "itc_reconciliation"]);
 export const gstReturnStatusEnum = pgEnum("gst_return_status", ["draft", "generated", "filed", "amended"]);
 export const gstTaxTypeEnum = pgEnum("gst_tax_type", ["igst", "cgst", "sgst", "cess"]);
 export const gstTransactionTypeEnum = pgEnum("gst_transaction_type", ["payment", "interest", "penalty", "refund", "itc_utilization"]);
