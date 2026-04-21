@@ -16,3 +16,7 @@ export * from "./ocr-scan";
 export * from "./products";
 export * from "./inventory";
 export * from "./inventory-config";
+export * from "./employees";
+export * from "./salary-structure";
+export * from "./payroll";
+export * from "./payroll-config";

@@ -57,6 +57,7 @@ export const jeStatusEnum = pgEnum("je_status", ["draft", "posted", "voided"]);
 
 export const aggregateTypeEnum = pgEnum("aggregate_type", [
   "journal_entry", "account", "fiscal_year", "invoice", "credit_note", "payment",
+  "payroll_run", "salary_structure", "employee_advance",
 ]);
 
 export const eventTypeEnum = pgEnum("event_type", [
@@ -69,6 +70,11 @@ export const eventTypeEnum = pgEnum("event_type", [
   "invoice_posted", "invoice_voided", "invoice_sent",
   "credit_note_created", "credit_note_modified", "credit_note_issued", "credit_note_voided",
   "payment_recorded", "payment_voided",
+  "employee_created", "employee_updated", "employee_deactivated",
+  "salary_structure_created", "salary_structure_updated",
+  "payroll_processed", "payroll_finalized", "payroll_voided",
+  "payslip_generated",
+  "advance_given", "advance_recovered",
 ]);
 
 export const cashFlowCategoryEnum = pgEnum("cash_flow_category", [
@@ -104,3 +110,28 @@ export const stockMovementTypeEnum = pgEnum("stock_movement_type", [
 ]);
 
 export const valuationMethodEnum = pgEnum("valuation_method", ["fifo", "weighted_average"]);
+
+export const payrollRunStatusEnum = pgEnum("payroll_run_status", [
+  "draft", "processing", "calculated", "finalized", "voided", "failed",
+]);
+
+export const payrollComponentTypeEnum = pgEnum("payroll_component_type", [
+  "earning", "deduction", "statutory", "advance", "arrears",
+]);
+
+export const tdsRegimeEnum = pgEnum("tds_regime", ["old", "new"]);
+
+export const advanceStatusEnum = pgEnum("advance_status", [
+  "active", "fully_recovered", "cancelled",
+]);
+
+export const employeeStatusEnum = pgEnum("employee_status", [
+  "active", "inactive", "exited",
+]);
+
+export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
+
+export const documentTypeEnum = pgEnum("document_type", [
+  "pan_card", "aadhaar_card", "photo", "bank_proof", "uan_card", "esi_card",
+  "address_proof", "qualification_certificate", "experience_letter",
+]);
