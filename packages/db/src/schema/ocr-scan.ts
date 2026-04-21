@@ -2,8 +2,8 @@ import {
   pgTable, uuid, text, numeric, timestamp,
   index,
 } from "drizzle-orm/pg-core";
-import { ocrStatusEnum, ocrScanTypeEnum } from "./enums.js";
-import { users } from "./users.js";
+import { ocrStatusEnum, ocrScanTypeEnum } from "./enums";
+import { users } from "./users";
 
 export const ocrScanResults = pgTable("ocr_scan_results", {
   id: uuid("id").defaultRandom().primaryKey(),

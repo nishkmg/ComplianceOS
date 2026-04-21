@@ -2,9 +2,9 @@ import {
   pgTable, uuid, text, date, numeric, timestamp,
   index, uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { paymentMethodEnum, paymentStatusEnum } from "./enums.js";
-import { users } from "./users.js";
-import { invoices } from "./invoices.js";
+import { paymentMethodEnum, paymentStatusEnum } from "./enums";
+import { users } from "./users";
+import { invoices } from "./invoices";
 
 export const payments = pgTable("payments", {
   id: uuid("id").defaultRandom().primaryKey(),

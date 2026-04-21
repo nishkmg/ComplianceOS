@@ -54,18 +54,19 @@ export async function consumeFifoLayers(
   warehouseId?: string,
 ): Promise<FifoConsumption> {
   // Get oldest layers first (FIFO)
+  const whereConditions = [
+    eq(inventoryLayers.tenantId, tenantId),
+    eq(inventoryLayers.productId, productId),
+    sql`${inventoryLayers.remainingQuantity} > 0`
+  ];
+  
+  if (warehouseId !== undefined && warehouseId !== null) {
+    whereConditions.push(eq(inventoryLayers.warehouseId, warehouseId));
+  }
+  
   const layers = await db.select()
     .from(inventoryLayers)
-    .where(
-      and(
-        eq(inventoryLayers.tenantId, tenantId),
-        eq(inventoryLayers.productId, productId),
-        warehouseId !== undefined 
-          ? eq(inventoryLayers.warehouseId, warehouseId)
-          : undefined,
-        sql`${inventoryLayers.remainingQuantity} > 0`
-      )
-    )
+    .where(and(...whereConditions))
     .orderBy(inventoryLayers.receiptDate);
   
   let remaining = quantityToConsume;
@@ -118,17 +119,18 @@ async function upsertWarehouseStock(
   quantityDelta: number,
   unitCost?: number,
 ): Promise<void> {
+  const whereConditions = [
+    eq(warehouseStock.tenantId, tenantId),
+    eq(warehouseStock.productId, productId)
+  ];
+  
+  if (warehouseId !== undefined && warehouseId !== null) {
+    whereConditions.push(eq(warehouseStock.warehouseId, warehouseId));
+  }
+  
   const existing = await db.select()
     .from(warehouseStock)
-    .where(
-      and(
-        eq(warehouseStock.tenantId, tenantId),
-        eq(warehouseStock.productId, productId),
-        warehouseId !== undefined && warehouseId !== null
-          ? eq(warehouseStock.warehouseId, warehouseId)
-          : undefined
-      )
-    );
+    .where(and(...whereConditions));
   
   if (existing.length > 0) {
     const currentQty = parseFloat(existing[0].quantity);
