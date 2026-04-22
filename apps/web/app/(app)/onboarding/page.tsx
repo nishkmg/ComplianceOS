@@ -25,9 +25,12 @@ export default function OnboardingPage() {
   const { currentStep, data: savedData, saveProgress, isLoading } = useOnboarding(tenantId);
   const router = useRouter();
 
-  // COA sub-step state (ephemeral — doesn't survive page reload)
-  const [coaSubStep, setCoaSubStep] = useState<"select" | "review">("select");
-  const [coaTemplateData, setCoaTemplateData] = useState<{ templateName: string; templateKey: string } | null>(null);
+  // COA sub-step state — persisted in savedData.coa for resume support
+  const coaData = savedData?.coa as { templateKey?: string; refinements?: unknown } | undefined;
+  const coaSubStep: "select" | "review" = coaData?.templateKey ? "review" : "select";
+  const coaTemplateData = coaData?.templateKey
+    ? { templateKey: coaData.templateKey, templateName: "" }
+    : null;
 
   // Redirect if already complete
   useEffect(() => {
@@ -90,8 +93,8 @@ export default function OnboardingPage() {
               businessType={(savedData as Record<string, unknown>)?.businessType as string ?? ""}
               industry={(savedData as Record<string, unknown>)?.industry as string ?? ""}
               onNext={(data) => {
-                setCoaTemplateData(data);
-                setCoaSubStep("review");
+                // Save template selection immediately for resume support
+                saveProgress(3, { coa: { templateKey: data.templateKey, templateName: data.templateName } });
               }}
               onBack={() => saveProgress(2)}
             />
@@ -99,11 +102,15 @@ export default function OnboardingPage() {
           {currentStep === 3 && coaSubStep === "review" && coaTemplateData && (
             <StepCoaReview
               templateKey={coaTemplateData.templateKey}
-              onBack={() => setCoaSubStep("select")}
+              tenantId={tenantId ?? ""}
+              onBack={() => {
+                // Clear CoA selection to go back to template select
+                saveProgress(3, { coa: null });
+              }}
               onNext={() => {
                 saveProgress(3);
-                setCoaSubStep("select");
               }}
+              onSaveProgress={(data) => saveProgress(3, data)}
             />
           )}
           {currentStep === 4 && (
@@ -116,6 +123,8 @@ export default function OnboardingPage() {
             <OpeningBalancesStep
               onComplete={() => router.push("/dashboard")}
               onBack={() => saveProgress(4)}
+              savedData={savedData as Record<string, unknown>}
+              tenantId={tenantId ?? undefined}
             />
           )}
         </div>

@@ -5,8 +5,10 @@ import { AccountTree, flattenTreeToRefinements, type TreeNode } from "./componen
 
 interface StepCoaReviewProps {
   templateKey: string;
+  tenantId: string;
   onBack: () => void;
   onNext: () => void;
+  onSaveProgress: (data: Record<string, unknown>) => Promise<void>;
 }
 
 interface SeedCoaResult {
@@ -68,7 +70,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
   regulated_professional: "Regulated Professional",
 };
 
-export default function StepCoaReview({ templateKey, onBack, onNext }: StepCoaReviewProps) {
+export default function StepCoaReview({ templateKey, tenantId, onBack, onNext, onSaveProgress }: StepCoaReviewProps) {
   const [treeNodes, setTreeNodes] = useState<TreeNode[]>([]);
   const [treeReady, setTreeReady] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,12 +93,6 @@ export default function StepCoaReview({ templateKey, onBack, onNext }: StepCoaRe
     setError(null);
 
     try {
-      // Get tenantId from session storage (set by step 1)
-      const tenantId = sessionStorage.getItem("onboarding_tenant_id");
-      if (!tenantId) {
-        throw new Error("No tenant ID found. Please complete step 1 first.");
-      }
-
       // Derive businessType + industry from templateKey
       const parts = templateKey.split("_");
       const businessType = parts.slice(0, -1).join("_"); // e.g. "sole_proprietorship"
@@ -105,11 +101,21 @@ export default function StepCoaReview({ templateKey, onBack, onNext }: StepCoaRe
       // Flatten tree to refinements input
       const refinements = flattenTreeToRefinements(treeNodes);
 
-      // Check: at least one enabled account per kind
+      // Validate: at least one enabled account per kind
       const enabledByKind: Record<string, number> = {};
       for (const acc of refinements.accounts) {
-        if (!enabledByKind[acc.code.charAt(0)]) enabledByKind[acc.code.charAt(0)] = 0;
-        if (acc.isEnabled) enabledByKind[acc.code.charAt(0)]++;
+        const kindCode = acc.code.charAt(0);
+        if (!enabledByKind[kindCode]) enabledByKind[kindCode] = 0;
+        if (acc.isEnabled) enabledByKind[kindCode]++;
+      }
+
+      const kindNames: Record<string, string> = { "1": "Assets", "2": "Liabilities", "3": "Equity", "4": "Revenue", "5": "Expenses" };
+      const missingKinds = Object.entries(enabledByKind)
+        .filter(([_, count]) => count === 0)
+        .map(([code]) => kindNames[code]);
+
+      if (missingKinds.length > 0) {
+        throw new Error(`At least one account must be enabled for: ${missingKinds.join(", ")}`);
       }
 
       // Seed CoA
@@ -121,11 +127,7 @@ export default function StepCoaReview({ templateKey, onBack, onNext }: StepCoaRe
       });
 
       // Save progress (step 3)
-      await fetchSaveProgress({
-        tenantId,
-        step: 3,
-        data: { coa: { templateKey, refinements } },
-      });
+      await onSaveProgress({ coa: { templateKey, refinements } });
 
       onNext();
     } catch (err) {
