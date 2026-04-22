@@ -1,17 +1,21 @@
 import { eq, and } from "drizzle-orm";
 import type { Database } from "@complianceos/db";
-import { creditNotes, invoiceLines, invoices, accounts } from "@complianceos/db";
+import { creditNotes, invoiceLines, invoices, accounts, receivablesSummary } from "@complianceos/db";
 import { CreateCreditNoteInputSchema } from "@complianceos/shared";
 import { createJournalEntry } from "./create-journal-entry";
 import { appendEvent } from "../lib/event-store";
-import { getNextInvoiceNumber } from "../services/invoice-number";
+import { getNextCreditNoteNumber } from "../services/invoice-number";
 
 export async function createCreditNote(
   db: Database,
   tenantId: string,
   actorId: string,
   input: {
-    originalInvoiceId: string;
+    originalInvoiceId?: string;
+    date: string;
+    customerName: string;
+    customerGstin?: string;
+    customerAddress?: string;
     reason: string;
     lines: Array<{
       accountId: string;
@@ -22,30 +26,49 @@ export async function createCreditNote(
       discountPercent?: number;
     }>;
   },
-): Promise<{ creditNoteId: string; journalEntryId: string }> {
+): Promise<{ creditNoteId: string; creditNoteNumber: string; journalEntryId: string }> {
   const validated = CreateCreditNoteInputSchema.parse(input);
 
-  // Verify original invoice exists and is posted
-  const originalInvoice = await db.select().from(invoices).where(
-    and(eq(invoices.id, validated.originalInvoiceId), eq(invoices.tenantId, tenantId)),
-  ).limit(1);
+  let customerName = validated.customerName;
+  let customerGstin = validated.customerGstin;
+  let customerAddress = validated.customerAddress;
+  let customerState: string;
 
-  if (originalInvoice.length === 0) {
-    throw new Error("Original invoice not found");
-  }
+  // If original invoice provided, fetch and validate
+  if (validated.originalInvoiceId) {
+    const originalInvoice = await db.select().from(invoices).where(
+      and(eq(invoices.id, validated.originalInvoiceId), eq(invoices.tenantId, tenantId)),
+    ).limit(1);
 
-  if (originalInvoice[0].status !== "sent") {
-    throw new Error(`Original invoice must be posted/sent, got: ${originalInvoice[0].status}`);
+    if (originalInvoice.length === 0) {
+      throw new Error("Original invoice not found");
+    }
+
+    // Validate same customer
+    if (originalInvoice[0].customerName !== validated.customerName) {
+      throw new Error("Credit note customer must match original invoice customer");
+    }
+
+    customerState = originalInvoice[0].customerState || "IN-TN";
+    customerGstin = originalInvoice[0].customerGstin || undefined;
+    customerAddress = originalInvoice[0].customerAddress || undefined;
+  } else {
+    // Standalone credit note - require customer details
+    customerState = "IN-TN"; // Default for standalone, could be made configurable
   }
 
   // Determine fiscal year from date
-  const dateStr = new Date().toISOString().split("T")[0];
-  const year = new Date().getFullYear();
-  const fy = `${year}-${String(year + 1).slice(-2)}`;
+  const dateStr = validated.date;
+  const year = new Date(dateStr).getFullYear();
+  const month = new Date(dateStr).getMonth() + 1;
+  const fy = month >= 4 ? `${year}-${String(year + 1).slice(-2)}` : `${year - 1}-${String(year).slice(-2)}`;
 
-  const creditNoteNumber = await getNextInvoiceNumber(db, tenantId, fy);
+  const creditNoteNumber = await getNextCreditNoteNumber(db, tenantId, fy);
 
-  // Calculate line amounts (same as invoice but with negative amounts)
+  // For GST calculation
+  const tenantState = "IN-TN"; // TODO: fetch from tenant config
+
+  // Calculate line amounts
   const lineCalculations = validated.lines.map((line) => {
     const qty = Number(line.quantity);
     const unitPrice = Number(line.unitPrice);
@@ -60,13 +83,12 @@ export async function createCreditNote(
     let sgstAmount = 0;
     let igstAmount = 0;
 
-    const customerState = originalInvoice[0].customerState;
-    const tenantState = "IN-TN"; // TODO: fetch from tenant config
-
     if (customerState === tenantState) {
+      // Intra-state: CGST + SGST each half of rate
       cgstAmount = amount * gstRate / 200;
       sgstAmount = amount * gstRate / 200;
     } else {
+      // Inter-state: IGST = full rate
       igstAmount = amount * gstRate / 100;
     }
 
@@ -94,17 +116,47 @@ export async function createCreditNote(
   const gstTotal = cgstTotal + sgstTotal + igstTotal;
   const grandTotal = subtotal + gstTotal - discountTotal;
 
+  // Validate against outstanding
+  const outstandingResult = await db.select().from(receivablesSummary).where(
+    and(eq(receivablesSummary.tenantId, tenantId), eq(receivablesSummary.customerName, customerName)),
+  ).limit(1);
+
+  let outstanding = 0;
+  if (outstandingResult.length > 0) {
+    outstanding = Number(outstandingResult[0].totalOutstanding);
+  }
+
+  // For linked CN, also check against original invoice outstanding
+  let originalInvoiceNumber: string | undefined;
+  if (validated.originalInvoiceId) {
+    const origInv = await db.select({ grandTotal: invoices.grandTotal, invoiceNumber: invoices.invoiceNumber }).from(invoices).where(
+      eq(invoices.id, validated.originalInvoiceId),
+    ).limit(1);
+    
+    if (origInv.length > 0) {
+      originalInvoiceNumber = origInv[0].invoiceNumber;
+      const invoiceOutstanding = Number(origInv[0].grandTotal);
+      if (Math.abs(grandTotal) > invoiceOutstanding) {
+        throw new Error("Credit amount exceeds outstanding");
+      }
+    }
+  } else {
+    // Standalone CN - check against customer total outstanding
+    if (Math.abs(grandTotal) > outstanding) {
+      throw new Error("Credit amount exceeds customer outstanding");
+    }
+  }
+
   // Insert credit note
   const result = await db.transaction(async (tx) => {
     const cn = await tx.insert(creditNotes).values({
       tenantId,
       invoiceNumber: creditNoteNumber,
-      date: dateStr,
-      customerName: originalInvoice[0].customerName,
-      customerEmail: originalInvoice[0].customerEmail,
-      customerGstin: originalInvoice[0].customerGstin,
-      customerAddress: originalInvoice[0].customerAddress,
-      customerState: originalInvoice[0].customerState,
+      date: validated.date,
+      customerName,
+      customerGstin: customerGstin || null,
+      customerAddress: customerAddress || null,
+      customerState,
       status: "issued",
       subtotal: String(subtotal.toFixed(2)),
       cgstTotal: String(cgstTotal.toFixed(2)),
@@ -114,15 +166,11 @@ export async function createCreditNote(
       grandTotal: String(grandTotal.toFixed(2)),
       fiscalYear: fy,
       createdBy: actorId,
-      originalInvoiceId: validated.originalInvoiceId,
+      originalInvoiceId: validated.originalInvoiceId || null,
       reason: validated.reason,
     }).returning({ id: creditNotes.id });
 
     // Create reversal JE
-    // Cr Trade Receivable (negative - reduces receivable)
-    // Dr CGST/SGST/IGST Input (negative - reduces input tax)
-    // Dr Revenue accounts (negative - reduces revenue)
-
     const allAccounts = await db.select({ id: accounts.id, name: accounts.name, kind: accounts.kind })
       .from(accounts).where(eq(accounts.tenantId, tenantId));
 
@@ -142,7 +190,7 @@ export async function createCreditNote(
       });
     }
 
-    // Dr Revenue per line (negative amounts)
+    // Dr Revenue per line (negative amounts reversed)
     for (const line of lineCalculations) {
       jeLines.push({
         accountId: line.accountId,
@@ -152,7 +200,7 @@ export async function createCreditNote(
       });
     }
 
-    // Dr CGST/SGST/IGST Input (negative)
+    // Dr CGST/SGST/IGST Input (negative amounts reversed)
     const cgstAccount = allAccounts.find((a) => a.name.toLowerCase().includes("cgst") && a.name.toLowerCase().includes("input"));
     const sgstAccount = allAccounts.find((a) => a.name.toLowerCase().includes("sgst") && a.name.toLowerCase().includes("input"));
     const igstAccount = allAccounts.find((a) => a.name.toLowerCase().includes("igst") && a.name.toLowerCase().includes("input"));
@@ -168,23 +216,30 @@ export async function createCreditNote(
     }
 
     const jeResult = await createJournalEntry(db, tenantId, actorId, fy, {
-      date: dateStr,
-      narration: `Credit Note ${creditNoteNumber} for ${originalInvoice[0].invoiceNumber}: ${validated.reason}`,
+      date: validated.date,
+      narration: `Credit Note ${creditNoteNumber} for ${originalInvoiceNumber ? originalInvoiceNumber + ": " : ""}${validated.reason}`,
       referenceType: "credit_note",
       referenceId: cn[0].id,
       lines: jeLines,
     });
 
+    // Get customer account ID for event (use receivables account as proxy)
+    const customerId = receivable?.id || "00000000-0000-0000-0000-000000000000";
+
     // Append event
     await appendEvent(tx, tenantId, "credit_note", cn[0].id, "credit_note_created", {
       creditNoteId: cn[0].id,
+      creditNoteNumber,
       originalInvoiceId: validated.originalInvoiceId,
+      customerId,
+      customerName,
+      totalAmount: Number(grandTotal),
+      taxAmount: Number(gstTotal),
       reason: validated.reason,
-      amount: Number(grandTotal),
       journalEntryId: jeResult.entryId,
     }, actorId);
 
-    return { creditNoteId: cn[0].id, journalEntryId: jeResult.entryId };
+    return { creditNoteId: cn[0].id, creditNoteNumber, journalEntryId: jeResult.entryId };
   });
 
   return result;

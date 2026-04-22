@@ -206,7 +206,7 @@ async function loadTemplateNodes(templateKey: string): Promise<TreeNode[]> {
   };
 
   const mod = await import(
-    `../../../../../../../packages/db/src/seed/coa-templates/${templateKey}.json`
+    `@complianceos/db/seed/coa-templates/${templateKey}.json`
   );
   const accounts: TemplateAccount[] = mod.default;
 

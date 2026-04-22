@@ -3,7 +3,7 @@ import { z } from "zod";
 export const EventEnvelopeSchema = z.object({
   id: z.string().uuid(),
   tenantId: z.string().uuid(),
-  aggregateType: z.enum(["journal_entry", "account", "fiscal_year"]),
+  aggregateType: z.enum(["journal_entry", "account", "fiscal_year", "invoice", "credit_note"]),
   aggregateId: z.string().uuid(),
   eventType: z.enum([
     "journal_entry_created", "journal_entry_modified", "journal_entry_deleted",
@@ -11,6 +11,8 @@ export const EventEnvelopeSchema = z.object({
     "account_created", "account_modified", "account_deactivated",
     "fiscal_year_created", "fiscal_year_closed",
     "narration_corrected",
+    "invoice_created", "invoice_posted", "invoice_sent", "invoice_voided",
+    "credit_note_created",
   ]),
   payload: z.record(z.unknown()),
   sequence: z.bigint(),

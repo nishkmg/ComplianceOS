@@ -54,10 +54,14 @@ export const InvoiceVoidedPayloadSchema = z.object({
 
 export const CreditNoteCreatedPayloadSchema = z.object({
   creditNoteId: z.string().uuid(),
-  originalInvoiceId: z.string().uuid(),
+  creditNoteNumber: z.string(),
+  originalInvoiceId: z.string().uuid().optional(),
+  customerId: z.string().uuid(),
+  customerName: z.string(),
+  totalAmount: z.number(),
+  taxAmount: z.number(),
   reason: z.string(),
-  amount: z.number(),
-  journalEntryId: z.string().uuid().optional(),
+  journalEntryId: z.string().uuid(),
 });
 
 // Command inputs
@@ -88,7 +92,11 @@ export const ModifyInvoiceInputSchema = CreateInvoiceInputSchema.partial().exten
 });
 
 export const CreateCreditNoteInputSchema = z.object({
-  originalInvoiceId: z.string().uuid(),
+  originalInvoiceId: z.string().uuid().optional(),
+  date: z.string().date(),
+  customerName: z.string().min(1),
+  customerGstin: z.string().regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/).optional().or(z.literal('')),
+  customerAddress: z.string().optional(),
   reason: z.string().min(1),
   lines: z.array(InvoiceLineInputSchema).min(1),
 });

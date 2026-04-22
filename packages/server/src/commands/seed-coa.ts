@@ -1,16 +1,16 @@
 import { db } from "@complianceos/db";
 import { accounts } from "@complianceos/db";
 import type { CoARefinementsInput } from "@complianceos/shared";
-import soleProprietorshipTrading from "@complianceos/db/src/seed/coa-templates/sole_proprietorship_trading.json";
-import soleProprietorshipServices from "@complianceos/db/src/seed/coa-templates/sole_proprietorship_services.json";
-import partnershipTrading from "@complianceos/db/src/seed/coa-templates/partnership_trading.json";
-import partnershipServices from "@complianceos/db/src/seed/coa-templates/partnership_services.json";
-import llpServices from "@complianceos/db/src/seed/coa-templates/llp_services.json";
-import hufTrading from "@complianceos/db/src/seed/coa-templates/huf_trading.json";
-import privateLimitedTrading from "@complianceos/db/src/seed/coa-templates/private_limited_trading.json";
-import privateLimitedServices from "@complianceos/db/src/seed/coa-templates/private_limited_services.json";
-import privateLimitedManufacturing from "@complianceos/db/src/seed/coa-templates/private_limited_manufacturing.json";
-import regulatedProfessional from "@complianceos/db/src/seed/coa-templates/regulated_professional.json";
+import soleProprietorshipTrading from "@complianceos/db/seed/coa-templates/sole_proprietorship_trading.json";
+import soleProprietorshipServices from "@complianceos/db/seed/coa-templates/sole_proprietorship_services.json";
+import partnershipTrading from "@complianceos/db/seed/coa-templates/partnership_trading.json";
+import partnershipServices from "@complianceos/db/seed/coa-templates/partnership_services.json";
+import llpServices from "@complianceos/db/seed/coa-templates/llp_services.json";
+import hufTrading from "@complianceos/db/seed/coa-templates/huf_trading.json";
+import privateLimitedTrading from "@complianceos/db/seed/coa-templates/private_limited_trading.json";
+import privateLimitedServices from "@complianceos/db/seed/coa-templates/private_limited_services.json";
+import privateLimitedManufacturing from "@complianceos/db/seed/coa-templates/private_limited_manufacturing.json";
+import regulatedProfessional from "@complianceos/db/seed/coa-templates/regulated_professional.json";
 
 type CoATemplateAccount = {
   code: string;
