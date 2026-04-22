@@ -128,13 +128,13 @@ export default function CashLedgerPage() {
                 </td>
               </tr>
             ) : filteredTransactions && filteredTransactions.length > 0 ? (
-              filteredTransactions.map((t) => (
+              filteredTransactions.filter((t): t is typeof filteredTransactions[0] & { ledgerType: "cash" } => t.ledgerType === "cash").map((t) => (
                 <tr key={t.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-600">{t.transactionDate}</td>
+                  <td className="px-4 py-3 text-gray-600">{new Date(t.transactionDate).toLocaleDateString()}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 text-xs rounded-full capitalize ${
                       t.transactionType === "payment" ? "bg-red-100 text-red-800" :
-                      t.transactionType === "deposit" ? "bg-green-100 text-green-800" :
+                      t.transactionType === "refund" ? "bg-green-100 text-green-800" :
                       "bg-blue-100 text-blue-800"
                     }`}>
                       {t.transactionType}

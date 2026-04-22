@@ -54,13 +54,13 @@ export default function GSTMismatchesPage() {
       "Difference",
       "Reason",
     ];
-    const rows = mismatches.map((m: Mismatch) => [
+    const rows = (mismatches as any[]).map((m) => [
       m.invoiceNumber ?? "",
       m.supplierName ?? m.description ?? "",
       "",
       m.bookValue ? formatINR(m.bookValue) : "",
       m.returnValue ? formatINR(m.returnValue) : "",
-      formatINR(Math.abs(m.difference)),
+      formatINR(Math.abs(m.difference ?? m.taxAmount ?? 0)),
       m.type,
     ]);
 
@@ -74,7 +74,7 @@ export default function GSTMismatchesPage() {
     URL.revokeObjectURL(url);
   };
 
-  const handleAccept = (mismatch: Mismatch) => {
+  const handleAccept = (mismatch: any) => {
     console.log("Accept mismatch:", mismatch);
   };
 
@@ -145,7 +145,7 @@ export default function GSTMismatchesPage() {
                 </td>
               </tr>
             ) : mismatches && mismatches.length > 0 ? (
-              mismatches.map((mismatch: Mismatch, idx: number) => (
+              (mismatches as any[]).map((mismatch: any, idx: number) => (
                 <tr key={idx} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-gray-900">
                     {mismatch.invoiceNumber ?? "—"}

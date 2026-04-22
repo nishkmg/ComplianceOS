@@ -42,21 +42,21 @@ export default function GSTReconciliationPage() {
   });
 
   const handleReconcile = () => {
-    reconcileMutation.mutate({ periodMonth, periodYear });
+    reconcileMutation.mutateAsync({ periodMonth, periodYear });
   };
 
   const matchedCount = summary?.salesInvoices.matched ?? 0;
   const matchedValue = summary?.totalMatchedValue ?? 0;
-  const mismatchedCount = mismatches?.length ?? 0;
-  const mismatchedValue = mismatches?.reduce((sum, m) => sum + Math.abs(m.difference ?? 0), 0) ?? 0;
+  const mismatchedCount = (mismatches as any[])?.length ?? 0;
+  const mismatchedValue = (mismatches as any[])?.reduce((sum, m) => sum + Math.abs(m.taxAmount ?? 0), 0) ?? 0;
   const pendingCount = (summary?.salesInvoices.total ?? 0) - matchedCount;
 
-  const mismatchReasons = mismatches?.reduce((acc, m) => {
+  const mismatchReasons = (mismatches as any[])?.reduce((acc, m) => {
     acc[m.type] = (acc[m.type] ?? 0) + 1;
     return acc;
   }, {} as Record<string, number>) ?? {};
 
-  const maxReasonCount = Math.max(...Object.values(mismatchReasons), 1);
+  const maxReasonCount = Math.max(...Object.values(mismatchReasons).map(v => Number(v) || 1), 1);
 
   return (
     <div className="space-y-6">
@@ -122,12 +122,12 @@ export default function GSTReconciliationPage() {
                 <div className="flex-1">
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-gray-700 capitalize">{reason.replace(/_/g, " ")}</span>
-                    <span className="text-gray-500">{count}</span>
+                    <span className="text-gray-500">{String(count)}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-red-500 h-2 rounded-full"
-                      style={{ width: `${(count / maxReasonCount) * 100}%` }}
+                      style={{ width: `${(Number(count) / maxReasonCount) * 100}%` }}
                     />
                   </div>
                 </div>

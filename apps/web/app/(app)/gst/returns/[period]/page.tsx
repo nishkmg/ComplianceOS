@@ -56,12 +56,17 @@ export default function GSTReturnDetailPage() {
 
   const currentReturn = activeTab === "gstr1" ? gstr1 : activeTab === "gstr2b" ? gstr2b : gstr3b;
 
+  const generateGSTR1 = api.gstReturns.generateGSTR1.useMutation();
+  const generateGSTR2B = api.gstReturns.generateGSTR2B.useMutation();
+  const generateGSTR3B = api.gstReturns.generateGSTR3B.useMutation();
+  const fileReturn = api.gstReturns.file.useMutation();
+
   const handleGenerateAll = async () => {
     try {
       await Promise.all([
-        api.gstReturns.generateGSTR1.mutate({ periodMonth: month, periodYear: year }),
-        api.gstReturns.generateGSTR2B.mutate({ periodMonth: month, periodYear: year }),
-        api.gstReturns.generateGSTR3B.mutate({ periodMonth: month, periodYear: year }),
+        generateGSTR1.mutateAsync({ periodMonth: month, periodYear: year }),
+        generateGSTR2B.mutateAsync({ periodMonth: month, periodYear: year }),
+        generateGSTR3B.mutateAsync({ periodMonth: month, periodYear: year }),
       ]);
     } catch (error) {
       console.error("Failed to generate returns:", error);
@@ -73,7 +78,7 @@ export default function GSTReturnDetailPage() {
     if (!arn) return;
 
     try {
-      await api.gstReturns.file.mutate({ returnId, arn });
+      await fileReturn.mutateAsync({ returnId, arn });
     } catch (error) {
       console.error("Failed to file return:", error);
     }

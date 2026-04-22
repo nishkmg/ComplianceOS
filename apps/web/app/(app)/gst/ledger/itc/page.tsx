@@ -154,7 +154,7 @@ export default function ITCLedgerPage() {
           </thead>
           <tbody className="divide-y">
             {filteredTransactions && filteredTransactions.length > 0 ? (
-              filteredTransactions.map((t) => (
+              filteredTransactions.filter((t): t is typeof filteredTransactions[0] & { ledgerType: "itc" } => t.ledgerType === "itc").map((t) => (
                 <tr key={t.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <span className="px-2 py-1 text-xs rounded-full uppercase bg-gray-100 text-gray-800">

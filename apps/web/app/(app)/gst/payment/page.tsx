@@ -73,10 +73,13 @@ export default function GSTPaymentPage() {
 
   const utilization = calculateUtilization();
 
+  const createChallan = api.gstPayment.createChallan.useMutation();
+  const payGst = api.gstPayment.payGst.useMutation();
+
   const handleGenerateChallan = async () => {
     setIsGenerating(true);
     try {
-      const result = await api.gstPayment.createChallan.mutate({
+      const result = await createChallan.mutateAsync({
         periodMonth,
         periodYear,
       });
@@ -95,7 +98,7 @@ export default function GSTPaymentPage() {
     setIsPaying(true);
     try {
       const challanId = btoa(JSON.stringify(challanData));
-      await api.gstPayment.payGst.mutate({
+      await payGst.mutateAsync({
         challanId,
         mode: paymentMode,
         bankName: bankName || undefined,

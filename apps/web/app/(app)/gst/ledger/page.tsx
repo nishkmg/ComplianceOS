@@ -199,12 +199,12 @@ export default function GSTLedgerPage() {
           </thead>
           <tbody className="divide-y">
             {transactions && transactions.length > 0 ? (
-              transactions.slice(0, 10).map((t) => (
+              transactions.filter((t): t is typeof transactions[0] & { ledgerType: "cash" } => t.ledgerType === "cash").slice(0, 10).map((t) => (
                 <tr key={t.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-600">{t.transactionDate}</td>
+                  <td className="px-4 py-3 text-gray-600">{t.transactionDate || new Date(t.createdAt).toLocaleDateString()}</td>
                   <td className="px-4 py-3">
                     <span className="px-2 py-1 text-xs rounded-full capitalize bg-gray-100 text-gray-800">
-                      {t.transactionType}
+                      {t.ledgerType}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-gray-600 uppercase">{t.taxType}</td>

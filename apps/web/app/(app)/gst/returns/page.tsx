@@ -61,14 +61,20 @@ export default function GSTReturnsPage() {
 
   const filteredReturns = returns ?? [];
 
+  const generateGSTR1 = api.gstReturns.generateGSTR1.useMutation();
+  const generateGSTR2B = api.gstReturns.generateGSTR2B.useMutation();
+  const generateGSTR3B = api.gstReturns.generateGSTR3B.useMutation();
+  const fileReturn = api.gstReturns.file.useMutation();
+  const amendReturn = api.gstReturns.amend.useMutation();
+
   const handleGenerate = async (month: number, year: number, type: GSTReturn["returnType"]) => {
     try {
       if (type === "gstr1") {
-        await api.gstReturns.generateGSTR1.mutate({ periodMonth: month, periodYear: year });
+        await generateGSTR1.mutateAsync({ periodMonth: month, periodYear: year });
       } else if (type === "gstr2b") {
-        await api.gstReturns.generateGSTR2B.mutate({ periodMonth: month, periodYear: year });
+        await generateGSTR2B.mutateAsync({ periodMonth: month, periodYear: year });
       } else if (type === "gstr3b") {
-        await api.gstReturns.generateGSTR3B.mutate({ periodMonth: month, periodYear: year });
+        await generateGSTR3B.mutateAsync({ periodMonth: month, periodYear: year });
       }
     } catch (error) {
       console.error("Failed to generate return:", error);
@@ -80,7 +86,7 @@ export default function GSTReturnsPage() {
     if (!arn) return;
 
     try {
-      await api.gstReturns.file.mutate({ returnId, arn });
+      await fileReturn.mutateAsync({ returnId, arn });
     } catch (error) {
       console.error("Failed to file return:", error);
     }
@@ -92,7 +98,7 @@ export default function GSTReturnsPage() {
 
     try {
       const changes = JSON.parse(changesJson);
-      await api.gstReturns.amend.mutate({ returnId, changes });
+      await amendReturn.mutateAsync({ returnId, changes });
     } catch (error) {
       console.error("Failed to amend return:", error);
     }
