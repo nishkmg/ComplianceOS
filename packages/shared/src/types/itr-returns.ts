@@ -15,8 +15,10 @@ export enum ITRReturnType {
 export enum ITRReturnStatus {
   DRAFT = "draft",
   COMPUTED = "computed",
+  GENERATED = "generated",
   FILED = "filed",
   VERIFIED = "verified",
+  VOIDED = "voided",
 }
 
 export enum IncomeHead {

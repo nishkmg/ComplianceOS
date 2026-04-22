@@ -146,7 +146,7 @@ export const gstTaxTypeEnum = pgEnum("gst_tax_type", ["igst", "cgst", "sgst", "c
 export const gstTransactionTypeEnum = pgEnum("gst_transaction_type", ["payment", "interest", "penalty", "refund", "itc_utilization"]);
 
 export const itrReturnTypeEnum = pgEnum("itr_return_type", ["itr3", "itr4", "itr5", "itr1", "itr2"]);
-export const itrReturnStatusEnum = pgEnum("itr_return_status", ["draft", "computed", "filed", "verified"]);
+export const itrReturnStatusEnum = pgEnum("itr_return_status", ["draft", "computed", "generated", "filed", "verified", "voided"]);
 export const incomeHeadEnum = pgEnum("income_head", ["salary", "house_property", "business_profit", "capital_gains", "other_sources"]);
 export const taxRegimeEnum = pgEnum("tax_regime", ["old", "new"]);
 export const presumptiveSchemeEnum = pgEnum("presumptive_scheme", ["44ad", "44ada", "44ae", "none"]);
