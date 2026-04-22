@@ -56,6 +56,14 @@ export interface CompanyConfig {
   bankIfsc?: string;
 }
 
+export interface CustomerDetails {
+  name: string;
+  address?: string | null;
+  gstin?: string | null;
+  state?: string | null;
+  email?: string | null;
+}
+
 export interface InvoiceConfig {
   company: CompanyConfig;
 }
@@ -323,6 +331,14 @@ const InvoiceDocument: React.FC<InvoiceDocumentProps> = ({ invoice, config }) =>
 // ---------------------------------------------------------------------------
 // Main export
 // ---------------------------------------------------------------------------
+
+export interface PdfGeneratorService {
+  generateInvoicePdf(input: {
+    invoice: InvoiceWithLines;
+    config: InvoiceConfig;
+    customerDetails: CustomerDetails;
+  }): Promise<Buffer>;
+}
 
 export async function generateInvoicePdf(
   invoice: InvoiceWithLines,
