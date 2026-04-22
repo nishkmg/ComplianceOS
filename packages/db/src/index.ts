@@ -105,4 +105,17 @@ export const {
   gstrTableMappings,
   // GST Config
   gstConfig,
+  // ITR Returns
+  itrReturns,
+  itrReturnLines,
+  itrSchedules,
+  // ITR Ledgers
+  advanceTaxLedger,
+  selfAssessmentLedger,
+  // ITR Config
+  itrConfig,
+  // ITR Snapshots
+  itrSnapshots,
+  // ITR Mappings
+  itrFieldMappings,
 } = schema;
