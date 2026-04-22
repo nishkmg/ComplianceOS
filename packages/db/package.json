@@ -12,6 +12,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx src/seed/index.ts",
+    "db:seed:demo": "SEED_DEMO=true tsx src/seed/index.ts",
+    "db:seed:demo:clean": "SEED_DEMO=true CLEAN_DEMO=true tsx src/seed/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
