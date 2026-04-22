@@ -21,6 +21,9 @@ import { gstLedgerRouter } from "./gst-ledger";
 import { gstReturnsRouter } from "./gst-returns";
 import { gstReconciliationRouter } from "./gst-reconciliation";
 import { gstPaymentRouter } from "./gst-payment";
+import { itrReturnsRouter } from "./itr-returns";
+import { itrComputationRouter } from "./itr-computation";
+import { itrPaymentRouter } from "./itr-payment";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -45,6 +48,9 @@ export const appRouter = router({
   gstReturns: gstReturnsRouter,
   gstReconciliation: gstReconciliationRouter,
   gstPayment: gstPaymentRouter,
+  itrReturns: itrReturnsRouter,
+  itrComputation: itrComputationRouter,
+  itrPayment: itrPaymentRouter,
 });
 
 export type AppRouter = typeof appRouter;
