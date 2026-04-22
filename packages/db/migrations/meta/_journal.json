@@ -57,6 +57,13 @@
       "when": 1776760662615,
       "tag": "0007_chemical_doomsday",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1776838603526,
+      "tag": "0008_numerous_victor_mancha",
+      "breakpoints": true
     }
   ]
 }

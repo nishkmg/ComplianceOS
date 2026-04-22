@@ -23,3 +23,8 @@ export * from "./payroll-config";
 export * from "./gst-returns";
 export * from "./gst-ledgers";
 export * from "./gst-config";
+export * from "./itr-returns";
+export * from "./itr-ledgers";
+export * from "./itr-config";
+export * from "./itr-snapshots";
+export * from "./itr-mappings";
