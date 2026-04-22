@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import { pdf } from "@react-pdf/renderer";
+import { api } from "@/lib/api";
 
 // Types
 interface InvoiceLineData {
@@ -59,20 +58,6 @@ interface InvoiceConfig {
 }
 
 // ---------------------------------------------------------------------------
-// API helpers (same pattern as onboarding)
-// ---------------------------------------------------------------------------
-
-async function fetchInvoice(id: string): Promise<InvoiceWithLines> {
-  const url = `/api/trpc/invoices.get?input=${encodeURIComponent(JSON.stringify({ id }))}`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Failed to fetch invoice: ${response.statusText}`);
-  const json = await response.json();
-  const data = json.result?.data;
-  if (!data) throw new Error("Invoice not found");
-  return data;
-}
-
-// ---------------------------------------------------------------------------
 // Skeleton
 // ---------------------------------------------------------------------------
 
@@ -95,85 +80,34 @@ function PdfLoadingSkeleton() {
 interface PdfPreviewProps {
   invoice: InvoiceWithLines;
   config: InvoiceConfig;
+  pdfUrl: string | null;
+  filename: string;
   onDownload: () => void;
   onPrint: () => void;
 }
 
-const PdfPreviewInner = dynamic(
-  () => import("@/components/ui/invoice-pdf").then((mod) => mod.InvoicePDF),
-  { ssr: false, loading: () => <PdfLoadingSkeleton /> }
-);
-
-function PdfPreview({ invoice, config, onDownload, onPrint }: PdfPreviewProps) {
-  const [blobUrl, setBlobUrl] = useState<string | null>(null);
-  const [pdfDoc, setPdfDoc] = useState<ReturnType<typeof pdf> | null>(null);
-  const [isGenerating, setIsGenerating] = useState(true);
-
-  // Generate PDF blob on mount or when invoice/config changes
-  useEffect(() => {
-    let cancelled = false;
-    let currentUrl: string | null = null;
-
-    async function generatePdf() {
-      setIsGenerating(true);
-      try {
-        const { InvoicePDF } = await import("@/components/ui/invoice-pdf");
-        const doc = pdf(<InvoicePDF invoice={invoice} config={config} />);
-        if (cancelled) return;
-        setPdfDoc(doc);
-
-        // Generate blob URL for preview
-        const blob = await doc.toBlob();
-        if (cancelled) return;
-        const url = URL.createObjectURL(blob);
-        if (currentUrl) URL.revokeObjectURL(currentUrl);
-        currentUrl = url;
-        setBlobUrl(url);
-      } catch (err) {
-        console.error("PDF generation failed:", err);
-      } finally {
-        if (!cancelled) setIsGenerating(false);
-      }
+function PdfPreview({ invoice, config, pdfUrl, filename, onDownload, onPrint }: PdfPreviewProps) {
+  const handlePrint = useCallback(() => {
+    if (pdfUrl) {
+      const printWindow = window.open(pdfUrl, "_blank");
+      printWindow?.print();
     }
-
-    generatePdf();
-
-    return () => {
-      cancelled = true;
-      if (currentUrl) URL.revokeObjectURL(currentUrl);
-    };
-  }, [invoice, config]);
-
-  const handleDownload = useCallback(() => {
-    if (pdfDoc) {
-      pdfDoc.toBlob().then((blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `Invoice-${invoice.invoiceNumber}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-    }
-  }, [pdfDoc, invoice.invoiceNumber]);
+  }, [pdfUrl]);
 
   return (
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex items-center gap-2">
-        {isGenerating && (
-          <span className="text-sm text-gray-500">Generating PDF...</span>
-        )}
         <button
-          onClick={handleDownload}
-          disabled={isGenerating}
+          onClick={onDownload}
+          disabled={!pdfUrl}
           className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Download PDF
         </button>
         <button
-          onClick={onPrint}
-          disabled={isGenerating || !blobUrl}
+          onClick={handlePrint}
+          disabled={!pdfUrl}
           className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Print
@@ -182,11 +116,9 @@ function PdfPreview({ invoice, config, onDownload, onPrint }: PdfPreviewProps) {
 
       {/* PDF Preview */}
       <div className="bg-white border rounded-lg overflow-hidden">
-        {isGenerating ? (
-          <PdfLoadingSkeleton />
-        ) : blobUrl ? (
+        {pdfUrl ? (
           <iframe
-            src={blobUrl}
+            src={pdfUrl}
             className="w-full h-[600px]"
             title="Invoice PDF Preview"
           />
@@ -209,52 +141,59 @@ function InvoicePdfPageContent() {
   const router = useRouter();
   const id = params.id as string;
 
-  const [invoice, setInvoice] = useState<InvoiceWithLines | null>(null);
   const [config, setConfig] = useState<InvoiceConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [pdfData, setPdfData] = useState<{ url: string; filename: string } | null>(null);
 
-  // Load invoice
+  // Fetch invoice data
+  const { data: invoice, isLoading: isLoadingInvoice, error: invoiceError } = api.invoices.get.useQuery({ id });
+
+  // Generate PDF mutation
+  const { mutateAsync: generatePdf, isPending: isGeneratingPdf } = api.invoices.generatePdf.useMutation();
+
+  // Load config and generate PDF on mount
   useEffect(() => {
-    async function load() {
-      try {
-        setIsLoading(true);
-        const invoiceData = await fetchInvoice(id);
-        setInvoice(invoiceData);
+    if (invoice) {
+      // Build config from invoice data
+      const configData: InvoiceConfig = {
+        company: {
+          name: "ComplianceOS Demo",
+          address: invoice.customerAddress || "123 Business Park, Suite 100",
+          city: "Chennai",
+          state: "IN-TN",
+          gstin: "33AAAAA0000A1ZA",
+          pan: "AAAAA0000A",
+          email: "billing@example.com",
+          phone: "+91 98765 43210",
+          bankName: "HDFC Bank",
+          bankAccount: "XXXXXXXX1234",
+          bankIfsc: "HDFC0001234",
+        },
+      };
+      setConfig(configData);
 
-        // Build config from invoice data (simplified for now)
-        const configData: InvoiceConfig = {
-          company: {
-            name: "ComplianceOS Demo",
-            address: invoiceData.customerAddress || "123 Business Park, Suite 100",
-            city: "Chennai",
-            state: "IN-TN",
-            gstin: "33AAAAA0000A1ZA",
-            pan: "AAAAA0000A",
-            email: "billing@example.com",
-            phone: "+91 98765 43210",
-            bankName: "HDFC Bank",
-            bankAccount: "XXXXXXXX1234",
-            bankIfsc: "HDFC0001234",
-          },
-        };
-        setConfig(configData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load invoice");
-      } finally {
-        setIsLoading(false);
-      }
+      // Generate PDF
+      generatePdf({ id }).then((result) => {
+        setPdfData({ url: result.pdfUrl, filename: result.filename });
+      }).catch((err) => {
+        console.error("PDF generation failed:", err);
+      });
     }
-    load();
-  }, [id]);
+  }, [invoice, id, generatePdf]);
 
   const handleClose = useCallback(() => {
     router.back();
   }, [router]);
 
-  const handlePrint = useCallback(() => {
-    window.print();
-  }, []);
+  const handleDownload = useCallback(() => {
+    if (pdfData?.url) {
+      const a = document.createElement("a");
+      a.href = pdfData.url;
+      a.download = pdfData.filename;
+      a.click();
+    }
+  }, [pdfData]);
+
+  const isLoading = isLoadingInvoice || isGeneratingPdf || !config;
 
   if (isLoading) {
     return (
@@ -264,11 +203,11 @@ function InvoicePdfPageContent() {
     );
   }
 
-  if (error || !invoice) {
+  if (invoiceError || !invoice) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-red-50 border border-red-200 rounded p-4 text-red-700">
-          {error || "Failed to load invoice"}
+          {invoiceError?.message || "Failed to load invoice"}
         </div>
         <div className="mt-4">
           <button
@@ -299,12 +238,14 @@ function InvoicePdfPageContent() {
       </div>
 
       {/* PDF Preview */}
-      {config && (
+      {config && pdfData && (
         <PdfPreview
           invoice={invoice}
           config={config}
-          onDownload={() => {}}
-          onPrint={handlePrint}
+          pdfUrl={pdfData.url}
+          filename={pdfData.filename}
+          onDownload={handleDownload}
+          onPrint={() => {}}
         />
       )}
 

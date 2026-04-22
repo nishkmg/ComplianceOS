@@ -238,6 +238,74 @@ export const invoicesRouter = router({
       return { pdfUrl: invoice[0].pdfUrl ?? null };
     }),
 
+  generatePdf: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const { tenantId } = ctx.session.user;
+
+      const invoice = await ctx.db
+        .select()
+        .from(invoices)
+        .where(and(eq(invoices.id, input.id), eq(invoices.tenantId, tenantId)))
+        .limit(1);
+
+      if (!invoice[0]) {
+        throw new Error("Invoice not found");
+      }
+
+      const lines = await ctx.db
+        .select()
+        .from(invoiceLines)
+        .where(eq(invoiceLines.invoiceId, input.id));
+
+      // Generate PDF buffer using @react-pdf/renderer
+      const { pdf } = await import("@react-pdf/renderer");
+      const { InvoicePDF } = await import("@complianceos/web/components/ui/invoice-pdf");
+
+      const invoiceData = {
+        ...invoice[0],
+        lines: lines.map((line) => ({
+          description: line.description,
+          quantity: Number(line.quantity),
+          unitPrice: Number(line.unitPrice),
+          gstRate: Number(line.gstRate),
+          amount: Number(line.amount),
+          cgstAmount: Number(line.cgstAmount),
+          sgstAmount: Number(line.sgstAmount),
+          igstAmount: Number(line.igstAmount),
+          discountPercent: Number(line.discountPercent ?? 0),
+          discountAmount: Number(line.discountAmount ?? 0),
+        })),
+      };
+
+      const config = {
+        company: {
+          name: "ComplianceOS Demo",
+          address: invoice[0].customerAddress || "123 Business Park, Suite 100",
+          city: "Chennai",
+          state: "IN-TN",
+          gstin: "33AAAAA0000A1ZA",
+          pan: "AAAAA0000A",
+          email: "billing@example.com",
+          phone: "+91 98765 43210",
+          bankName: "HDFC Bank",
+          bankAccount: "XXXXXXXX1234",
+          bankIfsc: "HDFC0001234",
+        },
+      };
+
+      const doc = pdf(<InvoicePDF invoice={invoiceData as any} config={config} />);
+      const pdfBuffer = await doc.toBuffer();
+
+      // Return base64 for client-side download
+      const base64 = pdfBuffer.toString("base64");
+
+      return {
+        pdfUrl: `data:application/pdf;base64,${base64}`,
+        filename: `Invoice-${invoice[0].invoiceNumber}.pdf`,
+      };
+    }),
+
   listByCustomer: protectedProcedure
     .input(z.object({ customerName: z.string() }))
     .query(async ({ ctx, input }) => {
