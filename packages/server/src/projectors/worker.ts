@@ -12,6 +12,9 @@ import { statutoryLiabilitiesProjector } from "./statutory-liabilities.js";
 import { gstLiabilityProjector } from "./gst-liability.js";
 import { gstItcAvailableProjector } from "./gst-itc-available.js";
 import { gstCashBalanceProjector } from "./gst-cash-balance.js";
+import { itrAnnualIncomeProjector } from "./itr-annual-income.js";
+import { itrTaxSummaryProjector } from "./itr-tax-summary.js";
+import { itrAdvanceTaxProjector } from "./itr-advance-tax.js";
 import type { Projector } from "./types.js";
 
 const projectors: Projector[] = [
@@ -26,6 +29,9 @@ const projectors: Projector[] = [
   gstLiabilityProjector,
   gstItcAvailableProjector,
   gstCashBalanceProjector,
+  itrAnnualIncomeProjector,
+  itrTaxSummaryProjector,
+  itrAdvanceTaxProjector,
 ];
 
 const POLL_INTERVAL_MS = 500;

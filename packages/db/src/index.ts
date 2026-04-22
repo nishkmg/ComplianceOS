@@ -118,4 +118,8 @@ export const {
   itrSnapshots,
   // ITR Mappings
   itrFieldMappings,
+  // ITR Projections
+  itrAnnualIncomeProjection,
+  itrTaxSummaryProjection,
+  itrAdvanceTaxProjection,
 } = schema;

@@ -28,3 +28,4 @@ export * from "./itr-ledgers";
 export * from "./itr-config";
 export * from "./itr-snapshots";
 export * from "./itr-mappings";
+export * from "./itr-projections";
