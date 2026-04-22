@@ -29,6 +29,10 @@ const navItems = [
   { href: "/gst/reconciliation", label: "Reconciliation", indent: true },
   { href: "/gst/ledger", label: "Ledger", indent: true },
   { href: "/gst/payment", label: "Payment", indent: true },
+  { href: "/itr", label: "ITR" },
+  { href: "/itr/returns", label: "Returns", indent: true },
+  { href: "/itr/computation", label: "Computation", indent: true },
+  { href: "/itr/payment", label: "Payment", indent: true },
   { href: "/reports", label: "Reports" },
   { href: "/settings", label: "Settings" },
 ];
