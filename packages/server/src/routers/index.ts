@@ -7,6 +7,7 @@ import { onboardingRouter } from "./onboarding";
 import { paymentsRouter } from "./payments";
 import { receivablesRouter } from "./receivables";
 import { invoiceConfigRouter } from "./invoice-config";
+import { invoicesRouter } from "./invoices";
 import { ocrScanRouter } from "./ocr-scan";
 import { productsRouter } from "./products";
 import { inventoryRouter } from "./inventory";
@@ -33,6 +34,7 @@ export const appRouter = router({
   onboarding: onboardingRouter,
   payments: paymentsRouter,
   receivables: receivablesRouter,
+  invoices: invoicesRouter,
   invoiceConfig: invoiceConfigRouter,
   ocrScan: ocrScanRouter,
   products: productsRouter,

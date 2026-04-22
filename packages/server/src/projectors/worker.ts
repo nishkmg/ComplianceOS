@@ -15,6 +15,7 @@ import { gstCashBalanceProjector } from "./gst-cash-balance.js";
 import { itrAnnualIncomeProjector } from "./itr-annual-income.js";
 import { itrTaxSummaryProjector } from "./itr-tax-summary.js";
 import { itrAdvanceTaxProjector } from "./itr-advance-tax.js";
+import { InventoryValuationProjector } from "./inventory-valuation.js";
 import type { Projector } from "./types.js";
 
 const projectors: Projector[] = [
@@ -32,6 +33,7 @@ const projectors: Projector[] = [
   itrAnnualIncomeProjector,
   itrTaxSummaryProjector,
   itrAdvanceTaxProjector,
+  InventoryValuationProjector,
 ];
 
 const POLL_INTERVAL_MS = 500;
