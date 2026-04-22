@@ -202,6 +202,23 @@ export const receivablesRouter = router({
     return overdueWithOutstanding;
   }),
 
+  agingReport: protectedProcedure.query(async ({ ctx }) => {
+    const rows = await ctx.db
+      .select()
+      .from(receivablesSummary)
+      .where(eq(receivablesSummary.tenantId, ctx.tenantId));
+
+    return rows.map((r) => ({
+      customerName: r.customerName,
+      customerGstin: r.customerGstin,
+      totalOutstanding: parseFloat(r.totalOutstanding.toString()),
+      current030: parseFloat(r.current030.toString()),
+      aging3160: parseFloat(r.aging3160.toString()),
+      aging6190: parseFloat(r.aging6190.toString()),
+      aging90Plus: parseFloat(r.aging90Plus.toString()),
+    }));
+  }),
+
   dashboard: protectedProcedure.query(async ({ ctx }) => {
     // Total outstanding
     const summaryRows = await ctx.db
