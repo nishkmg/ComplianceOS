@@ -1,147 +1,230 @@
-import { eq } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
+import { eq, and, lte, sql } from "drizzle-orm";
+import { createTransport, type Transporter, type SendMailOptions } from "nodemailer";
 import { emailQueue } from "@complianceos/db";
+import type { Database } from "@complianceos/db";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-export interface EmailJob {
-  invoiceId: string;
-  pdfUrl: string;
-  customerEmail: string;
-  customerName: string;
-  queuedAt: string;
+export interface EmailQueueItem {
+  id: string;
+  tenantId: string;
+  to: string;
+  subject: string;
+  body: string;
+  attachments?: { filename: string; url: string }[] | null;
+  status: "pending" | "sent" | "failed";
+  retryCount: number;
+  errorMessage?: string | null;
+  scheduledAt: Date;
+  sentAt?: Date | null;
+  createdAt: Date;
 }
 
-export interface EmailQueueStats {
-  pending: number;
-  processed: number;
-}
-
-// ---------------------------------------------------------------------------
-// Redis client (lazy init)
-// ---------------------------------------------------------------------------
-
-let _redis: import("ioredis").Redis | null = null;
-
-async function getRedis(): Promise<import("ioredis").Redis> {
-  if (_redis) return _redis;
-  const { default: Redis } = await import("ioredis");
-  const url = process.env.REDIS_URL ?? "redis://localhost:6379";
-  _redis = new Redis(url);
-  return _redis;
-}
-
-const QUEUE_KEY = "complianceos:email:queue";
-const PROCESSED_KEY = "complianceos:email:processed";
-
-// ---------------------------------------------------------------------------
-// Queue email job
-// ---------------------------------------------------------------------------
-
-export async function queueEmail(
-  invoiceId: string,
-  pdfUrl: string,
-  customerEmail: string,
-  customerName: string,
-): Promise<void> {
-  const job: EmailJob = {
-    invoiceId,
-    pdfUrl,
-    customerEmail,
-    customerName,
-    queuedAt: new Date().toISOString(),
-  };
-
-  const redis = await getRedis();
-  await redis.lpush(QUEUE_KEY, JSON.stringify(job));
-
-  console.log(`[email-queue] Queued email job for invoice ${invoiceId}`, {
-    customerEmail,
-    customerName,
-    pdfUrl,
-  });
+export interface EnqueueEmailInput {
+  tenantId: string;
+  to: string;
+  subject: string;
+  body: string;
+  attachments?: { filename: string; url: string }[];
+  metadata?: Record<string, unknown>;
+  scheduledAt?: Date;
 }
 
 // ---------------------------------------------------------------------------
-// Process email queue (stub worker)
+// Config
 // ---------------------------------------------------------------------------
 
-export async function processEmailQueue(): Promise<void> {
-  const redis = await getRedis();
+const SMTP_CONFIG = {
+  host: process.env.MAIL_HOST || "localhost",
+  port: parseInt(process.env.MAIL_PORT || "587", 10),
+  secure: process.env.MAIL_SECURE === "true",
+  auth: process.env.MAIL_USER && process.env.MAIL_PASS
+    ? {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      }
+    : undefined,
+};
 
-  while (true) {
-    // Blocking pop with 5-second timeout
-    const result = await redis.brpop(QUEUE_KEY, 5);
-    if (!result) continue;
+const MAX_RETRIES = 3;
+const RETRY_DELAYS = [1000, 5000, 15000]; // exponential backoff: 1s, 5s, 15s
 
-    const raw = result[1];
-    let job: EmailJob;
-    try {
-      job = JSON.parse(raw) as EmailJob;
-    } catch {
-      console.error("[email-queue] Failed to parse job:", raw);
-      continue;
-    }
+// ---------------------------------------------------------------------------
+// Email Queue Service Class
+// ---------------------------------------------------------------------------
 
-    try {
-      // Stub: in real impl call SendGrid/Resend API here
-      console.log(`[email-queue] Sending email to ${job.customerEmail} for invoice ${job.invoiceId}`);
-      console.log(`[email-queue] PDF URL: ${job.pdfUrl}`);
+export class EmailQueueService {
+  private db: Database;
+  private transporter: Transporter;
 
-      // Simulate async send delay
-      await new Promise((r) => setTimeout(r, 500));
-
-      console.log(`[email-queue] Email sent successfully to ${job.customerEmail}`);
-
-      // Record processed count
-      await redis.hincrby(PROCESSED_KEY, "count", 1);
-    } catch (err) {
-      console.error(`[email-queue] Failed to send email for invoice ${job.invoiceId}:`, err);
-      // Re-queue for retry
-      await redis.lpush(QUEUE_KEY, raw);
-    }
+  constructor(db: Database) {
+    this.db = db;
+    this.transporter = createTransport({
+      host: SMTP_CONFIG.host,
+      port: SMTP_CONFIG.port,
+      secure: SMTP_CONFIG.secure,
+      auth: SMTP_CONFIG.auth,
+    });
   }
-}
 
-// ---------------------------------------------------------------------------
-// Queue stats
-// ---------------------------------------------------------------------------
+  /**
+   * Enqueue email for background sending
+   */
+  async enqueue(input: EnqueueEmailInput): Promise<string> {
+    const scheduledAt = input.scheduledAt || new Date();
 
-export async function getEmailQueueStats(): Promise<EmailQueueStats> {
-  const redis = await getRedis();
-  const [pending, processedStr] = await Promise.all([
-    redis.llen(QUEUE_KEY),
-    redis.hget(PROCESSED_KEY, "count"),
-  ]);
-  return {
-    pending,
-    processed: parseInt(processedStr ?? "0", 10),
-  };
-}
+    const [result] = await this.db
+      .insert(emailQueue)
+      .values({
+        tenantId: input.tenantId,
+        to: input.to,
+        subject: input.subject,
+        body: input.body,
+        attachments: input.attachments || [],
+        status: "pending",
+        retryCount: 0,
+        scheduledAt,
+      })
+      .returning();
 
-// ---------------------------------------------------------------------------
-// Persist email job to DB (for audit/history)
-// ---------------------------------------------------------------------------
+    return result.id;
+  }
 
-export async function persistEmailJob(db: Database, job: EmailJob): Promise<void> {
-  await db.insert(emailQueue).values({
-    invoiceId: job.invoiceId,
-    customerEmail: job.customerEmail,
-    customerName: job.customerName,
-    pdfUrl: job.pdfUrl,
-    status: "queued",
-    queuedAt: new Date(job.queuedAt),
-  });
-}
+  /**
+   * Get pending emails for processing
+   */
+  async getPendingEmails(tenantId: string, limit: number = 50): Promise<EmailQueueItem[]> {
+    const now = new Date();
 
-export async function updateEmailJobStatus(
-  db: Database,
-  invoiceId: string,
-  status: "queued" | "sent" | "failed",
-): Promise<void> {
-  await db.update(emailQueue)
-    .set({ status, sentAt: status === "sent" ? new Date() : undefined })
-    .where(eq(emailQueue.invoiceId, invoiceId));
+    const items = await this.db
+      .select()
+      .from(emailQueue)
+      .where(
+        and(
+          eq(emailQueue.tenantId, tenantId),
+          eq(emailQueue.status, "pending"),
+          lte(emailQueue.scheduledAt, now)
+        )
+      )
+      .limit(limit)
+      .orderBy(emailQueue.scheduledAt);
+
+    return items;
+  }
+
+  /**
+   * Process queue - send pending emails
+   */
+  async processQueue(tenantId: string, limit: number = 50): Promise<{
+    success: number;
+    failed: number;
+  }> {
+    const pending = await this.getPendingEmails(tenantId, limit);
+    let success = 0;
+    let failed = 0;
+
+    for (const item of pending) {
+      try {
+        await this.sendEmail(item);
+        await this.markSent(item.id);
+        success++;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        const shouldRetry = item.retryCount < MAX_RETRIES;
+
+        if (shouldRetry) {
+          const nextRetryAt = new Date(Date.now() + RETRY_DELAYS[item.retryCount]);
+          await this.db
+            .update(emailQueue)
+            .set({
+              retryCount: item.retryCount + 1,
+              errorMessage,
+              scheduledAt: nextRetryAt,
+            })
+            .where(eq(emailQueue.id, item.id));
+        } else {
+          await this.markFailed(item.id, errorMessage);
+        }
+        failed++;
+      }
+    }
+
+    return { success, failed };
+  }
+
+  /**
+   * Mark email as sent
+   */
+  async markSent(queueId: string): Promise<void> {
+    await this.db
+      .update(emailQueue)
+      .set({
+        status: "sent",
+        sentAt: new Date(),
+        errorMessage: null,
+      })
+      .where(eq(emailQueue.id, queueId));
+  }
+
+  /**
+   * Mark email as failed
+   */
+  async markFailed(queueId: string, errorMessage: string): Promise<void> {
+    await this.db
+      .update(emailQueue)
+      .set({
+        status: "failed",
+        errorMessage,
+      })
+      .where(eq(emailQueue.id, queueId));
+  }
+
+  /**
+   * Send email via SMTP
+   */
+  private async sendEmail(item: EmailQueueItem): Promise<void> {
+    const mailOptions: SendMailOptions = {
+      from: process.env.MAIL_FROM || "noreply@complianceos.com",
+      to: item.to,
+      subject: item.subject,
+      html: item.body,
+      attachments: item.attachments?.map((att) => ({
+        filename: att.filename,
+        path: att.url,
+      })),
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
+
+  /**
+   * Get queue stats for tenant
+   */
+  async getStats(tenantId: string): Promise<{
+    pending: number;
+    sent: number;
+    failed: number;
+  }> {
+    const [pending, sent, failed] = await Promise.all([
+      this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(emailQueue)
+        .where(and(eq(emailQueue.tenantId, tenantId), eq(emailQueue.status, "pending")))
+        .then((r) => Number(r[0]?.count ?? 0)),
+      this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(emailQueue)
+        .where(and(eq(emailQueue.tenantId, tenantId), eq(emailQueue.status, "sent")))
+        .then((r) => Number(r[0]?.count ?? 0)),
+      this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(emailQueue)
+        .where(and(eq(emailQueue.tenantId, tenantId), eq(emailQueue.status, "failed")))
+        .then((r) => Number(r[0]?.count ?? 0)),
+    ]);
+
+    return { pending, sent, failed };
+  }
 }
