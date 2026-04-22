@@ -1,5 +1,9 @@
 import { z } from "zod";
 import { TaxRegime, ITRReturnType, ITRReturnStatus } from "./itr-returns";
+import { AdvanceTaxPaidPayloadSchema, SelfAssessmentTaxPaidPayloadSchema } from "./itr-ledgers";
+
+// Re-export from itr-ledgers
+export type { AdvanceTaxPaidPayload, SelfAssessmentTaxPaidPayload } from "./itr-ledgers";
 
 // ============================================================================
 // Income Computation Events
@@ -91,14 +95,19 @@ export const ItrEventTypeSchema = z.enum([
   "income_computed",
   "tax_computed",
   "itr_generated",
+  "advance_tax_paid",
+  "self_assessment_tax_paid",
 ]);
 
 export type ItrEventType = z.infer<typeof ItrEventTypeSchema>;
 
-export const ItrEventPayloadSchema = z.discriminatedUnion("itrReturnId", [
+// Union without discriminator - events have different shapes
+export const ItrEventPayloadSchema = z.union([
   IncomeComputedPayloadSchema,
   TaxComputedPayloadSchema,
   ITRGeneratedPayloadSchema,
+  AdvanceTaxPaidPayloadSchema,
+  SelfAssessmentTaxPaidPayloadSchema,
 ]);
 
 export type ItrEventPayload = z.infer<typeof ItrEventPayloadSchema>;

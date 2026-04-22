@@ -139,27 +139,31 @@ export type ITRTaxLedgerSummary = z.infer<typeof ITRTaxLedgerSummarySchema>;
 // ============================================================================
 
 export const AdvanceTaxPaidPayloadSchema = z.object({
+  aggregateId: z.string(), // tenant-assessmentYear
   installmentId: z.string().uuid(),
   tenantId: z.string().uuid(),
-  assessmentYear: z.string(),
+  assessmentYear: z.string().regex(/^\d{4}-\d{2}$/),
   installmentNumber: z.string(),
-  amount: z.string(),
+  amount: z.number(),
   challanNumber: z.string(),
+  challanDate: z.string(),
+  interest234C: z.number().optional(),
   paidAt: z.date(),
-  interest234b: z.string(),
-  interest234c: z.string(),
 });
 
 export type AdvanceTaxPaidPayload = z.infer<typeof AdvanceTaxPaidPayloadSchema>;
 
 export const SelfAssessmentTaxPaidPayloadSchema = z.object({
+  aggregateId: z.string(), // itrReturnId
   paymentId: z.string().uuid(),
   tenantId: z.string().uuid(),
-  assessmentYear: z.string(),
-  amount: z.string(),
+  assessmentYear: z.string().regex(/^\d{4}-\d{2}$/),
+  itrReturnId: z.string().uuid(),
+  amount: z.number(),
   challanNumber: z.string(),
+  challanDate: z.string(),
+  balanceAfterPayment: z.number(),
   paidAt: z.date(),
-  balancePayable: z.string(),
 });
 
 export type SelfAssessmentTaxPaidPayload = z.infer<typeof SelfAssessmentTaxPaidPayloadSchema>;
