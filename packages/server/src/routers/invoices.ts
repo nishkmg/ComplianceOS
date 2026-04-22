@@ -217,7 +217,8 @@ export const invoicesRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { tenantId } = ctx.session.user;
       const actorId = ctx.session.user.id;
-      return sendInvoice(ctx.db, tenantId, actorId, input.id);
+      const result = await sendInvoice(ctx.db, tenantId, actorId, input.id);
+      return result;
     }),
 
   pdf: protectedProcedure
