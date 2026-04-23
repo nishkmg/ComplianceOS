@@ -8,118 +8,89 @@ export const db = drizzle(client, { schema });
 export type Database = typeof db;
 
 // Re-export schema tables for convenient access
-export const {
-  // Enums
-  businessTypeEnum,
-  stateEnum,
-  industryEnum,
-  gstRegistrationEnum,
-  roleEnum,
-  moduleEnum,
-  setByEnum,
-  accountKindEnum,
-  accountSubTypeEnum,
-  tagEnum,
-  reconciliationAccountEnum,
-  referenceTypeEnum,
-  jeStatusEnum,
-  aggregateTypeEnum,
-  eventTypeEnum,
-  cashFlowCategoryEnum,
-  fyStatusEnum,
-  // Tenants
-  tenants,
-  tenantModuleConfig,
-  // Users
-  users,
-  userTenants,
-  // Accounts
-  accounts,
-  accountTags,
-  cashFlowDefaultMapping,
-  accountCashFlowOverrides,
-  // Journal
-  journalEntries,
-  journalEntryLines,
-  narrationCorrections,
-  // Projections
-  accountBalances,
-  journalEntryView,
-  fySummaries,
-  // Fiscal Years
-  fiscalYears,
-  entryNumberCounters,
-  // Projector State
-  projectorState,
-  reportCacheVersions,
-  // Events
-  eventStore,
-  snapshots,
-  // Invoices
-  invoices,
-  invoiceLines,
-  invoiceView,
-  creditNotes,
-  invoiceConfig,
-  // Payments
-  payments,
-  paymentAllocations,
-  // Receivables
-  receivablesSummary,
-  // Email Queue
-  emailQueue,
-  // OCR
-  ocrScanResults,
-  // Inventory
-  inventoryLayers,
-  stockMovements,
-  warehouseStock,
-  inventoryConfig,
-  // Products
-  products,
-  productTaxCategories,
-  // Employees
-  employees,
-  employeeDocuments,
-  taxPreferences,
-  // Salary Structure
-  salaryComponents,
-  employeeSalaryStructures,
-  // Payroll
-  payrollRuns,
-  payrollLines,
-  payrollAdvances,
-  payslips,
-  // Payroll Config
-  payrollConfig,
-  statutoryConfig,
-  payrollSummary,
-  statutoryLiabilities,
-  // GST Ledgers
-  gstCashLedger,
-  gstItcLedger,
-  gstLiabilityLedger,
-  // GST Returns
-  gstReturns,
-  gstReturnLines,
-  gstrTableMappings,
-  // GST Config
-  gstConfig,
-  // ITR Returns
-  itrReturns,
-  itrReturnLines,
-  itrSchedules,
-  // ITR Ledgers
-  advanceTaxLedger,
-  selfAssessmentLedger,
-  // ITR Config
-  itrConfig,
-  // ITR Snapshots
-  itrSnapshots,
-  // ITR Mappings
-  itrFieldMappings,
-  // ITR Projections
-  itrAnnualIncomeProjection,
-  itrTaxSummaryProjection,
-  itrAdvanceTaxProjection,
-} = schema;
+export const accounts = schema.accounts;
+export const accountTags = schema.accountTags;
+export const cashFlowDefaultMapping = schema.cashFlowDefaultMapping;
+export const accountCashFlowOverrides = schema.accountCashFlowOverrides;
+export const journalEntries = schema.journalEntries;
+export const journalEntryLines = schema.journalEntryLines;
+export const narrationCorrections = schema.narrationCorrections;
+export const accountBalances = schema.accountBalances;
+export const journalEntryView = schema.journalEntryView;
+export const fySummaries = schema.fySummaries;
+export const fiscalYears = schema.fiscalYears;
+export const entryNumberCounters = schema.entryNumberCounters;
+export const projectorState = schema.projectorState;
+export const reportCacheVersions = schema.reportCacheVersions;
+export const eventStore = schema.eventStore;
+export const snapshots = schema.snapshots;
+export const invoices = schema.invoices;
+export const invoiceLines = schema.invoiceLines;
+export const invoiceView = schema.invoiceView;
+export const creditNotes = schema.creditNotes;
+export const invoiceConfig = schema.invoiceConfig;
+export const payments = schema.payments;
+export const paymentAllocations = schema.paymentAllocations;
+export const receivablesSummary = schema.receivablesSummary;
+export const emailQueue = schema.emailQueue;
+export const ocrScanResults = schema.ocrScanResults;
+export const inventoryLayers = schema.inventoryLayers;
+export const stockMovements = schema.stockMovements;
+export const warehouseStock = schema.warehouseStock;
+export const inventoryConfig = schema.inventoryConfig;
+export const products = schema.products;
+export const productTaxCategories = schema.productTaxCategories;
+export const employees = schema.employees;
+export const employeeDocuments = schema.employeeDocuments;
+export const taxPreferences = schema.taxPreferences;
+export const salaryComponents = schema.salaryComponents;
+export const employeeSalaryStructures = schema.employeeSalaryStructures;
+export const payrollRuns = schema.payrollRuns;
+export const payrollLines = schema.payrollLines;
+export const payrollAdvances = schema.payrollAdvances;
+export const payslips = schema.payslips;
+export const payrollConfig = schema.payrollConfig;
+export const statutoryConfig = schema.statutoryConfig;
+export const payrollSummary = schema.payrollSummary;
+export const statutoryLiabilities = schema.statutoryLiabilities;
+export const gstCashLedger = schema.gstCashLedger;
+export const gstItcLedger = schema.gstItcLedger;
+export const gstLiabilityLedger = schema.gstLiabilityLedger;
+export const gstReturns = schema.gstReturns;
+export const gstReturnLines = schema.gstReturnLines;
+export const gstrTableMappings = schema.gstrTableMappings;
+export const gstConfig = schema.gstConfig;
+export const itrReturns = schema.itrReturns;
+export const itrReturnLines = schema.itrReturnLines;
+export const itrSchedules = schema.itrSchedules;
+export const advanceTaxLedger = schema.advanceTaxLedger;
+export const selfAssessmentLedger = schema.selfAssessmentLedger;
+export const itrConfig = schema.itrConfig;
+export const itrSnapshots = schema.itrSnapshots;
+export const itrFieldMappings = schema.itrFieldMappings;
+export const itrAnnualIncomeProjection = schema.itrAnnualIncomeProjection;
+export const itrAdvanceTaxProjection = schema.itrAdvanceTaxProjection;
+export const itrTaxSummaryProjection = schema.itrTaxSummaryProjection;
+export const tenants = schema.tenants;
+export const tenantModuleConfig = schema.tenantModuleConfig;
+export const users = schema.users;
+export const userTenants = schema.userTenants;
+
+// Re-export enums
+export const businessTypeEnum = schema.businessTypeEnum;
+export const stateEnum = schema.stateEnum;
+export const industryEnum = schema.industryEnum;
+export const gstRegistrationEnum = schema.gstRegistrationEnum;
+export const roleEnum = schema.roleEnum;
+export const moduleEnum = schema.moduleEnum;
+export const setByEnum = schema.setByEnum;
+export const accountKindEnum = schema.accountKindEnum;
+export const accountSubTypeEnum = schema.accountSubTypeEnum;
+export const tagEnum = schema.tagEnum;
+export const reconciliationAccountEnum = schema.reconciliationAccountEnum;
+export const referenceTypeEnum = schema.referenceTypeEnum;
+export const jeStatusEnum = schema.jeStatusEnum;
+export const aggregateTypeEnum = schema.aggregateTypeEnum;
+export const eventTypeEnum = schema.eventTypeEnum;
+export const cashFlowCategoryEnum = schema.cashFlowCategoryEnum;
+export const fyStatusEnum = schema.fyStatusEnum;

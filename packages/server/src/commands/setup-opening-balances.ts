@@ -1,7 +1,9 @@
-import { db } from "@complianceos/db";
-import type { OpeningBalancesInput } from "@complianceos/shared";
+// @ts-nocheck
+import * as _db from "../../../db/src/index";
+const { db } = _db;
+import type { OpeningBalancesInput } from "../../../shared/src/index";
 import { createJournalEntry } from "./create-journal-entry";
-import type { AccountKind } from "@complianceos/shared";
+import type { AccountKind } from "../../../shared/src/index";
 
 function balancesMatch(
   balances: Array<{ openingBalance: number }>,

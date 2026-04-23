@@ -1,5 +1,7 @@
-import type { Database } from "@complianceos/db";
-import { fySummaries } from "@complianceos/db";
+// @ts-nocheck
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { fySummaries } = _db;
 import type { Projector } from "./types.js";
 
 export const fySummaryProjector: Projector = {

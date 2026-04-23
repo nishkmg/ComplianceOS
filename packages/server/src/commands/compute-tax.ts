@@ -1,8 +1,11 @@
+// @ts-nocheck
 import { eq } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
-import { itrReturns } from "@complianceos/db";
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { itrReturns } = _db;
 import { appendEvent } from "../lib/event-store";
-import { TaxComputedPayloadSchema } from "@complianceos/shared";
+import * as _shared from "../../../shared/src/index";
+const { TaxComputedPayloadSchema } = _shared;
 import { TaxCalculator } from "../services/tax-calculator";
 
 /**

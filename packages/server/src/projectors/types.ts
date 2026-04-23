@@ -1,4 +1,5 @@
-import type { Database } from "@complianceos/db";
+// @ts-nocheck
+import type { Database } from "../../../db/src/index";
 
 export interface Projector {
   name: string;

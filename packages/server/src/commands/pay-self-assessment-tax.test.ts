@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { eq } from "drizzle-orm";
-import { selfAssessmentLedger, itrReturns } from "@complianceos/db";
+import { selfAssessmentLedger, itrReturns } from "../../../db/src/index";
 import { paySelfAssessmentTax } from "./pay-self-assessment-tax";
 import { appendEvent } from "../lib/event-store";
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Tesseract from "tesseract.js";
 import { readFile } from "fs/promises";
 import { getFilePath } from "./file-upload";

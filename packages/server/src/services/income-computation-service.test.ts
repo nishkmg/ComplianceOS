@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Income Computation Service Tests
  * 

@@ -1,5 +1,30 @@
+// Explicit imports for tsx ESM compatibility
+import {
+  CreateJournalEntryInputSchema,
+  PostJournalEntryInputSchema,
+  VoidJournalEntryInputSchema,
+  ModifyJournalEntryInputSchema,
+  CreateAccountInputSchema,
+} from "./types/commands";
+
+import {
+  BusinessProfileInputSchema,
+  CoARefinementsInputSchema,
+  OpeningBalancesInputSchema,
+} from "./types/onboarding";
+
+export {
+  CreateJournalEntryInputSchema,
+  PostJournalEntryInputSchema,
+  VoidJournalEntryInputSchema,
+  ModifyJournalEntryInputSchema,
+  CreateAccountInputSchema,
+  BusinessProfileInputSchema,
+  CoARefinementsInputSchema,
+  OpeningBalancesInputSchema,
+};
+
 export * from "./types/events";
-export * from "./types/commands";
 export * from "./types/reports";
 export * from "./types/onboarding";
 export * from "./types/invoices";

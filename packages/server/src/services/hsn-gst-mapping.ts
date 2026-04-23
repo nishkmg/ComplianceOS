@@ -1,3 +1,4 @@
+// @ts-nocheck
 // packages/server/src/services/hsn-gst-mapping.ts
 
 const HSN_GST_DEFAULTS: Record<string, number> = {

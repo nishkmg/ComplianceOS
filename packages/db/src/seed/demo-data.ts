@@ -7,11 +7,13 @@ import { products } from "../schema/products";
 import { accounts } from "../schema/accounts";
 import { journalEntries, journalEntryLines } from "../schema/journal";
 import { invoices, invoiceLines } from "../schema/invoices";
-import { employees, salaryComponents, employeeSalaryStructures } from "../schema/employees";
-import { payrollRuns, payrollLines } from "../schema/payroll";
+import { employees } from "../schema/employees";
+import { salaryComponents, employeeSalaryStructures } from "../schema/salary-structure";
+import { payrollRuns, payrollLines, payrollAdvances } from "../schema/payroll";
+import { stockMovements, inventoryLayers, warehouseStock } from "../schema/inventory";
 import { gstConfig } from "../schema/gst-config";
 import { itrConfig } from "../schema/itr-config";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 const DEMO_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 const DEMO_USER_ID = "00000000-0000-0000-0000-000000000001";
@@ -19,37 +21,32 @@ const DEMO_USER_ID = "00000000-0000-0000-0000-000000000001";
 export async function cleanDemoData() {
   console.log("🧹 Cleaning existing demo data...");
   
-  // Delete in reverse order of dependencies
-  await db.delete(payrollLines).where(sql`true`);
-  await db.delete(payrollRuns).where(sql`true`);
-  await db.delete(invoiceLines).where(sql`true`);
-  await db.delete(invoices).where(sql`true`);
-  await db.delete(journalEntryLines).where(sql`true`);
-  await db.delete(journalEntries).where(sql`true`);
-  await db.delete(stockMovements).where(sql`true`);
-  await db.delete(inventoryLayers).where(sql`true`);
-  await db.delete(warehouseStock).where(sql`true`);
-  await db.delete(products).where(sql`true`);
-  await db.delete(employees).where(sql`true`);
-  await db.delete(salaryComponents).where(sql`true`);
-  await db.delete(employeeSalaryStructures).where(sql`true`);
-  await db.delete(accounts).where(eq(accounts.tenantId, DEMO_TENANT_ID));
-  await db.delete(fiscalYears).where(eq(fiscalYears.tenantId, DEMO_TENANT_ID));
-  await db.delete(gstConfig).where(eq(gstConfig.tenantId, DEMO_TENANT_ID));
-  await db.delete(itrConfig).where(eq(itrConfig.tenantId, DEMO_TENANT_ID));
-  await db.delete(userTenants).where(eq(userTenants.tenantId, DEMO_TENANT_ID));
-  await db.delete(userTenants).where(eq(userTenants.userId, DEMO_USER_ID));
-  await db.delete(tenants).where(eq(tenants.id, DEMO_TENANT_ID));
-  await db.delete(users).where(eq(users.id, DEMO_USER_ID));
+  // Delete in dependency order - tenant-scoped tables only
+  try { await db.delete(payrollAdvances).where(eq(payrollAdvances.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(payrollRuns).where(eq(payrollRuns.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(invoices).where(eq(invoices.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(journalEntries).where(eq(journalEntries.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(stockMovements).where(eq(stockMovements.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(inventoryLayers).where(eq(inventoryLayers.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(warehouseStock).where(eq(warehouseStock.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(products).where(eq(products.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(employees).where(eq(employees.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(salaryComponents).where(eq(salaryComponents.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(employeeSalaryStructures).where(eq(employeeSalaryStructures.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(accounts).where(eq(accounts.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(fiscalYears).where(eq(fiscalYears.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(gstConfig).where(eq(gstConfig.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(itrConfig).where(eq(itrConfig.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(userTenants).where(eq(userTenants.tenantId, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(userTenants).where(eq(userTenants.userId, DEMO_USER_ID)); } catch {}
+  try { await db.delete(tenants).where(eq(tenants.id, DEMO_TENANT_ID)); } catch {}
+  try { await db.delete(users).where(eq(users.id, DEMO_USER_ID)); } catch {}
   
   console.log("✅ Demo data cleaned");
 }
 
 export async function seedDemoData() {
-  const shouldClean = process.env.CLEAN_DEMO === "true";
-  if (shouldClean) {
-    await cleanDemoData();
-  }
+  await cleanDemoData();
 
   console.log("🌱 Seeding demo data for ComplianceOS...");
 
@@ -99,10 +96,18 @@ export async function seedDemoData() {
   // 5. Create GST config
   await db.insert(gstConfig).values({
     tenantId: DEMO_TENANT_ID,
-    gstRegistration: "regular",
-    itcEligible: true,
-    tdsApplicable: true,
-    applicableGstRates: [5, 12, 18, 28],
+    gstin: "27ABCDE1234F1Z5",
+    legalName: "Demo Business Private Limited",
+    tradeName: "Demo Business",
+    stateCode: "27",
+    stateName: "Maharashtra",
+    businessType: "private_limited",
+    taxpayerType: "regular",
+    filingFrequency: "monthly",
+    isCompositionDealer: false,
+    email: "gst@demobusiness.test",
+    phone: "+91 22 1234 5678",
+    createdBy: DEMO_USER_ID,
   });
 
   // 6. Create ITR config
@@ -110,8 +115,9 @@ export async function seedDemoData() {
     tenantId: DEMO_TENANT_ID,
     taxRegime: "new",
     presumptiveScheme: "none",
-    tdsApplicable: true,
-    advanceTaxApplicable: true,
+    tdsApplicable: "true",
+    advanceTaxApplicable: "true",
+    eligibleDeductions: {},
   });
 
   // 7. Create sample products
@@ -123,8 +129,7 @@ export async function seedDemoData() {
       sku: "SVC-001",
       description: "Professional consulting services",
       hsnCode: "9983111",
-      gstRate: 18,
-      isService: true,
+      gstRate: "18",
     },
     {
       id: "00000000-0000-0000-0000-000000000102",
@@ -133,14 +138,12 @@ export async function seedDemoData() {
       sku: "SVC-002",
       description: "Annual software license",
       hsnCode: "9973310",
-      gstRate: 18,
-      isService: true,
+      gstRate: "18",
     },
   ]);
 
   // 8. Create sample employee
   await db.insert(employees).values({
-    id: "00000000-0000-0000-0000-000000000201",
     tenantId: DEMO_TENANT_ID,
     employeeCode: "EMP001",
     firstName: "John",
@@ -154,9 +157,9 @@ export async function seedDemoData() {
     pan: "ABCPD1234E",
     aadhaar: "1234 5678 9012",
     bankName: "HDFC Bank",
-    bankAccount: "50200012345678",
+    bankAccountNumber: "50200012345678",
     bankIfsc: "HDFC0001234",
-    isActive: true,
+    status: "active",
   });
 
   console.log("✅ Demo tenant created: Demo Business Pvt Ltd");

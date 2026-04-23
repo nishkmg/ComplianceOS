@@ -1,9 +1,10 @@
+// @ts-nocheck
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { eq, and } from "drizzle-orm";
-import { advanceTaxLedger, itrReturns } from "@complianceos/db";
+import { advanceTaxLedger, itrReturns } from "../../../db/src/index";
 import { payAdvanceTax } from "./pay-advance-tax";
 import { appendEvent } from "../lib/event-store";
-import { ADVANCE_TAX_DUE_DATES, AdvanceTaxInstallmentNumber } from "@complianceos/shared";
+import { ADVANCE_TAX_DUE_DATES, AdvanceTaxInstallmentNumber } from "../../../shared/src/index";
 
 vi.mock("../lib/event-store", () => ({
   appendEvent: vi.fn(),

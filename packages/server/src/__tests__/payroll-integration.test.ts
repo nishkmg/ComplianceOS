@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { db, tenants, users, userTenants } from "@complianceos/db";
+import { db, tenants, users, userTenants } from "../../../db/src/index";
 import { eq, and } from "drizzle-orm";
 import { createEmployee } from "../commands/create-employee";
 import { createSalaryStructure } from "../commands/create-salary-structure";

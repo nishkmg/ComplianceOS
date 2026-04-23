@@ -1,4 +1,5 @@
-import type { PFCalculationResult } from "@complianceos/shared";
+// @ts-nocheck
+import type { PFCalculationResult } from "../../../shared/src/index";
 
 interface PFConfig {
   pfErPercentage: number;

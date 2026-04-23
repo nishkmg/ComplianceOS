@@ -1,6 +1,8 @@
 import { eq, and, gt, max, sql } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
-import { eventStore } from "@complianceos/db";
+import type { Database } from "../../../db/src/index";
+import * as schema from "../../../db/src/index";
+
+const { eventStore } = schema;
 
 // Accept both the top-level DB and Drizzle transaction objects
 type Tx = Parameters<Parameters<Database["transaction"]>[0]>[0];

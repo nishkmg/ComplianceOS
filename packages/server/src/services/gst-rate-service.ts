@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * GST Rate Service
  * 

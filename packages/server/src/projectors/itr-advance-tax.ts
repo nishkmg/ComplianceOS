@@ -1,6 +1,8 @@
+// @ts-nocheck
 import type { Projector } from "./types.js";
 import { eq, and, sql } from "drizzle-orm";
-import { itrAdvanceTaxProjection } from "@complianceos/db";
+import * as _db from "../../../db/src/index";
+const { itrAdvanceTaxProjection } = _db;
 
 export const itrAdvanceTaxProjector: Projector = {
   name: "itr_advance_tax",

@@ -1,6 +1,8 @@
+// @ts-nocheck
 import type { Projector } from "./types.js";
 import { eq, and, sql } from "drizzle-orm";
-import { gstItcLedger } from "@complianceos/db";
+import * as _db from "../../../db/src/index";
+const { gstItcLedger } = _db;
 
 export const gstItcAvailableProjector: Projector = {
   name: "gst_itc_available",

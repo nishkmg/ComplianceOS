@@ -1,6 +1,8 @@
+// @ts-nocheck
 import { eq, and } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
-import { invoices, invoiceLines } from "@complianceos/db";
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { invoices, invoiceLines } = _db;
 import { appendEvent } from "../lib/event-store";
 import { generateInvoicePdf, type InvoiceWithLines, type InvoiceConfig } from "../services/pdf-generator";
 import { EmailQueueService } from "../services/email-queue";

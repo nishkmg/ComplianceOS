@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 

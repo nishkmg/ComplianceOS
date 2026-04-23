@@ -14,7 +14,7 @@ export const gstReturns = pgTable("gst_returns", {
   returnType: gstReturnTypeEnum("return_type").notNull(),
   taxPeriodMonth: text("tax_period_month").notNull(),
   taxPeriodYear: text("tax_period_year").notNull(),
-  fiscalYear: text("fiscal_year").notNull().references(() => fiscalYears.id),
+  fiscalYear: text("fiscal_year").notNull(),
   status: gstReturnStatusEnum("status").notNull().default("draft"),
   filingDate: date("filing_date"),
   dueDate: date("due_date").notNull(),

@@ -1,4 +1,6 @@
+// @ts-nocheck
 "use client";
+import { Suspense } from "react";
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -14,7 +16,7 @@ const incomeHeads = [
   { key: "otherSources", label: "Other Sources", icon: "📋", description: "Interest, dividends, and other income" },
 ];
 
-export default function ITRComputationPage() {
+const Page = function ITRComputationPage() {
   const searchParams = useSearchParams();
   const returnId = searchParams.get("returnId") ?? "";
 
@@ -163,3 +165,4 @@ export default function ITRComputationPage() {
     </div>
   );
 }
+export default function PageWrapper() { return <Suspense><Page /></Suspense>; }

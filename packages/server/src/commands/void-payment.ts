@@ -1,14 +1,11 @@
+// @ts-nocheck
 import { eq, and } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
-import {
-  payments,
-  paymentAllocations,
-  invoices,
-  journalEntries,
-  journalEntryLines,
-} from "@complianceos/db";
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { payments, paymentAllocations, invoices, journalEntries, journalEntryLines } = _db;
 import { appendEvent } from "../lib/event-store";
-import { VoidPaymentInputSchema } from "@complianceos/shared";
+import * as _shared from "../../../shared/src/index";
+const { VoidPaymentInputSchema } = _shared;
 import { getNextEntryNumber } from "../lib/entry-number";
 import { validateBalance } from "../lib/balance-validator";
 

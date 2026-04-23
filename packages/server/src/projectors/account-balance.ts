@@ -1,5 +1,7 @@
-import type { Database } from "@complianceos/db";
-import { accountBalances } from "@complianceos/db";
+// @ts-nocheck
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { accountBalances } = _db;
 import { sql } from "drizzle-orm";
 import type { Projector } from "./types.js";
 

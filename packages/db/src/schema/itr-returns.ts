@@ -11,7 +11,7 @@ export const itrReturns = pgTable("itr_returns", {
   id: uuid("id").defaultRandom().primaryKey(),
   tenantId: uuid("tenant_id").notNull(),
   assessmentYear: text("assessment_year").notNull(),
-  financialYear: text("financial_year").notNull().references(() => fiscalYears.id),
+  financialYear: text("financial_year").notNull(),
   returnType: itrReturnTypeEnum("return_type").notNull(),
   status: itrReturnStatusEnum("status").notNull().default("draft"),
   taxRegime: taxRegimeEnum("tax_regime"),

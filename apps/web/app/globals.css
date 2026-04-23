@@ -1,3 +1,420 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FONTS - Loaded via @fontsource packages
+   ───────────────────────────────────────────────────────────────────────────── */
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/syne/400.css';
+@import '@fontsource/syne/500.css';
+@import '@fontsource/dm-mono/400.css';
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CSS VARIABLES - Design System Tokens
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* ─── Colors ────────────────────────────────────────────────────────────── */
+  /* Accent */
+  --color-amber: #C8860A;
+  --color-amber-hover: #B07408;
+  
+  /* Semantic */
+  --color-success: #16A34A;
+  --color-success-bg: #DCFCE7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEE2E2;
+  
+  /* Neutrals */
+  --color-dark: #1A1A1A;
+  --color-mid: #555555;
+  --color-light: #888888;
+  --color-lighter: #CCCCCC;
+  --color-lightest: #F5F5F5;
+  
+  /* Surfaces */
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #FAFAFA;
+  --color-sidebar: #F0F0F0;
+  --color-border: #E5E5E5;
+  
+  /* ─── Typography Scale ──────────────────────────────────────────────────── */
+  /* Display - Playfair Display */
+  --font-display-xl: 38px;
+  --font-display-lg: 26px;
+  --font-display-md: 20px;
+  --font-display-sm: 16px;
+  
+  /* UI - Syne */
+  --font-ui-lg: 15px;
+  --font-ui-md: 13px;
+  --font-ui-sm: 12px;
+  --font-ui-xs: 10px;
+  
+  /* Mono - DM Mono (for numbers) */
+  --font-mono-lg: 15px;
+  --font-mono-md: 13px;
+  --font-mono-sm: 11px;
+  
+  /* Font Families */
+  --font-display: 'Playfair Display', serif;
+  --font-ui: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  
+  /* ─── Spacing Scale ─────────────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  
+  /* ─── Border Radius ─────────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* ─── Borders ───────────────────────────────────────────────────────────── */
+  --border-hairline: 0.5px;
+  --border-default: 1px;
+  
+  /* ─── Shadows (minimal - flat design) ───────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--font-ui-md);
+  color: var(--color-dark);
+  background: var(--color-surface);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+   ───────────────────────────────────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Number formatting - Indian numbering system */
+.text-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   UTILITY CLASSES
+   ───────────────────────────────────────────────────────────────────────────── */
+/* Hairline borders */
+.border-hairline {
+  border-width: var(--border-hairline);
+}
+
+.border-hairline-t {
+  border-top-width: var(--border-hairline);
+}
+
+.border-hairline-b {
+  border-bottom-width: var(--border-hairline);
+}
+
+.border-hairline-l {
+  border-left-width: var(--border-hairline);
+}
+
+.border-hairline-r {
+  border-right-width: var(--border-hairline);
+}
+
+/* Status colors */
+.text-amber {
+  color: var(--color-amber);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.bg-amber {
+  background-color: var(--color-amber);
+}
+
+.bg-success {
+  background-color: var(--color-success);
+}
+
+.bg-success-subtle {
+  background-color: var(--color-success-bg);
+}
+
+.bg-danger {
+  background-color: var(--color-danger);
+}
+
+.bg-danger-subtle {
+  background-color: var(--color-danger-bg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENT BASE STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-ui);
+  font-size: var(--font-ui-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: var(--border-default) solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-amber);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-amber-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-dark);
+  border-color: var(--color-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-mid);
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-surface-muted);
+}
+
+/* Form inputs */
+.input, .input-field {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-ui);
+  font-size: var(--font-ui-sm);
+  border: var(--border-default) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  transition: border-color 0.15s ease;
+}
+
+.input:focus, .input-field:focus {
+  outline: none;
+  border-color: var(--color-amber);
+}
+
+.input-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  font-family: var(--font-ui);
+  font-size: var(--font-ui-xs);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-amber {
+  background-color: var(--color-amber);
+  color: white;
+}
+
+.badge-success {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.badge-gray {
+  background-color: var(--color-lighter);
+  color: var(--color-mid);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TABLE STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-ui-md);
+}
+
+.table th {
+  text-align: left;
+  font-weight: 500;
+  font-size: var(--font-ui-sm);
+  color: var(--color-light);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-hairline) solid var(--color-border);
+  background-color: var(--color-surface-muted);
+}
+
+.table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-hairline) solid var(--color-border);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.table-right {
+  text-align: right;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CARD STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: var(--border-hairline) solid var(--color-border);
+}
+
+.card-body {
+  padding: var(--space-4) var(--space-5);
+}
+
+.card-footer {
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--border-hairline) solid var(--color-border);
+  background-color: var(--color-surface-muted);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   KPI TILE STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+.kpi-tile {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  border-top: 2px solid var(--color-amber);
+}
+
+.kpi-tile.success {
+  border-top-color: var(--color-success);
+}
+
+.kpi-tile.danger {
+  border-top-color: var(--color-danger);
+}
+
+.kpi-tile.neutral {
+  border-top-color: var(--color-light);
+}
+
+.kpi-value {
+  font-family: var(--font-mono);
+  font-size: var(--font-mono-lg);
+  font-weight: 400;
+  text-align: right;
+}
+
+.kpi-label {
+  font-family: var(--font-ui);
+  font-size: var(--font-ui-sm);
+  color: var(--color-light);
+  margin-bottom: var(--space-1);
+}
+
+.kpi-delta {
+  font-family: var(--font-ui);
+  font-size: var(--font-ui-xs);
+  margin-top: var(--space-1);
+}
+
+.kpi-delta.up {
+  color: var(--color-success);
+}
+
+.kpi-delta.down {
+  color: var(--color-danger);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BALANCE BAR STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+.balance-bar {
+  border-top: var(--border-hairline) solid var(--color-border);
+  background-color: var(--color-surface-muted);
+  padding: var(--space-4);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   HELPER CLASSES
+   ───────────────────────────────────────────────────────────────────────────── */
+.bg-surface-muted {
+  background-color: var(--color-surface-muted);
+}
+
+.text-light {
+  color: var(--color-light);
+}

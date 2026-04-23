@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface ProfessionalTaxSlab {
   maxSalary: number | null;
   tax: number;

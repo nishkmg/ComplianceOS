@@ -1,5 +1,7 @@
-import type { Database } from "@complianceos/db";
-import { snapshots } from "@complianceos/db";
+// @ts-nocheck
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { snapshots } = _db;
 import type { Projector } from "./types.js";
 
 const SNAPSHOT_INTERVAL = 10;

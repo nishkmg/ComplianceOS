@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
-import type { Database } from "@complianceos/db";
-import { snapshots } from "@complianceos/db";
+import type { Database } from "../../../db/src/index";
+import * as _db from "../../../db/src/index";
+const { snapshots } = _db;
 import { getAggregateEvents } from "./event-store";
 
 export interface AggregateState {
