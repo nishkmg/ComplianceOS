@@ -3,10 +3,51 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { accountBalances } = _db;
+const { accountBalances, journalEntryView } = _db;
 import type { TrialBalance, ProfitAndLoss, BalanceSheet, CashFlowStatement } from "../../../shared/src/index";
 
 export const balancesRouter = router({
+  ledger: publicProcedure
+    .input(z.object({ accountId: z.string().uuid(), fiscalYear: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const entries = await ctx.db.query.journalEntryView.findMany({
+        where: and(
+          eq(journalEntryView.tenantId, ctx.tenantId),
+          eq(journalEntryView.fiscalYear, input.fiscalYear),
+        ),
+        orderBy: (entries, { asc }) => [asc(entries.date)],
+      });
+
+      let runningBalance = 0;
+      const ledgerEntries = entries
+        .flatMap((entry) => {
+          const lines = entry.lines || [];
+          const relevantLines = lines.filter((l) => l.accountId === input.accountId);
+          return relevantLines.map((line) => {
+            const isDebit = parseFloat(line.debit || "0") > 0;
+            const amount = isDebit ? parseFloat(line.debit) : parseFloat(line.credit || "0");
+            runningBalance += isDebit ? amount : -amount;
+            return {
+              date: entry.date,
+              narration: entry.narration,
+              entryNumber: entry.entryNumber,
+              debit: isDebit ? line.debit : "0",
+              credit: isDebit ? "0" : line.credit,
+              balance: runningBalance,
+            };
+          });
+        })
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+      return {
+        accountId: input.accountId,
+        fiscalYear: input.fiscalYear,
+        entries: ledgerEntries,
+        openingBalance: 0,
+        closingBalance: runningBalance,
+      };
+    }),
+
   trialBalance: publicProcedure
     .input(z.object({ fiscalYear: z.string() }))
     .query(async ({ ctx, input }): Promise<TrialBalance> => {
