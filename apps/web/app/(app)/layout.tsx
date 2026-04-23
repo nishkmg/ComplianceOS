@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { CommandPalette } from "@/components/command-palette";
+import { SessionProvider } from "next-auth/react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -54,16 +55,17 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const currentFy = fiscalYears.find(fy => fy.name.includes(activeFy)) || fiscalYears[0];
 
   return (
-    <TRPCProvider>
-      <div className="flex min-h-screen bg-[#F5F5F5]">
+    <SessionProvider>
+      <TRPCProvider>
+      <div className="flex min-h-screen bg-lightest">
         {/* Command Palette */}
         <CommandPalette isOpen={commandPaletteOpen} onClose={closeCommandPalette} />
 
         {/* Sidebar */}
-        <aside className="w-64 bg-[#F0F0F0] flex flex-col">
+        <aside className="w-64 bg-sidebar flex flex-col">
           {/* Logo */}
           <div className="p-4 pb-6">
-            <h1 className="font-display text-[38px] font-normal text-[#1A1A1A] leading-tight">
+            <h1 className="font-display text-[38px] font-normal text-dark leading-tight">
               ComplianceOS
             </h1>
           </div>
@@ -74,8 +76,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               const isActive = pathname.startsWith(item.href);
               const baseClasses = "block px-3 py-2 rounded-[4px] text-[13px] transition-colors";
               const activeClasses = isActive
-                ? "bg-[#C8860A] text-white"
-                : "text-[#555555] hover:bg-[#E5E5E5]";
+                ? "bg-amber text-white"
+                : "text-mid hover:bg-lighter";
               const indentClasses = item.indent ? "ml-4" : "";
               const subIndentClasses = item.subIndent ? "ml-4" : "";
 
@@ -94,29 +96,29 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           {/* FY Footer - Clickable */}
           <div className="relative">
             <div
-              className="p-3 border-t border-hairline border-[#E5E5E5] cursor-pointer hover:bg-[#E5E5E5] transition-colors"
+              className="p-3 border-t border-hairline border-lighter cursor-pointer hover:bg-lighter transition-colors"
               onClick={() => setShowFyPopover(!showFyPopover)}
             >
-              <div className="text-[10px] text-[#888888] uppercase tracking-wide mb-1">
+              <div className="text-[10px] text-light uppercase tracking-wide mb-1">
                 Active Fiscal Year
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-[#555555] font-medium">
+                <span className="text-[12px] text-mid font-medium">
                   FY {activeFy}
                 </span>
                 <div className="flex items-center gap-2">
                   <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-[4px] ${
-                    currentFy.status === "open" ? "bg-[#DCFCE7] text-[#16A34A]" : "bg-[#E5E5E5] text-[#555555]"
+                    currentFy.status === "open" ? "bg-success-bg text-success" : "bg-[#E5E5E5] text-mid"
                   }`}>
                     {currentFy.status === "open" ? "Open" : "Closed"}
                   </span>
-                  <svg className="w-3 h-3 text-[#888888]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3 text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
               </div>
               {currentFy.status === "open" && fiscalYears.filter(f => f.status === "open").length > 1 && (
-                <div className="text-[9px] text-[#DC2626] mt-1">
+                <div className="text-[9px] text-danger mt-1">
                   {currentFy.daysRemaining} days remaining
                 </div>
               )}
@@ -125,7 +127,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             {/* FY Popover */}
             {showFyPopover && (
               <div
-                className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-[8px] shadow-lg border border-[#E5E5E5] overflow-hidden"
+                className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-[8px] shadow-lg border border-lighter overflow-hidden"
                 onClick={() => setShowFyPopover(false)}
               >
                 <div className="p-2">
@@ -138,20 +140,20 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                       }}
                       className={`w-full text-left px-3 py-2 rounded-[4px] transition-colors ${
                         activeFy === fy.name.split(" ")[1]
-                          ? "bg-[#C8860A] text-white"
-                          : "text-[#555555] hover:bg-[#F5F5F5]"
+                          ? "bg-amber text-white"
+                          : "text-mid hover:bg-lightest"
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[12px] font-medium">{fy.name}</span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded ${
-                          fy.status === "open" ? "bg-[#DCFCE7] text-[#16A34A]" : "bg-[#E5E5E5] text-[#555555]"
+                          fy.status === "open" ? "bg-success-bg text-success" : "bg-[#E5E5E5] text-mid"
                         }`}>
                           {fy.status}
                         </span>
                       </div>
                       {fy.status === "open" && (
-                        <div className="text-[9px] text-[#888888] mt-0.5">
+                        <div className="text-[9px] text-light mt-0.5">
                           {fy.daysRemaining} days remaining
                         </div>
                       )}
@@ -168,6 +170,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
-    </TRPCProvider>
+      </TRPCProvider>
+    </SessionProvider>
   );
 }
