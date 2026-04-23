@@ -17,8 +17,8 @@ interface BadgeProps {
  */
 export function Badge({ variant = 'gray', children, className = '' }: BadgeProps) {
   const variantClasses = {
-    amber: 'bg-amber text-white',
-    success: 'bg-success text-white',
+    amber: 'bg-[#C8860A] text-white',
+    success: 'bg-[#16A34A] text-white',
     gray: 'bg-[#E5E5E5] text-[#555555]',
     danger: 'bg-[#DC2626] text-white',
   };

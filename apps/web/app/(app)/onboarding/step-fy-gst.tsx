@@ -3,11 +3,6 @@
 import { useState } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 
 const GST_RATES = [5, 12, 18, 28];
 
@@ -48,63 +43,59 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Fiscal Year & GST Setup</h2>
-        <p className="mt-1 text-sm text-gray-600">
+      <div className="mb-8">
+        <h2 className="font-display text-[20px] font-normal text-dark">Fiscal Year & GST Setup</h2>
+        <p className="font-ui text-[13px] text-light mt-1">
           Configure your financial year and GST settings
         </p>
       </div>
 
-      <div className="space-y-6 max-w-md">
+      <div className="space-y-5 max-w-md">
         <div>
-          <Label htmlFor="fyStart">Current Fiscal Year Start</Label>
-          <Input
+          <label htmlFor="fyStart" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            Current Fiscal Year Start
+          </label>
+          <input
             id="fyStart"
             type="date"
             value={formData.fiscalYearStart}
-            onChange={(e) =>
-              setFormData({ ...formData, fiscalYearStart: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, fiscalYearStart: e.target.value })}
+            className="input-field w-full font-ui"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 font-ui text-[10px] text-light">
             Indian FY runs from April 1 to March 31
           </p>
         </div>
 
         <div>
-          <Label>GST Registration Type</Label>
-          <Select
+          <label htmlFor="gstType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            GST Registration Type
+          </label>
+          <select
+            id="gstType"
             value={formData.gstRegistration}
-            onValueChange={(value) =>
-              setFormData({ ...formData, gstRegistration: value })
-            }
+            onChange={(e) => setFormData({ ...formData, gstRegistration: e.target.value })}
+            className="input-field w-full font-ui"
           >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="regular">Regular</SelectItem>
-              <SelectItem value="composition">Composition Scheme</SelectItem>
-              <SelectItem value="none">Not Registered</SelectItem>
-            </SelectContent>
-          </Select>
+            <option value="regular">Regular</option>
+            <option value="composition">Composition Scheme</option>
+            <option value="none">Not Registered</option>
+          </select>
         </div>
 
         {formData.gstRegistration !== "none" && (
           <>
             <div>
-              <Label>Applicable GST Rates</Label>
-              <div className="mt-2 flex gap-2">
+              <label className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+                Applicable GST Rates
+              </label>
+              <div className="flex gap-2">
                 {GST_RATES.map((rate) => (
                   <button
                     key={rate}
                     type="button"
                     onClick={() => toggleGstRate(rate)}
-                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                      formData.applicableGstRates.includes(rate)
-                        ? "bg-amber-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                    className={`filter-tab ${formData.applicableGstRates.includes(rate) ? "active" : ""}`}
                   >
                     {rate}%
                   </button>
@@ -112,43 +103,45 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between py-3 border-t border-hairline">
               <div>
-                <Label>ITC Eligible</Label>
-                <p className="text-xs text-gray-500">
-                  Can claim Input Tax Credit
-                </p>
+                <p className="font-ui text-[13px] text-dark">ITC Eligible</p>
+                <p className="font-ui text-[10px] text-light">Can claim Input Tax Credit</p>
               </div>
-              <Switch
-                checked={formData.itcEligible}
-                onCheckedChange={(checked) =>
-                  setFormData({ ...formData, itcEligible: checked })
-                }
-              />
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, itcEligible: !formData.itcEligible })}
+                className={`w-10 h-6 rounded-full transition-colors ${formData.itcEligible ? "bg-amber" : "bg-lighter"} relative`}
+              >
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${formData.itcEligible ? "left-5" : "left-1"}`} />
+              </button>
             </div>
           </>
         )}
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between py-3 border-t border-hairline">
           <div>
-            <Label>TDS Applicable</Label>
-            <p className="text-xs text-gray-500">
-              Deduct TDS on specified payments
-            </p>
+            <p className="font-ui text-[13px] text-dark">TDS Applicable</p>
+            <p className="font-ui text-[10px] text-light">Deduct TDS on specified payments</p>
           </div>
-          <Switch
-            checked={formData.tdsApplicable}
-            onCheckedChange={(checked) =>
-              setFormData({ ...formData, tdsApplicable: checked })
-            }
-          />
+          <button
+            type="button"
+            onClick={() => setFormData({ ...formData, tdsApplicable: !formData.tdsApplicable })}
+            className={`w-10 h-6 rounded-full transition-colors ${formData.tdsApplicable ? "bg-amber" : "bg-lighter"} relative`}
+          >
+            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${formData.tdsApplicable ? "left-5" : "left-1"}`} />
+          </button>
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <Button onClick={handleContinue} disabled={saveProgress.isPending}>
-          Continue
-        </Button>
+      <div className="mt-8 flex justify-end pt-6 border-t border-hairline">
+        <button
+          onClick={handleContinue}
+          disabled={saveProgress.isPending}
+          className="filter-tab active disabled:opacity-50"
+        >
+          {saveProgress.isPending ? "Saving..." : "Continue"}
+        </button>
       </div>
     </div>
   );

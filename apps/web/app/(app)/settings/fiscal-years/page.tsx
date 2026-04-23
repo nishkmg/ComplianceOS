@@ -3,14 +3,11 @@
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
-const statusBadge: Record<string, string> = {
-  open: "bg-green-100 text-green-800",
-  closed: "bg-gray-100 text-gray-800",
-  pending_close: "bg-orange-100 text-orange-800",
+const statusLabels: Record<string, string> = {
+  open: "Open",
+  closed: "Closed",
+  pending_close: "Pending Close",
 };
 
 export default function FiscalYearsPage() {
@@ -39,82 +36,76 @@ export default function FiscalYearsPage() {
     }
   };
 
-  const openFYs = fiscalYears?.filter((fy: any) => fy.status === "open") || [];
   const hasDrafts = (fy: any) => fy.draftCount > 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Fiscal Years</h1>
-          <p className="text-sm text-gray-600">Manage your financial year periods</p>
+          <h1 className="font-display text-[26px] font-normal text-dark">Fiscal Years</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Manage financial year periods</p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
+        <button onClick={() => setShowCreateModal(true)} className="filter-tab active">
           + New FY
-        </Button>
+        </button>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+      {/* Table */}
+      <div className="card overflow-hidden">
+        <table className="table table-dense">
+          <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-gray-500 font-medium">FY</th>
-              <th className="px-6 py-3 text-left text-gray-500 font-medium">Start</th>
-              <th className="px-6 py-3 text-left text-gray-500 font-medium">End</th>
-              <th className="px-6 py-3 text-left text-gray-500 font-medium">Status</th>
-              <th className="px-6 py-3 text-right text-gray-500 font-medium">Entries</th>
-              <th className="px-6 py-3 text-right text-gray-500 font-medium">Drafts</th>
-              <th className="px-6 py-3 text-right text-gray-500 font-medium">Action</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">FY</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Start</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">End</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Entries</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Drafts</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody>
             {fiscalYears?.map((fy: any) => (
-              <tr key={fy.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 font-medium text-gray-900">{fy.year}</td>
-                <td className="px-6 py-4 text-gray-600">{fy.startDate}</td>
-                <td className="px-6 py-4 text-gray-600">{fy.endDate}</td>
-                <td className="px-6 py-4">
-                  <Badge variant={fy.status === "open" ? "success" : "secondary"}>
-                    {fy.status}
+              <tr key={fy.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                <td className="px-4 py-3 font-display text-[14px] font-medium text-dark">{fy.year}</td>
+                <td className="px-4 py-3 font-mono text-[13px] text-light">{fy.startDate}</td>
+                <td className="px-4 py-3 font-mono text-[13px] text-light">{fy.endDate}</td>
+                <td className="px-4 py-3">
+                  <Badge variant={fy.status === "open" ? "success" : fy.status === "pending_close" ? "amber" : "gray"}>
+                    {statusLabels[fy.status]}
                   </Badge>
                 </td>
-                <td className="px-6 py-4 text-right text-gray-600">{fy.entryCount || 0}</td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{fy.entryCount || 0}</td>
+                <td className="px-4 py-3 font-mono text-[13px] text-right">
                   {hasDrafts(fy) ? (
-                    <span className="text-orange-600 font-medium">{fy.draftCount}</span>
+                    <span className="text-amber font-medium">{fy.draftCount}</span>
                   ) : (
-                    <span className="text-gray-400">0</span>
+                    <span className="text-light">0</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-4 py-3 text-right">
                   {fy.status === "open" && (
                     <>
                       {hasDrafts(fy) ? (
-                        <span className="text-xs text-gray-400">Has drafts</span>
+                        <span className="font-ui text-[11px] text-light">Has drafts</span>
                       ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setFyToClose({ id: fy.id, year: fy.year });
-                            setShowCloseModal(true);
-                          }}
-                        >
+                        <button onClick={() => { setFyToClose({ id: fy.id, year: fy.year }); setShowCloseModal(true); }} className="font-ui text-[12px] text-amber hover:underline">
                           Close FY
-                        </Button>
+                        </button>
                       )}
                     </>
                   )}
                   {fy.status === "closed" && (
-                    <span className="text-xs text-gray-400">Closed</span>
+                    <button className="font-ui text-[12px] text-light hover:underline">Reopen</button>
                   )}
                 </td>
               </tr>
             ))}
-            {!fiscalYears || fiscalYears.length === 0 && (
+            {(!fiscalYears || fiscalYears.length === 0) && (
               <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                  No fiscal years found. Create one to get started.
+                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
+                  No fiscal years configured
                 </td>
               </tr>
             )}
@@ -122,86 +113,68 @@ export default function FiscalYearsPage() {
         </table>
       </div>
 
-      {openFYs.length >= 2 && (
-        <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-          <p className="text-sm text-yellow-800">
-            <strong>Note:</strong> You have {openFYs.length} open fiscal years. Maximum 2 open FYs allowed.
-            Close older FYs to maintain compliance.
+      {fiscalYears && fiscalYears.filter((fy: any) => fy.status === "open").length >= 2 && (
+        <div className="card p-4 bg-amber/5 border-l-4 border-l-amber">
+          <p className="font-ui text-[12px] text-amber">
+            <strong>Note:</strong> You have {fiscalYears.filter((fy: any) => fy.status === "open").length} open fiscal years. Maximum 2 open FYs allowed.
           </p>
         </div>
       )}
 
-      {/* Create FY Modal */}
+      {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6">
-            <h3 className="text-lg font-semibold text-gray-900">Create Fiscal Year</h3>
-            <div className="mt-4 space-y-4">
-              <div>
-                <Label htmlFor="year">FY Label</Label>
-                <Input
-                  id="year"
-                  placeholder="2027-28"
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="card w-full max-w-md p-6">
+            <h2 className="font-display text-[18px] font-normal text-dark mb-4">Create Fiscal Year</h2>
+            <div className="space-y-4">
+              <div className="flex flex-col gap-1">
+                <label className="font-ui text-[10px] uppercase tracking-wide text-light">FY Name</label>
+                <input
+                  type="text"
                   value={newFY.year}
                   onChange={(e) => setNewFY({ ...newFY, year: e.target.value })}
+                  className="input-field font-ui"
+                  placeholder="2027-28"
                 />
               </div>
-              <div>
-                <Label htmlFor="startDate">Start Date</Label>
-                <Input
-                  id="startDate"
+              <div className="flex flex-col gap-1">
+                <label className="font-ui text-[10px] uppercase tracking-wide text-light">Start Date</label>
+                <input
                   type="date"
                   value={newFY.startDate}
                   onChange={(e) => setNewFY({ ...newFY, startDate: e.target.value })}
+                  className="input-field font-ui"
                 />
               </div>
-              <div>
-                <Label htmlFor="endDate">End Date</Label>
-                <Input
-                  id="endDate"
+              <div className="flex flex-col gap-1">
+                <label className="font-ui text-[10px] uppercase tracking-wide text-light">End Date</label>
+                <input
                   type="date"
                   value={newFY.endDate}
                   onChange={(e) => setNewFY({ ...newFY, endDate: e.target.value })}
+                  className="input-field font-ui"
                 />
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCreateModal(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleCreate} disabled={createFY.isPending}>
-                Create FY
-              </Button>
+            <div className="flex gap-3 mt-6">
+              <button onClick={handleCreate} className="filter-tab active flex-1">Create</button>
+              <button onClick={() => setShowCreateModal(false)} className="filter-tab flex-1">Cancel</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Close FY Modal */}
+      {/* Close Modal */}
       {showCloseModal && fyToClose && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6">
-            <h3 className="text-lg font-semibold text-gray-900">Close Fiscal Year</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Are you sure you want to close FY <strong>{fyToClose.year}</strong>?
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="card w-full max-w-md p-6">
+            <h2 className="font-display text-[18px] font-normal text-dark mb-2">Close Fiscal Year</h2>
+            <p className="font-ui text-[13px] text-light mb-6">
+              Are you sure you want to close <span className="font-mono text-dark">{fyToClose.year}</span>? This action cannot be undone.
             </p>
-            <div className="mt-4 rounded-lg bg-red-50 p-4">
-              <p className="text-sm text-red-800">
-                <strong>Warning:</strong> This action cannot be undone. No new entries can be posted to a closed fiscal year.
-              </p>
-            </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCloseModal(false)}>
-                Cancel
-              </Button>
-              <Button
-                variant="outline"
-                className="border-red-300 text-red-600 hover:bg-red-50"
-                onClick={handleClose}
-                disabled={closeFY.isPending}
-              >
-                Close FY
-              </Button>
+            <div className="flex gap-3">
+              <button onClick={handleClose} className="filter-tab bg-danger text-white hover:bg-danger/90">Close FY</button>
+              <button onClick={() => setShowCloseModal(false)} className="filter-tab">Cancel</button>
             </div>
           </div>
         </div>

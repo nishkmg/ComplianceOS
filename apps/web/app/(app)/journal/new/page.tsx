@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BalanceBar, Badge } from "@/components/ui";
-import { formatINR } from "@/lib/format";
+import { formatINR, formatDate, formatIndianNumber } from "@/lib/format";
 
 const MOCK_ACCOUNTS = [
   { id: "1", name: "Cash Account", code: "10100", type: "asset" },
@@ -41,21 +41,6 @@ export default function NewJournalEntryPage() {
   const totalDebit = lines.reduce((sum, l) => sum + parseFloat(l.debit || "0"), 0);
   const totalCredit = lines.reduce((sum, l) => sum + parseFloat(l.credit || "0"), 0);
   const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01 && totalDebit > 0;
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
-        e.preventDefault();
-        if (isBalanced) handleSubmit(new Event("submit") as any);
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-        e.preventDefault();
-        addLine();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lines, isBalanced]);
 
   function addLine() {
     setLines([...lines, { accountId: "", debit: "", credit: "", description: "" }]);
@@ -95,20 +80,30 @@ export default function NewJournalEntryPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-[#1A1A1A]">New Journal Entry</h1>
-          <p className="text-[12px] text-[#888888] mt-1">Create a new double-entry transaction</p>
+          <h1 className="font-display text-[26px] font-normal text-dark">New Journal Entry</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Create a new double-entry transaction</p>
         </div>
         <div className="flex gap-2">
-          <button type="button" onClick={() => router.back()} className="btn btn-secondary">
-            Cancel
+          <button type="button" onClick={() => router.back()} className="filter-tab">
+            Discard (Esc)
           </button>
           <button
             type="button"
+            data-save-draft
+            onClick={() => handleSubmit(new Event("submit") as any)}
+            className="filter-tab"
+            disabled={saving}
+          >
+            Save Draft (⌘S)
+          </button>
+          <button
+            type="button"
+            data-post-entry
             onClick={() => isBalanced && handleSubmit(new Event("submit") as any)}
             disabled={!isBalanced || saving}
-            className="btn btn-primary"
+            className="filter-tab active disabled:opacity-50"
           >
-            {saving ? "Saving..." : "Save Draft"}
+            {saving ? "Posting..." : "Post Entry (⌘↵)"}
           </button>
         </div>
       </div>
@@ -119,39 +114,41 @@ export default function NewJournalEntryPage() {
           {/* Top Row: Date + Reference */}
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-[12px] text-[#888888] uppercase tracking-wide mb-2">
-                Date *
+              <label className="block text-[10px] text-light uppercase tracking-wide mb-2 font-ui font-medium">
+                Entry Date *
               </label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="input-field w-full"
+                className="input-field w-full font-ui"
                 required
               />
             </div>
             <div>
-              <label className="block text-[12px] text-[#888888] uppercase tracking-wide mb-2">
-                Reference
+              <label className="block text-[10px] text-light uppercase tracking-wide mb-2 font-ui font-medium">
+                Reference Type
               </label>
-              <select className="input-field w-full">
-                <option value="manual">Manual Entry</option>
+              <select className="input-field w-full font-ui">
+                <option value="manual">Manual Journal Entry</option>
                 <option value="opening_balance">Opening Balance</option>
-                <option value="carry_forward">Carry Forward</option>
+                <option value="invoice">Sales Invoice</option>
+                <option value="purchase">Purchase Invoice</option>
+                <option value="payment">Payment Receipt</option>
               </select>
             </div>
           </div>
 
           {/* Narration */}
           <div>
-            <label className="block text-[12px] text-[#888888] uppercase tracking-wide mb-2">
+            <label className="block text-[10px] text-light uppercase tracking-wide mb-2 font-ui font-medium">
               Narration *
             </label>
             <input
               type="text"
               value={narration}
               onChange={(e) => setNarration(e.target.value)}
-              className="input-field w-full"
+              className="input-field w-full font-ui"
               placeholder="Brief description of this transaction"
               required
             />
@@ -159,19 +156,25 @@ export default function NewJournalEntryPage() {
 
           {/* Lines Table */}
           <div className="space-y-3">
-            <div className="grid grid-cols-12 gap-4 text-[10px] uppercase tracking-wide text-[#888888]">
-              <div className="col-span-6">Account</div>
-              <div className="col-span-2 text-right">Debit</div>
-              <div className="col-span-2 text-right">Credit</div>
+            <div className="grid grid-cols-12 gap-4 text-[10px] uppercase tracking-wide text-light font-ui font-medium px-2">
+              <div className="col-span-1">#</div>
+              <div className="col-span-5">Account Name</div>
+              <div className="col-span-2 text-right">Debit (Dr)</div>
+              <div className="col-span-2 text-right">Credit (Cr)</div>
               <div className="col-span-2"></div>
             </div>
 
             {lines.map((line, index) => {
               const selectedAccount = MOCK_ACCOUNTS.find((a) => a.id === line.accountId);
               return (
-                <div key={index} className="grid grid-cols-12 gap-4 items-start">
+                <div key={index} className="grid grid-cols-12 gap-4 items-center">
+                  {/* Line Number */}
+                  <div className="col-span-1 font-mono text-[11px] text-light text-center">
+                    {index + 1}
+                  </div>
+
                   {/* Account Select */}
-                  <div className="col-span-6 relative">
+                  <div className="col-span-5 relative">
                     <input
                       type="text"
                       value={selectedAccount ? `${selectedAccount.name} (${selectedAccount.code})` : accountSearch}
@@ -181,21 +184,21 @@ export default function NewJournalEntryPage() {
                         if (!e.target.value) selectAccount(index, "");
                       }}
                       onFocus={() => setShowAccountDropdown(index)}
-                      placeholder="Search account..."
-                      className="input-field w-full"
+                      placeholder="Search account code or name..."
+                      className="input-field w-full font-ui"
                     />
                     {showAccountDropdown === index && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-[#E5E5E5] rounded-[6px] shadow-lg max-h-[240px] overflow-y-auto">
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-lighter rounded-[6px] shadow-lg max-h-[240px] overflow-y-auto">
                         {filteredAccounts.map((account) => (
                           <button
                             key={account.id}
                             type="button"
                             onClick={() => selectAccount(index, account.id)}
-                            className="w-full px-4 py-3 text-left hover:bg-[#FFF8F0] border-b border-[#E5E5E5] last:border-0"
+                            className="w-full px-4 py-3 text-left hover:bg-surface-muted border-b border-lighter last:border-0"
                           >
-                            <div className="text-[13px] text-[#1A1A1A]">{account.name}</div>
-                            <div className="text-[10px] text-[#888888] font-mono">
-                              {account.code} • {account.type}
+                            <div className="text-[13px] text-dark font-ui">{account.name}</div>
+                            <div className="text-[10px] text-light font-mono">
+                              {account.code} • {account.type.toUpperCase()}
                             </div>
                           </button>
                         ))}
@@ -234,10 +237,10 @@ export default function NewJournalEntryPage() {
                     <button
                       type="button"
                       onClick={() => setLines(lines.filter((_, idx) => idx !== index))}
-                      className="text-[13px] text-[#888888] hover:text-[#DC2626] px-3 py-2"
+                      className="text-[13px] text-light hover:text-danger font-ui px-3 py-2"
                       disabled={lines.length <= 2}
                     >
-                      Remove
+                      × Remove
                     </button>
                   </div>
                 </div>
@@ -246,49 +249,17 @@ export default function NewJournalEntryPage() {
 
             <button
               type="button"
+              data-add-line
               onClick={addLine}
-              className="text-[13px] text-[#C8860A] hover:text-[#A86E08] font-medium py-2"
+              className="text-[13px] text-amber hover:text-amber-hover font-ui font-medium py-2 px-2"
             >
-              + Add Line (⌘+Enter)
+              + Add line (N)
             </button>
           </div>
 
           {/* Balance Bar */}
           <BalanceBar debit={totalDebit} credit={totalCredit} />
-
-          {/* Footer Actions */}
-          <div className="flex items-center justify-between pt-6 border-t border-[#E5E5E5]">
-            <div className="text-[12px] text-[#888888]">
-              <span className="font-mono text-[#1A1A1A]">{lines.length}</span> lines •{" "}
-              <span className={isBalanced ? "text-[#1A7A3D]" : "text-[#DC2626]"}>
-                {isBalanced ? "Balanced" : "Out of balance"}
-              </span>
-            </div>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                disabled={!isBalanced || saving}
-              >
-                Save & New
-              </button>
-              <button
-                type="button"
-                onClick={() => isBalanced && handleSubmit(new Event("submit") as any)}
-                disabled={!isBalanced || saving}
-                className="btn btn-primary"
-              >
-                {saving ? "Saving..." : "Save Draft"}
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
-
-      {/* Keyboard Shortcuts Help */}
-      <div className="text-[10px] text-[#888888] text-center">
-        <span className="font-mono bg-[#F5F5F5] px-2 py-1 rounded">⌘+S</span> to save •{" "}
-        <span className="font-mono bg-[#F5F5F5] px-2 py-1 rounded">⌘+Enter</span> to add line
       </div>
     </div>
   );

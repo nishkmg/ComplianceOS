@@ -38,57 +38,55 @@ export default function ProductsPage() {
   }, [search, page]);
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        <Link
-          href="/inventory/products/new"
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-        >
-          New Product
-        </Link>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-display text-[26px] font-normal text-dark">Products</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Manage inventory items</p>
+        </div>
+        <Link href="/inventory/products/new" className="filter-tab active">New Product</Link>
       </div>
 
-      <div className="mb-4">
+      <div>
         <input
           type="text"
           placeholder="Search by name, SKU, or HSN..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-md px-3 py-2 border border-gray-300 rounded text-sm"
+          className="input-field font-ui w-full max-w-md"
         />
       </div>
 
       {loading ? (
-        <div className="text-center py-8 text-gray-500">Loading...</div>
+        <div className="text-center py-12 font-ui text-light">Loading...</div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+        <div className="card overflow-hidden">
+          <table className="table table-dense">
+            <thead>
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">SKU</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Name</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">HSN Code</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">GST Rate</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Status</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">SKU</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">Name</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">HSN Code</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">GST Rate</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={5} className="px-4 py-12 text-center font-ui text-[13px] text-light">
                     No products found
                   </td>
                 </tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-mono text-gray-700">{product.sku}</td>
-                    <td className="px-4 py-3 text-gray-900">{product.name}</td>
-                    <td className="px-4 py-3 font-mono text-gray-600">{product.hsnCode}</td>
-                    <td className="px-4 py-3 text-gray-600">{product.gstRate ? `${product.gstRate}%` : "-"}</td>
+                  <tr key={product.id} className="border-b border-hairline hover:bg-surface-muted">
+                    <td className="font-mono text-[13px] text-dark px-4 py-3">{product.sku}</td>
+                    <td className="font-ui text-[13px] text-dark px-4 py-3">{product.name}</td>
+                    <td className="font-mono text-[13px] text-mid px-4 py-3">{product.hsnCode}</td>
+                    <td className="font-ui text-[13px] text-mid px-4 py-3">{product.gstRate ? `${product.gstRate}%` : "-"}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 text-xs rounded-full ${product.isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}`}>
+                      <span className={`inline-flex items-center px-2 py-1 text-[10px] uppercase tracking-wide rounded ${product.isActive ? "bg-success text-white" : "bg-lighter text-mid"}`}>
                         {product.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>

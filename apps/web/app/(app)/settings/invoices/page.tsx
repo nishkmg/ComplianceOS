@@ -27,18 +27,7 @@ async function fetchConfig(): Promise<InvoiceConfig> {
   const response = await fetch("/api/trpc/invoiceConfig.get");
   if (!response.ok) throw new Error("Failed to load config");
   const json = await response.json();
-  return json.result?.data ?? {
-    prefix: "INV",
-    nextNumber: 1,
-    logoUrl: null,
-    companyName: null,
-    companyAddress: null,
-    companyGstin: null,
-    paymentTerms: null,
-    bankDetails: null,
-    notes: null,
-    terms: null,
-  };
+  return json.result?.data ?? { prefix: "INV", nextNumber: 1, logoUrl: null, companyName: null, companyAddress: null, companyGstin: null, paymentTerms: null, bankDetails: null, notes: null, terms: null };
 }
 
 async function saveConfig(data: InvoiceConfig): Promise<void> {
@@ -51,18 +40,7 @@ async function saveConfig(data: InvoiceConfig): Promise<void> {
 }
 
 export default function InvoiceSettingsPage() {
-  const [config, setConfig] = useState<InvoiceConfig>({
-    prefix: "INV",
-    nextNumber: 1,
-    logoUrl: null,
-    companyName: null,
-    companyAddress: null,
-    companyGstin: null,
-    paymentTerms: null,
-    bankDetails: null,
-    notes: null,
-    terms: null,
-  });
+  const [config, setConfig] = useState<InvoiceConfig>({ prefix: "INV", nextNumber: 1, logoUrl: null, companyName: null, companyAddress: null, companyGstin: null, paymentTerms: null, bankDetails: null, notes: null, terms: null });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -107,20 +85,22 @@ export default function InvoiceSettingsPage() {
   };
 
   const handlePreview = () => {
-    // Store config in sessionStorage and navigate to preview
     sessionStorage.setItem("invoicePreviewConfig", JSON.stringify(config));
     window.open("/invoices/preview", "_blank");
   };
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Invoice Settings</h1>
-        <div className="bg-white rounded-lg shadow p-6">
+      <div className="space-y-6">
+        <div>
+          <h1 className="font-display text-[26px] font-normal text-dark">Invoice Settings</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Configure invoice defaults and branding</p>
+        </div>
+        <div className="card p-6">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/4" />
-            <div className="h-10 bg-gray-200 rounded" />
-            <div className="h-10 bg-gray-200 rounded" />
+            <div className="h-4 bg-surface-muted rounded w-1/4" />
+            <div className="h-10 bg-surface-muted rounded" />
+            <div className="h-10 bg-surface-muted rounded" />
           </div>
         </div>
       </div>
@@ -128,263 +108,190 @@ export default function InvoiceSettingsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Invoice Settings</h1>
-        <button
-          onClick={handlePreview}
-          className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded border hover:bg-gray-200"
-        >
-          Preview Invoice
-        </button>
+        <div>
+          <h1 className="font-display text-[26px] font-normal text-dark">Invoice Settings</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Configure invoice defaults and branding</p>
+        </div>
+        <button onClick={handlePreview} className="filter-tab">Preview Invoice</button>
       </div>
 
+      {/* Alerts */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="card p-4 border-l-4 border-l-danger bg-danger/5">
+          <p className="font-ui text-[13px] text-danger">{error}</p>
         </div>
       )}
-
       {saved && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <p className="text-sm text-green-800">Settings saved successfully</p>
+        <div className="card p-4 border-l-4 border-l-success bg-success/5">
+          <p className="font-ui text-[13px] text-success">Settings saved successfully</p>
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-lg font-medium">Invoice Numbering</h2>
-        </div>
-        <div className="px-6 py-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Prefix
-              </label>
-              <input
-                type="text"
-                value={config.prefix}
-                onChange={(e) => setConfig((prev) => ({ ...prev, prefix: e.target.value }))}
-                className="w-full px-3 py-2 border rounded text-sm"
-                placeholder="INV"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Changing prefix doesn&apos;t affect existing numbers
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Next Number
-              </label>
-              <input
-                type="text"
-                value={`${config.prefix}-${config.nextNumber}`}
-                readOnly
-                className="w-full px-3 py-2 border rounded text-sm bg-gray-50 text-gray-600"
-              />
-              <p className="mt-1 text-xs text-gray-500">
-                Next invoice number that will be used
-              </p>
-            </div>
+      {/* Invoice Numbering */}
+      <div className="card p-6">
+        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Invoice Numbering</h2>
+        <div className="grid grid-cols-2 gap-5">
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Prefix</label>
+            <input
+              type="text"
+              value={config.prefix}
+              onChange={(e) => setConfig((prev) => ({ ...prev, prefix: e.target.value }))}
+              className="input-field font-ui"
+              placeholder="INV"
+            />
+            <p className="font-ui text-[10px] text-light mt-1">Changing prefix doesn&apos;t affect existing numbers</p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Next Number</label>
+            <input
+              type="text"
+              value={`${config.prefix}-${config.nextNumber}`}
+              readOnly
+              className="input-field font-mono bg-surface-muted text-light"
+            />
+            <p className="font-ui text-[10px] text-light mt-1">Next invoice number that will be used</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-lg font-medium">Company Branding</h2>
-        </div>
-        <div className="px-6 py-4 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Logo
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleLogoChange}
-              className="text-sm text-gray-600"
-            />
+      {/* Company Branding */}
+      <div className="card p-6">
+        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Company Branding</h2>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Logo</label>
+            <input type="file" accept="image/*" onChange={handleLogoChange} className="font-ui text-[13px] text-mid" />
             {logoPreview && (
               <div className="mt-2">
-                <img
-                  src={logoPreview}
-                  alt="Logo preview"
-                  className="h-20 w-auto object-contain border rounded"
-                />
+                <img src={logoPreview} alt="Logo preview" className="h-20 w-auto object-contain border border-hairline rounded" />
               </div>
             )}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company Name
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Company Name</label>
             <input
               type="text"
               value={config.companyName ?? ""}
               onChange={(e) => setConfig((prev) => ({ ...prev, companyName: e.target.value || null }))}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="input-field font-ui"
               placeholder="Your Company Name"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company Address
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Company Address</label>
             <textarea
               value={config.companyAddress ?? ""}
               onChange={(e) => setConfig((prev) => ({ ...prev, companyAddress: e.target.value || null }))}
               rows={3}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="input-field font-ui"
               placeholder="Your Address"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GSTIN
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">GSTIN</label>
             <input
               type="text"
               value={config.companyGstin ?? ""}
               onChange={(e) => setConfig((prev) => ({ ...prev, companyGstin: e.target.value || null }))}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="input-field font-mono"
               placeholder="22AAAAA0000A1ZA"
             />
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-lg font-medium">Bank Details</h2>
-        </div>
-        <div className="px-6 py-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Account Name
-              </label>
-              <input
-                type="text"
-                value={config.bankDetails?.accountName ?? ""}
-                onChange={(e) =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    bankDetails: { ...prev.bankDetails, accountName: e.target.value || undefined },
-                  }))
-                }
-                className="w-full px-3 py-2 border rounded text-sm"
-                placeholder="Account Name"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Account Number
-              </label>
-              <input
-                type="text"
-                value={config.bankDetails?.accountNumber ?? ""}
-                onChange={(e) =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    bankDetails: { ...prev.bankDetails, accountNumber: e.target.value || undefined },
-                  }))
-                }
-                className="w-full px-3 py-2 border rounded text-sm"
-                placeholder="Account Number"
-              />
-            </div>
+      {/* Bank Details */}
+      <div className="card p-6">
+        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Bank Details</h2>
+        <div className="grid grid-cols-2 gap-5">
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Account Name</label>
+            <input
+              type="text"
+              value={config.bankDetails?.accountName ?? ""}
+              onChange={(e) => setConfig((prev) => ({ ...prev, bankDetails: { ...prev.bankDetails, accountName: e.target.value || undefined } }))}
+              className="input-field font-ui"
+              placeholder="Account Name"
+            />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                IFSC Code
-              </label>
-              <input
-                type="text"
-                value={config.bankDetails?.ifscCode ?? ""}
-                onChange={(e) =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    bankDetails: { ...prev.bankDetails, ifscCode: e.target.value || undefined },
-                  }))
-                }
-                className="w-full px-3 py-2 border rounded text-sm"
-                placeholder="SBIN0001234"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bank Name
-              </label>
-              <input
-                type="text"
-                value={config.bankDetails?.bankName ?? ""}
-                onChange={(e) =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    bankDetails: { ...prev.bankDetails, bankName: e.target.value || undefined },
-                  }))
-                }
-                className="w-full px-3 py-2 border rounded text-sm"
-                placeholder="State Bank of India"
-              />
-            </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Account Number</label>
+            <input
+              type="text"
+              value={config.bankDetails?.accountNumber ?? ""}
+              onChange={(e) => setConfig((prev) => ({ ...prev, bankDetails: { ...prev.bankDetails, accountNumber: e.target.value || undefined } }))}
+              className="input-field font-mono"
+              placeholder="Account Number"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">IFSC Code</label>
+            <input
+              type="text"
+              value={config.bankDetails?.ifscCode ?? ""}
+              onChange={(e) => setConfig((prev) => ({ ...prev, bankDetails: { ...prev.bankDetails, ifscCode: e.target.value || undefined } }))}
+              className="input-field font-mono"
+              placeholder="SBIN0001234"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Bank Name</label>
+            <input
+              type="text"
+              value={config.bankDetails?.bankName ?? ""}
+              onChange={(e) => setConfig((prev) => ({ ...prev, bankDetails: { ...prev.bankDetails, bankName: e.target.value || undefined } }))}
+              className="input-field font-ui"
+              placeholder="State Bank of India"
+            />
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-lg font-medium">Defaults</h2>
-        </div>
-        <div className="px-6 py-4 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Default Payment Terms
-            </label>
+      {/* Defaults */}
+      <div className="card p-6">
+        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Defaults</h2>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Default Payment Terms</label>
             <textarea
               value={config.paymentTerms ?? ""}
               onChange={(e) => setConfig((prev) => ({ ...prev, paymentTerms: e.target.value || null }))}
               rows={2}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="input-field font-ui"
               placeholder="Payment due within 30 days"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Default Notes
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Default Notes</label>
             <textarea
               value={config.notes ?? ""}
               onChange={(e) => setConfig((prev) => ({ ...prev, notes: e.target.value || null }))}
               rows={2}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="input-field font-ui"
               placeholder="Thank you for your business"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Default Terms &amp; Conditions
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Default Terms & Conditions</label>
             <textarea
               value={config.terms ?? ""}
               onChange={(e) => setConfig((prev) => ({ ...prev, terms: e.target.value || null }))}
               rows={3}
-              className="w-full px-3 py-2 border rounded text-sm"
+              className="input-field font-ui"
               placeholder="Terms and conditions"
             />
           </div>
         </div>
       </div>
 
+      {/* Save Button */}
       <div className="flex justify-end">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="px-6 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {saving ? "Saving..." : "Save"}
+        <button onClick={handleSave} disabled={saving} className="filter-tab active disabled:opacity-50">
+          {saving ? "Saving..." : "Save Settings"}
         </button>
       </div>
     </div>

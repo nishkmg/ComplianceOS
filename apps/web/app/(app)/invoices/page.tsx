@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
+import { formatIndianNumber } from "@/lib/format";
 
 interface Invoice {
   id: string;
@@ -37,85 +38,93 @@ export default function InvoicesPage() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Invoices</h1>
-        <Link href="/invoices/new" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+        <div>
+          <h1 className="font-display text-[26px] font-normal text-dark">Invoices</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Manage sales invoices and billing</p>
+        </div>
+        <Link href="/invoices/new" className="filter-tab active">
           + New Invoice
         </Link>
       </div>
 
+      {/* Filters */}
       <div className="flex gap-4 items-center">
-        <select
-          value={statusFilter}
-          onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="px-3 py-2 border rounded text-sm"
-        >
-          {statusOptions.map((s) => (
-            <option key={s} value={s}>
-              {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-            </option>
-          ))}
-        </select>
+        <div className="filter-tabs">
+          <select
+            value={statusFilter}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+            className="filter-tab font-ui"
+          >
+            {statusOptions.map((s) => (
+              <option key={s} value={s}>
+                {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+              </option>
+            ))}
+          </select>
+        </div>
         <input
           type="text"
-          placeholder="Search customer..."
+          placeholder="Search customer... (/)"
           value={customerSearch}
           onChange={(e) => { setCustomerSearch(e.target.value); setPage(1); }}
-          className="px-3 py-2 border rounded text-sm flex-1"
+          className="input-field font-ui flex-1 max-w-xs ml-auto"
         />
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+      {/* Table */}
+      <div className="card overflow-hidden">
+        <table className="table table-dense">
+          <thead>
             <tr>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Invoice #</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Customer</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Due Date</th>
-              <th className="px-4 py-3 text-right text-gray-500 font-medium">Amount</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Status</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Actions</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Invoice #</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Customer</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Due Date</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody>
             {filteredInvoices.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
-                  No invoices yet
+                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
+                  No invoices found
                 </td>
               </tr>
             ) : (
               filteredInvoices.map((invoice) => (
-                <tr key={invoice.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <Link href={`/invoices/${invoice.id}`} className="text-blue-600 hover:underline">
+                <tr key={invoice.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                  <td className="font-mono text-[13px] text-amber px-4 py-3">
+                    <Link href={`/invoices/${invoice.id}`} className="hover:underline">
                       {invoice.invoiceNumber}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{invoice.customerName}</td>
-                  <td className="px-4 py-3 text-gray-600">{invoice.date}</td>
-                  <td className="px-4 py-3 text-gray-600">{invoice.dueDate}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{invoice.amount}</td>
+                  <td className="font-ui text-[13px] text-dark px-4 py-3">{invoice.customerName}</td>
+                  <td className="font-mono text-[13px] text-light px-4 py-3">{invoice.date}</td>
+                  <td className="font-mono text-[13px] text-light px-4 py-3">{invoice.dueDate}</td>
+                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">₹{invoice.amount}</td>
                   <td className="px-4 py-3">
                     <InvoiceStatusBadge status={invoice.status} />
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       {(invoice.status === "draft") && (
-                        <Link href={`/invoices/${invoice.id}/edit`} className="text-blue-600 hover:underline text-xs">
+                        <Link href={`/invoices/${invoice.id}/edit`} className="font-ui text-[12px] text-amber hover:underline">
                           Edit
                         </Link>
                       )}
                       {(invoice.status === "draft") && (
-                        <button className="text-green-600 hover:underline text-xs">Post</button>
+                        <button className="font-ui text-[12px] text-success hover:underline">Post</button>
                       )}
                       {(invoice.status === "sent" || invoice.status === "partially_paid") && (
-                        <button className="text-red-600 hover:underline text-xs">Void</button>
+                        <button className="font-ui text-[12px] text-danger hover:underline">Void</button>
                       )}
-                      <button className="text-gray-600 hover:underline text-xs">Send</button>
-                      <button className="text-gray-600 hover:underline text-xs">PDF</button>
+                      <button className="font-ui text-[12px] text-mid hover:underline">Send</button>
+                      <button className="font-ui text-[12px] text-mid hover:underline">PDF</button>
                     </div>
                   </td>
                 </tr>
@@ -125,22 +134,23 @@ export default function InvoicesPage() {
         </table>
       </div>
 
+      {/* Footer */}
       {filteredInvoices.length > 0 && (
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Showing {filteredInvoices.length} of {filteredInvoices.length} invoices</span>
+        <div className="flex items-center justify-between font-ui text-[12px] text-light">
+          <span>Showing {filteredInvoices.length} invoice{filteredInvoices.length !== 1 ? "s" : ""}</span>
           <div className="flex gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-3 py-1 border rounded disabled:opacity-50"
+              className="filter-tab disabled:opacity-50"
             >
               Previous
             </button>
-            <span className="px-3 py-1">Page {page}</span>
+            <span className="px-3 py-2">Page {page}</span>
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={filteredInvoices.length < pageSize}
-              className="px-3 py-1 border rounded disabled:opacity-50"
+              className="filter-tab disabled:opacity-50"
             >
               Next
             </button>

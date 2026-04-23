@@ -46,13 +46,12 @@ export default function OnboardingPage() {
     completeOnboarding,
   } = useOnboarding(activeTenantId);
 
-  // Wait for client-side mount and session
   if (!mounted || status === "loading") {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 font-ui text-mid">Loading...</p>
         </div>
       </div>
     );
@@ -75,99 +74,109 @@ export default function OnboardingPage() {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-          <p className="mt-4 text-gray-600">Loading your setup...</p>
+          <p className="mt-4 font-ui text-mid">Loading your setup...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="min-h-screen bg-lightest">
       {/* Progress Steps */}
-      <nav aria-label="Progress">
-        <ol className="flex items-center space-x-8 overflow-x-auto pb-4">
-          {STEPS.map((step) => {
-            const isCompleted = completedSteps.includes(step.number);
-            const isCurrent = currentStep === step.number;
-            const isUpcoming = currentStep < step.number;
+      <nav aria-label="Progress" className="bg-white border-b border-hairline">
+        <div className="max-w-5xl mx-auto px-6 py-8">
+          <div className="flex items-center justify-between">
+            {STEPS.map((step, index) => {
+              const isCompleted = completedSteps.includes(step.number);
+              const isCurrent = currentStep === step.number;
+              const isPending = !isCompleted && !isCurrent;
 
-            return (
-              <li key={step.number} className="relative flex-shrink-0">
-                <div className="flex items-center space-x-3">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-colors ${
-                      isCompleted
-                        ? "border-amber-500 bg-amber-500 text-white"
-                        : isCurrent
-                        ? "border-amber-500 text-amber-500"
-                        : "border-gray-300 text-gray-300"
-                    }`}
-                  >
-                    {isCompleted ? (
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    ) : (
-                      <span className="font-semibold">{step.number}</span>
-                    )}
-                  </div>
-                  <div className="hidden sm:block">
-                    <p className={`text-sm font-medium ${isCurrent ? "text-gray-900" : "text-gray-500"}`}>
-                      {step.title}
-                    </p>
-                    <p className="text-xs text-gray-500">{step.description}</p>
-                  </div>
-                </div>
-                {step.number < STEPS.length && (
-                  <div className="absolute left-14 top-5 hidden h-0.5 w-24 sm:block">
+              return (
+                <div key={step.number} className="flex items-center">
+                  {/* Step Circle */}
+                  <div className="flex flex-col items-center">
                     <div
-                      className={`h-full ${
-                        completedSteps.includes(step.number + 1)
-                          ? "bg-amber-500"
-                          : "bg-gray-200"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-ui text-[13px] font-medium transition-colors ${
+                        isCompleted
+                          ? "bg-amber text-white"
+                          : isCurrent
+                          ? "border-2 border-amber text-amber"
+                          : "border-2 border-lighter text-light"
                       }`}
-                    />
+                    >
+                      {isCompleted ? (
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        step.number
+                      )}
+                    </div>
+                    {/* Step Label */}
+                    <div className="mt-2 text-center hidden lg:block">
+                      <p className={`text-[11px] font-medium ${isCurrent ? "text-dark" : "text-light"}`}>
+                        {step.title}
+                      </p>
+                      <p className="text-[9px] text-light mt-0.5">{step.description}</p>
+                    </div>
                   </div>
-                )}
-              </li>
-            );
-          })}
-        </ol>
+
+                  {/* Connector Line */}
+                  {index < STEPS.length - 1 && (
+                    <div className="w-16 lg:w-24 h-0.5 mx-2 lg:mx-4">
+                      <div
+                        className={`h-full transition-colors ${
+                          completedSteps.includes(step.number + 1)
+                            ? "bg-amber"
+                            : "bg-lighter"
+                        }`}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </nav>
 
       {/* Step Content */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        {currentStep === 1 && (
-          <StepBusinessProfile onTenantCreated={handleTenantCreated} />
-        )}
-        {currentStep === 2 && activeTenantId && (
-          <StepModuleActivation
-            tenantId={activeTenantId}
-            onComplete={() => goToStep(3)}
-          />
-        )}
-        {currentStep === 3 && activeTenantId && (
-          <StepCoaTemplate
-            tenantId={activeTenantId}
-            onComplete={() => goToStep(4)}
-          />
-        )}
-        {currentStep === 4 && activeTenantId && (
-          <StepFyGst
-            tenantId={activeTenantId}
-            onComplete={() => goToStep(5)}
-          />
-        )}
-        {currentStep === 5 && activeTenantId && (
-          <StepOpeningBalances
-            tenantId={activeTenantId}
-            onComplete={handleComplete}
-          />
-        )}
+      <div className="max-w-3xl mx-auto px-6 py-8">
+        <div className="card">
+          <div className="p-8">
+            {currentStep === 1 && (
+              <StepBusinessProfile onTenantCreated={handleTenantCreated} />
+            )}
+            {currentStep === 2 && activeTenantId && (
+              <StepModuleActivation
+                tenantId={activeTenantId}
+                onComplete={() => goToStep(3)}
+              />
+            )}
+            {currentStep === 3 && activeTenantId && (
+              <StepCoaTemplate
+                tenantId={activeTenantId}
+                onComplete={() => goToStep(4)}
+              />
+            )}
+            {currentStep === 4 && activeTenantId && (
+              <StepFyGst
+                tenantId={activeTenantId}
+                onComplete={() => goToStep(5)}
+              />
+            )}
+            {currentStep === 5 && activeTenantId && (
+              <StepOpeningBalances
+                tenantId={activeTenantId}
+                onComplete={handleComplete}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -120,147 +120,166 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
 
   return (
     <div className="max-w-2xl">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Business Profile</h2>
-        <p className="mt-1 text-sm text-gray-600">
+      <div className="mb-8">
+        <h2 className="font-display text-[20px] font-normal text-dark">Business Profile</h2>
+        <p className="font-ui text-[13px] text-light mt-1">
           Tell us about your business structure and location
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid gap-6 sm:grid-cols-2">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <Label htmlFor="name">Business Name *</Label>
-            <Input
+            <label htmlFor="name" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              Business Name *
+            </label>
+            <input
               id="name"
+              type="text"
               placeholder="Your business name"
+              className="input-field w-full font-ui"
               {...register("name")}
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.name.message}</p>
             )}
           </div>
 
           <div className="sm:col-span-2">
-            <Label htmlFor="legalName">Legal Name (optional)</Label>
-            <Input
+            <label htmlFor="legalName" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              Legal Name <span className="text-light">(optional)</span>
+            </label>
+            <input
               id="legalName"
+              type="text"
               placeholder="As per registration documents"
+              className="input-field w-full font-ui"
               {...register("legalName")}
             />
           </div>
 
           <div>
-            <Label htmlFor="businessType">Business Type *</Label>
-            <Select
-              onValueChange={(value) => setValue("businessType", value)}
-              defaultValue={businessType}
+            <label htmlFor="businessType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              Business Type *
+            </label>
+            <select
+              id="businessType"
+              className="input-field w-full font-ui"
+              {...register("businessType")}
+              onChange={(e) => setValue("businessType", e.target.value)}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select business type" />
-              </SelectTrigger>
-              <SelectContent>
-                {BUSINESS_TYPES.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {BUSINESS_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
             {errors.businessType && (
-              <p className="mt-1 text-sm text-red-600">{errors.businessType.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.businessType.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="industry">Industry *</Label>
-            <Select
-              onValueChange={(value) => setValue("industry", value)}
-              defaultValue={watch("industry")}
+            <label htmlFor="industry" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              Industry *
+            </label>
+            <select
+              id="industry"
+              className="input-field w-full font-ui"
+              {...register("industry")}
+              onChange={(e) => setValue("industry", e.target.value)}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select industry" />
-              </SelectTrigger>
-              <SelectContent>
-                {INDUSTRIES.map((ind) => (
-                  <SelectItem key={ind.value} value={ind.value}>
-                    {ind.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {INDUSTRIES.map((ind) => (
+                <option key={ind.value} value={ind.value}>
+                  {ind.label}
+                </option>
+              ))}
+            </select>
             {errors.industry && (
-              <p className="mt-1 text-sm text-red-600">{errors.industry.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.industry.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="pan">PAN *</Label>
-            <Input
+            <label htmlFor="pan" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              PAN *
+            </label>
+            <input
               id="pan"
+              type="text"
               placeholder="AAAAA9999A"
-              className="uppercase"
+              className="input-field w-full font-ui uppercase"
               maxLength={10}
               {...register("pan")}
             />
             {errors.pan && (
-              <p className="mt-1 text-sm text-red-600">{errors.pan.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.pan.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="gstin">GSTIN (optional)</Label>
-            <Input
+            <label htmlFor="gstin" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              GSTIN <span className="text-light">(optional)</span>
+            </label>
+            <input
               id="gstin"
+              type="text"
               placeholder="27AABCU9603R1ZM"
-              className="uppercase"
+              className="input-field w-full font-ui uppercase"
               maxLength={15}
               {...register("gstin")}
             />
             {errors.gstin && (
-              <p className="mt-1 text-sm text-red-600">{errors.gstin.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.gstin.message}</p>
             )}
           </div>
 
           <div className="sm:col-span-2">
-            <Label htmlFor="state">State *</Label>
-            <Select
-              onValueChange={(value) => setValue("state", value)}
-              defaultValue={watch("state")}
+            <label htmlFor="state" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              State *
+            </label>
+            <select
+              id="state"
+              className="input-field w-full font-ui"
+              {...register("state")}
+              onChange={(e) => setValue("state", e.target.value)}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select state" />
-              </SelectTrigger>
-              <SelectContent>
-                {STATES.map((state) => (
-                  <SelectItem key={state.value} value={state.value}>
-                    {state.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {STATES.map((state) => (
+                <option key={state.value} value={state.value}>
+                  {state.label}
+                </option>
+              ))}
+            </select>
             {errors.state && (
-              <p className="mt-1 text-sm text-red-600">{errors.state.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.state.message}</p>
             )}
           </div>
 
           <div className="sm:col-span-2">
-            <Label htmlFor="address">Registered Address *</Label>
-            <Input
+            <label htmlFor="address" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              Registered Address *
+            </label>
+            <input
               id="address"
+              type="text"
               placeholder="Full address with PIN code"
+              className="input-field w-full font-ui"
               {...register("address")}
             />
             {errors.address && (
-              <p className="mt-1 text-sm text-red-600">{errors.address.message}</p>
+              <p className="mt-1 font-ui text-[11px] text-danger">{errors.address.message}</p>
             )}
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
-          <Button type="submit" disabled={isSubmitting || createTenant.isPending}>
-            {isSubmitting ? "Creating..." : "Continue"}
-          </Button>
+        <div className="flex justify-end pt-6 border-t border-hairline">
+          <button
+            type="submit"
+            disabled={isSubmitting || createTenant.isPending}
+            className="filter-tab active disabled:opacity-50"
+          >
+            {isSubmitting || createTenant.isPending ? "Creating..." : "Continue"}
+          </button>
         </div>
       </form>
     </div>

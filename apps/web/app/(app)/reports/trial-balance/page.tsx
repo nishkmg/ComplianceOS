@@ -18,7 +18,7 @@ const mockData: TrialBalanceEntry[] = [
   { code: "10500", name: "Equipment", debit: 450000, credit: 0 },
   { code: "20101", name: "Trade Payables", debit: 0, credit: 180000 },
   { code: "20200", name: "GST Output", debit: 0, credit: 125000 },
-  { code: "30100", name: "Capital Account", debit: 0, credit: 1500000 },
+  { code: "30100", name: "Capital Account", debit: 0, credit: 1665000 },
   { code: "40100", name: "Sales Revenue", debit: 0, credit: 2800000 },
   { code: "50100", name: "Purchase Expenses", debit: 1200000, credit: 0 },
   { code: "50200", name: "Operating Expenses", debit: 450000, credit: 0 },
@@ -37,30 +37,30 @@ export default function TrialBalancePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-[#1A1A1A]">Trial Balance</h1>
-          <p className="text-[12px] text-[#888888] mt-1">FY 2026-27 • As of today</p>
+          <h1 className="font-display text-[26px] font-normal text-dark">Trial Balance</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Verification of Debit and Credit Equality</p>
         </div>
         <div className="flex gap-2">
-          <span className={`px-4 py-2 text-[13px] rounded-[6px] ${isBalanced ? "bg-[#DCFCE7] text-[#16A34A]" : "bg-[#FEE2E2] text-[#DC2626]"}`}>
-            {isBalanced ? "✓ Balanced" : "✗ Out of Balance"}
+          <span className={`px-4 py-2 font-ui text-[13px] rounded-[6px] flex items-center gap-2 ${isBalanced ? "bg-success-bg text-success" : "bg-danger-bg text-danger"}`}>
+            {isBalanced ? "✓ Balanced" : "⚠ Out of Balance"}
           </span>
-          <button className="btn btn-secondary">Export Excel</button>
+          <button className="filter-tab">Export Excel</button>
         </div>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="card p-4">
-          <p className="text-[12px] text-[#888888] mb-1">Total Debit</p>
-          <p className="font-mono text-[20px] text-[#1A7A3D]">{formatINR(totalDebit)}</p>
+        <div className="card p-4 border-t-2 border-success">
+          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Total Debit</p>
+          <p className="font-mono text-[20px] text-right text-success">{formatINR(totalDebit)}</p>
         </div>
-        <div className="card p-4">
-          <p className="text-[12px] text-[#888888] mb-1">Total Credit</p>
-          <p className="font-mono text-[20px] text-[#B91C1C]">{formatINR(totalCredit)}</p>
+        <div className="card p-4 border-t-2 border-danger">
+          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Total Credit</p>
+          <p className="font-mono text-[20px] text-right text-danger">{formatINR(totalCredit)}</p>
         </div>
-        <div className="card p-4">
-          <p className="text-[12px] text-[#888888] mb-1">Difference</p>
-          <p className={`font-mono text-[20px] ${isBalanced ? "text-[#16A34A]" : "text-[#DC2626]"}`}>
+        <div className="card p-4 border-t-2 border-amber">
+          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Difference</p>
+          <p className={`font-mono text-[20px] text-right ${isBalanced ? "text-success" : "text-danger"}`}>
             {formatINR(Math.abs(totalDebit - totalCredit))}
           </p>
         </div>
@@ -68,38 +68,38 @@ export default function TrialBalancePage() {
 
       {/* Table */}
       <div className="card">
-        <table className="table">
+        <table className="table table-dense">
           <thead>
             <tr>
-              <th className="text-[10px] uppercase tracking-wide text-left w-[100px]">Code</th>
-              <th className="text-[10px] uppercase tracking-wide text-left">Account Name</th>
-              <th className="text-[10px] uppercase tracking-wide text-right w-[150px]">Debit (₹)</th>
-              <th className="text-[10px] uppercase tracking-wide text-right w-[150px]">Credit (₹)</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left w-32">Account Code</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Account Name</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Debit (₹)</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Credit (₹)</th>
             </tr>
           </thead>
           <tbody>
             {mockData.map((entry) => (
-              <tr key={entry.code}>
-                <td className="font-mono text-[13px] text-[#C8860A]">{entry.code}</td>
-                <td className="text-[13px] text-[#1A1A1A]">{entry.name}</td>
-                <td className="font-mono text-[13px] text-right text-[#1A7A3D]">
+              <tr key={entry.code} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                <td className="font-mono text-[13px] text-amber">{entry.code}</td>
+                <td className="font-ui text-[13px] text-dark">{entry.name}</td>
+                <td className="font-mono text-[13px] text-right text-success">
                   {entry.debit > 0 ? formatINR(entry.debit) : "—"}
                 </td>
-                <td className="font-mono text-[13px] text-right text-[#B91C1C]">
+                <td className="font-mono text-[13px] text-right text-danger">
                   {entry.credit > 0 ? formatINR(entry.credit) : "—"}
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-[#1A1A1A]">
-              <td colSpan={2} className="py-4 text-[13px] font-medium text-[#1A1A1A]">
-                Total
+            <tr className="border-t-2 border-dark font-semibold">
+              <td colSpan={2} className="py-4 font-ui text-[13px] text-dark">
+                Total Summary
               </td>
-              <td className="font-mono text-[14px] text-right text-[#1A7A3D] py-4">
+              <td className="font-mono text-[14px] text-right text-success py-4">
                 {formatINR(totalDebit)}
               </td>
-              <td className="font-mono text-[14px] text-right text-[#B91C1C] py-4">
+              <td className="font-mono text-[14px] text-right text-danger py-4">
                 {formatINR(totalCredit)}
               </td>
             </tr>
@@ -108,10 +108,10 @@ export default function TrialBalancePage() {
       </div>
 
       {/* Notes */}
-      <div className="text-[12px] text-[#888888]">
-        <p>
-          <strong>Note:</strong> This trial balance shows all ledger account balances at the current date. 
-          Debit and credit totals must match for the books to be in balance.
+      <div className="text-[12px] text-light border-l-2 border-amber pl-4">
+        <p className="font-ui">
+          <strong>Accountant's Note:</strong> This trial balance shows all ledger account balances at the current date. 
+          Debit and credit totals must match for the books to be in balance. Any difference should be investigated and rectified before financial statement preparation.
         </p>
       </div>
     </div>

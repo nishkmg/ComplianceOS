@@ -77,155 +77,103 @@ export default function ProfitAndLossPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-[#1A1A1A]">Profit & Loss Statement</h1>
-          <p className="text-[12px] text-[#888888] mt-1">FY 2026-27 • April 2026 - March 2027</p>
+          <h1 className="font-display text-[26px] font-normal text-dark">Profit & Loss Statement</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Financial Performance Summary</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode("schedule3")}
-            className={`px-4 py-2 text-[13px] rounded-[6px] ${
-              viewMode === "schedule3" ? "bg-[#C8860A] text-white" : "bg-white border border-[#E5E5E5]"
-            }`}
+            className={`filter-tab ${viewMode === "schedule3" ? "active" : ""}`}
           >
             Schedule III
           </button>
           <button
             onClick={() => setViewMode("proprietorship")}
-            className={`px-4 py-2 text-[13px] rounded-[6px] ${
-              viewMode === "proprietorship" ? "bg-[#C8860A] text-white" : "bg-white border border-[#E5E5E5]"
-            }`}
+            className={`filter-tab ${viewMode === "proprietorship" ? "active" : ""}`}
           >
             Proprietorship
           </button>
-          <button className="btn btn-secondary">Export PDF</button>
+          <button className="filter-tab">Export PDF</button>
         </div>
       </div>
 
       {/* Report Body */}
-      <div className="card">
-        <div className="p-8 space-y-6">
-          {/* Title */}
-          <div className="text-center border-b border-[#E5E5E5] pb-6">
-            <h2 className="font-display text-[20px] font-normal text-[#1A1A1A]">Demo Business Pvt Ltd</h2>
-            <p className="text-[12px] text-[#888888] mt-1">Statement of Profit and Loss</p>
-            <p className="text-[10px] text-[#888888]">For the year ended 31 March 2027</p>
-          </div>
+      <div className="report-container max-w-4xl mx-auto">
+        <div className="report-header">
+          <h2 className="report-company">Mehta Textiles Private Limited</h2>
+          <p className="report-title">Statement of Profit and Loss</p>
+          <p className="report-period">For the year ended 31 March 2027 • All amounts in ₹</p>
+        </div>
 
-          {/* Revenue */}
-          <div>
-            <h3 className="font-display text-[16px] font-medium text-[#1A1A1A] mb-3">{mockData.revenue.name}</h3>
-            <div className="space-y-2 ml-4">
-              {mockData.revenue.items.map((item) => (
-                <div key={item.code} className="flex justify-between text-[13px]">
-                  <span className="text-[#555555]">
-                    <span className="font-mono text-[#C8860A] mr-2">{item.code}</span>
-                    {item.name}
-                  </span>
-                  <span className="font-mono text-right">{formatINR(item.amount)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-[13px] font-medium mt-3 pt-3 border-t border-[#E5E5E5]">
-              <span>Total Revenue</span>
-              <span className="font-mono">{formatINR(mockData.revenue.total)}</span>
-            </div>
-          </div>
-
-          {/* Cost of Goods Sold */}
-          <div>
-            <h3 className="font-display text-[16px] font-medium text-[#1A1A1A] mb-3">{mockData.costOfGoodsSold.name}</h3>
-            <div className="space-y-2 ml-4">
-              {mockData.costOfGoodsSold.items.map((item) => (
-                <div key={item.code} className="flex justify-between text-[13px]">
-                  <span className="text-[#555555]">
-                    <span className="font-mono text-[#C8860A] mr-2">{item.code}</span>
-                    {item.name}
-                  </span>
-                  <span className="font-mono text-right">{formatINR(item.amount)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-[13px] font-medium mt-3 pt-3 border-t border-[#E5E5E5]">
-              <span>Total Cost of Goods Sold</span>
-              <span className="font-mono">{formatINR(mockData.costOfGoodsSold.total)}</span>
-            </div>
-          </div>
-
-          {/* Gross Profit */}
-          <div className="flex justify-between text-[14px] font-medium pt-4 border-t-2 border-[#1A1A1A]">
-            <span>Gross Profit</span>
-            <span className="font-mono text-[#1A7A3D]">{formatINR(mockData.grossProfit)}</span>
-          </div>
-
-          {/* Operating Expenses */}
-          <div>
-            <h3 className="font-display text-[16px] font-medium text-[#1A1A1A] mb-3">{mockData.operatingExpenses.name}</h3>
-            <div className="space-y-2 ml-4">
-              {mockData.operatingExpenses.items.map((item) => (
-                <div key={item.code} className="flex justify-between text-[13px]">
-                  <span className="text-[#555555]">
-                    <span className="font-mono text-[#C8860A] mr-2">{item.code}</span>
-                    {item.name}
-                  </span>
-                  <span className="font-mono text-right">{formatINR(item.amount)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-[13px] font-medium mt-3 pt-3 border-t border-[#E5E5E5]">
-              <span>Total Operating Expenses</span>
-              <span className="font-mono">{formatINR(mockData.operatingExpenses.total)}</span>
-            </div>
-          </div>
-
-          {/* Operating Profit */}
-          <div className="flex justify-between text-[14px] font-medium pt-4 border-t-2 border-[#1A1A1A]">
-            <span>Operating Profit (EBIT)</span>
-            <span className="font-mono text-[#1A7A3D]">{formatINR(mockData.operatingProfit)}</span>
-          </div>
-
-          {/* Other Income & Expenses */}
-          <div className="grid grid-cols-2 gap-8 pt-4">
-            <div>
-              <h3 className="font-display text-[14px] font-medium text-[#1A1A1A] mb-3">{mockData.otherIncome.name}</h3>
-              <div className="space-y-2 ml-4">
-                {mockData.otherIncome.items.map((item) => (
-                  <div key={item.code} className="flex justify-between text-[13px]">
-                    <span className="text-[#555555]">
-                      <span className="font-mono text-[#C8860A] mr-2">{item.code}</span>
-                      {item.name}
-                    </span>
-                    <span className="font-mono text-right">{formatINR(item.amount)}</span>
-                  </div>
-                ))}
+        {/* Revenue */}
+        <div className="report-section">
+          <h3 className="report-section-header">I. Revenue from Operations</h3>
+          <div className="space-y-1">
+            {mockData.revenue.items.map((item) => (
+              <div key={item.code} className="report-line indent">
+                <span>
+                  <span className="font-mono text-[11px] text-amber mr-2">{item.code}</span>
+                  {item.name}
+                </span>
+                <span className="report-amount">{formatINR(item.amount)}</span>
               </div>
-            </div>
-            <div>
-              <h3 className="font-display text-[14px] font-medium text-[#1A1A1A] mb-3">{mockData.otherExpenses.name}</h3>
-              <div className="space-y-2 ml-4">
-                {mockData.otherExpenses.items.map((item) => (
-                  <div key={item.code} className="flex justify-between text-[13px]">
-                    <span className="text-[#555555]">
-                      <span className="font-mono text-[#C8860A] mr-2">{item.code}</span>
-                      {item.name}
-                    </span>
-                    <span className="font-mono text-right">{formatINR(item.amount)}</span>
-                  </div>
-                ))}
+            ))}
+          </div>
+          <div className="report-line total">
+            <span>Total Revenue (I)</span>
+            <span className="report-amount">{formatINR(mockData.revenue.total)}</span>
+          </div>
+        </div>
+
+        {/* Expenses */}
+        <div className="report-section">
+          <h3 className="report-section-header">II. Expenses</h3>
+          
+          <div className="report-line indent">
+            <span>Cost of Materials Consumed</span>
+            <span className="report-amount">{formatINR(mockData.costOfGoodsSold.total)}</span>
+          </div>
+
+          <div className="space-y-1 mt-2">
+            {mockData.operatingExpenses.items.map((item) => (
+              <div key={item.code} className="report-line indent">
+                <span>
+                  <span className="font-mono text-[11px] text-amber mr-2">{item.code}</span>
+                  {item.name}
+                </span>
+                <span className="report-amount">{formatINR(item.amount)}</span>
               </div>
-            </div>
+            ))}
           </div>
 
-          {/* Net Profit */}
-          <div className="flex justify-between text-[16px] font-medium pt-6 border-t-2 border-[#1A1A1A] bg-[#F5F5F5] p-4 rounded-[8px]">
-            <span>Net Profit for the Year</span>
-            <span className="font-mono text-[#1A7A3D]">{formatINR(mockData.netProfit)}</span>
+          <div className="report-line total">
+            <span>Total Expenses (II)</span>
+            <span className="report-amount">{formatINR(mockData.costOfGoodsSold.total + mockData.operatingExpenses.total)}</span>
+          </div>
+        </div>
+
+        {/* Profit Calculation */}
+        <div className="report-section pt-4 border-t border-hairline">
+          <div className="report-line font-semibold">
+            <span>Profit Before Exceptional Items and Tax (I - II)</span>
+            <span className="report-amount">{formatINR(mockData.revenue.total - (mockData.costOfGoodsSold.total + mockData.operatingExpenses.total))}</span>
           </div>
 
-          {/* Notes */}
-          <div className="pt-6 border-t border-[#E5E5E5]">
-            <p className="text-[10px] text-[#888888]">
-              The accompanying notes form an integral part of these financial statements.
-            </p>
+          <div className="report-line mt-4 final">
+            <span className="uppercase tracking-wider">Net Profit for the Year</span>
+            <span className="report-amount text-[16px]">{formatINR(mockData.netProfit)}</span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-12 pt-6 border-t border-hairline flex justify-between items-end">
+          <div className="text-[10px] text-light italic max-w-[300px]">
+            The accompanying notes form an integral part of these financial statements.
+            Prepared in accordance with Indian Accounting Standards (Ind AS).
+          </div>
+          <div className="text-right">
+            <div className="w-32 h-px bg-dark mb-2 ml-auto" />
+            <div className="text-[11px] font-semibold text-dark uppercase tracking-wide">Authorized Signatory</div>
           </div>
         </div>
       </div>

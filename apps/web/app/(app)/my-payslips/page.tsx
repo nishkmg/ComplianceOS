@@ -2,61 +2,63 @@
 "use client";
 
 import { api } from "@/lib/api";
+import { Badge } from "@/components/ui";
 
 export default function MyPayslipsPage() {
   const { data, isLoading } = api.payslips.listMyPayslips.useQuery();
 
-  if (isLoading) return <div className="p-8">Loading...</div>;
+  if (isLoading) return <div className="py-12 text-center font-ui text-light">Loading...</div>;
 
   const payslips = data ?? [];
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">My Payslips</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-display text-[26px] font-normal text-dark">My Payslips</h1>
+        <p className="font-ui text-[12px] text-light mt-1">View and download your payslips</p>
+      </div>
 
       {payslips.length === 0 ? (
-        <div className="border rounded p-8 text-center text-gray-600">
-          No payslips available
+        <div className="card p-12 text-center border-2 border-dashed">
+          <p className="font-ui text-[13px] text-light">No payslips available</p>
         </div>
       ) : (
-        <div className="border rounded">
-          <table className="w-full">
-            <thead className="bg-gray-50">
+        <div className="card overflow-hidden">
+          <table className="table table-dense">
+            <thead>
               <tr>
-                <th className="border px-4 py-2 text-left">Period</th>
-                <th className="border px-4 py-2 text-left">Generated On</th>
-                <th className="border px-4 py-2 text-left">Status</th>
-                <th className="border px-4 py-2 text-right">Actions</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">Period</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">Generated On</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide">Status</th>
+                <th className="font-ui text-[10px] uppercase tracking-wide text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {payslips.map((payslip: any) => (
-                <tr key={payslip.id} className="hover:bg-gray-50">
-                  <td className="border px-4 py-2">
+                <tr key={payslip.id} className="border-b border-hairline hover:bg-surface-muted">
+                  <td className="font-ui text-[13px] text-dark px-4 py-3">
                     {new Date(parseInt(payslip.year), parseInt(payslip.month) - 1).toLocaleString("default", { month: "long", year: "numeric" })}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="font-mono text-[13px] text-light px-4 py-3">
                     {new Date(payslip.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="border px-4 py-2">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      payslip.pdfUrl ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-                    }`}>
+                  <td className="px-4 py-3">
+                    <Badge variant={payslip.pdfUrl ? "success" : "gray"}>
                       {payslip.pdfUrl ? "Available" : "Processing"}
-                    </span>
+                    </Badge>
                   </td>
-                  <td className="border px-4 py-2 text-right">
+                  <td className="px-4 py-3 text-right">
                     {payslip.pdfUrl ? (
                       <a
                         href={`/api/payslips/download?id=${payslip.id}`}
-                        className="text-blue-600 hover:underline"
+                        className="font-ui text-[13px] text-amber hover:underline"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         Download PDF
                       </a>
                     ) : (
-                      <span className="text-gray-400">Generating...</span>
+                      <span className="font-ui text-[13px] text-light">Generating...</span>
                     )}
                   </td>
                 </tr>

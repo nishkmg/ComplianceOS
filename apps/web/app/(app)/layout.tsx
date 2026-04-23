@@ -1,10 +1,12 @@
 // @ts-nocheck
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { TRPCProvider } from "@/components/trpc-provider";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { CommandPalette } from "@/components/command-palette";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -22,7 +24,6 @@ const navItems = [
   { href: "/accounts", label: "Accounts" },
   { href: "/inventory", label: "Inventory" },
   { href: "/inventory/products", label: "Products", indent: true },
-  { href: "/inventory/products/new", label: "New", indent: true, subIndent: true },
   { href: "/inventory/stock", label: "Stock", indent: true },
   { href: "/inventory/reports", label: "Reports", indent: true },
   { href: "/gst", label: "GST" },
@@ -38,18 +39,31 @@ const navItems = [
   { href: "/settings", label: "Settings" },
 ];
 
+const fiscalYears = [
+  { id: "fy1", name: "FY 2026-27", status: "open", daysRemaining: 245 },
+  { id: "fy2", name: "FY 2025-26", status: "open", daysRemaining: 67 },
+  { id: "fy3", name: "FY 2024-25", status: "closed", daysRemaining: 0 },
+];
+
 export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const activeFy = "2026-27";
+  const [activeFy, setActiveFy] = useState("2026-27");
+  const [showFyPopover, setShowFyPopover] = useState(false);
+  const { commandPaletteOpen, closeCommandPalette } = useKeyboardShortcuts();
+
+  const currentFy = fiscalYears.find(fy => fy.name.includes(activeFy)) || fiscalYears[0];
 
   return (
     <TRPCProvider>
       <div className="flex min-h-screen bg-[#F5F5F5]">
+        {/* Command Palette */}
+        <CommandPalette isOpen={commandPaletteOpen} onClose={closeCommandPalette} />
+
         {/* Sidebar */}
         <aside className="w-64 bg-[#F0F0F0] flex flex-col">
           {/* Logo */}
           <div className="p-4 pb-6">
-            <h1 className="font-display text-[26px] font-normal text-[#1A1A1A]">
+            <h1 className="font-display text-[38px] font-normal text-[#1A1A1A] leading-tight">
               ComplianceOS
             </h1>
           </div>
@@ -77,19 +91,75 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             })}
           </nav>
 
-          {/* FY Footer */}
-          <div className="p-3 border-t border-hairline border-[#E5E5E5]">
-            <div className="text-[10px] text-[#888888] uppercase tracking-wide mb-1">
-              Active Fiscal Year
+          {/* FY Footer - Clickable */}
+          <div className="relative">
+            <div
+              className="p-3 border-t border-hairline border-[#E5E5E5] cursor-pointer hover:bg-[#E5E5E5] transition-colors"
+              onClick={() => setShowFyPopover(!showFyPopover)}
+            >
+              <div className="text-[10px] text-[#888888] uppercase tracking-wide mb-1">
+                Active Fiscal Year
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-[#555555] font-medium">
+                  FY {activeFy}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-[4px] ${
+                    currentFy.status === "open" ? "bg-[#DCFCE7] text-[#16A34A]" : "bg-[#E5E5E5] text-[#555555]"
+                  }`}>
+                    {currentFy.status === "open" ? "Open" : "Closed"}
+                  </span>
+                  <svg className="w-3 h-3 text-[#888888]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              {currentFy.status === "open" && fiscalYears.filter(f => f.status === "open").length > 1 && (
+                <div className="text-[9px] text-[#DC2626] mt-1">
+                  {currentFy.daysRemaining} days remaining
+                </div>
+              )}
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[12px] text-[#555555] font-medium">
-                FY {activeFy}
-              </span>
-              <span className="inline-flex items-center px-2 py-0.5 bg-[#DCFCE7] text-[#16A34A] text-[10px] font-medium rounded-[4px]">
-                Open
-              </span>
-            </div>
+
+            {/* FY Popover */}
+            {showFyPopover && (
+              <div
+                className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-[8px] shadow-lg border border-[#E5E5E5] overflow-hidden"
+                onClick={() => setShowFyPopover(false)}
+              >
+                <div className="p-2">
+                  {fiscalYears.map((fy) => (
+                    <button
+                      key={fy.id}
+                      onClick={() => {
+                        setActiveFy(fy.name.split(" ")[1]);
+                        setShowFyPopover(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-[4px] transition-colors ${
+                        activeFy === fy.name.split(" ")[1]
+                          ? "bg-[#C8860A] text-white"
+                          : "text-[#555555] hover:bg-[#F5F5F5]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[12px] font-medium">{fy.name}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                          fy.status === "open" ? "bg-[#DCFCE7] text-[#16A34A]" : "bg-[#E5E5E5] text-[#555555]"
+                        }`}>
+                          {fy.status}
+                        </span>
+                      </div>
+                      {fy.status === "open" && (
+                        <div className="text-[9px] text-[#888888] mt-0.5">
+                          {fy.daysRemaining} days remaining
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </aside>
 

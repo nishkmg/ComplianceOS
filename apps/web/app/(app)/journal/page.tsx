@@ -40,26 +40,20 @@ export default function JournalPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-[#1A1A1A]">Journal Entries</h1>
-          <p className="text-[12px] text-[#888888] mt-1">FY 2026-27 • {filteredEntries.length} entries</p>
+          <h1 className="font-display text-[26px] font-normal text-dark">Journal Entries</h1>
+          <p className="font-ui text-[12px] text-light mt-1">FY 2026-27 • {filteredEntries.length} entries</p>
         </div>
-        <Link href="/journal/new" className="btn btn-primary">
-          + New Entry
-        </Link>
+        <Link href="/journal/new" className="filter-tab active">+ New Entry</Link>
       </div>
 
       {/* Filter Tabs + Search */}
       <div className="flex items-center gap-4">
-        <div className="flex gap-2">
+        <div className="filter-tabs">
           {["all", "draft", "posted", "voided"].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 text-[13px] rounded-[6px] capitalize transition-colors ${
-                filter === f
-                  ? "bg-[#C8860A] text-white"
-                  : "bg-white border border-[#E5E5E5] text-[#555555] hover:border-[#C8860A]"
-              }`}
+              className={`filter-tab ${filter === f ? "active" : ""}`}
             >
               {f}
             </button>
@@ -67,45 +61,46 @@ export default function JournalPage() {
         </div>
         <input
           type="text"
-          placeholder="Search by narration or entry #"
+          placeholder="Search by narration or entry # (/)"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="ml-auto px-4 py-2 text-[13px] border border-[#E5E5E5] rounded-[6px] focus:outline-none focus:border-[#C8860A] w-[320px]"
+          data-search-input
+          className="ml-auto input-field w-[320px]"
         />
       </div>
 
       {/* Table */}
       <div className="card">
-        <table className="table">
+        <table className="table table-dense">
           <thead>
             <tr>
-              <th className="text-[10px] uppercase tracking-wide text-left">Entry #</th>
-              <th className="text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="text-[10px] uppercase tracking-wide text-left">Narration</th>
-              <th className="text-[10px] uppercase tracking-wide text-right">Debit</th>
-              <th className="text-[10px] uppercase tracking-wide text-right">Credit</th>
-              <th className="text-[10px] uppercase tracking-wide">Status</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Entry #</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Narration</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Debit</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Credit</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide">Status</th>
             </tr>
           </thead>
           <tbody>
             {filteredEntries.length > 0 ? (
               filteredEntries.map((entry) => (
                 <tr key={entry.id}>
-                  <td className="font-mono text-[13px] text-[#C8860A]">
+                  <td className="font-mono text-[13px] text-amber">
                     <Link href={`/journal/${entry.id}`} className="hover:underline">
                       {entry.entryNumber}
                     </Link>
                   </td>
-                  <td className="font-mono text-[13px] text-[#888888]">
-                    {new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  <td className="font-mono text-[13px] text-light">
+                    {new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                   </td>
-                  <td className="text-[13px] text-[#555555]">
+                  <td className="font-ui text-[13px] text-mid">
                     {entry.narration}
                   </td>
-                  <td className="font-mono text-[13px] text-right text-[#1A7A3D]">
+                  <td className="font-mono text-[13px] text-right text-success">
                     {entry.debit > 0 ? formatINR(entry.debit) : "—"}
                   </td>
-                  <td className="font-mono text-[13px] text-right text-[#B91C1C]">
+                  <td className="font-mono text-[13px] text-right text-danger">
                     {entry.credit > 0 ? formatINR(entry.credit) : "—"}
                   </td>
                   <td>
@@ -117,7 +112,7 @@ export default function JournalPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="text-center py-12 text-[13px] text-[#888888]">
+                <td colSpan={6} className="text-center py-12 font-ui text-[13px] text-light">
                   No entries found
                 </td>
               </tr>
@@ -125,13 +120,13 @@ export default function JournalPage() {
           </tbody>
           <tfoot>
             <tr className="border-t-2 border-[#1A1A1A]">
-              <td colSpan={3} className="py-3 text-[13px] font-medium text-[#555555]">
+              <td colSpan={3} className="py-3 font-ui text-[13px] font-medium text-mid">
                 Totals
               </td>
-              <td className="font-mono text-[13px] text-right text-[#1A7A3D] py-3">
+              <td className="font-mono text-[13px] text-right text-success py-3">
                 {formatINR(totalDebit)}
               </td>
-              <td className="font-mono text-[13px] text-right text-[#B91C1C] py-3">
+              <td className="font-mono text-[13px] text-right text-danger py-3">
                 {formatINR(totalCredit)}
               </td>
               <td />

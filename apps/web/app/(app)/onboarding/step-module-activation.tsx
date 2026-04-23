@@ -3,9 +3,6 @@
 import { useState } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 
 const MODULES = [
   {
@@ -80,9 +77,9 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Module Activation</h2>
-        <p className="mt-1 text-sm text-gray-600">
+      <div className="mb-8">
+        <h2 className="font-display text-[20px] font-normal text-dark">Module Activation</h2>
+        <p className="font-ui text-[13px] text-light mt-1">
           Choose the features you want to enable for your business
         </p>
       </div>
@@ -91,32 +88,53 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
         {MODULES.map((mod) => {
           const isEnabled = modules.find((m) => m.module === mod.id)?.enabled ?? false;
           return (
-            <Card key={mod.id} className={isEnabled ? "border-amber-500 bg-amber-50" : ""}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">{mod.name}</CardTitle>
-                  <Switch
-                    checked={isEnabled}
-                    onCheckedChange={() => toggleModule(mod.id)}
-                    disabled={mod.required}
+            <div
+              key={mod.id}
+              className={`card p-5 cursor-pointer transition-all ${
+                isEnabled ? "border-amber bg-surface-muted" : ""
+              }`}
+              onClick={() => !mod.required && toggleModule(mod.id)}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="font-ui text-[15px] font-medium text-dark">{mod.name}</h3>
+                <div
+                  className={`w-10 h-6 rounded-full transition-colors ${
+                    isEnabled ? "bg-amber" : "bg-lighter"
+                  } relative`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    !mod.required && toggleModule(mod.id);
+                  }}
+                >
+                  <div
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                      isEnabled ? "left-5" : "left-1"
+                    }`}
                   />
                 </div>
-                <CardDescription className="text-sm">
-                  {mod.description}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+              </div>
+              <p className="font-ui text-[12px] text-light">{mod.description}</p>
+              {mod.required && (
+                <span className="inline-block mt-2 font-ui text-[9px] uppercase tracking-wide text-amber">
+                  Required
+                </span>
+              )}
+            </div>
           );
         })}
       </div>
 
-      <div className="mt-6 flex justify-between items-center">
-        <p className="text-sm text-gray-600">
+      <div className="mt-8 flex justify-between items-center pt-6 border-t border-hairline">
+        <p className="font-ui text-[12px] text-light">
           Accounting is always enabled (core feature)
         </p>
-        <Button onClick={handleContinue} disabled={saveProgress.isPending}>
-          Continue
-        </Button>
+        <button
+          onClick={handleContinue}
+          disabled={saveProgress.isPending}
+          className="filter-tab active disabled:opacity-50"
+        >
+          {saveProgress.isPending ? "Saving..." : "Continue"}
+        </button>
       </div>
     </div>
   );

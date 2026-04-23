@@ -4,15 +4,12 @@ import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { Badge, BalanceBar } from "@/components/ui";
-import { formatIndianNumber } from "@/lib/format";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { formatIndianNumber, formatDateShort } from "@/lib/format";
 
 const statusColors: Record<string, string> = {
-  draft: "bg-yellow-100 text-yellow-800",
-  posted: "bg-green-100 text-green-800",
-  voided: "bg-gray-100 text-gray-800",
+  draft: "bg-amber text-white",
+  posted: "bg-success text-white",
+  voided: "bg-gray text-mid",
 };
 
 export default function JournalEntryDetailPage() {
@@ -64,7 +61,7 @@ export default function JournalEntryDetailPage() {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-          <p className="mt-4 text-gray-600">Loading entry...</p>
+          <p className="mt-4 font-ui text-mid">Loading entry...</p>
         </div>
       </div>
     );
@@ -72,11 +69,11 @@ export default function JournalEntryDetailPage() {
 
   if (!entry) {
     return (
-      <div className="rounded-lg border border-gray-200 p-12 text-center">
-        <p className="text-gray-500">Journal entry not found</p>
-        <Button className="mt-4" onClick={() => router.push("/journal")}>
+      <div className="card p-12 text-center">
+        <p className="font-ui text-light">Journal entry not found</p>
+        <button onClick={() => router.push("/journal")} className="filter-tab active mt-4">
           Back to Journal
-        </Button>
+        </button>
       </div>
     );
   }
@@ -90,92 +87,116 @@ export default function JournalEntryDetailPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{entry.entryNumber}</h1>
-          <p className="text-sm text-gray-500">{entry.date} · FY {entry.fiscalYear}</p>
+          <h1 className="font-display text-[26px] font-normal text-dark">{entry.entryNumber}</h1>
+          <p className="font-ui text-[12px] text-light mt-1">
+            {formatDateShort(entry.date)} · FY {entry.fiscalYear}
+          </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge variant={entry.status === "posted" ? "success" : entry.status === "voided" ? "secondary" : "warning"}>
+          <Badge variant={entry.status === "posted" ? "success" : entry.status === "voided" ? "gray" : "amber"}>
             {entry.status}
           </Badge>
         </div>
       </div>
 
       {/* Narration */}
-      <div className="rounded-lg border border-gray-200 p-6">
-        {isCorrectingNarration ? (
-          <div className="space-y-4">
-            <div>
-              <Label>Old Narration</Label>
-              <p className="mt-1 text-sm text-gray-500">{entry.narration}</p>
+      <div className="card">
+        <div className="p-6">
+          {isCorrectingNarration ? (
+            <div className="space-y-4">
+              <div>
+                <label className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+                  Old Narration
+                </label>
+                <p className="font-ui text-[13px] text-light line-through">{entry.narration}</p>
+              </div>
+              <div>
+                <label htmlFor="newNarration" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+                  New Narration
+                </label>
+                <input
+                  id="newNarration"
+                  type="text"
+                  value={newNarration}
+                  onChange={(e) => setNewNarration(e.target.value)}
+                  className="input-field w-full font-ui"
+                  autoFocus
+                  placeholder="Enter corrected narration"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleCorrectNarration}
+                  disabled={correctNarration.isPending || !newNarration.trim()}
+                  className="filter-tab active disabled:opacity-50"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setIsCorrectingNarration(false)}
+                  className="filter-tab"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-            <div>
-              <Label htmlFor="newNarration">New Narration</Label>
-              <Input
-                id="newNarration"
-                value={newNarration}
-                onChange={(e) => setNewNarration(e.target.value)}
-                className="mt-1"
-                autoFocus
-              />
+          ) : (
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="font-ui text-[15px] font-medium text-dark">{entry.narration}</h2>
+                <p className="font-ui text-[12px] text-light mt-1">
+                  Reference: <span className="font-mono text-amber">{entry.referenceType || "Manual"}</span>
+                </p>
+              </div>
+              {entry.status === "draft" && (
+                <button
+                  onClick={() => {
+                    setNewNarration(entry.narration);
+                    setIsCorrectingNarration(true);
+                  }}
+                  className="filter-tab"
+                >
+                  Correct Narration
+                </button>
+              )}
             </div>
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleCorrectNarration} disabled={correctNarration.isPending}>
-                Save
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => setIsCorrectingNarration(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">{entry.narration}</h2>
-              <p className="mt-1 text-sm text-gray-500">Reference: {entry.referenceType}</p>
-            </div>
-            {entry.status === "draft" && (
-              <Button size="sm" variant="outline" onClick={() => {
-                setNewNarration(entry.narration);
-                setIsCorrectingNarration(true);
-              }}>
-                Correct Narration
-              </Button>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Lines */}
-      <div className="rounded-lg border border-gray-200">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+      <div className="card overflow-hidden">
+        <table className="table table-dense">
+          <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-gray-500 font-medium">Account</th>
-              <th className="px-6 py-3 text-right text-gray-500 font-medium">Debit (₹)</th>
-              <th className="px-6 py-3 text-right text-gray-500 font-medium">Credit (₹)</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Account</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Debit (₹)</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Credit (₹)</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody>
             {entry.lines?.map((line: any, i: number) => (
-              <tr key={i}>
-                <td className="px-6 py-3 text-gray-900">{line.accountName || line.accountId}</td>
-                <td className="px-6 py-3 text-right text-gray-600">
-                  {line.debit && line.debit !== "0" ? formatIndianNumber(line.debit) : "-"}
+              <tr key={i} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                <td className="font-ui text-[13px] text-dark px-4 py-3">
+                  {line.accountName || line.accountId}
                 </td>
-                <td className="px-6 py-3 text-right text-gray-600">
-                  {line.credit && line.credit !== "0" ? formatIndianNumber(line.credit) : "-"}
+                <td className="font-mono text-[13px] text-right text-success px-4 py-3">
+                  {line.debit && line.debit !== "0" ? formatIndianNumber(line.debit) : "—"}
+                </td>
+                <td className="font-mono text-[13px] text-right text-danger px-4 py-3">
+                  {line.credit && line.credit !== "0" ? formatIndianNumber(line.credit) : "—"}
                 </td>
               </tr>
             ))}
           </tbody>
-          <tfoot className="bg-gray-50 border-t">
-            <tr>
-              <td className="px-6 py-3 font-semibold text-gray-900">Total</td>
-              <td className={`px-6 py-3 text-right font-semibold ${isBalanced ? "text-gray-900" : "text-red-600"}`}>
-                ₹{formatIndianNumber(totalDebit)}
+          <tfoot>
+            <tr className="border-t-2 border-dark font-semibold">
+              <td className="font-ui text-[13px] text-dark px-6 py-4">Total</td>
+              <td className={`font-mono text-[14px] text-right px-6 py-4 ${isBalanced ? "text-success" : "text-danger"}`}>
+                {formatIndianNumber(totalDebit)}
               </td>
-              <td className={`px-6 py-3 text-right font-semibold ${isBalanced ? "text-gray-900" : "text-red-600"}`}>
-                ₹{formatIndianNumber(totalCredit)}
+              <td className={`font-mono text-[14px] text-right px-6 py-4 ${isBalanced ? "text-success" : "text-danger"}`}>
+                {formatIndianNumber(totalCredit)}
               </td>
             </tr>
           </tfoot>
@@ -183,88 +204,108 @@ export default function JournalEntryDetailPage() {
       </div>
 
       {!isBalanced && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-800">
-          <p className="font-medium">Entry is not balanced. Difference: ₹{formatIndianNumber(Math.abs(totalDebit - totalCredit))}</p>
+        <div className="bg-danger-bg p-4 rounded-md">
+          <p className="font-ui text-[13px] text-danger font-medium">
+            Entry is not balanced. Difference: {formatIndianNumber(Math.abs(totalDebit - totalCredit))}
+          </p>
         </div>
       )}
 
+      {/* Balance Bar */}
+      <BalanceBar debit={totalDebit} credit={totalCredit} />
+
       {/* Actions */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 pt-6 border-t border-hairline">
         {entry.status === "draft" && (
           <>
-            <Button
+            <button
               onClick={() => postEntry.mutate({ id: entryId })}
               disabled={postEntry.isPending || !isBalanced}
+              className="filter-tab active disabled:opacity-50"
             >
               Post Entry
-            </Button>
-            <Button variant="outline" onClick={() => router.push(`/journal/${entryId}/edit`)}>
+            </button>
+            <button
+              onClick={() => router.push(`/journal/${entryId}/edit`)}
+              className="filter-tab"
+            >
               Edit
-            </Button>
-            <Button
-              variant="outline"
+            </button>
+            <button
               onClick={() => {
                 if (confirm("Delete this draft entry?")) {
                   router.push("/journal");
                 }
               }}
+              className="filter-tab"
             >
               Delete
-            </Button>
+            </button>
           </>
         )}
         {entry.status === "posted" && (
           <>
-            <Button
-              variant="outline"
+            <button
               onClick={() => setShowVoidModal(true)}
               disabled={voidEntry.isPending}
+              className="filter-tab"
             >
               Void Entry
-            </Button>
-            <Button variant="outline" onClick={() => {
-              setNewNarration(entry.narration);
-              setIsCorrectingNarration(true);
-            }}>
+            </button>
+            <button
+              onClick={() => {
+                setNewNarration(entry.narration);
+                setIsCorrectingNarration(true);
+              }}
+              className="filter-tab"
+            >
               Correct Narration
-            </Button>
+            </button>
           </>
         )}
         {entry.status === "voided" && (
-          <p className="text-sm text-gray-500">Voided entries cannot be modified</p>
+          <p className="font-ui text-light">Voided entries cannot be modified</p>
         )}
       </div>
 
       {/* Void Modal */}
       {showVoidModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6">
-            <h3 className="text-lg font-semibold text-gray-900">Void Journal Entry</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              This will create a reversing entry. The original entry cannot be modified after voiding.
-            </p>
-            <div className="mt-4">
-              <Label htmlFor="voidReason">Reason for voiding *</Label>
-              <Input
-                id="voidReason"
-                value={voidReason}
-                onChange={(e) => setVoidReason(e.target.value)}
-                className="mt-1"
-                placeholder="e.g., Duplicate entry, incorrect amount"
-              />
-            </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowVoidModal(false)}>
-                Cancel
-              </Button>
-              <Button
-                variant="outline"
-                className="border-red-300 text-red-600 hover:bg-red-50"
-                onClick={handleVoid}
-                disabled={voidEntry.isPending || !voidReason.trim()}
-              >
-                Void Entry
-              </Button>
+        <div className="command-palette-overlay" onClick={() => setShowVoidModal(false)}>
+          <div className="command-palette max-w-md" onClick={e => e.stopPropagation()}>
+            <div className="p-6">
+              <h3 className="font-display text-[20px] font-normal text-dark mb-2">
+                Void Journal Entry
+              </h3>
+              <div className="void-modal-warning mb-4">
+                <p className="font-ui text-[13px]">
+                  This will create a reversing entry. The original entry cannot be modified after voiding.
+                </p>
+              </div>
+              <div>
+                <label htmlFor="voidReason" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+                  Reason for voiding *
+                </label>
+                <input
+                  id="voidReason"
+                  type="text"
+                  value={voidReason}
+                  onChange={(e) => setVoidReason(e.target.value)}
+                  className="input-field w-full font-ui"
+                  placeholder="e.g., Duplicate entry, incorrect amount"
+                />
+              </div>
+              <div className="flex justify-end gap-2 mt-6">
+                <button onClick={() => setShowVoidModal(false)} className="filter-tab">
+                  Cancel
+                </button>
+                <button
+                  onClick={handleVoid}
+                  disabled={voidEntry.isPending || !voidReason.trim()}
+                  className="filter-tab bg-danger-bg text-danger border-danger hover:bg-danger-bg"
+                >
+                  Void Entry
+                </button>
+              </div>
             </div>
           </div>
         </div>

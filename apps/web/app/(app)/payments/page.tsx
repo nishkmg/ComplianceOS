@@ -3,6 +3,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Badge } from "@/components/ui";
+import { formatIndianNumber } from "@/lib/format";
 
 interface Payment {
   id: string;
@@ -28,11 +30,6 @@ const methodLabels: Record<string, string> = {
   cheque: "Cheque",
 };
 
-const statusColors: Record<string, string> = {
-  recorded: "bg-green-100 text-green-800",
-  voided: "bg-red-100 text-red-800",
-};
-
 export default function PaymentsPage() {
   const [customerSearch, setCustomerSearch] = useState("");
   const [dateFrom, setDateFrom] = useState("");
@@ -48,99 +45,113 @@ export default function PaymentsPage() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Payments</h1>
-        <Link href="/payments/new" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+        <div>
+          <h1 className="font-display text-[26px] font-normal text-dark">Payments</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Record and track customer payments</p>
+        </div>
+        <Link href="/payments/new" className="filter-tab active">
           + Record Payment
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-3 p-4 bg-white rounded-lg shadow">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-500">Customer</label>
-          <input
-            type="text"
-            placeholder="Search customer..."
-            value={customerSearch}
-            onChange={(e) => setCustomerSearch(e.target.value)}
-            className="px-3 py-1.5 text-sm border rounded w-48"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-500">From Date</label>
-          <input
-            type="date"
-            value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
-            className="px-3 py-1.5 text-sm border rounded"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-500">To Date</label>
-          <input
-            type="date"
-            value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
-            className="px-3 py-1.5 text-sm border rounded"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-500">Method</label>
-          <select
-            value={methodFilter}
-            onChange={(e) => setMethodFilter(e.target.value)}
-            className="px-3 py-1.5 text-sm border rounded"
-          >
-            <option value="all">All Methods</option>
-            <option value="cash">Cash</option>
-            <option value="bank">Bank Transfer</option>
-            <option value="online">Online</option>
-            <option value="cheque">Cheque</option>
-          </select>
+      {/* Filters */}
+      <div className="card p-4">
+        <div className="flex flex-wrap gap-4 items-end">
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Customer</label>
+            <input
+              type="text"
+              placeholder="Search customer..."
+              value={customerSearch}
+              onChange={(e) => setCustomerSearch(e.target.value)}
+              className="input-field font-ui w-48"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">From Date</label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="input-field font-ui"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">To Date</label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="input-field font-ui"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Method</label>
+            <select
+              value={methodFilter}
+              onChange={(e) => setMethodFilter(e.target.value)}
+              className="input-field font-ui"
+            >
+              <option value="all">All Methods</option>
+              <option value="cash">Cash</option>
+              <option value="bank">Bank Transfer</option>
+              <option value="online">Online</option>
+              <option value="cheque">Cheque</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+      {/* Table */}
+      <div className="card overflow-hidden">
+        <table className="table table-dense">
+          <thead>
             <tr>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Payment #</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Customer</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-              <th className="px-4 py-3 text-right text-gray-500 font-medium">Amount</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Method</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Status</th>
-              <th className="px-4 py-3 text-center text-gray-500 font-medium">Actions</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Payment #</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Customer</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Method</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-center">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-400">No payments found</td>
+                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
+                  No payments found
+                </td>
               </tr>
             ) : (
               filtered.map((payment) => (
-                <tr key={payment.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <span className="font-mono text-blue-600">{payment.paymentNumber}</span>
+                <tr key={payment.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                  <td className="font-mono text-[13px] text-amber px-4 py-3">
+                    <Link href={`/payments/${payment.id}`} className="hover:underline">
+                      {payment.paymentNumber}
+                    </Link>
                   </td>
-                  <td className="px-4 py-3 text-gray-900">{payment.customerName}</td>
-                  <td className="px-4 py-3 text-gray-600">{payment.date}</td>
-                  <td className="px-4 py-3 text-right text-gray-900 font-medium">
-                    ₹{payment.amount.toLocaleString("en-IN")}
+                  <td className="font-ui text-[13px] text-dark px-4 py-3">{payment.customerName}</td>
+                  <td className="font-mono text-[13px] text-light px-4 py-3">{payment.date}</td>
+                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">
+                    {formatIndianNumber(payment.amount)}
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{methodLabels[payment.paymentMethod]}</td>
+                  <td className="font-ui text-[13px] text-mid px-4 py-3">{methodLabels[payment.paymentMethod]}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 text-xs rounded-full capitalize ${statusColors[payment.status]}`}>
+                    <Badge variant={payment.status === "recorded" ? "success" : "gray"}>
                       {payment.status}
-                    </span>
+                    </Badge>
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <button className="text-blue-600 hover:underline text-xs">View</button>
+                    <div className="flex gap-3 justify-center">
+                      <Link href={`/payments/${payment.id}`} className="font-ui text-[12px] text-amber hover:underline">
+                        View
+                      </Link>
                       {payment.status === "recorded" && (
-                        <button className="text-red-600 hover:underline text-xs">Void</button>
+                        <button className="font-ui text-[12px] text-danger hover:underline">Void</button>
                       )}
                     </div>
                   </td>

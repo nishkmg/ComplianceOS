@@ -3,10 +3,6 @@
 import { useState, useMemo } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { formatIndianNumber } from "@/lib/format";
 
 interface OpeningBalance {
@@ -68,43 +64,43 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   if (mode === "fresh_start") {
     return (
       <div>
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Opening Balances</h2>
-          <p className="mt-1 text-sm text-gray-600">
+        <div className="mb-8">
+          <h2 className="font-display text-[20px] font-normal text-dark">Opening Balances</h2>
+          <p className="font-ui text-[13px] text-light mt-1">
             Are you starting fresh or migrating from another system?
           </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Card
-            className="cursor-pointer border-amber-500 bg-amber-50"
+          <div
+            className="card p-5 cursor-pointer border-amber bg-surface-muted"
             onClick={() => setMode("fresh_start")}
           >
-            <CardContent className="pt-6">
-              <h3 className="font-semibold">Fresh Start</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                New business with no prior transactions. Start with zero balances.
-              </p>
-            </CardContent>
-          </Card>
+            <h3 className="font-ui text-[15px] font-medium text-dark mb-2">Fresh Start</h3>
+            <p className="font-ui text-[12px] text-light">
+              New business with no prior transactions. Start with zero balances.
+            </p>
+          </div>
 
-          <Card
-            className="cursor-pointer hover:border-gray-300"
+          <div
+            className="card p-5 cursor-pointer hover:border-lighter"
             onClick={() => setMode("migration")}
           >
-            <CardContent className="pt-6">
-              <h3 className="font-semibold">Migration</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Moving from another system. Enter your opening balances.
-              </p>
-            </CardContent>
-          </Card>
+            <h3 className="font-ui text-[15px] font-medium text-dark mb-2">Migration</h3>
+            <p className="font-ui text-[12px] text-light">
+              Moving from another system. Enter your opening balances.
+            </p>
+          </div>
         </div>
 
-        <div className="mt-6 flex justify-end">
-          <Button onClick={handleContinue} disabled={setupOpeningBalances.isPending}>
+        <div className="mt-8 flex justify-end pt-6 border-t border-hairline">
+          <button
+            onClick={handleContinue}
+            disabled={setupOpeningBalances.isPending}
+            className="filter-tab active disabled:opacity-50"
+          >
             {setupOpeningBalances.isPending ? "Setting up..." : "Continue"}
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -112,28 +108,28 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Enter Opening Balances</h2>
-        <p className="mt-1 text-sm text-gray-600">
+      <div className="mb-8">
+        <h2 className="font-display text-[20px] font-normal text-dark">Enter Opening Balances</h2>
+        <p className="font-ui text-[13px] text-light mt-1">
           Enter balances as of the fiscal year start date
         </p>
       </div>
 
       {accounts && accounts.length > 0 && (
-        <div className="space-y-4 max-h-96 overflow-auto">
+        <div className="space-y-3 max-h-96 overflow-auto">
           {accounts
             .filter((a: any) => a.isLeaf)
             .slice(0, 20)
             .map((account: any) => (
-              <div key={account.id} className="flex items-center gap-4">
+              <div key={account.id} className="flex items-center gap-4 card p-4">
                 <div className="flex-1">
-                  <p className="font-medium">{account.name}</p>
-                  <p className="text-xs text-gray-500">{account.code}</p>
+                  <p className="font-ui text-[13px] text-dark">{account.name}</p>
+                  <p className="font-mono text-[11px] text-light">{account.code}</p>
                 </div>
-                <Input
+                <input
                   type="number"
                   placeholder="0.00"
-                  className="w-32"
+                  className="input-field w-32 font-mono text-right"
                   onChange={(e) => {
                     const value = parseFloat(e.target.value) || 0;
                     setBalances((prev) => {
@@ -162,34 +158,31 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
       )}
 
       {balances.length > 0 && (
-        <Card className="mt-6 bg-gray-50">
-          <CardContent className="pt-6">
-            <div className="flex justify-between text-sm">
-              <span>Total Debits:</span>
-              <span className="font-medium">{formatIndianNumber(totalDebits)}</span>
+        <div className="card bg-surface-muted p-5 mt-6">
+          <div className="space-y-2">
+            <div className="flex justify-between font-ui text-[13px]">
+              <span className="text-light">Total Debits</span>
+              <span className="font-mono text-dark">{formatIndianNumber(totalDebits)}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span>Total Credits:</span>
-              <span className="font-medium">{formatIndianNumber(totalCredits)}</span>
+            <div className="flex justify-between font-ui text-[13px]">
+              <span className="text-light">Total Credits</span>
+              <span className="font-mono text-dark">{formatIndianNumber(totalCredits)}</span>
             </div>
-            <div className="mt-2 flex justify-between border-t pt-2">
-              <span>Difference:</span>
-              <span
-                className={`font-semibold ${
-                  difference === 0 ? "text-green-600" : "text-red-600"
-                }`}
-              >
+            <div className="mt-3 pt-3 border-t border-hairline flex justify-between font-ui text-[13px]">
+              <span className="text-light">Difference</span>
+              <span className={`font-mono font-semibold ${difference === 0 ? "text-success" : "text-danger"}`}>
                 {formatIndianNumber(difference)}
               </span>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
-      <div className="mt-6 flex justify-end">
-        <Button
+      <div className="mt-8 flex justify-end pt-6 border-t border-hairline">
+        <button
           onClick={handleContinue}
           disabled={setupOpeningBalances.isPending || (mode === "migration" && difference !== 0)}
+          className={`filter-tab active disabled:opacity-50`}
         >
           {setupOpeningBalances.isPending
             ? "Setting up..."
@@ -198,7 +191,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
             : difference === 0
             ? "Complete Setup"
             : "Balance Required"}
-        </Button>
+        </button>
       </div>
     </div>
   );

@@ -4,6 +4,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { Badge } from "@/components/ui";
+import { formatIndianNumber } from "@/lib/format";
 
 interface GSTReturn {
   id: string;
@@ -20,12 +22,12 @@ interface GSTReturn {
   dueDate: string;
 }
 
-const statusConfig: Record<GSTReturn["status"], { bg: string; label: string }> = {
-  draft: { bg: "bg-gray-100 text-gray-800", label: "Draft" },
-  generated: { bg: "bg-blue-100 text-blue-800", label: "Generated" },
-  filed: { bg: "bg-green-100 text-green-800", label: "Filed" },
-  amended: { bg: "bg-yellow-100 text-yellow-800", label: "Amended" },
-  completed: { bg: "bg-green-100 text-green-800", label: "Completed" },
+const statusConfig: Record<GSTReturn["status"], { label: string; variant: "gray" | "blue" | "success" | "amber" }> = {
+  draft: { label: "Draft", variant: "gray" },
+  generated: { label: "Generated", variant: "blue" },
+  filed: { label: "Filed", variant: "success" },
+  amended: { label: "Amended", variant: "amber" },
+  completed: { label: "Completed", variant: "success" },
 };
 
 const returnTypes = ["all", "gstr1", "gstr2b", "gstr3b"] as const;
@@ -106,136 +108,143 @@ export default function GSTReturnsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">GST Returns</h1>
-        <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
-          Generate All
-        </button>
+        <div>
+          <h1 className="font-display text-[26px] font-normal text-dark">GST Returns</h1>
+          <p className="font-ui text-[12px] text-light mt-1">Generate and file GST returns</p>
+        </div>
+        <button className="filter-tab active">Generate All</button>
       </div>
 
+      {/* Filters */}
       <div className="flex gap-4 items-center flex-wrap">
-        <select
-          value={periodMonth ?? ""}
-          onChange={(e) => { setPeriodMonth(e.target.value ? Number(e.target.value) : undefined); setPage(1); }}
-          className="px-3 py-2 border rounded text-sm"
-        >
-          <option value="">All Months</option>
-          {months.map((m) => (
-            <option key={m.value} value={m.value}>{m.label}</option>
-          ))}
-        </select>
+        <div className="flex flex-col gap-1">
+          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
+          <select
+            value={periodMonth ?? ""}
+            onChange={(e) => { setPeriodMonth(e.target.value ? Number(e.target.value) : undefined); setPage(1); }}
+            className="input-field font-ui"
+          >
+            <option value="">All Months</option>
+            {months.map((m) => (
+              <option key={m.value} value={m.value}>{m.label}</option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          type="number"
-          placeholder="Year (e.g., 2026)"
-          value={periodYear ?? ""}
-          onChange={(e) => { setPeriodYear(e.target.value ? Number(e.target.value) : undefined); setPage(1); }}
-          className="px-3 py-2 border rounded text-sm w-32"
-          min={2000}
-          max={2100}
-        />
+        <div className="flex flex-col gap-1">
+          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
+          <input
+            type="number"
+            placeholder="Year"
+            value={periodYear ?? ""}
+            onChange={(e) => { setPeriodYear(e.target.value ? Number(e.target.value) : undefined); setPage(1); }}
+            className="input-field font-ui w-28"
+            min={2000}
+            max={2100}
+          />
+        </div>
 
-        <select
-          value={returnType}
-          onChange={(e) => { setReturnType(e.target.value as (typeof returnTypes)[number]); setPage(1); }}
-          className="px-3 py-2 border rounded text-sm"
-        >
-          {returnTypes.map((t) => (
-            <option key={t} value={t}>
-              {t === "all" ? "All Return Types" : t.toUpperCase()}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-col gap-1">
+          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Return Type</label>
+          <select
+            value={returnType}
+            onChange={(e) => { setReturnType(e.target.value as (typeof returnTypes)[number]); setPage(1); }}
+            className="input-field font-ui"
+          >
+            {returnTypes.map((t) => (
+              <option key={t} value={t}>
+                {t === "all" ? "All Return Types" : t.toUpperCase()}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <select
-          value={status}
-          onChange={(e) => { setStatus(e.target.value as (typeof statuses)[number]); setPage(1); }}
-          className="px-3 py-2 border rounded text-sm"
-        >
-          {statuses.map((s) => (
-            <option key={s} value={s}>
-              {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-col gap-1">
+          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Status</label>
+          <select
+            value={status}
+            onChange={(e) => { setStatus(e.target.value as (typeof statuses)[number]); setPage(1); }}
+            className="input-field font-ui"
+          >
+            {statuses.map((s) => (
+              <option key={s} value={s}>
+                {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+      {/* Table */}
+      <div className="card overflow-hidden">
+        <table className="table table-dense">
+          <thead>
             <tr>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Return #</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Type</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Period</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Due Date</th>
-              <th className="px-4 py-3 text-right text-gray-500 font-medium">Liability</th>
-              <th className="px-4 py-3 text-right text-gray-500 font-medium">ITC</th>
-              <th className="px-4 py-3 text-right text-gray-500 font-medium">Payable</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Status</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Filed Date</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Actions</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Return #</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Period</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Due Date</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Liability</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">ITC</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Payable</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Filed Date</th>
+              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={10} className="px-4 py-8 text-center text-gray-500">
-                  Loading...
-                </td>
+                <td colSpan={10} className="px-4 py-12 text-center font-ui text-light">Loading GST returns...</td>
               </tr>
             ) : filteredReturns.length === 0 ? (
               <tr>
-                <td colSpan={10} className="px-4 py-8 text-center text-gray-500">
-                  No GST returns yet
-                </td>
+                <td colSpan={10} className="px-4 py-12 text-center font-ui text-light">No GST returns yet</td>
               </tr>
             ) : (
               filteredReturns.map((ret) => {
-                const statusConf = statusConfig[ret.status] ?? { bg: "bg-gray-100 text-gray-800", label: ret.status };
+                const statusConf = statusConfig[ret.status] ?? { label: ret.status, variant: "gray" as const };
                 return (
-                  <tr key={ret.id} className="hover:bg-gray-50">
+                  <tr key={ret.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
                     <td className="px-4 py-3">
-                      <Link href={`/gst/returns/${ret.taxPeriodYear}-${ret.taxPeriodMonth}`} className="text-blue-600 hover:underline">
+                      <Link href={`/gst/returns/${ret.taxPeriodYear}-${ret.taxPeriodMonth}`} className="font-mono text-[13px] text-amber hover:underline">
                         {ret.returnNumber}
                       </Link>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="font-medium uppercase">{ret.returnType}</span>
+                      <span className="font-ui text-[13px] text-dark uppercase">{ret.returnType}</span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 font-ui text-[13px] text-mid">
                       {months.find((m) => m.value === Number(ret.taxPeriodMonth))?.label} {ret.taxPeriodYear}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{ret.dueDate}</td>
-                    <td className="px-4 py-3 text-right text-gray-600">₹{Number(ret.totalTaxPayable).toLocaleString("en-IN")}</td>
-                    <td className="px-4 py-3 text-right text-gray-600">₹{Number(ret.totalEligibleItc).toLocaleString("en-IN")}</td>
-                    <td className="px-4 py-3 text-right text-gray-600">₹{Number(ret.totalTaxPaid).toLocaleString("en-IN")}</td>
+                    <td className="px-4 py-3 font-mono text-[13px] text-light">{ret.dueDate}</td>
+                    <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(Number(ret.totalTaxPayable))}</td>
+                    <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(Number(ret.totalEligibleItc))}</td>
+                    <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(Number(ret.totalTaxPaid))}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 text-xs rounded-full capitalize ${statusConf.bg}`}>
-                        {statusConf.label}
-                      </span>
+                      <Badge variant={statusConf.variant}>{statusConf.label}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{ret.filingDate ?? "-"}</td>
+                    <td className="px-4 py-3 font-mono text-[13px] text-light">{ret.filingDate ?? "-"}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         {ret.status === "draft" && (
-                          <button
-                            onClick={() => handleGenerate(Number(ret.taxPeriodMonth), Number(ret.taxPeriodYear), ret.returnType)}
-                            className="text-blue-600 hover:underline text-xs"
-                          >
+                          <button onClick={() => handleGenerate(Number(ret.taxPeriodMonth), Number(ret.taxPeriodYear), ret.returnType)} className="font-ui text-[12px] text-amber hover:underline">
                             Generate
                           </button>
                         )}
-                        <Link href={`/gst/returns/${ret.taxPeriodYear}-${ret.taxPeriodMonth}/${ret.returnType}`} className="text-gray-600 hover:underline text-xs">
+                        <Link href={`/gst/returns/${ret.taxPeriodYear}-${ret.taxPeriodMonth}/${ret.returnType}`} className="font-ui text-[12px] text-mid hover:underline">
                           View
                         </Link>
                         {ret.status === "generated" && (
-                          <button onClick={() => handleFile(ret.id)} className="text-green-600 hover:underline text-xs">
+                          <button onClick={() => handleFile(ret.id)} className="font-ui text-[12px] text-success hover:underline">
                             File
                           </button>
                         )}
                         {ret.status === "filed" && (
-                          <button onClick={() => handleAmend(ret.id)} className="text-yellow-600 hover:underline text-xs">
+                          <button onClick={() => handleAmend(ret.id)} className="font-ui text-[12px] text-amber hover:underline">
                             Amend
                           </button>
                         )}
@@ -250,22 +259,14 @@ export default function GSTReturnsPage() {
       </div>
 
       {filteredReturns.length > 0 && (
-        <div className="flex items-center justify-between text-sm text-gray-600">
+        <div className="flex items-center justify-between text-sm font-ui text-mid">
           <span>Showing {filteredReturns.length} returns</span>
           <div className="flex gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="px-3 py-1 border rounded disabled:opacity-50"
-            >
+            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="filter-tab disabled:opacity-50">
               Previous
             </button>
             <span className="px-3 py-1">Page {page}</span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              disabled={filteredReturns.length < pageSize}
-              className="px-3 py-1 border rounded disabled:opacity-50"
-            >
+            <button onClick={() => setPage((p) => p + 1)} disabled={filteredReturns.length < pageSize} className="filter-tab disabled:opacity-50">
               Next
             </button>
           </div>

@@ -76,9 +76,7 @@ export default function ChartOfAccountsPage() {
         return (
           <div key={account.id}>
             <div
-              className={`group flex items-center gap-3 py-3 px-4 hover:bg-[#FFF8F0] border-b border-[#E5E5E5] last:border-0 cursor-pointer ${
-                level > 0 ? "bg-[#FAFAFA]" : ""
-              }`}
+              className={`group flex items-center gap-3 py-3 px-4 hover:bg-surface-muted border-b border-hairline last:border-0 cursor-pointer ${level > 0 ? "bg-surface-muted" : ""}`}
               style={{ paddingLeft: `${indent + 16}px` }}
               onClick={() => account.hasChildren && toggleExpand(account.id)}
             >
@@ -89,22 +87,14 @@ export default function ChartOfAccountsPage() {
                   e.stopPropagation();
                   toggleExpand(account.id);
                 }}
-                className={`w-5 h-5 flex items-center justify-center rounded hover:bg-[#E5E5E5] text-[#888888] ${
-                  !account.hasChildren ? "invisible" : ""
-                }`}
+                className={`w-5 h-5 flex items-center justify-center rounded hover:bg-lighter text-light ${!account.hasChildren ? "invisible" : ""}`}
               >
                 {isExpanded ? "−" : "+"}
               </button>
 
               {/* Code */}
-              <span className="font-mono text-[13px] text-[#C8860A] w-[80px] flex-shrink-0">
-                {account.code}
-              </span>
-
-              {/* Name */}
-              <span className="text-[13px] text-[#1A1A1A] flex-1">
-                {account.name}
-              </span>
+              <span className="font-mono text-[13px] text-amber w-[80px] flex-shrink-0">{account.code}</span>
+              <span className="text-[13px] text-dark flex-1">{account.name}</span>
 
               {/* Type */}
               <Badge variant={getTypeBadgeVariant(account.type)}>
@@ -113,13 +103,8 @@ export default function ChartOfAccountsPage() {
 
               {/* Balance */}
               {account.balance > 0 && (
-                <span className={`font-mono text-[13px] w-[120px] text-right ${
-                  account.balanceType === "debit" ? "text-[#1A7A3D]" : "text-[#B91C1C]"
-                }`}>
-                  {formatINR(account.balance)}{" "}
-                  <span className="text-[10px] text-[#888888]">
-                    {account.balanceType === "debit" ? "Dr" : "Cr"}
-                  </span>
+                <span className={`font-mono text-[13px] w-[120px] text-right ${account.balanceType === "debit" ? "text-success" : "text-danger"}`}>
+                  {formatINR(account.balance)} <span className="text-[10px] text-light">{account.balanceType === "debit" ? "Dr" : "Cr"}</span>
                 </span>
               )}
 
@@ -127,14 +112,14 @@ export default function ChartOfAccountsPage() {
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   type="button"
-                  className="text-[12px] text-[#555555] hover:text-[#C8860A] px-2 py-1"
+                  className="text-[12px] text-mid hover:text-amber px-2 py-1"
                 >
                   Edit
                 </button>
                 {account.hasChildren && (
                   <button
                     type="button"
-                    className="text-[12px] text-[#555555] hover:text-[#C8860A] px-2 py-1"
+                    className="text-[12px] text-mid hover:text-amber px-2 py-1"
                   >
                     + Child
                   </button>
@@ -154,8 +139,8 @@ export default function ChartOfAccountsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-[#1A1A1A]">Chart of Accounts</h1>
-          <p className="text-[12px] text-[#888888] mt-1">
+          <h1 className="font-display text-[26px] font-normal text-dark">Chart of Accounts</h1>
+          <p className="text-[12px] text-light mt-1">
             {MOCK_ACCOUNTS.filter((a) => !a.hasChildren).length} active accounts • 4-level hierarchy
           </p>
         </div>
@@ -183,7 +168,7 @@ export default function ChartOfAccountsPage() {
 
       {/* Account Tree */}
       <div className="card">
-        <div className="grid grid-cols-12 gap-3 px-4 py-3 bg-[#FAFAFA] border-b border-[#E5E5E5] text-[10px] uppercase tracking-wide text-[#888888]">
+        <div className="grid grid-cols-12 gap-3 px-4 py-3 bg-surface-muted border-b border-hairline text-[10px] uppercase tracking-wide text-light">
           <div className="col-span-12 flex items-center gap-3">
             <span className="w-5"></span>
             <span className="w-[80px]">Code</span>
@@ -193,13 +178,13 @@ export default function ChartOfAccountsPage() {
             <span className="w-[120px]"></span>
           </div>
         </div>
-        <div className="divide-y divide-[#E5E5E5]">
+        <div className="divide-y divide-hairline">
           {renderAccountTree(null, 0)}
         </div>
       </div>
 
       {/* Help Text */}
-      <div className="text-[12px] text-[#888888]">
+      <div className="text-[12px] text-light">
         <p>
           <strong>Tip:</strong> Click the +/− to expand/collapse account groups. Leaf accounts (no children) can be used in journal entries.
         </p>

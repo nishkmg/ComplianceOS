@@ -16,15 +16,12 @@ export default function NewPaymentPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <Link href="/payments" className="text-sm text-gray-500 hover:underline">
+          <Link href="/payments" className="font-ui text-[12px] text-amber hover:underline">
             ← Back to Payments
           </Link>
-          <h1 className="text-2xl font-bold mt-1">Record Payment</h1>
+          <h1 className="font-display text-[26px] font-normal text-dark mt-1">Record Payment</h1>
         </div>
-        <Link 
-          href="/payments" 
-          className="px-4 py-2 bg-white border text-sm rounded hover:bg-gray-50"
-        >
+        <Link href="/payments" className="filter-tab">
           Payment History
         </Link>
       </div>

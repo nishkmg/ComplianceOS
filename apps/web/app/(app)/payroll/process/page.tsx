@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui";
 
 export default function ProcessPayrollPage() {
   const router = useRouter();
@@ -12,102 +13,64 @@ export default function ProcessPayrollPage() {
   const [year, setYear] = useState(String(new Date().getFullYear()));
 
   const { data: pendingEmployees } = api.payroll.pending.useQuery();
-  const processPayroll = api.payroll.process.useMutation({
-    onSuccess: (data: any) => {
-      router.push(`/payroll/${data.payrollRunId}`);
-    },
-  });
+  const processPayroll = api.payroll.process.useMutation({ onSuccess: (data: any) => router.push(`/payroll/${data.payrollRunId}`) });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     processPayroll.mutate({ employeeId, month, year });
   };
 
+  const monthLabels = ["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Process Payroll</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-display text-[26px] font-normal text-dark">Process Payroll</h1>
+        <p className="font-ui text-[12px] text-light mt-1">Calculate and finalize employee payroll</p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-        <div>
-          <label className="block text-sm font-medium mb-1">Employee *</label>
-          <select
-            required
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="">Select Employee</option>
-            {pendingEmployees?.map((emp: any) => (
-              <option key={emp.id} value={emp.id}>
-                {emp.employeeCode} - {emp.firstName} {emp.lastName}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Month *</label>
-            <select
-              required
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            >
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i} value={String(i + 1).padStart(2, "0")}>
-                  {new Date(2026, i).toLocaleString("default", { month: "long" })}
-                </option>
-              ))}
+      <form onSubmit={handleSubmit} className="space-y-5 max-w-lg">
+        <div className="card p-5 space-y-4">
+          <div className="flex flex-col gap-1">
+            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Employee <span className="text-danger">*</span></label>
+            <select required value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="input-field font-ui">
+              <option value="">Select Employee</option>
+              {pendingEmployees?.map((emp: any) => (<option key={emp.id} value={emp.id}>{emp.employeeCode} - {emp.firstName} {emp.lastName}</option>))}
             </select>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Year *</label>
-            <input
-              required
-              type="number"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month <span className="text-danger">*</span></label>
+              <select required value={month} onChange={(e) => setMonth(e.target.value)} className="input-field font-ui">
+                {monthLabels.map((m, i) => (<option key={i} value={String(i + 1).padStart(2, "0")}>{m}</option>))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year <span className="text-danger">*</span></label>
+              <input required type="number" value={year} onChange={(e) => setYear(e.target.value)} className="input-field font-ui" />
+            </div>
           </div>
         </div>
 
-        <div className="flex gap-4 pt-4">
-          <button
-            type="submit"
-            disabled={processPayroll.isPending}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-          >
+        <div className="flex gap-3">
+          <button type="submit" disabled={processPayroll.isPending} className="filter-tab active disabled:opacity-50">
             {processPayroll.isPending ? "Processing..." : "Process Payroll"}
           </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-4 py-2 border rounded hover:bg-gray-50"
-          >
-            Cancel
-          </button>
+          <button type="button" onClick={() => router.back()} className="filter-tab">Cancel</button>
         </div>
       </form>
 
       {pendingEmployees && pendingEmployees.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-lg font-semibold mb-2">Pending for {month}/{year}</h2>
-          <ul className="space-y-2">
+        <div className="card p-5">
+          <h2 className="font-display text-[16px] font-normal text-dark mb-4">Pending for {month}/{year}</h2>
+          <div className="space-y-2">
             {pendingEmployees.map((emp: any) => (
-              <li key={emp.id} className="flex justify-between items-center border p-2 rounded">
-                <span>{emp.employeeCode} - {emp.firstName} {emp.lastName}</span>
-                <button
-                  onClick={() => setEmployeeId(emp.id)}
-                  className="text-blue-600 hover:underline text-sm"
-                >
-                  Select
-                </button>
-              </li>
+              <div key={emp.id} className="flex justify-between items-center p-3 bg-surface-muted rounded">
+                <span className="font-ui text-[13px] text-dark">{emp.employeeCode} - {emp.firstName} {emp.lastName}</span>
+                <Badge variant="amber">Pending</Badge>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>
