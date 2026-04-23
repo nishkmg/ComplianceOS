@@ -17,7 +17,12 @@ const nextAuth = NextAuth({
         if (!credentials?.email) return null;
         const user = await db.select().from(users).where(eq(users.email, credentials.email)).limit(1);
         if (!user[0]) return null;
-        return { id: user[0].id, email: user[0].email, name: user[0].name };
+        // Demo mode: accept demo user without password verification
+        if (user[0].email === "demo@complianceos.test") {
+          return { id: user[0].id, email: user[0].email, name: user[0].name };
+        }
+        // Production: implement proper password verification with bcrypt/argon2
+        return null;
       },
     }),
   ],

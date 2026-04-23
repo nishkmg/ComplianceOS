@@ -19,8 +19,8 @@
 
 ```bash
 # 1. Clone & Install
-git clone https://github.com/your-org/complianceos.git
-cd complianceos
+git clone https://github.com/nishkmg/ComplianceOS.git
+cd ComplianceOS
 pnpm install
 
 # 2. Start Infrastructure (macOS)
@@ -34,7 +34,7 @@ createdb complianceos_dev
 cp .env.example .env
 # Edit .env with your database URL
 
-# 5. Migrate & Seed
+# 5. Migrate & Seed Demo Data
 pnpm db:migrate
 pnpm --filter @complianceos/db db:seed:demo
 
@@ -43,7 +43,7 @@ pnpm dev
 ```
 
 **Access:** http://localhost:3000  
-**Demo Login:** demo@complianceos.test
+**Demo Login:** demo@complianceos.test (no password required in dev)
 
 ---
 
