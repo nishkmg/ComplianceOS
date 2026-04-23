@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { router } from "../index";
 import { accountsRouter } from "./accounts";
 import { journalEntriesRouter } from "./journal-entries";
