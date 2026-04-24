@@ -1,11 +1,11 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { BalanceBar, Badge } from "@/components/ui";
-import { formatINR, formatDate, formatIndianNumber } from "@/lib/format";
+import { BalanceBar } from "@/components/ui";
 import { showToast } from "@/lib/toast";
+import { useArrowNavigation } from "@/hooks/use-arrow-navigation";
 
 const MOCK_ACCOUNTS = [
   { id: "1", name: "Cash Account", code: "10100", type: "asset" },
@@ -38,6 +38,18 @@ export default function NewJournalEntryPage() {
   const [showAccountDropdown, setShowAccountDropdown] = useState<number | null>(null);
   const [accountSearch, setAccountSearch] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const COLUMN_COUNT = 4;
+
+  const getCellId = useCallback((row: number, col: number) => {
+    return `je-line-${row}-col-${col}`;
+  }, []);
+
+  const { handleKeyDown } = useArrowNavigation({
+    rowCount: lines.length,
+    columnCount: COLUMN_COUNT,
+    getCellId,
+  });
 
   const totalDebit = lines.reduce((sum, l) => sum + parseFloat(l.debit || "0"), 0);
   const totalCredit = lines.reduce((sum, l) => sum + parseFloat(l.credit || "0"), 0);
@@ -186,6 +198,7 @@ export default function NewJournalEntryPage() {
                   {/* Account Select */}
                   <div className="col-span-5 relative">
                     <input
+                      id={getCellId(index, 0)}
                       type="text"
                       value={selectedAccount ? `${selectedAccount.name} (${selectedAccount.code})` : accountSearch}
                       onChange={(e) => {
@@ -194,6 +207,7 @@ export default function NewJournalEntryPage() {
                         if (!e.target.value) selectAccount(index, "");
                       }}
                       onFocus={() => setShowAccountDropdown(index)}
+                      onKeyDown={(e) => handleKeyDown(e, index, 0)}
                       placeholder="Search account code or name..."
                       className="input-field w-full font-ui"
                     />
@@ -219,9 +233,11 @@ export default function NewJournalEntryPage() {
                   {/* Debit */}
                   <div className="col-span-2">
                     <input
+                      id={getCellId(index, 1)}
                       type="number"
                       value={line.debit}
                       onChange={(e) => updateLine(index, "debit", e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, index, 1)}
                       placeholder="0.00"
                       className="input-field w-full text-right font-mono"
                       min="0"
@@ -232,9 +248,11 @@ export default function NewJournalEntryPage() {
                   {/* Credit */}
                   <div className="col-span-2">
                     <input
+                      id={getCellId(index, 2)}
                       type="number"
                       value={line.credit}
                       onChange={(e) => updateLine(index, "credit", e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, index, 2)}
                       placeholder="0.00"
                       className="input-field w-full text-right font-mono"
                       min="0"
@@ -245,8 +263,10 @@ export default function NewJournalEntryPage() {
                   {/* Remove */}
                   <div className="col-span-2 flex items-center justify-end">
                     <button
+                      id={getCellId(index, 3)}
                       type="button"
                       onClick={() => setLines(lines.filter((_, idx) => idx !== index))}
+                      onKeyDown={(e) => handleKeyDown(e, index, 3)}
                       className="text-[13px] text-light hover:text-danger font-ui px-3 py-2"
                       disabled={lines.length <= 2}
                     >

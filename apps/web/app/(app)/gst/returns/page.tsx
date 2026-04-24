@@ -48,8 +48,8 @@ const months = [
   { value: 12, label: "March" },
 ];
 
-// ARN validation: 2 digits + 14 alphanumeric + 1 checksum
-const ARN_REGEX = /^\d{2}[A-Z0-9]{14}\d{1}$/;
+// ARN validation: 2 digits + 13-15 alphanumeric
+const ARN_REGEX = /^\d{2}[A-Z0-9]{13,15}$/;
 
 export default function GSTReturnsPage() {
   const [periodMonth, setPeriodMonth] = useState<number | undefined>(undefined);
@@ -102,7 +102,7 @@ export default function GSTReturnsPage() {
 
   const handleFile = async () => {
     if (!ARN_REGEX.test(arn)) {
-      setArnError('Invalid ARN format. Expected: 2 digits + 14 alphanumeric + 1 checksum');
+      setArnError('Invalid ARN. Expected: 2-digit state code + 13-15 alphanumeric characters');
       return;
     }
     if (!selectedReturnId) return;
@@ -317,7 +317,13 @@ export default function GSTReturnsPage() {
       )}
 
       {/* File Return Dialog */}
-      <Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
+      <Dialog open={fileDialogOpen} onOpenChange={(open) => {
+        setFileDialogOpen(open);
+        if (!open) {
+          setArn('');
+          setArnError('');
+        }
+      }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>File GST Return</DialogTitle>
@@ -345,7 +351,13 @@ export default function GSTReturnsPage() {
       </Dialog>
 
       {/* Amend Return Dialog */}
-      <Dialog open={amendDialogOpen} onOpenChange={setAmendDialogOpen}>
+      <Dialog open={amendDialogOpen} onOpenChange={(open) => {
+        setAmendDialogOpen(open);
+        if (!open) {
+          setChangesJson('');
+          setJsonError('');
+        }
+      }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Amend GST Return</DialogTitle>
