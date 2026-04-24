@@ -1,12 +1,13 @@
+"use client";
+
 import { ReactNode, useState } from "react";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { CommandPalette } from "@/components/command-palette";
 import { SessionProvider } from "next-auth/react";
+import { ServerAuthCheck } from "./server-auth-check";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -44,20 +45,6 @@ const fiscalYears = [
   { id: "fy2", name: "FY 2025-26", status: "open", daysRemaining: 67 },
   { id: "fy3", name: "FY 2024-25", status: "closed", daysRemaining: 0 },
 ];
-
-async function ServerAuthCheck({ children }: { children: ReactNode }) {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/login");
-  }
-  
-  if (!session.user.onboardingComplete) {
-    redirect("/onboarding");
-  }
-
-  return <>{children}</>;
-}
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
