@@ -11,17 +11,28 @@ export async function postJournalEntry(
   entryId: string,
   actorId: string,
 ): Promise<void> {
-  const entry = await db.select().from(journalEntries).where(
-    and(eq(journalEntries.id, entryId), eq(journalEntries.tenantId, tenantId)),
-  );
-
-  if (entry.length === 0) throw new Error("Journal entry not found");
-  if (entry[0].status !== "draft") throw new Error(`Cannot post entry with status ${entry[0].status}`);
-
   await db.transaction(async (tx) => {
-    await tx.update(journalEntries)
+    const entry = await tx.select().from(journalEntries).where(
+      and(eq(journalEntries.id, entryId), eq(journalEntries.tenantId, tenantId)),
+    ).for("update");
+
+    if (entry.length === 0) throw new Error("Journal entry not found");
+    if (entry[0].status !== "draft") throw new Error(`Cannot post entry with status ${entry[0].status}`);
+
+    const updated = await tx.update(journalEntries)
       .set({ status: "posted", updatedAt: new Date() })
-      .where(eq(journalEntries.id, entryId));
+      .where(
+        and(
+          eq(journalEntries.id, entryId),
+          eq(journalEntries.tenantId, tenantId),
+          eq(journalEntries.status, "draft"),
+        ),
+      )
+      .returning();
+
+    if (updated.length === 0) {
+      throw new Error("Concurrent modification: entry status changed");
+    }
 
     await appendEvent(tx, tenantId, "journal_entry", entryId, "journal_entry_posted", {
       entryId,

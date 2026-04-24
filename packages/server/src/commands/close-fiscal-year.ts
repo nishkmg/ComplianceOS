@@ -11,34 +11,44 @@ export async function closeFiscalYear(
   fyId: string,
   actorId: string,
 ): Promise<void> {
-  const fy = await db.select().from(fiscalYears).where(
-    and(eq(fiscalYears.id, fyId), eq(fiscalYears.tenantId, tenantId)),
-  );
-
-  if (fy.length === 0) throw new Error("Fiscal year not found");
-  if (fy[0].status === "closed") throw new Error("Fiscal year is already closed");
-
-  // Check for draft entries
-  const draftCount = await db.select().from(journalEntries).where(
-    and(
-      eq(journalEntries.tenantId, tenantId),
-      eq(journalEntries.fiscalYear, fy[0].year),
-      eq(journalEntries.status, "draft"),
-    ),
-  ).then(rows => rows.length);
-
-  if (draftCount > 0) {
-    throw new Error(`Cannot close FY with ${draftCount} draft entries. Please post or delete them first.`);
-  }
-
   await db.transaction(async (tx) => {
-    await tx.update(fiscalYears)
+    const fy = await tx.select().from(fiscalYears).where(
+      and(eq(fiscalYears.id, fyId), eq(fiscalYears.tenantId, tenantId)),
+    ).for("update");
+
+    if (fy.length === 0) throw new Error("Fiscal year not found");
+    if (fy[0].status === "closed") throw new Error("Fiscal year is already closed");
+
+    const draftCount = await tx.select().from(journalEntries).where(
+      and(
+        eq(journalEntries.tenantId, tenantId),
+        eq(journalEntries.fiscalYear, fy[0].year),
+        eq(journalEntries.status, "draft"),
+      ),
+    ).then(rows => rows.length);
+
+    if (draftCount > 0) {
+      throw new Error(`Cannot close FY with ${draftCount} draft entries. Please post or delete them first.`);
+    }
+
+    const updated = await tx.update(fiscalYears)
       .set({ 
         status: "closed", 
         closedBy: actorId,
         closedAt: new Date(),
       })
-      .where(eq(fiscalYears.id, fyId));
+      .where(
+        and(
+          eq(fiscalYears.id, fyId),
+          eq(fiscalYears.tenantId, tenantId),
+          eq(fiscalYears.status, "open"),
+        ),
+      )
+      .returning();
+
+    if (updated.length === 0) {
+      throw new Error("Concurrent modification: fiscal year status changed");
+    }
 
     await appendEvent(tx, tenantId, "fiscal_year", fyId, "fiscal_year_closed", {
       fyId,
