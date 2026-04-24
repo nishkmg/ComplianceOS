@@ -150,12 +150,21 @@ importers:
       '@complianceos/shared':
         specifier: workspace:*
         version: link:../shared
+      '@react-pdf/renderer':
+        specifier: ^4.5.1
+        version: 4.5.1(react@19.2.5)
       '@types/node':
         specifier: ^25.6.0
         version: 25.6.0
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
+      vitest:
+        specifier: ^1.6.1
+        version: 1.6.1(@types/node@25.6.0)(lightningcss@1.32.0)
 
   packages/shared:
     dependencies:
