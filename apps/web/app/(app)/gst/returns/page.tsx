@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge, Button, Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, Input, Label } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 
@@ -48,6 +48,9 @@ const months = [
   { value: 12, label: "March" },
 ];
 
+// ARN validation: 2 digits + 14 alphanumeric + 1 checksum
+const ARN_REGEX = /^\d{2}[A-Z0-9]{14}\d{1}$/;
+
 export default function GSTReturnsPage() {
   const [periodMonth, setPeriodMonth] = useState<number | undefined>(undefined);
   const [periodYear, setPeriodYear] = useState<number | undefined>(undefined);
@@ -55,6 +58,15 @@ export default function GSTReturnsPage() {
   const [status, setStatus] = useState<(typeof statuses)[number]>("all");
   const [page, setPage] = useState(1);
   const pageSize = 10;
+
+  // Dialog states
+  const [fileDialogOpen, setFileDialogOpen] = useState(false);
+  const [amendDialogOpen, setAmendDialogOpen] = useState(false);
+  const [selectedReturnId, setSelectedReturnId] = useState<string | null>(null);
+  const [arn, setArn] = useState("");
+  const [arnError, setArnError] = useState("");
+  const [changesJson, setChangesJson] = useState("");
+  const [jsonError, setJsonError] = useState("");
 
   const { data: returns, isLoading } = api.gstReturns.list.useQuery({
     periodMonth,
@@ -88,29 +100,54 @@ export default function GSTReturnsPage() {
     }
   };
 
-  const handleFile = async (returnId: string) => {
-    const arn = prompt("Enter ARN (Acknowledgement Reference Number):");
-    if (!arn) return;
+  const handleFile = async () => {
+    if (!ARN_REGEX.test(arn)) {
+      setArnError('Invalid ARN format. Expected: 2 digits + 14 alphanumeric + 1 checksum');
+      return;
+    }
+    if (!selectedReturnId) return;
 
     try {
-      await fileReturn.mutateAsync({ returnId, arn });
+      await fileReturn.mutateAsync({ returnId: selectedReturnId, arn });
       showToast.success('GST return filed successfully');
+      setFileDialogOpen(false);
+      setArn('');
+      setArnError('');
+      setSelectedReturnId(null);
     } catch (error) {
       showToast.error('Failed to file return');
     }
   };
 
-  const handleAmend = async (returnId: string) => {
-    const changesJson = prompt("Enter changes as JSON:");
-    if (!changesJson) return;
+  const handleAmend = async () => {
+    if (!selectedReturnId) return;
 
     try {
       const changes = JSON.parse(changesJson);
-      await amendReturn.mutateAsync({ returnId, changes });
+      await amendReturn.mutateAsync({ returnId: selectedReturnId, changes });
       showToast.success('GST return amended successfully');
+      setAmendDialogOpen(false);
+      setChangesJson('');
+      setJsonError('');
+      setSelectedReturnId(null);
     } catch (error) {
+      setJsonError('Invalid JSON format');
       showToast.error('Failed to amend return');
     }
+  };
+
+  const openFileDialog = (returnId: string) => {
+    setSelectedReturnId(returnId);
+    setArn('');
+    setArnError('');
+    setFileDialogOpen(true);
+  };
+
+  const openAmendDialog = (returnId: string) => {
+    setSelectedReturnId(returnId);
+    setChangesJson('');
+    setJsonError('');
+    setAmendDialogOpen(true);
   };
 
   return (
@@ -245,12 +282,12 @@ export default function GSTReturnsPage() {
                           View
                         </Link>
                         {ret.status === "generated" && (
-                          <button onClick={() => handleFile(ret.id)} className="font-ui text-[12px] text-success hover:underline">
+                          <button onClick={() => openFileDialog(ret.id)} className="font-ui text-[12px] text-success hover:underline">
                             File
                           </button>
                         )}
                         {ret.status === "filed" && (
-                          <button onClick={() => handleAmend(ret.id)} className="font-ui text-[12px] text-amber hover:underline">
+                          <button onClick={() => openAmendDialog(ret.id)} className="font-ui text-[12px] text-amber hover:underline">
                             Amend
                           </button>
                         )}
@@ -278,6 +315,63 @@ export default function GSTReturnsPage() {
           </div>
         </div>
       )}
+
+      {/* File Return Dialog */}
+      <Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>File GST Return</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div>
+              <Label htmlFor="arn">ARN Number</Label>
+              <Input
+                id="arn"
+                value={arn}
+                onChange={(e) => {
+                  setArn(e.target.value.toUpperCase());
+                  setArnError('');
+                }}
+                placeholder="e.g., 01ABCDE1234567F8"
+              />
+              {arnError && <p className="text-sm text-red-600 mt-2">{arnError}</p>}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setFileDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleFile}>Submit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Amend Return Dialog */}
+      <Dialog open={amendDialogOpen} onOpenChange={setAmendDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Amend GST Return</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div>
+              <Label htmlFor="changes">Changes (JSON)</Label>
+              <textarea
+                id="changes"
+                value={changesJson}
+                onChange={(e) => {
+                  setChangesJson(e.target.value);
+                  setJsonError('');
+                }}
+                placeholder='{"field": "value"}'
+                className="flex min-h-[120px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+              />
+              {jsonError && <p className="text-sm text-red-600 mt-2">{jsonError}</p>}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAmendDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAmend}>Submit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
