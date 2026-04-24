@@ -18,14 +18,13 @@ const getAssessmentYearFromFinancialYear = (financialYear: string) => {
 export const itrPaymentRouter = router({
   getAdvanceTaxLedger: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid().optional(),
       assessmentYear: z.string(),
     }))
     .query(async ({ ctx, input }) => {
       const installments = await ctx.db.select().from(advanceTaxLedger)
         .where(
           and(
-            eq(advanceTaxLedger.tenantId, input.tenantId || ctx.tenantId),
+            eq(advanceTaxLedger.tenantId, ctx.tenantId),
             eq(advanceTaxLedger.assessmentYear, input.assessmentYear),
           ),
         )
@@ -62,14 +61,13 @@ export const itrPaymentRouter = router({
 
   getSelfAssessmentDetails: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid().optional(),
       assessmentYear: z.string(),
     }))
     .query(async ({ ctx, input }) => {
       const records = await ctx.db.select().from(selfAssessmentLedger)
         .where(
           and(
-            eq(selfAssessmentLedger.tenantId, input.tenantId || ctx.tenantId),
+            eq(selfAssessmentLedger.tenantId, ctx.tenantId),
             eq(selfAssessmentLedger.assessmentYear, input.assessmentYear),
           ),
         )
@@ -106,14 +104,13 @@ export const itrPaymentRouter = router({
 
   getPaymentHistory: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid().optional(),
       assessmentYear: z.string(),
     }))
     .query(async ({ ctx, input }) => {
       const advancePayments = await ctx.db.select().from(advanceTaxLedger)
         .where(
           and(
-            eq(advanceTaxLedger.tenantId, input.tenantId || ctx.tenantId),
+            eq(advanceTaxLedger.tenantId, ctx.tenantId),
             eq(advanceTaxLedger.assessmentYear, input.assessmentYear),
             eq(advanceTaxLedger.paidDate, sql`IS NOT NULL`),
           ),
@@ -123,7 +120,7 @@ export const itrPaymentRouter = router({
       const selfAssessmentPayments = await ctx.db.select().from(selfAssessmentLedger)
         .where(
           and(
-            eq(selfAssessmentLedger.tenantId, input.tenantId || ctx.tenantId),
+            eq(selfAssessmentLedger.tenantId, ctx.tenantId),
             eq(selfAssessmentLedger.assessmentYear, input.assessmentYear),
             eq(selfAssessmentLedger.paidDate, sql`IS NOT NULL`),
           ),

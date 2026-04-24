@@ -11,14 +11,13 @@ const { TaxRegime } = _shared;
 export const itrComputationRouter = router({
   getIncomeBreakdown: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid(),
       financialYear: z.string(),
     }))
     .query(async ({ ctx, input }) => {
       const projections = await ctx.db.select().from(itrAnnualIncomeProjection)
         .where(
           and(
-            eq(itrAnnualIncomeProjection.tenantId, input.tenantId || ctx.tenantId),
+            eq(itrAnnualIncomeProjection.tenantId, ctx.tenantId),
             eq(itrAnnualIncomeProjection.financialYear, input.financialYear),
           ),
         );

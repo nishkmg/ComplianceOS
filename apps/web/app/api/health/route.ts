@@ -31,7 +31,7 @@ async function checkRedis(): Promise<{ status: string; latencyMs?: number; error
   }
 }
 
-async function checkProjector(): Promise<{ status: string; url?: string; error?: string }> {
+async function checkProjector(): Promise<{ status: string; url?: string; error?: string; projectors?: string[] }> {
   const projectorUrl = process.env.PROJECTOR_URL || "http://localhost:3100";
   
   try {
