@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.0",
@@ -38,8 +41,10 @@
     "@complianceos/db": "workspace:*",
     "@complianceos/server": "workspace:*",
     "@complianceos/shared": "workspace:*",
+    "@playwright/test": "^1.59.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "playwright": "^1.59.1",
     "typescript": "^5.7.0"
   }
 }
