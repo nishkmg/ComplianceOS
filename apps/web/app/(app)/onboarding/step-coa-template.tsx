@@ -4,6 +4,7 @@
 import { useState } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
 
 const TEMPLATES = [
   {
@@ -48,7 +49,11 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
 
   const seedCoa = api.onboarding.seedCoa.useMutation({
     onSuccess: () => {
+      showToast.success('Chart of Accounts set up successfully');
       onComplete();
+    },
+    onError: (error) => {
+      showToast.error(error.message || 'Failed to set up Chart of Accounts');
     },
   });
 

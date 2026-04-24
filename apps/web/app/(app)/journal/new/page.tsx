@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BalanceBar, Badge } from "@/components/ui";
 import { formatINR, formatDate, formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 const MOCK_ACCOUNTS = [
   { id: "1", name: "Cash Account", code: "10100", type: "asset" },
@@ -66,13 +67,22 @@ export default function NewJournalEntryPage() {
       a.code.toLowerCase().includes(accountSearch.toLowerCase())
   );
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent, status: 'draft' | 'posted' = 'posted') {
     e.preventDefault();
-    if (!isBalanced) return;
+    if (!isBalanced) {
+      showToast.error('Debit and credit must be equal');
+      return;
+    }
     setSaving(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setSaving(false);
-    router.push("/journal");
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      showToast.success(status === 'draft' ? 'Draft saved successfully' : 'Journal entry posted successfully');
+      router.push("/journal");
+    } catch (error) {
+      showToast.error('Failed to save journal entry');
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (

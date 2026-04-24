@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { showToast } from "@/lib/toast";
 
 const BUSINESS_TYPES = [
   { value: "sole_proprietorship", label: "Sole Proprietorship" },
@@ -80,7 +81,11 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
 
   const createTenant = api.onboarding.createTenant.useMutation({
     onSuccess: (data) => {
+      showToast.success('Business profile created successfully');
       onTenantCreated(data.tenantId);
+    },
+    onError: (error) => {
+      showToast.error(error.message || 'Failed to create business profile');
     },
   });
 
@@ -113,7 +118,7 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
     try {
       await createTenant.mutateAsync(data as any);
     } catch (error) {
-      console.error("Failed to create tenant:", error);
+      showToast.error('Failed to create business profile');
     } finally {
       setIsSubmitting(false);
     }

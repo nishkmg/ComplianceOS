@@ -4,6 +4,7 @@
 import { useState } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
 
 const MODULES = [
   {
@@ -55,7 +56,13 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
   );
 
   const saveProgress = api.onboarding.saveProgress.useMutation({
-    onSuccess: onComplete,
+    onSuccess: () => {
+      showToast.success('Module preferences saved');
+      onComplete();
+    },
+    onError: (error) => {
+      showToast.error(error.message || 'Failed to save module preferences');
+    },
   });
 
   const toggleModule = (moduleId: string) => {

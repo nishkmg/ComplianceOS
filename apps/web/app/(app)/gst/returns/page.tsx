@@ -6,6 +6,7 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 interface GSTReturn {
   id: string;
@@ -74,13 +75,16 @@ export default function GSTReturnsPage() {
     try {
       if (type === "gstr1") {
         await generateGSTR1.mutateAsync({ periodMonth: month, periodYear: year });
+        showToast.success('GSTR-1 generated successfully');
       } else if (type === "gstr2b") {
         await generateGSTR2B.mutateAsync({ periodMonth: month, periodYear: year });
+        showToast.success('GSTR-2B generated successfully');
       } else if (type === "gstr3b") {
         await generateGSTR3B.mutateAsync({ periodMonth: month, periodYear: year });
+        showToast.success('GSTR-3B generated successfully');
       }
     } catch (error) {
-      console.error("Failed to generate return:", error);
+      showToast.error('Failed to generate return');
     }
   };
 
@@ -90,8 +94,9 @@ export default function GSTReturnsPage() {
 
     try {
       await fileReturn.mutateAsync({ returnId, arn });
+      showToast.success('GST return filed successfully');
     } catch (error) {
-      console.error("Failed to file return:", error);
+      showToast.error('Failed to file return');
     }
   };
 
@@ -102,8 +107,9 @@ export default function GSTReturnsPage() {
     try {
       const changes = JSON.parse(changesJson);
       await amendReturn.mutateAsync({ returnId, changes });
+      showToast.success('GST return amended successfully');
     } catch (error) {
-      console.error("Failed to amend return:", error);
+      showToast.error('Failed to amend return');
     }
   };
 

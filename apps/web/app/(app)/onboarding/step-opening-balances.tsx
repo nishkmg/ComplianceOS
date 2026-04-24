@@ -6,6 +6,7 @@ import { useState, useMemo } from "react";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 import { Label } from "@/components/ui/label";
+import { showToast } from "@/lib/toast";
 
 interface OpeningBalance {
   accountId: string;
@@ -29,7 +30,13 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   });
 
   const setupOpeningBalances = api.onboarding.setupOpeningBalances.useMutation({
-    onSuccess: onComplete,
+    onSuccess: () => {
+      showToast.success('Opening balances set up successfully');
+      onComplete();
+    },
+    onError: (error) => {
+      showToast.error(error.message || 'Failed to set up opening balances');
+    },
   });
 
   const { totalDebits, totalCredits, difference } = useMemo(() => {

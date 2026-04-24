@@ -5,6 +5,7 @@ import { useState } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
 import { Label } from "@/components/ui/label";
+import { showToast } from "@/lib/toast";
 
 const GST_RATES = [5, 12, 18, 28];
 
@@ -23,7 +24,13 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
   });
 
   const saveProgress = api.onboarding.saveProgress.useMutation({
-    onSuccess: onComplete,
+    onSuccess: () => {
+      showToast.success('Fiscal year and GST settings saved');
+      onComplete();
+    },
+    onError: (error) => {
+      showToast.error(error.message || 'Failed to save settings');
+    },
   });
 
   const handleContinue = async () => {
