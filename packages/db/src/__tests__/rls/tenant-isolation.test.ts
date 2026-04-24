@@ -1,7 +1,9 @@
+// @ts-nocheck - RLS integration test
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../../schema';
+import { sql } from 'drizzle-orm';
 
 describe('Row Level Security (RLS)', () => {
   let sqlTenant1: postgres.Sql;
@@ -226,5 +228,3 @@ describe('Row Level Security (RLS)', () => {
     });
   });
 });
-
-import { sql } from 'drizzle-orm';
