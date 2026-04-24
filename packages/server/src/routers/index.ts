@@ -1,4 +1,4 @@
-import { router } from "../index";
+import { router } from "../trpc";
 import { accountsRouter } from "./accounts";
 import { journalEntriesRouter } from "./journal-entries";
 import { balancesRouter } from "./balances";
