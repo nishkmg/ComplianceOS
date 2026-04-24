@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { createFiscalYear } from "../commands/create-fiscal-year";
 import { closeFiscalYear } from "../commands/close-fiscal-year";
 import { eq, and } from "drizzle-orm";
@@ -19,15 +19,15 @@ export const fiscalYearsRouter = router({
     return result[0] ?? null;
   }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(z.object({ year: z.string(), startDate: z.string(), endDate: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return createFiscalYear(ctx.db, ctx.tenantId, ctx.session!.user.id, input.year, input.startDate, input.endDate);
+      return createFiscalYear(ctx.db, ctx.tenantId, ctx.session.user.id, input.year, input.startDate, input.endDate);
     }),
 
-  close: publicProcedure
+  close: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return closeFiscalYear(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
+      return closeFiscalYear(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
     }),
 });

@@ -1,7 +1,6 @@
-// @ts-nocheck
-"use client";
-
 import { ReactNode, useState } from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { TRPCProvider } from "@/components/trpc-provider";
@@ -46,7 +45,33 @@ const fiscalYears = [
   { id: "fy3", name: "FY 2024-25", status: "closed", daysRemaining: 0 },
 ];
 
+async function ServerAuthCheck({ children }: { children: ReactNode }) {
+  const session = await auth();
+  
+  if (!session?.user) {
+    redirect("/login");
+  }
+  
+  if (!session.user.onboardingComplete) {
+    redirect("/onboarding");
+  }
+
+  return <>{children}</>;
+}
+
 export default function AppLayout({ children }: { children: ReactNode }) {
+  return (
+    <ServerAuthCheck>
+      <SessionProvider>
+        <TRPCProvider>
+          <AppShell>{children}</AppShell>
+        </TRPCProvider>
+      </SessionProvider>
+    </ServerAuthCheck>
+  );
+}
+
+function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [activeFy, setActiveFy] = useState("2026-27");
   const [showFyPopover, setShowFyPopover] = useState(false);
@@ -55,9 +80,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const currentFy = fiscalYears.find(fy => fy.name.includes(activeFy)) || fiscalYears[0];
 
   return (
-    <SessionProvider>
-      <TRPCProvider>
-      <div className="flex min-h-screen bg-lightest">
+    <div className="flex min-h-screen bg-lightest">
         {/* Command Palette */}
         <CommandPalette isOpen={commandPaletteOpen} onClose={closeCommandPalette} />
 
@@ -170,7 +193,5 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
-      </TRPCProvider>
-    </SessionProvider>
   );
 }

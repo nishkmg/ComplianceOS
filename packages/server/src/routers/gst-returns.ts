@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { generateGSTR1 } from "../commands/generate-gstr1";
 import { generateGSTR2B } from "../commands/generate-gstr2b";
 import { generateGSTR3B } from "../commands/generate-gstr3b";
@@ -101,7 +101,7 @@ export const gstReturnsRouter = router({
       };
     }),
 
-  generateGSTR1: publicProcedure
+  generateGSTR1: protectedProcedure
     .input(z.object({
       periodMonth: z.number().min(1).max(12),
       periodYear: z.number().min(2000),
@@ -110,7 +110,7 @@ export const gstReturnsRouter = router({
       const result = await generateGSTR1(
         ctx.db,
         ctx.tenantId,
-        ctx.session!.user.id,
+        ctx.session.user.id,
         input,
       );
 
@@ -120,7 +120,7 @@ export const gstReturnsRouter = router({
       };
     }),
 
-  generateGSTR2B: publicProcedure
+  generateGSTR2B: protectedProcedure
     .input(z.object({
       periodMonth: z.number().min(1).max(12),
       periodYear: z.number().min(2000),
@@ -129,7 +129,7 @@ export const gstReturnsRouter = router({
       const result = await generateGSTR2B(
         ctx.db,
         ctx.tenantId,
-        ctx.session!.user.id,
+        ctx.session.user.id,
         input,
       );
 
@@ -139,7 +139,7 @@ export const gstReturnsRouter = router({
       };
     }),
 
-  generateGSTR3B: publicProcedure
+  generateGSTR3B: protectedProcedure
     .input(z.object({
       periodMonth: z.number().min(1).max(12),
       periodYear: z.number().min(2000),
@@ -148,7 +148,7 @@ export const gstReturnsRouter = router({
       const result = await generateGSTR3B(
         ctx.db,
         ctx.tenantId,
-        ctx.session!.user.id,
+        ctx.session.user.id,
         input,
       );
 
@@ -160,7 +160,7 @@ export const gstReturnsRouter = router({
       };
     }),
 
-  file: publicProcedure
+  file: protectedProcedure
     .input(z.object({
       returnId: z.string().uuid(),
       arn: z.string(),
@@ -171,7 +171,7 @@ export const gstReturnsRouter = router({
           status: GSTReturnStatus.FILED,
           filingDate: new Date().toISOString().split("T")[0],
           arn: input.arn,
-          filedBy: ctx.session!.user.id,
+          filedBy: ctx.session.user.id,
           updatedAt: new Date(),
         })
         .where(
@@ -198,7 +198,7 @@ export const gstReturnsRouter = router({
           status: GSTReturnStatus.FILED,
           filedAt: new Date().toISOString(),
         },
-        ctx.session!.user.id,
+        ctx.session.user.id,
       );
 
       return {
@@ -207,7 +207,7 @@ export const gstReturnsRouter = router({
       };
     }),
 
-  amend: publicProcedure
+  amend: protectedProcedure
     .input(z.object({
       returnId: z.string().uuid(),
       changes: z.record(z.unknown()),
@@ -241,7 +241,7 @@ export const gstReturnsRouter = router({
         totalEligibleItc: original.totalEligibleItc,
         totalTaxPayable: original.totalTaxPayable,
         totalTaxPaid: original.totalTaxPaid,
-        createdBy: ctx.session!.user.id,
+        createdBy: ctx.session.user.id,
       }).returning();
 
       // Copy lines from original return
@@ -287,7 +287,7 @@ export const gstReturnsRouter = router({
           status: GSTReturnStatus.AMENDED,
           amendedAt: new Date().toISOString(),
         },
-        ctx.session!.user.id,
+        ctx.session.user.id,
       );
 
       return {
