@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { createServer } from "http";
 import * as _db from "../../../db/src/index";
-const { db, projectorState, eventStore } = _db;
-import { eq, and, gt, asc, desc } from "drizzle-orm";
+const { db, projectorState, eventStore, tenants } = _db;
+import { eq, and, gt, asc, desc, sql } from "drizzle-orm";
 import { accountBalanceProjector } from "./account-balance.js";
 import { journalEntryViewProjector } from "./journal-entry-view.js";
 import { snapshotProjector } from "./snapshot.js";
@@ -17,8 +17,6 @@ import { gstCashBalanceProjector } from "./gst-cash-balance.js";
 import { itrAnnualIncomeProjector } from "./itr-annual-income.js";
 import { itrTaxSummaryProjector } from "./itr-tax-summary.js";
 import { itrAdvanceTaxProjector } from "./itr-advance-tax.js";
-// -ignore - temporarily disabled
-// import { InventoryValuationProjector } from "./inventory-valuation.js";
 import type { Projector } from "./types.js";
 
 const projectors: Projector[] = [
@@ -36,13 +34,12 @@ const projectors: Projector[] = [
   itrAnnualIncomeProjector,
   itrTaxSummaryProjector,
   itrAdvanceTaxProjector,
-//   InventoryValuationProjector,
 ];
 
 const POLL_INTERVAL_MS = 500;
 const BATCH_SIZE = 50;
 
-async function processProjector(projector: Projector, tenantId: string): Promise<void> {
+async function ensureProjectorState(projector: Projector, tenantId: string): Promise<void> {
   const stateRow = await db
     .select()
     .from(projectorState)
@@ -54,48 +51,99 @@ async function processProjector(projector: Projector, tenantId: string): Promise
     )
     .limit(1);
 
-  // lastProcessedSequence stored as text in DB
+  if (!stateRow.length) {
+    await db.insert(projectorState).values({
+      tenantId,
+      projectorName: projector.name,
+      lastProcessedSequence: "0",
+      status: "active",
+    });
+  }
+}
+
+async function processProjector(projector: Projector, tenantId: string): Promise<void> {
+  await ensureProjectorState(projector, tenantId);
+
+  const stateRow = await db
+    .select()
+    .from(projectorState)
+    .where(
+      and(
+        eq(projectorState.tenantId, tenantId),
+        eq(projectorState.projectorName, projector.name),
+      ),
+    )
+    .limit(1);
+
   const lastSeq = BigInt(stateRow[0]?.lastProcessedSequence ?? "0");
 
-  const events = await db
-    .select()
-    .from(eventStore)
-    .where(gt(eventStore.sequence, lastSeq))
-    .orderBy(asc(eventStore.sequence))
-    .limit(BATCH_SIZE);
+  const events = await db.execute(
+    sql`
+      SELECT * FROM event_store
+      WHERE tenant_id = ${tenantId}
+        AND sequence > ${lastSeq}
+      ORDER BY sequence ASC
+      LIMIT ${BATCH_SIZE}
+      FOR UPDATE SKIP LOCKED
+    `
+  );
 
-  if (events.length === 0) return;
+  if (!events.rows || events.rows.length === 0) return;
+
+  let processingError = null;
+  let lastProcessedEventId = null;
 
   await db.transaction(async (tx) => {
-    // Cast tx to any to satisfy Projector.process(db: Database) signature —
-    // PgTransaction implements the same query surface as PostgresJsDatabase
     const txDb = tx as any;
 
-    for (const event of events) {
-      if (!projector.handles.includes(event.eventType)) continue;
+    for (const eventRow of events.rows) {
+      const event = {
+        id: eventRow.id,
+        tenantId: eventRow.tenant_id,
+        aggregateType: eventRow.aggregate_type,
+        aggregateId: eventRow.aggregate_id,
+        eventType: eventRow.event_type,
+        payload: eventRow.payload,
+        sequence: BigInt(eventRow.sequence),
+        actorId: eventRow.actor_id,
+        createdAt: new Date(eventRow.created_at),
+      };
+
+      if (!projector.handles.includes(event.eventType)) {
+        lastProcessedEventId = event.id;
+        continue;
+      }
 
       try {
         await projector.process(txDb, event);
+        lastProcessedEventId = event.id;
       } catch (err) {
         console.error(`[${projector.name}] Error processing event ${event.id}:`, err);
+        processingError = err;
+        break;
       }
     }
 
-    // Update last processed sequence to the highest sequence in this batch
-    const lastEvent = events[events.length - 1]!;
-    await tx
-      .update(projectorState)
-      .set({
-        lastProcessedSequence: String(lastEvent.sequence),
-        updatedAt: new Date(),
-      })
-      .where(
-        and(
-          eq(projectorState.tenantId, tenantId),
-          eq(projectorState.projectorName, projector.name),
-        ),
-      );
+    if (lastProcessedEventId && !processingError) {
+      const lastEvent = events.rows.find(r => r.id === lastProcessedEventId);
+      await tx
+        .update(projectorState)
+        .set({
+          lastProcessedSequence: String(lastEvent.sequence),
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(projectorState.tenantId, tenantId),
+            eq(projectorState.projectorName, projector.name),
+          ),
+        );
+    }
   });
+
+  if (processingError) {
+    console.error(`[${projector.name}] Stopping at event ${lastProcessedEventId} due to error`);
+  }
 }
 
 async function main(): Promise<void> {
@@ -103,16 +151,11 @@ async function main(): Promise<void> {
 
   while (true) {
     try {
+      const allTenants = await db.select({ id: tenants.id }).from(tenants);
+
       for (const projector of projectors) {
-        const tenantRows = await db
-          .select({ tenantId: projectorState.tenantId })
-          .from(projectorState)
-          .where(eq(projectorState.projectorName, projector.name));
-
-        const uniqueTenants = [...new Set(tenantRows.map((t) => t.tenantId))];
-
-        for (const tenantId of uniqueTenants) {
-          await processProjector(projector, tenantId);
+        for (const tenant of allTenants) {
+          await processProjector(projector, tenant.id);
         }
       }
     } catch (err) {

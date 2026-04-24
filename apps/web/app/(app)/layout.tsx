@@ -102,13 +102,12 @@ function AppShell({ children }: { children: ReactNode }) {
                 ? "bg-amber text-white"
                 : "text-mid hover:bg-lighter";
               const indentClasses = item.indent ? "ml-4" : "";
-              const subIndentClasses = item.subIndent ? "ml-4" : "";
 
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`${baseClasses} ${activeClasses} ${indentClasses} ${subIndentClasses}`}
+                  className={`${baseClasses} ${activeClasses} ${indentClasses}`}
                 >
                   {item.label}
                 </Link>

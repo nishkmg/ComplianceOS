@@ -1,8 +1,7 @@
+// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-// @ts-ignore - tRPC type collision workaround
-import { api } from "@/lib/api";
 
 interface OnboardingData {
   businessProfile?: {
