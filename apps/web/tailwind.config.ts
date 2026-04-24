@@ -18,9 +18,9 @@ const config: Config = {
         'display-md': ['20px', '1.3'],
         'display-sm': ['16px', '1.4'],
         'ui-lg': ['15px', '1.4'],
-        'ui-md': ['13px', '1.5'],
-        'ui-sm': ['12px', '1.5'],
-        'ui-xs': ['10px', '1.4'],
+        'ui-md': ['14px', '1.5'],
+        'ui-sm': ['13px', '1.5'],
+        'ui-xs': ['11px', '1.4'],
         'mono-lg': ['15px', '1.4'],
         'mono-md': ['13px', '1.4'],
         'mono-sm': ['11px', '1.4'],
@@ -29,7 +29,7 @@ const config: Config = {
       // Colors
       colors: {
         amber: {
-          DEFAULT: '#C8860A',
+          DEFAULT: '#B47500',
           hover: '#B07408',
         },
         success: {
@@ -42,7 +42,7 @@ const config: Config = {
         },
         dark: '#1A1A1A',
         mid: '#555555',
-        light: '#888888',
+        light: '#767676',
         lighter: '#CCCCCC',
         lightest: '#F5F5F5',
         surface: {
