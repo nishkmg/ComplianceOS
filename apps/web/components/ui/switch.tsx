@@ -10,9 +10,10 @@ export interface SwitchProps extends React.InputHTMLAttributes<HTMLInputElement>
 }
 
 const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
-  ({ className, checked, onCheckedChange, ...props }, ref) => {
+  ({ className, checked, onCheckedChange, id, ...props }, ref) => {
     return (
       <button
+        id={id}
         type="button"
         role="switch"
         aria-checked={checked}

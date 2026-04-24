@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { Label } from "@/components/ui/label";
 
 interface OpeningBalance {
   accountId: string;
@@ -124,10 +125,13 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
             .map((account: any) => (
               <div key={account.id} className="flex items-center gap-4 card p-4">
                 <div className="flex-1">
-                  <p className="font-ui text-[13px] text-dark">{account.name}</p>
+                  <Label htmlFor={`balance-${account.id}`} className="font-ui text-[13px] text-dark block">
+                    {account.name}
+                  </Label>
                   <p className="font-mono text-[11px] text-light">{account.code}</p>
                 </div>
                 <input
+                  id={`balance-${account.id}`}
                   type="number"
                   placeholder="0.00"
                   className="input-field w-32 font-mono text-right"

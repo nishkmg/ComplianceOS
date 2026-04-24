@@ -4,6 +4,7 @@
 import { useState } from "react";
 // @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
+import { Label } from "@/components/ui/label";
 
 const GST_RATES = [5, 12, 18, 28];
 
@@ -53,9 +54,9 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
 
       <div className="space-y-5 max-w-md">
         <div>
-          <label htmlFor="fyStart" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+          <Label htmlFor="fyStart" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
             Current Fiscal Year Start
-          </label>
+          </Label>
           <input
             id="fyStart"
             type="date"
@@ -69,9 +70,9 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
         </div>
 
         <div>
-          <label htmlFor="gstType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+          <Label htmlFor="gstType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
             GST Registration Type
-          </label>
+          </Label>
           <select
             id="gstType"
             value={formData.gstRegistration}
@@ -87,9 +88,9 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
         {formData.gstRegistration !== "none" && (
           <>
             <div>
-              <label className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+              <Label className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
                 Applicable GST Rates
-              </label>
+              </Label>
               <div className="flex gap-2">
                 {GST_RATES.map((rate) => (
                   <button

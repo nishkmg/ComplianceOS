@@ -131,9 +131,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label htmlFor="name" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="name" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               Business Name *
-            </label>
+            </Label>
             <input
               id="name"
               type="text"
@@ -147,9 +147,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div className="sm:col-span-2">
-            <label htmlFor="legalName" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="legalName" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               Legal Name <span className="text-light">(optional)</span>
-            </label>
+            </Label>
             <input
               id="legalName"
               type="text"
@@ -160,9 +160,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div>
-            <label htmlFor="businessType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="businessType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               Business Type *
-            </label>
+            </Label>
             <select
               id="businessType"
               className="input-field w-full font-ui"
@@ -181,9 +181,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div>
-            <label htmlFor="industry" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="industry" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               Industry *
-            </label>
+            </Label>
             <select
               id="industry"
               className="input-field w-full font-ui"
@@ -202,9 +202,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div>
-            <label htmlFor="pan" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="pan" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               PAN *
-            </label>
+            </Label>
             <input
               id="pan"
               type="text"
@@ -219,9 +219,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div>
-            <label htmlFor="gstin" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="gstin" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               GSTIN <span className="text-light">(optional)</span>
-            </label>
+            </Label>
             <input
               id="gstin"
               type="text"
@@ -236,9 +236,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div className="sm:col-span-2">
-            <label htmlFor="state" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="state" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               State *
-            </label>
+            </Label>
             <select
               id="state"
               className="input-field w-full font-ui"
@@ -257,9 +257,9 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
           </div>
 
           <div className="sm:col-span-2">
-            <label htmlFor="address" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+            <Label htmlFor="address" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
               Registered Address *
-            </label>
+            </Label>
             <input
               id="address"
               type="text"
