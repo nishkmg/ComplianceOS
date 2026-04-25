@@ -1,0 +1,243 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation "Main navigation" [ref=e3]:
+      - generic [ref=e4]:
+        - link "ComplianceOS" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - button "Open menu" [ref=e6] [cursor=pointer]:
+          - img [ref=e7]
+    - main [ref=e11]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Built for Indian Business
+          - heading "The accounting software that thinks in lakhs, not thousands." [level=1] [ref=e17]
+          - paragraph [ref=e18]: Double-entry books, GST returns, payroll and ITR — fully connected, built from scratch for how Indian businesses actually work.
+          - generic [ref=e19]:
+            - link "Start free →" [ref=e20] [cursor=pointer]:
+              - /url: /signup
+              - text: Start free
+              - generic [ref=e21]: →
+            - link "Watch demo" [ref=e22] [cursor=pointer]:
+              - /url: /features
+              - img [ref=e23]
+              - text: Watch demo
+          - paragraph [ref=e25]: Free to start·No credit card·Indian FY Apr–Mar
+        - generic [ref=e26]:
+          - generic [ref=e28]: app.complianceos.in
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - generic [ref=e31]:
+                - generic [ref=e32]: Active Fiscal Year
+                - generic [ref=e33]: FY 2026-27
+              - generic [ref=e34]: Good morning, Mehta Textiles
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - generic [ref=e37]: Revenue (MTD)
+                - generic [ref=e38]: ₹12,45,000
+              - generic [ref=e39]:
+                - generic [ref=e40]: Expenses (MTD)
+                - generic [ref=e41]: ₹8,45,200
+              - generic [ref=e42]:
+                - generic [ref=e43]: Net Profit (MTD)
+                - generic [ref=e44]: ₹3,99,800
+              - generic [ref=e45]:
+                - generic [ref=e46]: Cash Balance
+                - generic [ref=e47]: ₹24,50,000
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: Why ComplianceOS
+          - heading "Everything an Indian business needs, in one place that actually works." [level=2] [ref=e52]:
+            - text: Everything an Indian business needs,
+            - text: in one place that actually works.
+        - generic [ref=e53]:
+          - link "Books that balance themselves Every journal entry is double-entry by construction. Posting is blocked until debits equal credits — the UI enforces what your accountant has always manually checked. Learn more →" [ref=e55] [cursor=pointer]:
+            - /url: /features/accounting
+            - img [ref=e57]
+            - heading "Books that balance themselves" [level=3] [ref=e59]
+            - paragraph [ref=e60]: Every journal entry is double-entry by construction. Posting is blocked until debits equal credits — the UI enforces what your accountant has always manually checked.
+            - generic [ref=e61]:
+              - text: Learn more
+              - generic [ref=e62]: →
+          - link "GST done without a CA on call GSTR-1, GSTR-2B, and GSTR-3B generated from your own entries. ITC reconciliation built in. File the return yourself — record the ARN, done. Learn more →" [ref=e64] [cursor=pointer]:
+            - /url: /features/gst
+            - img [ref=e66]
+            - heading "GST done without a CA on call" [level=3] [ref=e68]
+            - paragraph [ref=e69]: GSTR-1, GSTR-2B, and GSTR-3B generated from your own entries. ITC reconciliation built in. File the return yourself — record the ARN, done.
+            - generic [ref=e70]:
+              - text: Learn more
+              - generic [ref=e71]: →
+          - link "Reports that look like reports P&L and Balance Sheet in Schedule III format, typeset for print. Send to your CA or a bank directly from the browser — no export, no reformatting. Learn more →" [ref=e73] [cursor=pointer]:
+            - /url: /features/accounting
+            - img [ref=e75]
+            - heading "Reports that look like reports" [level=3] [ref=e77]
+            - paragraph [ref=e78]: P&L and Balance Sheet in Schedule III format, typeset for print. Send to your CA or a bank directly from the browser — no export, no reformatting.
+            - generic [ref=e79]:
+              - text: Learn more
+              - generic [ref=e80]: →
+          - link "Indian numbers, everywhere ₹12,45,000 — not ₹1,245,000. Every amount in the Indian numbering system, every time. This is the only accounting software that gets this right without a plugin. Learn more →" [ref=e82] [cursor=pointer]:
+            - /url: /features/accounting
+            - img [ref=e84]
+            - heading "Indian numbers, everywhere" [level=3] [ref=e86]
+            - paragraph [ref=e87]: ₹12,45,000 — not ₹1,245,000. Every amount in the Indian numbering system, every time. This is the only accounting software that gets this right without a plugin.
+            - generic [ref=e88]:
+              - text: Learn more
+              - generic [ref=e89]: →
+          - link "One FY closes, the next one opens Apr–Mar fiscal years built in from day one. Two concurrent open FYs for year-end transitions. No \"financial year workaround\" required. Learn more →" [ref=e91] [cursor=pointer]:
+            - /url: /features/accounting
+            - img [ref=e93]
+            - heading "One FY closes, the next one opens" [level=3] [ref=e95]
+            - paragraph [ref=e96]: Apr–Mar fiscal years built in from day one. Two concurrent open FYs for year-end transitions. No "financial year workaround" required.
+            - generic [ref=e97]:
+              - text: Learn more
+              - generic [ref=e98]: →
+        - link "See all features →" [ref=e100] [cursor=pointer]:
+          - /url: /features
+          - text: See all features
+          - generic [ref=e101]: →
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: THE PRODUCT
+          - heading "See a journal entry posted in under 10 seconds." [level=2] [ref=e106]:
+            - text: See a journal entry posted
+            - text: in under 10 seconds.
+        - generic [ref=e107]:
+          - button "Dashboard" [ref=e108] [cursor=pointer]
+          - button "New Entry" [ref=e109] [cursor=pointer]
+          - button "P&L Report" [ref=e110] [cursor=pointer]
+          - button "GST Return" [ref=e111] [cursor=pointer]
+        - generic [ref=e112]:
+          - generic [ref=e114]: app.complianceos.in
+          - generic [ref=e116]:
+            - generic [ref=e117]: Dashboard overview with real-time KPIs
+            - paragraph [ref=e118]: Revenue, expenses, net profit — all in Indian numbering format.
+      - generic [ref=e120]:
+        - heading "Everything connected. Nothing siloed." [level=2] [ref=e121]:
+          - text: Everything connected.
+          - text: Nothing siloed.
+        - generic [ref=e122]:
+          - link "Accounting Double-entry ledger, chart of accounts, trial balance, P&L, balance sheet — built for Schedule III and beyond. Learn more →" [ref=e123] [cursor=pointer]:
+            - /url: /features/accounting
+            - heading "Accounting" [level=3] [ref=e124]
+            - paragraph [ref=e125]: Double-entry ledger, chart of accounts, trial balance, P&L, balance sheet — built for Schedule III and beyond.
+            - generic [ref=e126]:
+              - text: Learn more
+              - generic [ref=e127]: →
+          - link "GST Returns GSTR-1, GSTR-2B, GSTR-3B generated from your entries. ITC reconciliation with auto-match. Learn more →" [ref=e128] [cursor=pointer]:
+            - /url: /features/gst
+            - heading "GST Returns" [level=3] [ref=e129]
+            - paragraph [ref=e130]: GSTR-1, GSTR-2B, GSTR-3B generated from your entries. ITC reconciliation with auto-match.
+            - generic [ref=e131]:
+              - text: Learn more
+              - generic [ref=e132]: →
+          - link "Invoicing GST-compliant invoices with automatic tax calculation. Post to your books with one click. Learn more →" [ref=e133] [cursor=pointer]:
+            - /url: /features/invoicing
+            - heading "Invoicing" [level=3] [ref=e134]
+            - paragraph [ref=e135]: GST-compliant invoices with automatic tax calculation. Post to your books with one click.
+            - generic [ref=e136]:
+              - text: Learn more
+              - generic [ref=e137]: →
+          - link "Payroll PF, ESI, PT, TDS — all statutory components calculated automatically. Payslips self-serve. Learn more →" [ref=e138] [cursor=pointer]:
+            - /url: /features/payroll
+            - heading "Payroll" [level=3] [ref=e139]
+            - paragraph [ref=e140]: PF, ESI, PT, TDS — all statutory components calculated automatically. Payslips self-serve.
+            - generic [ref=e141]:
+              - text: Learn more
+              - generic [ref=e142]: →
+          - link "ITR Returns From P&L to tax computation to self-assessment. Old vs new regime comparison built in. Learn more →" [ref=e143] [cursor=pointer]:
+            - /url: /features/itr
+            - heading "ITR Returns" [level=3] [ref=e144]
+            - paragraph [ref=e145]: From P&L to tax computation to self-assessment. Old vs new regime comparison built in.
+            - generic [ref=e146]:
+              - text: Learn more
+              - generic [ref=e147]: →
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]: From Our Users
+          - heading "They switched from Tally. Here's what they said." [level=2] [ref=e152]:
+            - text: They switched from Tally.
+            - text: Here's what they said.
+        - region "User testimonials" [ref=e153]:
+          - generic [ref=e154]:
+            - generic [ref=e155]: "\""
+            - blockquote [ref=e156]: The P&L actually looks like a P&L — not like a software printout. My CA was surprised I generated it myself.
+            - generic [ref=e159]:
+              - generic [ref=e160]: Priya Sharma
+              - generic [ref=e161]: Proprietor, Sharma Garments
+              - generic [ref=e162]: Mumbai
+          - generic [ref=e163]:
+            - button "Previous testimonial" [ref=e164] [cursor=pointer]:
+              - img
+            - tablist "Testimonial indicators" [ref=e166]:
+              - tab "Testimonial 1 of 3" [selected] [ref=e167] [cursor=pointer]
+              - tab "Testimonial 2 of 3" [ref=e168] [cursor=pointer]
+              - tab "Testimonial 3 of 3" [ref=e169] [cursor=pointer]
+            - button "Next testimonial" [ref=e170] [cursor=pointer]:
+              - img
+      - generic [ref=e173]:
+        - heading "Ready to move off Tally?" [level=2] [ref=e174]
+        - paragraph [ref=e175]:
+          - text: Start free. No credit card.
+          - text: No migration consultant required.
+        - generic [ref=e176]:
+          - link "Start free →" [ref=e177] [cursor=pointer]:
+            - /url: /signup
+            - text: Start free
+            - generic [ref=e178]: →
+          - link "Talk to us" [ref=e179] [cursor=pointer]:
+            - /url: /contact
+        - paragraph [ref=e180]: Your data stays in India. Always.
+    - contentinfo [ref=e181]:
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e185]: ComplianceOS
+          - paragraph [ref=e186]: Built for Indian business.
+          - paragraph [ref=e187]: © 2026 ComplianceOS. All rights reserved.
+        - generic [ref=e188]:
+          - heading "Product" [level=4] [ref=e189]
+          - list [ref=e190]:
+            - listitem [ref=e191]:
+              - link "Accounting" [ref=e192] [cursor=pointer]:
+                - /url: /features/accounting
+            - listitem [ref=e193]:
+              - link "GST Filing" [ref=e194] [cursor=pointer]:
+                - /url: /features/gst
+            - listitem [ref=e195]:
+              - link "Invoicing" [ref=e196] [cursor=pointer]:
+                - /url: /features/invoicing
+            - listitem [ref=e197]:
+              - link "Payroll" [ref=e198] [cursor=pointer]:
+                - /url: /features/payroll
+            - listitem [ref=e199]:
+              - link "ITR Returns" [ref=e200] [cursor=pointer]:
+                - /url: /features/itr
+        - generic [ref=e201]:
+          - heading "Company" [level=4] [ref=e202]
+          - list [ref=e203]:
+            - listitem [ref=e204]:
+              - link "About" [ref=e205] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e206]:
+              - link "Blog" [ref=e207] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e208]:
+              - link "Pricing" [ref=e209] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e210]:
+              - link "Contact" [ref=e211] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e212]:
+          - heading "Legal" [level=4] [ref=e213]
+          - list [ref=e214]:
+            - listitem [ref=e215]:
+              - link "Privacy policy" [ref=e216] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e217]:
+              - link "Terms of service" [ref=e218] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e219]:
+              - link "Cookie policy" [ref=e220] [cursor=pointer]:
+                - /url: /cookies
+            - listitem [ref=e221]:
+              - link "Security" [ref=e222] [cursor=pointer]:
+                - /url: /security
+  - region "Notifications alt+T"
