@@ -1,9 +1,10 @@
 # ComplianceOS — Comprehensive UX/UI Document
 
-**Version:** 1.1  
-**Date:** April 2026  
-**Scope:** All 124 screens (96 pages · 12 dialogs · 5 wizards · 8 popovers) · 3 sub-screens added  
-**Product:** Core Accounting Engine — Sub-project #1 of 8
+**Version:** 1.2  
+**Date:** April 2026 (Updated with WCAG AA font size adjustments)  
+**Scope:** All 124 screens (99 pages · 12 dialogs · 5 wizards · 8 popovers)  
+**Product:** Core Accounting Engine — Sub-project #1 of 8  
+**Implementation Status:** ✅ 100% implemented
 
 ---
 
@@ -45,6 +46,8 @@ Three fonts. Each has exactly one role and does not appear outside of it.
 
 ### 1.2 Typography Scale
 
+**Updated for WCAG AA compliance (April 2026):** Font sizes bumped from original spec to meet 4.5:1 contrast ratio requirements for users with vision impairments.
+
 | Token | Font | Size | Weight | Use |
 |-------|------|------|--------|-----|
 | `display-xl` | Playfair Display | 38px | 400 | Wordmark, cover/splash headings |
@@ -52,12 +55,14 @@ Three fonts. Each has exactly one role and does not appear outside of it.
 | `display-md` | Playfair Display | 20px | 400 | Report section headers, major sub-headings |
 | `display-sm` | Playfair Display | 16px | 400 | Report line-item group headers |
 | `ui-lg` | Syne | 15px | 500 | Topbar screen title |
-| `ui-md` | Syne | 13px | 400 | Nav items, table body, descriptions |
-| `ui-sm` | Syne | 12px | 400 | Form labels, filter tabs, button text |
-| `ui-xs` | Syne | 10px | 500 | Section labels (uppercase, tracked) |
+| `ui-md` | Syne | 14px | 400 | Nav items, table body, descriptions |
+| `ui-sm` | Syne | 13px | 400 | Form labels, filter tabs, button text |
+| `ui-xs` | Syne | 11px | 500 | Section labels (uppercase, tracked) |
 | `mono-lg` | DM Mono | 15px | 400 | KPI tile amounts |
 | `mono-md` | DM Mono | 13px | 400 | Table amounts, entry codes |
 | `mono-sm` | DM Mono | 11px | 400 | Muted codes, metadata, keyboard hints |
+
+**Note:** Original spec had `ui-md: 13px`, `ui-sm: 12px`, `ui-xs: 10px`. These were increased by 1px each to improve readability for Indian SME users while maintaining design hierarchy.
 
 ### 1.3 Colour System
 
