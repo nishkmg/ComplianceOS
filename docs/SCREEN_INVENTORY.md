@@ -1,9 +1,11 @@
 # ComplianceOS — User-Facing Screen Inventory
 
-**Version:** 1.2  
+**Version:** 1.3  
 **Date:** 2026-04-25  
-**Total Screens:** 139 pages (99 app + 17 marketing + 23 public) + 12 dialogs/modals + 5 wizards + 8 popovers/overlays  
-**Marketing Pages Added:** 17 public-facing marketing pages (no auth required)
+**Stitch Verified:** 157 screens (projects/9254241192295332344)  
+**Route Count:** 139 defined in code  
+**Gap:** 18 screens (variants/drafts/hidden in Stitch)  
+**Marketing Pages:** 17 public-facing marketing pages (no auth required)
 
 ---
 
