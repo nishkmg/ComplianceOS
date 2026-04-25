@@ -860,3 +860,240 @@ PRINT STYLESHEET
 .animate-spin { animation: spin 1s linear infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MARKETING SITE EXTENSIONS
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Typography: Marketing Extensions ─────────────────────────────────── */
+:root {
+  --marketing-hero: 64px;
+  --marketing-xl: 48px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --marketing-hero: 40px;
+    --marketing-xl: 32px;
+  }
+}
+
+/* ─── Colors: Marketing Additions ──────────────────────────────────────── */
+:root {
+  --page-bg: #FAFAF8;
+  --section-dark: #111111;
+  --section-amber: rgba(200,134,10,0.06);
+  --section-muted: #F4F2EE;
+  --amber-text: #B47500;
+  --amber-dark-bg: #C8860A;
+  --shadow-screenshot: 0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+}
+
+/* Marketing Container */
+.marketing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (min-width: 1440px) {
+  .marketing-container {
+    max-width: 1320px;
+    padding: 0 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .marketing-container {
+    padding: 0 16px;
+  }
+}
+
+/* ─── Navigation ───────────────────────────────────────────────────────── */
+.marketing-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, backdrop-filter 0.2s ease;
+}
+
+.marketing-nav.is-sticky {
+  background: rgba(250,250,248,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 0.5px solid #E8E4DC;
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────── */
+.marketing-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 20px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  background-color: var(--color-amber);
+  border-radius: var(--radius-md);
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.marketing-btn-primary:hover {
+  background-color: #B27609;
+}
+
+.marketing-btn-primary:active {
+  background-color: #9E6808;
+  transform: scale(0.98);
+}
+
+.marketing-btn-primary:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+.marketing-btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* CTA Arrow animation */
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.cta:hover .cta-arrow,
+.marketing-btn-primary:hover .cta-arrow,
+.feature-card:hover .cta-arrow {
+  transform: translateX(3px);
+}
+
+/* ─── Feature Card ─────────────────────────────────────────────────────── */
+.feature-card {
+  border-top: 2px solid var(--color-amber);
+  transition: box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.feature-card .learn-more {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.feature-card:hover .learn-more {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── Testimonial Carousel ─────────────────────────────────────────────── */
+.testimonial-card {
+  transition: opacity 0.25s ease;
+}
+
+/* ─── FAQ Accordion ────────────────────────────────────────────────────── */
+.faq-item[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease;
+}
+
+.faq-item[open] .faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer-inner {
+  overflow: hidden;
+}
+
+.faq-chevron {
+  transition: transform 0.2s ease;
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::marker,
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ─── Pricing Card ─────────────────────────────────────────────────────── */
+.pricing-card {
+  transition: box-shadow 0.2s ease;
+}
+
+.pricing-card-featured {
+  border-top: 2px solid var(--color-amber);
+  box-shadow: var(--shadow-card);
+}
+
+/* ─── Animations ───────────────────────────────────────────────────────── */
+.animate-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.animate-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-stagger .animate-in:nth-child(1) { transition-delay: 0ms; }
+.animate-stagger .animate-in:nth-child(2) { transition-delay: 50ms; }
+.animate-stagger .animate-in:nth-child(3) { transition-delay: 100ms; }
+.animate-stagger .animate-in:nth-child(4) { transition-delay: 150ms; }
+.animate-stagger .animate-in:nth-child(5) { transition-delay: 200ms; }
+
+/* ─── Skip Link ────────────────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  background: var(--color-amber);
+  color: #FFFFFF;
+  padding: 8px 16px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ─── Reduced Motion ───────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .feature-card,
+  .cta-arrow,
+  .testimonial-card,
+  .marketing-nav,
+  .faq-answer,
+  .faq-chevron,
+  .pricing-card {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
