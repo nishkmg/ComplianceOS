@@ -1,8 +1,9 @@
 # ComplianceOS — User-Facing Screen Inventory
 
-**Version:** 1.1  
-**Date:** 2026-04-24  
-**Total Screens:** 124 pages + 12 dialogs/modals + 5 wizards + 8 popovers/overlays
+**Version:** 1.2  
+**Date:** 2026-04-25  
+**Total Screens:** 139 pages (99 app + 17 marketing + 23 public) + 12 dialogs/modals + 5 wizards + 8 popovers/overlays  
+**Marketing Pages Added:** 17 public-facing marketing pages (no auth required)
 
 ---
 
@@ -22,7 +23,196 @@
 
 ---
 
-## 1. Authentication Screens (Public)
+## 1. Public Marketing Pages (No Auth)
+
+### 1.1 Homepage
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/` |
+| **File** | `apps/web/app/(marketing)/page.tsx` |
+| **Purpose** | Convert visitors to sign-ups. Communicate product identity and differentiation. |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Sticky nav, Hero (64px headline + product screenshot), 5 benefit cards, Dark demo section with tab switcher, Module feature grid, Testimonial carousel, Conversion CTA, Footer |
+| **States** | ⏳ Screenshot loading, scroll-triggered fade-in animations |
+| **A11y** | Skip link, `role="navigation"`, `aria-expanded` dropdown, carousel ARIA, reduced-motion support |
+
+### 1.2 Features Overview
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/features` |
+| **File** | `apps/web/app/(marketing)/features/page.tsx` |
+| **Purpose** | Overview of all 5 modules before diving into specific feature pages |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, 5 zigzag cards (alternating image/text), Module screenshots |
+| **States** | Scroll-triggered fade-in |
+| **A11y** | Alt text on screenshots, semantic headings |
+
+### 1.3 Feature: Accounting
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/features/accounting` |
+| **File** | `apps/web/app/(marketing)/features/accounting/page.tsx` |
+| **Purpose** | Detail page for accounting module |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, Balance constraint demo (animated), Chart of accounts tree screenshot, Reports section (P&L + BS), CTA |
+| **States** | Scroll-triggered animations |
+| **A11y** | Semantic headings, `alt` on screenshots |
+
+### 1.4 Feature: GST
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/features/gst` |
+| **File** | `apps/web/app/(marketing)/features/gst/page.tsx` |
+| **Purpose** | Detail page for GST module |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, 3-step filing flow, ITC reconciliation screenshot, Honest limitation banner (no GSP integration), CTA |
+| **States** | Scroll-triggered animations |
+| **A11y** | Limitation banner uses `role="note"` |
+
+### 1.5 Feature: Invoicing
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/features/invoicing` |
+| **File** | `apps/web/app/(marketing)/features/invoicing/page.tsx` |
+| **Purpose** | Detail page for invoicing module |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, Invoice → Ledger flow diagram, Invoice PDF preview with GST breakdown, OCR scan two-panel, CTA |
+| **States** | Scroll-triggered animations |
+| **A11y** | Table ARIA on invoice preview |
+
+### 1.6 Feature: Payroll
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/features/payroll` |
+| **File** | `apps/web/app/(marketing)/features/payroll/page.tsx` |
+| **Purpose** | Detail page for payroll module |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, Salary structure (earnings + deductions), Payslip view, Compliance reports section, CTA |
+| **States** | Scroll-triggered animations |
+| **A11y** | Form field labels in salary structure |
+
+### 1.7 Feature: ITR
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/features/itr` |
+| **File** | `apps/web/app/(marketing)/features/itr/page.tsx` |
+| **Purpose** | Detail page for ITR module |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, Regime comparison (old vs new), Presumptive scheme (44AD/44ADA), Integration chain diagram, CTA |
+| **States** | Scroll-triggered animations |
+| **A11y** | Comparison table ARIA |
+
+### 1.8 Pricing
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/pricing` |
+| **File** | `apps/web/app/(marketing)/pricing/page.tsx` |
+| **Purpose** | Present pricing tiers with billing toggle and FAQ |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Billing toggle (Annual/Monthly with radio role), 3 pricing cards (Free/Pro/Business), FAQ accordion (6 items), "Most popular" badge |
+| **States** | ✅ Billing toggle updates prices without reload, ⚠️ Email support SLA |
+| **A11y** | `role="radiogroup"`, `aria-checked` on toggle, FAQ uses `<details>`/`<summary>` |
+
+### 1.9 About
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/about` |
+| **File** | `apps/web/app/(marketing)/about/page.tsx` |
+| **Purpose** | Company background, team, beliefs |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Hero headline, Problem statement, 3 team cards, Design narrative, 5 belief statements |
+| **States** | Scroll-triggered animations |
+| **A11y** | Semantic heading hierarchy, `alt` on team photos |
+
+### 1.10 Contact
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/contact` |
+| **File** | `apps/web/app/(marketing)/contact/page.tsx` |
+| **Purpose** | Contact form and business information |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Contact form (Name, Email, Business type select, Message textarea), Contact info panel, Honeypot spam protection |
+| **States** | ✅ Success (green check + confirmation), ⚠️ Error (fallback email), ⏳ Submit loading |
+| **A11y** | `htmlFor`/`id` on all form fields, `role="alert"` on errors |
+
+### 1.11 Blog Index
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/blog` |
+| **File** | `apps/web/app/(marketing)/blog/page.tsx` |
+| **Purpose** | Content marketing and SEO surface |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📊 📱 |
+| **Components** | Featured post (50/50 image-text), 3-col post grid, Category labels, Author + date |
+| **States** | ⏳ Loading (images) |
+| **A11y** | `alt` on blog images, semantic `<article>` elements |
+
+### 1.12 Blog Post
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/blog/[slug]` |
+| **File** | `apps/web/app/(marketing)/blog/[slug]/page.tsx` |
+| **Purpose** | Individual blog article |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📱 📊 |
+| **Components** | Reading progress bar (fixed top), Back link, Post title, Byline, Body (H2/H3/blockquote), Related posts |
+| **States** | Reading progress updates on scroll |
+| **A11y** | `role="progressbar"`, `aria-valuenow`, semantic headings, blockquote ARIA |
+
+### 1.13 Privacy Policy
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/privacy` |
+| **File** | `apps/web/app/(marketing)/privacy/page.tsx` |
+| **Purpose** | Data handling and privacy disclosures (DPDP Act 2023) |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📱 📊 |
+| **Components** | Table of contents (anchored sections), Data Collected, How We Use It, Storage, Third Parties, User Rights, Contact |
+| **A11y** | Named anchors, semantic section headings |
+
+### 1.14 Terms of Service
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/terms` |
+| **File** | `apps/web/app/(marketing)/terms/page.tsx` |
+| **Purpose** | Terms governing use of the service |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📱 📊 |
+| **Components** | Sectioned legal document: Service, Responsibilities, Liability, Termination |
+
+### 1.15 Cookie Policy
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/cookies` |
+| **File** | `apps/web/app/(marketing)/cookies/page.tsx` |
+| **Purpose** | Cookie usage disclosure |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📱 📊 |
+| **Components** | Essential cookies only, No tracking/advertising cookies, Browser control instructions |
+
+### 1.16 Security
+| Attribute | Details |
+|-----------|---------|
+| **Route** | `/security` |
+| **File** | `apps/web/app/(marketing)/security/page.tsx` |
+| **Purpose** | Security practices for CTO/IT manager audience |
+| **Audience** | All (public) |
+| **Device** | 🖥️ 📱 📊 |
+| **Components** | Encryption (TLS 1.3 + AES-256), Data Residency (India-only), Access Controls, Incident Response contact |
+
+---
+
+## 2. Authentication Screens (Public)
 
 ### 1.1 Login
 | Attribute | Details |
@@ -1064,9 +1254,9 @@
 
 | Device | Support Level |
 |--------|---------------|
-| **Desktop (1920x1080+)** | Full support, all features |
+| **Desktop (1920x1080+)** | Full support, all features + marketing pages |
 | **Tablet (768x1024)** | Responsive layout, touch-friendly |
-| **Mobile (375x667)** | Critical paths only (view invoices, payslips) |
+| **Mobile (375x667)** | Marketing pages responsive (breakpoints at 768px), app critical paths only |
 
 ---
 
@@ -1074,8 +1264,9 @@
 
 | Category | Count |
 |----------|-------|
-| **Pages (Routes)** | 99 (+3 ITR sub-screens, +1 Inventory Reports) |
+| **App Pages (Routes)** | 99 (+3 ITR sub-screens, +1 Inventory Reports) |
+| **Marketing Pages (Public)** | 17 (homepage, 5 feature pages, pricing, about, contact, blog×2, 4 legal, features overview) |
 | **Dialogs/Modals** | 12 |
 | **Wizards** | 5 (onboarding steps) |
 | **Popovers/Overlays** | 8 |
-| **Total Unique Screens** | 124 |
+| **Total Unique Screens** | 141 |
