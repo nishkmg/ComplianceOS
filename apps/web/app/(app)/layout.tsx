@@ -8,6 +8,7 @@ import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { CommandPalette } from "@/components/command-palette";
 import { SessionProvider } from "next-auth/react";
 import { ServerAuthCheck } from "./server-auth-check";
+import { SkipToMainContent } from "@/components/ui";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -68,6 +69,9 @@ function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-lightest">
+        {/* Skip to Main Content (a11y) */}
+        <SkipToMainContent />
+        
         {/* Command Palette */}
         <CommandPalette isOpen={commandPaletteOpen} onClose={closeCommandPalette} />
 
@@ -175,7 +179,7 @@ function AppShell({ children }: { children: ReactNode }) {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main id="main-content" className="flex-1 p-6 overflow-y-auto" tabIndex={-1}>
           {children}
         </main>
       </div>

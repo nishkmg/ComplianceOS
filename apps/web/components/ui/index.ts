@@ -6,3 +6,17 @@ export { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogD
 export { Input } from './input';
 export { Label } from './label';
 export { KpiTile } from './kpi-tile';
+
+// State Components (per UX/UI doc §16)
+export { Skeleton, TableSkeleton, KPISkeleton, CardSkeleton } from './skeleton';
+export { EmptyState, EmptyStateIcons } from './empty-state';
+export {
+  ErrorState,
+  FieldError,
+  FormErrorSummary,
+  OfflineBanner,
+  NotFound,
+  PermissionDenied,
+} from './error-state';
+export { InlineConfirmation, InlineConfirmationWithReason } from './inline-confirmation';
+export { SkipToMainContent, SrOnly } from './skip-link';
