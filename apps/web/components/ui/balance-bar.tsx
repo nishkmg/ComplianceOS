@@ -30,7 +30,7 @@ export function BalanceBar({
   const { debit: debitNum, credit: creditNum, difference, balanced } = calculateBalance(debit, credit);
 
   return (
-    <div className="border-t border-hairline bg-surface-muted p-4">
+    <div className="border-t border-hairline bg-surface-muted p-4" role="region" aria-label="Journal entry balance">
       <div className="flex items-center justify-between">
         {/* Balance Summary */}
         <div className="flex items-center gap-6">
@@ -54,8 +54,10 @@ export function BalanceBar({
                   ? 'text-success'
                   : 'text-danger'
               }`}
+              aria-live="polite"
+              aria-atomic="true"
             >
-              {balanced ? '✓' : ''} {formatIndianNumber(difference, { currency: true, decimals: 2 })}
+              {balanced ? '✓ ' : ''}{formatIndianNumber(difference, { currency: true, decimals: 2 })}
             </div>
           </div>
         </div>
