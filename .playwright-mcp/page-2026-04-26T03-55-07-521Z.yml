@@ -1,0 +1,188 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation "Main navigation" [ref=e4]:
+      - generic [ref=e5]:
+        - link "ComplianceOS" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - button "Open menu" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+    - main [ref=e12]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: Features
+        - heading "Every module your accountant wanted. Built together, not bolted on." [level=1] [ref=e16]:
+          - text: Every module your accountant wanted.
+          - text: Built together, not bolted on.
+        - paragraph [ref=e17]: Five integrated modules. One data model. Zero re-entry.
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - link "Accounting & Ledger" [ref=e22] [cursor=pointer]:
+              - /url: /features/accounting
+              - heading "Accounting & Ledger" [level=2] [ref=e23]
+            - paragraph [ref=e24]: Double-entry ledger, chart of accounts, journal entries, trial balance, P&L, balance sheet, cash flow — all the reports your CA asks for.
+            - list [ref=e25]:
+              - listitem [ref=e26]:
+                - img [ref=e27]
+                - text: Double-entry enforced at the UI level
+              - listitem [ref=e29]:
+                - img [ref=e30]
+                - text: Schedule III P&L and Balance Sheet
+              - listitem [ref=e32]:
+                - img [ref=e33]
+                - text: Hierarchical chart of accounts (4 levels)
+            - link "Explore Accounting →" [ref=e35] [cursor=pointer]:
+              - /url: /features/accounting
+              - text: Explore Accounting
+              - generic [ref=e36]: →
+          - generic [ref=e38]:
+            - generic [ref=e39]: Accounting Module
+            - paragraph [ref=e40]: Authentic screenshot of the Accounting & Ledger screen.
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - link "GST Filing" [ref=e43] [cursor=pointer]:
+              - /url: /features/gst
+              - heading "GST Filing" [level=2] [ref=e44]
+            - paragraph [ref=e45]: GSTR-1, GSTR-2B, and GSTR-3B generated from your own entries. No re-entering data into the GST portal format.
+            - list [ref=e46]:
+              - listitem [ref=e47]:
+                - img [ref=e48]
+                - text: GSTR-1 auto-generated from invoices
+              - listitem [ref=e50]:
+                - img [ref=e51]
+                - text: GSTR-2B fetched and ITC reconciled
+              - listitem [ref=e53]:
+                - img [ref=e54]
+                - text: GSTR-3B summary with tax payable
+            - link "Explore GST →" [ref=e56] [cursor=pointer]:
+              - /url: /features/gst
+              - text: Explore GST
+              - generic [ref=e57]: →
+          - generic [ref=e59]:
+            - generic [ref=e60]: GST Module
+            - paragraph [ref=e61]: Authentic screenshot of the GST Filing screen.
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - link "Invoicing" [ref=e64] [cursor=pointer]:
+              - /url: /features/invoicing
+              - heading "Invoicing" [level=2] [ref=e65]
+            - paragraph [ref=e66]: GST-compliant invoices that post to your books automatically. No double entry between invoicing and accounting.
+            - list [ref=e67]:
+              - listitem [ref=e68]:
+                - img [ref=e69]
+                - text: Automatic CGST/SGST/IGST calculation
+              - listitem [ref=e71]:
+                - img [ref=e72]
+                - text: Invoice → Journal entry in one click
+              - listitem [ref=e74]:
+                - img [ref=e75]
+                - text: OCR scan for vendor bills
+            - link "Explore Invoicing →" [ref=e77] [cursor=pointer]:
+              - /url: /features/invoicing
+              - text: Explore Invoicing
+              - generic [ref=e78]: →
+          - generic [ref=e80]:
+            - generic [ref=e81]: Invoicing Module
+            - paragraph [ref=e82]: Authentic screenshot of the Invoicing screen.
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - link "Payroll" [ref=e85] [cursor=pointer]:
+              - /url: /features/payroll
+              - heading "Payroll" [level=2] [ref=e86]
+            - paragraph [ref=e87]: PF, ESI, Professional Tax, TDS — all statutory components calculated automatically. Payslips self-serve for employees.
+            - list [ref=e88]:
+              - listitem [ref=e89]:
+                - img [ref=e90]
+                - text: PF at 12% of basic — auto-calculated
+              - listitem [ref=e92]:
+                - img [ref=e93]
+                - text: Professional Tax by state — auto-set
+              - listitem [ref=e95]:
+                - img [ref=e96]
+                - text: TDS projection updated monthly
+            - link "Explore Payroll →" [ref=e98] [cursor=pointer]:
+              - /url: /features/payroll
+              - text: Explore Payroll
+              - generic [ref=e99]: →
+          - generic [ref=e101]:
+            - generic [ref=e102]: Payroll Module
+            - paragraph [ref=e103]: Authentic screenshot of the Payroll screen.
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - link "ITR Returns" [ref=e106] [cursor=pointer]:
+              - /url: /features/itr
+              - heading "ITR Returns" [level=2] [ref=e107]
+            - paragraph [ref=e108]: From P&L to tax computation to filing. Old vs new regime comparison built in. No re-entry at year end.
+            - list [ref=e109]:
+              - listitem [ref=e110]:
+                - img [ref=e111]
+                - text: Regime comparison from actual books
+              - listitem [ref=e113]:
+                - img [ref=e114]
+                - text: Presumptive scheme (44AD/44ADA)
+              - listitem [ref=e116]:
+                - img [ref=e117]
+                - text: Self-assessment tax calculation
+            - link "Explore ITR →" [ref=e119] [cursor=pointer]:
+              - /url: /features/itr
+              - text: Explore ITR
+              - generic [ref=e120]: →
+          - generic [ref=e122]:
+            - generic [ref=e123]: ITR Module
+            - paragraph [ref=e124]: Authentic screenshot of the ITR Returns screen.
+    - contentinfo [ref=e125]:
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - generic [ref=e129]: ComplianceOS
+          - paragraph [ref=e130]: Built for Indian business.
+          - paragraph [ref=e131]: © 2026 ComplianceOS. All rights reserved.
+        - generic [ref=e132]:
+          - heading "Product" [level=4] [ref=e133]
+          - list [ref=e134]:
+            - listitem [ref=e135]:
+              - link "Accounting" [ref=e136] [cursor=pointer]:
+                - /url: /features/accounting
+            - listitem [ref=e137]:
+              - link "GST Filing" [ref=e138] [cursor=pointer]:
+                - /url: /features/gst
+            - listitem [ref=e139]:
+              - link "Invoicing" [ref=e140] [cursor=pointer]:
+                - /url: /features/invoicing
+            - listitem [ref=e141]:
+              - link "Payroll" [ref=e142] [cursor=pointer]:
+                - /url: /features/payroll
+            - listitem [ref=e143]:
+              - link "ITR Returns" [ref=e144] [cursor=pointer]:
+                - /url: /features/itr
+        - generic [ref=e145]:
+          - heading "Company" [level=4] [ref=e146]
+          - list [ref=e147]:
+            - listitem [ref=e148]:
+              - link "About" [ref=e149] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e150]:
+              - link "Blog" [ref=e151] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e152]:
+              - link "Pricing" [ref=e153] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e154]:
+              - link "Contact" [ref=e155] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e156]:
+          - heading "Legal" [level=4] [ref=e157]
+          - list [ref=e158]:
+            - listitem [ref=e159]:
+              - link "Privacy policy" [ref=e160] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e161]:
+              - link "Terms of service" [ref=e162] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e163]:
+              - link "Cookie policy" [ref=e164] [cursor=pointer]:
+                - /url: /cookies
+            - listitem [ref=e165]:
+              - link "Security" [ref=e166] [cursor=pointer]:
+                - /url: /security
+  - region "Notifications alt+T"
