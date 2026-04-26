@@ -886,6 +886,18 @@ PRINT STYLESHEET
    MARKETING SITE EXTENSIONS
    ════════════════════════════════════════════════════════════════════════════ */
 
+.font-display-xl { font-family: var(--font-display); }
+.text-display-xl { font-size: 38px; line-height: 1.2; font-weight: 400; }
+.font-display-lg { font-family: var(--font-display); }
+.text-display-lg { font-size: 26px; line-height: 1.3; font-weight: 400; }
+.font-mono-md { font-family: var(--font-mono); font-size: 14px; }
+.font-mono-lg { font-family: var(--font-mono); font-size: 18px; }
+
+.font-ui-lg { font-family: var(--font-ui); font-size: 18px; font-weight: 500; }
+.font-ui-md { font-family: var(--font-ui); font-size: 16px; font-weight: 400; }
+.font-ui-sm { font-family: var(--font-ui); font-size: 14px; font-weight: 400; }
+.font-ui-xs { font-family: var(--font-ui); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; }
+
 /* ─── Typography: Marketing Extensions ─────────────────────────────────── */
 :root {
   --marketing-hero: 64px;
@@ -897,6 +909,20 @@ PRINT STYLESHEET
     --marketing-hero: 40px;
     --marketing-xl: 32px;
   }
+}
+
+.font-marketing-hero {
+  font-family: var(--font-display);
+  font-size: var(--marketing-hero);
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.font-marketing-xl {
+  font-family: var(--font-display);
+  font-size: var(--marketing-xl);
+  line-height: 1.15;
+  font-weight: 400;
 }
 
 /* ─── Colors: Marketing Additions ──────────────────────────────────────── */
@@ -911,6 +937,52 @@ PRINT STYLESHEET
   --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
   --radius-xl: 16px;
   --radius-2xl: 24px;
+}
+
+.bg-page-bg { background-color: var(--page-bg); }
+.bg-section-dark { background-color: var(--section-dark); }
+.bg-section-amber { background-color: var(--section-amber); }
+.bg-section-muted { background-color: var(--section-muted); }
+.text-amber-text { color: var(--amber-text); }
+.border-border-subtle { border-color: #E8E4DC; }
+
+.shadow-screenshot {
+  box-shadow: var(--shadow-screenshot);
+}
+
+/* Browser Chrome */
+.browser-chrome {
+    border-radius: 8px 8px 0 0;
+    background: #E8E4DC;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    gap: 6px;
+}
+
+.browser-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* ─── Marketing Navigation ──────────────────────────────────────────────── */
+.marketing-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, backdrop-filter 0.2s ease;
+}
+
+.marketing-nav.is-scrolled {
+  background: rgba(244,242,238,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid #E8E4DC;
 }
 
 /* Marketing Container */
@@ -931,24 +1003,6 @@ PRINT STYLESHEET
   .marketing-container {
     padding: 0 16px;
   }
-}
-
-/* ─── Navigation ───────────────────────────────────────────────────────── */
-.marketing-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: transparent;
-  transition: background 0.2s ease, border-color 0.2s ease, backdrop-filter 0.2s ease;
-}
-
-.marketing-nav.is-scrolled {
-  background: rgba(244,242,238,0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 0.5px solid #E8E4DC;
 }
 
 /* ─── Buttons ──────────────────────────────────────────────────────────── */

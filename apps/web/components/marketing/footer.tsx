@@ -3,33 +3,42 @@ import Link from 'next/link';
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-[#F4F2EE] dark:bg-stone-900 w-full py-24 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-16 max-w-[1200px] mx-auto px-8">
-        <div className="col-span-1">
-          <p className="text-xl font-display font-bold text-stone-900 dark:text-stone-50 mb-6">ComplianceOS</p>
-          <p className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 leading-relaxed">
-            © 2024 ComplianceOS. Precision in Indian Accounting.
-          </p>
+    <footer className="w-full py-24 border-t-[0.5px] border-stone-200 dark:border-stone-800 bg-[#FAF9F6] dark:bg-stone-950 font-serif text-sm">
+      <div className="max-w-[1200px] mx-auto px-8 grid grid-cols-2 md:grid-cols-4 gap-12">
+        <div className="col-span-2 md:col-span-1">
+          <Link href="/" className="text-lg font-bold text-stone-900 dark:text-stone-50 mb-4 block opacity-100 hover:opacity-80 transition-opacity no-underline">
+            ComplianceOS
+          </Link>
+          <p className="text-stone-500 dark:text-stone-500">© 2024 ComplianceOS. Precision in Indian Accounting.</p>
         </div>
+        
         <div>
-          <h4 className="font-ui text-xs uppercase tracking-widest text-stone-900 dark:text-stone-100 font-semibold mb-6">Resources</h4>
-          <ul className="space-y-4 list-none p-0 m-0">
-            <li><Link href="/blog" className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all no-underline">Compliance Guide</Link></li>
-            <li><Link href="/blog" className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all no-underline">GST Tools</Link></li>
+          <h4 className="font-semibold text-stone-900 dark:text-stone-50 mb-6 uppercase tracking-wider text-[11px]">Product</h4>
+          <ul className="space-y-4 list-none p-0">
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/features">Features</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/pricing">Pricing</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/security">Security</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/api">API</Link></li>
           </ul>
         </div>
+
         <div>
-          <h4 className="font-ui text-xs uppercase tracking-widest text-stone-900 dark:text-stone-100 font-semibold mb-6">Company</h4>
-          <ul className="space-y-4 list-none p-0 m-0">
-            <li><Link href="/privacy" className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all no-underline">Privacy Policy</Link></li>
-            <li><Link href="/terms" className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all no-underline">Terms of Service</Link></li>
+          <h4 className="font-semibold text-stone-900 dark:text-stone-50 mb-6 uppercase tracking-wider text-[11px]">Company</h4>
+          <ul className="space-y-4 list-none p-0">
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/about">About</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/careers">Careers</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/press">Press</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/blog">Blog</Link></li>
           </ul>
         </div>
+
         <div>
-          <h4 className="font-ui text-xs uppercase tracking-widest text-stone-900 dark:text-stone-100 font-semibold mb-6">Support</h4>
-          <ul className="space-y-4 list-none p-0 m-0">
-            <li><Link href="/contact" className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all no-underline">Contact Support</Link></li>
-            <li><Link href="/contact" className="font-ui text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all no-underline underline decoration-[#C8860A] underline-offset-4">Schedule a Demo</Link></li>
+          <h4 className="font-semibold text-stone-900 dark:text-stone-50 mb-6 uppercase tracking-wider text-[11px]">Legal & Support</h4>
+          <ul className="space-y-4 list-none p-0">
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/privacy">Privacy</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/terms">Terms</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/compliance">Compliance</Link></li>
+            <li><Link className="text-stone-500 dark:text-stone-500 hover:text-[#C8860A] hover:underline decoration-[#C8860A] underline-offset-4 transition-all no-underline" href="/contact">Contact</Link></li>
           </ul>
         </div>
       </div>
