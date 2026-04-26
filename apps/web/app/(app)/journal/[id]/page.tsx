@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "@/lib/api";
-import { Badge, BalanceBar } from "@/components/ui";
+import { Badge, BalanceBar, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui";
 import { formatIndianNumber, formatDateShort } from "@/lib/format";
 
 const statusColors: Record<string, string> = {
@@ -270,47 +270,43 @@ export default function JournalEntryDetailPage() {
       </div>
 
       {/* Void Modal */}
-      {showVoidModal && (
-        <div className="command-palette-overlay" onClick={() => setShowVoidModal(false)}>
-          <div className="command-palette max-w-md" onClick={e => e.stopPropagation()}>
-            <div className="p-6">
-              <h3 className="font-display text-[20px] font-normal text-dark mb-2">
-                Void Journal Entry
-              </h3>
-              <div className="void-modal-warning mb-4">
-                <p className="font-ui text-[13px]">
-                  This will create a reversing entry. The original entry cannot be modified after voiding.
-                </p>
-              </div>
-              <div>
-                <label htmlFor="voidReason" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-                  Reason for voiding *
-                </label>
-                <input
-                  id="voidReason"
-                  type="text"
-                  value={voidReason}
-                  onChange={(e) => setVoidReason(e.target.value)}
-                  className="input-field w-full font-ui"
-                  placeholder="e.g., Duplicate entry, incorrect amount"
-                />
-              </div>
-              <div className="flex justify-end gap-2 mt-6">
-                <button onClick={() => setShowVoidModal(false)} className="filter-tab">
-                  Cancel
-                </button>
-                <button
-                  onClick={handleVoid}
-                  disabled={voidEntry.isPending || !voidReason.trim()}
-                  className="filter-tab bg-danger-bg text-danger border-danger hover:bg-danger-bg"
-                >
-                  Void Entry
-                </button>
-              </div>
+      <Dialog open={showVoidModal} onOpenChange={setShowVoidModal}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Void Journal Entry</DialogTitle></DialogHeader>
+          <div className="py-4">
+            <div className="mb-4">
+              <p className="font-ui text-[13px] text-light">
+                This will create a reversing entry. The original entry cannot be modified after voiding.
+              </p>
+            </div>
+            <div>
+              <label htmlFor="voidReason" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
+                Reason for voiding *
+              </label>
+              <input
+                id="voidReason"
+                type="text"
+                value={voidReason}
+                onChange={(e) => setVoidReason(e.target.value)}
+                className="input-field w-full font-ui"
+                placeholder="e.g., Duplicate entry, incorrect amount"
+              />
             </div>
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <button onClick={() => setShowVoidModal(false)} className="filter-tab">
+              Cancel
+            </button>
+            <button
+              onClick={handleVoid}
+              disabled={voidEntry.isPending || !voidReason.trim()}
+              className="filter-tab bg-danger-bg text-danger border-danger hover:bg-danger-bg"
+            >
+              Void Entry
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

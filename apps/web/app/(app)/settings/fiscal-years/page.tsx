@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui";
 
 const statusLabels: Record<string, string> = {
   open: "Open",
@@ -123,63 +123,59 @@ export default function FiscalYearsPage() {
       )}
 
       {/* Create Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="card w-full max-w-md p-6">
-            <h2 className="font-display text-[18px] font-normal text-dark mb-4">Create Fiscal Year</h2>
-            <div className="space-y-4">
-              <div className="flex flex-col gap-1">
-                <label className="font-ui text-[10px] uppercase tracking-wide text-light">FY Name</label>
-                <input
-                  type="text"
-                  value={newFY.year}
-                  onChange={(e) => setNewFY({ ...newFY, year: e.target.value })}
-                  className="input-field font-ui"
-                  placeholder="2027-28"
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="font-ui text-[10px] uppercase tracking-wide text-light">Start Date</label>
-                <input
-                  type="date"
-                  value={newFY.startDate}
-                  onChange={(e) => setNewFY({ ...newFY, startDate: e.target.value })}
-                  className="input-field font-ui"
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="font-ui text-[10px] uppercase tracking-wide text-light">End Date</label>
-                <input
-                  type="date"
-                  value={newFY.endDate}
-                  onChange={(e) => setNewFY({ ...newFY, endDate: e.target.value })}
-                  className="input-field font-ui"
-                />
-              </div>
+      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Create Fiscal Year</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="flex flex-col gap-1">
+              <label className="font-ui text-[10px] uppercase tracking-wide text-light">FY Name</label>
+              <input
+                type="text"
+                value={newFY.year}
+                onChange={(e) => setNewFY({ ...newFY, year: e.target.value })}
+                className="input-field font-ui"
+                placeholder="2027-28"
+              />
             </div>
-            <div className="flex gap-3 mt-6">
-              <button onClick={handleCreate} className="filter-tab active flex-1">Create</button>
-              <button onClick={() => setShowCreateModal(false)} className="filter-tab flex-1">Cancel</button>
+            <div className="flex flex-col gap-1">
+              <label className="font-ui text-[10px] uppercase tracking-wide text-light">Start Date</label>
+              <input
+                type="date"
+                value={newFY.startDate}
+                onChange={(e) => setNewFY({ ...newFY, startDate: e.target.value })}
+                className="input-field font-ui"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="font-ui text-[10px] uppercase tracking-wide text-light">End Date</label>
+              <input
+                type="date"
+                value={newFY.endDate}
+                onChange={(e) => setNewFY({ ...newFY, endDate: e.target.value })}
+                className="input-field font-ui"
+              />
             </div>
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <button onClick={() => setShowCreateModal(false)} className="filter-tab">Cancel</button>
+            <button onClick={handleCreate} className="filter-tab active">Create</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Close Modal */}
-      {showCloseModal && fyToClose && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="card w-full max-w-md p-6">
-            <h2 className="font-display text-[18px] font-normal text-dark mb-2">Close Fiscal Year</h2>
-            <p className="font-ui text-[13px] text-light mb-6">
-              Are you sure you want to close <span className="font-mono text-dark">{fyToClose.year}</span>? This action cannot be undone.
-            </p>
-            <div className="flex gap-3">
-              <button onClick={handleClose} className="filter-tab bg-danger text-white hover:bg-danger/90">Close FY</button>
-              <button onClick={() => setShowCloseModal(false)} className="filter-tab">Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog open={showCloseModal} onOpenChange={setShowCloseModal}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Close Fiscal Year</DialogTitle></DialogHeader>
+          <p className="font-ui text-[13px] text-light py-4">
+            Are you sure you want to close <span className="font-mono text-dark">{fyToClose?.year}</span>? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <button onClick={() => setShowCloseModal(false)} className="filter-tab">Cancel</button>
+            <button onClick={handleClose} className="filter-tab bg-danger text-white hover:bg-danger/90">Close FY</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

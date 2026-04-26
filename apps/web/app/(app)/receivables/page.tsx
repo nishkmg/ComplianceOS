@@ -4,34 +4,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { Badge, KpiTile } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
-
-function KpiCard({
-  label,
-  value,
-  sublabel,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  sublabel?: string;
-  highlight?: "green" | "yellow" | "orange" | "red";
-}) {
-  const borderMap = {
-    green: "border-l-4 border-l-green",
-    yellow: "border-l-4 border-l-amber",
-    orange: "border-l-4 border-l-orange",
-    red: "border-l-4 border-l-danger",
-  };
-
-  return (
-    <div className={`card p-5 ${highlight ? borderMap[highlight] : ""}`}>
-      <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-2">{label}</p>
-      <p className="font-mono text-[22px] font-medium text-dark">{value}</p>
-      {sublabel && <p className="font-ui text-[11px] text-mid mt-1">{sublabel}</p>}
-    </div>
-  );
-}
 
 export default function ReceivablesDashboardPage() {
   const { data: agingReport, isLoading } = api.receivables.agingReport.useQuery();
@@ -86,11 +60,11 @@ export default function ReceivablesDashboardPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <KpiCard label="Total Outstanding" value={formatIndianNumber(totals.total)} sublabel="All receivables" />
-        <KpiCard label="Current (0-30)" value={formatIndianNumber(totals.current030)} sublabel="Not yet due" highlight="green" />
-        <KpiCard label="31-60 Days Overdue" value={formatIndianNumber(totals.aging3160)} highlight="yellow" />
-        <KpiCard label="61-90 Days Overdue" value={formatIndianNumber(totals.aging6190)} highlight="orange" />
-        <KpiCard label="90+ Days Overdue" value={formatIndianNumber(totals.aging90Plus)} sublabel="Critical" highlight="red" />
+        <KpiTile label="Total Outstanding" value={formatIndianNumber(totals.total)} subtext="All receivables" variant="neutral" />
+        <KpiTile label="Current (0-30)" value={formatIndianNumber(totals.current030)} subtext="Not yet due" variant="success" />
+        <KpiTile label="31-60 Days Overdue" value={formatIndianNumber(totals.aging3160)} variant="amber" />
+        <KpiTile label="61-90 Days Overdue" value={formatIndianNumber(totals.aging6190)} variant="amber" />
+        <KpiTile label="90+ Days Overdue" value={formatIndianNumber(totals.aging90Plus)} subtext="Critical" variant="danger" />
       </div>
 
       {/* Aging Table */}
