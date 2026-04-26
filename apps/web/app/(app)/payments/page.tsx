@@ -14,150 +14,102 @@ interface Payment {
   amount: number;
   paymentMethod: string;
   status: "recorded" | "voided";
+  type: "received" | "paid";
 }
 
 const mockPayments: Payment[] = [
-  { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp", date: "2026-04-10", amount: 50000, paymentMethod: "bank", status: "recorded" },
-  { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd", date: "2026-04-12", amount: 25000, paymentMethod: "cash", status: "recorded" },
-  { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Gamma Pvt", date: "2026-04-15", amount: 75000, paymentMethod: "cheque", status: "recorded" },
-  { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Acme Corp", date: "2026-04-08", amount: 30000, paymentMethod: "online", status: "voided" },
+  { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp", date: "2026-04-10", amount: 50000, paymentMethod: "bank", status: "recorded", type: "received" },
+  { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd", date: "2026-04-12", amount: 25000, paymentMethod: "cash", status: "recorded", type: "received" },
+  { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X", date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
+  { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt", date: "2026-04-15", amount: 75000, paymentMethod: "cheque", status: "recorded", type: "received" },
+  { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp", date: "2026-04-08", amount: 30000, paymentMethod: "online", status: "voided", type: "paid" },
 ];
 
-const methodLabels: Record<string, string> = {
-  cash: "Cash",
-  bank: "Bank Transfer",
-  online: "Online",
-  cheque: "Cheque",
-};
-
 export default function PaymentsPage() {
-  const [customerSearch, setCustomerSearch] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
-  const [methodFilter, setMethodFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   const filtered = mockPayments.filter((p) => {
-    const matchCustomer = p.customerName.toLowerCase().includes(customerSearch.toLowerCase());
-    const matchMethod = methodFilter === "all" || p.paymentMethod === methodFilter;
-    const matchDateFrom = !dateFrom || p.date >= dateFrom;
-    const matchDateTo = !dateTo || p.date <= dateTo;
-    return matchCustomer && matchMethod && matchDateFrom && matchDateTo;
+    if (typeFilter !== "all" && p.type !== typeFilter) return false;
+    if (search && !p.customerName.toLowerCase().includes(search.toLowerCase()) && !p.paymentNumber.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
   });
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 text-left">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Payments</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Record and track customer payments</p>
+          <h1 className="font-display-xl text-display-xl text-on-surface mb-2">Payment Ledger</h1>
+          <p className="font-ui-sm text-ui-sm text-text-mid max-w-2xl">High-density overview of all incoming and outgoing fiscal transactions. Reconcile entries with your master GST log.</p>
         </div>
-        <Link href="/payments/new" className="filter-tab active">
-          + Record Payment
-        </Link>
+        <div className="flex gap-3">
+          <button className="px-5 py-2.5 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-ui-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
+            <span className="material-symbols-outlined text-[18px]">download</span>
+            Export CSV
+          </button>
+          <Link href="/payments/new" className="px-5 py-2.5 bg-primary-container text-white font-ui-sm text-ui-sm hover:opacity-90 transition-opacity flex items-center gap-2 no-underline">
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            New Entry
+          </Link>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="card p-4">
-        <div className="flex flex-wrap gap-4 items-end">
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Customer</label>
-            <input
-              type="text"
-              placeholder="Search customer..."
-              value={customerSearch}
-              onChange={(e) => setCustomerSearch(e.target.value)}
-              className="input-field font-ui w-48"
-            />
+      {/* Filter Bar */}
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white border-[0.5px] border-border-subtle p-4">
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">search</span>
+            <input className="w-full pl-10 pr-4 py-2 border-[0.5px] border-border-subtle rounded-none text-ui-sm outline-none focus:border-primary transition-colors" placeholder="Search entries..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">From Date</label>
-            <input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              className="input-field font-ui"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">To Date</label>
-            <input
-              type="date"
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              className="input-field font-ui"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Method</label>
-            <select
-              value={methodFilter}
-              onChange={(e) => setMethodFilter(e.target.value)}
-              className="input-field font-ui"
-            >
-              <option value="all">All Methods</option>
-              <option value="cash">Cash</option>
-              <option value="bank">Bank Transfer</option>
-              <option value="online">Online</option>
-              <option value="cheque">Cheque</option>
+          <div className="relative">
+            <select className="border-[0.5px] border-border-subtle bg-white px-4 py-2 text-ui-sm rounded-none text-text-mid appearance-none pr-8 outline-none focus:border-primary transition-colors" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+              <option value="all">All Types</option>
+              <option value="received">Received</option>
+              <option value="paid">Paid</option>
             </select>
+          </div>
+          <div className="flex items-center gap-2 text-ui-sm text-stone-400 w-full md:w-auto justify-end">
+            <span className="material-symbols-outlined text-[18px]">filter_list</span>
+            <span>Filters active</span>
           </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
+      <div className="bg-white border-[0.5px] border-border-subtle overflow-x-auto">
+        <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Payment #</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Customer</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Method</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-center">Actions</th>
+            <tr className="bg-stone-50 border-b-[0.5px] border-border-subtle">
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold">Date</th>
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold">Payment #</th>
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold">From/To</th>
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold">Method</th>
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold">Type</th>
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold text-right">Amount (₹)</th>
+              <th className="py-4 px-6 font-ui-xs text-ui-xs text-stone-500 uppercase tracking-wider font-semibold text-right">Status</th>
             </tr>
           </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                  No payments found
+          <tbody className="divide-y-[0.5px] divide-border-subtle">
+            {filtered.map((p) => (
+              <tr key={p.id} className="hover:bg-stone-50/50 transition-colors">
+                <td className="py-4 px-6 font-mono-md text-[13px] text-stone-600">{new Date(p.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                <td className="py-4 px-6 font-mono-md text-[13px] text-amber-text font-medium">{p.paymentNumber}</td>
+                <td className="py-4 px-6 font-ui-sm text-stone-700">{p.customerName}</td>
+                <td className="py-4 px-6 font-ui-sm text-stone-500">{p.paymentMethod}</td>
+                <td className="py-4 px-6">
+                  <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border-[0.5px] rounded-sm ${
+                    p.type === 'received' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'
+                  }`}>
+                    {p.type}
+                  </span>
+                </td>
+                <td className="py-4 px-6 font-mono-lg text-stone-900 text-right tracking-tighter">₹{p.amount.toLocaleString('en-IN')}</td>
+                <td className="py-4 px-6 text-right">
+                  <Badge variant={p.status === 'recorded' ? 'success' : 'gray'}>{p.status}</Badge>
                 </td>
               </tr>
-            ) : (
-              filtered.map((payment) => (
-                <tr key={payment.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                  <td className="font-mono text-[13px] text-amber px-4 py-3">
-                    <Link href={`/payments/${payment.id}`} className="hover:underline">
-                      {payment.paymentNumber}
-                    </Link>
-                  </td>
-                  <td className="font-ui text-[13px] text-dark px-4 py-3">{payment.customerName}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{payment.date}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">
-                    {formatIndianNumber(payment.amount)}
-                  </td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3">{methodLabels[payment.paymentMethod]}</td>
-                  <td className="px-4 py-3">
-                    <Badge variant={payment.status === "recorded" ? "success" : "gray"}>
-                      {payment.status}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <div className="flex gap-3 justify-center">
-                      <Link href={`/payments/${payment.id}`} className="font-ui text-[12px] text-amber hover:underline">
-                        View
-                      </Link>
-                      {payment.status === "recorded" && (
-                        <button className="font-ui text-[12px] text-danger hover:underline">Void</button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
       </div>

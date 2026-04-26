@@ -13,7 +13,7 @@ interface Invoice {
   date: string;
   dueDate: string;
   amount: string;
-  status: "draft" | "sent" | "partially_paid" | "paid" | "voided";
+  status: "draft" | "sent" | "partially_paid" | "paid" | "voided" | "overdue";
 }
 
 const mockInvoices: Invoice[] = [
@@ -21,142 +21,129 @@ const mockInvoices: Invoice[] = [
   { id: "2", invoiceNumber: "INV-2026-27-002", customerName: "TechStart Ltd", date: "2026-04-18", dueDate: "2026-05-18", amount: "59,000", status: "draft" },
   { id: "3", invoiceNumber: "INV-2026-27-003", customerName: "Global Traders", date: "2026-04-10", dueDate: "2026-05-10", amount: "2,36,000", status: "partially_paid" },
   { id: "4", invoiceNumber: "INV-2026-27-004", customerName: "Alpha Industries", date: "2026-04-05", dueDate: "2026-05-05", amount: "3,54,000", status: "paid" },
+  { id: "5", invoiceNumber: "INV-2026-27-005", customerName: "Delayed Payments Co", date: "2026-03-20", dueDate: "2026-04-19", amount: "5,90,000", status: "overdue" },
 ];
 
-const statusOptions = ["all", "draft", "sent", "partially_paid", "paid", "voided"];
+const tabs = ["all", "draft", "sent", "partially_paid", "paid", "voided", "overdue"];
 
 export default function InvoicesPage() {
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [customerSearch, setCustomerSearch] = useState<string>("");
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
-  const filteredInvoices = mockInvoices.filter((inv) => {
+  const filtered = mockInvoices.filter((inv) => {
     if (statusFilter !== "all" && inv.status !== statusFilter) return false;
-    if (customerSearch && !inv.customerName.toLowerCase().includes(customerSearch.toLowerCase())) return false;
+    if (search && !inv.customerName.toLowerCase().includes(search.toLowerCase()) && !inv.invoiceNumber.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Invoices</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Manage sales invoices and billing</p>
+    <div className="space-y-0">
+      {/* Page Header */}
+      <div className="px-8 pt-10 pb-6 border-b-[0.5px] border-border-subtle bg-surface-container-lowest sticky top-0 z-30 -mx-8 -mt-8 mb-0" style={{ width: 'calc(100% + 64px)' }}>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-[1200px] mx-auto text-left">
+          <div>
+            <h1 className="font-display-lg text-on-surface mb-1">Invoices</h1>
+            <p className="font-ui-sm text-text-mid">Manage and track your fiscal billing documents.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm rounded hover:bg-surface-container-highest transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
+              <span className="material-symbols-outlined text-[18px]">download</span>
+              Export List
+            </button>
+            <Link href="/invoices/new" className="px-5 py-2 bg-primary-container text-white font-ui-sm rounded hover:bg-primary/90 transition-colors flex items-center gap-2 group no-underline">
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              New Invoice
+              <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
+            </Link>
+          </div>
         </div>
-        <Link href="/invoices/new" className="filter-tab active">
-          + New Invoice
-        </Link>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-4 items-center">
-        <div className="filter-tabs">
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="filter-tab font-ui"
-          >
-            {statusOptions.map((s) => (
-              <option key={s} value={s}>
-                {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-              </option>
-            ))}
-          </select>
+      {/* Filter Bar */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4 mt-6 text-left">
+        <div className="flex overflow-x-auto pb-2 w-full lg:w-auto gap-1 border-b-[0.5px] border-border-subtle">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setStatusFilter(tab)}
+              className={`px-4 py-2 font-ui-sm whitespace-nowrap transition-colors cursor-pointer border-none bg-transparent ${
+                statusFilter === tab ? "text-on-surface border-b-[2px] border-primary-container" : "text-text-mid hover:text-on-surface hover:bg-surface-container-low"
+              }`}
+            >
+              {tab === "all" ? "All Invoices" : tab.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+              <span className="ml-1 text-[10px] bg-surface-container-highest px-1.5 py-0.5 rounded-full text-text-mid">
+                {tab === "all" ? mockInvoices.length : mockInvoices.filter(i => i.status === tab).length}
+              </span>
+            </button>
+          ))}
         </div>
-        <input
-          type="text"
-          placeholder="Search customer... (/)"
-          value={customerSearch}
-          onChange={(e) => { setCustomerSearch(e.target.value); setPage(1); }}
-          className="input-field font-ui flex-1 max-w-xs ml-auto"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            className="border-[0.5px] border-border-subtle bg-white px-4 py-2 font-ui-sm outline-none focus:border-primary transition-colors w-64 text-ui-sm"
+            placeholder="Search invoices..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="p-2 border-[0.5px] border-border-subtle bg-white text-text-mid hover:text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer">
+            <span className="material-symbols-outlined text-[18px]">filter_list</span>
+          </button>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Invoice #</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Customer</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Due Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredInvoices.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                  No invoices found
-                </td>
+      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden">
+        <div className="h-[2px] w-full bg-primary-container"></div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-[#F9F8F6] border-b-[0.5px] border-border-subtle">
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest w-12 border-r-[0.5px] border-border-subtle">
+                  <input type="checkbox" className="rounded-[2px] border-[0.5px] border-border-subtle" />
+                </th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Invoice #</th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Customer</th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Date</th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Due Date</th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right">Amount (₹)</th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right">Status</th>
+                <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest w-12"></th>
               </tr>
-            ) : (
-              filteredInvoices.map((invoice) => (
-                <tr key={invoice.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                  <td className="font-mono text-[13px] text-amber px-4 py-3">
-                    <Link href={`/invoices/${invoice.id}`} className="hover:underline">
-                      {invoice.invoiceNumber}
-                    </Link>
+            </thead>
+            <tbody className="divide-y-[0.5px] divide-border-subtle">
+              {filtered.map((inv) => (
+                <tr key={inv.id} className={`hover:bg-surface-container-lowest hover:shadow-card transition-all group ${inv.status === 'overdue' ? 'bg-error-container/5' : ''}`}>
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">
+                    <input type="checkbox" className="rounded-[2px] border-[0.5px] border-border-subtle" />
                   </td>
-                  <td className="font-ui text-[13px] text-dark px-4 py-3">{invoice.customerName}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{invoice.date}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{invoice.dueDate}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">₹{invoice.amount}</td>
-                  <td className="px-4 py-3">
-                    <InvoiceStatusBadge status={invoice.status} />
+                  <td className="py-4 px-6 font-mono-md text-amber-text">
+                    <Link href={`/invoices/${inv.id}`} className="hover:underline no-underline">{inv.invoiceNumber}</Link>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-3">
-                      {(invoice.status === "draft") && (
-                        <Link href={`/invoices/${invoice.id}/edit`} className="font-ui text-[12px] text-amber hover:underline">
-                          Edit
-                        </Link>
-                      )}
-                      {(invoice.status === "draft") && (
-                        <button className="font-ui text-[12px] text-success hover:underline">Post</button>
-                      )}
-                      {(invoice.status === "sent" || invoice.status === "partially_paid") && (
-                        <button className="font-ui text-[12px] text-danger hover:underline">Void</button>
-                      )}
-                      <button className="font-ui text-[12px] text-mid hover:underline">Send</button>
-                      <button className="font-ui text-[12px] text-mid hover:underline">PDF</button>
-                    </div>
+                  <td className="py-4 px-6 font-ui-sm text-on-surface font-medium">{inv.customerName}</td>
+                  <td className="py-4 px-6 font-mono-md text-text-mid">{new Date(inv.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td className="py-4 px-6 font-mono-md text-text-mid">{new Date(inv.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td className="py-4 px-6 font-mono-md text-right font-bold">₹{inv.amount}</td>
+                  <td className="py-4 px-6 text-right">
+                    <InvoiceStatusBadge status={inv.status} />
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <button className="text-text-light hover:text-on-surface transition-colors opacity-0 group-hover:opacity-100 cursor-pointer border-none bg-transparent">
+                      <span className="material-symbols-outlined text-[18px]">edit</span>
+                    </button>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Footer */}
-      {filteredInvoices.length > 0 && (
-        <div className="flex items-center justify-between font-ui text-[12px] text-light">
-          <span>Showing {filteredInvoices.length} invoice{filteredInvoices.length !== 1 ? "s" : ""}</span>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Pagination */}
+        <div className="px-6 py-4 border-t-[0.5px] border-border-subtle flex items-center justify-between">
+          <span className="font-mono-md text-[12px] text-text-light">Showing {filtered.length} of {mockInvoices.length} invoices</span>
           <div className="flex gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="filter-tab disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="px-3 py-2">Page {page}</span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              disabled={filteredInvoices.length < pageSize}
-              className="filter-tab disabled:opacity-50"
-            >
-              Next
-            </button>
+            <button className="p-2 border-[0.5px] border-border-subtle bg-stone-50 text-text-light cursor-pointer hover:bg-stone-100 transition-colors"><span className="material-symbols-outlined text-[16px]">chevron_left</span></button>
+            <button className="p-2 border-[0.5px] border-border-subtle bg-stone-50 text-text-light cursor-pointer hover:bg-stone-100 transition-colors"><span className="material-symbols-outlined text-[16px]">chevron_right</span></button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
