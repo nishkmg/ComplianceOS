@@ -11,3 +11,4 @@ stitch-output/
 stitch-output/*
 .playwright-mcp/
 login-snapshot.yml
+homepage-after-fix.png

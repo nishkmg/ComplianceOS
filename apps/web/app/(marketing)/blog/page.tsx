@@ -29,7 +29,7 @@ export default function BlogIndexPage() {
 
             {/* Featured post */}
             <Link href={`/blog/${featured.slug}`} className="block bg-surface border border-[#E8E4DC] rounded-lg overflow-hidden mb-12 no-underline group hover:shadow-card transition-shadow">
-              <div className="grid grid-cols-1 md:grid-cols-2">
+              <article className="grid grid-cols-1 md:grid-cols-2">
                 <div className="bg-section-muted min-h-[200px] flex items-center justify-center">
                   <span className="font-ui text-ui-xs text-light">Featured image placeholder</span>
                 </div>
@@ -43,14 +43,15 @@ export default function BlogIndexPage() {
                     <span>{featured.date}</span>
                   </div>
                 </div>
-              </div>
+              </article>
             </Link>
 
             {/* Post grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.slice(1).map((post) => (
                 <Link key={post.slug} href={`/blog/${post.slug}`} className="block bg-surface border border-[#E8E4DC] rounded-lg p-6 no-underline group hover:shadow-card transition-shadow">
-                  <span className="font-ui text-[11px] font-medium text-amber-text uppercase tracking-wider">{post.category}</span>
+                  <article>
+                    <span className="font-ui text-[11px] font-medium text-amber-text uppercase tracking-wider">{post.category}</span>
                   <h3 className="font-display text-display-md text-dark mt-2 mb-3 group-hover:text-amber transition-colors line-clamp-2">{post.title}</h3>
                   <p className="font-ui text-[14px] text-mid mb-4 line-clamp-3">{post.excerpt}</p>
                   <div className="flex items-center gap-2 font-ui text-[12px] text-light">
@@ -58,6 +59,7 @@ export default function BlogIndexPage() {
                     <span>·</span>
                     <span>{post.date}</span>
                   </div>
+                  </article>
                 </Link>
               ))}
             </div>

@@ -121,12 +121,12 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div>
                 <SectionLabel>Built for Indian Business</SectionLabel>
-                <h1 className="font-display text-[40px] md:text-[64px] font-normal text-dark leading-[1.1] mb-6">
+                <h1 className="font-display text-[var(--marketing-hero)] font-normal text-dark leading-[1.1] mb-6">
                   The accounting software<br className="hidden lg:block" />
                   that thinks in lakhs,<br className="hidden lg:block" />
                   not thousands.
                 </h1>
-                <p className="font-ui text-[16px] md:text-[18px] text-mid leading-relaxed max-w-[560px] mb-8">
+                <p className="font-ui text-[14px] md:text-[16px] text-mid leading-relaxed max-w-[560px] mb-8">
                   Double-entry books, GST returns, payroll and ITR — fully connected, built from scratch for how Indian businesses actually work.
                 </p>
                 <div className="flex flex-wrap gap-3 mb-6">
@@ -181,7 +181,7 @@ export default function HomePage() {
           <div className="marketing-container">
             <div className="text-center mb-16">
               <SectionLabel>Why ComplianceOS</SectionLabel>
-              <h2 className="font-display text-[32px] md:text-[38px] font-normal text-dark leading-[1.2]">
+              <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2]">
                 Everything an Indian business needs,<br />in one place that actually works.
               </h2>
             </div>
@@ -205,7 +205,7 @@ export default function HomePage() {
           <div className="marketing-container">
             <div className="text-center mb-12">
               <SectionLabel>THE PRODUCT</SectionLabel>
-              <h2 className="font-display text-[32px] md:text-[38px] font-normal text-white leading-[1.2]">
+              <h2 className="font-display text-[28px] md:text-[38px] font-normal text-white leading-[1.2]">
                 See a journal entry posted<br />in under 10 seconds.
               </h2>
             </div>
@@ -251,7 +251,7 @@ export default function HomePage() {
         {/* ═══ 3.5 Feature Grid ═══ */}
         <section ref={modulesRef} className="animate-in py-24 md:py-32">
           <div className="marketing-container">
-            <h2 className="font-display text-[32px] md:text-[38px] font-normal text-dark leading-[1.2] text-center mb-16">
+            <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2] text-center mb-16">
               Everything connected.<br />Nothing siloed.
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -274,7 +274,7 @@ export default function HomePage() {
           <div className="marketing-container">
             <div className="text-center mb-12">
               <SectionLabel>From Our Users</SectionLabel>
-              <h2 className="font-display text-[32px] md:text-[38px] font-normal text-dark leading-[1.2]">
+              <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2]">
                 They switched from Tally.<br />Here&apos;s what they said.
               </h2>
             </div>
@@ -317,7 +317,7 @@ export default function HomePage() {
         {/* ═══ 3.7 Conversion CTA ═══ */}
         <section ref={ctaRef} className="animate-in py-24 md:py-32" style={{ background: 'rgba(200,134,10,0.06)', borderTop: '0.5px solid rgba(200,134,10,0.2)', borderBottom: '0.5px solid rgba(200,134,10,0.2)' }}>
           <div className="marketing-container text-center">
-            <h2 className="font-display text-[32px] md:text-[38px] font-normal text-dark leading-[1.2] mb-4">
+            <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2] mb-4">
               Ready to move off Tally?
             </h2>
             <p className="font-ui text-[16px] md:text-[18px] text-mid mb-8">
