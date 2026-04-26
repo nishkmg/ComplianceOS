@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ComplianceOS - GST Payment</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config Injection -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#825500",
+                      "section-muted": "#F4F2EE",
+                      "primary-fixed-dim": "#ffb950",
+                      "secondary-container": "#e2dfde",
+                      "page-bg": "#FAFAF8",
+                      "on-background": "#211b13",
+                      "on-secondary-container": "#636262",
+                      "on-primary-container": "#3f2700",
+                      "inverse-primary": "#ffb950",
+                      "tertiary-container": "#309bdb",
+                      "border-subtle": "#E8E4DC",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface": "#fff8f4",
+                      "on-secondary-fixed-variant": "#474746",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-error": "#ffffff",
+                      "text-mid": "#555555",
+                      "surface-container-low": "#fff1e4",
+                      "tertiary": "#006494",
+                      "on-primary-fixed-variant": "#633f00",
+                      "surface-bright": "#fff8f4",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-container-high": "#f3e6d9",
+                      "primary-fixed": "#ffddb3",
+                      "amber-text": "#B47500",
+                      "on-primary": "#ffffff",
+                      "primary": "#825500",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#362f27",
+                      "surface-dim": "#e5d8cb",
+                      "surface-variant": "#ede0d3",
+                      "primary-container": "#c8860a",
+                      "tertiary-fixed": "#cae6ff",
+                      "secondary": "#5f5e5e",
+                      "on-primary-fixed": "#291800",
+                      "inverse-on-surface": "#fcefe1",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-surface": "#211b13",
+                      "surface-container-highest": "#ede0d3",
+                      "on-surface-variant": "#514535",
+                      "on-error-container": "#93000a",
+                      "section-dark": "#111111",
+                      "text-light": "#888888",
+                      "surface-container": "#f9ecde",
+                      "on-tertiary-container": "#002f49",
+                      "outline": "#847563",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#d6c4af",
+                      "background": "#fff8f4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "space-64": "64px",
+                      "space-128": "128px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px",
+                      "space-96": "96px"
+              },
+              "fontFamily": {
+                      "mono-md": ["DM Mono", "monospace"],
+                      "display-lg": ["Playfair Display", "serif"],
+                      "marketing-xl": ["Playfair Display", "serif"],
+                      "ui-sm": ["Syne", "sans-serif"],
+                      "mono-lg": ["DM Mono", "monospace"],
+                      "marketing-hero": ["Playfair Display", "serif"],
+                      "display-xl": ["Playfair Display", "serif"],
+                      "ui-lg": ["Syne", "sans-serif"],
+                      "ui-xs": ["Syne", "sans-serif"],
+                      "ui-md": ["Syne", "sans-serif"]
+              },
+              "fontSize": {
+                      "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                      "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                      "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                      "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                      "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                      "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                      "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                      "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                      "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Base styles to enforce typography pairings and clean resets */
+        body {
+            font-family: 'Syne', sans-serif;
+            background-color: #FAFAF8; /* page-bg */
+            color: #211b13; /* on-background */
+        }
+        
+        /* Editorial Table styling */
+        .ledger-table th, .ledger-table td {
+            border-bottom: 0.5px solid #E8E4DC; /* border-subtle */
+        }
+        .ledger-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Input overrides for editorial look */
+        input[type="text"], select {
+            border-radius: 0;
+            background-color: transparent;
+        }
+        
+        /* Material symbols specific setup */
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-background font-ui-md antialiased flex min-h-screen">
+<!-- ========================================== -->
+<!-- JSON Component: SideNavBar -->
+<!-- ========================================== -->
+<nav class="hidden md:flex flex-col bg-[#FDFCFB] dark:bg-[#121212] h-screen w-72 border-r-[0.5px] sticky left-0 border-[#E8E4DC] dark:border-stone-800 flat py-8 px-4 gap-2">
+<!-- Header -->
+<div class="px-4 mb-8">
+<h1 class="font-serif font-bold text-[#1A1A1A] dark:text-white tracking-widest uppercase text-lg mb-1">ComplianceOS</h1>
+<p class="font-ui-xs text-text-light uppercase tracking-widest">Enterprise Tier</p>
+</div>
+<!-- CTA -->
+<div class="px-2 mb-6">
+<button class="w-full bg-primary-container text-on-primary-container font-ui-sm py-3 px-4 flex justify-between items-center transition-all duration-200 hover:shadow-sm">
+<span>Add New Entity</span>
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+<!-- Main Navigation Links -->
+<div class="flex-1 flex flex-col gap-1">
+<!-- Overview (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-150">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Compliance Ledger (Active) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-[#F5F2ED] dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] font-semibold select-none cursor-default font-serif text-[13px] leading-relaxed" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span>Compliance Ledger</span>
+</a>
+<!-- Entity Management (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-150">corporate_fare</span>
+<span>Entity Management</span>
+</a>
+<!-- Reports Archive (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-150">analytics</span>
+<span>Reports Archive</span>
+</a>
+<!-- Audit Settings (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-150">verified_user</span>
+<span>Audit Settings</span>
+</a>
+</div>
+<!-- Footer Navigation Links -->
+<div class="mt-auto flex flex-col gap-1 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-150">security</span>
+<span>Security Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-150">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- ========================================== -->
+<!-- Main Content Canvas -->
+<!-- ========================================== -->
+<main class="flex-1 flex flex-col max-w-7xl mx-auto w-full">
+<!-- Canvas Header -->
+<header class="px-gutter-desktop py-12 border-b-[0.5px] border-border-subtle flex justify-between items-end">
+<div>
+<p class="font-ui-xs text-amber-text uppercase tracking-widest mb-3">Form GSTR-3B Module</p>
+<h2 class="font-display-xl text-on-background">Liability Offset &amp; Cash Ledger</h2>
+</div>
+<div class="hidden md:flex gap-4">
+<button class="px-6 py-3 border-[0.5px] border-on-background text-on-background font-ui-sm hover:bg-surface-container-lowest transition-colors">
+                    Save Draft
+                </button>
+</div>
+</header>
+<div class="p-gutter-desktop space-y-space-64 pb-32">
+<!-- 1. Period Selection -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-text-light uppercase tracking-widest">Financial Year</label>
+<div class="relative">
+<select class="w-full appearance-none border-b-[0.5px] border-border-subtle border-t-0 border-x-0 bg-transparent py-2 pl-0 pr-8 font-mono-md text-on-background focus:ring-0 focus:border-amber-text cursor-pointer">
+<option>2023 - 2024</option>
+<option>2022 - 2023</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-text-light pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-text-light uppercase tracking-widest">Return Period</label>
+<div class="relative">
+<select class="w-full appearance-none border-b-[0.5px] border-border-subtle border-t-0 border-x-0 bg-transparent py-2 pl-0 pr-8 font-ui-sm text-on-background focus:ring-0 focus:border-amber-text cursor-pointer">
+<option>October (Q3)</option>
+<option>September (Q2)</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-text-light pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-text-light uppercase tracking-widest">GSTIN Reference</label>
+<div class="border-b-[0.5px] border-border-subtle py-2">
+<span class="font-mono-md text-on-background">27AAACR1234F1Z5</span>
+</div>
+</div>
+</section>
+<!-- 2. Tax Liability (Gross) - Bento style modular cards -->
+<section>
+<div class="flex justify-between items-end mb-6 border-b-[0.5px] border-border-subtle pb-4">
+<h3 class="font-ui-lg text-on-background">1. Gross Tax Liability</h3>
+<p class="font-ui-xs text-text-light uppercase tracking-widest">Derived from Outward Supplies</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-px bg-border-subtle border-[0.5px] border-border-subtle">
+<!-- IGST Card -->
+<div class="bg-surface-container-lowest p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow border-t-2 border-t-transparent hover:border-t-amber-text">
+<span class="font-ui-xs text-text-light uppercase tracking-widest">Integrated Tax (IGST)</span>
+<div class="flex items-baseline gap-1 mt-auto">
+<span class="font-ui-sm text-text-light">₹</span>
+<span class="font-mono-lg text-on-background">4,50,000.00</span>
+</div>
+</div>
+<!-- CGST Card -->
+<div class="bg-surface-container-lowest p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow border-t-2 border-t-transparent hover:border-t-amber-text">
+<span class="font-ui-xs text-text-light uppercase tracking-widest">Central Tax (CGST)</span>
+<div class="flex items-baseline gap-1 mt-auto">
+<span class="font-ui-sm text-text-light">₹</span>
+<span class="font-mono-lg text-on-background">1,25,000.00</span>
+</div>
+</div>
+<!-- SGST Card -->
+<div class="bg-surface-container-lowest p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow border-t-2 border-t-transparent hover:border-t-amber-text">
+<span class="font-ui-xs text-text-light uppercase tracking-widest">State/UT Tax (SGST)</span>
+<div class="flex items-baseline gap-1 mt-auto">
+<span class="font-ui-sm text-text-light">₹</span>
+<span class="font-mono-lg text-on-background">1,25,000.00</span>
+</div>
+</div>
+<!-- Total Card -->
+<div class="bg-section-muted p-6 flex flex-col gap-4">
+<span class="font-ui-xs text-on-background font-semibold uppercase tracking-widest">Total Liability</span>
+<div class="flex items-baseline gap-1 mt-auto">
+<span class="font-ui-sm text-on-background">₹</span>
+<span class="font-mono-lg text-on-background font-medium">7,00,000.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. ITC Offset Table (IGST first rule) -->
+<section>
+<div class="flex justify-between items-end mb-6 border-b-[0.5px] border-border-subtle pb-4">
+<h3 class="font-ui-lg text-on-background">2. ITC Set-off Computation</h3>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-amber-text">info</span>
+<p class="font-ui-xs text-amber-text uppercase tracking-widest">IGST Exhaustion Rule Applied</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle overflow-x-auto">
+<table class="w-full text-left ledger-table whitespace-nowrap">
+<thead>
+<tr class="bg-section-muted">
+<th class="p-4 font-ui-xs text-text-light uppercase tracking-widest font-normal w-1/5">Liability Head</th>
+<th class="p-4 font-ui-xs text-text-light uppercase tracking-widest font-normal text-right">Gross Liability (A)</th>
+<th class="p-4 font-ui-xs text-text-light uppercase tracking-widest font-normal text-right border-l-[0.5px] border-border-subtle bg-white">ITC: IGST</th>
+<th class="p-4 font-ui-xs text-text-light uppercase tracking-widest font-normal text-right bg-white">ITC: CGST</th>
+<th class="p-4 font-ui-xs text-text-light uppercase tracking-widest font-normal text-right bg-white">ITC: SGST</th>
+<th class="p-4 font-ui-xs text-on-background font-semibold uppercase tracking-widest text-right border-l-[0.5px] border-border-subtle">Cash Reqd (A-B)</th>
+</tr>
+</thead>
+<tbody class="font-mono-md text-on-background">
+<!-- Available ITC Row (Informational) -->
+<tr class="border-b-[2px] border-border-subtle bg-page-bg">
+<td class="p-4 font-ui-sm text-text-light italic">Available ITC Pool -&gt;</td>
+<td class="p-4 text-right"></td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle text-tertiary">3,00,000.00</td>
+<td class="p-4 text-right text-tertiary">1,50,000.00</td>
+<td class="p-4 text-right text-tertiary">1,00,000.00</td>
+<td class="p-4 border-l-[0.5px] border-border-subtle"></td>
+</tr>
+<!-- IGST Liability Row -->
+<tr>
+<td class="p-4 font-ui-sm font-medium">IGST Liability</td>
+<td class="p-4 text-right">4,50,000.00</td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle text-amber-text">-3,00,000.00</td>
+<td class="p-4 text-right text-text-light">0.00</td>
+<td class="p-4 text-right text-text-light">0.00</td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle font-medium">1,50,000.00</td>
+</tr>
+<!-- CGST Liability Row -->
+<tr>
+<td class="p-4 font-ui-sm font-medium">CGST Liability</td>
+<td class="p-4 text-right">1,25,000.00</td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle text-text-light">0.00</td>
+<td class="p-4 text-right text-amber-text">-1,25,000.00</td>
+<td class="p-4 text-right text-text-light">NA</td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle font-medium">0.00</td>
+</tr>
+<!-- SGST Liability Row -->
+<tr>
+<td class="p-4 font-ui-sm font-medium">SGST Liability</td>
+<td class="p-4 text-right">1,25,000.00</td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle text-text-light">0.00</td>
+<td class="p-4 text-right text-text-light">NA</td>
+<td class="p-4 text-right text-amber-text">-1,00,000.00</td>
+<td class="p-4 text-right border-l-[0.5px] border-border-subtle font-medium">25,000.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-3 flex justify-end gap-6 font-ui-xs text-text-light uppercase tracking-widest">
+<span>Total ITC Utilized: <span class="font-mono-md text-on-background ml-2">5,25,000.00</span></span>
+<span>ITC Balance C/F: <span class="font-mono-md text-on-background ml-2">25,000.00 (CGST)</span></span>
+</div>
+</section>
+<!-- 4. Cash Required Output -->
+<section class="bg-section-dark text-surface-container-lowest p-8 md:p-12 border-t-4 border-amber-text flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-2 max-w-lg">
+<h3 class="font-display-lg">Net Cash Liability</h3>
+<p class="font-ui-sm text-stone-400">This is the final amount payable via cash ledger after all eligible Input Tax Credit rules have been applied sequentially.</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-ui-xs uppercase tracking-widest text-stone-400">Total Payable Amount</span>
+<div class="flex items-baseline gap-2">
+<span class="font-ui-lg text-amber-text">₹</span>
+<span class="font-mono-lg text-[40px] font-medium leading-none">1,75,000.00</span>
+</div>
+</div>
+</section>
+<!-- Actions Row -->
+<div class="flex justify-end items-center gap-4 pt-6 border-t-[0.5px] border-border-subtle">
+<button class="px-6 py-4 border-[0.5px] border-on-background text-on-background font-ui-sm hover:bg-surface-container-lowest transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                    Generate Challan
+                </button>
+<button class="px-8 py-4 bg-primary-container text-on-primary-container font-ui-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-3 group">
+                    Record Payment
+                    <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

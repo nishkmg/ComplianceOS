@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invoicing | ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@400;500;600;700;800&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shadow-screenshot {
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+        }
+        .shadow-card:hover {
+            box-shadow: 0 10px 20px -5px rgba(200, 134, 10, 0.08);
+        }
+        .ledger-line {
+            background-image: radial-gradient(#E8E4DC 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "outline-variant": "#d6c4af",
+                      "text-light": "#888888",
+                      "tertiary-container": "#309bdb",
+                      "on-secondary-container": "#636262",
+                      "on-surface-variant": "#514535",
+                      "surface": "#fff8f4",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "on-error-container": "#93000a",
+                      "page-bg": "#FAFAF8",
+                      "secondary-container": "#e2dfde",
+                      "primary": "#825500",
+                      "surface-container-high": "#f3e6d9",
+                      "surface-bright": "#fff8f4",
+                      "on-tertiary-fixed": "#001e30",
+                      "primary-fixed-dim": "#ffb950",
+                      "border-subtle": "#E8E4DC",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "outline": "#847563",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-dim": "#e5d8cb",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#ffb950",
+                      "background": "#fff8f4",
+                      "on-background": "#211b13",
+                      "surface-container-highest": "#ede0d3",
+                      "secondary": "#5f5e5e",
+                      "primary-fixed": "#ffddb3",
+                      "surface-container": "#f9ecde",
+                      "error-container": "#ffdad6",
+                      "amber-text": "#B47500",
+                      "on-surface": "#211b13",
+                      "surface-variant": "#ede0d3",
+                      "on-secondary": "#ffffff",
+                      "section-dark": "#111111",
+                      "on-primary-fixed": "#291800",
+                      "surface-tint": "#825500",
+                      "on-primary-fixed-variant": "#633f00",
+                      "on-tertiary": "#ffffff",
+                      "tertiary": "#006494",
+                      "section-muted": "#F4F2EE",
+                      "on-primary-container": "#3f2700",
+                      "text-mid": "#555555",
+                      "inverse-surface": "#362f27",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed": "#cae6ff",
+                      "inverse-on-surface": "#fcefe1",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-tertiary-container": "#002f49",
+                      "surface-container-low": "#fff1e4",
+                      "primary-container": "#c8860a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-64": "64px",
+                      "space-96": "96px",
+                      "gutter-desktop": "24px",
+                      "space-48": "48px",
+                      "space-128": "128px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px"
+              },
+              "fontFamily": {
+                      "ui-md": ["Syne"],
+                      "ui-sm": ["Syne"],
+                      "marketing-hero": ["Playfair Display"],
+                      "display-lg": ["Playfair Display"],
+                      "ui-xs": ["Syne"],
+                      "ui-lg": ["Syne"],
+                      "display-xl": ["Playfair Display"],
+                      "mono-md": ["DM Mono"],
+                      "mono-lg": ["DM Mono"],
+                      "marketing-xl": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                      "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                      "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                      "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                      "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                      "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-page-bg text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="sticky top-0 w-full z-50 bg-[#F4F2EE]/90 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC]">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1320px] mx-auto">
+<div class="text-2xl font-bold font-serif text-stone-900">ComplianceOS</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#C8860A] font-bold border-b-2 border-[#C8860A] pb-1 font-ui-sm text-ui-sm" href="#">Features</a>
+<a class="text-stone-600 font-medium hover:text-stone-900 transition-colors duration-200 font-ui-sm text-ui-sm" href="#">Pricing</a>
+<a class="text-stone-600 font-medium hover:text-stone-900 transition-colors duration-200 font-ui-sm text-ui-sm" href="#">About Us</a>
+<a class="text-stone-600 font-medium hover:text-stone-900 transition-colors duration-200 font-ui-sm text-ui-sm" href="#">Resources</a>
+</div>
+<button class="bg-[#C8860A] text-white px-6 py-2 font-ui-sm text-ui-sm font-bold flex items-center group transition-all">
+                Start Free <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="pt-space-128 pb-space-96 px-8 max-w-[1320px] mx-auto overflow-hidden">
+<div class="max-w-[800px]">
+<span class="text-ui-xs font-ui-xs uppercase text-amber-text tracking-widest block mb-6">Automated Invoicing</span>
+<h1 class="font-marketing-hero text-marketing-hero text-stone-900 mb-8 leading-tight">Invoices that post to your books automatically. <span class="italic text-amber-text">No double entry.</span></h1>
+<p class="font-ui-lg text-ui-lg text-stone-600 max-w-[600px] mb-12">Every invoice created is instantly reconciled against your GST ledger and bank statements. Precision at the point of transaction.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-white px-8 py-4 font-ui-md text-ui-md font-bold group flex items-center">
+                    Get Started Now <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+</button>
+<button class="border border-stone-900 text-stone-900 px-8 py-4 font-ui-md text-ui-md font-bold hover:bg-stone-50 transition-colors">
+                    View Demo
+                </button>
+</div>
+</div>
+<!-- Hero Flow Diagram -->
+<div class="mt-space-96 relative p-12 bg-white border border-border-subtle">
+<div class="grid grid-cols-1 md:grid-cols-3 items-center gap-12 relative z-10">
+<!-- Step 1: Create -->
+<div class="text-center p-8 border border-dashed border-border-subtle bg-page-bg">
+<span class="material-symbols-outlined text-4xl text-amber-text mb-4" data-icon="description">description</span>
+<h3 class="font-ui-md text-ui-md font-bold mb-2">Invoice Created</h3>
+<p class="font-ui-xs text-ui-xs text-stone-500">GST, HSN &amp; PAN verified</p>
+</div>
+<!-- Animated SVG Arrow (Simplified for Static) -->
+<div class="hidden md:flex justify-center">
+<svg fill="none" height="40" viewbox="0 0 120 40" width="120" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 20H110M110 20L100 10M110 20L100 30" stroke="#C8860A" stroke-dasharray="4 4" stroke-width="2"></path>
+<circle cx="60" cy="20" fill="#C8860A" r="4"></circle>
+</svg>
+</div>
+<!-- Step 2: Auto-Post -->
+<div class="text-center p-8 border border-primary-container bg-section-amber">
+<span class="material-symbols-outlined text-4xl text-amber-text mb-4" data-icon="auto_awesome">auto_awesome</span>
+<h3 class="font-ui-md text-ui-md font-bold mb-2">Automated Ledger</h3>
+<p class="font-ui-xs text-ui-xs text-stone-500">Real-time posting to Sales Register</p>
+</div>
+</div>
+<!-- Background Ledger Lines -->
+<div class="absolute inset-0 ledger-line opacity-20 pointer-events-none"></div>
+</div>
+</header>
+<!-- PDF Preview: The Indian Invoice -->
+<section class="py-space-128 bg-section-muted">
+<div class="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div>
+<span class="text-ui-xs font-ui-xs uppercase text-amber-text tracking-widest block mb-4">Precision Compliance</span>
+<h2 class="font-display-xl text-display-xl text-stone-900 mb-6">Built for the Indian Fiscal Code</h2>
+<p class="font-ui-md text-ui-md text-stone-600 mb-8 leading-relaxed">ComplianceOS understands local complexities. From Rule 46 requirements to automatic CGST/SGST/IGST splitting based on place of supply, your invoices are audit-ready from second one.</p>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-amber-text font-bold" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-ui-md text-ui-md font-bold text-stone-900">E-Invoicing Ready</p>
+<p class="font-ui-sm text-ui-sm text-stone-500">One-click IRN and QR code generation for GST compliance.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-amber-text font-bold" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-ui-md text-ui-md font-bold text-stone-900">HSN/SAC Validation</p>
+<p class="font-ui-sm text-ui-sm text-stone-500">Integrated database lookup for correct tax rate application.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="relative">
+<!-- Realistic Invoice Screenshot Mockup -->
+<div class="bg-white p-12 shadow-screenshot border-[0.5px] border-border-subtle relative overflow-hidden group">
+<div class="flex justify-between border-b pb-8 mb-8">
+<div>
+<div class="text-xl font-serif font-bold text-stone-900">Acme Solutions Pvt Ltd</div>
+<div class="text-[10px] text-stone-400 font-mono-md mt-1 uppercase">GSTIN: 27AABCU1234F1Z5</div>
+</div>
+<div class="text-right">
+<div class="text-lg font-bold text-stone-900">TAX INVOICE</div>
+<div class="text-[10px] text-stone-400 font-mono-md mt-1">#INV-2024-0812</div>
+</div>
+</div>
+<table class="w-full text-left font-ui-sm text-ui-sm">
+<thead>
+<tr class="border-b border-stone-100 text-stone-400 text-[10px] uppercase tracking-wider">
+<th class="py-2">Description</th>
+<th class="py-2">HSN</th>
+<th class="py-2 text-right">Taxable Val</th>
+<th class="py-2 text-right">GST</th>
+</tr>
+</thead>
+<tbody class="text-stone-700">
+<tr class="border-b border-stone-50">
+<td class="py-4 font-medium">Cloud Infrastructure Mgmt</td>
+<td class="py-4 font-mono-md text-[11px]">998311</td>
+<td class="py-4 text-right">₹45,000.00</td>
+<td class="py-4 text-right">₹8,100.00</td>
+</tr>
+</tbody>
+</table>
+<div class="mt-8 ml-auto w-48 space-y-2">
+<div class="flex justify-between text-[11px] text-stone-500">
+<span>CGST (9%)</span>
+<span>₹4,050.00</span>
+</div>
+<div class="flex justify-between text-[11px] text-stone-500">
+<span>SGST (9%)</span>
+<span>₹4,050.00</span>
+</div>
+<div class="flex justify-between border-t border-amber-text/20 pt-2 font-bold text-stone-900">
+<span>Total</span>
+<span class="text-amber-text">₹53,100.00</span>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-stone-100 flex justify-between items-end">
+<div class="text-[9px] text-stone-400 font-mono-md leading-tight">
+                            Digital Signature Verified<br/>
+                            Date: 12 Aug 2024 14:22 IST
+                        </div>
+<div class="w-16 h-16 bg-stone-100 border flex items-center justify-center opacity-50">
+<span class="material-symbols-outlined text-stone-300" data-icon="qr_code_2">qr_code_2</span>
+</div>
+</div>
+<!-- Overlay Aesthetic -->
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-amber-text text-white text-[10px] font-bold px-3 py-1 uppercase tracking-tighter">Verified</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- OCR Section: Photo vs Extracted Fields -->
+<section class="py-space-128 overflow-hidden">
+<div class="max-w-[1320px] mx-auto px-8">
+<div class="text-center max-w-[700px] mx-auto mb-space-96">
+<span class="text-ui-xs font-ui-xs uppercase text-amber-text tracking-widest block mb-4">Input Intelligence</span>
+<h2 class="font-display-xl text-display-xl text-stone-900 mb-6">Snap a vendor bill, we do the rest</h2>
+<p class="font-ui-md text-ui-md text-stone-600 leading-relaxed">Our proprietary OCR engine is trained on Indian invoice formats. It extracts PAN, GSTIN, and line items with 99.8% accuracy, mapping them to your expense accounts automatically.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-1 border border-border-subtle bg-border-subtle p-[0.5px]">
+<!-- Panel 1: The Raw Image -->
+<div class="bg-white p-12 flex flex-col items-center justify-center relative min-h-[500px]">
+<div class="absolute top-6 left-6 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-stone-300"></span>
+<span class="text-ui-xs font-ui-xs uppercase text-stone-400">Raw Input Source</span>
+</div>
+<div class="w-full max-w-[320px] shadow-screenshot rotate-[-2deg] bg-stone-50 p-6 border border-stone-200">
+<div class="h-64 w-full bg-stone-200 mb-4 overflow-hidden">
+<img alt="a slightly crumpled physical paper receipt with printed text and numbers lying on a textured wooden surface" class="w-full h-full object-cover grayscale contrast-125 opacity-70" data-alt="a slightly crumpled physical paper receipt with printed text and numbers lying on a textured wooden surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0KPlv2iC0XbEiihE910y4gdRQVDaKCRkaSadE-AevTHGDrCyACHXHGRafaG8wG3Dzt1BfOrRrGVvZDMjVRrOkwYeLN5ZtArNBFCgfY9j83FqEdgbokKfpCVsm5r2FaEBsfhUnha3lr0F6wdQK6ZbfDMwmjcbcVOhhQ1DQXyUu2TlCbqKQX8FQfQq5rPCVPEUteatlNLSqRnJZmzlaLJgDpdIw_HeJFstPMzxU3D5I_WLxkoG7PZpJG_2cRo67JIRU5Zjedi40mo"/>
+</div>
+<div class="space-y-2 opacity-40">
+<div class="h-2 w-3/4 bg-stone-400"></div>
+<div class="h-2 w-1/2 bg-stone-400"></div>
+<div class="h-2 w-full bg-stone-400"></div>
+</div>
+</div>
+<!-- Scanning Beam Simulation -->
+<div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-amber-text/5 to-transparent h-12 w-full animate-scan"></div>
+</div>
+<!-- Panel 2: The Extracted Data -->
+<div class="bg-section-amber p-12 flex flex-col justify-center min-h-[500px]">
+<div class="absolute top-6 left-6 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-text"></span>
+<span class="text-ui-xs font-ui-xs uppercase text-amber-text">Structured Data Output</span>
+</div>
+<div class="space-y-6 max-w-sm mx-auto w-full">
+<div class="space-y-1">
+<label class="text-[10px] font-ui-xs uppercase text-stone-400">Vendor Identity</label>
+<div class="p-4 bg-white border border-amber-text/20 flex items-center justify-between">
+<span class="font-ui-md text-ui-md font-bold">Mahalaxmi Enterprise</span>
+<span class="material-symbols-outlined text-amber-text text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="text-[10px] font-ui-xs uppercase text-stone-400">Tax Identification</label>
+<div class="p-3 bg-white border border-stone-100 font-mono-md text-[12px]">27BKPSA1204K...</div>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] font-ui-xs uppercase text-stone-400">Total Amount</label>
+<div class="p-3 bg-white border border-stone-100 font-mono-md text-[12px] text-amber-text font-bold">₹12,480.00</div>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] font-ui-xs uppercase text-stone-400">Ledger Mapping</label>
+<div class="p-3 bg-white border border-stone-100 flex items-center gap-2">
+<span class="material-symbols-outlined text-stone-400 text-sm" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-ui-sm text-ui-sm">Office Maintenance (Exp)</span>
+</div>
+</div>
+<button class="w-full py-4 bg-stone-900 text-white font-ui-md text-ui-md font-bold hover:bg-stone-800 transition-colors">
+                            Approve Entry
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Detailed Features Bento Grid -->
+<section class="py-space-128 bg-white border-y border-border-subtle">
+<div class="max-w-[1320px] mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Large Card -->
+<div class="md:col-span-7 bg-page-bg p-12 border border-border-subtle group hover:border-amber-text transition-colors shadow-card">
+<span class="material-symbols-outlined text-amber-text text-4xl mb-6" data-icon="payments">payments</span>
+<h3 class="font-display-lg text-display-lg mb-4">Payment Links &amp; Reminders</h3>
+<p class="font-ui-md text-ui-md text-stone-600 mb-8 max-w-md">Accept UPI, NetBanking, and Cards directly from the invoice. Our system automatically follows up on overdue payments so you don't have to.</p>
+<div class="flex gap-4">
+<img alt="a clear macro photo of a digital payment terminal screen showing a successful transaction icon" class="h-12 w-12 rounded-full grayscale border border-border-subtle" data-alt="a clear macro photo of a digital payment terminal screen showing a successful transaction icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbP9UoX6XzfCxQlxQoUY15HsFkCQfdluQZOaFTSSquUPi28LtaX27hl61oJAlJT7dyFvbHPoTHBXzPyDuMNstiRN1KbVTUfge_OrmYf0RYE8-K46p67LrVM2OGT34HqexOQdEQrm0OqHIdIXfCijPNeNzPAc9rwsHeofDurCWuNDn5edWDwhWotAlgq3yaKXofeqKsSVH8WPM351NEeOw-W78v4Buoz7x4eHtkpZCwu2G-y57VJYSbCIzjGTQYxvxmVV-pbqPTJkU"/>
+<img alt="a high resolution close-up of a person tapping a smartphone on a modern card reader with warm lighting" class="h-12 w-12 rounded-full grayscale border border-border-subtle" data-alt="a high resolution close-up of a person tapping a smartphone on a modern card reader with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfrfTA-t-MGam0fB64Yc8dafTea8Ms8b0ERcSaI1xaTCXTuAuNZgBvup-DauqzaN_EvzgUnc8uWGtUQ2ajGiFUQvN3VLYYbivbHqKbW01T3rFU_00qOXIjSX-udV0tilC-WPYz7Sa2Jl0s3jbW6ge7zePMPAfYZlDG43sBHmYRUFs1-_0c4Ve-oWdj6Obt2kbaVHAt-MjU1ivE0lzQku7gTGwC0BscJTAjEiJ61MKV7ihSHGhH5_3AQYXBVFsVTTGwHOi4RgMkW0c"/>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="md:col-span-5 bg-stone-900 p-12 text-white flex flex-col justify-between">
+<div>
+<h3 class="font-display-lg text-display-lg mb-4">Zero Reco Errors</h3>
+<p class="font-ui-sm text-ui-sm text-stone-400">Every rupee is accounted for. Bank feed synchronization means your invoices mark themselves as 'Paid' the moment the money hits your account.</p>
+</div>
+<div class="mt-8 border-t border-stone-800 pt-8">
+<div class="flex items-center gap-4 text-amber-text font-bold text-ui-sm">
+                            EXPLORE RECONCILIATION <span>→</span>
+</div>
+</div>
+</div>
+<!-- Small Card 2 -->
+<div class="md:col-span-5 bg-section-amber p-12 border border-border-subtle">
+<h3 class="font-ui-lg text-ui-lg font-bold mb-4">Recurring Retainers</h3>
+<p class="font-ui-sm text-ui-sm text-stone-600">Perfect for service businesses. Set up monthly billing and let ComplianceOS handle the generation, dispatch, and tax filing.</p>
+</div>
+<!-- Small Card 3 -->
+<div class="md:col-span-7 bg-white p-12 border border-border-subtle flex flex-col md:flex-row items-center gap-8">
+<div class="flex-1">
+<h3 class="font-ui-lg text-ui-lg font-bold mb-2">Multi-Currency</h3>
+<p class="font-ui-sm text-ui-sm text-stone-600">Export services? Handle FIRC and currency conversions automatically while staying compliant with GST export rules.</p>
+</div>
+<div class="flex-none flex items-center justify-center w-24 h-24 bg-page-bg rounded-full border border-dashed border-stone-300">
+<span class="material-symbols-outlined text-stone-300 text-3xl" data-icon="language">language</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-space-128 text-center px-8 bg-page-bg">
+<h2 class="font-marketing-hero text-marketing-xl text-stone-900 mb-8">Ready for error-free accounting?</h2>
+<p class="font-ui-lg text-ui-lg text-stone-600 max-w-[600px] mx-auto mb-12">Join 15,000+ Indian businesses automating their compliance with ComplianceOS.</p>
+<button class="bg-[#C8860A] text-white px-12 py-5 font-ui-md text-ui-md font-bold group flex items-center mx-auto shadow-xl hover:shadow-2xl transition-all">
+            Start Your 14-Day Free Trial <span class="ml-3 group-hover:translate-x-1 transition-transform">→</span>
+</button>
+<p class="mt-6 text-ui-xs text-stone-400 uppercase tracking-widest">No credit card required • GST Registered</p>
+</section>
+<!-- Footer -->
+<footer class="bg-[#F4F2EE] border-t-[0.5px] border-[#E8E4DC] py-24">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 max-w-[1200px] mx-auto px-8">
+<div class="md:col-span-1">
+<div class="text-xl font-serif text-stone-900 mb-6">ComplianceOS</div>
+<p class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 leading-relaxed">
+                    © 2024 ComplianceOS. Precision in Indian Accounting.
+                </p>
+</div>
+<div class="md:col-span-1 space-y-4">
+<h4 class="font-ui-sm text-ui-sm font-bold text-stone-900 uppercase tracking-widest">Product</h4>
+<nav class="flex flex-col gap-3">
+<a class="text-stone-500 font-['Syne'] text-xs uppercase tracking-widest hover:text-[#C8860A] transition-all" href="#">Compliance Guide</a>
+<a class="text-stone-500 font-['Syne'] text-xs uppercase tracking-widest hover:text-[#C8860A] transition-all" href="#">GST Tools</a>
+</nav>
+</div>
+<div class="md:col-span-1 space-y-4">
+<h4 class="font-ui-sm text-ui-sm font-bold text-stone-900 uppercase tracking-widest">Legal</h4>
+<nav class="flex flex-col gap-3">
+<a class="text-stone-500 font-['Syne'] text-xs uppercase tracking-widest hover:text-[#C8860A] transition-all" href="#">Privacy Policy</a>
+<a class="text-stone-500 font-['Syne'] text-xs uppercase tracking-widest hover:text-[#C8860A] transition-all" href="#">Terms of Service</a>
+</nav>
+</div>
+<div class="md:col-span-1 space-y-4">
+<h4 class="font-ui-sm text-ui-sm font-bold text-stone-900 uppercase tracking-widest">Support</h4>
+<nav class="flex flex-col gap-3">
+<a class="text-stone-500 font-['Syne'] text-xs uppercase tracking-widest hover:text-[#C8860A] transition-all" href="#">Contact Support</a>
+</nav>
+</div>
+</div>
+</footer>
+</body></html>

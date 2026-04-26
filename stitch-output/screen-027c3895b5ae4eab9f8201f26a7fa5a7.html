@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GST Liability Ledger - LedgerStandard</title>
+<!-- Google Fonts: Syne, Playfair Display, DM Mono, Noto Serif -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-tertiary-container": "#002f49",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "secondary-container": "#e2dfde",
+                      "surface-bright": "#fff8f4",
+                      "tertiary-container": "#309bdb",
+                      "on-surface-variant": "#514535",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-secondary-container": "#636262",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#211b13",
+                      "surface-dim": "#e5d8cb",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-background": "#211b13",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "outline-variant": "#d6c4af",
+                      "tertiary": "#006494",
+                      "outline": "#847563",
+                      "surface": "#fff8f4",
+                      "primary": "#825500",
+                      "primary-fixed-dim": "#ffb950",
+                      "primary-fixed": "#ffddb3",
+                      "surface-container-highest": "#ede0d3",
+                      "border-subtle": "#E8E4DC",
+                      "section-muted": "#F4F2EE",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#ede0d3",
+                      "surface-container-high": "#f3e6d9",
+                      "inverse-on-surface": "#fcefe1",
+                      "secondary": "#5f5e5e",
+                      "amber-text": "#B47500",
+                      "page-bg": "#FAFAF8",
+                      "surface-container": "#f9ecde",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#cae6ff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "on-primary-container": "#3f2700",
+                      "background": "#fff8f4",
+                      "section-dark": "#111111",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#291800",
+                      "text-mid": "#555555",
+                      "primary-container": "#c8860a",
+                      "on-primary-fixed-variant": "#633f00",
+                      "inverse-primary": "#ffb950",
+                      "surface-tint": "#825500",
+                      "text-light": "#888888",
+                      "surface-container-low": "#fff1e4",
+                      "inverse-surface": "#362f27",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-96": "96px",
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "space-128": "128px",
+                      "space-64": "64px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px"
+              },
+              "fontFamily": {
+                      "mono-lg": ["DM Mono"],
+                      "mono-md": ["DM Mono"],
+                      "marketing-hero": ["Playfair Display"],
+                      "ui-lg": ["Syne"],
+                      "display-lg": ["Playfair Display"],
+                      "marketing-xl": ["Playfair Display"],
+                      "display-xl": ["Playfair Display"],
+                      "ui-md": ["Syne"],
+                      "ui-sm": ["Syne"],
+                      "ui-xs": ["Syne"]
+              },
+              "fontSize": {
+                      "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                      "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                      "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                      "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                      "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                      "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}]
+              },
+              "boxShadow": {
+                  "screenshot": "0 24px 64px -12px rgba(0, 0, 0, 0.08)",
+                  "card": "0 8px 24px -8px rgba(0, 0, 0, 0.05)"
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface antialiased flex selection:bg-primary-container selection:text-white">
+<!-- Shared Component: SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-[0.5px] border-stone-200 dark:border-stone-800 bg-[#F9F7F2] dark:bg-stone-950 flex flex-col py-8 z-40 hidden md:flex font-noto-serif text-sm tracking-wide uppercase text-[#C8860A]">
+<!-- Header / Brand -->
+<div class="px-6 mb-12">
+<div class="w-10 h-10 bg-white border-[0.5px] border-border-subtle flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">domain</span>
+</div>
+<h2 class="font-syne text-xs tracking-[0.2em] text-[#C8860A] font-bold mb-1">Standard Chartered CA</h2>
+<p class="font-ui-xs text-ui-xs text-text-mid normal-case">FY 2023-24</p>
+</div>
+<!-- Main Navigation -->
+<nav class="flex-1 flex flex-col">
+<!-- Inactive Tab -->
+<a class="flex items-center gap-3 px-6 py-4 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span>General Ledger</span>
+</a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-6 py-4 w-full transition-all bg-[#C8860A]/10 text-[#C8860A] border-r-2 border-[#C8860A] font-bold" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span>GST Liability</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-3 px-6 py-4 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">history_edu</span>
+<span>Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span>Vouchers</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span>TDS Compliance</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span>Advisory</span>
+</a>
+</nav>
+<!-- CTA & Footer -->
+<div class="px-6 mt-auto flex flex-col gap-4">
+<button class="w-full bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-4 hover:bg-primary transition-colors flex justify-between items-center group">
+                New Entry
+                <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<div class="border-t-[0.5px] border-stone-200 dark:border-stone-800 pt-4 mt-2">
+<a class="flex items-center gap-3 py-2 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">help_outline</span>
+<span class="font-ui-xs text-ui-xs normal-case">Support</span>
+</a>
+<a class="flex items-center gap-3 py-2 w-full transition-all text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span class="font-ui-xs text-ui-xs normal-case">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 min-h-screen px-margin-mobile md:px-gutter-wide lg:px-space-64 py-space-64 flex flex-col">
+<!-- Page Header -->
+<header class="mb-space-48 flex flex-col gap-4">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-6">
+<div>
+<h1 class="font-display-xl text-display-xl text-on-surface mb-2 tracking-tight">Liability Ledger</h1>
+<p class="font-ui-sm text-ui-sm text-text-mid flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                        Current Period: April 2023 - March 2024
+                    </p>
+</div>
+<div class="flex gap-4">
+<button class="border-[0.5px] border-on-surface text-on-surface bg-transparent font-ui-xs text-ui-xs uppercase tracking-widest px-6 py-3 hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+                        Filter
+                    </button>
+<button class="border-[0.5px] border-on-surface text-on-surface bg-transparent font-ui-xs text-ui-xs uppercase tracking-widest px-6 py-3 hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">download</span>
+                        Export
+                    </button>
+</div>
+</div>
+</header>
+<!-- KPI Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter-desktop mb-space-64">
+<div class="border-[0.5px] border-border-subtle bg-surface p-6 flex flex-col justify-between h-32 relative hover:shadow-card transition-shadow cursor-default group">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+<span class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest">Total Liability Generated</span>
+<div class="flex items-end justify-between">
+<span class="font-mono-lg text-mono-lg text-on-surface">₹ 12,45,800.00</span>
+<span class="material-symbols-outlined text-border-subtle group-hover:text-primary-container transition-colors">trending_up</span>
+</div>
+</div>
+<div class="border-[0.5px] border-border-subtle bg-surface p-6 flex flex-col justify-between h-32 relative hover:shadow-card transition-shadow cursor-default">
+<span class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">CGST Output</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹ 4,15,200.00</span>
+</div>
+<div class="border-[0.5px] border-border-subtle bg-surface p-6 flex flex-col justify-between h-32 relative hover:shadow-card transition-shadow cursor-default">
+<span class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">SGST Output</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹ 4,15,200.00</span>
+</div>
+<div class="border-[0.5px] border-border-subtle bg-surface p-6 flex flex-col justify-between h-32 relative hover:shadow-card transition-shadow cursor-default">
+<span class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">IGST Output</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹ 4,15,400.00</span>
+</div>
+</section>
+<!-- Ledger Table Area -->
+<section class="flex-1 bg-surface border-[0.5px] border-border-subtle flex flex-col">
+<div class="px-6 py-4 border-b-[0.5px] border-border-subtle bg-section-muted flex justify-between items-center">
+<span class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">Sales Register Extracts</span>
+<span class="font-mono-md text-mono-md text-text-mid">Showing 1-5 of 142 entries</span>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse whitespace-nowrap">
+<thead>
+<tr class="bg-surface">
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal">Date</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal">Invoice #</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal text-right">Taxable Value</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal text-right">CGST</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal text-right">SGST</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal text-right">IGST</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-normal text-right">Cess</th>
+<th class="font-ui-xs text-ui-xs text-on-surface uppercase tracking-widest border-b-[0.5px] border-border-subtle px-6 py-4 font-bold text-right">Total Liability</th>
+</tr>
+</thead>
+<tbody class="font-ui-sm text-ui-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-section-amber transition-colors group">
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle">12 Apr 2023</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-text-mid group-hover:text-primary-container transition-colors">INV-2324-001</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right">1,50,000.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">13,500.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">13,500.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right font-medium">1,77,000.00</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-section-amber transition-colors group">
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle">15 Apr 2023</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-text-mid group-hover:text-primary-container transition-colors">INV-2324-002</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right">85,000.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">15,300.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right font-medium">1,00,300.00</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-section-amber transition-colors group">
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle">18 Apr 2023</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-text-mid group-hover:text-primary-container transition-colors">INV-2324-003</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right">2,20,000.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">19,800.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">19,800.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">5,000.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right font-medium">2,64,600.00</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-section-amber transition-colors group">
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle">22 Apr 2023</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-text-mid group-hover:text-primary-container transition-colors">INV-2324-004</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right">45,000.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">8,100.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right font-medium">53,100.00</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-section-amber transition-colors group">
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle">29 Apr 2023</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-text-mid group-hover:text-primary-container transition-colors">INV-2324-005</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right">1,10,000.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">9,900.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-text-mid">9,900.00</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right text-border-subtle">-</td>
+<td class="px-6 py-5 border-b-[0.5px] border-border-subtle font-mono-md text-mono-md text-right font-medium">1,29,800.00</td>
+</tr>
+</tbody>
+<!-- Running Balance Footer -->
+<tfoot class="bg-section-muted border-t-[0.5px] border-border-subtle">
+<tr>
+<td class="px-6 py-6 font-ui-sm text-ui-sm text-on-surface font-bold uppercase tracking-widest" colspan="2">Running Balance</td>
+<td class="px-6 py-6 font-mono-md text-mono-md text-on-surface text-right font-medium border-t-2 border-transparent">6,10,000.00</td>
+<td class="px-6 py-6 font-mono-md text-mono-md text-on-surface text-right font-medium border-t-2 border-transparent">43,200.00</td>
+<td class="px-6 py-6 font-mono-md text-mono-md text-on-surface text-right font-medium border-t-2 border-transparent">43,200.00</td>
+<td class="px-6 py-6 font-mono-md text-mono-md text-on-surface text-right font-medium border-t-2 border-transparent">23,400.00</td>
+<td class="px-6 py-6 font-mono-md text-mono-md text-on-surface text-right font-medium border-t-2 border-transparent">5,000.00</td>
+<td class="px-6 py-6 font-mono-lg text-mono-lg text-primary-container text-right font-bold border-t-[3px] border-primary-container bg-surface relative">
+<div class="absolute -top-[3px] left-0 w-full h-[3px] bg-primary-container"></div>
+                                ₹ 7,24,800.00
+                            </td>
+</tr>
+</tfoot>
+</table>
+</div>
+</section>
+</main>
+</body></html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invoice Detail - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "border-subtle": "#E8E4DC",
+                      "section-muted": "#F4F2EE",
+                      "surface-container-highest": "#ede0d3",
+                      "on-secondary-fixed-variant": "#474746",
+                      "outline-variant": "#d6c4af",
+                      "primary-fixed": "#ffddb3",
+                      "primary": "#825500",
+                      "section-dark": "#111111",
+                      "secondary-container": "#e2dfde",
+                      "amber-text": "#B47500",
+                      "page-bg": "#FAFAF8",
+                      "tertiary": "#006494",
+                      "primary-fixed-dim": "#ffb950",
+                      "tertiary-fixed": "#cae6ff",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-container": "#002f49",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#633f00",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container": "#f9ecde",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-surface-variant": "#514535",
+                      "on-surface": "#211b13",
+                      "inverse-primary": "#ffb950",
+                      "surface-tint": "#825500",
+                      "primary-container": "#c8860a",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "error": "#ba1a1a",
+                      "background": "#fff8f4",
+                      "tertiary-container": "#309bdb",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-primary-fixed": "#291800",
+                      "on-primary-container": "#3f2700",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "text-mid": "#555555",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#636262",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "surface": "#fff8f4",
+                      "surface-container-low": "#fff1e4",
+                      "outline": "#847563",
+                      "surface-dim": "#e5d8cb",
+                      "surface-container-high": "#f3e6d9",
+                      "on-primary": "#ffffff",
+                      "text-light": "#888888",
+                      "inverse-on-surface": "#fcefe1",
+                      "surface-variant": "#ede0d3",
+                      "surface-bright": "#fff8f4",
+                      "secondary": "#5f5e5e",
+                      "inverse-surface": "#362f27",
+                      "on-background": "#211b13",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "gutter-wide": "32px",
+                      "gutter-desktop": "24px",
+                      "space-64": "64px",
+                      "space-96": "96px",
+                      "margin-mobile": "16px",
+                      "space-128": "128px"
+              },
+              "fontFamily": {
+                      "ui-lg": ["Syne"],
+                      "ui-sm": ["Syne"],
+                      "marketing-hero": ["Playfair Display"],
+                      "ui-md": ["Syne"],
+                      "marketing-xl": ["Playfair Display"],
+                      "mono-lg": ["DM Mono"],
+                      "display-lg": ["Playfair Display"],
+                      "mono-md": ["DM Mono"],
+                      "display-xl": ["Playfair Display"],
+                      "ui-xs": ["Syne"]
+              },
+              "fontSize": {
+                      "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                      "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                      "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                      "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                      "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                      "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .shadow-screenshot {
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05), 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface font-ui-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 border-r border-[#E8E4DC] dark:border-[#2A2A2A] fixed left-0 top-0 bg-[#FDFCFB] dark:bg-[#121212] flex flex-col h-full py-6 z-50">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#1A1A1A] dark:text-[#FDFCFB]" style="font-variation-settings: 'FILL' 1;">assured_workload</span>
+<div>
+<h1 class="font-serif text-lg font-black tracking-tighter text-[#1A1A1A] dark:text-[#FDFCFB]">ComplianceOS</h1>
+<p class="font-ui-xs text-text-light uppercase tracking-widest text-[10px]">Editorial Ledger v1.0</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 font-ui-sm text-ui-sm tracking-tight leading-tight mono-numbers">
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-6 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-6 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+                General Ledger
+            </a>
+<a class="flex items-center gap-3 text-[#C8860A] bg-[#F5F2ED] dark:bg-[#1A1A1A] border-r-2 border-[#C8860A] font-bold px-6 py-3 duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                Invoicing
+            </a>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-6 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+                Tax Returns
+            </a>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-6 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+                Employees
+            </a>
+</nav>
+<div class="px-6 mt-auto flex flex-col gap-4">
+<button class="w-full flex items-center justify-center gap-2 bg-[#1A1A1A] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#1A1A1A] py-2.5 font-ui-sm text-ui-sm font-medium hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Entry
+            </button>
+<div class="pt-4 border-t-[0.5px] border-[#E8E4DC] dark:border-[#2A2A2A] flex flex-col gap-1 font-ui-sm text-ui-sm">
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] py-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] py-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[18px]">contact_support</span>
+                    Support
+                </a>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-[#FDFCFB]/80 dark:bg-[#121212]/80 backdrop-blur-md flex items-center justify-between px-8 py-4 ml-64 w-[calc(100%-16rem)]">
+<div class="flex items-center gap-8">
+<span class="hidden md:block font-serif text-sm uppercase tracking-widest font-bold text-[#1A1A1A] dark:text-[#FDFCFB]">General Ledger</span>
+<nav class="hidden md:flex items-center gap-6 font-serif text-sm uppercase tracking-widest font-medium">
+<a class="text-[#6B6B6B] dark:text-[#999999] pb-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] transition-opacity" href="#">Recent</a>
+<a class="text-[#6B6B6B] dark:text-[#999999] pb-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] transition-opacity" href="#">Drafts</a>
+<a class="text-[#6B6B6B] dark:text-[#999999] pb-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] transition-opacity" href="#">Archived</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center gap-4 border-r-[0.5px] border-[#E8E4DC] dark:border-[#2A2A2A] pr-6">
+<button class="font-ui-sm text-ui-sm text-[#1A1A1A] font-medium hover:opacity-70 transition-opacity">Export CSV</button>
+<button class="font-ui-sm text-ui-sm text-[#1A1A1A] font-medium hover:opacity-70 transition-opacity">Print Ledger</button>
+</div>
+<div class="flex items-center gap-4 text-[#C8860A] dark:text-[#E69B0D]">
+<button class="hover:text-[#1A1A1A] transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-[#1A1A1A] transition-colors"><span class="material-symbols-outlined">history</span></button>
+<button class="hover:text-[#1A1A1A] transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 lg:p-12 min-h-screen bg-page-bg flex flex-col items-center">
+<!-- Back Navigation -->
+<div class="w-full max-w-[210mm] mb-6 flex justify-start">
+<a class="flex items-center gap-2 font-ui-sm text-ui-sm text-text-light hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                Back to Invoices
+            </a>
+</div>
+<!-- A4 Document Wrapper -->
+<article class="bg-surface-container-lowest w-full max-w-[210mm] shadow-screenshot border-[0.5px] border-border-subtle p-10 lg:p-14 relative group">
+<!-- Document Header -->
+<header class="flex justify-between items-start border-b-[0.5px] border-border-subtle pb-8 mb-8">
+<div class="flex flex-col">
+<h2 class="font-display-lg text-display-lg text-on-surface font-semibold mb-2">ComplianceOS</h2>
+<p class="font-ui-sm text-ui-sm text-text-mid">14th Floor, Maker Chambers VI</p>
+<p class="font-ui-sm text-ui-sm text-text-mid">Nariman Point, Mumbai - 400021</p>
+<p class="font-ui-sm text-ui-sm text-text-mid mt-2"><span class="font-medium text-on-surface">GSTIN:</span> 27AAACC1234E1Z5</p>
+</div>
+<div class="text-right flex flex-col items-end">
+<h1 class="font-serif text-[32px] uppercase tracking-widest text-text-light mb-4">Tax Invoice</h1>
+<div class="grid grid-cols-2 gap-x-6 gap-y-2 text-left">
+<span class="font-ui-xs text-ui-xs text-text-light uppercase">Invoice No:</span>
+<span class="font-mono-md text-mono-md text-on-surface font-medium text-right">INV-24-089</span>
+<span class="font-ui-xs text-ui-xs text-text-light uppercase">Date:</span>
+<span class="font-mono-md text-mono-md text-on-surface text-right">24 Oct 2023</span>
+<span class="font-ui-xs text-ui-xs text-text-light uppercase">Due Date:</span>
+<span class="font-mono-md text-mono-md text-on-surface text-right">23 Nov 2023</span>
+</div>
+</div>
+</header>
+<!-- Bill To Section -->
+<section class="mb-10">
+<h3 class="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-3 border-b-[0.5px] border-border-subtle inline-block pb-1">Billed To</h3>
+<h4 class="font-ui-lg text-ui-lg font-medium text-on-surface">Reliance Industries Ltd.</h4>
+<p class="font-ui-sm text-ui-sm text-text-mid mt-1">Maker Chambers IV, 222 Nariman Point</p>
+<p class="font-ui-sm text-ui-sm text-text-mid">Mumbai, Maharashtra - 400021</p>
+<p class="font-ui-sm text-ui-sm text-text-mid mt-2"><span class="font-medium text-on-surface">GSTIN:</span> 27AAACA6873Q1Z2</p>
+<p class="font-ui-sm text-ui-sm text-text-mid"><span class="font-medium text-on-surface">Place of Supply:</span> Maharashtra (27)</p>
+</section>
+<!-- Line Items Table -->
+<section class="mb-10">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr>
+<th class="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-wide w-5/12">Description</th>
+<th class="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-wide w-2/12">HSN/SAC</th>
+<th class="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-wide text-right w-1/12">Qty</th>
+<th class="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-wide text-right w-2/12">Rate (₹)</th>
+<th class="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-wide text-right w-2/12">Amount (₹)</th>
+</tr>
+</thead>
+<tbody class="font-ui-sm text-ui-sm">
+<tr>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top pr-4">
+<span class="font-medium text-on-surface block">Enterprise Retainer - Q3</span>
+<span class="text-text-mid text-[13px] mt-1 block">Comprehensive financial advisory and compliance management for Q3 2023.</span>
+</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-text-mid">998311</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-on-surface text-right">1.00</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-on-surface text-right">1,25,000.00</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-on-surface text-right">1,25,000.00</td>
+</tr>
+<tr>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top pr-4">
+<span class="font-medium text-on-surface block">Tax Audit Assistance</span>
+<span class="text-text-mid text-[13px] mt-1 block">Preparation of preliminary schedules and representation.</span>
+</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-text-mid">998312</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-on-surface text-right">1.00</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-on-surface text-right">45,000.00</td>
+<td class="border-b-[0.5px] border-border-subtle py-4 align-top font-mono-md text-mono-md text-on-surface text-right">45,000.00</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- Tax & Totals Breakdown -->
+<section class="flex justify-end mb-12">
+<div class="w-1/2">
+<div class="flex justify-between py-2 border-b-[0.5px] border-border-subtle">
+<span class="font-ui-sm text-ui-sm text-text-mid">Subtotal</span>
+<span class="font-mono-md text-mono-md text-on-surface">₹ 1,70,000.00</span>
+</div>
+<div class="flex justify-between py-2 border-b-[0.5px] border-border-subtle">
+<span class="font-ui-sm text-ui-sm text-text-mid">CGST (9%)</span>
+<span class="font-mono-md text-mono-md text-on-surface">₹ 15,300.00</span>
+</div>
+<div class="flex justify-between py-2 border-b-[0.5px] border-border-subtle">
+<span class="font-ui-sm text-ui-sm text-text-mid">SGST (9%)</span>
+<span class="font-mono-md text-mono-md text-on-surface">₹ 15,300.00</span>
+</div>
+<div class="flex justify-between py-4 border-b-2 border-primary-container mt-2">
+<span class="font-ui-lg text-ui-lg font-medium text-on-surface uppercase tracking-wide">Grand Total</span>
+<span class="font-mono-lg text-mono-lg font-medium text-primary-container">₹ 2,00,600.00</span>
+</div>
+<div class="text-right mt-2">
+<span class="font-ui-xs text-ui-xs text-text-light italic">Rupees Two Lakh Six Hundred Only.</span>
+</div>
+</div>
+</section>
+<!-- Footer: Bank Details & T&C -->
+<footer class="flex justify-between items-end border-t-[0.5px] border-border-subtle pt-8">
+<div class="w-2/3 pr-8">
+<h5 class="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-2">Bank Details</h5>
+<div class="grid grid-cols-[100px_1fr] gap-1 font-ui-sm text-ui-sm text-on-surface">
+<span class="text-text-mid">Bank:</span> <span>HDFC Bank, Fort Branch</span>
+<span class="text-text-mid">Account Name:</span> <span>ComplianceOS Solutions</span>
+<span class="text-text-mid">Account No:</span> <span class="font-mono-md text-mono-md">50200012345678</span>
+<span class="text-text-mid">IFSC Code:</span> <span class="font-mono-md text-mono-md">HDFC0000060</span>
+</div>
+<div class="mt-6">
+<h5 class="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-1">Terms &amp; Conditions</h5>
+<ol class="list-decimal list-inside font-ui-xs text-[11px] text-text-light leading-relaxed">
+<li>Payment is due within 30 days of the invoice date.</li>
+<li>Late payments will incur an interest of 1.5% per month.</li>
+<li>Subject to Mumbai jurisdiction.</li>
+</ol>
+</div>
+</div>
+<div class="w-1/3 flex flex-col items-center">
+<div class="h-16 w-32 border-b-[0.5px] border-border-subtle mb-2"></div>
+<span class="font-ui-xs text-ui-xs text-text-mid text-center block w-full">Authorized Signatory<br/>ComplianceOS</span>
+</div>
+</footer>
+</article>
+<!-- Action Buttons -->
+<div class="w-full max-w-[210mm] mt-8 flex justify-end gap-4 mb-16">
+<button class="px-5 py-2.5 rounded-[0.125rem] border-[0.5px] border-on-surface text-on-surface font-ui-sm text-ui-sm font-medium hover:bg-section-muted transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+                Edit
+            </button>
+<button class="px-5 py-2.5 rounded-[0.125rem] border-[0.5px] border-on-surface text-on-surface font-ui-sm text-ui-sm font-medium hover:bg-section-muted transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                Mark as Paid
+            </button>
+<button class="px-5 py-2.5 rounded-[0.125rem] border-[0.5px] border-on-surface text-on-surface font-ui-sm text-ui-sm font-medium hover:bg-section-muted transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                Download PDF
+            </button>
+<button class="px-6 py-2.5 rounded-[0.125rem] bg-primary-container text-on-primary font-ui-sm text-ui-sm font-medium hover:bg-surface-tint transition-colors flex items-center gap-2 group">
+                Send
+                <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</main>
+</body></html>

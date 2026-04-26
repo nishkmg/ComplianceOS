@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@400;500;600;700;800&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "error": "#ba1a1a",
+                  "outline-variant": "#d6c4af",
+                  "text-light": "#888888",
+                  "tertiary-container": "#309bdb",
+                  "on-secondary-container": "#636262",
+                  "on-surface-variant": "#514535",
+                  "surface": "#fff8f4",
+                  "on-tertiary-fixed-variant": "#004b70",
+                  "on-error-container": "#93000a",
+                  "page-bg": "#FAFAF8",
+                  "secondary-container": "#e2dfde",
+                  "primary": "#825500",
+                  "surface-container-high": "#f3e6d9",
+                  "surface-bright": "#fff8f4",
+                  "on-tertiary-fixed": "#001e30",
+                  "primary-fixed-dim": "#ffb950",
+                  "border-subtle": "#E8E4DC",
+                  "secondary-fixed-dim": "#c8c6c5",
+                  "section-amber": "rgba(200, 134, 10, 0.06)",
+                  "on-secondary-fixed": "#1c1b1b",
+                  "outline": "#847563",
+                  "surface-container-lowest": "#ffffff",
+                  "surface-dim": "#e5d8cb",
+                  "tertiary-fixed-dim": "#8ecdff",
+                  "on-error": "#ffffff",
+                  "inverse-primary": "#ffb950",
+                  "background": "#fff8f4",
+                  "on-background": "#211b13",
+                  "surface-container-highest": "#ede0d3",
+                  "secondary": "#5f5e5e",
+                  "primary-fixed": "#ffddb3",
+                  "surface-container": "#f9ecde",
+                  "error-container": "#ffdad6",
+                  "amber-text": "#B47500",
+                  "on-surface": "#211b13",
+                  "surface-variant": "#ede0d3",
+                  "on-secondary": "#ffffff",
+                  "section-dark": "#111111",
+                  "on-primary-fixed": "#291800",
+                  "surface-tint": "#825500",
+                  "on-primary-fixed-variant": "#633f00",
+                  "on-tertiary": "#ffffff",
+                  "tertiary": "#006494",
+                  "section-muted": "#F4F2EE",
+                  "on-primary-container": "#3f2700",
+                  "text-mid": "#555555",
+                  "inverse-surface": "#362f27",
+                  "on-secondary-fixed-variant": "#474746",
+                  "on-primary": "#ffffff",
+                  "tertiary-fixed": "#cae6ff",
+                  "inverse-on-surface": "#fcefe1",
+                  "secondary-fixed": "#e5e2e1",
+                  "on-tertiary-container": "#002f49",
+                  "surface-container-low": "#fff1e4",
+                  "primary-container": "#c8860a"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.125rem",
+                  "lg": "0.25rem",
+                  "xl": "0.5rem",
+                  "full": "0.75rem"
+          },
+          "spacing": {
+                  "space-64": "64px",
+                  "space-96": "96px",
+                  "gutter-desktop": "24px",
+                  "space-48": "48px",
+                  "space-128": "128px",
+                  "margin-mobile": "16px",
+                  "gutter-wide": "32px"
+          },
+          "fontFamily": {
+                  "ui-md": ["Syne"],
+                  "ui-sm": ["Syne"],
+                  "marketing-hero": ["Playfair Display"],
+                  "display-lg": ["Playfair Display"],
+                  "ui-xs": ["Syne"],
+                  "ui-lg": ["Syne"],
+                  "display-xl": ["Playfair Display"],
+                  "mono-md": ["DM Mono"],
+                  "mono-lg": ["DM Mono"],
+                  "marketing-xl": ["Playfair Display"]
+          },
+          "fontSize": {
+                  "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                  "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                  "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                  "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                  "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                  "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                  "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                  "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                  "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                  "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .shadow-screenshot {
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+    }
+    .shadow-card {
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+    }
+    .amber-underline-hover:hover {
+      text-decoration: underline;
+      text-decoration-color: #C8860A;
+      text-underline-offset: 4px;
+    }
+  </style>
+</head>
+<body class="bg-page-bg text-on-background font-ui-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="sticky top-0 w-full z-50 bg-[#F4F2EE]/90 dark:bg-stone-950/90 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1320px] mx-auto">
+<div class="text-2xl font-bold font-serif text-stone-900 dark:text-stone-50">ComplianceOS</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Features</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Pricing</a>
+<a class="text-[#C8860A] font-bold border-b-2 border-[#C8860A] pb-1 hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">About Us</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Resources</a>
+</div>
+<button class="bg-[#C8860A] text-white px-6 py-2.5 font-ui-sm font-semibold tracking-tight hover:translate-x-1 transition-transform">
+        Start Free →
+      </button>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="pt-space-128 pb-space-96 px-8 max-w-[1320px] mx-auto">
+<div class="max-w-[900px]">
+<span class="font-ui-xs text-amber-text uppercase mb-6 block">Our Genesis</span>
+<h1 class="font-marketing-hero text-marketing-hero text-on-background mb-12">
+          We built the accounting software we wish existed when we started our businesses.
+        </h1>
+<div class="h-1 w-24 bg-primary mb-12"></div>
+</div>
+<div class="w-full h-[500px] overflow-hidden">
+<img alt="modern minimalist office workspace in India with natural light streaming through large windows onto clean desk surfaces" class="w-full h-full object-cover grayscale opacity-90 shadow-screenshot" data-alt="Modern minimalist office workspace in India with natural light streaming through large windows onto clean desk surfaces, editorial aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIgSsEfWdfd4aXlIBX6IhQrjXX9LN1LV9otOY_Kkh-EcxlnbV5LmIgU7dwF_BFo-O9-Z71wBGsHOkYSDmAkO8FyNKZFfmzh3YbUTIBg5XKLpP07ebp6dRibypt3SEcLsiUhmHdQW39mglK6uoGowk1zK96djCexPfDV66H6mtYiQ9i4yAgKN-OCuoybYfu9vpdkLhaixaVOS8pOWdsuUVgxFIIdrRycgEJCf1-Ch_2TW6o6RyVwyhWVLh7O-Vjse0n_KRRDMgFioc"/>
+</div>
+</section>
+<!-- Problem Section -->
+<section class="py-space-96 px-8 bg-section-muted">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
+<div>
+<h2 class="font-display-xl text-display-xl text-on-background mb-8">The compliance gap in India’s digital era.</h2>
+</div>
+<div class="space-y-8 font-ui-md text-ui-md text-on-surface-variant">
+<p>
+            For years, Indian entrepreneurs have been forced to choose between legacy software that feels like it was designed in the 1990s or global platforms that don't understand the nuances of GST, TDS, and the complexities of the Indian fiscal year.
+          </p>
+<p>
+            We saw founders spending more time in spreadsheets than in their products. We saw CAs frustrated by fragmented data and manual reconciliations. The system wasn't just broken; it was indifferent to the speed at which modern Indian business moves.
+          </p>
+<p>
+            ComplianceOS was born in a small office in Bengaluru out of this frustration. We didn't want to build just another tool. We wanted to build a financial operating system that respects the precision of Indian accounting while delivering the utility of modern software.
+          </p>
+</div>
+</div>
+</section>
+<!-- Values Section (Bento Style) -->
+<section class="py-space-128 px-8 max-w-[1320px] mx-auto">
+<div class="text-center mb-16">
+<span class="font-ui-xs text-amber-text uppercase">Our Product Beliefs</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-0.5 bg-border-subtle border-[0.5px] border-border-subtle">
+<div class="bg-page-bg p-12 flex flex-col justify-center min-h-[350px]">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="numbers">numbers</span>
+<blockquote class="font-display-lg text-display-lg italic leading-tight text-on-background">
+            "Indian numbering is not a locale option. It is the default."
+          </blockquote>
+</div>
+<div class="bg-page-bg p-12 flex flex-col justify-center min-h-[350px] border-l-[0.5px] border-border-subtle">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="verified_user">verified_user</span>
+<blockquote class="font-display-lg text-display-lg italic leading-tight text-on-background">
+            "Compliance is not a quarterly panic; it is a daily silent pulse."
+          </blockquote>
+</div>
+<div class="bg-page-bg p-12 flex flex-col justify-center min-h-[350px] border-l-[0.5px] border-border-subtle">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="edit_note">edit_note</span>
+<blockquote class="font-display-lg text-display-lg italic leading-tight text-on-background">
+            "Every ledger entry should tell a story, not just fill a row."
+          </blockquote>
+</div>
+</div>
+</section>
+<!-- Team Section -->
+<section class="py-space-128 px-8 bg-section-amber">
+<div class="max-w-[1200px] mx-auto">
+<div class="mb-16">
+<h2 class="font-marketing-xl text-marketing-xl text-on-background">The Architects.</h2>
+<p class="font-ui-lg text-ui-lg text-on-surface-variant max-w-[600px] mt-4">Founded by a team of accountants, engineers, and product designers who believe Indian finance deserves better design.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<!-- Founder 1 -->
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary p-8 shadow-card group hover:shadow-screenshot transition-all">
+<div class="aspect-square mb-8 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<img alt="portrait of a professional Indian male founder in a smart casual blazer against a neutral architectural background" class="w-full h-full object-cover" data-alt="Portrait of a professional Indian male founder in a smart casual blazer against a neutral architectural background, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLmI4VTtQbrX_2nxNV0an3o_kY-CXKNVYzJvIF_aMuogDpjFrpLUh_XIKJfzra3aFTxlS7QdA-1fxA38e_3oIc7HB6Q58rP54hiYbY7JUcqSrngEDBGfRSdGt11NI6B0DF1zCfx_KBrTDIXDJdVzV1mHU7OHPUnNU1gcHJZmwmOrN26Open273UcGlBW2cUirOpuAd6oPHZS5FmlqkAFCCTnTE5YXvUpktguYsWKwZlNTMv2p0SEXlM491vxjjGFpl1doxe-F4u-Y"/>
+</div>
+<h3 class="font-ui-lg text-ui-lg font-bold text-on-background">Arjun Mehta</h3>
+<p class="font-ui-xs text-amber-text uppercase mb-4">CEO &amp; Co-Founder</p>
+<p class="font-ui-sm text-on-surface-variant">
+              Former Chartered Accountant at a Big 4 firm. Arjun spent a decade watching Indian SMEs struggle with manual GST filings before deciding to build the solution.
+            </p>
+</div>
+<!-- Founder 2 -->
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary p-8 shadow-card group hover:shadow-screenshot transition-all">
+<div class="aspect-square mb-8 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<img alt="portrait of a professional Indian female co-founder with a confident expression in a modern office setting" class="w-full h-full object-cover" data-alt="Portrait of a professional Indian female co-founder with a confident expression in a modern office setting, professional editorial photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNBsicr4W5QYGDBU0zs6IhFsAZ_uco29WaCqgxP3lLD-q0-kGOmorfDOqPuLhsJJHvVZ8U2U_4lPdpIEuPrWCkZ_3sBmT5sF3RdLA_qmm8caS5S_-fXwpKsMRbLzkmujkWdqKpc3k0k2DiYywsYaIhh9y7f-QteRZKYG_AgNtM4RgIhJ9qmWm6Xg40_4obnyXl87dx00Ah0uI8-mT8TJtv9DeLsn89xb5LynYPSnS7Y_ytfBI61Et-3SBYclXfKxqVCkuH19OeKws"/>
+</div>
+<h3 class="font-ui-lg text-ui-lg font-bold text-on-background">Priya Sharma</h3>
+<p class="font-ui-xs text-amber-text uppercase mb-4">CTO &amp; Co-Founder</p>
+<p class="font-ui-sm text-on-surface-variant">
+              Previously an engineering lead at a major fintech unicorn. Priya is obsessed with data integrity and building high-concurrency systems for the Indian market.
+            </p>
+</div>
+<!-- Founder 3 -->
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary p-8 shadow-card group hover:shadow-screenshot transition-all">
+<div class="aspect-square mb-8 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<img alt="portrait of an Indian male product design leader in a creative studio environment" class="w-full h-full object-cover" data-alt="Portrait of an Indian male product design leader in a creative studio environment, authentic and warm professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5V91btwpBgrDQALvdjR6kjvcNc6NwvgXzPtXP0I-OFftjAQhyAb4fBVLWZR8s-7bGQcn2YFmyashCqQfs2g_9sB8up4ovKWtk-jMAs9K6KEJ8kxr8rbWCXWjEmNLU05ESn0QuQcU8sFqEiRuv-sxj2uyzfBl5rKLWLjwb0jaHKKMxUpx8P3YbPIs6rJ3P8ansHuk5NJJKpiMdQzBCAI2sTmWetztdiQ8Ep6VxthnWzJli23DzLv7sAwYLDUR75LuGBPpL5Nvm9Ik"/>
+</div>
+<h3 class="font-ui-lg text-ui-lg font-bold text-on-background">Rohan Das</h3>
+<p class="font-ui-xs text-amber-text uppercase mb-4">Head of Design</p>
+<p class="font-ui-sm text-on-surface-variant">
+              Rohan believes that accounting software should be as beautiful as a fine-press book. He leads our 'Editorial Utility' design philosophy.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-space-128 px-8 text-center border-t-[0.5px] border-border-subtle">
+<div class="max-w-[700px] mx-auto">
+<h2 class="font-display-xl text-display-xl mb-8">Join the new era of Indian compliance.</h2>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<button class="bg-[#C8860A] text-white px-8 py-4 font-ui-md font-semibold hover:translate-x-1 transition-transform">
+            Get Started for Free →
+          </button>
+<button class="border-[0.5px] border-stone-900 px-8 py-4 font-ui-md font-semibold hover:bg-stone-900 hover:text-white transition-all">
+            Book a Demo
+          </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#F4F2EE] dark:bg-stone-900 w-full py-24 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 max-w-[1200px] mx-auto px-8">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-serif text-stone-900 dark:text-stone-50 mb-6">ComplianceOS</div>
+<p class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400">
+          © 2024 ComplianceOS. Precision in Indian Accounting.
+        </p>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-['Syne'] text-xs uppercase tracking-widest text-[#C8860A] font-bold">Resources</span>
+<a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all amber-underline-hover" href="#">Compliance Guide</a>
+<a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all amber-underline-hover" href="#">GST Tools</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-['Syne'] text-xs uppercase tracking-widest text-[#C8860A] font-bold">Legal</span>
+<a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all amber-underline-hover" href="#">Privacy Policy</a>
+<a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all amber-underline-hover" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-['Syne'] text-xs uppercase tracking-widest text-[#C8860A] font-bold">Contact</span>
+<a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all amber-underline-hover" href="#">Contact Support</a>
+<div class="flex gap-4 mt-2">
+<span class="material-symbols-outlined text-stone-400" data-icon="share">share</span>
+<span class="material-symbols-outlined text-stone-400" data-icon="mail">mail</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
