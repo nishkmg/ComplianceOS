@@ -1,342 +1,283 @@
 // @ts-nocheck
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
-import { SectionLabel } from '@/components/marketing/section-label';
-import { FeatureCard } from '@/components/marketing/feature-card';
-import { TestimonialCard } from '@/components/marketing/testimonial-card';
 
-/* ─── Intersection Observer Hook ───────────────────────────── */
-function useScrollIn(threshold = 0.15) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }
-      },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return ref;
-}
-
-/* ─── Benefit Card Data ────────────────────────────────────── */
 const benefits = [
-  {
-    icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>,
-    headline: 'Books that balance themselves',
-    description: 'Every journal entry is double-entry by construction. Posting is blocked until debits equal credits — the UI enforces what your accountant has always manually checked.',
-  },
-  {
-    icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
-    headline: 'GST done without a CA on call',
-    description: 'GSTR-1, GSTR-2B, and GSTR-3B generated from your own entries. ITC reconciliation built in. File the return yourself — record the ARN, done.',
-  },
-  {
-    icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
-    headline: 'Reports that look like reports',
-    description: 'P&L and Balance Sheet in Schedule III format, typeset for print. Send to your CA or a bank directly from the browser — no export, no reformatting.',
-  },
-  {
-    icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-    headline: 'Indian numbers, everywhere',
-    description: '₹12,45,000 — not ₹1,245,000. Every amount in the Indian numbering system, every time. This is the only accounting software that gets this right without a plugin.',
-  },
-  {
-    icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
-    headline: 'One FY closes, the next one opens',
-    description: 'Apr–Mar fiscal years built in from day one. Two concurrent open FYs for year-end transitions. No "financial year workaround" required.',
-  },
+  { icon: 'account_balance', title: 'Books balance', desc: 'Automated double-entry reconciliation that actually adds up to zero.' },
+  { icon: 'description', title: 'GST done', desc: 'One-click GSTR filing with auto-matching for ITC claims.' },
+  { icon: 'analytics', title: 'Reports look like reports', desc: 'Print-ready financial statements formatted for Indian bank compliance.' },
+  { icon: 'pin', title: 'Indian numbers', desc: 'Native support for lakhs, crores, and the Indian comma system.' },
+  { icon: 'event_available', title: 'FY closes', desc: 'Seamless financial year transition with zero data loss or duplication.' },
 ];
 
 const modules = [
-  { href: '/features/accounting', name: 'Accounting', desc: 'Double-entry ledger, chart of accounts, trial balance, P&L, balance sheet — built for Schedule III and beyond.' },
-  { href: '/features/gst', name: 'GST Returns', desc: 'GSTR-1, GSTR-2B, GSTR-3B generated from your entries. ITC reconciliation with auto-match.' },
-  { href: '/features/invoicing', name: 'Invoicing', desc: 'GST-compliant invoices with automatic tax calculation. Post to your books with one click.' },
-  { href: '/features/payroll', name: 'Payroll', desc: 'PF, ESI, PT, TDS — all statutory components calculated automatically. Payslips self-serve.' },
-  { href: '/features/itr', name: 'ITR Returns', desc: 'From P&L to tax computation to self-assessment. Old vs new regime comparison built in.' },
+  {
+    title: 'Accounting & Ledger Management',
+    desc: 'Maintain a crystal clear audit trail. From journal entries to ledger balancing, ComplianceOS ensures every rupee is accounted for with physical-ledger accuracy.',
+    features: ['Real-time double entry validation', 'Multi-entity consolidation'],
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDNXThbfELK5AhC0elKySL96OfB0dLGfwyxGnnLZs1_nZ7U5c0p-NpwSJyUIvu9EKLzGNRiG3daLtJ0zK7oN9CxjuI42_nIVnWTCquOkvJuXptM02rZcx4WmTXTV9hqR3h6J5FloUHtDeLhxTWh5kmgmhYCePfZh_v-KcPERqunSW46wE_ymY0LpX6j4gzIf-YWAPNJHS_O1egKCXtW3xdfdielPbDB7FrNLi84ia40FNOrVP9Q1j8PBD1O_WZNkES4LdvVd4c7_g8',
+  },
+  {
+    title: 'GST Compliance & Filing',
+    desc: 'Never fear an audit again. Our GST module handles HSN/SAC codes, auto-calculates SGST/CGST/IGST, and generates JSON files ready for the GST portal.',
+    features: ['Auto-matched GSTR-2B reconciliation', 'E-way bill integration'],
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGQFVxictEH7e8HWK8fhANk-4yHxrtDwhrPwGEDHXQRUYzmIeudBS_Pxro_eZIsTRbus8j22Fm2llDuZ_fJ9FFt7Ov4OXtD1hGTmYb-Qx38CO3GZk5DXnGZ93n1p8WzSRWoO5xfN7IuJ372_IcfDAmthlZrqToD7KxC8AMU4hD51U91S63vcB4zZDXZjSstz8xvhvIFzN5kcgMft6xPOP-eTM6Og7LmUGdyQOA8pK-Gi4Pi44dWqFtOaX7LE4r6gyyCnIGPORBwmU',
+  },
+  {
+    title: 'Smart Invoicing',
+    desc: 'Create professional, GST-compliant invoices in seconds. Manage receivables with automated payment reminders and multi-currency support.',
+    features: [],
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsuB9Zh-ox2KgNp0CyfUm1KQBs0eHJV0hvhWaLMxjmRYszXz2pUuf37iACp7H6qDyVnDJBxNwzrzf0SmocsoxBOM59B2prhc6FXQq-rWWYUaPaPPv7AP5vLT8aQPpZf_thoyrob4pGiENuH7BII6wpJHzQDceyc0QHfRH7do6S4UoNpeqeILFqmtOzOp3VF5I35e9Y_IWLC0j7eXrCCCCIm0Co79-Ks7zjKt8-gMOyAwHgmypzYqzGAzV046yeYpWz5lvn-Fm1DYc',
+  },
 ];
 
 const testimonials = [
   {
-    quote: 'The P&L actually looks like a P&L — not like a software printout. My CA was surprised I generated it myself.',
+    quote: '"ComplianceOS is the first tool that understands how Indian businesses actually operate. The GST reconciliation alone saves our team 20 hours a week."',
+    name: 'Arjun Mehta',
+    role: 'CEO, Bharat Logistics',
+  },
+  {
+    quote: '"As a CA, I recommend ComplianceOS to all my clients. The audit trails are bulletproof and the reporting format is exactly what banks need."',
     name: 'Priya Sharma',
-    role: 'Proprietor, Sharma Garments',
-    location: 'Mumbai',
-  },
-  {
-    quote: 'We moved from Tally last quarter. The GST reconciliation alone saved us a week of accountant time every month.',
-    name: 'Rahul Verma',
-    role: 'Partner, Verma & Sons Trading',
-    location: 'Delhi',
-  },
-  {
-    quote: 'The Indian numbering everywhere is such a relief. No more explaining to international software why we use lakhs.',
-    name: 'Anita Desai',
-    role: 'CFO, Desai Manufacturing Pvt. Ltd.',
-    location: 'Pune',
+    role: 'Senior Partner, Sharma & Co.',
   },
 ];
 
-/* ─── Demo Tabs ──────────────────────────────────────────── */
-const demoTabs = ['Dashboard', 'New Entry', 'P&L Report', 'GST Return'];
-
 export default function HomePage() {
-  const [demoIndex, setDemoIndex] = useState(0);
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
-  const testimonialTimer = useRef(null);
-
-  const heroRef = useScrollIn(0.1);
-  const benefitsRef = useScrollIn(0.1);
-  const demoRef = useScrollIn(0.1);
-  const modulesRef = useScrollIn(0.1);
-  const ctaRef = useScrollIn(0.1);
-
-  /* Auto-advance testimonials */
-  useEffect(() => {
-    testimonialTimer.current = setInterval(() => {
-      setTestimonialIndex((i) => (i + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(testimonialTimer.current);
-  }, []);
+  const [demoTab, setDemoTab] = useState(0);
+  const demoTabs = ['Dashboard', 'New Entry', 'P&L', 'GST'];
 
   return (
-    <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="bg-page-bg min-h-screen font-['Syne']">
       <MarketingNav />
 
-      <main id="main-content">
-        {/* ═══ 3.1 Hero Section ═══ */}
-        <section ref={heroRef} className="animate-in py-32 md:py-40">
-          <div className="marketing-container">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <div>
-                <SectionLabel>Built for Indian Business</SectionLabel>
-                <h1 className="font-display font-normal text-dark leading-[1.1] mb-6" style={{ fontSize: 'var(--marketing-hero)' }}>
-                  The accounting software<br className="hidden lg:block" />
-                  that thinks in lakhs,<br className="hidden lg:block" />
-                  not thousands.
-                </h1>
-                <p className="font-ui text-[14px] md:text-[16px] text-mid leading-relaxed max-w-[560px] mb-8">
-                  Double-entry books, GST returns, payroll and ITR — fully connected, built from scratch for how Indian businesses actually work.
-                </p>
-                <div className="flex flex-wrap gap-3 mb-6">
-                  <Link href="/signup" className="marketing-btn-primary text-[16px] px-7 py-3.5 no-underline">
-                    Start free <span className="cta-arrow">→</span>
-                  </Link>
-                  <Link href="/features" className="inline-flex items-center gap-2 px-6 py-3.5 font-ui text-[16px] font-medium text-dark border border-dark rounded-md hover:bg-section-muted transition-colors no-underline">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 12 12"><polygon points="3,2 10,6 3,10" /></svg>
-                    Watch demo
-                  </Link>
-                </div>
-                <p className="font-ui text-[13px] text-light">
-                  Free to start<span className="mx-2">·</span>No credit card<span className="mx-2">·</span>Indian FY Apr–Mar
-                </p>
-              </div>
-              <div className="rounded-2xl shadow-screenshot overflow-hidden bg-surface border border-border">
-                <div className="bg-section-muted px-4 py-2 flex items-center gap-2 border-b border-border">
-                  <div className="w-3 h-3 rounded-full bg-danger" />
-                  <div className="w-3 h-3 rounded-full bg-amber" />
-                  <div className="w-3 h-3 rounded-full bg-success" />
-                  <span className="ml-4 font-ui text-[12px] text-light">app.complianceos.in</span>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <div className="font-ui text-[11px] text-light uppercase tracking-wider mb-1">Active Fiscal Year</div>
-                      <div className="font-mono text-[13px] text-amber font-medium">FY 2026-27</div>
-                    </div>
-                    <div className="font-ui text-[11px] text-light">Good morning, Mehta Textiles</div>
-                  </div>
-                  <div className="grid grid-cols-4 gap-3">
-                    {[
-                      { label: 'Revenue (MTD)', value: '₹12,45,000', color: 'text-amber' },
-                      { label: 'Expenses (MTD)', value: '₹8,45,200', color: 'text-danger' },
-                      { label: 'Net Profit (MTD)', value: '₹3,99,800', color: 'text-success' },
-                      { label: 'Cash Balance', value: '₹24,50,000', color: 'text-dark' },
-                    ].map((kpi) => (
-                      <div key={kpi.label} className="border border-border rounded-md p-3 border-t-2 border-t-amber">
-                        <div className="font-ui text-[10px] text-light uppercase tracking-wider mb-1">{kpi.label}</div>
-                        <div className={`font-mono text-[14px] font-medium ${kpi.color}`}>{kpi.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ 3.3 Core Benefits ═══ */}
-        <section ref={benefitsRef} className="animate-in py-24 md:py-32">
-          <div className="marketing-container">
-            <div className="text-center mb-16">
-              <SectionLabel>Why ComplianceOS</SectionLabel>
-              <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2]">
-                Everything an Indian business needs,<br />in one place that actually works.
-              </h2>
-            </div>
-            <div className="animate-stagger grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {benefits.map((b, i) => (
-                <div key={i} className={`animate-in ${i >= 3 ? 'lg:col-span-1 lg:max-w-[400px] lg:mx-auto' : ''}`}>
-                  <FeatureCard icon={b.icon} headline={b.headline} description={b.description} href={`/features/${b.headline.toLowerCase().includes('gst') ? 'gst' : b.headline.toLowerCase().includes('book') || b.headline.toLowerCase().includes('report') || b.headline.toLowerCase().includes('indian') || b.headline.toLowerCase().includes('fy') ? 'accounting' : 'accounting'}`} />
-                </div>
-              ))}
-            </div>
-            <div className="text-center mt-10">
-              <Link href="/features" className="font-ui text-[15px] font-medium text-amber-text hover:underline no-underline">
-                See all features <span className="cta-arrow">→</span>
+      {/* ═══ Hero Section ═══ */}
+      <header className="pt-[128px] pb-[96px] px-8" style={{ maxWidth: '1320px', margin: '0 auto' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div style={{ maxWidth: '576px' }}>
+            <span className="text-[12px] font-[500] text-amber-text uppercase mb-6 block" style={{ letterSpacing: '0.2em' }}>
+              Made for India
+            </span>
+            <h1 className="font-display leading-[1.1] font-[400] text-dark mb-8" style={{ fontSize: 'var(--marketing-hero)' }}>
+              The accounting software that thinks in lakhs, not thousands.
+            </h1>
+            <p className="text-[18px] leading-[1.5] font-[400] text-mid mb-10" style={{ maxWidth: '512px' }}>
+              Rigorous accounting precision built specifically for Indian fiscal realities. GST, Payroll, and Audit trails that CAs actually trust.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-4 bg-amber text-white font-ui font-bold uppercase no-underline group text-[14px] tracking-widest hover:opacity-90 transition-all">
+                Get Started Today <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+              <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4 border border-dark text-dark font-ui font-bold uppercase no-underline text-[14px] tracking-widest hover:bg-dark hover:text-white transition-all">
+                Book a Demo
               </Link>
             </div>
           </div>
-        </section>
-
-        {/* ═══ 3.4 Product Demo Section ═══ */}
-        <section ref={demoRef} className="animate-in bg-dark text-white py-24 md:py-32">
-          <div className="marketing-container">
-            <div className="text-center mb-12">
-              <SectionLabel>THE PRODUCT</SectionLabel>
-              <h2 className="font-display text-[28px] md:text-[38px] font-normal text-white leading-[1.2]">
-                See a journal entry posted<br />in under 10 seconds.
-              </h2>
+          <div className="relative">
+            <div className="shadow-screenshot border-[0.5px] border-border-subtle overflow-hidden" style={{ filter: 'grayscale(0.2) contrast(1.05)' }}>
+              <div className="bg-[#F4F2EE] px-4 py-3 flex items-center gap-2 border-b border-border-subtle">
+                <div className="w-3 h-3 rounded-full bg-[#ba1a1a]" />
+                <div className="w-3 h-3 rounded-full bg-[#C8860A]" />
+                <div className="w-3 h-3 rounded-full bg-[#16A34A]" />
+                <span className="ml-4 text-[12px] text-light">app.complianceos.in</span>
+              </div>
+              <div className="p-6 bg-white">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <div className="text-[10px] text-light uppercase tracking-wider mb-1">Active Fiscal Year</div>
+                    <div className="font-mono text-[13px] text-amber font-medium">FY 2026-27</div>
+                  </div>
+                  <div className="text-[11px] text-light">Good morning, Mehta Textiles</div>
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {[
+                    { label: 'Revenue (MTD)', value: '₹12,45,000', color: 'text-amber' },
+                    { label: 'Expenses (MTD)', value: '₹8,45,200', color: 'text-[#ba1a1a]' },
+                    { label: 'Net Profit (MTD)', value: '₹3,99,800', color: 'text-[#16A34A]' },
+                    { label: 'Cash Balance', value: '₹24,50,000', color: 'text-dark' },
+                  ].map((kpi) => (
+                    <div key={kpi.label} className="border border-border-subtle rounded-md p-3 border-t-2 border-t-[#C8860A]">
+                      <div className="text-[10px] text-light uppercase tracking-wider mb-1">{kpi.label}</div>
+                      <div className={`font-mono text-[14px] font-medium ${kpi.color}`}>{kpi.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-2 mb-10">
+          </div>
+        </div>
+      </header>
+
+      {/* ═══ Social Proof ═══ */}
+      <section className="bg-section-muted py-16 border-y border-border-subtle">
+        <div className="px-8" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <p className="text-[12px] text-center text-light uppercase tracking-widest mb-10" style={{ fontWeight: 500 }}>
+            Trusted by India's leading firms &amp; CAs
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-16 opacity-60" style={{ filter: 'contrast(1.25)' }}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-8 w-24 bg-section-muted border border-border-subtle flex items-center justify-center text-[12px] text-light">
+                LOGO {i + 1}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Core Benefits ═══ */}
+      <section className="py-[128px] px-8" style={{ maxWidth: '1320px', margin: '0 auto' }}>
+        <div className="mb-16">
+          <span className="text-[12px] font-medium text-amber-text uppercase tracking-widest">Built for precision</span>
+          <h2 className="font-display text-[38px] leading-[1.2] font-[400] text-dark mt-4" style={{ maxWidth: '544px' }}>
+            Ledger-first design for the modern Indian enterprise.
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {benefits.map((b) => (
+            <div key={b.title} className="bg-surface p-8 border border-border-subtle border-t-2" style={{ borderTopColor: '#C8860A' }}>
+              <div className="text-amber mb-6 text-2xl" aria-hidden="true">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                </svg>
+              </div>
+              <h3 className="font-ui text-[15px] font-bold text-dark mb-4">{b.title}</h3>
+              <p className="font-ui text-[14px] text-mid leading-relaxed">{b.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ Product Demo ═══ */}
+      <section className="bg-[#111111] py-[128px] overflow-hidden">
+        <div className="px-8" style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          <div className="text-center mb-16">
+            <h2 className="font-display text-[38px] leading-[1.2] font-[400] text-white mb-6">Experience the precision.</h2>
+            <div className="flex justify-center gap-8 border-b border-white/10">
               {demoTabs.map((tab, i) => (
                 <button
                   key={tab}
-                  onClick={() => setDemoIndex(i)}
-                  className={`px-4 py-2 font-ui text-[14px] rounded-md transition-colors cursor-pointer border ${
-                    i === demoIndex
-                      ? 'bg-amber/10 text-amber border-amber'
-                      : 'text-light bg-transparent border-transparent hover:text-white'
+                  onClick={() => setDemoTab(i)}
+                  className={`pb-4 text-[14px] font-ui px-4 transition-colors cursor-pointer bg-transparent border-none ${
+                    i === demoTab
+                      ? 'text-white border-b-2 border-[#C8860A]'
+                      : 'text-stone-500 hover:text-stone-300 border-b-2 border-transparent'
                   }`}
                 >
                   {tab}
                 </button>
               ))}
             </div>
-            <div className="rounded-2xl shadow-screenshot overflow-hidden bg-surface max-w-4xl mx-auto">
-              <div className="bg-section-muted px-4 py-2 flex items-center gap-2 border-b border-border">
-                <div className="w-3 h-3 rounded-full bg-danger" />
-                <div className="w-3 h-3 rounded-full bg-amber" />
-                <div className="w-3 h-3 rounded-full bg-success" />
-                <span className="ml-4 font-ui text-[12px] text-light">app.complianceos.in</span>
-              </div>
-              <div className="p-8 min-h-[280px] flex items-center justify-center text-dark">
-                <div className="text-center">
-                  <div className="font-display text-display-lg text-dark mb-2">
-                    {['Dashboard overview with real-time KPIs', 'Journal entry with balance bar', 'Schedule III P&L report', 'GSTR-3B summary'][demoIndex]}
+          </div>
+          <div className="relative" style={{ maxWidth: '1024px', margin: '0 auto' }}>
+            <div className="bg-[#1A1A1A] rounded-lg border border-white/10 p-2 shadow-2xl">
+              <div className="rounded-md opacity-90 min-h-[300px] flex items-center justify-center bg-[#222] text-light font-ui">
+                <div className="text-center p-8">
+                  <div className="text-white text-[20px] font-display mb-4">
+                    {['Dashboard overview with real-time KPIs', 'Journal entry with balance bar', 'Schedule III P&L report', 'GSTR-3B summary'][demoTab]}
                   </div>
-                  <p className="font-ui text-ui-md text-light">
+                  <p className="text-[14px]">
                     {['Revenue, expenses, net profit — all in Indian numbering format.',
                       'Double-entry enforced. Post blocked until balance hits ₹0.00.',
                       'Typeset for print. Send directly to your CA.',
-                      'Auto-populated from your entries. Enter ARN, done.'][demoIndex]}
+                      'Auto-populated from your entries. Enter ARN, done.'][demoTab]}
                   </p>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ═══ 3.5 Feature Grid ═══ */}
-        <section ref={modulesRef} className="animate-in py-24 md:py-32">
-          <div className="marketing-container">
-            <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2] text-center mb-16">
-              Everything connected.<br />Nothing siloed.
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {modules.map((m) => (
-                <Link key={m.href} href={m.href} className="group block bg-surface border border-[#E8E4DC] rounded-lg p-8 no-underline hover:shadow-card transition-shadow relative overflow-hidden">
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                  <h3 className="font-display text-display-lg text-dark mb-2">{m.name}</h3>
-                  <p className="font-ui text-[15px] text-mid leading-relaxed mb-4">{m.desc}</p>
-                  <span className="font-ui text-[15px] font-medium text-amber-text opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1">
-                    Learn more <span className="cta-arrow">→</span>
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ 3.6 Testimonials ═══ */}
-        <section className="py-24 md:py-32 bg-section-muted">
-          <div className="marketing-container">
-            <div className="text-center mb-12">
-              <SectionLabel>From Our Users</SectionLabel>
-              <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2]">
-                They switched from Tally.<br />Here&apos;s what they said.
-              </h2>
-            </div>
-            <div className="max-w-2xl mx-auto" role="region" aria-label="User testimonials">
-              <TestimonialCard {...testimonials[testimonialIndex]} />
-              <div className="flex items-center justify-between mt-8">
-                <button
-                  onClick={() => setTestimonialIndex((i) => (i - 1 + testimonials.length) % testimonials.length)}
-                  className="bg-transparent border-none cursor-pointer text-light hover:text-dark p-2"
-                  aria-label="Previous testimonial"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                </button>
-                <div className="flex gap-2" role="tablist" aria-label="Testimonial indicators">
-                  {testimonials.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setTestimonialIndex(i)}
-                      role="tab"
-                      aria-selected={i === testimonialIndex}
-                      aria-label={`Testimonial ${i + 1} of ${testimonials.length}`}
-                      className={`rounded-full border-none cursor-pointer transition-all ${
-                        i === testimonialIndex ? 'w-2 h-2 bg-amber' : 'w-1.5 h-1.5 bg-[#E8E4DC]'
-                      }`}
-                    />
-                  ))}
+      {/* ═══ Feature Modules ═══ */}
+      <section className="py-[128px] px-8" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div className="text-center mb-24">
+          <span className="text-[12px] font-medium text-amber-text uppercase tracking-widest">Complete Control</span>
+          <h2 className="font-display text-[38px] leading-[1.15] font-[400] text-dark mt-4">
+            Modules built for Indian scale.
+          </h2>
+        </div>
+        <div className="space-y-[96px]">
+          {modules.map((m, i) => (
+            <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+              <div className={i === 1 ? 'order-2 md:order-1' : ''}>
+                <div className="bg-section-muted p-8 border border-border-subtle shadow-screenshot">
+                  <div className="min-h-[200px] flex items-center justify-center text-light font-ui text-[14px] bg-white">
+                    Module screenshot {i + 1}
+                  </div>
                 </div>
-                <button
-                  onClick={() => setTestimonialIndex((i) => (i + 1) % testimonials.length)}
-                  className="bg-transparent border-none cursor-pointer text-light hover:text-dark p-2"
-                  aria-label="Next testimonial"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                </button>
+              </div>
+              <div className={i === 1 ? 'order-1 md:order-2' : ''}>
+                <h3 className="font-display text-[26px] leading-[1.3] font-[400] text-dark mb-6">{m.title}</h3>
+                <p className="text-[16px] leading-[1.6] text-mid mb-8">{m.desc}</p>
+                {m.features.length > 0 && (
+                  <ul className="space-y-4">
+                    {m.features.map((f) => (
+                      <li key={f} className="flex items-center gap-3 font-ui text-[14px] text-mid">
+                        <svg className="w-5 h-5 text-amber flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
+                        </svg>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {i === 2 && (
+                  <Link href="/features/invoicing" className="text-amber font-bold text-[14px] flex items-center gap-2 group no-underline mt-8">
+                    Explore Invoicing <span className="transition-transform group-hover:translate-x-1">→</span>
+                  </Link>
+                )}
               </div>
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        {/* ═══ 3.7 Conversion CTA ═══ */}
-        <section ref={ctaRef} className="animate-in py-24 md:py-32" style={{ background: 'rgba(200,134,10,0.06)', borderTop: '0.5px solid rgba(200,134,10,0.2)', borderBottom: '0.5px solid rgba(200,134,10,0.2)' }}>
-          <div className="marketing-container text-center">
-            <h2 className="font-display text-[28px] md:text-[38px] font-normal text-dark leading-[1.2] mb-4">
-              Ready to move off Tally?
-            </h2>
-            <p className="font-ui text-[16px] md:text-[18px] text-mid mb-8">
-              Start free. No credit card.<br />No migration consultant required.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
-              <Link href="/signup" className="marketing-btn-primary text-[16px] px-7 py-3.5 no-underline">
-                Start free <span className="cta-arrow">→</span>
-              </Link>
-              <Link href="/contact" className="inline-flex items-center gap-2 px-6 py-3.5 font-ui text-[16px] font-medium text-dark border border-dark rounded-md hover:bg-section-muted transition-colors no-underline">
-                Talk to us
-              </Link>
-            </div>
-            <p className="font-ui text-[13px] text-light">
-              Your data stays in India. Always.
-            </p>
+      {/* ═══ Testimonials ═══ */}
+      <section className="bg-section-muted py-[128px] px-8 border-y border-border-subtle overflow-hidden">
+        <div className="px-8" style={{ maxWidth: '1320px', margin: '0 auto' }}>
+          <div className="text-center mb-16">
+            <span className="text-[12px] font-medium text-amber-text uppercase tracking-widest">Testimonials</span>
+            <h2 className="font-display text-[38px] leading-[1.2] font-[400] text-dark mt-4">Loved by Founders &amp; CAs.</h2>
           </div>
-        </section>
-      </main>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((t) => (
+              <div key={t.name} className="bg-white p-12 border border-border-subtle relative">
+                <div className="text-[#C8860A] text-6xl opacity-20 absolute top-8 left-8 font-display leading-none" aria-hidden="true">"</div>
+                <p className="text-[16px] italic font-display text-dark leading-relaxed mb-8 relative z-10">{t.quote}</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-section-muted border border-border-subtle" />
+                  <div>
+                    <p className="font-bold text-[14px] text-dark">{t.name}</p>
+                    <p className="text-[12px] text-light uppercase tracking-tighter">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Conversion CTA ═══ */}
+      <section className="py-[128px] px-8" style={{ background: 'rgba(200,134,10,0.06)' }}>
+        <div className="text-center border border-amber/20 p-16 bg-white/50 backdrop-blur-sm" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h2 className="font-display text-[38px] leading-[1.15] font-[400] text-dark mb-6">Ready to bring precision to your books?</h2>
+          <p className="text-[18px] leading-[1.5] text-mid mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
+          <div className="flex flex-col md:flex-row justify-center gap-6">
+            <Link href="/signup" className="inline-flex items-center px-10 py-5 bg-amber text-white font-ui font-bold uppercase no-underline text-[14px] tracking-widest group hover:opacity-90 transition-all">
+              Start Free Trial <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+            <Link href="/contact" className="inline-flex items-center px-10 py-5 border border-dark text-dark font-ui font-bold uppercase no-underline text-[14px] tracking-widest hover:bg-dark hover:text-white transition-all">
+              Talk to Us
+            </Link>
+          </div>
+          <p className="text-[12px] text-light mt-8">No credit card required. Cancel anytime.</p>
+        </div>
+      </section>
 
       <MarketingFooter />
     </div>

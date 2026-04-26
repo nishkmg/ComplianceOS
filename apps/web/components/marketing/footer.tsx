@@ -2,74 +2,38 @@
 import Link from 'next/link';
 
 export function MarketingFooter() {
-  const columns = [
-    {
-      title: 'Product',
-      links: [
-        { href: '/features/accounting', label: 'Accounting' },
-        { href: '/features/gst', label: 'GST Filing' },
-        { href: '/features/invoicing', label: 'Invoicing' },
-        { href: '/features/payroll', label: 'Payroll' },
-        { href: '/features/itr', label: 'ITR Returns' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { href: '/about', label: 'About' },
-        { href: '/blog', label: 'Blog' },
-        { href: '/pricing', label: 'Pricing' },
-        { href: '/contact', label: 'Contact' },
-      ],
-    },
-    {
-      title: 'Legal',
-      links: [
-        { href: '/privacy', label: 'Privacy policy' },
-        { href: '/terms', label: 'Terms of service' },
-        { href: '/cookies', label: 'Cookie policy' },
-        { href: '/security', label: 'Security' },
-      ],
-    },
-  ];
-
   return (
-    <footer className="bg-section-muted border-t border-hairline border-[#E8E4DC]">
-      <div className="marketing-container py-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Column 1: Brand */}
-          <div>
-            <div className="font-display text-display-md text-dark mb-2">
-              ComplianceOS
-            </div>
-            <p className="font-ui text-[14px] italic text-light mb-4">
-              Built for Indian business.
-            </p>
-            <p className="font-ui text-[12px] text-light">
-              © 2026 ComplianceOS. All rights reserved.
-            </p>
-          </div>
+    <footer className="bg-[#F4F2EE] w-full py-24 border-t-[0.5px] border-[#E8E4DC]">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-16 px-8" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div>
+          <p className="font-display text-[20px] text-dark mb-6">ComplianceOS</p>
+          <p className="font-ui text-[12px] uppercase tracking-widest text-light leading-relaxed">
+            © 2024 ComplianceOS. Precision in Indian Accounting.
+          </p>
+        </div>
 
-          {/* Link columns */}
-          {columns.map((col) => (
-            <div key={col.title}>
-              <h4 className="font-ui text-[11px] font-medium text-light uppercase tracking-wider mb-4">
-                {col.title}
-              </h4>
-              <ul className="space-y-3 list-none p-0 m-0">
-                {col.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="font-ui text-[14px] text-mid hover:text-dark no-underline transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div>
+          <h4 className="font-ui text-[12px] uppercase tracking-widest text-dark font-semibold mb-6">Resources</h4>
+          <ul className="space-y-4">
+            <li><Link href="/blog" className="font-ui text-[12px] uppercase tracking-widest text-light hover:text-amber transition-all no-underline">Compliance Guide</Link></li>
+            <li><Link href="/blog" className="font-ui text-[12px] uppercase tracking-widest text-light hover:text-amber transition-all no-underline">GST Tools</Link></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-ui text-[12px] uppercase tracking-widest text-dark font-semibold mb-6">Company</h4>
+          <ul className="space-y-4">
+            <li><Link href="/privacy" className="font-ui text-[12px] uppercase tracking-widest text-light hover:text-amber transition-all no-underline">Privacy Policy</Link></li>
+            <li><Link href="/terms" className="font-ui text-[12px] uppercase tracking-widest text-light hover:text-amber transition-all no-underline">Terms of Service</Link></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-ui text-[12px] uppercase tracking-widest text-dark font-semibold mb-6">Support</h4>
+          <ul className="space-y-4">
+            <li><Link href="/contact" className="font-ui text-[12px] uppercase tracking-widest text-light hover:text-amber transition-all no-underline">Contact Support</Link></li>
+            <li><Link href="/contact" className="font-ui text-[12px] uppercase tracking-widest text-amber underline decoration-amber underline-offset-4 no-underline">Schedule a Demo</Link></li>
+          </ul>
         </div>
       </div>
     </footer>
