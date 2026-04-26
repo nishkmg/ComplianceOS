@@ -53,7 +53,7 @@ const config: Config = {
         border: '#E5E5E5',
       },
       
-      // Spacing
+      // Spacing (extends defaults — keep 6=32px for app, add marketing values)
       spacing: {
         '1': '4px',
         '2': '8px',
@@ -61,6 +61,16 @@ const config: Config = {
         '4': '16px',
         '5': '24px',
         '6': '32px',
+        '8': '32px',
+        '10': '40px',
+        '12': '48px',
+        '14': '56px',
+        '16': '64px',
+        '20': '80px',
+        '24': '96px',
+        '28': '112px',
+        '32': '128px',
+        '40': '160px',
       },
       
       // Border radius
