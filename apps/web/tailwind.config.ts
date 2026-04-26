@@ -31,6 +31,7 @@ const config: Config = {
         amber: {
           DEFAULT: '#B47500',
           hover: '#B07408',
+          stitch: '#825500',
         },
         success: {
           DEFAULT: '#16A34A',
@@ -51,6 +52,13 @@ const config: Config = {
         },
         sidebar: '#F0F0F0',
         border: '#E5E5E5',
+        "on-surface": "#211b13",
+        "border-subtle": "#E8E4DC",
+        "page-bg": "#FAFAF8",
+        "amber-text": "#B47500",
+        "section-amber": "rgba(200, 134, 10, 0.06)",
+        "section-dark": "#111111",
+        "section-muted": "#F4F2EE",
       },
       
       // Spacing (extends defaults — keep 6=32px for app, add marketing values)
@@ -71,6 +79,10 @@ const config: Config = {
         '28': '112px',
         '32': '128px',
         '40': '160px',
+        'space-48': '48px',
+        'space-64': '64px',
+        'space-96': '96px',
+        'space-128': '128px',
       },
       
       // Border radius
@@ -90,6 +102,7 @@ const config: Config = {
         'sm': '0 1px 2px rgba(0, 0, 0, 0.04)',
         'md': '0 2px 4px rgba(0, 0, 0, 0.06)',
         'lg': '0 4px 8px rgba(0, 0, 0, 0.08)',
+        'screenshot': "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
       },
     },
   },
