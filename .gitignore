@@ -9,3 +9,5 @@ dist/
 .DS_Store
 stitch-output/
 stitch-output/*
+.playwright-mcp/
+login-snapshot.yml
