@@ -2,8 +2,12 @@
 
 **Project**: projects/9254241192295332344  
 **Date**: 2026-04-25  
-**Stitch Screens**: 157  
-**Code Routes**: 139  
+**Stitch Total Entries**: 157  
+- **UI Screens**: 151  
+- **Uploaded Documents**: 5 (SCREEN_INVENTORY.md x2, UX_UI_Doc x2, DESIGN.md)  
+- **Design System Asset**: 1  
+**Code Routes**: 143  
+**Remaining Gap**: 8 UI screens (variants, empty states)  
 
 ---
 
@@ -164,56 +168,41 @@
 
 ---
 
-## Gap Analysis: Screens NOT in SCREEN_INVENTORY.md
+## Gap Analysis: Screens NOT in Code (8 remaining)
 
-### New Routes to Add (15 screens)
+Note: 4 of 12 identified gaps were implemented this session (`/gst/ledger/liability`, `/access-denied`, `/audit-log`, `/audit-log/[id]`).
 
-| Screen | Stitch Title | Suggested Route |
-|--------|--------------|-----------------|
-| 1 | Report: Inventory Expiry Log | `/inventory/reports` |
-| 2 | GST Ledger: Liability Ledger | `/gst/ledger/liability` (NEW) |
-| 3 | Access Denied | `/access-denied` |
-| 4 | Audit Log Detail | `/audit-log/[id]` or `/audit-log` |
-| 5 | 404 Not Found | `/404` |
-| 6 | Report: Inventory Turnover Analysis | `/inventory/reports` |
-| 7 | Report: Form 16 Data (Payroll) | `/payroll-reports` |
-| 8 | Report: Professional Tax Workings | `/payroll-reports` |
-| 9 | Report: Stock Movement | `/inventory/reports` |
-| 10 | Report: PF Challan (Payroll) | `/payroll-reports` |
-| 11 | Report: ESI Challan (Payroll) | `/payroll-reports` |
-| 12 | ITR Payment History | `/itr/payment/history` (may duplicate) |
-| 13 | Homepage (Mobile) | `/` (mobile variant) |
-| 14 | Dialog: Adjust Stock | (dialog - may not need route) |
-| 15 | GST Return: Success State | `/gst/returns` (success state) |
+### Remaining New Routes (3)
 
-### Components (No Route Needed)
+| Screen | Stitch Title | Suggested Route | Notes |
+|--------|--------------|-----------------|-------|
+| 1 | Report: Inventory Expiry Log | `/inventory/reports` | Needs tRPC router |
+| 2 | Report: Inventory Turnover Analysis | `/inventory/reports` | Needs tRPC router |
+| 3 | Report: Stock Movement | `/inventory/reports` | Needs tRPC router |
+| 4 | Report: Inventory Valuation | `/inventory/reports` | Needs tRPC router (duplicate) |
+| 5 | Report: PF Challan (Payroll) | `/payroll-reports` | Needs tRPC router |
+| 6 | Report: ESI Challan (Payroll) | `/payroll-reports` | Needs tRPC router |
+| 7 | Report: Form 16 Data (Payroll) | `/payroll-reports` | Needs tRPC router |
+| 8 | Report: Professional Tax Workings | `/payroll-reports` | Needs tRPC router |
 
-- Account Preview Slide-over (component)
-- Shared UI: Balance Bar Reference (component)
-- Global Command Palette ⌘K (component)
-- Mobile Nav Overlay (component)
-- Fiscal Year Selector Popover (component)
-- 6 Dialog variants (void, discard, file, amend, export, delete, payment allocation, etc.)
-- Login/Signup variants covered
-- Empty states (covered in existing routes)
+### Excluded (No Route Needed)
 
-### Observed Duplicates (in Stitch)
-
-- Cookie Policy (x2)
-- Contact Us (x2)
-- ITR Payment History (x2)
-- Features Overview (x2)
-- Payroll Team Salary Preview (x2)
-- Homepage Mobile variant (same as homepage)
+| Category | Count | Reason |
+|----------|-------|--------|
+| Mobile variant screens | 2 | Covered by responsive CSS |
+| Empty state screens | ~8 | Covered by inline state components |
+| Uploaded documents | 5 | Not UI screens |
+| Design system asset | 1 | Component library |
 
 ---
 
-## Summary
+### Summary
 
 | Category | Count |
 |----------|-------|
-| Stitch Screens | 157 |
-| Unique Route Mappings | ~130 |
-| New Routes to Add | ~12 |
+| Stitch UI Screens | 151 |
+| Unique Route Mappings | ~143 |
+| New Routes to Add | 8 (reports) |
+| Uploaded Docs | 5 |
 | Dialogs/Components | ~15 |
-| Already in SCREEN_INVENTORY.md | ~120 |
+| Already in Code | ~143 |
