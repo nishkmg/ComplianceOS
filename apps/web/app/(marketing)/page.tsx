@@ -121,7 +121,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div>
                 <SectionLabel>Built for Indian Business</SectionLabel>
-                <h1 className="font-display text-[var(--marketing-hero)] font-normal text-dark leading-[1.1] mb-6">
+                <h1 className="font-display font-normal text-dark leading-[1.1] mb-6" style={{ fontSize: 'var(--marketing-hero)' }}>
                   The accounting software<br className="hidden lg:block" />
                   that thinks in lakhs,<br className="hidden lg:block" />
                   not thousands.
