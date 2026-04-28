@@ -41,6 +41,7 @@ export * from "./types/itr-ledgers";
 export * from "./types/itr-config";
 export * from "./types/itr-snapshots";
 export * from "./types/itr-events";
+export * from "./validation/helpers";
 export * from "./validation/journal";
 export * from "./validation/account";
 export * from "./validation/fiscal-year";

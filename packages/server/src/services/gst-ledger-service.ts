@@ -2,6 +2,7 @@
 import * as _db from "../../../db/src/index";
 const { db, gstCashLedger, gstItcLedger, gstLiabilityLedger, fiscalYears } = _db;
 import { eq, and, gte, lte } from 'drizzle-orm';
+import { logger } from '../lib/logger';
 import { GSTTaxType, type ITCUtilizationResult } from "../../../shared/src/index";
 import { z } from 'zod';
 
@@ -530,7 +531,7 @@ export async function recordITCAddition(
 
     return { id: itcRecord.id, success: true };
   } catch (error) {
-    console.error('Failed to record ITC addition:', error);
+    logger.error('Failed to record ITC addition', error as Error);
     return { id: '', success: false };
   }
 }
@@ -567,7 +568,7 @@ export async function recordITCReversal(
 
     return { id: reversal.id, success: true };
   } catch (error) {
-    console.error('Failed to record ITC reversal:', error);
+    logger.error('Failed to record ITC reversal', error as Error);
     return { id: '', success: false };
   }
 }
@@ -609,7 +610,7 @@ export async function recordGSTPayment(
 
     return { id: payment.id, success: true };
   } catch (error) {
-    console.error('Failed to record GST payment:', error);
+    logger.error('Failed to record GST payment', error as Error);
     return { id: '', success: false };
   }
 }
@@ -648,7 +649,7 @@ export async function recordITCUtilization(
 
     return { id: utilization.id, success: true };
   } catch (error) {
-    console.error('Failed to record ITC utilization:', error);
+    logger.error('Failed to record ITC utilization', error as Error);
     return { id: '', success: false };
   }
 }
@@ -689,7 +690,7 @@ export async function recordGSTLiability(
 
     return { id: liability.id, success: true };
   } catch (error) {
-    console.error('Failed to record GST liability:', error);
+    logger.error('Failed to record GST liability', error as Error);
     return { id: '', success: false };
   }
 }
@@ -729,7 +730,7 @@ export async function recordTaxPayment(
 
     return { id: payment.id, success: true };
   } catch (error) {
-    console.error('Failed to record tax payment:', error);
+    logger.error('Failed to record tax payment', error as Error);
     return { id: '', success: false };
   }
 }
