@@ -9,7 +9,7 @@ export { KpiTile } from './kpi-tile';
 
 // State Components (per UX/UI doc §16)
 export { Skeleton, TableSkeleton, KPISkeleton, CardSkeleton } from './skeleton';
-export { EmptyState, EmptyStateIcons } from './empty-state';
+export { EmptyState } from './empty-state';
 export {
   ErrorState,
   FieldError,

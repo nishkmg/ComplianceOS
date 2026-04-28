@@ -62,22 +62,25 @@ export function AppSidebar() {
       </nav>
 
       {/* FY Footer */}
-      <div className="relative mt-auto border-t border-hairline border-lighter">
+      <div className="relative mt-auto border-t border-lighter">
         <div 
-          className="p-4 cursor-pointer hover:bg-[#E8E4DC]/20 transition-colors"
+          className="p-3 cursor-pointer hover:bg-[#E8E4DC]/20 transition-colors"
           onClick={() => setShowFyPopover(!showFyPopover)}
         >
           <div className="text-[10px] text-light uppercase tracking-wide mb-1">Active Fiscal Year</div>
           <div className="flex items-center justify-between">
             <span className="text-mid font-medium">FY {activeFy}</span>
-            <span className={`px-2 py-0.5 text-[9px] font-bold uppercase rounded-sm ${currentFy.status === 'open' ? 'bg-success-bg text-success' : 'bg-lighter text-mid'}`}>
+            <span className={`px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-sm ${currentFy.status === 'open' ? 'bg-success-bg text-success' : 'bg-lighter text-mid'}`}>
               {currentFy.status}
             </span>
           </div>
+          {currentFy.status === 'open' && (
+            <div className="text-[9px] text-light mt-0.5">{currentFy.daysRemaining} days remaining</div>
+          )}
         </div>
 
         {showFyPopover && (
-          <div className="absolute bottom-full left-2 right-2 mb-2 bg-white rounded-md shadow-lg border border-border-subtle overflow-hidden z-50">
+          <div className="absolute bottom-full left-2 right-2 mb-2 bg-white rounded-sm shadow-lg border border-border-subtle overflow-hidden z-50">
             {fiscalYears.map((fy) => (
               <button
                 key={fy.id}
@@ -85,14 +88,28 @@ export function AppSidebar() {
                   setActiveFy(fy.name.split(" ")[1]);
                   setShowFyPopover(false);
                 }}
-                className="w-full text-left px-4 py-3 hover:bg-lightest transition-colors border-none bg-transparent cursor-pointer flex justify-between items-center"
+                className={`w-full text-left px-4 py-3 hover:bg-[#fff8f4] transition-colors border-none bg-transparent cursor-pointer flex items-center justify-between ${
+                  activeFy === fy.name.split(" ")[1] ? 'border-l-[3px] border-primary-container bg-section-amber' : 'border-l-[3px] border-transparent'
+                }`}
               >
-                <span className={`text-[12px] ${activeFy === fy.name.split(" ")[1] ? 'font-bold text-primary' : 'text-mid'}`}>
-                  {fy.name}
-                </span>
-                <span className={`text-[9px] uppercase font-bold ${fy.status === 'open' ? 'text-success' : 'text-light'}`}>
-                  {fy.status}
-                </span>
+                <div className="flex flex-col gap-0.5">
+                  <span className={`font-mono text-[13px] ${activeFy === fy.name.split(" ")[1] ? 'font-bold text-on-surface' : 'text-mid'}`}>
+                    {fy.name}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[9px] uppercase font-bold px-1 py-0.5 rounded-sm border ${
+                      fy.status === 'open' ? 'text-amber-text bg-amber-50 border-amber-200' : 'text-text-mid bg-lighter border-border'
+                    }`}>
+                      {fy.status}
+                    </span>
+                    {fy.status === 'open' && fy.daysRemaining > 0 && (
+                      <span className="text-[9px] text-light lowercase tracking-normal">{fy.daysRemaining} days remaining</span>
+                    )}
+                  </div>
+                </div>
+                {activeFy === fy.name.split(" ")[1] && (
+                  <span className="material-symbols-outlined text-primary-container text-[20px] opacity-100">check</span>
+                )}
               </button>
             ))}
           </div>
