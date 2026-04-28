@@ -2,41 +2,16 @@
 "use client";
 
 import { useState } from "react";
-// @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 
 const TEMPLATES = [
-  {
-    id: "sole_proprietorship_trading",
-    name: "Trading Business",
-    description: "Buy-sell businesses, wholesale, retail",
-    businessType: "sole_proprietorship",
-  },
-  {
-    id: "sole_proprietorship_services",
-    name: "Services Business",
-    description: "Consulting, professional services",
-    businessType: "sole_proprietorship",
-  },
-  {
-    id: "partnership_trading",
-    name: "Partnership Trading",
-    description: "Partnership firm engaged in trading",
-    businessType: "partnership",
-  },
-  {
-    id: "private_limited_services",
-    name: "Private Limited (Services)",
-    description: "Pvt Ltd company providing services",
-    businessType: "private_limited",
-  },
-  {
-    id: "regulated_professional",
-    name: "Regulated Professional",
-    description: "CA, CS, Lawyers, Architects",
-    businessType: "sole_proprietorship",
-  },
+  { id: "trading", name: "Trading & Retail", desc: "For wholesale and retail firms managing physical stock. Includes Inventory, COGS, and standard GST tax ledgers.", icon: "shopping_cart", recommended: true },
+  { id: "services", name: "Professional Services", desc: "Designed for CA firms, IT consultants, and agencies. Focus on service revenue and recurring expense tracking.", icon: "account_balance" },
+  { id: "manufacturing", name: "Manufacturing Entity", desc: "Complex structure including Raw Materials, Work-in-Progress (WIP), and Finished Goods with statutory audit readiness.", icon: "factory" },
+  { id: "proprietorship", name: "Sole Proprietorship", desc: "Simplified structure with Drawals and Capital accounts mapped to Income Tax reporting standards.", icon: "person" },
+  { id: "pvt_ltd", name: "Private Limited", desc: "MCA-compliant structure with Share Capital, Reserves & Surplus, and Schedule III reporting defaults.", icon: "corporate_fare" },
+  { id: "llp", name: "Partnership / LLP", desc: "Multi-partner capital tracking with distribution-ready expense ledgers and GST readiness.", icon: "groups" },
 ];
 
 interface StepCoaTemplateProps {
@@ -45,66 +20,79 @@ interface StepCoaTemplateProps {
 }
 
 export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) {
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState("trading");
 
-  const seedCoa = api.onboarding.seedCoa.useMutation({
+  const seedCoa = api.onboarding.seedChartOfAccounts.useMutation({
     onSuccess: () => {
-      showToast.success('Chart of Accounts set up successfully');
+      showToast.success('Chart of accounts initialized');
       onComplete();
     },
     onError: (error) => {
-      showToast.error(error.message || 'Failed to set up Chart of Accounts');
+      showToast.error(error.message || 'Failed to initialize CoA');
     },
   });
 
-  const handleSelect = async (templateId: string) => {
-    setSelectedTemplate(templateId);
-    const [businessType, industry] = templateId.split("_");
+  const handleSelect = async () => {
     await seedCoa.mutateAsync({
       tenantId,
-      businessType: businessType || "sole_proprietorship",
-      industry: industry || "trading",
+      templateId: selectedTemplate,
     });
   };
 
   return (
-    <div>
-      <div className="mb-8">
-        <h2 className="font-display text-[20px] font-normal text-dark">Chart of Accounts</h2>
-        <p className="font-ui text-[13px] text-light mt-1">
-          Select a template that matches your business type
+    <div className="flex flex-col gap-12 text-left">
+      {/* Section Header */}
+      <div>
+        <h1 className="font-display-xl text-display-xl text-on-surface mb-6">Select CoA Template</h1>
+        <p className="font-ui-lg text-ui-lg text-text-mid max-w-3xl leading-relaxed">
+          Choose a baseline structure tailored to your business operations. These templates are strictly aligned with standard Indian accounting practices and statutory compliance requirements.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {TEMPLATES.map((template) => (
+      {/* 3-Column Card Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {TEMPLATES.map((t) => (
           <div
-            key={template.id}
-            className={`card p-5 cursor-pointer transition-all ${
-              selectedTemplate === template.id
-                ? "border-amber bg-surface-muted"
-                : "hover:border-lighter"
+            key={t.id}
+            onClick={() => setSelectedTemplate(t.id)}
+            className={`group border-[0.5px] border-border-subtle p-8 flex flex-col relative transition-all duration-300 cursor-pointer ${
+              selectedTemplate === t.id ? "bg-[#fff8f4] border-amber shadow-sm" : "bg-white hover:bg-stone-50"
             }`}
-            onClick={() => handleSelect(template.id)}
           >
-            <h3 className="font-ui text-[15px] font-medium text-dark mb-1">
-              {template.name}
-            </h3>
-            <p className="font-ui text-[12px] text-light mb-3">
-              {template.description}
+            {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>}
+            <div className="flex justify-between items-start mb-6">
+              <span className={`material-symbols-outlined text-3xl ${selectedTemplate === t.id ? "text-[#C8860A]" : "text-stone-300"}`}>
+                {t.icon}
+              </span>
+              {t.recommended && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-900 text-white px-2 py-0.5 rounded-sm">Recommended</span>}
+            </div>
+            <h3 className="font-display-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
+            <p className="font-ui-sm text-ui-sm text-text-mid leading-relaxed flex-1">
+              {t.desc}
             </p>
-            <p className="font-ui text-[10px] uppercase tracking-wide text-light">
-              Business: {template.businessType.replace("_", " ")}
-            </p>
+            {selectedTemplate === t.id && (
+              <div className="mt-6 flex items-center gap-2 text-primary font-ui-xs text-[11px] uppercase tracking-widest font-bold">
+                <span className="material-symbols-outlined text-sm">check_circle</span>
+                Selection Confirmed
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      {seedCoa.isPending && (
-        <div className="mt-6 text-center">
-          <p className="font-ui text-mid">Setting up your Chart of Accounts...</p>
-        </div>
-      )}
+      <div className="flex justify-between items-center mt-6 pt-8 border-t border-border-subtle">
+        <p className="font-ui-xs text-[11px] text-text-light uppercase tracking-wider italic">
+          You can modify, merge, or add individual ledgers after this step.
+        </p>
+        <button
+          onClick={handleSelect}
+          disabled={seedCoa.isPending}
+          className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+        >
+          {seedCoa.isPending ? "Generating Ledgers..." : "Initialise Ledgers"}
+          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+        </button>
+      </div>
     </div>
   );
 }

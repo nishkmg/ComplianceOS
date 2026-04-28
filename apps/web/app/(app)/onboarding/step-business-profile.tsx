@@ -2,91 +2,43 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-// @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
 import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
 import { showToast } from "@/lib/toast";
 
 const BUSINESS_TYPES = [
-  { value: "sole_proprietorship", label: "Sole Proprietorship" },
-  { value: "partnership", label: "Partnership" },
-  { value: "llp", label: "LLP (Limited Liability Partnership)" },
-  { value: "private_limited", label: "Private Limited Company" },
-  { value: "public_limited", label: "Public Limited Company" },
-  { value: "huf", label: "HUF (Hindu Undivided Family)" },
+  { value: "pvt_ltd", label: "Private Limited Company" },
+  { value: "llp", label: "Limited Liability Partnership (LLP)" },
+  { value: "proprietorship", label: "Sole Proprietorship" },
+  { value: "partnership", label: "Partnership Firm" },
+  { value: "public_ltd", label: "Public Limited Company" },
 ];
 
 const INDUSTRIES = [
-  { value: "retail_trading", label: "Retail / Trading" },
+  { value: "it_services", label: "Information Technology" },
   { value: "manufacturing", label: "Manufacturing" },
-  { value: "services_professional", label: "Services / Professional" },
-  { value: "freelancer_consultant", label: "Freelancer / Consultant" },
-  { value: "regulated_professional", label: "Regulated Professional (CA/CS/Law)" },
+  { value: "retail", label: "Retail & E-commerce" },
+  { value: "services", label: "Professional Services" },
+  { value: "other", label: "Other" },
 ];
 
 const STATES = [
-  { value: "andhra_pradesh", label: "Andhra Pradesh" },
-  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
-  { value: "assam", label: "Assam" },
-  { value: "bihar", label: "Bihar" },
-  { value: "chhattisgarh", label: "Chhattisgarh" },
-  { value: "goa", label: "Goa" },
-  { value: "gujarat", label: "Gujarat" },
-  { value: "haryana", label: "Haryana" },
-  { value: "himachal_pradesh", label: "Himachal Pradesh" },
-  { value: "jharkhand", label: "Jharkhand" },
-  { value: "karnataka", label: "Karnataka" },
-  { value: "kerala", label: "Kerala" },
-  { value: "madhya_pradesh", label: "Madhya Pradesh" },
-  { value: "maharashtra", label: "Maharashtra" },
-  { value: "manipur", label: "Manipur" },
-  { value: "meghalaya", label: "Meghalaya" },
-  { value: "mizoram", label: "Mizoram" },
-  { value: "nagaland", label: "Nagaland" },
-  { value: "odisha", label: "Odisha" },
-  { value: "punjab", label: "Punjab" },
-  { value: "rajasthan", label: "Rajasthan" },
-  { value: "sikkim", label: "Sikkim" },
-  { value: "tamil_nadu", label: "Tamil Nadu" },
-  { value: "telangana", label: "Telangana" },
-  { value: "tripura", label: "Tripura" },
-  { value: "uttar_pradesh", label: "Uttar Pradesh" },
-  { value: "uttarakhand", label: "Uttarakhand" },
-  { value: "west_bengal", label: "West Bengal" },
-  { value: "delhi", label: "Delhi" },
-  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
-  { value: "ladakh", label: "Ladakh" },
-  { value: "chandigarh", label: "Chandigarh" },
-  { value: "puducherry", label: "Puducherry" },
-  { value: "andaman_nicobar", label: "Andaman & Nicobar Islands" },
-  { value: "dadra_nagar_haveli_daman_diu", label: "Dadra & Nagar Haveli, Daman & Diu" },
-  { value: "lakshadweep", label: "Lakshadweep" },
+  { value: "MH", label: "Maharashtra" },
+  { value: "KA", label: "Karnataka" },
+  { value: "DL", label: "Delhi" },
+  { value: "TN", label: "Tamil Nadu" },
+  { value: "GJ", label: "Gujarat" },
 ];
 
-interface StepBusinessProfileProps {
-  onTenantCreated: (tenantId: string) => void;
-}
-
-export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProps) {
-  const router = useRouter();
+export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const createTenant = api.onboarding.createTenant.useMutation({
+  const createTenant = api.tenants.create.useMutation({
     onSuccess: (data) => {
-      showToast.success('Business profile created successfully');
-      onTenantCreated(data.tenantId);
-    },
-    onError: (error) => {
-      showToast.error(error.message || 'Failed to create business profile');
-    },
+      onTenantCreated(data.id);
+      showToast.success('Business profile established successfully');
+    }
   });
 
   const {
@@ -94,197 +46,163 @@ export function StepBusinessProfile({ onTenantCreated }: StepBusinessProfileProp
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
   } = useForm<BusinessProfileInput>({
     resolver: zodResolver(BusinessProfileInputSchema),
     defaultValues: {
-      name: "",
-      legalName: "",
-      businessType: "sole_proprietorship",
-      pan: "",
-      gstin: "",
-      address: "",
-      state: "karnataka",
-      industry: "services_professional",
-      dateOfIncorporation: "",
-    },
+      businessType: "pvt_ltd",
+      industry: "it_services",
+      state: "MH",
+    }
   });
-
-  const businessType = watch("businessType");
-  const gstRegistration = watch("gstin");
 
   const onSubmit = async (data: BusinessProfileInput) => {
     setIsSubmitting(true);
     try {
       await createTenant.mutateAsync(data as any);
     } catch (error) {
-      showToast.error('Failed to create business profile');
+      showToast.error('Failed to establish business profile');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-2xl">
-      <div className="mb-8">
-        <h2 className="font-display text-[20px] font-normal text-dark">Business Profile</h2>
-        <p className="font-ui text-[13px] text-light mt-1">
-          Tell us about your business structure and location
+    <div className="flex flex-col gap-12 text-left">
+      {/* Section Header */}
+      <div>
+        <h1 className="font-display-xl text-display-xl text-on-surface mb-3">Business Profile</h1>
+        <p className="font-ui-md text-ui-md text-text-mid max-w-2xl leading-relaxed">
+          Establish your organizational identity. This information ensures your ledgers and regulatory filings are accurately attributed under Indian corporate framework.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="sm:col-span-2">
-            <Label htmlFor="name" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              Business Name *
-            </Label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Your business name"
-              className="input-field w-full font-ui"
-              {...register("name")}
-            />
-            {errors.name && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.name.message}</p>
-            )}
-          </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+        {/* Business Name */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="name">Operating Name</label>
+          <input 
+            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light" 
+            id="name" 
+            placeholder="e.g. Acme Technologies" 
+            {...register("name")}
+          />
+          {errors.name && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.name.message}</p>}
+        </div>
 
-          <div className="sm:col-span-2">
-            <Label htmlFor="legalName" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              Legal Name <span className="text-light">(optional)</span>
-            </Label>
-            <input
-              id="legalName"
-              type="text"
-              placeholder="As per registration documents"
-              className="input-field w-full font-ui"
-              {...register("legalName")}
-            />
-          </div>
+        {/* Legal Name */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="legalName">
+            Registered Legal Name
+            <span className="material-symbols-outlined text-[14px] text-text-light cursor-help" title="As registered with the MCA">info</span>
+          </label>
+          <input 
+            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light" 
+            id="legalName" 
+            placeholder="e.g. Acme Technologies Private Limited" 
+            {...register("legalName")}
+          />
+        </div>
 
-          <div>
-            <Label htmlFor="businessType" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              Business Type *
-            </Label>
-            <select
+        {/* Business Type */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="businessType">Entity Type</label>
+          <div className="relative">
+            <select 
+              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
               id="businessType"
-              className="input-field w-full font-ui"
               {...register("businessType")}
               onChange={(e) => setValue("businessType", e.target.value)}
             >
-              {BUSINESS_TYPES.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
+              <option disabled value="">Select structure...</option>
+              {BUSINESS_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            {errors.businessType && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.businessType.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="industry" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              Industry *
-            </Label>
-            <select
-              id="industry"
-              className="input-field w-full font-ui"
-              {...register("industry")}
-              onChange={(e) => setValue("industry", e.target.value)}
-            >
-              {INDUSTRIES.map((ind) => (
-                <option key={ind.value} value={ind.value}>
-                  {ind.label}
-                </option>
-              ))}
-            </select>
-            {errors.industry && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.industry.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="pan" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              PAN *
-            </Label>
-            <input
-              id="pan"
-              type="text"
-              placeholder="AAAAA9999A"
-              className="input-field w-full font-ui uppercase"
-              maxLength={10}
-              {...register("pan")}
-            />
-            {errors.pan && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.pan.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="gstin" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              GSTIN <span className="text-light">(optional)</span>
-            </Label>
-            <input
-              id="gstin"
-              type="text"
-              placeholder="27AABCU9603R1ZM"
-              className="input-field w-full font-ui uppercase"
-              maxLength={15}
-              {...register("gstin")}
-            />
-            {errors.gstin && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.gstin.message}</p>
-            )}
-          </div>
-
-          <div className="sm:col-span-2">
-            <Label htmlFor="state" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              State *
-            </Label>
-            <select
-              id="state"
-              className="input-field w-full font-ui"
-              {...register("state")}
-              onChange={(e) => setValue("state", e.target.value)}
-            >
-              {STATES.map((state) => (
-                <option key={state.value} value={state.value}>
-                  {state.label}
-                </option>
-              ))}
-            </select>
-            {errors.state && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.state.message}</p>
-            )}
-          </div>
-
-          <div className="sm:col-span-2">
-            <Label htmlFor="address" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-              Registered Address *
-            </Label>
-            <input
-              id="address"
-              type="text"
-              placeholder="Full address with PIN code"
-              className="input-field w-full font-ui"
-              {...register("address")}
-            />
-            {errors.address && (
-              <p className="mt-1 font-ui text-[11px] text-danger">{errors.address.message}</p>
-            )}
+            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
           </div>
         </div>
 
-        <div className="flex justify-end pt-6 border-t border-hairline">
-          <button
-            type="submit"
-            disabled={isSubmitting || createTenant.isPending}
-            className="filter-tab active disabled:opacity-50"
-          >
-            {isSubmitting || createTenant.isPending ? "Creating..." : "Continue"}
+        {/* Industry */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="industry">Primary Sector</label>
+          <div className="relative">
+            <select 
+              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
+              id="industry"
+              {...register("industry")}
+              onChange={(e) => setValue("industry", e.target.value)}
+            >
+              <option disabled value="">Select industry...</option>
+              {INDUSTRIES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
+            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        {/* PAN Number */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pan">Permanent Account Number</label>
+          <input 
+            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
+            id="pan" 
+            maxlength="10" 
+            placeholder="ABCDE1234F" 
+            {...register("pan")}
+          />
+          {errors.pan && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.pan.message}</p>}
+        </div>
+
+        {/* GSTIN */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="gstin">
+            GST Identification Number
+            <span className="material-symbols-outlined text-[14px] text-text-light cursor-help" title="Leave blank if not registered">info</span>
+          </label>
+          <input 
+            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
+            id="gstin" 
+            maxlength="15" 
+            placeholder="22AAAAA0000A1Z5" 
+            {...register("gstin")}
+          />
+        </div>
+
+        {/* State */}
+        <div className="flex flex-col gap-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="state">State of Registration</label>
+          <div className="relative">
+            <select 
+              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
+              id="state"
+              {...register("state")}
+              onChange={(e) => setValue("state", e.target.value)}
+            >
+              <option disabled value="">Select state...</option>
+              {STATES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
+            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        {/* Address */}
+        <div className="flex flex-col gap-2 md:col-span-2">
+          <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="address">Registered Office Address</label>
+          <textarea 
+            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors resize-none placeholder:text-text-light" 
+            id="address" 
+            placeholder="Enter complete building name, street, and PIN code..." 
+            rows="3"
+            {...register("address")}
+          ></textarea>
+          {errors.address && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.address.message}</p>}
+        </div>
+
+        {/* Footer Actions */}
+        <div className="md:col-span-2 flex justify-between items-center mt-6 pt-8 border-t border-border-subtle">
+          <button className="font-ui-sm text-ui-sm text-text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
+            Save as Draft
+          </button>
+          <button className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer" type="submit" disabled={isSubmitting || createTenant.isPending}>
+            {isSubmitting || createTenant.isPending ? "Establishing Profile..." : "Continue to Setup"}
+            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
           </button>
         </div>
       </form>

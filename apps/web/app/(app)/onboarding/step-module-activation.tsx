@@ -2,47 +2,16 @@
 "use client";
 
 import { useState } from "react";
-// @ts-ignore - tRPC type collision workaround
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 
 const MODULES = [
-  {
-    id: "accounting",
-    name: "Accounting",
-    description: "Double-entry bookkeeping, financial statements",
-    required: true,
-  },
-  {
-    id: "invoicing",
-    name: "Invoicing",
-    description: "Sales & purchase invoices, credit notes",
-  },
-  {
-    id: "inventory",
-    name: "Inventory",
-    description: "Stock tracking, FIFO valuation",
-  },
-  {
-    id: "payroll",
-    name: "Payroll",
-    description: "Salary processing, payslips, PF/ESI/TDS",
-  },
-  {
-    id: "gst",
-    name: "GST",
-    description: "GSTR-1/2B/3B, ITC reconciliation",
-  },
-  {
-    id: "itr",
-    name: "Income Tax",
-    description: "ITR-3/4 computation, advance tax",
-  },
-  {
-    id: "ocr",
-    name: "OCR Scan",
-    description: "Invoice & receipt scanning",
-  },
+  { id: "accounting", name: "Core Ledger", desc: "Double-entry bookkeeping, financial statements, and multi-entity consolidation.", icon: "account_balance", required: true },
+  { id: "gst", name: "GST Compliance", desc: "Automated GSTR-1, 2B matching, and 3B preparation. Includes e-invoicing.", icon: "gavel" },
+  { id: "invoicing", name: "Billing & Invoicing", desc: "Compliant tax invoice generation, proforma tracking, and payment reminders.", icon: "receipt_long" },
+  { id: "inventory", name: "Inventory Ledger", desc: "Multi-warehouse tracking, stock valuation (FIFO), and low-stock alerts.", icon: "inventory_2" },
+  { id: "payroll", name: "Statutory Payroll", desc: "Salary processing, auto PF/ESI/PT calculation, and employee payslips.", icon: "groups" },
+  { id: "itr", name: "ITR Returns", desc: "Income tax computation for ITR-3/4 and advance tax tracking.", icon: "description" },
 ];
 
 interface StepModuleActivationProps {
@@ -51,9 +20,7 @@ interface StepModuleActivationProps {
 }
 
 export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivationProps) {
-  const [modules, setModules] = useState(
-    MODULES.map((m) => ({ module: m.id, enabled: m.required }))
-  );
+  const [enabledModules, setEnabledModules] = useState<Set<string>>(new Set(["accounting", "gst", "invoicing"]));
 
   const saveProgress = api.onboarding.saveProgress.useMutation({
     onSuccess: () => {
@@ -65,83 +32,69 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
     },
   });
 
-  const toggleModule = (moduleId: string) => {
-    setModules((prev) =>
-      prev.map((m) =>
-        m.module === moduleId
-          ? { ...m, enabled: m.module === "accounting" ? true : !m.enabled }
-          : m
-      )
-    );
+  const toggleModule = (id: string) => {
+    if (id === "accounting") return;
+    const next = new Set(enabledModules);
+    enabledModules.has(id) ? next.delete(id) : next.add(id);
+    setEnabledModules(next);
   };
 
   const handleContinue = async () => {
+    const data = Array.from(enabledModules).map(id => ({ module: id, enabled: true }));
     await saveProgress.mutateAsync({
       tenantId,
       step: 2,
-      data: { moduleActivation: modules },
+      data: { moduleActivation: data },
     });
   };
 
   return (
-    <div>
-      <div className="mb-8">
-        <h2 className="font-display text-[20px] font-normal text-dark">Module Activation</h2>
-        <p className="font-ui text-[13px] text-light mt-1">
-          Choose the features you want to enable for your business
+    <div className="flex flex-col gap-12 text-left">
+      {/* Section Header */}
+      <div>
+        <span className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest block mb-4">Architecture</span>
+        <h1 className="font-display-xl text-display-xl text-on-surface mb-4">Configure Ledger Modules</h1>
+        <p className="font-ui-md text-ui-md text-text-mid max-w-2xl leading-relaxed">
+          Select the specific functional modules required for your organization's fiscal operations. These can be adjusted post-onboarding within system settings.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {MODULES.map((mod) => {
-          const isEnabled = modules.find((m) => m.module === mod.id)?.enabled ?? false;
-          return (
-            <div
-              key={mod.id}
-              className={`card p-5 cursor-pointer transition-all ${
-                isEnabled ? "border-amber bg-surface-muted" : ""
-              }`}
-              onClick={() => !mod.required && toggleModule(mod.id)}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="font-ui text-[15px] font-medium text-dark">{mod.name}</h3>
-                <div
-                  className={`w-10 h-6 rounded-full transition-colors ${
-                    isEnabled ? "bg-amber" : "bg-lighter"
-                  } relative`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    !mod.required && toggleModule(mod.id);
-                  }}
-                >
-                  <div
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
-                      isEnabled ? "left-5" : "left-1"
-                    }`}
-                  />
-                </div>
-              </div>
-              <p className="font-ui text-[12px] text-light">{mod.description}</p>
-              {mod.required && (
-                <span className="inline-block mt-2 font-ui text-[9px] uppercase tracking-wide text-amber">
-                  Required
-                </span>
-              )}
+      {/* Grid for Modules */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {MODULES.map((mod) => (
+          <div
+            key={mod.id}
+            onClick={() => toggleModule(mod.id)}
+            className={`group border-[0.5px] border-border-subtle p-6 flex flex-col relative transition-all duration-300 cursor-pointer ${
+              enabledModules.has(mod.id) ? "bg-[#fff8f4] border-amber shadow-sm" : "bg-white hover:bg-stone-50"
+            }`}
+          >
+            {enabledModules.has(mod.id) && <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>}
+            <div className="flex justify-between items-start mb-4">
+              <span className={`material-symbols-outlined text-2xl ${enabledModules.has(mod.id) ? "text-[#C8860A]" : "text-stone-400"}`}>
+                {mod.icon}
+              </span>
+              {mod.required && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-100 text-stone-500 px-2 py-0.5 rounded-sm">Required</span>}
             </div>
-          );
-        })}
+            <h3 className="font-ui-lg text-lg font-bold text-on-surface mb-2">{mod.name}</h3>
+            <p className="font-ui-sm text-ui-sm text-text-mid flex-1 leading-relaxed">
+              {mod.desc}
+            </p>
+          </div>
+        ))}
       </div>
 
-      <div className="mt-8 flex justify-between items-center pt-6 border-t border-hairline">
-        <p className="font-ui text-[12px] text-light">
-          Accounting is always enabled (core feature)
+      <div className="flex justify-between items-center mt-6 pt-8 border-t border-border-subtle">
+        <p className="font-ui-xs text-[11px] text-text-light uppercase tracking-wider italic">
+          Accounting module is always active as the system core.
         </p>
         <button
           onClick={handleContinue}
           disabled={saveProgress.isPending}
-          className="filter-tab active disabled:opacity-50"
+          className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
         >
-          {saveProgress.isPending ? "Saving..." : "Continue"}
+          {saveProgress.isPending ? "Saving..." : "Establish Framework"}
+          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
         </button>
       </div>
     </div>
