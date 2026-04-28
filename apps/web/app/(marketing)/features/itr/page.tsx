@@ -1,98 +1,100 @@
 // @ts-nocheck
 'use client';
 
-import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
-import { SectionLabel } from '@/components/marketing/section-label';
 
-export default function ItrPage() {
-  const heroRef = useRef(null);
-  useEffect(() => {
-    const el = heroRef.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }, { threshold: 0.1 });
-    obs.observe(el); return () => obs.disconnect();
-  }, []);
-
+export default function ITRFeaturePage() {
   return (
-    <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="bg-page-bg text-on-surface antialiased min-h-screen">
       <MarketingNav />
-      <main id="main-content">
-        <section ref={heroRef} className="animate-in py-24 md:py-32">
-          <div className="marketing-container max-w-3xl">
-            <SectionLabel>ITR Returns</SectionLabel>
-            <h1 className="font-display text-[36px] md:text-[48px] font-normal text-dark leading-[1.15] mb-6">
-              Your books talk directly to your ITR. No re-entry at year end.
+      <main className="pt-32 pb-24">
+        {/* Hero */}
+        <section className="max-w-7xl mx-auto px-8 pt-16 pb-space-64 text-left">
+          <div className="max-w-4xl">
+            <h2 className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-6 font-bold">ITR Compliance Hub</h2>
+            <h1 className="font-marketing-hero text-marketing-hero text-on-surface mb-8">
+              From P&L to ITR — without re-entering a single number.
             </h1>
+            <p className="font-ui-lg text-ui-lg text-text-mid max-w-2xl mb-10 leading-relaxed">
+              Your tax computation is automatically derived from your closed books. Old vs new regime comparison built in, not bolted on.
+            </p>
+            <Link href="/signup" className="bg-primary-container text-white px-8 py-4 font-ui-sm text-sm font-bold uppercase tracking-widest hover:bg-primary transition-all no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+              Start Free <span className="inline-block ml-2">→</span>
+            </Link>
           </div>
         </section>
 
-        <section className="py-16 border-t border-border">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-8">Regime comparison</h2>
-            <div className="rounded-xl shadow-card overflow-hidden border border-border bg-surface p-8">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="p-4 border border-border rounded-lg">
-                  <h3 className="font-ui text-ui-xs text-light uppercase tracking-wider mb-4">Old Regime</h3>
-                  <div className="space-y-2 font-mono text-[13px]">
-                    <div>Gross Income <span className="float-right">₹18,50,000</span></div>
-                    <div>Deductions (80C etc.) <span className="float-right">-₹1,50,000</span></div>
-                    <div className="border-t border-border pt-2 font-medium">Taxable <span className="float-right">₹17,00,000</span></div>
-                    <div className="text-danger">Tax <span className="float-right">₹2,56,200</span></div>
+        {/* ITR Types */}
+        <section className="max-w-[1200px] mx-auto px-8 pb-space-64">
+          <h2 className="font-display-xl text-display-xl text-on-surface mb-12 text-left">ITR forms covered.</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { title: "ITR-3", desc: "Business income from profession or business. Full P&L mapping with Schedule III compliance.", active: true },
+              { title: "ITR-4", desc: "Presumptive taxation under Sections 44AD, 44ADA, and 44AE. Simplified computation.", active: false },
+              { title: "ITR-6", desc: "Companies — direct integration with your balance sheet and P&L.", active: false },
+            ].map((form) => (
+              <div key={form.title} className={`bg-white border-[0.5px] border-border-subtle p-8 shadow-sm relative text-left ${form.active ? 'border-t-2 border-t-primary-container' : ''}`}>
+                <h3 className="font-display-lg text-lg font-bold text-on-surface mb-4">{form.title}</h3>
+                <p className="font-ui-sm text-sm text-text-mid leading-relaxed mb-8">{form.desc}</p>
+                {form.active && <span className="text-primary font-ui-xs text-[10px] uppercase font-bold tracking-widest">Currently Supported</span>}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Regime Comparison */}
+        <section className="bg-section-muted py-space-64">
+          <div className="max-w-[1200px] mx-auto px-8 text-left">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <h2 className="font-display-xl text-display-xl text-on-surface mb-6">Old vs New — compare using your actual books.</h2>
+                <p className="font-ui-md text-ui-md text-text-mid leading-relaxed mb-8">
+                  Not a generic calculator. Your actual income, deductions, and exemptions run through both tax regimes side-by-side. See exactly how much you save — in real numbers.
+                </p>
+                <ul className="space-y-4 font-ui-sm text-sm">
+                  {['Actual P&L data, not estimate', 'Section-by-section regime comparison', 'One click to select the optimal regime'].map((item) => (
+                    <li key={item} className="flex items-center gap-3">
+                      <span className="material-symbols-outlined text-primary-container text-sm">check_circle</span>
+                      <span className="text-text-mid">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm">
+                <div className="space-y-4 font-mono text-sm">
+                  <div className="flex justify-between font-bold border-b border-border-subtle pb-3">
+                    <span className="uppercase tracking-widest text-[11px] font-ui">Tax Regime</span>
+                    <div className="flex gap-8">
+                      <span className="w-20 text-right">Old</span>
+                      <span className="w-20 text-right">New</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-ui text-text-mid">Total Tax</span>
+                    <div className="flex gap-8">
+                      <span className="w-20 text-right">₹ 1,04,520</span>
+                      <span className="w-20 text-right text-green-700">₹ 1,00,000</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between bg-green-50 px-4 py-3 -mx-4 mt-2 font-bold">
+                    <span className="uppercase tracking-widest text-[11px] font-ui text-green-800">Savings</span>
+                    <span className="text-green-700">₹ 4,520 ~ 4.3%</span>
                   </div>
                 </div>
-                <div className="p-4 border border-amber/30 rounded-lg bg-amber/5">
-                  <h3 className="font-ui text-ui-xs text-amber uppercase tracking-wider mb-4">New Regime</h3>
-                  <div className="space-y-2 font-mono text-[13px]">
-                    <div>Gross Income <span className="float-right">₹18,50,000</span></div>
-                    <div>No deductions <span className="float-right">-</span></div>
-                    <div className="border-t border-border pt-2 font-medium">Taxable <span className="float-right">₹18,50,000</span></div>
-                    <div className="text-success">Tax <span className="float-right">₹2,04,600</span></div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 p-4 rounded-lg" style={{ background: 'rgba(200,134,10,0.06)', border: '0.5px solid rgba(200,134,10,0.2)' }}>
-                <span className="font-ui text-[14px] font-medium text-amber">Recommendation: </span>
-                <span className="font-ui text-[14px] text-mid">New regime saves ₹51,600 — calculated from your actual books.</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-16 bg-section-muted">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-4">Presumptive scheme (44AD/44ADA)</h2>
-            <div className="rounded-xl shadow-card overflow-hidden border border-border bg-surface p-8">
-              <p className="font-ui text-[14px] text-mid">For eligible businesses — deemed income calculated from turnover. No detailed expense tracking required.</p>
-              <div className="flex items-center justify-center gap-8 mt-4 font-mono text-[13px]">
-                <div><span className="font-ui text-ui-xs text-light">Turnover</span><br />₹75,00,000</div>
-                <svg className="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                <div><span className="font-ui text-ui-xs text-light">Deemed Income (8%)</span><br /><span className="text-success">₹6,00,000</span></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-16">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-4">Integration chain</h2>
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              {['Journal Entries', 'P&L', 'ITR Computation', 'Self-assessment Tax'].map((step, i) => (
-                <div key={step} className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-amber/10 text-amber flex items-center justify-center font-ui text-[13px] font-medium">{i + 1}</div>
-                  <span className="font-ui text-[13px] text-dark">{step}</span>
-                  {i < 3 && <svg className="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-16 text-center">
-          <div className="marketing-container">
-            <Link href="/signup" className="marketing-btn-primary text-[16px] px-7 py-3.5 no-underline">
-              Start with ITR <span className="cta-arrow">→</span>
+        {/* CTA */}
+        <section className="py-space-96 px-8 text-center">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="font-marketing-xl text-marketing-xl text-on-surface mb-6">File with confidence this year.</h2>
+            <p className="font-ui-md text-ui-md text-text-mid mb-10">From P&L to ITR — zero re-entry. No double data entry, no audit anxiety.</p>
+            <Link href="/signup" className="bg-primary-container text-white px-10 py-5 font-ui-sm text-sm font-bold uppercase tracking-widest hover:bg-primary transition-all no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+              Start Free <span className="inline-block">→</span>
             </Link>
           </div>
         </section>

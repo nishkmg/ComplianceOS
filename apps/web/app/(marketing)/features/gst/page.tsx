@@ -1,91 +1,98 @@
 // @ts-nocheck
 'use client';
 
-import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
-import { SectionLabel } from '@/components/marketing/section-label';
 
-export default function GstPage() {
-  const heroRef = useRef(null);
-  useEffect(() => {
-    const el = heroRef.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }, { threshold: 0.1 });
-    obs.observe(el); return () => obs.disconnect();
-  }, []);
-
+export default function GSTFeaturePage() {
   return (
-    <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="bg-page-bg text-on-surface antialiased min-h-screen">
       <MarketingNav />
-      <main id="main-content">
-        <section ref={heroRef} className="animate-in py-24 md:py-32">
-          <div className="marketing-container max-w-3xl">
-            <SectionLabel>GST</SectionLabel>
-            <h1 className="font-display text-[36px] md:text-[48px] font-normal text-dark leading-[1.15] mb-6">
+      <main className="pt-32 pb-24">
+        {/* Hero */}
+        <section className="max-w-7xl mx-auto px-8 pt-16 pb-space-64">
+          <div className="max-w-4xl text-left">
+            <div className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-6 font-bold">GST Compliance Engine</div>
+            <h1 className="font-marketing-hero text-marketing-hero text-on-surface mb-8">
               GSTR-1, GSTR-2B, GSTR-3B — generated from your own entries. Not re-entered.
             </h1>
+            <p className="font-ui-lg text-ui-lg text-text-mid max-w-2xl mb-10 leading-relaxed">
+              Stop manually reconciling spreadsheets. Our engine maps your daily accounting entries directly to Indian GST return formats, highlighting ITC mismatches before you file.
+            </p>
+            <div className="flex gap-6">
+              <Link href="/signup" className="bg-primary-container text-white px-8 py-4 font-ui-sm text-sm font-bold uppercase tracking-widest hover:bg-primary transition-all no-underline rounded-sm shadow-sm">
+                Start Free <span className="inline-block ml-2">→</span>
+              </Link>
+            </div>
           </div>
         </section>
 
-        <section className="py-16 border-t border-border">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-8">The filing flow</h2>
-            <div className="space-y-6">
+        {/* KPI Stats */}
+        <section className="max-w-[1200px] mx-auto px-8 mb-space-64">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              { label: "GSTR Returns", value: "3" },
+              { label: "ITC Auto-Match Rate", value: "99.2%" },
+              { label: "E-way Bills Generated", value: "1,200+" },
+              { label: "Tax Saved (MTD)", value: "₹ 2.4L" },
+            ].map((s) => (
+              <div key={s.label} className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 shadow-sm text-left">
+                <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2 font-bold">{s.label}</p>
+                <p className="font-mono text-2xl font-bold text-on-surface">{s.value}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Zigzag Modules */}
+        <section className="space-y-space-64 max-w-[1200px] mx-auto px-8 pb-space-64">
+          {[
+            { icon: "receipt", title: "Auto-Generated Returns", desc: "GSTR-1, 2B, and 3B are generated directly from your invoices and journal entries. No double data entry, no manual mapping, no transcription errors.", reversed: false },
+            { icon: "difference", title: "ITC Reconciliation", desc: "Auto-match your purchase register with the GSTR-2B statement from the portal. Unmatched items are flagged instantly with drill-down to source documents.", reversed: true },
+            { icon: "local_shipping", title: "E-Way Bill Integration", desc: "Generate e-way bills directly from your sales invoices without switching portals. One click. Pre-populated. GST-compliant.", reversed: false },
+          ].map((m) => (
+            <div key={m.title} className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${m.reversed ? 'lg:direction-rtl' : ''}`}>
+              <div className={`text-left ${m.reversed ? 'lg:order-2' : ''}`}>
+                <h3 className="font-display-xl text-display-xl text-on-surface mb-6">{m.title}</h3>
+                <p className="font-ui-md text-ui-md text-text-mid leading-relaxed">{m.desc}</p>
+              </div>
+              <div className={`bg-section-muted border-[0.5px] border-border-subtle p-8 ${m.reversed ? 'lg:order-1' : ''}`}>
+                <div className="aspect-[4/3] bg-white border border-border-subtle flex items-center justify-center">
+                  <span className="material-symbols-outlined text-6xl text-text-light/30">{m.icon}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* Feature Grid */}
+        <section className="bg-section-muted py-space-64">
+          <div className="max-w-[1200px] mx-auto px-8">
+            <h2 className="font-display-xl text-display-xl text-on-surface mb-16 text-center">Everything your GST module needs.</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { step: 1, title: 'Entries posted → GSTR-1 auto-generated', desc: 'Every invoice and journal entry with GST impact flows into GSTR-1 automatically. No manual re-entry.' },
-                { step: 2, title: 'GSTR-2B fetched → ITC reconciled', desc: 'Your auto-populated ITC statement is fetched. The system matches it against your purchase entries.' },
-                { step: 3, title: 'GSTR-3B generated → Enter ARN → Filed', desc: 'The summary return is pre-filled from GSTR-1 and 2B. File on the portal, enter the ARN here.' },
-              ].map((s) => (
-                <div key={s.step} className="flex gap-4 items-start">
-                  <div className="w-8 h-8 rounded-full bg-amber text-white flex items-center justify-center font-ui text-[14px] font-medium flex-shrink-0">{s.step}</div>
-                  <div>
-                    <h3 className="font-ui text-[15px] font-medium text-dark">{s.title}</h3>
-                    <p className="font-ui text-[14px] text-mid">{s.desc}</p>
-                  </div>
+                { icon: "checklist", title: "Matching Engine", desc: "Two-way reconciliation between your purchase ledger and GSTR-2A/2B auto-drafted statement." },
+                { icon: "auto_fix_high", title: "Auto-filing Ready", desc: "Generate exact JSON payloads for the GST portal. No format conversions needed before upload." },
+                { icon: "summarize", title: "3B with Drill-down", desc: "Every line in your GSTR-3B can be traced back to the source invoice or journal entry." },
+              ].map((f) => (
+                <div key={f.title} className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm border-t-2 border-t-primary-container text-left">
+                  <span className="material-symbols-outlined text-primary-container text-3xl mb-4 block">{f.icon}</span>
+                  <h3 className="font-ui-lg font-bold text-on-surface mb-3">{f.title}</h3>
+                  <p className="font-ui-sm text-sm text-text-mid leading-relaxed">{f.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="py-16 bg-section-muted">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-4">ITC Reconciliation</h2>
-            <div className="rounded-xl shadow-card overflow-hidden border border-border bg-surface p-8">
-              <div className="flex gap-6 mb-6">
-                {[
-                  { label: 'Matched', value: '₹1,85,000', color: 'text-success' },
-                  { label: 'Unmatched', value: '₹12,500', color: 'text-danger' },
-                  { label: 'Pending', value: '₹8,200', color: 'text-amber' },
-                ].map((kpi) => (
-                  <div key={kpi.label} className="text-center">
-                    <div className="font-ui text-[11px] text-light uppercase tracking-wider mb-1">{kpi.label}</div>
-                    <div className={`font-mono text-[15px] font-medium ${kpi.color}`}>{kpi.value}</div>
-                  </div>
-                ))}
-              </div>
-              <p className="font-ui text-[13px] text-light">Know your ITC position before the due date.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Honest limitation banner */}
-        <section className="py-8">
-          <div className="marketing-container max-w-3xl">
-            <div className="rounded-lg p-4 flex gap-3 items-start" style={{ background: 'rgba(200,134,10,0.06)', border: '0.5px solid rgba(200,134,10,0.2)' }}>
-              <svg className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <p className="font-ui text-[14px] text-mid m-0">
-                <strong>Note:</strong> ComplianceOS does not file directly to the GST portal (no GSP integration in v1). You file on the GSTN portal, then record the ARN here. We generate everything; you file it.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-16 text-center">
-          <div className="marketing-container">
-            <Link href="/signup" className="marketing-btn-primary text-[16px] px-7 py-3.5 no-underline">
-              Start with the GST module <span className="cta-arrow">→</span>
+        {/* CTA */}
+        <section className="py-space-96 px-8 text-center">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="font-marketing-xl text-marketing-xl text-on-surface mb-6">Start generating compliant returns today.</h2>
+            <p className="font-ui-md text-ui-md text-text-mid mb-10">No GST data entry. No CSV exports. No portal re-entry.</p>
+            <Link href="/signup" className="bg-primary-container text-white px-10 py-5 font-ui-sm text-sm font-bold uppercase tracking-widest hover:bg-primary transition-all no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+              Start Free <span className="inline-block">→</span>
             </Link>
           </div>
         </section>
