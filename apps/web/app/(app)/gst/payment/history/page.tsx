@@ -3,97 +3,78 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 
-const months = [
-  { value: 1, label: "April" }, { value: 2, label: "May" }, { value: 3, label: "June" },
-  { value: 4, label: "July" }, { value: 5, label: "August" }, { value: 6, label: "September" },
-  { value: 7, label: "October" }, { value: 8, label: "November" }, { value: 9, label: "December" },
-  { value: 10, label: "January" }, { value: 11, label: "February" }, { value: 12, label: "March" },
+const mockPayments = [
+  { id: "1", date: "24 Oct 2024", cpin: "CPIN-880120421", head: "IGST", amount: 425000, status: "paid" },
+  { id: "2", date: "24 Oct 2024", cpin: "CPIN-880120422", head: "CGST", amount: 120000, status: "paid" },
+  { id: "3", date: "12 Sep 2024", cpin: "CPIN-874512309", head: "SGST", amount: 120000, status: "paid" },
+  { id: "4", date: "12 Sep 2024", cpin: "CPIN-874512310", head: "IGST", amount: 380000, status: "paid" },
 ];
 
-export default function PaymentHistoryPage() {
-  const [filterPeriod, setFilterPeriod] = useState<number | undefined>(undefined);
-  const [filterYear, setFilterYear] = useState<number | undefined>(undefined);
-
-  const { data: payments } = api.gstPayment.paymentHistory.useQuery();
-
-  const filteredPayments = payments?.filter((p) => {
-    if (filterPeriod === undefined && filterYear === undefined) return true;
-    const challanMonth = p.challanDate ? new Date(p.challanDate).getMonth() + 1 : null;
-    const challanYear = p.challanDate ? new Date(p.challanDate).getFullYear() : null;
-    if (filterPeriod !== undefined && challanMonth !== filterPeriod) return false;
-    if (filterYear !== undefined && challanYear !== filterYear) return false;
-    return true;
-  });
-
-  const handleDownloadChallan = (challan: any) => {
-    const content = `CHALLAN DETAILS\n===============\n\nChallan Number: ${challan.challanNumber}\nChallan Date: ${challan.challanDate}\nPayment Date: ${challan.paymentDate}\nBank: ${challan.bankName}\n\nTax Breakdown:\n${challan.taxBreakdown.map((b: any) => `  ${b.taxType.toUpperCase()}: ₹${b.amount.toLocaleString("en-IN")}`).join("\n")}\n\nTotal Amount: ₹${challan.totalAmount.toLocaleString("en-IN")}`;
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${challan.challanNumber}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
+export default function GSTPaymentHistoryPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-0 text-left">
+      {/* Header */}
+      <header className="px-gutter-desktop pt-10 pb-8 flex justify-between items-end mt-4">
         <div>
-          <Link href="/gst/ledger" className="font-ui text-[12px] text-amber hover:underline">← Back to GST Ledger</Link>
-          <h1 className="font-display text-[26px] font-normal text-dark mt-1">Payment History</h1>
+          <p className="font-ui-xs text-xs text-amber-text uppercase tracking-widest mb-2 font-bold">Electronic Cash Ledger</p>
+          <h1 className="font-display-lg text-display-lg text-on-surface">GST Payment History</h1>
         </div>
-        <Link href="/gst/payment" className="filter-tab active">Make Payment</Link>
-      </div>
+        <div className="flex gap-4">
+          <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
+            <span className="material-symbols-outlined text-[18px]">filter_list</span> Filter
+          </button>
+          <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
+            <span className="material-symbols-outlined text-[18px]">download</span> Export CSV
+          </button>
+        </div>
+      </header>
 
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select value={filterPeriod ?? ""} onChange={(e) => setFilterPeriod(e.target.value ? Number(e.target.value) : undefined)} className="input-field font-ui">
-            <option value="">All Months</option>
-            {months.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-          </select>
+      <div className="overflow-y-auto pb-12">
+        {/* Summary Bar */}
+        <div className="bg-white border-[0.5px] border-border-subtle p-8 mb-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2 font-bold">Total Paid (FY 2024-25)</p>
+            <p className="font-mono text-3xl font-bold text-on-surface">₹ 42,85,900.00</p>
+          </div>
+          <div className="w-[1px] h-12 bg-border-subtle hidden md:block"></div>
+          <div className="text-left md:text-right">
+            <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2 font-bold">Last Update</p>
+            <p className="font-mono text-sm text-text-mid">12 Nov 2024, 14:32 IST</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input type="number" placeholder="Year" value={filterYear ?? ""} onChange={(e) => setFilterYear(e.target.value ? Number(e.target.value) : undefined)} className="input-field font-ui w-28" min={2000} max={2100} />
-        </div>
-      </div>
 
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Challan No.</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Bank</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Mode</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredPayments && filteredPayments.length > 0 ? (
-              filteredPayments.map((p) => (
-                <tr key={p.id} className="border-b border-hairline">
-                  <td className="font-mono text-[13px] text-amber px-4 py-3">{p.challanNumber}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{p.challanDate}</td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3">{p.bankName}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(p.totalAmount)}</td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3 capitalize">{p.mode}</td>
-                  <td className="px-4 py-3">
-                    <button onClick={() => handleDownloadChallan(p)} className="font-ui text-[12px] text-amber hover:underline">Download</button>
-                  </td>
+        {/* Ledger Table */}
+        <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
+          <div className="h-[2px] w-full bg-primary-container"></div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-stone-50 border-b-[0.5px] border-border-subtle">
+                <tr>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest">Payment Date</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest">Challan ID (CPIN)</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest">Tax Head</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest text-right">Amount (₹)</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest text-center">Status</th>
                 </tr>
-              ))
-            ) : (
-              <tr><td colSpan={6} className="px-4 py-12 text-center font-ui text-light">No payment history found</td></tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
+                {mockPayments.map((p) => (
+                  <tr key={p.id} className="hover:bg-stone-50/30 transition-colors">
+                    <td className="py-5 px-6 text-text-mid">{p.date}</td>
+                    <td className="py-5 px-6 font-mono text-sm text-on-surface">{p.cpin}</td>
+                    <td className="py-5 px-6 font-ui-sm font-bold uppercase">{p.head}</td>
+                    <td className="py-5 px-6 text-right font-bold text-on-surface">₹ {formatIndianNumber(p.amount)}</td>
+                    <td className="py-5 px-6 text-center">
+                      <span className="inline-block px-2 py-0.5 bg-green-50 text-green-700 border border-green-200 text-[9px] font-bold uppercase rounded-sm">Paid</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
