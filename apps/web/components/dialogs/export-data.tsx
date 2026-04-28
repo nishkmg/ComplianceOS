@@ -1,66 +1,111 @@
 // @ts-nocheck
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 interface ExportDataDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  title?: string;
-  onExport: (format: string, dateRange: { from: string; to: string }) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onExport: (data: any) => void;
 }
 
 export function ExportDataDialog({
-  open,
-  onOpenChange,
-  title = "Export Data",
+  isOpen,
+  onClose,
   onExport,
 }: ExportDataDialogProps) {
-  const [format, setFormat] = useState("csv");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
-
-  if (!open) return null;
-
-  const handleExport = () => {
-    onExport(format, { from: dateFrom, to: dateTo });
-    onOpenChange(false);
-  };
+  const [fiscalYear, setFiscalYear] = useState('2024-25');
+  const [format, setFormat] = useState('xlsx');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/40" onClick={() => onOpenChange(false)} />
-      <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6 space-y-4">
-        <h2 className="font-display text-[18px] font-normal text-dark">{title}</h2>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl p-0 overflow-hidden border-[0.5px] border-border-subtle rounded-sm shadow-lg">
+        <DialogHeader className="px-8 py-6 border-b-[0.5px] border-border-subtle flex flex-row items-start justify-between bg-stone-50">
+          <div className="text-left">
+            <DialogTitle className="font-display-lg text-lg font-normal text-on-surface mb-1">Export Data</DialogTitle>
+            <p className="font-ui-sm text-sm text-text-mid">Generate ledgers and compliance reports for offline review.</p>
+          </div>
+        </DialogHeader>
 
-        <div className="space-y-3">
-          <div>
-            <label className="block font-ui text-[12px] text-light mb-1">Format</label>
-            <select value={format} onChange={(e) => setFormat(e.target.value)} className="input-field w-full font-ui">
-              <option value="csv">CSV</option>
-              <option value="xlsx">Excel (XLSX)</option>
-              <option value="pdf">PDF</option>
-            </select>
+        <div className="p-8 flex flex-col gap-8 bg-white overflow-y-auto max-h-[70vh] text-left">
+          {/* Section: FY */}
+          <div className="flex flex-col gap-4">
+            <label className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold">Select Period</label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <select 
+                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-sm text-sm text-on-surface appearance-none focus:outline-none focus:border-primary outline-none"
+                  value={fiscalYear}
+                  onChange={(e) => setFiscalYear(e.target.value)}
+                >
+                  <option value="2024-25">FY 2024-25</option>
+                  <option value="2023-24">FY 2023-24</option>
+                </select>
+                <span className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-text-mid">
+                  <span className="material-symbols-outlined">expand_more</span>
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block font-ui text-[12px] text-light mb-1">From Date</label>
-              <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="input-field w-full font-ui" />
+          <hr className="border-t-[0.5px] border-border-subtle m-0" />
+
+          {/* Section: Modules */}
+          <div className="flex flex-col gap-4">
+            <label className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold">Select Modules</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {['General Ledger', 'GST Data', 'Employee Records', 'ITR Computation'].map((m) => (
+                <label key={m} className="flex items-start gap-3 p-4 border-[0.5px] border-border-subtle rounded-sm hover:bg-stone-50 cursor-pointer transition-colors has-[:checked]:border-primary-container has-[:checked]:bg-[#fff8f4]">
+                  <input type="checkbox" className="mt-1 accent-primary" defaultChecked={m === 'General Ledger'} />
+                  <div className="flex flex-col">
+                    <span className="font-ui-sm font-bold text-on-surface">{m}</span>
+                    <span className="font-ui-xs text-[11px] text-text-mid">Full historical logs and balance summaries.</span>
+                  </div>
+                </label>
+              ))}
             </div>
-            <div>
-              <label className="block font-ui text-[12px] text-light mb-1">To Date</label>
-              <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="input-field w-full font-ui" />
+          </div>
+
+          <hr className="border-t-[0.5px] border-border-subtle m-0" />
+
+          {/* Section: Format */}
+          <div className="flex flex-col gap-4">
+            <label className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold">Export Format</label>
+            <div className="flex gap-4">
+              {[
+                { id: 'xlsx', name: 'Excel (.xlsx)', icon: 'table' },
+                { id: 'pdf', name: 'PDF Document', icon: 'description' },
+              ].map((f) => (
+                <label key={f.id} className="cursor-pointer flex-1">
+                  <input type="radio" className="sr-only peer" name="format" checked={format === f.id} onChange={() => setFormat(f.id)} />
+                  <div className="border-[0.5px] border-border-subtle rounded-sm p-4 text-center peer-checked:border-primary-container peer-checked:bg-[#fff8f4] hover:bg-stone-50 transition-colors flex flex-col items-center gap-2">
+                    <span className={`material-symbols-outlined text-text-mid ${format === f.id ? 'text-primary-container' : ''}`}>{f.icon}</span>
+                    <span className={`font-ui-sm text-xs ${format === f.id ? 'font-bold' : ''}`}>{f.name}</span>
+                  </div>
+                </label>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleExport}>Export</Button>
-        </div>
-      </div>
-    </div>
+        <DialogFooter className="px-8 py-6 border-t-[0.5px] border-border-subtle bg-stone-50 flex flex-row items-center justify-end gap-4">
+          <button onClick={onClose} className="font-ui-sm text-sm text-text-mid hover:text-on-surface transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
+          <button 
+            onClick={() => onExport({ fiscalYear, format })}
+            className="bg-primary-container text-white font-ui-sm text-sm px-8 py-3 rounded-sm hover:bg-primary transition-all shadow-sm border-none cursor-pointer flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-sm">download</span>
+            Generate Report
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

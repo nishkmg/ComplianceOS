@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Employee Directory - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#291800",
+                        "primary-fixed": "#ffddb3",
+                        "on-tertiary-container": "#002f49",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "inverse-surface": "#362f27",
+                        "surface-variant": "#ede0d3",
+                        "outline-variant": "#d6c4af",
+                        "primary-fixed-dim": "#ffb950",
+                        "outline": "#847563",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fff1e4",
+                        "on-surface-variant": "#514535",
+                        "surface-container": "#f9ecde",
+                        "section-muted": "#F4F2EE",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "amber-text": "#B47500",
+                        "on-secondary-fixed-variant": "#474746",
+                        "surface-dim": "#e5d8cb",
+                        "secondary": "#5f5e5e",
+                        "secondary-container": "#e2dfde",
+                        "secondary-fixed": "#e5e2e1",
+                        "page-bg": "#FAFAF8",
+                        "text-mid": "#555555",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "on-primary-fixed-variant": "#633f00",
+                        "on-error-container": "#93000a",
+                        "on-background": "#211b13",
+                        "inverse-primary": "#ffb950",
+                        "primary-container": "#c8860a",
+                        "surface": "#fff8f4",
+                        "primary": "#825500",
+                        "on-secondary-container": "#636262",
+                        "background": "#fff8f4",
+                        "error": "#ba1a1a",
+                        "section-dark": "#111111",
+                        "inverse-on-surface": "#fcefe1",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#211b13",
+                        "text-light": "#888888",
+                        "on-primary-container": "#3f2700",
+                        "on-tertiary-fixed": "#001e30",
+                        "tertiary-fixed": "#cae6ff",
+                        "tertiary": "#006494",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-tint": "#825500",
+                        "on-secondary": "#ffffff",
+                        "border-subtle": "#E8E4DC",
+                        "surface-container-highest": "#ede0d3",
+                        "surface-bright": "#fff8f4",
+                        "surface-container-high": "#f3e6d9",
+                        "tertiary-container": "#309bdb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-48": "48px",
+                        "gutter-wide": "32px",
+                        "gutter-desktop": "24px",
+                        "margin-mobile": "16px",
+                        "space-96": "96px",
+                        "space-128": "128px",
+                        "space-64": "64px"
+                    },
+                    "fontFamily": {
+                        "ui-lg": ["Syne"],
+                        "mono-md": ["DM Mono"],
+                        "marketing-hero": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "ui-xs": ["Syne"],
+                        "ui-sm": ["Syne"],
+                        "ui-md": ["Syne"],
+                        "display-lg": ["Playfair Display"],
+                        "mono-lg": ["DM Mono"],
+                        "display-xl": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                        "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shadow-screenshot {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        }
+        .shadow-card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+        body { font-family: 'Noto Serif', serif; }
+        .font-ui-sm { font-family: 'Syne', sans-serif; }
+        .font-mono-md { font-family: 'DM Mono', monospace; }
+    </style>
+</head>
+<body class="bg-[#FBF9F6] text-on-surface min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 border-r-[0.5px] border-stone-200 dark:border-stone-800 fixed left-0 top-0 bg-[#FBF9F6] dark:bg-stone-950 flex flex-col py-6 px-4 z-50 font-['Noto_Serif'] font-medium overflow-y-auto">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-amber-700 rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tighter text-stone-900 dark:text-stone-100 uppercase leading-none">ComplianceOS</h1>
+<p class="text-[10px] text-amber-600 dark:text-amber-500 uppercase tracking-widest font-bold mt-1">Editorial Ledger</p>
+</div>
+</div>
+</div>
+<div class="space-y-1 mb-8">
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">menu_book</span>
+<span class="text-sm">Journal</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">account_tree</span>
+<span class="text-sm">Chart of Accounts</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">receipt_long</span>
+<span class="text-sm">Invoicing</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">payments</span>
+<span class="text-sm">Payments</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span class="text-sm">Reports</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">account_balance</span>
+<span class="text-sm">GST</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">gavel</span>
+<span class="text-sm">ITR</span>
+</a>
+<!-- Active Nav -->
+<a class="text-amber-700 dark:text-amber-500 border-r-2 border-amber-600 bg-stone-100/50 dark:bg-stone-900/50 p-3 flex items-center gap-3 active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-sm font-bold">Payroll</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">inventory_2</span>
+<span class="text-sm">Inventory</span>
+</a>
+</div>
+<div class="mt-auto">
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 rounded active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<div class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full border-b-[0.5px] border-stone-200 dark:border-stone-800 bg-[#FBF9F6]/80 dark:bg-stone-950/80 backdrop-blur-md z-40 flex items-center justify-between px-8 h-16 font-['Noto_Serif'] text-sm tracking-tight">
+<div class="flex items-center gap-8">
+<div class="text-lg font-black text-stone-900 dark:text-stone-100">ComplianceOS</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-amber-700 dark:text-amber-500 font-bold border-b-2 border-amber-600 py-5" href="#">Modules</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors py-5" href="#">Audit Log</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-64 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg group-focus-within:text-amber-600 transition-colors">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-stone-100 dark:bg-stone-900 border-none rounded text-xs focus:ring-1 focus:ring-amber-600/30 transition-all" placeholder="Search entity, ledger, or report..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+</button>
+<button class="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-[22px]">help</span>
+</button>
+<button class="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-[22px]">apps</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-stone-200 overflow-hidden border border-stone-300 cursor-pointer">
+<img alt="Accountant Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnnu0UoSK5G3gG4zyfqbnCiddf25SSv-Aq0e5eTeMU5WqJHkUMcnhYIs7LTtVXzzYX2VYEDaNHTtkuAw88PZvvU0xxq2jIqu5OkVWKAaDxmd_LpUXoWvUfVKM_CWknjuDkSAre6v_0Og9S1AUVnjJyqux1ResbUq4UdMmpcfAohplrN0geLaQXDBQl-7EVQWqUdATsl52cFxWzffm88YXtRqgpFBLYGswQCMhMKtnABbpT8IbiRg70QCHz-3w7he7kRB7HFLXtF74"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content Canvas -->
+<main class="flex-1 p-8 max-w-[1400px] w-full mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+<div>
+<h2 class="text-3xl font-bold text-stone-900 dark:text-stone-100 tracking-tight mb-2">Employee Directory</h2>
+<p class="text-stone-500 text-sm">Centralized register for payroll compliance, KYC verification, and statutory records.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-5 py-2.5 border-[0.5px] border-stone-300 text-stone-700 bg-white hover:bg-stone-50 rounded font-ui-sm text-xs transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">download</span>
+                    Export PDF/Excel
+                </button>
+<button class="px-5 py-2.5 bg-amber-700 text-white rounded font-ui-sm text-xs hover:bg-amber-800 transition-colors flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-lg">person_add</span>
+                    Add New Employee
+                </button>
+</div>
+</div>
+<!-- Directory Toolbar / Filters -->
+<div class="bg-white dark:bg-stone-900 border-[0.5px] border-stone-200 dark:border-stone-800 rounded-t-lg p-5 flex flex-col lg:flex-row gap-5 justify-between items-center">
+<div class="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
+<button class="px-4 py-1.5 bg-amber-50 text-amber-800 rounded font-ui-sm text-[11px] font-bold uppercase tracking-wider border-[0.5px] border-amber-200">All Records (142)</button>
+<button class="px-4 py-1.5 text-stone-500 hover:bg-stone-50 rounded font-ui-sm text-[11px] font-bold uppercase tracking-wider transition-colors">Engineering (45)</button>
+<button class="px-4 py-1.5 text-stone-500 hover:bg-stone-50 rounded font-ui-sm text-[11px] font-bold uppercase tracking-wider transition-colors">Sales (38)</button>
+<button class="px-4 py-1.5 text-stone-500 hover:bg-stone-50 rounded font-ui-sm text-[11px] font-bold uppercase tracking-wider transition-colors">Operations (22)</button>
+<button class="px-4 py-1.5 text-stone-500 hover:bg-stone-50 rounded font-ui-sm text-[11px] font-bold uppercase tracking-wider transition-colors">Finance (15)</button>
+</div>
+<div class="flex items-center gap-3 w-full lg:w-auto">
+<div class="relative w-full lg:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-stone-50 dark:bg-stone-950 border-[0.5px] border-stone-200 dark:border-stone-800 rounded font-ui-sm text-xs focus:ring-1 focus:ring-amber-600/20 outline-none" placeholder="Filter by Name, ID or PAN..." type="text"/>
+</div>
+<button class="p-2 border-[0.5px] border-stone-200 dark:border-stone-800 rounded text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+</button>
+</div>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-white dark:bg-stone-900 border-x-[0.5px] border-b-[0.5px] border-stone-200 dark:border-stone-800 rounded-b-lg overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead>
+<tr class="bg-stone-50/80 dark:bg-stone-950/50 text-stone-500 border-b-[0.5px] border-stone-200 dark:border-stone-800">
+<th class="py-4 px-6 font-ui-sm text-[10px] uppercase tracking-widest font-bold">Emp Code</th>
+<th class="py-4 px-6 font-ui-sm text-[10px] uppercase tracking-widest font-bold">Name &amp; Identity</th>
+<th class="py-4 px-6 font-ui-sm text-[10px] uppercase tracking-widest font-bold">Department</th>
+<th class="py-4 px-6 font-ui-sm text-[10px] uppercase tracking-widest font-bold">Joining Date</th>
+<th class="py-4 px-6 font-ui-sm text-[10px] uppercase tracking-widest font-bold">Compliance Status</th>
+<th class="py-4 px-6 font-ui-sm text-[10px] uppercase tracking-widest font-bold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-[0.5px] divide-stone-100 dark:divide-stone-800">
+<!-- Row 1 -->
+<tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/20 transition-colors group">
+<td class="py-4 px-6 font-mono-md text-xs text-stone-600">EMP-1042</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<div class="w-9 h-9 rounded bg-amber-100 text-amber-800 flex items-center justify-center text-xs font-bold shadow-sm">AS</div>
+<div>
+<div class="text-sm font-bold text-stone-900 dark:text-stone-100">Aarav Sharma</div>
+<div class="font-mono-md text-[10px] text-stone-400">aarav.s@company.in</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 text-stone-600 uppercase tracking-tighter">Engineering</span>
+</td>
+<td class="py-4 px-6 font-mono-md text-xs text-stone-500">12 Mar 2021</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-green-50 text-green-700 text-[10px] font-bold uppercase tracking-wider border-[0.5px] border-green-200">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                Verified
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-stone-300 hover:text-amber-700 transition-colors p-1 opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/20 transition-colors group">
+<td class="py-4 px-6 font-mono-md text-xs text-stone-600">EMP-1089</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<div class="w-9 h-9 rounded bg-amber-100 text-amber-800 flex items-center justify-center text-xs font-bold shadow-sm">NP</div>
+<div>
+<div class="text-sm font-bold text-stone-900 dark:text-stone-100">Neha Patel</div>
+<div class="font-mono-md text-[10px] text-stone-400">neha.p@company.in</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 text-stone-600 uppercase tracking-tighter">Sales</span>
+</td>
+<td class="py-4 px-6 font-mono-md text-xs text-stone-500">05 Jun 2022</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-amber-50 text-amber-700 text-[10px] font-bold uppercase tracking-wider border-[0.5px] border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                Pending KYC
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-stone-300 hover:text-amber-700 transition-colors p-1 opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/20 transition-colors group">
+<td class="py-4 px-6 font-mono-md text-xs text-stone-600">EMP-1102</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<div class="w-9 h-9 rounded bg-amber-100 text-amber-800 flex items-center justify-center text-xs font-bold shadow-sm">RJ</div>
+<div>
+<div class="text-sm font-bold text-stone-900 dark:text-stone-100">Rahul Joshi</div>
+<div class="font-mono-md text-[10px] text-stone-400">rahul.j@company.in</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 text-stone-600 uppercase tracking-tighter">Finance</span>
+</td>
+<td class="py-4 px-6 font-mono-md text-xs text-stone-500">18 Sep 2022</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-green-50 text-green-700 text-[10px] font-bold uppercase tracking-wider border-[0.5px] border-green-200">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                Verified
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-stone-300 hover:text-amber-700 transition-colors p-1 opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/20 transition-colors group">
+<td class="py-4 px-6 font-mono-md text-xs text-stone-600">EMP-1156</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<div class="w-9 h-9 rounded bg-amber-100 text-amber-800 flex items-center justify-center text-xs font-bold shadow-sm">SK</div>
+<div>
+<div class="text-sm font-bold text-stone-900 dark:text-stone-100">Sneha Kapoor</div>
+<div class="font-mono-md text-[10px] text-stone-400">sneha.k@company.in</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 text-stone-600 uppercase tracking-tighter">Operations</span>
+</td>
+<td class="py-4 px-6 font-mono-md text-xs text-stone-500">02 Jan 2023</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-red-50 text-red-700 text-[10px] font-bold uppercase tracking-wider border-[0.5px] border-red-200">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                UAN Missing
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-stone-300 hover:text-amber-700 transition-colors p-1 opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="p-6 bg-stone-50/30 dark:bg-stone-950/20 flex items-center justify-between font-ui-sm text-xs text-stone-500">
+<div class="flex items-center gap-1">
+                    Showing <span class="font-bold text-stone-900 dark:text-stone-100 mx-1">1-10</span> of 142 total entries
+                </div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded hover:bg-stone-100 disabled:opacity-30 disabled:hover:bg-transparent transition-colors" disabled="">
+<span class="material-symbols-outlined text-xl">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded bg-amber-700 text-white flex items-center justify-center font-bold">1</button>
+<button class="w-8 h-8 rounded hover:bg-stone-100 flex items-center justify-center font-bold">2</button>
+<button class="w-8 h-8 rounded hover:bg-stone-100 flex items-center justify-center font-bold">3</button>
+<span class="px-2">...</span>
+<button class="w-8 h-8 rounded hover:bg-stone-100 flex items-center justify-center font-bold">15</button>
+</div>
+<button class="p-1.5 rounded hover:bg-stone-100 transition-colors">
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

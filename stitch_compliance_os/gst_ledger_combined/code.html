@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ComplianceOS - GST Ledgers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#002f49",
+                        "on-primary-fixed": "#291800",
+                        "outline-variant": "#d6c4af",
+                        "secondary-container": "#e2dfde",
+                        "on-primary-container": "#3f2700",
+                        "on-secondary-container": "#636262",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#cae6ff",
+                        "primary-container": "#c8860a",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "surface-container": "#f9ecde",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "outline": "#847563",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#006494",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#633f00",
+                        "border-subtle": "#E8E4DC",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "primary-fixed-dim": "#ffb950",
+                        "surface-dim": "#e5d8cb",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f4",
+                        "text-light": "#888888",
+                        "text-mid": "#555555",
+                        "surface": "#fff8f4",
+                        "primary": "#825500",
+                        "on-background": "#211b13",
+                        "section-dark": "#111111",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-surface-variant": "#514535",
+                        "inverse-primary": "#ffb950",
+                        "secondary": "#5f5e5e",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "inverse-surface": "#362f27",
+                        "surface-bright": "#fff8f4",
+                        "inverse-on-surface": "#fcefe1",
+                        "tertiary-container": "#309bdb",
+                        "section-muted": "#F4F2EE",
+                        "primary-fixed": "#ffddb3",
+                        "surface-container-highest": "#ede0d3",
+                        "surface-tint": "#825500",
+                        "amber-text": "#B47500",
+                        "page-bg": "#FAFAF8",
+                        "on-surface": "#211b13",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container-low": "#fff1e4",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-container-high": "#f3e6d9",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#ede0d3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-96": "96px",
+                        "margin-mobile": "16px",
+                        "gutter-wide": "32px",
+                        "space-48": "48px",
+                        "space-64": "64px",
+                        "space-128": "128px",
+                        "gutter-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "ui-sm": ["Syne"],
+                        "ui-lg": ["Syne"],
+                        "display-lg": ["Playfair Display"],
+                        "ui-xs": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "ui-md": ["Syne"],
+                        "display-xl": ["Playfair Display"],
+                        "mono-md": ["DM Mono"],
+                        "mono-lg": ["DM Mono"]
+                    },
+                    "fontSize": {
+                        "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                        "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row antialiased">
+<!-- TopNavBar (Mobile Only) -->
+<header class="md:hidden flex justify-between items-center px-8 py-3 w-full border-b-[0.5px] border-[#E8E4DC] bg-[#FDFCFB]/90 backdrop-blur-md z-50">
+<div class="text-lg font-bold tracking-tighter text-slate-900 uppercase">ComplianceOS</div>
+<button class="p-2 text-slate-600">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex flex-col h-screen w-64 border-r-[0.5px] border-[#E8E4DC] bg-[#F9F8F6] fixed left-0 top-0 z-40">
+<div class="p-6 border-b-[0.5px] border-[#E8E4DC]">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-size: 18px;">corporate_fare</span>
+</div>
+<div>
+<h1 class="text-sm font-black text-slate-900 font-ui-sm text-ui-sm">ComplianceOS</h1>
+<p class="font-ui-xs text-ui-xs text-slate-500 uppercase">Enterprise Console</p>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white py-2 px-4 rounded flex items-center justify-center gap-2 font-ui-sm text-ui-sm hover:translate-x-1 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-size: 16px;">add</span>
+                New Filing
+            </button>
+</div>
+<nav class="flex-1 py-4 flex flex-col font-serif text-sm tracking-tight">
+<a class="flex items-center gap-3 w-full text-slate-500 py-3 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 w-full bg-white text-[#C8860A] border-l-2 border-[#C8860A] font-semibold py-3 px-4" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+                GST Ledgers
+            </a>
+<a class="flex items-center gap-3 w-full text-slate-500 py-3 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">insights</span>
+                Advance Tax
+            </a>
+<a class="flex items-center gap-3 w-full text-slate-500 py-3 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+                Payroll Reports
+            </a>
+<a class="flex items-center gap-3 w-full text-slate-500 py-3 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+                Statutory Docs
+            </a>
+<a class="flex items-center gap-3 w-full text-slate-500 py-3 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="border-t-[0.5px] border-[#E8E4DC] py-4">
+<a class="flex items-center gap-3 w-full text-slate-500 py-2 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200 font-serif text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 w-full text-slate-500 py-2 px-4 hover:bg-slate-100 hover:translate-x-1 transition-transform duration-200 font-serif text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">archive</span>
+                Archive
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-gutter-wide flex flex-col gap-8 max-w-[1200px] mx-auto w-full">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-4 md:mt-8">
+<div>
+<h2 class="font-display-xl text-display-xl text-on-background">Electronic Credit Ledger</h2>
+<p class="font-ui-md text-ui-md text-text-mid mt-2">Statement of Input Tax Credit for GSTIN: 27AACPB1234F1Z5</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-ui-xs text-ui-xs uppercase text-amber-text tracking-widest">Financial Year</label>
+<select class="bg-surface border-[0.5px] border-outline text-on-surface font-ui-sm text-ui-sm rounded px-3 py-2 focus:ring-primary-container focus:border-primary-container">
+<option>2023-2024</option>
+<option>2022-2023</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-ui-xs text-ui-xs uppercase text-amber-text tracking-widest">Month</label>
+<select class="bg-surface border-[0.5px] border-outline text-on-surface font-ui-sm text-ui-sm rounded px-3 py-2 focus:ring-primary-container focus:border-primary-container">
+<option>October</option>
+<option>September</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Ledger Balances Summary -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider mb-2">Integrated Tax (IGST)</h3>
+<div class="font-mono-lg text-mono-lg text-on-background">₹ 4,50,230.00</div>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider mb-2">Central Tax (CGST)</h3>
+<div class="font-mono-lg text-mono-lg text-on-background">₹ 1,25,400.00</div>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider mb-2">State Tax (SGST)</h3>
+<div class="font-mono-lg text-mono-lg text-on-background">₹ 1,25,400.00</div>
+</div>
+</div>
+<!-- High Density Data Table -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle rounded overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-section-muted border-b-[0.5px] border-border-subtle">
+<th class="p-4 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid border-r-[0.5px] border-border-subtle min-w-[120px]">Date</th>
+<th class="p-4 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid border-r-[0.5px] border-border-subtle min-w-[180px]">Reference No.</th>
+<th class="p-4 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid border-r-[0.5px] border-border-subtle min-w-[250px]">Description</th>
+<th class="p-4 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid border-r-[0.5px] border-border-subtle text-right min-w-[140px]">IGST (₹)</th>
+<th class="p-4 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid border-r-[0.5px] border-border-subtle text-right min-w-[140px]">CGST (₹)</th>
+<th class="p-4 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid text-right min-w-[140px]">SGST (₹)</th>
+</tr>
+</thead>
+<tbody class="font-mono-md text-mono-md">
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface-container-low transition-colors">
+<td class="p-4 border-r-[0.5px] border-border-subtle">15-Oct-2023</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-text-mid">GSTR3B-0923</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle font-ui-sm text-ui-sm">ITC Claimed via GSTR-3B for Sep</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right text-tertiary">45,000.00</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right text-tertiary">12,500.00</td>
+<td class="p-4 text-right text-tertiary">12,500.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface-container-low transition-colors bg-surface-bright">
+<td class="p-4 border-r-[0.5px] border-border-subtle">20-Oct-2023</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-text-mid">PMT-06-1023</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle font-ui-sm text-ui-sm">Offset against Liability (Oct)</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right text-error">-15,200.00</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right text-error">-5,400.00</td>
+<td class="p-4 text-right text-error">-5,400.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface-container-low transition-colors">
+<td class="p-4 border-r-[0.5px] border-border-subtle">28-Oct-2023</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-text-mid">ITC-02-1023</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle font-ui-sm text-ui-sm">Transfer of ITC (Merger)</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right text-tertiary">1,20,000.00</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right text-text-light">0.00</td>
+<td class="p-4 text-right text-text-light">0.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-section-muted border-t-[0.5px] border-border-subtle font-bold">
+<td class="p-4 text-right border-r-[0.5px] border-border-subtle font-ui-sm text-ui-sm uppercase tracking-widest" colspan="3">Closing Balance</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right">4,50,230.00</td>
+<td class="p-4 border-r-[0.5px] border-border-subtle text-right">1,25,400.00</td>
+<td class="p-4 text-right">1,25,400.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Payslips - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Syne:wght@400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;family=Noto+Serif:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FAFAF8;
+        }
+        /* Custom scrollbar for a cleaner ledger look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAFAF8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E8E4DC;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c8c6c5;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "section-muted": "#F4F2EE",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f9ecde",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#3f2700",
+                    "border-subtle": "#E8E4DC",
+                    "on-tertiary-fixed-variant": "#004b70",
+                    "surface-container-low": "#fff1e4",
+                    "on-surface": "#211b13",
+                    "outline": "#847563",
+                    "surface-variant": "#ede0d3",
+                    "on-error-container": "#93000a",
+                    "secondary": "#5f5e5e",
+                    "surface-tint": "#825500",
+                    "tertiary-container": "#309bdb",
+                    "inverse-on-surface": "#fcefe1",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "tertiary-fixed": "#cae6ff",
+                    "primary": "#825500",
+                    "surface-dim": "#e5d8cb",
+                    "text-light": "#888888",
+                    "on-secondary-fixed-variant": "#474746",
+                    "on-primary-fixed-variant": "#633f00",
+                    "amber-text": "#B47500",
+                    "on-error": "#ffffff",
+                    "on-background": "#211b13",
+                    "on-secondary-container": "#636262",
+                    "background": "#fff8f4",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "tertiary": "#006494",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#8ecdff",
+                    "secondary-container": "#e2dfde",
+                    "surface-container-high": "#f3e6d9",
+                    "page-bg": "#FAFAF8",
+                    "surface-container-highest": "#ede0d3",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-primary-fixed": "#291800",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-tertiary-container": "#002f49",
+                    "primary-fixed": "#ffddb3",
+                    "primary-container": "#c8860a",
+                    "on-tertiary": "#ffffff",
+                    "section-dark": "#111111",
+                    "text-mid": "#555555",
+                    "on-primary": "#ffffff",
+                    "surface": "#fff8f4",
+                    "outline-variant": "#d6c4af",
+                    "surface-bright": "#fff8f4",
+                    "inverse-surface": "#362f27",
+                    "inverse-primary": "#ffb950",
+                    "section-amber": "rgba(200, 134, 10, 0.06)",
+                    "primary-fixed-dim": "#ffb950",
+                    "on-surface-variant": "#514535"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "space-128": "128px",
+                    "space-64": "64px",
+                    "space-48": "48px",
+                    "gutter-desktop": "24px",
+                    "gutter-wide": "32px",
+                    "space-96": "96px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "display-xl": ["Playfair Display"],
+                    "ui-lg": ["Syne"],
+                    "mono-md": ["DM Mono"],
+                    "ui-sm": ["Syne"],
+                    "display-lg": ["Playfair Display"],
+                    "marketing-xl": ["Playfair Display"],
+                    "marketing-hero": ["Playfair Display"],
+                    "ui-xs": ["Syne"],
+                    "ui-md": ["Syne"],
+                    "mono-lg": ["DM Mono"],
+                    "noto-serif": ["Noto Serif"]
+            },
+            "fontSize": {
+                "ui-md": "14px",
+                "ui-sm": "13px"
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-page-bg text-on-surface font-ui-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<header class="bg-[#F9F8F6] dark:bg-slate-950/80 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC] dark:border-slate-800 flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-noto-serif antialiased">
+<div class="flex items-center gap-4 lg:ml-64">
+<span class="font-noto-serif font-bold text-lg tracking-tight text-[#1A1A1A] dark:text-slate-100 hidden md:inline">ComplianceOS</span>
+<div class="h-4 w-[0.5px] bg-border-subtle mx-2 hidden md:block"></div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-[#666666] dark:text-slate-400 hover:text-[#1A1A1A] dark:hover:text-white transition-colors text-sm" href="#">Dashboard</a>
+<a class="text-[#666666] dark:text-slate-400 hover:text-[#1A1A1A] dark:hover:text-white transition-colors text-sm" href="#">Journal</a>
+<a class="text-[#C8860A] border-b-2 border-[#C8860A] font-semibold text-sm h-14 flex items-center" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low px-3 py-1.5 border border-border-subtle flex items-center gap-2">
+<span class="material-symbols-outlined text-[#666666]" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-ui-sm font-mono-md w-48" placeholder="Search entries..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white transition-colors p-2 cursor-pointer active:opacity-70" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white transition-colors p-2 cursor-pointer active:opacity-70" data-icon="help_outline">help_outline</button>
+<img alt="User avatar" class="h-8 w-8 rounded-full border border-border-subtle cursor-pointer active:opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_LyZVre3hECu6yTfD6qwQVXPVIx-hNE3wYg1NhX4ee6O4ShNQXYJM5FQsp9RoZUU5NT5ZukjR2O3uQ1khbieCHxqgt3euupJ4s6rSHw4pICGTtIoIZ3jaDWOkbnKR8hfuJz9iBYoOeoPffsUYLBOIx43yfrASD47uis6wiX4RzzUsSxhQJ90g7DlzlNGVVJhNxHvIqKMXajzJE5_MJjoczKPVfDhlYbwigVcqHlMaja2LjwxilHqB1gYPRs6OBjZ8ymBxsiHYDsY"/>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="bg-[#F9F8F6] dark:bg-slate-900 h-full w-64 fixed left-0 top-0 border-r-[0.5px] border-[#E8E4DC] dark:border-slate-800 flex flex-col py-4 gap-1 z-40 hidden lg:flex font-noto-serif text-[13px] tracking-tight transition-all ease-in-out">
+<div class="mb-6 px-6 mt-14">
+<h2 class="font-noto-serif font-black text-[#1A1A1A] dark:text-white text-lg">Core Engine</h2>
+<p class="text-xs text-[#666666] dark:text-slate-400 mt-1">Precision Accounting</p>
+</div>
+<nav class="flex-grow space-y-1 overflow-y-auto px-2">
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="menu_book">menu_book</span>
+<span>Journal</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="account_tree">account_tree</span>
+<span>CoA</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="gavel">gavel</span>
+<span>GST</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="description">description</span>
+<span>ITR</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="receipt_long">receipt_long</span>
+<span>Invoicing</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>Payments</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="bg-white dark:bg-slate-800 text-[#1A1A1A] dark:text-white border-l-2 border-[#C8860A] font-semibold flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-lg text-[#C8860A]" data-icon="group">group</span>
+<span>Payroll</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="insert_chart">insert_chart</span>
+<span>Reports</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2 pt-4 border-t-[0.5px] border-[#E8E4DC] dark:border-slate-800">
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="contact_support">contact_support</span>
+<span>Support</span>
+</a>
+<a class="text-error hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-64 pt-20 pb-20 px-6 min-h-screen max-w-[1200px] mx-auto w-full">
+<!-- Page Header & Controls -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 border-b-[0.5px] border-border-subtle pb-6">
+<div>
+<h2 class="font-display-xl text-display-xl text-on-background mb-1">My Payslips</h2>
+<p class="font-ui-sm text-text-mid max-w-lg">Access your monthly compensation statements, tax deductions, and historical earning records.</p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<!-- Period Selector -->
+<div class="flex items-center border-[0.5px] border-border-subtle bg-surface-container-lowest focus-within:border-primary transition-colors relative">
+<select class="appearance-none bg-transparent font-ui-sm text-ui-sm text-on-surface py-2.5 pl-4 pr-10 outline-none border-none cursor-pointer">
+<option value="10">October</option>
+<option value="09">September</option>
+<option value="08">August</option>
+<option value="07">July</option>
+</select>
+<div class="w-[0.5px] h-6 bg-border-subtle"></div>
+<select class="appearance-none bg-transparent font-ui-sm text-ui-sm text-on-surface py-2.5 pl-4 pr-10 outline-none border-none cursor-pointer">
+<option value="2024">2024</option>
+<option value="2023">2023</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 pointer-events-none text-text-light text-[18px]">calendar_today</span>
+</div>
+<!-- Action Button -->
+<button class="bg-primary-container text-on-primary font-ui-sm py-2.5 px-6 flex items-center gap-2 hover:bg-primary transition-all rounded-none group shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span class="uppercase tracking-wider font-ui-xs">Download PDF</span>
+<span class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1 ml-1">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Employee Meta Data (Ledger Style) -->
+<section class="bg-surface-container-lowest border-[0.5px] border-border-subtle mb-10 relative overflow-hidden shadow-sm">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-secondary-container"></div>
+<div class="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x-[0.5px] divide-border-subtle">
+<div class="p-6">
+<p class="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-1">Employee Name</p>
+<p class="font-ui-lg text-lg text-on-surface">Arjun Desai</p>
+</div>
+<div class="p-6">
+<p class="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-1">Employee ID</p>
+<p class="font-mono-md text-mono-md text-on-surface">EMP-2021-0492</p>
+</div>
+<div class="p-6">
+<p class="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-1">Department</p>
+<p class="font-ui-md text-ui-md text-on-surface">Financial Engineering</p>
+</div>
+<div class="p-6">
+<p class="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-1">Tax Identifiers</p>
+<div class="flex items-center gap-2">
+<span class="font-ui-xs text-[10px] text-text-mid bg-surface px-2 py-0.5 border-[0.5px] border-border-subtle">PAN</span>
+<span class="font-mono-md text-mono-md text-on-surface">ABCDE1234F</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Payslip Primary Ledger -->
+<section class="border-[0.5px] border-border-subtle bg-surface-container-lowest relative shadow-sm overflow-hidden mb-8">
+<!-- Precision Accent Line -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+<!-- Hero Section: Net Pay -->
+<div class="p-8 md:p-12 border-b-[0.5px] border-border-subtle bg-surface flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+<div>
+<h3 class="font-ui-xs text-[11px] text-amber-text uppercase tracking-widest mb-3 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container inline-block"></span>
+                    Net Pay Transfer
+                </h3>
+<div class="font-marketing-hero text-5xl md:text-6xl text-on-surface font-mono-lg tracking-tight">₹ 1,42,850.00</div>
+<p class="font-ui-sm text-ui-sm text-text-mid mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+                    Paid on 31st Oct, 2024 to HDFC Bank ending in **** 4509
+                </p>
+</div>
+<!-- Quick Summary Block -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 min-w-[300px]">
+<div class="flex justify-between items-center mb-3 pb-3 border-b-[0.5px] border-border-subtle border-dashed">
+<span class="font-ui-sm text-text-mid">Gross Earnings</span>
+<span class="font-mono-md text-on-surface">₹ 1,85,000.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-ui-sm text-text-mid">Total Deductions</span>
+<span class="font-mono-md text-on-surface">₹ 42,150.00</span>
+</div>
+</div>
+</div>
+<!-- Detailed Breakdown Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-2">
+<!-- Column 1: Earnings -->
+<div class="p-8 lg:border-r-[0.5px] border-border-subtle flex flex-col h-full bg-white">
+<div class="flex items-center gap-3 mb-8 pb-4 border-b-[0.5px] border-border-subtle">
+<span class="material-symbols-outlined text-primary-container text-[24px]">trending_up</span>
+<h4 class="font-ui-lg text-lg text-on-surface">Earnings Breakup</h4>
+</div>
+<div class="flex-1 flex flex-col gap-5">
+<div class="flex justify-between items-center group">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">Basic Salary</span>
+<span class="font-mono-md text-on-surface">₹ 80,000.00</span>
+</div>
+<div class="flex justify-between items-center group">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">House Rent Allowance (HRA)</span>
+<span class="font-mono-md text-on-surface">₹ 40,000.00</span>
+</div>
+<div class="flex justify-between items-center group">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">Leave Travel Allowance (LTA)</span>
+<span class="font-mono-md text-on-surface">₹ 15,000.00</span>
+</div>
+<div class="flex justify-between items-center group">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">Special Allowance</span>
+<span class="font-mono-md text-on-surface">₹ 50,000.00</span>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t-[0.5px] border-border-subtle flex justify-between items-center bg-stone-50 -mx-8 px-8 py-4 -mb-8">
+<span class="font-ui-md font-bold text-on-surface uppercase tracking-wider text-xs">Total Earnings</span>
+<span class="font-mono-lg text-xl text-on-surface font-bold">₹ 1,85,000.00</span>
+</div>
+</div>
+<!-- Column 2: Deductions -->
+<div class="p-8 flex flex-col h-full border-t-[0.5px] lg:border-t-0 border-border-subtle bg-white">
+<div class="flex items-center gap-3 mb-8 pb-4 border-b-[0.5px] border-border-subtle">
+<span class="material-symbols-outlined text-outline text-[24px]">trending_down</span>
+<h4 class="font-ui-lg text-lg text-on-surface">Deductions Breakup</h4>
+</div>
+<div class="flex-1 flex flex-col gap-5">
+<div class="flex justify-between items-center group">
+<div class="flex flex-col">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">Provident Fund (PF)</span>
+<span class="font-ui-xs text-[10px] text-text-light">Employee Contribution</span>
+</div>
+<span class="font-mono-md text-on-surface">₹ 9,600.00</span>
+</div>
+<div class="flex justify-between items-center group">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">Professional Tax</span>
+<span class="font-mono-md text-on-surface">₹ 200.00</span>
+</div>
+<div class="flex justify-between items-center group">
+<div class="flex flex-col">
+<span class="font-ui-md text-on-surface-variant group-hover:text-on-surface transition-colors">Tax Deducted at Source (TDS)</span>
+<span class="font-ui-xs text-[10px] text-text-light">As per old regime</span>
+</div>
+<span class="font-mono-md text-on-surface">₹ 32,350.00</span>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t-[0.5px] border-border-subtle flex justify-between items-center bg-stone-50 -mx-8 px-8 py-4 -mb-8">
+<span class="font-ui-md font-bold text-on-surface uppercase tracking-wider text-xs">Total Deductions</span>
+<span class="font-mono-lg text-xl text-on-surface font-bold">₹ 42,150.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Note -->
+<div class="mt-12 text-center pb-12">
+<p class="font-ui-xs text-[11px] text-text-light max-w-2xl mx-auto leading-relaxed">
+            This is a computer-generated document. No signature is required. For discrepancies regarding tax deductions or provident fund contributions, please contact the HR compliance team at <a class="text-primary-container underline underline-offset-4" href="mailto:payroll@complianceos.in">payroll@complianceos.in</a>.
+        </p>
+<div class="mt-12 border-t-[0.5px] border-border-subtle pt-6 flex justify-center items-center opacity-30">
+<span class="font-mono-md text-[10px] uppercase tracking-widest">End of Statement • System V.4.2</span>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-[#F9F8F6] border-t border-border-subtle grid grid-cols-5 py-3 px-2 z-50">
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Journal</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Add</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#C8860A]">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Payroll</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Account</span>
+</button>
+</nav>
+</body></html>

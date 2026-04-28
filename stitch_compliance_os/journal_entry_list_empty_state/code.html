@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Journal Entries - Empty State</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "on-tertiary-fixed": "#001e30",
+                    "primary": "#825500",
+                    "surface-container-highest": "#ede0d3",
+                    "border-subtle": "#E8E4DC",
+                    "on-tertiary-fixed-variant": "#004b70",
+                    "text-mid": "#555555",
+                    "surface-variant": "#ede0d3",
+                    "surface-dim": "#e5d8cb",
+                    "surface-container-high": "#f3e6d9",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface": "#fff8f4",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#d6c4af",
+                    "text-light": "#888888",
+                    "primary-fixed-dim": "#ffb950",
+                    "on-primary-container": "#3f2700",
+                    "inverse-surface": "#362f27",
+                    "amber-text": "#B47500",
+                    "inverse-on-surface": "#fcefe1",
+                    "surface-tint": "#825500",
+                    "surface-container": "#f9ecde",
+                    "inverse-primary": "#ffb950",
+                    "tertiary-fixed": "#cae6ff",
+                    "secondary": "#5f5e5e",
+                    "on-tertiary": "#ffffff",
+                    "surface-bright": "#fff8f4",
+                    "secondary-container": "#e2dfde",
+                    "section-amber": "rgba(200, 134, 10, 0.06)",
+                    "on-surface": "#211b13",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#006494",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "primary-container": "#c8860a",
+                    "on-error": "#ffffff",
+                    "section-muted": "#F4F2EE",
+                    "tertiary-fixed-dim": "#8ecdff",
+                    "page-bg": "#FAFAF8",
+                    "surface-container-low": "#fff1e4",
+                    "on-secondary-fixed-variant": "#474746",
+                    "on-tertiary-container": "#002f49",
+                    "outline": "#847563",
+                    "section-dark": "#111111",
+                    "on-surface-variant": "#514535",
+                    "secondary-fixed": "#e5e2e1",
+                    "primary-fixed": "#ffddb3",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#291800",
+                    "on-background": "#211b13",
+                    "tertiary-container": "#309bdb",
+                    "on-primary-fixed-variant": "#633f00",
+                    "on-secondary-container": "#636262",
+                    "background": "#fff8f4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "space-96": "96px",
+                    "gutter-desktop": "24px",
+                    "space-64": "64px",
+                    "space-48": "48px",
+                    "gutter-wide": "32px",
+                    "space-128": "128px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "mono-md": ["DM Mono"],
+                    "ui-lg": ["Syne"],
+                    "ui-xs": ["Syne"],
+                    "ui-md": ["Syne"],
+                    "marketing-xl": ["Playfair Display"],
+                    "display-xl": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "mono-lg": ["DM Mono"],
+                    "ui-sm": ["Syne"],
+                    "marketing-hero": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                    "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                    "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                    "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}]
+            },
+            "boxShadow": {
+                "card": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-page-bg font-ui-md text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-[#FDFCFB] dark:bg-[#121212] fixed top-0 w-full z-50 border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800 flex justify-between items-center px-12 h-16 backdrop-blur-md bg-opacity-90">
+<div class="flex items-center gap-8">
+<span class="font-serif text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase select-none">ComplianceOS</span>
+<!-- Navigation Links (Hidden on Mobile) -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="font-serif text-sm tracking-tight text-slate-900 dark:text-slate-100 text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1 rounded" href="#">Dashboard</a>
+<a class="font-serif text-sm tracking-tight text-slate-900 dark:text-slate-100 text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1 rounded" href="#">GST</a>
+<a class="font-serif text-sm tracking-tight text-slate-900 dark:text-slate-100 text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1 rounded" href="#">ITR</a>
+<a class="font-serif text-sm tracking-tight text-slate-900 dark:text-slate-100 text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1 rounded" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-4">
+<button class="text-stone-500 hover:text-stone-900 transition-all duration-200 cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-stone-500 hover:text-stone-900 transition-all duration-200 cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+<!-- Trailing Primary Action -->
+<button class="hidden md:flex text-[#C8860A] font-ui-sm text-ui-sm font-medium hover:opacity-80 transition-opacity">File Return</button>
+</div>
+</header>
+<div class="flex flex-1 pt-16 h-[calc(100vh-4rem)] overflow-hidden">
+<!-- SideNavBar (Hidden on Mobile) -->
+<nav class="hidden md:flex flex-col bg-[#FDFCFB] dark:bg-[#121212] h-full w-72 border-r-[0.5px] border-[#E8E4DC] dark:border-stone-800 sticky left-0 py-8 px-4 gap-2 overflow-y-auto">
+<div class="mb-8 px-4">
+<div class="font-serif font-bold text-[#1A1A1A] dark:text-white tracking-widest uppercase text-sm mb-1">ComplianceOS</div>
+<div class="font-mono-md text-mono-md text-text-light text-xs">Enterprise Tier</div>
+</div>
+<div class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT font-serif text-[13px] leading-relaxed text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 hover:translate-x-1 transition-transform duration-150 select-none cursor-default group" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 transition-opacity" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- ACTIVE NAV ITEM: Semantic match for "Journal entries" -> "Compliance Ledger" -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT font-serif text-[13px] leading-relaxed bg-[#F5F2ED] dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] font-semibold select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="menu_book" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span>Compliance Ledger</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT font-serif text-[13px] leading-relaxed text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 hover:translate-x-1 transition-transform duration-150 select-none cursor-default group" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 transition-opacity" data-icon="corporate_fare">corporate_fare</span>
+<span>Entity Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT font-serif text-[13px] leading-relaxed text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 hover:translate-x-1 transition-transform duration-150 select-none cursor-default group" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 transition-opacity" data-icon="analytics">analytics</span>
+<span>Reports Archive</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT font-serif text-[13px] leading-relaxed text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 hover:translate-x-1 transition-transform duration-150 select-none cursor-default group" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 transition-opacity" data-icon="verified_user">verified_user</span>
+<span>Audit Settings</span>
+</a>
+</div>
+<div class="mt-8 pt-6 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800 flex flex-col gap-1">
+<button class="w-full text-left px-4 py-3 border-[0.5px] border-[#1A1A1A] text-[#1A1A1A] font-ui-sm text-ui-sm rounded-DEFAULT hover:bg-[#1A1A1A] hover:text-white transition-colors duration-200">Add New Entity</button>
+<a class="flex items-center gap-3 px-4 py-3 mt-4 rounded-DEFAULT font-serif text-[13px] leading-relaxed text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 hover:translate-x-1 transition-transform duration-150 select-none cursor-default group" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 transition-opacity" data-icon="security">security</span>
+<span>Security Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-DEFAULT font-serif text-[13px] leading-relaxed text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 hover:translate-x-1 transition-transform duration-150 select-none cursor-default group" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-70 group-hover:opacity-100 transition-opacity" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas (Empty State) -->
+<main class="flex-1 bg-page-bg overflow-y-auto flex flex-col items-center justify-center p-8 md:p-12 relative">
+<!-- Contextual Background Elements (Minimalist) -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(#1A1A1A 1px, transparent 1px), linear-gradient(90deg, #1A1A1A 1px, transparent 1px); background-size: 64px 64px;"></div>
+<div class="max-w-xl w-full flex flex-col items-center text-center z-10">
+<!-- Empty State Illustration/Icon -->
+<div class="w-24 h-24 rounded-full border-[0.5px] border-outline-variant bg-surface-container-lowest flex items-center justify-center mb-8 shadow-sm">
+<span class="material-symbols-outlined text-4xl text-outline" style="font-variation-settings: 'wght' 200;">menu_book</span>
+</div>
+<!-- Messaging -->
+<h1 class="font-display-lg text-display-lg text-on-surface mb-4 tracking-tight">No journal entries yet</h1>
+<p class="font-ui-md text-ui-md text-text-mid mb-10 max-w-md leading-relaxed">
+                    Your books start here. Post your first entry to see your financial health dashboard come to life.
+                </p>
+<!-- Primary CTA -->
+<button class="bg-primary-container text-on-primary px-8 py-3.5 font-ui-sm text-ui-sm rounded-DEFAULT flex items-center gap-3 group hover:shadow-card transition-all duration-300">
+                    Create New Entry
+                    <span class="group-hover:translate-x-1 transition-transform duration-200">→</span>
+</button>
+</div>
+<!-- Fake structural lines to enhance "ledger" feel at the bottom -->
+<div class="absolute bottom-12 w-full max-w-3xl flex flex-col gap-[2px] opacity-20 pointer-events-none hidden md:flex">
+<div class="h-[0.5px] w-full bg-outline"></div>
+<div class="h-[0.5px] w-full bg-outline"></div>
+</div>
+</main>
+</div>
+<!-- Mobile Bottom Nav (Visible only on md:hidden, based on primary tabs) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-[#FDFCFB] border-t-[0.5px] border-[#E8E4DC] flex justify-around items-center h-16 px-2 z-50">
+<a class="flex flex-col items-center justify-center gap-1 w-full h-full text-stone-500" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 w-full h-full text-[#C8860A] border-t-2 border-[#C8860A]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="menu_book" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 w-full h-full text-stone-500" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="corporate_fare">corporate_fare</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 w-full h-full text-stone-500" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span>
+</a>
+</nav>
+</body></html>

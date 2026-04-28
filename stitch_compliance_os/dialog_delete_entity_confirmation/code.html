@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Delete Entity Confirmation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-tertiary-container": "#002f49",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "secondary-container": "#e2dfde",
+                      "surface-bright": "#fff8f4",
+                      "tertiary-container": "#309bdb",
+                      "on-surface-variant": "#514535",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-secondary-container": "#636262",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#211b13",
+                      "surface-dim": "#e5d8cb",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-background": "#211b13",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "outline-variant": "#d6c4af",
+                      "tertiary": "#006494",
+                      "outline": "#847563",
+                      "surface": "#fff8f4",
+                      "primary": "#825500",
+                      "primary-fixed-dim": "#ffb950",
+                      "primary-fixed": "#ffddb3",
+                      "surface-container-highest": "#ede0d3",
+                      "border-subtle": "#E8E4DC",
+                      "section-muted": "#F4F2EE",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#ede0d3",
+                      "surface-container-high": "#f3e6d9",
+                      "inverse-on-surface": "#fcefe1",
+                      "secondary": "#5f5e5e",
+                      "amber-text": "#B47500",
+                      "page-bg": "#FAFAF8",
+                      "surface-container": "#f9ecde",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#cae6ff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "on-primary-container": "#3f2700",
+                      "background": "#fff8f4",
+                      "section-dark": "#111111",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#291800",
+                      "text-mid": "#555555",
+                      "primary-container": "#c8860a",
+                      "on-primary-fixed-variant": "#633f00",
+                      "inverse-primary": "#ffb950",
+                      "surface-tint": "#825500",
+                      "text-light": "#888888",
+                      "surface-container-low": "#fff1e4",
+                      "inverse-surface": "#362f27",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-96": "96px",
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "space-128": "128px",
+                      "space-64": "64px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px"
+              },
+              "fontFamily": {
+                      "mono-lg": [
+                              "DM Mono"
+                      ],
+                      "mono-md": [
+                              "DM Mono"
+                      ],
+                      "marketing-hero": [
+                              "Playfair Display"
+                      ],
+                      "ui-lg": [
+                              "Syne"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "marketing-xl": [
+                              "Playfair Display"
+                      ],
+                      "display-xl": [
+                              "Playfair Display"
+                      ],
+                      "ui-md": [
+                              "Syne"
+                      ],
+                      "ui-sm": [
+                              "Syne"
+                      ],
+                      "ui-xs": [
+                              "Syne"
+                      ]
+              },
+              "fontSize": {
+                      "mono-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-hero": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "26px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-xl": [
+                              "38px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-ui-md min-h-screen overflow-hidden">
+<!-- Blurred Background App Shell -->
+<div class="fixed inset-0 pointer-events-none select-none blur-[4px] opacity-60 flex">
+<!-- SideNavBar JSON Component -->
+<aside class="bg-[#F9F7F2] h-screen w-64 fixed left-0 top-0 border-r-[0.5px] border-stone-200 flex flex-col h-full py-8 z-40">
+<div class="px-6 mb-8 flex flex-col gap-2">
+<span class="font-syne text-xs tracking-[0.2em] text-[#C8860A]">Standard Chartered CA</span>
+<span class="text-stone-500 font-ui-xs text-ui-xs">FY 2023-24</span>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<!-- Active Item -->
+<a class="bg-[#C8860A]/10 text-[#C8860A] border-r-2 border-[#C8860A] font-bold flex items-center gap-3 px-6 py-4 w-full transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">General Ledger</span>
+</a>
+<!-- Inactive Items -->
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-6 py-4 w-full transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">GST Liability</span>
+</a>
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-6 py-4 w-full transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">Audit Logs</span>
+</a>
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-6 py-4 w-full transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">Vouchers</span>
+</a>
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-6 py-4 w-full transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">TDS Compliance</span>
+</a>
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-6 py-4 w-full transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">Advisory</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="bg-[#C8860A] text-white w-full py-3 px-4 font-ui-sm text-ui-sm uppercase tracking-wider hover:opacity-90 transition-opacity">
+                    New Entry
+                </button>
+<div class="flex flex-col gap-1 mt-6 border-t-[0.5px] border-stone-200 pt-6">
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-2 py-3 w-full transition-all" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">Support</span>
+</a>
+<a class="text-stone-600 hover:text-stone-900 flex items-center gap-3 px-2 py-3 w-full transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-noto-serif text-sm tracking-wide uppercase">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area to hold TopAppBar -->
+<main class="ml-64 w-full flex-1">
+<!-- TopAppBar JSON Component -->
+<header class="bg-[#F9F7F2]/80 backdrop-blur-md fixed top-0 w-full z-50 border-b-[0.5px] border-stone-200 flex justify-between items-center px-8 h-16 max-w-[1320px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-stone-900">LedgerStandard</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-stone-950 border-b-2 border-[#C8860A] pb-1 font-semibold font-noto-serif antialiased tracking-tight cursor-pointer transition-all active:opacity-80" href="#">Dashboard</a>
+<a class="text-stone-500 font-medium hover:text-stone-900 font-noto-serif antialiased tracking-tight cursor-pointer transition-all active:opacity-80" href="#">Compliance</a>
+<a class="text-stone-500 font-medium hover:text-stone-900 font-noto-serif antialiased tracking-tight cursor-pointer transition-all active:opacity-80" href="#">Reports</a>
+<a class="text-stone-500 font-medium hover:text-stone-900 font-noto-serif antialiased tracking-tight cursor-pointer transition-all active:opacity-80" href="#">Audit</a>
+</nav>
+</div>
+<div class="flex items-center gap-4 text-[#C8860A]">
+<span class="material-symbols-outlined cursor-pointer hover:opacity-80">search</span>
+<span class="material-symbols-outlined cursor-pointer hover:opacity-80">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:opacity-80">settings</span>
+<div class="w-8 h-8 rounded-full bg-stone-300 ml-4 overflow-hidden border-[0.5px] border-stone-400">
+<!-- Placeholder for accountant profile -->
+</div>
+</div>
+</header>
+<!-- Dummy content for dashboard to blur -->
+<div class="pt-32 px-12 grid grid-cols-3 gap-8">
+<div class="h-64 bg-surface border-[0.5px] border-border-subtle p-6"></div>
+<div class="h-64 bg-surface border-[0.5px] border-border-subtle p-6 col-span-2"></div>
+<div class="h-96 bg-surface border-[0.5px] border-border-subtle p-6 col-span-3"></div>
+</div>
+</main>
+</div>
+<!-- Active Overlay & Dialog -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-on-background/30 backdrop-blur-[2px] p-4">
+<!-- Dialog Box -->
+<div class="bg-surface w-full max-w-xl border-[0.5px] border-border-subtle shadow-xl flex flex-col overflow-hidden relative">
+<!-- Warning Accent Bar -->
+<div class="h-[2px] w-full bg-error absolute top-0 left-0"></div>
+<div class="p-space-48 flex flex-col gap-gutter-wide">
+<!-- Header -->
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 shrink-0 bg-error-container text-error flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface mb-2">Delete Entity</h2>
+<p class="font-ui-md text-ui-md text-on-surface-variant">
+                            You are about to permanently delete the <span class="font-ui-md text-ui-md font-semibold text-on-surface">FY 2023-24 General Ledger</span>. This action cannot be reversed and will result in the following structural changes:
+                        </p>
+</div>
+</div>
+<!-- Consequences List -->
+<div class="bg-surface-container-low border-[0.5px] border-error/20 p-6 pl-10 relative">
+<ul class="list-disc text-error font-ui-sm text-ui-sm flex flex-col gap-2">
+<li>Permanent erasure of 4,208 voucher entries.</li>
+<li>Invalidation of attached GST reconciliation reports.</li>
+<li>Removal of all associated audit trails for this period.</li>
+</ul>
+</div>
+<!-- Verification Step -->
+<div class="flex flex-col gap-3 mt-4">
+<label class="font-ui-xs text-ui-xs uppercase tracking-wider text-text-mid" for="delete-confirmation">
+                        To verify, type <span class="font-mono-md text-mono-md font-bold text-on-surface mx-1 bg-surface-container px-2 py-1 border-[0.5px] border-border-subtle">DELETE</span> below:
+                    </label>
+<input autocomplete="off" class="w-full bg-surface-container-lowest border-[0.5px] border-border-subtle font-mono-lg text-mono-lg text-on-surface px-4 py-3 focus:outline-none focus:border-error focus:ring-1 focus:ring-error transition-colors" id="delete-confirmation" placeholder="Type here..." type="text"/>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="bg-surface-container-highest px-space-48 py-6 border-t-[0.5px] border-border-subtle flex items-center justify-end gap-4">
+<button class="font-ui-sm text-ui-sm text-text-mid hover:text-on-surface transition-colors px-6 py-3" type="button">
+                    Cancel Process
+                </button>
+<button class="bg-error text-on-error font-ui-sm text-ui-sm px-8 py-3 flex items-center gap-2 hover:bg-on-error-container transition-colors disabled:opacity-50 disabled:cursor-not-allowed" type="button">
+<span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                    Confirm Deletion
+                </button>
+</div>
+</div>
+</div>
+</body></html>

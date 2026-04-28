@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Opening Balances - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#825500",
+                      "section-muted": "#F4F2EE",
+                      "primary-fixed-dim": "#ffb950",
+                      "secondary-container": "#e2dfde",
+                      "page-bg": "#FAFAF8",
+                      "on-background": "#211b13",
+                      "on-secondary-container": "#636262",
+                      "on-primary-container": "#3f2700",
+                      "inverse-primary": "#ffb950",
+                      "tertiary-container": "#309bdb",
+                      "border-subtle": "#E8E4DC",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface": "#fff8f4",
+                      "on-secondary-fixed-variant": "#474746",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-error": "#ffffff",
+                      "text-mid": "#555555",
+                      "surface-container-low": "#fff1e4",
+                      "tertiary": "#006494",
+                      "on-primary-fixed-variant": "#633f00",
+                      "surface-bright": "#fff8f4",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-container-high": "#f3e6d9",
+                      "primary-fixed": "#ffddb3",
+                      "amber-text": "#B47500",
+                      "on-primary": "#ffffff",
+                      "primary": "#825500",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#362f27",
+                      "surface-dim": "#e5d8cb",
+                      "surface-variant": "#ede0d3",
+                      "primary-container": "#c8860a",
+                      "tertiary-fixed": "#cae6ff",
+                      "secondary": "#5f5e5e",
+                      "on-primary-fixed": "#291800",
+                      "inverse-on-surface": "#fcefe1",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-surface": "#211b13",
+                      "surface-container-highest": "#ede0d3",
+                      "on-surface-variant": "#514535",
+                      "on-error-container": "#93000a",
+                      "section-dark": "#111111",
+                      "text-light": "#888888",
+                      "surface-container": "#f9ecde",
+                      "on-tertiary-container": "#002f49",
+                      "outline": "#847563",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#d6c4af",
+                      "background": "#fff8f4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "space-64": "64px",
+                      "space-128": "128px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px",
+                      "space-96": "96px"
+              },
+              "fontFamily": {
+                      "mono-md": ["DM Mono"],
+                      "display-lg": ["Playfair Display"],
+                      "marketing-xl": ["Playfair Display"],
+                      "ui-sm": ["Syne"],
+                      "mono-lg": ["DM Mono"],
+                      "marketing-hero": ["Playfair Display"],
+                      "display-xl": ["Playfair Display"],
+                      "ui-lg": ["Syne"],
+                      "ui-xs": ["Syne"],
+                      "ui-md": ["Syne"]
+              },
+              "fontSize": {
+                      "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                      "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                      "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                      "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                      "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                      "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                      "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                      "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                      "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for table if it gets too long, maintaining editorial look */
+        .editorial-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .editorial-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .editorial-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #E8E4DC;
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface antialiased min-h-screen flex flex-col">
+<!-- Header / Nav Area (Minimal for Wizard) -->
+<header class="w-full border-b-[0.5px] border-border-subtle bg-surface-container-lowest py-6 px-12 flex items-center justify-between sticky top-0 z-50">
+<div class="font-marketing-xl text-[24px] font-black tracking-tighter uppercase text-on-background">
+            ComplianceOS
+        </div>
+<!-- Horizontal Stepper -->
+<nav aria-label="Progress" class="hidden md:block">
+<ol class="flex items-center space-x-6" role="list">
+<li class="flex items-center">
+<span class="flex items-center justify-center w-6 h-6 rounded-full border-[0.5px] border-border-subtle bg-surface-container text-text-light font-ui-xs text-ui-xs">1</span>
+<span class="ml-3 font-ui-xs text-ui-xs uppercase tracking-widest text-text-light">Entity</span>
+</li>
+<li class="flex items-center">
+<span class="w-4 h-[1px] bg-border-subtle"></span>
+</li>
+<li class="flex items-center">
+<span class="flex items-center justify-center w-6 h-6 rounded-full border-[0.5px] border-border-subtle bg-surface-container text-text-light font-ui-xs text-ui-xs">2</span>
+<span class="ml-3 font-ui-xs text-ui-xs uppercase tracking-widest text-text-light">Fiscal</span>
+</li>
+<li class="flex items-center">
+<span class="w-4 h-[1px] bg-border-subtle"></span>
+</li>
+<li class="flex items-center">
+<span class="flex items-center justify-center w-6 h-6 rounded-full border-[0.5px] border-border-subtle bg-surface-container text-text-light font-ui-xs text-ui-xs">3</span>
+<span class="ml-3 font-ui-xs text-ui-xs uppercase tracking-widest text-text-light">Tax</span>
+</li>
+<li class="flex items-center">
+<span class="w-4 h-[1px] bg-border-subtle"></span>
+</li>
+<li class="flex items-center">
+<span class="flex items-center justify-center w-6 h-6 rounded-full border-[0.5px] border-border-subtle bg-surface-container text-text-light font-ui-xs text-ui-xs">4</span>
+<span class="ml-3 font-ui-xs text-ui-xs uppercase tracking-widest text-text-light">Users</span>
+</li>
+<li class="flex items-center">
+<span class="w-4 h-[1px] bg-border-subtle"></span>
+</li>
+<li class="flex items-center">
+<span class="flex items-center justify-center w-6 h-6 rounded-full border-[0.5px] border-primary bg-primary text-on-primary font-ui-xs text-ui-xs">5</span>
+<span class="ml-3 font-ui-xs text-ui-xs uppercase tracking-widest text-primary font-semibold">Balances</span>
+</li>
+</ol>
+</nav>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-start py-space-64 px-4 w-full">
+<div class="w-full max-w-[900px] flex flex-col gap-8">
+<!-- Header Section -->
+<div class="flex flex-col gap-2">
+<h1 class="font-display-xl text-display-xl text-on-background">Opening Balances</h1>
+<p class="font-ui-md text-ui-md text-text-mid max-w-2xl">
+                    Establish the initial financial state for this entity. You may begin with a clean slate or carry forward balances from a previous accounting period. Ensure the double-entry equation balances perfectly before proceeding.
+                </p>
+</div>
+<!-- Configuration Card -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-primary shadow-sm flex flex-col">
+<!-- Mode 1: Fresh Start Checkbox -->
+<div class="p-8 border-b-[0.5px] border-border-subtle bg-section-amber bg-opacity-30">
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center mt-1">
+<input checked="" class="peer h-5 w-5 appearance-none rounded-sm border-[0.5px] border-outline checked:bg-primary checked:border-primary transition-colors cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-on-primary text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100" data-icon="check">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-ui-lg text-ui-lg text-on-background group-hover:text-primary transition-colors">Fresh Start</span>
+<span class="font-ui-sm text-ui-sm text-text-mid mt-1">Initialize all default ledger accounts with a ₹0.00 opening balance. Ideal for newly incorporated entities.</span>
+</div>
+</label>
+</div>
+<!-- Mode 2: Manual Entry Table (Preview State due to Fresh Start selection) -->
+<div class="flex flex-col bg-surface-container-lowest opacity-80 pointer-events-none">
+<div class="px-8 py-6 border-b-[0.5px] border-border-subtle flex items-center justify-between">
+<h2 class="font-ui-md text-ui-md font-medium text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-text-mid" data-icon="table_view">table_view</span>
+                            Ledger Account Schedule
+                        </h2>
+<span class="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid bg-surface-container px-3 py-1 rounded-sm">Read Only - Fresh Start</span>
+</div>
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-4 px-8 py-3 bg-surface-container-low border-b-[0.5px] border-border-subtle">
+<div class="col-span-6 font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid">Account Name</div>
+<div class="col-span-3 text-right font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid">Debit (₹)</div>
+<div class="col-span-3 text-right font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid">Credit (₹)</div>
+</div>
+<!-- Table Body (Simulated rows) -->
+<div class="flex flex-col max-h-[300px] overflow-y-auto editorial-scrollbar">
+<!-- Row 1 -->
+<div class="grid grid-cols-12 gap-4 px-8 py-4 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-6 font-ui-sm text-ui-sm text-on-surface">Cash &amp; Cash Equivalents</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">0.00</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">-</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-12 gap-4 px-8 py-4 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-6 font-ui-sm text-ui-sm text-on-surface">Accounts Receivable</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">0.00</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">-</div>
+</div>
+<!-- Row 3 -->
+<div class="grid grid-cols-12 gap-4 px-8 py-4 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-6 font-ui-sm text-ui-sm text-on-surface">Inventory Assets</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">0.00</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">-</div>
+</div>
+<!-- Row 4 -->
+<div class="grid grid-cols-12 gap-4 px-8 py-4 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-6 font-ui-sm text-ui-sm text-on-surface">Accounts Payable</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">-</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">0.00</div>
+</div>
+<!-- Row 5 -->
+<div class="grid grid-cols-12 gap-4 px-8 py-4 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-6 font-ui-sm text-ui-sm text-on-surface">Share Capital</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">-</div>
+<div class="col-span-3 text-right font-mono-md text-mono-md text-text-mid">0.00</div>
+</div>
+</div>
+<!-- Live Balance Checker Footer -->
+<div class="bg-section-muted border-t-[0.5px] border-border-subtle p-6 flex justify-end gap-12 items-center">
+<div class="flex flex-col items-end">
+<span class="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid mb-1">Total Dr</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹0.00</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid mb-1">Total Cr</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹0.00</span>
+</div>
+<div class="flex flex-col items-end pl-8 border-l-[0.5px] border-border-subtle">
+<span class="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid mb-1">Difference</span>
+<span class="font-mono-lg text-mono-lg text-primary">₹0.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-between items-center mt-4">
+<button class="font-ui-md text-ui-md text-secondary hover:text-on-background transition-colors flex items-center gap-2 group" type="button">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform" data-icon="arrow_back">arrow_back</span>
+                    Previous Step
+                </button>
+<button class="bg-primary text-on-primary font-ui-md text-ui-md px-8 py-3 flex items-center gap-3 hover:bg-surface-tint transition-all group shadow-sm" type="button">
+                    Confirm &amp; Complete
+                    <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Signup - ComplianceOS</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#633f00",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "secondary": "#5f5e5e",
+                        "text-light": "#888888",
+                        "surface-container-high": "#f3e6d9",
+                        "amber-text": "#B47500",
+                        "surface-variant": "#ede0d3",
+                        "on-background": "#211b13",
+                        "tertiary-fixed": "#cae6ff",
+                        "primary-fixed-dim": "#ffb950",
+                        "surface-container": "#f9ecde",
+                        "page-bg": "#FAFAF8",
+                        "inverse-on-surface": "#fcefe1",
+                        "on-primary-container": "#3f2700",
+                        "on-surface-variant": "#514535",
+                        "section-muted": "#F4F2EE",
+                        "primary-fixed": "#ffddb3",
+                        "primary-container": "#c8860a",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "inverse-surface": "#362f27",
+                        "section-dark": "#111111",
+                        "on-surface": "#211b13",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fff8f4",
+                        "surface": "#fff8f4",
+                        "background": "#fff8f4",
+                        "surface-container-highest": "#ede0d3",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#636262",
+                        "surface-container-low": "#fff1e4",
+                        "on-primary-fixed": "#291800",
+                        "border-subtle": "#E8E4DC",
+                        "error-container": "#ffdad6",
+                        "outline": "#847563",
+                        "outline-variant": "#d6c4af",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#001e30",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "on-secondary": "#ffffff",
+                        "text-mid": "#555555",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "on-tertiary-container": "#002f49",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "surface-tint": "#825500",
+                        "secondary-container": "#e2dfde",
+                        "tertiary-container": "#309bdb",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#474746",
+                        "tertiary": "#006494",
+                        "inverse-primary": "#ffb950",
+                        "surface-dim": "#e5d8cb",
+                        "secondary-fixed": "#e5e2e1",
+                        "primary": "#825500"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-96": "96px",
+                        "gutter-desktop": "24px",
+                        "space-64": "64px",
+                        "space-128": "128px",
+                        "margin-mobile": "16px",
+                        "gutter-wide": "32px",
+                        "space-48": "48px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Playfair Display"],
+                        "ui-sm": ["Syne"],
+                        "ui-xs": ["Syne"],
+                        "display-lg": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "ui-lg": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "mono-md": ["DM Mono"],
+                        "mono-lg": ["DM Mono"],
+                        "ui-md": ["Syne"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                        "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                        "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 antialiased selection:bg-primary-container selection:text-on-primary">
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md">
+<!-- Brand Header -->
+<div class="text-center mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight mb-2">ComplianceOS</h1>
+<p class="font-ui-md text-ui-md text-text-mid">Establish your firm's foundational ledger.</p>
+</div>
+<!-- Centered Card -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-[2px] border-t-primary-container p-8 shadow-sm">
+<!-- Progress Hint -->
+<div class="flex items-center justify-between mb-8 pb-4 border-b-[0.5px] border-border-subtle">
+<span class="font-mono-md text-mono-md text-text-mid tracking-widest uppercase">Step 1 of 7</span>
+<span class="font-ui-xs text-ui-xs text-amber-text">Entity Setup</span>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-6" method="POST">
+<!-- Business Name Field -->
+<div>
+<label class="block font-ui-sm text-ui-sm text-on-surface mb-2" for="business_name">Registered Business Name</label>
+<input class="block w-full border-[0.5px] border-border-subtle bg-transparent px-3 py-2 font-mono-md text-mono-md text-on-surface placeholder:text-text-light focus:border-primary focus:ring-0 focus:outline-none transition-colors" id="business_name" name="business_name" placeholder="As per MCA/GST records" required="" type="text"/>
+</div>
+<!-- Email Field -->
+<div>
+<label class="block font-ui-sm text-ui-sm text-on-surface mb-2" for="email">Primary Contact Email</label>
+<input class="block w-full border-[0.5px] border-border-subtle bg-transparent px-3 py-2 font-mono-md text-mono-md text-on-surface placeholder:text-text-light focus:border-primary focus:ring-0 focus:outline-none transition-colors" id="email" name="email" placeholder="admin@yourfirm.in" required="" type="email"/>
+</div>
+<!-- Password Field with Strength -->
+<div>
+<label class="block font-ui-sm text-ui-sm text-on-surface mb-2" for="password">Secure Password</label>
+<div class="relative">
+<input class="block w-full border-[0.5px] border-border-subtle bg-transparent px-3 py-2 font-mono-md text-mono-md text-on-surface placeholder:text-text-light focus:border-primary focus:ring-0 focus:outline-none transition-colors" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+<!-- Password Strength Indicator -->
+<div class="mt-2 flex gap-1 h-1 w-full">
+<div class="w-1/3 bg-primary-container h-full"></div>
+<div class="w-1/3 bg-border-subtle h-full"></div>
+<div class="w-1/3 bg-border-subtle h-full"></div>
+</div>
+<p class="mt-1 font-ui-xs text-ui-xs text-text-light text-right">Weak</p>
+</div>
+<!-- Confirm Password Field -->
+<div>
+<label class="block font-ui-sm text-ui-sm text-on-surface mb-2" for="confirm_password">Confirm Password</label>
+<input class="block w-full border-[0.5px] border-border-subtle bg-transparent px-3 py-2 font-mono-md text-mono-md text-on-surface placeholder:text-text-light focus:border-primary focus:ring-0 focus:outline-none transition-colors" id="confirm_password" name="confirm_password" placeholder="••••••••" required="" type="password"/>
+</div>
+<!-- Action Button -->
+<div class="pt-4">
+<button class="group w-full flex items-center justify-center gap-2 bg-primary-container border-[0.5px] border-primary-container px-6 py-3 font-ui-sm text-ui-sm text-on-primary hover:bg-surface-tint hover:border-surface-tint transition-all duration-300" type="submit">
+                        Continue to Firm Details
+                        <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-300">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Meta Links -->
+<div class="mt-8 text-center">
+<p class="font-ui-sm text-ui-sm text-text-mid">
+                Already maintaining a ledger? 
+                <a class="text-primary hover:text-surface-tint underline decoration-primary-container/30 decoration-2 underline-offset-4 transition-colors" href="#">Log in</a>
+</p>
+</div>
+</main>
+</body></html>

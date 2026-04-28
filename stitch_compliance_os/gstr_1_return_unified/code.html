@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GSTR-1 Return - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f9ecde",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#3f2700",
+                        "error": "#ba1a1a",
+                        "section-muted": "#F4F2EE",
+                        "on-surface": "#211b13",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "surface-container-low": "#fff1e4",
+                        "border-subtle": "#E8E4DC",
+                        "outline": "#847563",
+                        "secondary": "#5f5e5e",
+                        "surface-variant": "#ede0d3",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#fcefe1",
+                        "tertiary-container": "#309bdb",
+                        "surface-tint": "#825500",
+                        "text-light": "#888888",
+                        "on-secondary-fixed-variant": "#474746",
+                        "surface-dim": "#e5d8cb",
+                        "tertiary-fixed": "#cae6ff",
+                        "primary": "#825500",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "amber-text": "#B47500",
+                        "on-primary-fixed-variant": "#633f00",
+                        "on-secondary-container": "#636262",
+                        "on-background": "#211b13",
+                        "on-error": "#ffffff",
+                        "tertiary": "#006494",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary": "#ffffff",
+                        "background": "#fff8f4",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "secondary-container": "#e2dfde",
+                        "page-bg": "#FAFAF8",
+                        "surface-container-highest": "#ede0d3",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-primary-fixed": "#291800",
+                        "surface-container-high": "#f3e6d9",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-container": "#002f49",
+                        "section-dark": "#111111",
+                        "primary-container": "#c8860a",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffddb3",
+                        "surface": "#fff8f4",
+                        "outline-variant": "#d6c4af",
+                        "on-primary": "#ffffff",
+                        "text-mid": "#555555",
+                        "surface-bright": "#fff8f4",
+                        "primary-fixed-dim": "#ffb950",
+                        "on-surface-variant": "#514535",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "inverse-primary": "#ffb950",
+                        "inverse-surface": "#362f27"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "space-96": "96px",
+                        "space-64": "64px",
+                        "space-48": "48px",
+                        "gutter-desktop": "24px",
+                        "gutter-wide": "32px",
+                        "space-128": "128px"
+                    },
+                    "fontFamily": {
+                        "mono-lg": ["DM Mono"],
+                        "ui-xs": ["Syne"],
+                        "ui-md": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "ui-sm": ["Syne"],
+                        "mono-md": ["DM Mono"],
+                        "ui-lg": ["Syne"],
+                        "display-xl": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                        "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FAFAF8] text-on-surface font-ui-md antialiased selection:bg-primary-container selection:text-white">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex flex-col py-8 bg-white dark:bg-stone-950 fixed left-0 top-0 h-screen w-64 border-r-[0.5px] border-stone-200 dark:border-stone-800 z-40">
+<div class="px-6">
+<h1 class="text-stone-900 dark:text-stone-50 font-serif text-2xl border-b-[0.5px] border-stone-200 dark:border-stone-800 pb-4 mb-8 font-marketing-hero">ComplianceOS</h1>
+<p class="font-ui-xs text-secondary mb-8">FY 2024-25 • Ledger Mode</p>
+</div>
+<div class="flex-grow flex flex-col gap-2">
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+            Dashboard
+        </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+            Ledger
+        </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+            Invoicing
+        </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">insert_chart</span>
+            Reports
+        </a>
+<a class="bg-stone-50 dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] py-3 px-6 flex items-center gap-3 font-ui-sm font-medium" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">gavel</span>
+            GST
+        </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+            ITR
+        </a>
+</div>
+<div class="mt-auto flex flex-col gap-2 border-t-[0.5px] border-stone-200 dark:border-stone-800 pt-4">
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+            Settings
+        </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform hover:bg-stone-50 dark:hover:bg-stone-900/50 flex items-center gap-3 font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">contact_support</span>
+            Support
+        </a>
+</div>
+</nav>
+<!-- TopAppBar (Shared Component) -->
+<header class="hidden md:flex justify-between items-center h-16 px-8 ml-64 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md fixed top-0 right-0 border-b-[0.5px] border-stone-200 dark:border-stone-800 w-[calc(100%-16rem)] z-30">
+<div class="font-['Noto_Serif'] font-medium tracking-tight text-[#C8860A] dark:text-[#E6A01C]">
+<span class="font-marketing-hero text-xl">ComplianceOS</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-stone-500 dark:text-stone-400">
+<button class="hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-200">
+<span class="material-symbols-outlined">history_edu</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-stone-900 dark:text-stone-100 font-ui-sm border border-stone-900 px-4 py-1.5 rounded-sm hover:bg-stone-50 transition-colors">New Entry</button>
+<button class="bg-[#C8860A] text-white font-ui-sm px-4 py-1.5 rounded-sm hover:bg-[#B47500] transition-colors flex items-center gap-2 group">
+                File Return <span class="group-hover:translate-x-1 transition-transform">→</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-24 px-4 md:px-12 pb-24 max-w-[1320px] mx-auto min-h-screen">
+<!-- Hub Header -->
+<div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8">
+<div>
+<p class="font-ui-xs text-amber-text uppercase tracking-widest mb-2">GSTR-1 Outward Supplies</p>
+<h2 class="font-display-xl text-on-surface">September 2024</h2>
+<p class="font-ui-sm text-secondary mt-2 max-w-2xl">Details of outward supplies of goods or services. Ensure all B2B invoices and B2C aggregates are accurately reconciled before filing.</p>
+</div>
+<div class="flex flex-col gap-2 md:text-right">
+<p class="font-ui-xs text-secondary uppercase tracking-widest">Status</p>
+<div class="flex items-center md:justify-end gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span class="font-ui-sm font-medium">Pending Filing</span>
+</div>
+<p class="font-ui-xs text-secondary mt-1">Due: 11 Oct 2024</p>
+</div>
+</div>
+<!-- KPI Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] p-6 hover:shadow-sm transition-shadow duration-300">
+<h3 class="font-ui-sm text-secondary mb-4">Total Taxable Value</h3>
+<p class="font-mono-lg text-2xl text-on-surface">₹ 24,50,000.00</p>
+</div>
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] p-6 hover:shadow-sm transition-shadow duration-300">
+<h3 class="font-ui-sm text-secondary mb-4">Total Tax (IGST + CGST + SGST)</h3>
+<p class="font-mono-lg text-2xl text-on-surface">₹ 4,41,000.00</p>
+</div>
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] p-6 hover:shadow-sm transition-shadow duration-300">
+<h3 class="font-ui-sm text-secondary mb-4">Total Invoices</h3>
+<p class="font-mono-lg text-2xl text-on-surface">142</p>
+<p class="font-ui-xs text-secondary mt-2">120 B2B | 22 B2C</p>
+</div>
+</div>
+<!-- B2B Invoices Section (Table) -->
+<div class="mb-16">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-display-lg text-on-surface">B2B Invoices (4A, 4B, 4C, 6B, 6C)</h3>
+<button class="text-stone-900 font-ui-sm hover:text-[#C8860A] transition-colors flex items-center gap-1">
+                View All <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<div class="bg-white border-[0.5px] border-border-subtle overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b-[0.5px] border-border-subtle bg-section-muted/50">
+<th class="py-4 px-6 font-ui-xs text-secondary uppercase tracking-widest font-normal w-1/5">Receiver GSTIN</th>
+<th class="py-4 px-6 font-ui-xs text-secondary uppercase tracking-widest font-normal w-1/5">Invoice #</th>
+<th class="py-4 px-6 font-ui-xs text-secondary uppercase tracking-widest font-normal w-1/6">Date</th>
+<th class="py-4 px-6 font-ui-xs text-secondary uppercase tracking-widest font-normal text-right w-1/6">Taxable Value</th>
+<th class="py-4 px-6 font-ui-xs text-secondary uppercase tracking-widest font-normal text-right w-1/6">Tax Amount</th>
+</tr>
+</thead>
+<tbody class="font-mono-md">
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-stone-50 transition-colors cursor-pointer">
+<td class="py-4 px-6 text-on-surface">27AADCB2230M1Z2</td>
+<td class="py-4 px-6 text-on-surface">INV-2024-091</td>
+<td class="py-4 px-6 text-secondary">02-Sep-24</td>
+<td class="py-4 px-6 text-on-surface text-right">₹ 1,50,000.00</td>
+<td class="py-4 px-6 text-secondary text-right">₹ 27,000.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-stone-50 transition-colors cursor-pointer">
+<td class="py-4 px-6 text-on-surface">07BBEPC4451K1Z5</td>
+<td class="py-4 px-6 text-on-surface">INV-2024-092</td>
+<td class="py-4 px-6 text-secondary">05-Sep-24</td>
+<td class="py-4 px-6 text-on-surface text-right">₹ 75,000.00</td>
+<td class="py-4 px-6 text-secondary text-right">₹ 13,500.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-stone-50 transition-colors cursor-pointer">
+<td class="py-4 px-6 text-on-surface">29CDEFD5562L1Z8</td>
+<td class="py-4 px-6 text-on-surface">INV-2024-093</td>
+<td class="py-4 px-6 text-secondary">10-Sep-24</td>
+<td class="py-4 px-6 text-on-surface text-right">₹ 2,10,000.00</td>
+<td class="py-4 px-6 text-secondary text-right">₹ 37,800.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-stone-50 transition-colors cursor-pointer">
+<td class="py-4 px-6 text-on-surface">33FGHJQ7783N1Z1</td>
+<td class="py-4 px-6 text-on-surface">INV-2024-094</td>
+<td class="py-4 px-6 text-secondary">15-Sep-24</td>
+<td class="py-4 px-6 text-on-surface text-right">₹ 45,000.00</td>
+<td class="py-4 px-6 text-secondary text-right">₹ 8,100.00</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors cursor-pointer">
+<td class="py-4 px-6 text-on-surface">27XYZAB9904P1Z3</td>
+<td class="py-4 px-6 text-on-surface">INV-2024-095</td>
+<td class="py-4 px-6 text-secondary">22-Sep-24</td>
+<td class="py-4 px-6 text-on-surface text-right">₹ 3,20,000.00</td>
+<td class="py-4 px-6 text-secondary text-right">₹ 57,600.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- B2C Summary Section -->
+<div class="mb-16">
+<h3 class="font-display-lg text-on-surface mb-6">B2C Aggregated (7)</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- B2C Large -->
+<div class="bg-white border-[0.5px] border-border-subtle p-8 flex flex-col justify-between">
+<div>
+<h4 class="font-ui-lg text-on-surface mb-2">Inter-State Supplies (Large)</h4>
+<p class="font-ui-sm text-secondary mb-6">Invoice value more than ₹ 2.5 Lakhs</p>
+</div>
+<div class="flex justify-between items-end border-t-[0.5px] border-border-subtle pt-6">
+<div>
+<p class="font-ui-xs text-secondary uppercase mb-1">Taxable Value</p>
+<p class="font-mono-lg text-on-surface">₹ 0.00</p>
+</div>
+<div class="text-right">
+<p class="font-ui-xs text-secondary uppercase mb-1">Tax</p>
+<p class="font-mono-lg text-secondary">₹ 0.00</p>
+</div>
+</div>
+</div>
+<!-- B2C Small -->
+<div class="bg-white border-[0.5px] border-border-subtle p-8 flex flex-col justify-between">
+<div>
+<h4 class="font-ui-lg text-on-surface mb-2">Other than Large Invoices (Small)</h4>
+<p class="font-ui-sm text-secondary mb-6">Intra-State &amp; Inter-State supplies</p>
+</div>
+<div class="flex justify-between items-end border-t-[0.5px] border-border-subtle pt-6">
+<div>
+<p class="font-ui-xs text-secondary uppercase mb-1">Taxable Value</p>
+<p class="font-mono-lg text-on-surface">₹ 1,45,000.00</p>
+</div>
+<div class="text-right">
+<p class="font-ui-xs text-secondary uppercase mb-1">Tax</p>
+<p class="font-mono-lg text-secondary">₹ 26,100.00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

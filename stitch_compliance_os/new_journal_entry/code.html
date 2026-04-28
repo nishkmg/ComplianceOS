@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "section-muted": "#F4F2EE",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f9ecde",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#3f2700",
+                        "border-subtle": "#E8E4DC",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "surface-container-low": "#fff1e4",
+                        "on-surface": "#211b13",
+                        "outline": "#847563",
+                        "surface-variant": "#ede0d3",
+                        "on-error-container": "#93000a",
+                        "secondary": "#5f5e5e",
+                        "surface-tint": "#825500",
+                        "tertiary-container": "#309bdb",
+                        "inverse-on-surface": "#fcefe1",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "tertiary-fixed": "#cae6ff",
+                        "primary": "#825500",
+                        "surface-dim": "#e5d8cb",
+                        "text-light": "#888888",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary-fixed-variant": "#633f00",
+                        "amber-text": "#B47500",
+                        "on-error": "#ffffff",
+                        "on-background": "#211b13",
+                        "on-secondary-container": "#636262",
+                        "background": "#fff8f4",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "tertiary": "#006494",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "secondary-container": "#e2dfde",
+                        "surface-container-high": "#f3e6d9",
+                        "page-bg": "#FAFAF8",
+                        "surface-container-highest": "#ede0d3",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-primary-fixed": "#291800",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-container": "#002f49",
+                        "primary-fixed": "#ffddb3",
+                        "primary-container": "#c8860a",
+                        "on-tertiary": "#ffffff",
+                        "section-dark": "#111111",
+                        "text-mid": "#555555",
+                        "on-primary": "#ffffff",
+                        "surface": "#fff8f4",
+                        "outline-variant": "#d6c4af",
+                        "surface-bright": "#fff8f4",
+                        "inverse-surface": "#362f27",
+                        "inverse-primary": "#ffb950",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "primary-fixed-dim": "#ffb950",
+                        "on-surface-variant": "#514535"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Playfair Display"],
+                        "ui-lg": ["Syne"],
+                        "mono-md": ["DM Mono"],
+                        "ui-sm": ["Syne"],
+                        "display-lg": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "marketing-hero": ["Playfair Display"],
+                        "ui-xs": ["Syne"],
+                        "ui-md": ["Syne"],
+                        "mono-lg": ["DM Mono"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FAF9F6;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E8E4DC;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-on-surface font-ui-md selection:bg-surface-container">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-[0.5px] border-[#E8E4DC] bg-[#FAF9F6] flex flex-col py-8 px-4 gap-y-2 z-50">
+<div class="mb-8 px-2">
+<h1 class="font-serif text-lg tracking-tight text-stone-900">Editorial Ledger</h1>
+<p class="font-ui-xs text-[10px] text-stone-400 mt-1 uppercase tracking-widest">FY 2024-25</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 hover:translate-x-1 duration-200 ease-in-out transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-ui-sm font-ui-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#C8860A] bg-stone-100 border-r-2 border-[#C8860A] transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">auto_stories</span>
+<span class="text-ui-sm font-ui-sm font-semibold">Journal</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 hover:translate-x-1 duration-200 ease-in-out transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="text-ui-sm font-ui-sm">Chart of Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 hover:translate-x-1 duration-200 ease-in-out transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="text-ui-sm font-ui-sm">Invoicing</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 hover:translate-x-1 duration-200 ease-in-out transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="text-ui-sm font-ui-sm">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 hover:translate-x-1 duration-200 ease-in-out transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<span class="text-ui-sm font-ui-sm">Compliance (GST/ITR)</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 hover:translate-x-1 duration-200 ease-in-out transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-ui-sm font-ui-sm">Payroll</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 pt-4 border-t border-[#E8E4DC]">
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">contact_support</span>
+<span class="text-ui-sm font-ui-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone-600 hover:text-stone-900 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="text-ui-sm font-ui-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen relative pb-32">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-40 bg-[#FAF9F6] bg-opacity-90 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC] flex justify-between items-center w-full px-8 py-4">
+<div class="flex items-center gap-4">
+<button class="text-stone-400 hover:text-stone-900 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="font-serif text-2xl text-stone-900">New Journal Entry</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="font-ui-xs text-[#C8860A] uppercase tracking-widest">Entry #</span>
+<span class="font-mono-md text-stone-900">JE-2024-0042</span>
+</div>
+<div class="h-8 w-[0.5px] bg-[#E8E4DC]"></div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-stone-400">notifications</span>
+<span class="material-symbols-outlined text-stone-400">help_outline</span>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="max-w-[1100px] mx-auto px-8 py-10 space-y-12">
+<!-- Metadata Section -->
+<section class="grid grid-cols-12 gap-8 items-start">
+<div class="col-span-4 space-y-4">
+<div class="space-y-1">
+<label class="font-ui-xs text-stone-500 uppercase tracking-widest">Posting Date</label>
+<div class="relative">
+<input class="w-full bg-white border border-[#E8E4DC] px-4 py-2.5 font-mono-md focus:ring-1 focus:ring-[#C8860A] focus:border-[#C8860A] outline-none" type="date" value="2024-11-04"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-ui-xs text-stone-500 uppercase tracking-widest">Reference / ID</label>
+<input class="w-full bg-white border border-[#E8E4DC] px-4 py-2.5 font-mono-md focus:ring-1 focus:ring-[#C8860A] focus:border-[#C8860A] outline-none" placeholder="e.g. INV-8829" type="text"/>
+</div>
+</div>
+<div class="col-span-8 space-y-1">
+<label class="font-ui-xs text-stone-500 uppercase tracking-widest">Narration / Description</label>
+<textarea class="w-full bg-white border border-[#E8E4DC] px-4 py-3 font-ui-md focus:ring-1 focus:ring-[#C8860A] focus:border-[#C8860A] outline-none resize-none" placeholder="Enter detailed accounting narration for this entry..." rows="4"></textarea>
+</div>
+</section>
+<!-- Entry Table -->
+<section class="space-y-4">
+<div class="flex justify-between items-end pb-2 border-b border-stone-900">
+<h3 class="font-ui-lg text-stone-900 tracking-tight">Ledger Lines</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-1 text-stone-400">
+<kbd class="px-1.5 py-0.5 bg-stone-100 border border-stone-200 rounded text-[10px] font-mono-md text-stone-600">ALT+A</kbd>
+<span class="text-ui-xs uppercase tracking-tighter">Add Row</span>
+</div>
+</div>
+</div>
+<div class="border-[0.5px] border-[#E8E4DC] bg-white overflow-hidden">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-stone-50 border-b-[0.5px] border-[#E8E4DC]">
+<th class="px-4 py-3 text-left font-ui-xs text-stone-500 uppercase tracking-widest w-1/4">Account</th>
+<th class="px-4 py-3 text-left font-ui-xs text-stone-500 uppercase tracking-widest">Description</th>
+<th class="px-4 py-3 text-right font-ui-xs text-stone-500 uppercase tracking-widest w-40">Debit (₹)</th>
+<th class="px-4 py-3 text-right font-ui-xs text-stone-500 uppercase tracking-widest w-40">Credit (₹)</th>
+<th class="px-4 py-3 w-12"></th>
+</tr>
+</thead>
+<tbody class="divide-y-[0.5px] divide-[#E8E4DC]">
+<!-- Row 1 -->
+<tr class="group hover:bg-stone-50 transition-colors">
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 font-ui-md placeholder-stone-300" placeholder="Search account..." type="text" value="Office Rent - Mumbai"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 font-ui-md text-stone-500 placeholder-stone-300" placeholder="Add line description..." type="text" value="November 2024 Office Lease Payment"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 text-right font-mono-lg" placeholder="0.00" type="text" value="1,25,000.00"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 text-right font-mono-lg" placeholder="0.00" type="text" value=""/>
+</td>
+<td class="px-4 text-center">
+<button class="text-stone-300 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-stone-50 transition-colors">
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 font-ui-md" type="text" value="HDFC Bank Current A/c - 4022"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 font-ui-md text-stone-500" type="text" value="Chq # 992831 paid to Regency Properties"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 text-right font-mono-lg" placeholder="0.00" type="text" value=""/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 text-right font-mono-lg" placeholder="0.00" type="text" value="1,25,000.00"/>
+</td>
+<td class="px-4 text-center">
+<button class="text-stone-300 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Empty Row for input -->
+<tr class="bg-section-amber/20">
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 font-ui-md italic text-stone-400" placeholder="Type to add account..." type="text"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 font-ui-md text-stone-400" placeholder="..." type="text"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 text-right font-mono-lg" placeholder="0.00" type="text"/>
+</td>
+<td class="p-0">
+<input class="w-full px-4 py-4 bg-transparent border-none focus:ring-0 text-right font-mono-lg" placeholder="0.00" type="text"/>
+</td>
+<td class="px-4 text-center"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center gap-4 text-ui-xs text-stone-400 pt-2">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">info</span> Press <kbd class="px-1 bg-stone-100 rounded border">TAB</kbd> to move through fields</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#E8E4DC]"></span>
+<span><kbd class="px-1 bg-stone-100 rounded border">ALT+S</kbd> to Post Entry</span>
+</div>
+</section>
+</div>
+<!-- Floating Balance Bar & Actions -->
+<div class="fixed bottom-0 left-64 right-0 p-6 z-40 bg-gradient-to-t from-[#FAF9F6] via-[#FAF9F6] to-transparent pointer-events-none">
+<div class="max-w-[1100px] mx-auto flex items-center justify-between pointer-events-auto bg-stone-900 text-white rounded-xl shadow-2xl p-4 pl-8 border border-white/10 ring-8 ring-[#FAF9F6]">
+<!-- Balance Metrics -->
+<div class="flex items-center gap-12">
+<div class="space-y-0.5">
+<span class="font-ui-xs text-stone-400 uppercase tracking-widest text-[10px]">Total Debit</span>
+<div class="font-mono-lg">₹ 1,25,000.00</div>
+</div>
+<div class="space-y-0.5">
+<span class="font-ui-xs text-stone-400 uppercase tracking-widest text-[10px]">Total Credit</span>
+<div class="font-mono-lg">₹ 1,25,000.00</div>
+</div>
+<div class="h-8 w-[1px] bg-white/20"></div>
+<div class="flex items-center gap-3">
+<div class="space-y-0.5">
+<span class="font-ui-xs text-stone-400 uppercase tracking-widest text-[10px]">Difference</span>
+<div class="font-mono-lg text-emerald-400">₹ 0.00</div>
+</div>
+<div class="bg-emerald-500/10 p-1.5 rounded-full">
+<span class="material-symbols-outlined text-emerald-400 text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3">
+<button class="px-6 py-2.5 font-ui-sm text-white/60 hover:text-white transition-colors duration-200">
+                        Discard
+                    </button>
+<button class="px-6 py-2.5 font-ui-sm text-white border border-white/20 hover:bg-white/10 transition-all duration-200">
+                        Save Draft
+                    </button>
+<button class="flex items-center gap-2 bg-[#C8860A] px-8 py-2.5 font-ui-sm text-white group hover:bg-[#E59A0C] active:scale-95 transition-all">
+                        Post Entry
+                        <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Background Graphic (Subtle Texture) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[-1]">
+<img class="w-full h-full object-cover grayscale" data-alt="close up of premium textured off-white paper with natural fibers and subtle grain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaRulP1BJjNzLggCrTHuK9jEd7mbFyLZo-svov6S3HZTLeISMv2rURZcdmz9S1SQTQzOfZ03abfjeOGfXT_yG3m8p8zXNFafZERFI7RQKSIBOyivzfHFlDmwN5mN3OPtlVbcdFAiZ-XsMSHjpL-YfQnzS-zlP4VlZvhOJrWgQ2yLmYvQFAi5H9RDkXWwhx3jw8eigj6lYUZ8HK15A42BFG_Awq8IiowToDXWMLjv9Y_auofIRB_9K3PpqVkVGOX_hT0HnDb9aUNp8"/>
+</div>
+</main>
+</body></html>

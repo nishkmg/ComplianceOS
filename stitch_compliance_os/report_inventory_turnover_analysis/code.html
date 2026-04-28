@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ComplianceOS - Fast/Slow Moving Items</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #FDFCFB;
+            color: #1A1A1A;
+        }
+        .mono-num {
+            font-family: 'DM Mono', monospace;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: "#C8860A",
+                            container: "#F5F2ED"
+                        },
+                        stone: {
+                            50: "#FAFAF9",
+                            100: "#F5F5F4",
+                            200: "#E7E5E4",
+                            300: "#D6D3D1",
+                            400: "#A8A29E",
+                            500: "#78716C",
+                            600: "#57534E",
+                            800: "#292524",
+                            900: "#1C1917",
+                        }
+                    },
+                    fontFamily: {
+                        headline: ["Public Sans", "sans-serif"],
+                        display: ["Public Sans", "sans-serif"],
+                        body: ["Public Sans", "sans-serif"],
+                        label: ["Public Sans", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FDFCFB] flex h-screen overflow-hidden text-stone-900">
+<!-- SideNavBar -->
+<aside class="h-screen w-72 border-r-[0.5px] sticky left-0 border-[#E8E4DC] bg-[#FDFCFB] flex flex-col py-8 px-4 gap-2 flex-shrink-0 z-40">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-stone-200 overflow-hidden flex items-center justify-center">
+<img alt="User Workspace Avatar" class="w-full h-full object-cover" data-alt="professional company logo mark minimalist geometric shape subtle gray tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2EGWnsisuRPeRTz-L_XH3U6ClcsmDgIU_VocNXPk7WtoUR7UB_aJjfG2I6SXspa9nBELgMBRdTKm-mcH_rytG5dUOItRDDDQ0EjgJkunHl7-KUbzersmcbOqPcfobHsafOXojeReUgd9FcgqnTVV63mXqA3beJ74s3iR9oEpPwYevs3Md3mS_d9fahnebS7dWUZHr5fAhRuISdN_l7AKtUrflDzec-65c6leqUD4YiZa_PGq3loqghm7ft4Loy6kzpfId5rNbvj0"/>
+</div>
+<div>
+<h1 class="font-serif font-bold text-[#1A1A1A] tracking-widest uppercase text-sm">ComplianceOS</h1>
+<p class="text-xs text-stone-500 font-serif">Enterprise Tier</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 rounded-md font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 select-none cursor-pointer hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 select-none cursor-pointer hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+                Compliance Ledger
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 select-none cursor-pointer hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+                Entity Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md font-serif text-[13px] leading-relaxed bg-[#F5F2ED] text-[#C8860A] border-r-2 border-[#C8860A] font-semibold select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+                Reports Archive
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 select-none cursor-pointer hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+                Audit Settings
+            </a>
+</nav>
+<div class="mt-auto pt-4 border-t-[0.5px] border-[#E8E4DC] flex flex-col gap-1">
+<button class="w-full text-left px-4 py-3 text-sm font-serif text-[#C8860A] hover:bg-stone-50 rounded-md transition-colors border border-[#C8860A]/20 flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                 Add New Entity
+             </button>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-md font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 select-none cursor-pointer" href="#">
+<span class="material-symbols-outlined text-[18px]">security</span>
+                Security Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-md font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 select-none cursor-pointer" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<div class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- TopAppBar -->
+<header class="w-full border-b-[0.5px] border-[#E8E4DC] bg-[#FDFCFB]/90 backdrop-blur-md flex justify-between items-center px-12 h-16 flex-shrink-0 z-30">
+<div class="flex items-center gap-8 h-full">
+<div class="font-serif text-xl font-black tracking-tighter text-slate-900 uppercase">ComplianceOS</div>
+<nav class="hidden md:flex h-full items-center gap-6">
+<a class="h-full flex items-center font-serif text-sm tracking-tight text-stone-500 hover:text-stone-900 transition-all duration-200 cursor-pointer" href="#">Dashboard</a>
+<a class="h-full flex items-center font-serif text-sm tracking-tight text-stone-500 hover:text-stone-900 transition-all duration-200 cursor-pointer" href="#">GST</a>
+<a class="h-full flex items-center font-serif text-sm tracking-tight text-stone-500 hover:text-stone-900 transition-all duration-200 cursor-pointer" href="#">ITR</a>
+<a class="h-full flex items-center font-serif text-sm tracking-tight text-[#C8860A] border-b-2 border-[#C8860A] pb-[2px] transition-all duration-200 cursor-pointer" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-stone-50 border-[0.5px] border-stone-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-[#C8860A] focus:border-[#C8860A] text-stone-700 w-64 placeholder-stone-400 transition-all" placeholder="Search SKU or Name..." type="text"/>
+</div>
+<button class="text-stone-500 hover:text-stone-900 transition-colors p-1 rounded-md hover:bg-stone-50 flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-stone-500 hover:text-stone-900 transition-colors p-1 rounded-md hover:bg-stone-50 flex items-center justify-center">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="ml-2 bg-stone-900 text-white px-4 py-1.5 text-sm font-medium rounded-md hover:bg-stone-800 transition-colors shadow-sm">
+                    File Return
+                </button>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-8 lg:p-12 pb-32">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Report Header & Controls -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b-[0.5px] border-stone-200">
+<div>
+<h2 class="font-serif text-2xl font-semibold text-stone-900 mb-1 tracking-tight">Fast/Slow Moving Items Analysis</h2>
+<p class="text-sm text-stone-500 font-serif tracking-wide">Inventory turnover assessment for current fiscal period.</p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<!-- Period Filter -->
+<div class="flex items-center border-[0.5px] border-stone-200 rounded-md bg-white p-1">
+<span class="material-symbols-outlined text-stone-400 text-[16px] pl-2 pr-1">calendar_month</span>
+<select class="border-none bg-transparent text-sm py-1 pl-1 pr-6 focus:ring-0 text-stone-700 cursor-pointer font-serif">
+<option>Q3 2023-2024</option>
+<option>Q2 2023-2024</option>
+<option>YTD 2023-2024</option>
+</select>
+</div>
+<!-- Turnover Toggle -->
+<div class="flex bg-stone-100 p-1 rounded-md border-[0.5px] border-stone-200">
+<button class="px-4 py-1.5 text-sm font-medium bg-white text-stone-900 shadow-sm rounded-sm transition-all border-[0.5px] border-stone-200/50">Fast Moving</button>
+<button class="px-4 py-1.5 text-sm font-medium text-stone-500 hover:text-stone-700 transition-all rounded-sm">Slow Moving</button>
+</div>
+<!-- Export -->
+<button class="p-1.5 border-[0.5px] border-stone-200 rounded-md text-stone-600 hover:bg-stone-50 hover:text-[#C8860A] transition-colors flex items-center justify-center bg-white shadow-sm">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Metrics Summary Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white border-[0.5px] border-stone-200 rounded-lg p-5 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-green-50 rounded-bl-full -mr-8 -mt-8 opacity-50"></div>
+<span class="text-xs font-semibold uppercase tracking-wider text-stone-500 font-serif z-10">Avg. Fast Turnover</span>
+<div class="flex items-baseline gap-2 z-10">
+<span class="text-3xl font-medium text-stone-900 mono-num">14.2</span>
+<span class="text-xs text-stone-500 font-serif">times/year</span>
+</div>
+<div class="text-xs text-green-600 flex items-center gap-1 z-10 font-medium">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +1.2 from last quarter
+                        </div>
+</div>
+<div class="bg-white border-[0.5px] border-stone-200 rounded-lg p-5 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden">
+<span class="text-xs font-semibold uppercase tracking-wider text-stone-500 font-serif z-10">Total Units Sold (Fast)</span>
+<div class="flex items-baseline gap-2 z-10">
+<span class="text-3xl font-medium text-stone-900 mono-num">42,850</span>
+</div>
+<div class="text-xs text-stone-500 font-serif z-10">
+                            Representing 78% of total volume
+                        </div>
+</div>
+<div class="bg-[#FDFCFB] border-[0.5px] border-stone-200 rounded-lg p-5 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden border-l-2 border-l-[#C8860A]">
+<span class="text-xs font-semibold uppercase tracking-wider text-stone-500 font-serif z-10">Capital Tied Up</span>
+<div class="flex items-baseline gap-2 z-10">
+<span class="text-3xl font-medium text-stone-900 mono-num">₹1.2M</span>
+</div>
+<div class="text-xs text-stone-500 font-serif z-10">
+                            In fast moving category
+                        </div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-white border-[0.5px] border-stone-200 rounded-lg shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b-[0.5px] border-stone-200 bg-stone-50/50">
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif">SKU</th>
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif">Product Name</th>
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif">Category</th>
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif text-right">Stock (On Hand)</th>
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif text-right">Units Sold (Q3)</th>
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif text-right">Turnover Ratio</th>
+<th class="py-3 px-4 text-xs font-semibold text-stone-500 uppercase tracking-wider font-serif text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y-[0.5px] divide-stone-100">
+<!-- Row 1 -->
+<tr class="hover:bg-stone-50/80 transition-colors group">
+<td class="py-3 px-4 text-sm text-stone-600 mono-num">ITM-4092</td>
+<td class="py-3 px-4 text-sm text-stone-900 font-medium">Premium Widget A</td>
+<td class="py-3 px-4 text-sm text-stone-500">Components</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">120</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">1,450</td>
+<td class="py-3 px-4 text-sm text-stone-900 text-right font-medium mono-num">12.1</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-50 text-green-700 border-[0.5px] border-green-200 uppercase tracking-widest">High Velocity</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-stone-50/80 transition-colors group">
+<td class="py-3 px-4 text-sm text-stone-600 mono-num">ITM-8831</td>
+<td class="py-3 px-4 text-sm text-stone-900 font-medium">Standard Cog Set</td>
+<td class="py-3 px-4 text-sm text-stone-500">Hardware</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">45</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">890</td>
+<td class="py-3 px-4 text-sm text-stone-900 text-right font-medium mono-num">19.8</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-50 text-green-700 border-[0.5px] border-green-200 uppercase tracking-widest">High Velocity</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-stone-50/80 transition-colors group">
+<td class="py-3 px-4 text-sm text-stone-600 mono-num">ITM-2290</td>
+<td class="py-3 px-4 text-sm text-stone-900 font-medium">Bearing Unit C</td>
+<td class="py-3 px-4 text-sm text-stone-500">Components</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">210</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">2,100</td>
+<td class="py-3 px-4 text-sm text-stone-900 text-right font-medium mono-num">10.0</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700 border-[0.5px] border-blue-200 uppercase tracking-widest">Steady</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-stone-50/80 transition-colors group">
+<td class="py-3 px-4 text-sm text-stone-600 mono-num">ITM-1004</td>
+<td class="py-3 px-4 text-sm text-stone-900 font-medium">Assembly Bracket</td>
+<td class="py-3 px-4 text-sm text-stone-500">Hardware</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">85</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">760</td>
+<td class="py-3 px-4 text-sm text-stone-900 text-right font-medium mono-num">8.9</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700 border-[0.5px] border-blue-200 uppercase tracking-widest">Steady</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-stone-50/80 transition-colors group">
+<td class="py-3 px-4 text-sm text-stone-600 mono-num">ITM-7742</td>
+<td class="py-3 px-4 text-sm text-stone-900 font-medium">Lubricant Pro</td>
+<td class="py-3 px-4 text-sm text-stone-500">Consumables</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">300</td>
+<td class="py-3 px-4 text-sm text-stone-700 text-right mono-num">4,500</td>
+<td class="py-3 px-4 text-sm text-stone-900 text-right font-medium mono-num">15.0</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-50 text-green-700 border-[0.5px] border-green-200 uppercase tracking-widest">High Velocity</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-4 py-3 border-t-[0.5px] border-stone-200 bg-stone-50 flex items-center justify-between">
+<div class="text-xs text-stone-500 font-serif">
+                            Showing <span class="font-medium mono-num">1</span> to <span class="font-medium mono-num">5</span> of <span class="font-medium mono-num">42</span> fast moving items
+                        </div>
+<div class="flex gap-1">
+<button class="px-2 py-1 text-xs border-[0.5px] border-stone-200 bg-white rounded text-stone-400 cursor-not-allowed">Prev</button>
+<button class="px-2 py-1 text-xs border-[0.5px] border-[#C8860A] bg-[#C8860A]/10 rounded text-[#C8860A] font-medium">1</button>
+<button class="px-2 py-1 text-xs border-[0.5px] border-stone-200 bg-white rounded text-stone-600 hover:bg-stone-50">2</button>
+<button class="px-2 py-1 text-xs border-[0.5px] border-stone-200 bg-white rounded text-stone-600 hover:bg-stone-50">3</button>
+<button class="px-2 py-1 text-xs border-[0.5px] border-stone-200 bg-white rounded text-stone-600 hover:bg-stone-50">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Component logic pushed here inside the canvas to scroll with content usually, or fixed. Making it scroll with canvas. -->
+<div class="w-full border-t-[0.5px] border-[#E8E4DC] bg-[#FDFCFB] flex flex-col items-center justify-center py-8 gap-4 px-8 absolute bottom-0 left-0 right-0 z-20">
+<div class="flex flex-wrap gap-6 justify-center">
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Terms of Service</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Security Architecture</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Privacy Policy</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Regulatory Compliance</a>
+</div>
+<p class="font-serif text-[11px] uppercase tracking-widest text-stone-500">© 2024 ComplianceOS India. Precision Accounting Standards.</p>
+</div>
+</div>
+</body></html>

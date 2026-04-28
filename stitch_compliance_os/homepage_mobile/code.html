@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ComplianceOS — Built for Indian Business</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#fff1e4",
+                    "on-primary-fixed": "#291800",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#ede0d3",
+                    "on-secondary-container": "#636262",
+                    "outline": "#847563",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#d6c4af",
+                    "on-tertiary": "#ffffff",
+                    "border-subtle": "#E8E4DC",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#001e30",
+                    "tertiary-fixed-dim": "#8ecdff",
+                    "text-mid": "#555555",
+                    "section-amber": "rgba(200, 134, 10, 0.06)",
+                    "on-tertiary-container": "#002f49",
+                    "surface-dim": "#e5d8cb",
+                    "secondary-fixed": "#e5e2e1",
+                    "primary": "#825500",
+                    "inverse-primary": "#ffb950",
+                    "surface-tint": "#825500",
+                    "secondary-container": "#e2dfde",
+                    "on-tertiary-fixed-variant": "#004b70",
+                    "on-secondary-fixed-variant": "#474746",
+                    "tertiary": "#006494",
+                    "tertiary-container": "#309bdb",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#f3e6d9",
+                    "amber-text": "#B47500",
+                    "on-primary-fixed-variant": "#633f00",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "secondary": "#5f5e5e",
+                    "on-primary": "#ffffff",
+                    "text-light": "#888888",
+                    "surface-container": "#f9ecde",
+                    "page-bg": "#FAFAF8",
+                    "inverse-on-surface": "#fcefe1",
+                    "tertiary-fixed": "#cae6ff",
+                    "primary-fixed-dim": "#ffb950",
+                    "on-primary-container": "#3f2700",
+                    "on-background": "#211b13",
+                    "surface-variant": "#ede0d3",
+                    "on-error": "#ffffff",
+                    "section-dark": "#111111",
+                    "on-surface": "#211b13",
+                    "on-surface-variant": "#514535",
+                    "section-muted": "#F4F2EE",
+                    "primary-fixed": "#ffddb3",
+                    "primary-container": "#c8860a",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "inverse-surface": "#362f27",
+                    "background": "#fff8f4",
+                    "surface": "#fff8f4",
+                    "surface-bright": "#fff8f4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "space-96": "96px",
+                    "gutter-desktop": "24px",
+                    "margin-mobile": "16px",
+                    "space-64": "64px",
+                    "space-128": "128px",
+                    "gutter-wide": "32px",
+                    "space-48": "48px"
+            },
+            "fontFamily": {
+                    "marketing-xl": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "display-xl": ["Playfair Display"],
+                    "ui-xs": ["Syne"],
+                    "ui-sm": ["Syne"],
+                    "ui-md": ["Syne"],
+                    "ui-lg": ["Syne"],
+                    "marketing-hero": ["Playfair Display"],
+                    "mono-md": ["DM Mono"],
+                    "mono-lg": ["DM Mono"]
+            },
+            "fontSize": {
+                    "marketing-xl": ["32px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                    "display-xl": ["28px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                    "marketing-hero": ["40px", {"lineHeight": "1.1", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shadow-screenshot {
+            box-shadow: 0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-page-bg text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface-bright dark:bg-zinc-950 border-b border-outline-variant dark:border-zinc-800 h-16 flex justify-between items-center px-4 py-3">
+<div class="flex items-center gap-3">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-150 ease-out text-primary dark:text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<span class="font-['Playfair_Display'] text-xl font-normal text-on-surface dark:text-on-surface-variant">ComplianceOS</span>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Indian User Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a professional Indian business owner in a modern office environment with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3saOTpF5FzEarjLjfpzTGCW3dnwlNvpYrBP8-5a5dA_VzHxAC_TbFD4BVO4l_7O8uE7SJJmP3L_SvPvNJh0jlQtd2IOx8X_SS7xWZmjn7ySH9gEP-c1Ark5JjTHpc_f_dfaeaSGDx8l5-TPn8qTACGIZsYqB8T9iTXvlfIG_DF-7xClTHV7RYuiy6n3qO3_7-XmZh4J-230srhSRGb0odH3SycxovxzezdrgJPIn7gQsatWcp9690JWoXxW9vrvqevAT3dRHjIGY"/>
+</div>
+</div>
+</header>
+<main class="pt-16" id="main-content">
+<!-- Hero Section -->
+<section class="px-margin-mobile pt-10 pb-16 overflow-hidden">
+<div class="max-w-md mx-auto text-center flex flex-col items-center">
+<span class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-4">BUILT FOR INDIAN BUSINESS</span>
+<h1 class="font-marketing-hero text-marketing-hero text-on-surface mb-6">
+                    The accounting software that thinks in lakhs, not thousands.
+                </h1>
+<p class="font-ui-md text-ui-md text-text-mid mb-8 max-w-sm">
+                    Double-entry books, GST returns, payroll and ITR — fully connected, built from scratch for how Indian businesses actually work.
+                </p>
+<div class="flex flex-col w-full gap-3 mb-12">
+<a class="inline-flex items-center justify-center bg-primary text-on-primary font-ui-sm text-ui-sm font-medium px-8 py-4 rounded-xl active:scale-95 transition-transform" href="#">
+                        Start free — no credit card
+                        <span class="ml-2">→</span>
+</a>
+<a class="inline-flex items-center justify-center border border-outline text-on-surface font-ui-sm text-ui-sm font-medium px-8 py-4 rounded-xl active:scale-95 transition-transform" href="#">
+                        Watch demo
+                        <span class="material-symbols-outlined ml-2 text-[18px]">play_circle</span>
+</a>
+</div>
+<div class="w-full relative px-2">
+<div class="bg-surface-container rounded-t-2xl p-3 shadow-screenshot border border-outline-variant/30">
+<!-- Cropped Screenshot Representation -->
+<div class="bg-white rounded-lg p-4 text-left space-y-4">
+<div class="flex justify-between items-center mb-2">
+<div class="h-4 w-24 bg-surface-container-high rounded animate-pulse"></div>
+<div class="h-4 w-12 bg-section-amber rounded"></div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 border-t-2 border-primary bg-surface-container-lowest rounded-md">
+<span class="text-[10px] font-ui-xs text-text-light block uppercase">RECEIVABLES</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹12,45,000</span>
+</div>
+<div class="p-3 border-t-2 border-primary bg-surface-container-lowest rounded-md">
+<span class="text-[10px] font-ui-xs text-text-light block uppercase">GST PAYABLE</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹2,84,320</span>
+</div>
+</div>
+<div class="p-3 border-t-2 border-tertiary bg-surface-container-lowest rounded-md w-full">
+<span class="text-[10px] font-ui-xs text-text-light block uppercase">CASH AT BANK</span>
+<span class="font-mono-lg text-mono-lg text-on-surface">₹45,20,110.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof Bar -->
+<section class="bg-section-muted py-8 border-t border-outline-variant/30">
+<div class="px-margin-mobile text-center">
+<p class="font-ui-xs text-ui-xs text-text-light mb-6">TRUSTED BY BUSINESSES ACROSS INDIA</p>
+<div class="flex flex-wrap justify-center gap-8 opacity-60 grayscale">
+<div class="h-6 w-24 bg-outline-variant rounded-sm flex items-center justify-center font-display-lg text-[14px] italic">LogisticsCo</div>
+<div class="h-6 w-24 bg-outline-variant rounded-sm flex items-center justify-center font-display-lg text-[14px] italic">BharatRetail</div>
+<div class="h-6 w-24 bg-outline-variant rounded-sm flex items-center justify-center font-display-lg text-[14px] italic">CA Associates</div>
+</div>
+</div>
+</section>
+<!-- 1-Column Stack Layout Section -->
+<section class="py-space-64 px-margin-mobile space-y-space-48">
+<div class="text-center">
+<span class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest block mb-4">THE ECOSYSTEM</span>
+<h2 class="font-display-xl text-display-xl text-on-surface">Everything connected. Nothing siloed.</h2>
+</div>
+<!-- Bento-lite Cards for Mobile -->
+<div class="space-y-6">
+<!-- Accounting Card -->
+<div class="bg-surface-container-lowest border-t-2 border-primary rounded-xl p-6 shadow-sm">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="account_balance_wallet">account_balance_wallet</span>
+<h3 class="font-display-lg text-display-lg mb-2">Accounting &amp; Ledger</h3>
+<p class="font-ui-sm text-ui-sm text-text-mid mb-4">Double-entry books that enforce balance before posting. No manual checks required.</p>
+<a class="text-amber-text font-ui-sm text-ui-sm font-semibold flex items-center" href="#">
+                        Learn more <span class="ml-1">→</span>
+</a>
+</div>
+<!-- GST Card -->
+<div class="bg-surface-container-lowest border-t-2 border-primary rounded-xl p-6 shadow-sm">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="receipt_long">receipt_long</span>
+<h3 class="font-display-lg text-display-lg mb-2">GST Returns</h3>
+<p class="font-ui-sm text-ui-sm text-text-mid mb-4">GSTR-1, 2B, and 3B auto-generated from your ledger. Reconcile ITC in seconds.</p>
+<a class="text-amber-text font-ui-sm text-ui-sm font-semibold flex items-center" href="#">
+                        Learn more <span class="ml-1">→</span>
+</a>
+</div>
+<!-- Payroll Card -->
+<div class="bg-surface-container-lowest border-t-2 border-primary rounded-xl p-6 shadow-sm">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="payments">payments</span>
+<h3 class="font-display-lg text-display-lg mb-2">Payroll</h3>
+<p class="font-ui-sm text-ui-sm text-text-mid mb-4">Statutory compliance for PF, PT, and TDS built into the salary structure. One-click payslips.</p>
+<a class="text-amber-text font-ui-sm text-ui-sm font-semibold flex items-center" href="#">
+                        Learn more <span class="ml-1">→</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Pre-footer CTA -->
+<section class="bg-section-amber py-16 px-margin-mobile text-center border-t border-outline-variant/30">
+<h2 class="font-display-xl text-display-xl mb-4">Ready to move off Tally?</h2>
+<p class="font-ui-md text-ui-md text-text-mid mb-8">Start free. No credit card. No migration consultant required.</p>
+<a class="inline-flex w-full items-center justify-center bg-primary text-on-primary font-ui-sm text-ui-sm font-medium px-8 py-4 rounded-xl" href="#">
+                Start free — no credit card
+                <span class="ml-2">→</span>
+</a>
+<p class="font-ui-xs text-ui-xs text-text-light mt-6">Your data stays in India. Always.</p>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-section-muted border-t border-outline-variant/30 flex flex-col items-center gap-4 py-8 px-6 text-center">
+<span class="font-['Playfair_Display'] text-lg font-normal text-on-surface">ComplianceOS</span>
+<p class="font-['Syne'] text-xs leading-relaxed italic text-on-surface-variant dark:text-zinc-400">Built for Indian business.</p>
+<div class="flex gap-4">
+<a class="text-on-surface-variant/80 font-['Syne'] text-xs hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Privacy</a>
+<a class="text-on-surface-variant/80 font-['Syne'] text-xs hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Terms</a>
+<a class="text-on-surface-variant/80 font-['Syne'] text-xs hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Security</a>
+</div>
+<p class="font-['Syne'] text-xs leading-relaxed italic text-on-surface-variant/60 mt-4">© 2026 ComplianceOS. Built for Indian business.</p>
+</footer>
+<!-- BottomNavBar (Suppressed for focused landing page as per shell visibility rule) -->
+</body></html>

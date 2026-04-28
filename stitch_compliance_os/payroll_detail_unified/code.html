@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payroll Detail - October 2024</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "surface-dim": "#e5d8cb",
+                      "tertiary-container": "#309bdb",
+                      "surface-container-low": "#fff1e4",
+                      "inverse-primary": "#ffb950",
+                      "tertiary": "#006494",
+                      "border-subtle": "#E8E4DC",
+                      "on-secondary-fixed-variant": "#474746",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "page-bg": "#FAFAF8",
+                      "surface-variant": "#ede0d3",
+                      "surface-tint": "#825500",
+                      "on-primary-container": "#3f2700",
+                      "inverse-on-surface": "#fcefe1",
+                      "amber-text": "#B47500",
+                      "on-primary": "#ffffff",
+                      "outline": "#847563",
+                      "on-secondary-container": "#636262",
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed": "#cae6ff",
+                      "on-surface-variant": "#514535",
+                      "on-surface": "#211b13",
+                      "primary": "#825500",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed-dim": "#ffb950",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface-container-highest": "#ede0d3",
+                      "surface-container-high": "#f3e6d9",
+                      "text-mid": "#555555",
+                      "on-background": "#211b13",
+                      "outline-variant": "#d6c4af",
+                      "surface-bright": "#fff8f4",
+                      "section-muted": "#F4F2EE",
+                      "surface-container-lowest": "#ffffff",
+                      "section-dark": "#111111",
+                      "on-primary-fixed-variant": "#633f00",
+                      "surface": "#fff8f4",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "text-light": "#888888",
+                      "on-error": "#ffffff",
+                      "secondary": "#5f5e5e",
+                      "background": "#fff8f4",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "on-tertiary-container": "#002f49",
+                      "primary-fixed": "#ffddb3",
+                      "on-primary-fixed": "#291800",
+                      "primary-container": "#c8860a",
+                      "secondary-container": "#e2dfde",
+                      "on-error-container": "#93000a",
+                      "surface-container": "#f9ecde",
+                      "inverse-surface": "#362f27",
+                      "on-tertiary-fixed": "#001e30"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "space-128": "128px",
+                      "space-96": "96px",
+                      "space-64": "64px",
+                      "gutter-wide": "32px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "ui-sm": [
+                              "Syne"
+                      ],
+                      "mono-lg": [
+                              "DM Mono"
+                      ],
+                      "marketing-hero": [
+                              "Playfair Display"
+                      ],
+                      "ui-xs": [
+                              "Syne"
+                      ],
+                      "ui-md": [
+                              "Syne"
+                      ],
+                      "marketing-xl": [
+                              "Playfair Display"
+                      ],
+                      "display-xl": [
+                              "Playfair Display"
+                      ],
+                      "mono-md": [
+                              "DM Mono"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "ui-lg": [
+                              "Syne"
+                      ]
+              },
+              "fontSize": {
+                      "ui-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-hero": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "ui-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-xl": [
+                              "38px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "26px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { background-color: #FAFAF8; }
+        .shadow-screenshot { box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05); }
+        .shadow-card { box-shadow: 0 10px 20px -5px rgba(0,0,0,0.03); }
+    </style>
+</head>
+<body class="font-ui-md text-ui-md text-on-surface min-h-screen flex flex-col antialiased">
+<!-- Top Navigation -->
+<header class="sticky top-0 flex justify-between items-center px-8 h-16 w-full backdrop-blur-md z-40 bg-[#F9F7F2] dark:bg-stone-950 border-b-[0.5px] border-stone-200 dark:border-stone-800">
+<div class="flex items-center gap-8">
+<span class="font-serif font-black text-stone-900 dark:text-stone-50 text-xl tracking-tight">ComplianceOS</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-[#C8860A] border-b-2 border-[#C8860A] pb-1 font-serif text-sm tracking-tight cursor-pointer active:opacity-70 hover:text-[#C8860A] transition-colors duration-200" href="#">Ledger</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium font-serif text-sm tracking-tight cursor-pointer active:opacity-70 hover:text-[#C8860A] transition-colors duration-200" href="#">Taxation</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium font-serif text-sm tracking-tight cursor-pointer active:opacity-70 hover:text-[#C8860A] transition-colors duration-200" href="#">Audit</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium font-serif text-sm tracking-tight cursor-pointer active:opacity-70 hover:text-[#C8860A] transition-colors duration-200" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-stone-600 dark:text-stone-400">
+<span class="material-symbols-outlined cursor-pointer hover:text-[#C8860A] transition-colors duration-200">search</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#C8860A] transition-colors duration-200">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#C8860A] transition-colors duration-200">settings</span>
+</div>
+<button class="bg-primary-container text-on-primary px-4 py-2 rounded font-ui-sm text-ui-sm hover:opacity-90 transition-opacity">
+                File Return
+            </button>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-16 bottom-0 flex flex-col justify-between py-6 h-full w-64 border-r-[0.5px] border-stone-200 dark:border-stone-800 bg-[#F9F7F2] dark:bg-stone-950 divide-y-[0.5px] divide-stone-200 dark:divide-stone-800 z-30">
+<div class="flex-1 px-4 flex flex-col gap-2">
+<div class="px-4 pb-4">
+<h2 class="font-serif font-bold text-stone-900 dark:text-stone-50 text-sm">Fiscal Control</h2>
+<p class="font-sans text-xs uppercase tracking-widest text-stone-500">FY 2023-24</p>
+</div>
+<nav class="flex flex-col gap-1 font-sans text-xs uppercase tracking-widest">
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">description</span>
+                Journal Entries
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                GST Filings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+                Bank Reconciliation
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md bg-stone-100 dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                Payroll
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">account_tree</span>
+                Entity Settings
+            </a>
+</nav>
+</div>
+<div class="px-4 pt-4 flex flex-col gap-1 font-sans text-xs uppercase tracking-widest mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+            Change Fiscal Year
+        </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-stone-500 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-900/50 hover:translate-x-1 transition-transform duration-150 select-none" href="#">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+            System Status
+        </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-[1200px] px-gutter-desktop py-space-64 ml-64 mx-auto">
+<!-- Breadcrumbs / Back Action -->
+<div class="mb-8">
+<a class="inline-flex items-center text-text-mid hover:text-on-surface font-ui-sm text-ui-sm transition-colors group" href="#">
+<span class="material-symbols-outlined text-[18px] mr-2 group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    Back to Compliance Ledger
+                </a>
+</div>
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-48 border-b-[0.5px] border-border-subtle pb-8">
+<div>
+<h1 class="font-display-xl text-display-xl text-on-surface mb-4">Payroll Detail</h1>
+<div class="flex items-center gap-6 font-ui-sm text-ui-sm text-text-mid">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">calendar_month</span>
+<span>October 2024</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-green-600">check_circle</span>
+<span class="text-green-800 font-medium bg-green-100 px-2 py-0.5 rounded-full text-xs">Processed</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">history</span>
+<span>Run Date: 28 Oct 2024</span>
+</div>
+</div>
+</div>
+<div class="mt-6 md:mt-0 flex gap-4">
+<button class="px-6 py-2 border-[0.5px] border-outline text-on-surface font-ui-sm text-ui-sm hover:bg-surface-variant transition-colors rounded">
+                        Download Report
+                    </button>
+</div>
+</div>
+<!-- KPI Tiles (Summary) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-space-64">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 border-t-2 border-t-amber-text hover:shadow-card transition-shadow">
+<h3 class="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-4">Total Gross</h3>
+<div class="font-mono-lg text-mono-lg text-on-surface font-medium">₹ 12,45,000.00</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 hover:shadow-card transition-shadow">
+<h3 class="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-4">Total Deductions</h3>
+<div class="font-mono-lg text-mono-lg text-on-surface">₹ 2,15,400.00</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 border-t-2 border-t-tertiary hover:shadow-card transition-shadow">
+<h3 class="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-4">Total Net Pay</h3>
+<div class="font-mono-lg text-mono-lg text-primary-container font-medium">₹ 10,29,600.00</div>
+</div>
+</div>
+<!-- Detail Table -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle overflow-hidden">
+<div class="px-6 py-4 border-b-[0.5px] border-border-subtle bg-surface-bright flex justify-between items-center">
+<h2 class="font-ui-lg text-ui-lg text-on-surface">Employee Breakdown</h2>
+<div class="flex items-center gap-2 border-[0.5px] border-border-subtle px-3 py-1.5 bg-surface-container-lowest rounded">
+<span class="material-symbols-outlined text-[18px] text-text-light">search</span>
+<input class="border-none bg-transparent focus:ring-0 text-ui-sm font-ui-sm p-0 w-48 text-on-surface placeholder-text-light" placeholder="Search employee..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-section-muted border-b-[0.5px] border-border-subtle">
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap">Employee Name</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap text-right">Gross</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap text-right">PF</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap text-right">PT</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap text-right">TDS</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap text-right">Other Ded.</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase px-6 py-4 whitespace-nowrap text-right border-l-[0.5px] border-border-subtle">Net Pay</th>
+</tr>
+</thead>
+<tbody class="font-ui-sm text-ui-sm text-on-surface divide-y-[0.5px] divide-border-subtle">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium">Aarav Sharma</div>
+<div class="text-text-light text-[12px] mt-0.5">EMP-001</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">85,000.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">1,800.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">200.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">8,500.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">0.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md font-medium text-on-surface border-l-[0.5px] border-border-subtle">74,500.00</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium">Diya Patel</div>
+<div class="text-text-light text-[12px] mt-0.5">EMP-014</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">1,20,000.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">1,800.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">200.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">15,000.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">500.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md font-medium text-on-surface border-l-[0.5px] border-border-subtle">1,02,500.00</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium">Rohan Gupta</div>
+<div class="text-text-light text-[12px] mt-0.5">EMP-022</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">65,000.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">1,800.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">200.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">4,200.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-text-mid">0.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md font-medium text-on-surface border-l-[0.5px] border-border-subtle">58,800.00</td>
+</tr>
+</tbody>
+<tfoot class="bg-surface-container-low border-t-[0.5px] border-border-subtle">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap font-medium text-on-surface">Page Total</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-on-surface">2,70,000.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-on-surface">5,400.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-on-surface">600.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-on-surface">27,700.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md text-on-surface">500.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-mono-md text-mono-md font-medium text-primary-container border-l-[0.5px] border-border-subtle">2,35,800.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t-[0.5px] border-border-subtle flex justify-between items-center bg-surface-container-lowest">
+<span class="font-ui-sm text-ui-sm text-text-mid">Showing 1 to 3 of 42 entries</span>
+<div class="flex items-center gap-2">
+<button class="p-1 border-[0.5px] border-border-subtle rounded text-text-light hover:text-on-surface disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="p-1 border-[0.5px] border-border-subtle rounded text-text-light hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

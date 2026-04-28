@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Journal Entries | LedgerEdge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400;500;600;700;800&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "section-muted": "#F4F2EE",
+                      "error": "#ba1a1a",
+                      "surface-container": "#f9ecde",
+                      "error-container": "#ffdad6",
+                      "on-primary-container": "#3f2700",
+                      "border-subtle": "#E8E4DC",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface-container-low": "#fff1e4",
+                      "on-surface": "#211b13",
+                      "outline": "#847563",
+                      "surface-variant": "#ede0d3",
+                      "on-error-container": "#93000a",
+                      "secondary": "#5f5e5e",
+                      "surface-tint": "#825500",
+                      "tertiary-container": "#309bdb",
+                      "inverse-on-surface": "#fcefe1",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "tertiary-fixed": "#cae6ff",
+                      "primary": "#825500",
+                      "surface-dim": "#e5d8cb",
+                      "text-light": "#888888",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-primary-fixed-variant": "#633f00",
+                      "amber-text": "#B47500",
+                      "on-error": "#ffffff",
+                      "on-background": "#211b13",
+                      "on-secondary-container": "#636262",
+                      "background": "#fff8f4",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "tertiary": "#006494",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "secondary-container": "#e2dfde",
+                      "surface-container-high": "#f3e6d9",
+                      "page-bg": "#FAFAF8",
+                      "surface-container-highest": "#ede0d3",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-primary-fixed": "#291800",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-tertiary-container": "#002f49",
+                      "primary-fixed": "#ffddb3",
+                      "primary-container": "#c8860a",
+                      "on-tertiary": "#ffffff",
+                      "section-dark": "#111111",
+                      "text-mid": "#555555",
+                      "on-primary": "#ffffff",
+                      "surface": "#fff8f4",
+                      "outline-variant": "#d6c4af",
+                      "surface-bright": "#fff8f4",
+                      "inverse-surface": "#362f27",
+                      "inverse-primary": "#ffb950",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "primary-fixed-dim": "#ffb950",
+                      "on-surface-variant": "#514535"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-128": "128px",
+                      "space-64": "64px",
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "gutter-wide": "32px",
+                      "space-96": "96px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "noto-serif": ["Noto Serif"],
+                      "display-xl": ["Playfair Display"],
+                      "ui-lg": ["Syne"],
+                      "mono-md": ["DM Mono"],
+                      "ui-sm": ["Syne"],
+                      "display-lg": ["Playfair Display"],
+                      "marketing-xl": ["Playfair Display"],
+                      "marketing-hero": ["Playfair Display"],
+                      "ui-xs": ["Syne"],
+                      "ui-md": ["Syne"],
+                      "mono-lg": ["DM Mono"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .status-badge {
+            @apply px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-sm border-[0.5px];
+        }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] text-on-surface font-ui-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Shell -->
+<nav class="bg-[#F9F8F6] dark:bg-slate-950/80 backdrop-blur-md flex justify-between items-center h-14 px-6 fixed top-0 w-full z-50 border-b-[0.5px] border-[#E8E4DC] dark:border-slate-800 font-noto-serif antialiased">
+<div class="flex items-center gap-8 h-full">
+<span class="font-noto-serif font-bold text-lg tracking-tight text-[#1A1A1A] dark:text-slate-100">ComplianceOS</span>
+<div class="hidden md:flex gap-6 h-full items-center">
+<a class="text-[#C8860A] border-b-2 border-[#C8860A] h-full flex items-center font-semibold font-ui-xs text-xs tracking-widest uppercase cursor-pointer active:opacity-70" href="#">Journal</a>
+<a class="text-[#666666] dark:text-slate-400 hover:text-[#1A1A1A] dark:hover:text-white transition-colors cursor-pointer active:opacity-70 h-full flex items-center font-ui-xs text-xs tracking-widest uppercase" href="#">Audit</a>
+<a class="text-[#666666] dark:text-slate-400 hover:text-[#1A1A1A] dark:hover:text-white transition-colors cursor-pointer active:opacity-70 h-full flex items-center font-ui-xs text-xs tracking-widest uppercase" href="#">Ledgers</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="bg-surface-container-low border-none text-ui-xs px-4 py-1.5 w-64 rounded-sm focus:ring-1 focus:ring-primary-container" placeholder="Search entries..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="material-symbols-outlined p-1 text-[#C8860A] hover:bg-stone-100 rounded transition-colors cursor-pointer active:opacity-70">notifications</button>
+<button class="material-symbols-outlined p-1 text-[#C8860A] hover:bg-stone-100 rounded transition-colors cursor-pointer active:opacity-70">help_outline</button>
+</div>
+<button class="bg-[#C8860A] text-white px-4 py-2 text-xs font-ui-xs uppercase tracking-widest hover:translate-x-1 duration-200 ease-in-out transition-all">
+                Add Entry →
+            </button>
+</div>
+</nav>
+<div class="flex">
+<!-- Side Navigation Shell -->
+<aside class="bg-[#F9F8F6] dark:bg-slate-900 flex flex-col py-4 gap-1 fixed left-0 top-0 h-full w-64 z-40 border-r-[0.5px] border-[#E8E4DC] dark:border-slate-800 font-noto-serif text-[13px] tracking-tight pt-20 transition-all ease-in-out">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div>
+<h2 class="font-noto-serif font-black text-[#1A1A1A] dark:text-white text-lg tracking-tight">Core Engine</h2>
+<p class="text-[10px] text-[#666666] dark:text-slate-400 font-ui-xs tracking-widest uppercase">Precision Accounting</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col py-4 gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 bg-white dark:bg-slate-800 text-[#1A1A1A] dark:text-white border-l-2 border-[#C8860A] font-semibold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+                    Journal
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+                    CoA
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+                    GST
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+                    ITR
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                    Invoicing
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                    Payments
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                    Inventory
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+                    Payroll
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">insert_chart</span>
+                    Reports
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="mt-auto border-t border-[#E8E4DC] pt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">contact_support</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+                    Sign Out
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 w-full min-h-screen px-8 pt-24 pb-32">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<span class="text-amber-text font-ui-xs text-xs uppercase tracking-[0.2em] mb-2 block">General Ledger</span>
+<h1 class="font-serif text-4xl text-stone-900 leading-tight">Journal Entries</h1>
+</div>
+<div class="flex gap-4">
+<button class="border border-stone-900 px-6 py-2 text-xs font-ui-xs uppercase tracking-widest hover:bg-stone-50 transition-colors">Export CSV</button>
+<button class="border border-stone-900 px-6 py-2 text-xs font-ui-xs uppercase tracking-widest hover:bg-stone-50 transition-colors">Import Tally</button>
+</div>
+</div>
+<!-- Filters Bar -->
+<div class="bg-white border-[0.5px] border-border-subtle p-6 mb-8 flex flex-col gap-6 shadow-sm">
+<div class="flex justify-between items-center">
+<!-- Status Tabs -->
+<div class="flex gap-2 p-1 bg-section-muted rounded-sm">
+<button class="px-6 py-1.5 text-[10px] font-bold uppercase tracking-widest bg-white border border-border-subtle shadow-sm transition-all">All</button>
+<button class="px-6 py-1.5 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all">Posted</button>
+<button class="px-6 py-1.5 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all">Draft</button>
+<button class="px-6 py-1.5 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-all">Voided</button>
+</div>
+<!-- Actions -->
+<div class="flex gap-3">
+<button class="flex items-center gap-2 text-stone-500 font-ui-xs text-[11px] uppercase tracking-wider hover:text-stone-900">
+<span class="material-symbols-outlined text-sm">tune</span>
+                            Advanced Filter
+                        </button>
+<button class="flex items-center gap-2 text-stone-500 font-ui-xs text-[11px] uppercase tracking-wider hover:text-stone-900">
+<span class="material-symbols-outlined text-sm">refresh</span>
+                            Reset
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="space-y-1">
+<label class="text-[10px] font-bold uppercase tracking-widest text-stone-400">Date Range</label>
+<div class="flex items-center border-[0.5px] border-border-subtle px-3 py-2 bg-stone-50">
+<span class="material-symbols-outlined text-stone-400 text-lg mr-2">calendar_today</span>
+<input class="bg-transparent border-none p-0 text-xs font-ui-sm w-full focus:ring-0" type="text" value="01 Apr 2024 - 30 Apr 2024"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] font-bold uppercase tracking-widest text-stone-400">Account Group</label>
+<select class="w-full border-[0.5px] border-border-subtle px-3 py-2 bg-stone-50 text-xs font-ui-sm focus:ring-0">
+<option>All Accounts</option>
+<option>Bank &amp; Cash</option>
+<option>Trade Receivables</option>
+<option>Operating Expenses</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] font-bold uppercase tracking-widest text-stone-400">Entry Type</label>
+<select class="w-full border-[0.5px] border-border-subtle px-3 py-2 bg-stone-50 text-xs font-ui-sm focus:ring-0">
+<option>All Types</option>
+<option>Payment</option>
+<option>Receipt</option>
+<option>Contra</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] font-bold uppercase tracking-widest text-stone-400">Voucher Search</label>
+<input class="w-full border-[0.5px] border-border-subtle px-3 py-2 bg-stone-50 text-xs font-ui-sm focus:ring-0 placeholder:text-stone-300" placeholder="VCH/2024/000" type="text"/>
+</div>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse border-[0.5px] border-border-subtle">
+<thead>
+<tr class="bg-stone-50 border-b-[0.5px] border-border-subtle">
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500">Entry #</th>
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500">Date</th>
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500">Narration</th>
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500">Type</th>
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500 text-right">Debit (INR)</th>
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500 text-right">Credit (INR)</th>
+<th class="px-3 py-2 border-[0.5px] border-border-subtle text-[11px] font-bold uppercase tracking-[0.15em] text-stone-500 text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle">
+<tr class="hover:bg-stone-50 transition-colors group">
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">VCH/24/0182</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">12 Apr 2024</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-sm max-w-xs">
+<span class="font-semibold block text-stone-900">Office Rent - April 2024</span>
+<span class="text-[10px] text-stone-400 italic">Paid to Realty Corp via HDFC Net</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle">
+<span class="text-[11px] font-ui-xs font-semibold px-2 py-0.5 bg-stone-100 rounded-sm">Payment</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-900 font-medium">85,000.00</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-400">—</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-center">
+<span class="status-badge bg-green-50 text-green-700 border-green-200">Posted</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">VCH/24/0183</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">14 Apr 2024</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-sm max-w-xs">
+<span class="font-semibold block text-stone-900">Professional Services Fee</span>
+<span class="text-[10px] text-stone-400 italic">Consultancy charges for Client-A</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle">
+<span class="text-[11px] font-ui-xs font-semibold px-2 py-0.5 bg-blue-50 text-blue-700 rounded-sm">Receipt</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-400">—</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-900 font-medium">1,20,500.00</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-center">
+<span class="status-badge bg-amber-50 text-amber-700 border-amber-200">Draft</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">VCH/24/0184</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">15 Apr 2024</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-sm max-w-xs">
+<span class="font-semibold block text-stone-900">Petty Cash Withdrawal</span>
+<span class="text-[10px] text-stone-400 italic">Self withdrawal for office pantry</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle">
+<span class="text-[11px] font-ui-xs font-semibold px-2 py-0.5 bg-stone-100 rounded-sm">Contra</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-900 font-medium">5,000.00</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-400">—</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-center">
+<span class="status-badge bg-green-50 text-green-700 border-green-200">Posted</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">VCH/24/0185</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">18 Apr 2024</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-sm max-w-xs text-stone-400 line-through">
+<span class="font-semibold block">Cloud Subscription (AWS)</span>
+<span class="text-[10px] italic">Duplicate entry for server costs</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle opacity-50">
+<span class="text-[11px] font-ui-xs font-semibold px-2 py-0.5 bg-stone-100 rounded-sm">Journal</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-400">—</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-400">—</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-center">
+<span class="status-badge bg-stone-100 text-stone-400 border-stone-200">Voided</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">VCH/24/0186</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm">22 Apr 2024</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-sm max-w-xs">
+<span class="font-semibold block text-stone-900">Salaries - April 2024</span>
+<span class="text-[10px] text-stone-400 italic">Net pay distribution for all departments</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle">
+<span class="text-[11px] font-ui-xs font-semibold px-2 py-0.5 bg-stone-100 rounded-sm">Payment</span>
+</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-900 font-medium">12,45,000.00</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle font-mono-md text-sm text-right text-stone-400">—</td>
+<td class="px-3 py-2 border-[0.5px] border-border-subtle text-center">
+<span class="status-badge bg-green-50 text-green-700 border-green-200">Posted</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination-ish Footer -->
+<div class="mt-4 flex justify-between items-center text-xs text-stone-500 font-ui-xs">
+<p>Showing 5 of 142 entries</p>
+<div class="flex gap-2">
+<button class="p-1 border border-border-subtle hover:bg-stone-100"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="px-3 py-1 border border-border-subtle bg-white font-bold text-stone-900">1</button>
+<button class="px-3 py-1 border border-border-subtle hover:bg-stone-100">2</button>
+<button class="px-3 py-1 border border-border-subtle hover:bg-stone-100">3</button>
+<button class="p-1 border border-border-subtle hover:bg-stone-100"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</main>
+</div>
+<!-- Persistent Footer Summary -->
+<footer class="fixed bottom-0 right-0 left-64 bg-stone-900 text-white py-4 px-8 z-40 border-t border-stone-800 flex items-center justify-between">
+<div class="flex gap-12 items-center">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Total Posted Debit</span>
+<span class="font-mono-lg text-lg text-[#E59A0C]">₹ 13,35,000.00</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Total Posted Credit</span>
+<span class="font-mono-lg text-lg text-[#E59A0C]">₹ 13,35,000.00</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-1.5 bg-green-950 border border-green-900 text-green-400 text-[10px] font-bold uppercase tracking-widest rounded-sm">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                Ledger Balanced
+            </div>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 bg-white text-stone-900 px-6 py-2 text-xs font-bold uppercase tracking-widest hover:bg-amber-100 transition-colors">
+<span class="material-symbols-outlined text-sm">print</span>
+                Print Registry
+            </button>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,78 @@
+// @ts-nocheck
+'use client';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { formatIndianNumber } from '@/lib/format';
+
+interface PostEntryDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  entry: any;
+  onConfirm: () => void;
+}
+
+export function PostEntryDialog({
+  isOpen,
+  onClose,
+  entry,
+  onConfirm,
+}: PostEntryDialogProps) {
+  if (!entry) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-md p-0 overflow-hidden border border-border-subtle shadow-sm rounded-sm text-left">
+        <DialogHeader className="flex flex-row items-center p-6 border-b-[0.5px] border-stone-200 bg-[#F9F7F2] gap-3">
+          <div className="flex-shrink-0 bg-amber-50 p-2 rounded-full border-[0.5px] border-amber-200">
+            <span className="material-symbols-outlined text-[#C8860A]" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+          </div>
+          <DialogTitle className="font-display-lg text-lg font-bold text-on-surface tracking-tight">Confirm Post Entry</DialogTitle>
+        </DialogHeader>
+
+        <div className="p-6 flex-grow">
+          <p className="text-sm font-ui-sm text-text-mid mb-6 leading-relaxed">
+            Posting is irreversible and will update the general ledger. Ensure all amounts are correct.
+          </p>
+          
+          <div className="bg-stone-50 border-[0.5px] border-stone-200 rounded-sm p-5 space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b-[0.5px] border-stone-200 border-dashed">
+              <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Entry Number</span>
+              <span className="text-sm font-medium text-stone-900">{entry.entryNumber}</span>
+            </div>
+            <div className="flex justify-between items-center pb-3 border-b-[0.5px] border-stone-200 border-dashed">
+              <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Posting Date</span>
+              <span className="text-sm font-medium text-stone-900">{entry.date}</span>
+            </div>
+            <div className="flex justify-between items-center pt-1">
+              <span className="text-[10px] font-bold text-stone-700 uppercase tracking-widest">Total Amount</span>
+              <span className="text-lg font-bold text-[#C8860A]">₹ {formatIndianNumber(entry.amount)}</span>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-start gap-2 text-[11px] text-stone-500 bg-stone-50/50 p-3 rounded-sm border-[0.5px] border-stone-100 italic">
+            <span className="material-symbols-outlined text-[16px] text-stone-400 mt-0.5">info</span>
+            <p className="leading-tight">This entry affects multiple accounts and will be logged under fiscal period {entry.period}.</p>
+          </div>
+        </div>
+
+        <DialogFooter className="px-6 py-4 border-t-[0.5px] border-stone-200 bg-stone-50 flex flex-row items-center justify-end gap-3 rounded-b-sm">
+          <button onClick={onClose} className="px-5 py-2.5 text-sm font-bold uppercase tracking-widest text-stone-600 bg-transparent border border-stone-300 rounded-sm hover:bg-stone-100 hover:text-stone-900 transition-colors border-none cursor-pointer">
+            Cancel
+          </button>
+          <button 
+            onClick={onConfirm}
+            className="px-6 py-2.5 bg-[#C8860A] text-white font-bold uppercase tracking-widest text-sm rounded-sm hover:bg-amber-700 transition-colors shadow-sm border-none cursor-pointer"
+          >
+            Post Entry
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

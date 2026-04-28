@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Ledger - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#211b13",
+                        "on-primary-fixed": "#291800",
+                        "on-secondary-container": "#636262",
+                        "background": "#fff8f4",
+                        "on-primary-fixed-variant": "#633f00",
+                        "tertiary-container": "#309bdb",
+                        "outline": "#847563",
+                        "section-dark": "#111111",
+                        "on-tertiary-container": "#002f49",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#e5e2e1",
+                        "primary-fixed": "#ffddb3",
+                        "on-surface-variant": "#514535",
+                        "on-secondary-fixed-variant": "#474746",
+                        "surface-container-low": "#fff1e4",
+                        "tertiary": "#006494",
+                        "on-primary": "#ffffff",
+                        "section-muted": "#F4F2EE",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "page-bg": "#FAFAF8",
+                        "on-error": "#ffffff",
+                        "primary-container": "#c8860a",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-surface": "#211b13",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "secondary-container": "#e2dfde",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb950",
+                        "surface-tint": "#825500",
+                        "surface-container": "#f9ecde",
+                        "surface-bright": "#fff8f4",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#cae6ff",
+                        "secondary": "#5f5e5e",
+                        "text-light": "#888888",
+                        "outline-variant": "#d6c4af",
+                        "amber-text": "#B47500",
+                        "inverse-on-surface": "#fcefe1",
+                        "inverse-surface": "#362f27",
+                        "primary-fixed-dim": "#ffb950",
+                        "on-primary-container": "#3f2700",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "text-mid": "#555555",
+                        "border-subtle": "#E8E4DC",
+                        "surface-container-highest": "#ede0d3",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-tertiary-fixed": "#001e30",
+                        "primary": "#825500",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fff8f4",
+                        "surface-container-high": "#f3e6d9",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#ede0d3",
+                        "surface-dim": "#e5d8cb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "space-128": "128px",
+                        "space-96": "96px",
+                        "gutter-desktop": "24px",
+                        "space-48": "48px",
+                        "gutter-wide": "32px",
+                        "space-64": "64px"
+                    },
+                    "fontFamily": {
+                        "mono-md": ["DM Mono"],
+                        "ui-lg": ["Syne"],
+                        "ui-xs": ["Syne"],
+                        "ui-md": ["Syne"],
+                        "marketing-xl": ["Playfair Display"],
+                        "display-xl": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "mono-lg": ["DM Mono"],
+                        "ui-sm": ["Syne"],
+                        "marketing-hero": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                        "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface font-ui-md antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar Component -->
+<nav class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#FDFCFB] dark:bg-stone-900 text-[#C8860A] font-serif text-sm tracking-wide border-r-[0.5px] border-[#E8E4DC] dark:border-stone-800 flat hidden lg:flex flex-col h-full py-6 z-40">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-DEFAULT bg-primary-container flex items-center justify-center text-on-primary font-bold">
+                C
+            </div>
+<div>
+<div class="text-lg font-black uppercase tracking-widest text-[#C8860A]">ComplianceOS</div>
+<div class="text-xs text-stone-500">Verified Enterprise</div>
+</div>
+</div>
+<div class="flex-1 space-y-1">
+<a class="bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-white border-l-4 border-[#C8860A] font-bold py-3 px-6 flex items-center gap-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                Ledger
+            </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+                Invoices
+            </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+                GST Filing
+            </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Expenses
+            </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+                Audit Trail
+            </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Inventory
+            </a>
+</div>
+<div class="mt-auto space-y-1">
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="text-stone-500 dark:text-stone-400 py-3 px-6 flex items-center gap-3 hover:bg-[#F9F8F6] dark:hover:bg-stone-800 transition-all duration-200 flex items-center space-x-3 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                Fiscal Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 flex flex-col h-screen overflow-hidden bg-page-bg">
+<!-- TopAppBar Component (Mobile Fallback / Utility Header) -->
+<header class="bg-[#F9F8F6] dark:bg-stone-950 text-[#C8860A] dark:text-[#E9A21C] font-serif font-medium tracking-tight docked full-width top-0 z-50 border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800 flat no-shadows sticky top-0 w-full flex justify-between items-center px-6 py-3 backdrop-blur-md lg:hidden">
+<div class="text-xl font-bold tracking-tighter text-stone-900 dark:text-stone-100">ComplianceOS</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer transition-opacity active:opacity-70 text-stone-500 hover:text-stone-800" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer transition-opacity active:opacity-70 text-stone-500 hover:text-stone-800" data-icon="history_edu">history_edu</span>
+<span class="material-symbols-outlined cursor-pointer transition-opacity active:opacity-70 text-stone-500 hover:text-stone-800" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<!-- Canvas -->
+<div class="flex-1 overflow-y-auto p-gutter-desktop lg:p-gutter-wide">
+<!-- Breadcrumbs -->
+<div class="flex items-center text-ui-xs text-text-light mb-6 uppercase tracking-widest">
+<a class="hover:text-primary-container transition-colors" href="#">Ledger</a>
+<span class="mx-2">/</span>
+<a class="hover:text-primary-container transition-colors" href="#">Accounts</a>
+<span class="mx-2">/</span>
+<span class="text-on-surface">AC-7492-HDFC</span>
+</div>
+<!-- Account Header Card -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle rounded-DEFAULT mb-8">
+<div class="h-[2px] bg-primary-container w-full rounded-t-DEFAULT"></div>
+<div class="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<h1 class="font-display-lg text-on-surface">HDFC Current Account</h1>
+<span class="px-2 py-1 bg-surface-container text-surface-tint font-ui-xs rounded-DEFAULT border-[0.5px] border-outline-variant">ASSET / BANK</span>
+</div>
+<p class="font-mono-md text-text-mid">Code: AC-7492-HDFC | Branch: Mumbai Main</p>
+</div>
+<div class="text-right">
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-1">Current Balance</p>
+<p class="font-mono-lg text-display-xl text-on-surface">₹ 45,28,904.50 <span class="text-ui-md text-text-light ml-1">Dr</span></p>
+</div>
+</div>
+<div class="border-t-[0.5px] border-border-subtle bg-surface px-8 py-3 flex gap-6">
+<button class="flex items-center gap-2 text-ui-sm text-primary hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span> Export Statement
+                    </button>
+<button class="flex items-center gap-2 text-ui-sm text-primary hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span> Edit Details
+                    </button>
+</div>
+</div>
+<!-- Ledger Table Section -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle rounded-DEFAULT overflow-hidden">
+<div class="flex justify-between items-center p-4 border-b-[0.5px] border-border-subtle bg-surface">
+<h2 class="font-ui-lg text-on-surface">Transactions</h2>
+<div class="flex gap-4 items-center">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-light text-[18px]" data-icon="search">search</span>
+<input class="pl-9 pr-4 py-1.5 border-[0.5px] border-border-subtle rounded-DEFAULT text-ui-sm focus:ring-1 focus:ring-primary-container focus:border-primary-container bg-surface-container-lowest w-64" placeholder="Search narration..." type="text"/>
+</div>
+<button class="p-1.5 border-[0.5px] border-border-subtle rounded-DEFAULT text-text-mid hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b-[0.5px] border-border-subtle text-ui-xs text-text-mid uppercase tracking-widest">
+<th class="p-4 font-medium whitespace-nowrap">Date</th>
+<th class="p-4 font-medium whitespace-nowrap">Entry #</th>
+<th class="p-4 font-medium w-1/3">Narration</th>
+<th class="p-4 font-medium whitespace-nowrap">Voucher</th>
+<th class="p-4 font-medium text-right whitespace-nowrap">Debit (₹)</th>
+<th class="p-4 font-medium text-right whitespace-nowrap">Credit (₹)</th>
+<th class="p-4 font-medium text-right whitespace-nowrap">Balance (₹)</th>
+</tr>
+</thead>
+<tbody class="text-ui-sm divide-y-[0.5px] divide-border-subtle">
+<!-- Opening Balance Row -->
+<tr class="bg-surface hover:bg-surface-container-low transition-colors group">
+<td class="p-4 text-text-mid font-mono-md">01 Apr 2024</td>
+<td class="p-4 text-text-mid font-mono-md">-</td>
+<td class="p-4 font-medium text-on-surface italic">Opening Balance</td>
+<td class="p-4 text-text-mid">-</td>
+<td class="p-4 font-mono-md text-right">-</td>
+<td class="p-4 font-mono-md text-right">-</td>
+<td class="p-4 font-mono-md text-right font-medium">42,50,000.00 Dr</td>
+</tr>
+<!-- Transaction Rows -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-4 text-text-mid font-mono-md">05 Apr 2024</td>
+<td class="p-4 text-primary font-mono-md cursor-pointer hover:underline">JV-24-0012</td>
+<td class="p-4 text-on-surface">Payment received from Reliance Industries Ltd against Inv #INV-24-005</td>
+<td class="p-4 text-text-mid"><span class="px-2 py-0.5 bg-surface-variant rounded-DEFAULT text-ui-xs border-[0.5px] border-outline-variant">Receipt</span></td>
+<td class="p-4 font-mono-md text-right text-on-surface">5,25,000.00</td>
+<td class="p-4 font-mono-md text-right text-text-light">-</td>
+<td class="p-4 font-mono-md text-right font-medium">47,75,000.00 Dr</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-4 text-text-mid font-mono-md">08 Apr 2024</td>
+<td class="p-4 text-primary font-mono-md cursor-pointer hover:underline">JV-24-0018</td>
+<td class="p-4 text-on-surface">NEFT transfer to Tata Consultancy Services for IT Support Services</td>
+<td class="p-4 text-text-mid"><span class="px-2 py-0.5 bg-surface-variant rounded-DEFAULT text-ui-xs border-[0.5px] border-outline-variant">Payment</span></td>
+<td class="p-4 font-mono-md text-right text-text-light">-</td>
+<td class="p-4 font-mono-md text-right text-on-surface">1,50,000.00</td>
+<td class="p-4 font-mono-md text-right font-medium">46,25,000.00 Dr</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-4 text-text-mid font-mono-md">12 Apr 2024</td>
+<td class="p-4 text-primary font-mono-md cursor-pointer hover:underline">JV-24-0025</td>
+<td class="p-4 text-on-surface">Bank Charges - Quarterly Account Maintenance</td>
+<td class="p-4 text-text-mid"><span class="px-2 py-0.5 bg-surface-variant rounded-DEFAULT text-ui-xs border-[0.5px] border-outline-variant">Journal</span></td>
+<td class="p-4 font-mono-md text-right text-text-light">-</td>
+<td class="p-4 font-mono-md text-right text-on-surface">2,500.00</td>
+<td class="p-4 font-mono-md text-right font-medium">46,22,500.00 Dr</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-4 text-text-mid font-mono-md">15 Apr 2024</td>
+<td class="p-4 text-primary font-mono-md cursor-pointer hover:underline">JV-24-0031</td>
+<td class="p-4 text-on-surface">Cash withdrawal for petty cash replenishment</td>
+<td class="p-4 text-text-mid"><span class="px-2 py-0.5 bg-surface-variant rounded-DEFAULT text-ui-xs border-[0.5px] border-outline-variant">Contra</span></td>
+<td class="p-4 font-mono-md text-right text-text-light">-</td>
+<td class="p-4 font-mono-md text-right text-on-surface">50,000.00</td>
+<td class="p-4 font-mono-md text-right font-medium">45,72,500.00 Dr</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-4 text-text-mid font-mono-md">18 Apr 2024</td>
+<td class="p-4 text-primary font-mono-md cursor-pointer hover:underline">JV-24-0042</td>
+<td class="p-4 text-on-surface">GST Payment - March 2024 Liability</td>
+<td class="p-4 text-text-mid"><span class="px-2 py-0.5 bg-surface-variant rounded-DEFAULT text-ui-xs border-[0.5px] border-outline-variant">Payment</span></td>
+<td class="p-4 font-mono-md text-right text-text-light">-</td>
+<td class="p-4 font-mono-md text-right text-on-surface">43,595.50</td>
+<td class="p-4 font-mono-md text-right font-medium">45,28,904.50 Dr</td>
+</tr>
+</tbody>
+<tfoot class="bg-surface border-t-[1px] border-outline">
+<tr>
+<td class="p-4 font-medium text-right text-on-surface uppercase tracking-widest text-ui-xs" colspan="4">Period Totals</td>
+<td class="p-4 font-mono-md text-right font-bold text-on-surface">5,25,000.00</td>
+<td class="p-4 font-mono-md text-right font-bold text-on-surface">2,46,095.50</td>
+<td class="p-4"></td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between p-4 border-t-[0.5px] border-border-subtle bg-surface">
+<span class="text-ui-sm text-text-mid">Showing 1 to 5 of 128 entries</span>
+<div class="flex gap-1">
+<button class="px-3 py-1 border-[0.5px] border-border-subtle rounded-DEFAULT text-ui-sm text-text-mid hover:bg-surface-container disabled:opacity-50" disabled="">Prev</button>
+<button class="px-3 py-1 border-[0.5px] border-primary-container bg-primary-container text-on-primary rounded-DEFAULT text-ui-sm">1</button>
+<button class="px-3 py-1 border-[0.5px] border-border-subtle rounded-DEFAULT text-ui-sm text-on-surface hover:bg-surface-container">2</button>
+<button class="px-3 py-1 border-[0.5px] border-border-subtle rounded-DEFAULT text-ui-sm text-on-surface hover:bg-surface-container">3</button>
+<span class="px-2 py-1 text-text-mid">...</span>
+<button class="px-3 py-1 border-[0.5px] border-border-subtle rounded-DEFAULT text-ui-sm text-text-mid hover:bg-surface-container">Next</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Component -->
+<footer class="bg-[#F9F8F6] dark:bg-stone-950 text-[#C8860A] font-mono text-[10px] uppercase tracking-widest w-full py-4 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800 flat flex justify-between items-center px-12 w-full mt-auto">
+<div class="text-stone-400 dark:text-stone-600">Active Fiscal Year: 2024-25 | Precision Accounting Standards</div>
+<div class="flex gap-6">
+<a class="text-stone-400 dark:text-stone-600 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-150" href="#">Terms of Service</a>
+<a class="text-stone-400 dark:text-stone-600 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-150" href="#">Privacy Policy</a>
+<a class="text-stone-400 dark:text-stone-600 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-150" href="#">Compliance Shield</a>
+</div>
+</footer>
+</main>
+</body></html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invoice Configuration - ComplianceOS</title>
+<!-- Google Fonts: Syne, Playfair Display, DM Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#825500",
+                      "section-muted": "#F4F2EE",
+                      "primary-fixed-dim": "#ffb950",
+                      "secondary-container": "#e2dfde",
+                      "page-bg": "#FAFAF8",
+                      "on-background": "#211b13",
+                      "on-secondary-container": "#636262",
+                      "on-primary-container": "#3f2700",
+                      "inverse-primary": "#ffb950",
+                      "tertiary-container": "#309bdb",
+                      "border-subtle": "#E8E4DC",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface": "#fff8f4",
+                      "on-secondary-fixed-variant": "#474746",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-error": "#ffffff",
+                      "text-mid": "#555555",
+                      "surface-container-low": "#fff1e4",
+                      "tertiary": "#006494",
+                      "on-primary-fixed-variant": "#633f00",
+                      "surface-bright": "#fff8f4",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-container-high": "#f3e6d9",
+                      "primary-fixed": "#ffddb3",
+                      "amber-text": "#B47500",
+                      "on-primary": "#ffffff",
+                      "primary": "#825500",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#362f27",
+                      "surface-dim": "#e5d8cb",
+                      "surface-variant": "#ede0d3",
+                      "primary-container": "#c8860a",
+                      "tertiary-fixed": "#cae6ff",
+                      "secondary": "#5f5e5e",
+                      "on-primary-fixed": "#291800",
+                      "inverse-on-surface": "#fcefe1",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-surface": "#211b13",
+                      "surface-container-highest": "#ede0d3",
+                      "on-surface-variant": "#514535",
+                      "on-error-container": "#93000a",
+                      "section-dark": "#111111",
+                      "text-light": "#888888",
+                      "surface-container": "#f9ecde",
+                      "on-tertiary-container": "#002f49",
+                      "outline": "#847563",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#d6c4af",
+                      "background": "#fff8f4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "gutter-desktop": "24px",
+                      "space-64": "64px",
+                      "space-128": "128px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px",
+                      "space-96": "96px"
+              },
+              "fontFamily": {
+                      "mono-md": ["DM Mono"],
+                      "display-lg": ["Playfair Display"],
+                      "marketing-xl": ["Playfair Display"],
+                      "ui-sm": ["Syne"],
+                      "mono-lg": ["DM Mono"],
+                      "marketing-hero": ["Playfair Display"],
+                      "display-xl": ["Playfair Display"],
+                      "ui-lg": ["Syne"],
+                      "ui-xs": ["Syne"],
+                      "ui-md": ["Syne"]
+              },
+              "fontSize": {
+                      "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                      "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                      "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                      "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                      "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                      "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                      "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Base styles to ensure consistency */
+        body {
+            background-color: theme('colors.page-bg');
+            color: theme('colors.on-background');
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.page-bg');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.border-subtle');
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline-variant');
+        }
+    </style>
+</head>
+<body class="flex h-screen w-full overflow-hidden antialiased selection:bg-primary-container selection:text-white">
+<!-- JSON Component: SideNavBar -->
+<!-- ACTIVE LOGIC: "Audit Settings" selected as it aligns best with Configuration/Settings intent -->
+<nav class="bg-[#FDFCFB] dark:bg-[#121212] h-screen w-72 border-r-[0.5px] sticky left-0 border-[#E8E4DC] dark:border-stone-800 flex flex-col py-8 px-4 gap-2 z-40 hidden md:flex shrink-0">
+<!-- Header -->
+<div class="px-4 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-stone-200 overflow-hidden flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-stone-500 text-sm">person</span>
+</div>
+<div>
+<div class="font-serif font-bold text-[#1A1A1A] dark:text-white tracking-widest uppercase text-xs">ComplianceOS</div>
+<div class="font-serif text-[11px] leading-relaxed text-stone-500 uppercase tracking-widest mt-0.5">Enterprise Tier</div>
+</div>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 flex flex-col gap-1">
+<!-- Inactive Tab: Overview -->
+<a class="flex items-center gap-3 px-4 py-2.5 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform duration-150">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Inactive Tab: Compliance Ledger -->
+<a class="flex items-center gap-3 px-4 py-2.5 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform duration-150">menu_book</span>
+<span>Compliance Ledger</span>
+</a>
+<!-- Inactive Tab: Entity Management -->
+<a class="flex items-center gap-3 px-4 py-2.5 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform duration-150">corporate_fare</span>
+<span>Entity Management</span>
+</a>
+<!-- Inactive Tab: Reports Archive -->
+<a class="flex items-center gap-3 px-4 py-2.5 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 select-none cursor-default font-serif text-[13px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform duration-150">analytics</span>
+<span>Reports Archive</span>
+</a>
+<!-- Active Tab: Audit Settings -->
+<a class="flex items-center gap-3 px-4 py-2.5 rounded bg-[#F5F2ED] dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] font-semibold select-none cursor-default font-serif text-[13px] leading-relaxed" href="#">
+<span class="material-symbols-outlined text-lg">verified_user</span>
+<span>Audit Settings</span>
+</a>
+</div>
+<!-- CTA -->
+<div class="px-4 mt-4 mb-6">
+<button class="w-full py-2 px-4 border border-[#E8E4DC] dark:border-stone-700 text-[#C8860A] hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors duration-150 font-serif text-[12px] uppercase tracking-wider flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                Add New Entity
+            </button>
+</div>
+<!-- Footer Navigation -->
+<div class="border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800 pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 rounded text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors duration-150 font-serif text-[12px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-md group-hover:translate-x-1 transition-transform duration-150">security</span>
+<span>Security Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors duration-150 font-serif text-[12px] leading-relaxed group" href="#">
+<span class="material-symbols-outlined text-md group-hover:translate-x-1 transition-transform duration-150">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col overflow-y-auto relative bg-page-bg">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-30 bg-page-bg/90 backdrop-blur-md border-b-[0.5px] border-border-subtle px-12 py-8 flex justify-between items-end">
+<div>
+<p class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-2">Workspace Configuration</p>
+<h1 class="font-display-xl text-display-xl text-on-background leading-none">Document Settings</h1>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 border-[0.5px] border-on-background bg-transparent font-ui-sm text-ui-sm text-on-background hover:bg-surface-container-highest transition-colors flex items-center gap-2">
+                    Discard Changes
+                </button>
+<button class="px-6 py-2.5 bg-primary-container text-white font-ui-sm text-ui-sm hover:opacity-90 transition-opacity flex items-center gap-2 group">
+                    Save Configuration
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</header>
+<!-- Two Column Layout -->
+<div class="p-12 grid grid-cols-1 xl:grid-cols-[1fr_500px] gap-space-64 max-w-[1600px] mx-auto w-full">
+<!-- LEFT COLUMN: Form Settings -->
+<div class="flex flex-col gap-12">
+<!-- Section: Document Numbering -->
+<section class="border-t-[2px] border-primary-container bg-surface-container-lowest p-8 border-x-[0.5px] border-b-[0.5px] border-border-subtle relative group hover:shadow-sm transition-shadow">
+<h2 class="font-ui-lg text-ui-lg text-on-background mb-1">Numbering Sequence</h2>
+<p class="font-ui-sm text-ui-sm text-text-mid mb-8 max-w-xl">Define the prefix and sequential logic for fiscal compliance documents. Ensure format aligns with GSTIN regulations.</p>
+<div class="grid grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-wider">Prefix Format</label>
+<input class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-mono-md text-mono-md text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" type="text" value="INV/23-24/"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-wider">Next Sequence</label>
+<input class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-mono-md text-mono-md text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" type="number" value="0042"/>
+</div>
+</div>
+</section>
+<!-- Section: Brand Identity -->
+<section class="border-t-[2px] border-primary-container bg-surface-container-lowest p-8 border-x-[0.5px] border-b-[0.5px] border-border-subtle relative group hover:shadow-sm transition-shadow">
+<h2 class="font-ui-lg text-ui-lg text-on-background mb-1">Corporate Identity</h2>
+<p class="font-ui-sm text-ui-sm text-text-mid mb-8 max-w-xl">Upload official corporate seal or logo for header inclusion. High-contrast monochrome preferred for print legibility.</p>
+<div class="flex items-center gap-8">
+<div class="w-32 h-32 border-[0.5px] border-border-subtle bg-page-bg flex items-center justify-center shrink-0">
+<span class="font-display-lg text-display-lg text-on-surface-variant opacity-30">C-OS</span>
+</div>
+<div class="flex-1 border-[0.5px] border-dashed border-border-subtle bg-surface hover:bg-surface-container-highest transition-colors cursor-pointer p-8 flex flex-col items-center justify-center gap-3 text-center">
+<span class="material-symbols-outlined text-text-mid text-2xl">cloud_upload</span>
+<div>
+<p class="font-ui-sm text-ui-sm text-on-background font-medium">Click to upload or drag &amp; drop</p>
+<p class="font-ui-xs text-ui-xs text-text-mid mt-1">SVG, PNG, JPG (Max 2MB)</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Bank & Remittance -->
+<section class="border-t-[2px] border-primary-container bg-surface-container-lowest p-8 border-x-[0.5px] border-b-[0.5px] border-border-subtle relative group hover:shadow-sm transition-shadow">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="font-ui-lg text-ui-lg text-on-background mb-1">Remittance Details</h2>
+<p class="font-ui-sm text-ui-sm text-text-mid max-w-xl">Primary banking coordinates for B2B settlements. Displayed prominently at document footer.</p>
+</div>
+<span class="material-symbols-outlined text-primary-container">account_balance</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-wider">Beneficiary Name</label>
+<input class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-ui-sm text-ui-sm text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" type="text" value="ComplianceOS Technologies Pvt Ltd"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-wider">Account Number</label>
+<input class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-mono-md text-mono-md text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" type="text" value="09348827364510"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-wider">IFSC Code</label>
+<input class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-mono-md text-mono-md text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" type="text" value="HDFC0000123"/>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-wider">Bank Name &amp; Branch</label>
+<input class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-ui-sm text-ui-sm text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" type="text" value="HDFC Bank, Cyber City Branch, Gurugram"/>
+</div>
+</div>
+</section>
+<!-- Section: Terms -->
+<section class="border-t-[2px] border-primary-container bg-surface-container-lowest p-8 border-x-[0.5px] border-b-[0.5px] border-border-subtle relative group hover:shadow-sm transition-shadow">
+<h2 class="font-ui-lg text-ui-lg text-on-background mb-1">Standard Terms</h2>
+<p class="font-ui-sm text-ui-sm text-text-mid mb-6 max-w-xl">Legal stipulations appended to all generated invoices.</p>
+<div class="flex flex-col gap-2">
+<textarea class="bg-page-bg border-[0.5px] border-border-subtle px-4 py-3 font-ui-sm text-ui-sm text-on-background focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all resize-y" rows="4">1. Payment is due within 15 days of invoice date.
+2. Late payment subject to 1.5% monthly interest.
+3. Subject to Gurugram jurisdiction.</textarea>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN: Live Preview -->
+<div class="relative">
+<div class="sticky top-space-48 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                            Live Document Preview
+                        </h3>
+<span class="font-ui-xs text-ui-xs text-text-mid">A4 Format</span>
+</div>
+<!-- The Document Canvas (Editorial / Ledger Style) -->
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle shadow-sm p-10 flex flex-col aspect-[1/1.414] text-on-background relative overflow-hidden">
+<!-- subtle grid background to simulate ledger paper -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(#1A1A1A 1px, transparent 1px), linear-gradient(90deg, #1A1A1A 1px, transparent 1px); background-size: 20px 20px;"></div>
+<!-- Header -->
+<div class="flex justify-between items-start border-b-[0.5px] border-border-subtle pb-8 mb-8">
+<div class="flex flex-col">
+<span class="font-display-lg text-display-lg font-bold tracking-tight mb-4">INVOICE</span>
+<div class="font-ui-xs text-ui-xs text-text-mid flex flex-col gap-1">
+<span>Date: <span class="font-mono-md text-on-background">24 Oct 2023</span></span>
+<span>No: <span class="font-mono-md text-primary-container font-medium">INV/23-24/0042</span></span>
+</div>
+</div>
+<div class="text-right flex flex-col items-end">
+<div class="w-16 h-16 border-[0.5px] border-border-subtle flex items-center justify-center mb-4 bg-page-bg">
+<span class="font-display-lg text-sm text-on-surface-variant opacity-30">C-OS</span>
+</div>
+<span class="font-ui-sm text-ui-sm font-medium">ComplianceOS Tech Pvt Ltd</span>
+<span class="font-ui-xs text-ui-xs text-text-mid mt-1">GSTIN: 07AAACC1234D1Z5</span>
+</div>
+</div>
+<!-- Bill To -->
+<div class="mb-10">
+<p class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest mb-2 border-b-[0.5px] border-border-subtle inline-block pb-1">Billed To</p>
+<p class="font-ui-sm text-ui-sm font-medium mt-2">Acme Corporation Ltd</p>
+<p class="font-ui-xs text-ui-xs text-text-mid max-w-[200px] mt-1">4th Floor, Tech Park, Whitefield, Bangalore - 560066</p>
+</div>
+<!-- Line Items -->
+<div class="flex-1 flex flex-col">
+<div class="grid grid-cols-[1fr_auto_auto] gap-4 border-y-[0.5px] border-border-subtle py-2 mb-4">
+<span class="font-ui-xs text-ui-xs uppercase text-text-mid">Description</span>
+<span class="font-ui-xs text-ui-xs uppercase text-text-mid text-right w-16">Qty</span>
+<span class="font-ui-xs text-ui-xs uppercase text-text-mid text-right w-24">Amount</span>
+</div>
+<div class="grid grid-cols-[1fr_auto_auto] gap-4 py-2 border-b-[0.5px] border-border-subtle/50">
+<span class="font-ui-sm text-ui-sm text-on-background">Enterprise Audit Software License (Annual)</span>
+<span class="font-mono-md text-mono-md text-on-background text-right w-16">1</span>
+<span class="font-mono-md text-mono-md text-on-background text-right w-24">1,25,000</span>
+</div>
+<div class="grid grid-cols-[1fr_auto_auto] gap-4 py-2 border-b-[0.5px] border-border-subtle/50">
+<span class="font-ui-sm text-ui-sm text-on-background">Implementation &amp; Onboarding Support</span>
+<span class="font-mono-md text-mono-md text-on-background text-right w-16">1</span>
+<span class="font-mono-md text-mono-md text-on-background text-right w-24">25,000</span>
+</div>
+<!-- Totals -->
+<div class="mt-auto flex flex-col items-end pt-8">
+<div class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-2 w-48">
+<span class="font-ui-xs text-ui-xs text-text-mid">Subtotal</span>
+<span class="font-mono-md text-mono-md text-right">1,50,000</span>
+<span class="font-ui-xs text-ui-xs text-text-mid">IGST (18%)</span>
+<span class="font-mono-md text-mono-md text-right">27,000</span>
+</div>
+<div class="grid grid-cols-[auto_1fr] gap-x-8 mt-4 pt-4 border-t-[0.5px] border-on-background w-full max-w-[240px]">
+<span class="font-ui-sm text-ui-sm font-bold">Total (INR)</span>
+<span class="font-mono-lg text-mono-lg font-medium text-right">1,77,000</span>
+</div>
+</div>
+</div>
+<!-- Footer (Bank & Terms Preview) -->
+<div class="mt-12 pt-6 border-t-[0.5px] border-border-subtle flex justify-between gap-8">
+<div class="flex-1">
+<p class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest mb-2">Remittance</p>
+<div class="font-mono-md text-[10px] leading-relaxed text-text-mid flex flex-col">
+<span>Beneficiary: ComplianceOS Technologies Pvt Ltd</span>
+<span>A/C: <span class="text-on-background">09348827364510</span></span>
+<span>IFSC: <span class="text-on-background">HDFC0000123</span></span>
+</div>
+</div>
+<div class="flex-1">
+<p class="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest mb-2">Terms</p>
+<div class="font-ui-sm text-[10px] leading-relaxed text-text-mid">
+<p>1. Payment is due within 15 days of invoice date.</p>
+<p>2. Late payment subject to 1.5% monthly interest.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

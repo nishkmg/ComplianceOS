@@ -2,86 +2,115 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Badge, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui";
-
-const mockFY = {
-  id: "1",
-  year: "2026-27",
-  startDate: "2026-04-01",
-  endDate: "2027-03-31",
-  status: "open",
-  entryCount: 5,
-  draftCount: 1,
-};
+import { formatIndianNumber } from "@/lib/format";
 
 export default function FiscalYearDetailPage() {
   const params = useParams();
-  const [showCloseDialog, setShowCloseDialog] = useState(false);
+  const id = params.id as string;
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">FY {mockFY.year}</h1>
-          <p className="font-ui text-[12px] text-light mt-1">{mockFY.startDate} to {mockFY.endDate}</p>
-        </div>
-        <Badge variant={mockFY.status === "open" ? "success" : mockFY.status === "pending_close" ? "amber" : "gray"}>
-          {mockFY.status}
-        </Badge>
+    <div className="space-y-6 text-left">
+      {/* Breadcrumbs */}
+      <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-12">
+        <Link className="hover:text-on-surface transition-colors no-underline flex items-center gap-1" href="/settings/fiscal-years">
+          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          Fiscal Years
+        </Link>
+        <span className="text-border-subtle">/</span>
+        <span className="text-on-surface">FY 2024-25</span>
       </div>
 
-      <div className="card p-5 space-y-3">
-        <div className="flex justify-between font-ui text-[13px]">
-          <span className="text-light">Total Entries</span>
-          <span className="font-medium text-dark">{mockFY.entryCount}</span>
+      {/* Header Section */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b-[0.5px] border-border-subtle pb-8">
+        <div className="text-left">
+          <div className="flex items-center gap-4 mb-3">
+            <h1 className="font-display-xl text-4xl text-on-surface tracking-tight">FY 2024-25</h1>
+            <span className="font-ui-xs text-[10px] uppercase tracking-widest text-amber-text border-[0.5px] border-primary-container px-3 py-1 bg-[#fff8f4] rounded-sm font-bold">Open</span>
+          </div>
+          <p className="font-ui-md text-ui-md text-text-mid">Reporting period: April 1, 2024 — March 31, 2025</p>
         </div>
-        <div className="flex justify-between font-ui text-[13px]">
-          <span className="text-light">Draft Entries</span>
-          <span className="font-medium text-dark">{mockFY.draftCount}</span>
-        </div>
-        <div className="flex justify-between font-ui text-[13px]">
-          <span className="text-light">Days Remaining</span>
-          <span className="font-medium text-dark">~275 days</span>
-        </div>
-      </div>
-
-      {mockFY.draftCount > 0 && (
-        <div className="card p-4 bg-amber/5 border-l-4 border-l-amber">
-          <p className="font-ui text-[12px] text-amber">
-            <strong>Action Required:</strong> {mockFY.draftCount} draft entries exist in this FY. Post or delete all drafts before closing.
-          </p>
-        </div>
-      )}
-
-      <div className="flex gap-3">
-        {mockFY.status === "open" && mockFY.draftCount === 0 && (
-          <button
-            onClick={() => setShowCloseDialog(true)}
-            className="filter-tab active"
-          >
-            Close Fiscal Year
+        <div className="flex gap-4">
+          <button className="flex items-center gap-2 border-[0.5px] border-on-surface px-5 py-2.5 font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-colors cursor-pointer bg-transparent">
+            <span className="material-symbols-outlined text-[18px]">download</span>
+            Export Ledger
           </button>
-        )}
-        {mockFY.status === "open" && mockFY.draftCount > 0 && (
-          <button disabled className="filter-tab opacity-50 cursor-not-allowed">
-            Close Fiscal Year
-          </button>
-        )}
-      </div>
+        </div>
+      </header>
 
-      <Dialog open={showCloseDialog} onOpenChange={setShowCloseDialog}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Close FY {mockFY.year}?</DialogTitle></DialogHeader>
-          <p className="font-ui text-[13px] text-light py-4">
-            This action is irreversible. All entries will be locked and cannot be modified. Are you sure?
-          </p>
-          <DialogFooter>
-            <button onClick={() => setShowCloseDialog(false)} className="filter-tab">Cancel</button>
-            <button onClick={() => setShowCloseDialog(false)} className="filter-tab active">Confirm Close</button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Ledger Stats Bento Grid */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
+        <div className="bg-white border-[0.5px] border-border-subtle p-8 border-t-2 border-t-primary-container shadow-sm hover:shadow-md transition-shadow text-left">
+          <div className="flex justify-between items-start mb-6 text-text-light">
+            <span className="font-ui-xs text-[10px] uppercase tracking-widest font-bold">Voucher Count</span>
+            <span className="material-symbols-outlined text-lg">receipt_long</span>
+          </div>
+          <div className="font-mono text-3xl text-on-surface font-bold mb-2">12,483</div>
+          <div className="font-ui-sm text-xs text-text-light flex items-center gap-1">
+            <span className="material-symbols-outlined text-[14px] text-green-600">trending_up</span>
+            <span className="text-green-700 font-bold">+4.2%</span> vs previous year
+          </div>
+        </div>
+
+        <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm hover:shadow-md transition-shadow text-left">
+          <div className="flex justify-between items-start mb-6 text-text-light">
+            <span className="font-ui-xs text-[10px] uppercase tracking-widest font-bold">GST Liability</span>
+            <span className="material-symbols-outlined text-lg">gavel</span>
+          </div>
+          <div className="font-mono text-3xl text-on-surface font-bold mb-2">₹ 8.42L</div>
+          <div className="font-ui-sm text-xs text-text-light">
+            Accrued for periods Q1-Q3
+          </div>
+        </div>
+
+        <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm hover:shadow-md transition-shadow text-left">
+          <div className="flex justify-between items-start mb-6 text-text-light">
+            <span className="font-ui-xs text-[10px] uppercase tracking-widest font-bold">Last Activity</span>
+            <span className="material-symbols-outlined text-lg">update</span>
+          </div>
+          <div className="font-mono text-xl text-on-surface font-bold mb-2 mt-2 leading-relaxed">24 Oct 2024<br/>14:32:01 IST</div>
+          <div className="font-ui-sm text-xs text-text-light uppercase tracking-widest font-bold">
+            Automated feed active
+          </div>
+        </div>
+      </section>
+
+      {/* Action Panel: Close Fiscal Year */}
+      <section className="border-t-[0.5px] border-border-subtle pt-16 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
+          <div className="md:col-span-5">
+            <h2 className="font-display-xl text-3xl text-on-surface mb-6 font-bold">Year-End Finalization</h2>
+            <p className="font-ui-md text-sm text-text-mid leading-relaxed mb-6">
+              Initiating the closure of a fiscal year locks all ledgers and prevents further modifications to the accounting period. This process is mandatory for generating final statutory reports.
+            </p>
+            <div className="bg-[#fff8f4] border-[0.5px] border-amber/30 p-6 rounded-sm">
+               <p className="font-ui-sm text-xs text-amber-900 font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                 <span className="material-symbols-outlined text-sm">info</span>
+                 Closure Requirements
+               </p>
+               <ul className="space-y-2 list-none p-0">
+                 <li className="flex items-center gap-2 font-ui-sm text-[13px] text-amber-800">
+                   <span className="w-1 h-1 bg-amber-600 rounded-full"></span>
+                   All draft journal entries must be posted or deleted
+                 </li>
+                 <li className="flex items-center gap-2 font-ui-sm text-[13px] text-amber-800">
+                   <span className="w-1 h-1 bg-amber-600 rounded-full"></span>
+                   GST reconciliation for all periods must be complete
+                 </li>
+               </ul>
+            </div>
+          </div>
+          <div className="md:col-span-7 flex flex-col justify-center items-end">
+            <button className="bg-stone-100 border border-border-subtle text-text-mid px-12 py-4 font-ui-sm font-bold uppercase tracking-widest cursor-not-allowed opacity-50">
+              Close Fiscal Year
+            </button>
+            <p className="mt-4 text-[11px] text-text-light text-right uppercase tracking-widest">
+              Available in 158 days (March 31, 2025)
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

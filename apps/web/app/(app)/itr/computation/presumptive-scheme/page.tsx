@@ -1,219 +1,133 @@
 // @ts-nocheck
 "use client";
-import { Suspense } from "react";
 
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { PresumptiveScheme } from "@complianceos/shared";
+import { formatIndianNumber } from "@/lib/format";
 
-const businessTypes = [
-  { value: "trading", label: "Trading" },
-  { value: "manufacturing", label: "Manufacturing" },
-  { value: "service", label: "Service" },
-  { value: "goods_carriage", label: "Goods Carriage" },
-];
+export default function ITRPresumptivePage() {
+  const [section, setSection] = useState("44ad");
+  const [turnover, setTurnover] = useState(15000000);
+  const [digitalTurnover, setDigitalTurnover] = useState(12000000);
 
-const professions = [
-  { value: "engineering", label: "Engineering" },
-  { value: "architecture", label: "Architecture" },
-  { value: "accountancy", label: "Accountancy" },
-  { value: "legal", label: "Legal" },
-  { value: "medical", label: "Medical" },
-  { value: "technical", label: "Technical" },
-  { value: "interior_decoration", label: "Interior Decoration" },
-];
-
-const Page = function PresumptiveSchemePage() {
-  const searchParams = useSearchParams();
-  const returnId = searchParams.get("returnId") ?? "";
-
-  const [businessType, setBusinessType] = useState("service");
-  const [turnover, setTurnover] = useState<string>("5000000");
-  const [profession, setProfession] = useState("");
-  const [isProfession, setIsProfession] = useState(false);
-
-  const { data: recommendation } = api.itrComputation.recommendScheme.useQuery(
-    {
-      businessType,
-      turnover: Number(turnover),
-      profession: isProfession ? profession : undefined,
-    },
-    { enabled: !!returnId }
-  );
-
-  const schemes = [
-    {
-      code: PresumptiveScheme.SCHEME_44AD,
-      section: "44AD",
-      title: "Presumptive Business Income",
-      eligibility: "For businesses with turnover ≤ ₹3 crore",
-      rate: "6% of turnover (digital receipts) or 8%",
-      applicableFor: ["Trading", "Manufacturing", "Service"],
-    },
-    {
-      code: PresumptiveScheme.SCHEME_44ADA,
-      section: "44ADA",
-      title: "Presumptive Professional Income",
-      eligibility: "For specified professions with turnover ≤ ₹75 lakhs",
-      rate: "50% of gross receipts deemed as income",
-      applicableFor: professions.map((p) => p.label),
-    },
-    {
-      code: PresumptiveScheme.SCHEME_44AE,
-      section: "44AE",
-      title: "Goods Carriage Business",
-      eligibility: "For goods carriage operators (up to 10 vehicles)",
-      rate: "₹1,000 per ton per month or ₹7,500 per vehicle per month",
-      applicableFor: ["Goods Carriage"],
-    },
-  ];
+  const presumptiveIncome = section === "44ad" 
+    ? (digitalTurnover * 0.06) + ((turnover - digitalTurnover) * 0.08)
+    : (turnover * 0.5);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href={`/itr/computation?returnId=${returnId}`} className="text-sm text-gray-500 hover:underline">
-            ← Back to Computation
-          </Link>
-          <h1 className="text-2xl font-bold mt-1">Presumptive Taxation Scheme</h1>
-          <p className="text-sm text-gray-500">Select and configure presumptive scheme if applicable</p>
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <div className="mb-10 text-left">
+        <div className="font-ui-xs text-amber-text uppercase tracking-widest mb-2 flex items-center gap-2 font-bold">
+          <span className="material-symbols-outlined text-[14px]">calculate</span>
+          Tax Calculation Engine
         </div>
+        <h1 className="font-display-xl text-display-xl text-on-surface mb-4">Presumptive Taxation Model</h1>
+        <p className="font-ui-md text-text-mid max-w-2xl leading-relaxed">
+          Evaluate deemed income under sections 44AD (Business) and 44ADA (Profession). Compare presumptive outputs against actual book profit to determine audit applicability.
+        </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">Business/Profession Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-gray-600 mb-2">Type</label>
-            <select
-              value={isProfession ? "profession" : "business"}
-              onChange={(e) => setIsProfession(e.target.value === "profession")}
-              className="px-3 py-2 border rounded text-sm w-full"
-            >
-              <option value="business">Business</option>
-              <option value="profession">Profession</option>
-            </select>
-          </div>
-
-          {isProfession ? (
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Profession</label>
-              <select
-                value={profession}
-                onChange={(e) => setProfession(e.target.value)}
-                className="px-3 py-2 border rounded text-sm w-full"
-              >
-                <option value="">Select profession</option>
-                {professions.map((p) => (
-                  <option key={p.value} value={p.value}>{p.label}</option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Business Type</label>
-              <select
-                value={businessType}
-                onChange={(e) => setBusinessType(e.target.value)}
-                className="px-3 py-2 border rounded text-sm w-full"
-              >
-                {businessTypes.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm text-gray-600 mb-2">Annual Turnover/Gross Receipts</label>
-            <input
-              type="number"
-              value={turnover}
-              onChange={(e) => setTurnover(e.target.value)}
-              placeholder="Enter amount"
-              className="px-3 py-2 border rounded text-sm w-full"
-            />
-            <p className="text-xs text-gray-500 mt-1">₹{Number(turnover).toLocaleString("en-IN")}</p>
-          </div>
-        </div>
-      </div>
-
-      {recommendation && (
-        <div className={`rounded-lg shadow p-6 ${recommendation.eligible ? "bg-green-50" : "bg-gray-50"}`}>
-          <h3 className="text-lg font-bold mb-2">
-            {recommendation.eligible ? "✓ Eligible for Presumptive Scheme" : "Not Eligible for Presumptive Scheme"}
-          </h3>
-          {recommendation.eligible && (
-            <>
-              <p className="text-sm text-gray-700 mb-2">
-                <strong>Recommended:</strong> Section {recommendation.recommendedScheme.toUpperCase()}
-              </p>
-              <p className="text-sm text-gray-600 mb-2">
-                <strong>Deemed Income:</strong> ₹{Number(recommendation.presumptiveIncome).toLocaleString("en-IN")}
-              </p>
-              <p className="text-xs text-gray-500">{recommendation.reasoning}</p>
-            </>
-          )}
-          {!recommendation.eligible && (
-            <p className="text-sm text-gray-600">
-              Your business/profession does not qualify for presumptive taxation. Please compute income under normal provisions.
-            </p>
-          )}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 gap-4">
-        {schemes.map((scheme) => (
-          <div key={scheme.code} className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <h3 className="font-semibold text-lg">{scheme.section} - {scheme.title}</h3>
-                <p className="text-sm text-gray-500">{scheme.eligibility}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1200px] mx-auto">
+        {/* Left Column: Inputs */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
+          <div className="bg-white border border-border-subtle p-8 rounded-sm border-t-2 border-t-primary-container shadow-sm hover:shadow-md transition-all">
+            <h2 className="font-display-lg text-lg font-bold text-on-surface mb-6">Parameter Configuration</h2>
+            <form className="space-y-8">
+              {/* Scheme Selection */}
+              <div className="text-left">
+                <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-text-mid mb-3">Applicable Section</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div 
+                    onClick={() => setSection("44ad")}
+                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ad' ? 'border-primary-container bg-[#fff8f4]' : 'border-border-subtle hover:bg-stone-50'}`}
+                  >
+                    <span className="font-ui-lg text-on-surface font-bold">Section 44AD</span>
+                    <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Eligible Business</span>
+                    {section === '44ad' && <span className="material-symbols-outlined absolute top-4 right-4 text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>}
+                  </div>
+                  <div 
+                    onClick={() => setSection("44ada")}
+                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ada' ? 'border-primary-container bg-[#fff8f4]' : 'border-border-subtle hover:bg-stone-50'}`}
+                  >
+                    <span className="font-ui-lg text-on-surface font-bold">Section 44ADA</span>
+                    <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Specified Profession</span>
+                    {section === '44ada' && <span className="material-symbols-outlined absolute top-4 right-4 text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>}
+                  </div>
+                </div>
               </div>
-              {recommendation?.recommendedScheme === scheme.code && (
-                <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800 font-medium">
-                  Recommended
-                </span>
+
+              {/* Turnover Input */}
+              <div className="text-left">
+                <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-text-mid mb-2" htmlFor="turnover">Total Turnover / Gross Receipts</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-text-mid">₹</span>
+                  <input 
+                    className="w-full bg-stone-50 border border-border-subtle rounded-sm py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
+                    type="number" 
+                    value={turnover}
+                    onChange={(e) => setTurnover(parseFloat(e.target.value) || 0)}
+                  />
+                </div>
+              </div>
+
+              {section === "44ad" && (
+                <div className="text-left">
+                  <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-text-mid mb-2" htmlFor="digital">Turnover via Digital Modes</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-text-mid">₹</span>
+                    <input 
+                      className="w-full bg-stone-50 border border-border-subtle rounded-sm py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
+                      type="number" 
+                      value={digitalTurnover}
+                      onChange={(e) => setDigitalTurnover(parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
+                  <p className="text-[10px] text-text-light mt-2 italic">Bank transfers, UPI, credit/debit cards, and other prescribed digital modes qualify for 6% rate.</p>
+                </div>
               )}
+            </form>
+          </div>
+        </div>
+
+        {/* Right Column: Output */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+          <div className="bg-stone-900 text-white p-8 rounded-sm shadow-xl flex flex-col border border-stone-800">
+            <h3 className="font-display-lg text-lg font-bold text-amber-500 mb-8">Computation Result</h3>
+            
+            <div className="space-y-6">
+              <div className="flex justify-between items-end border-b border-stone-800 pb-4">
+                <span className="font-ui-sm text-sm text-stone-400">Presumptive Income</span>
+                <span className="font-mono text-2xl font-bold text-white">₹ {formatIndianNumber(presumptiveIncome)}</span>
+              </div>
+              
+              <div className="flex justify-between items-center text-stone-400">
+                <span className="font-ui-xs text-[10px] uppercase tracking-widest">Effective Rate</span>
+                <span className="font-mono text-sm">{((presumptiveIncome / turnover) * 100).toFixed(2)}%</span>
+              </div>
             </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="text-gray-600 font-medium">Rate:</span>
-                <span className="text-gray-700">{scheme.rate}</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-gray-600 font-medium">Applicable For:</span>
-                <span className="text-gray-700">{scheme.applicableFor.join(", ")}</span>
-              </div>
+
+            <div className="mt-auto pt-12">
+               <button className="w-full bg-[#C8860A] text-white py-4 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all rounded-sm border-none cursor-pointer flex items-center justify-center gap-2">
+                 Apply to Computation
+                 <span className="material-symbols-outlined">arrow_forward</span>
+               </button>
             </div>
           </div>
-        ))}
-      </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="font-semibold mb-4">Benefits of Presumptive Taxation</h3>
-        <ul className="space-y-2 text-sm text-gray-600">
-          <li className="flex items-start gap-2">
-            <span className="text-green-600">✓</span>
-            <span>No need to maintain detailed books of account</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-600">✓</span>
-            <span>Simplified computation - deemed income rate applies</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-600">✓</span>
-            <span>No audit requirement under section 44AB (if conditions met)</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-600">✓</span>
-            <span>Lower compliance burden and faster filing</span>
-          </li>
-        </ul>
+          <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm text-left">
+             <div className="flex items-start gap-3">
+               <span className="material-symbols-outlined text-primary-container">info</span>
+               <div>
+                 <h4 className="font-ui-sm font-bold text-on-surface text-xs uppercase tracking-widest mb-1">Audit Applicability</h4>
+                 <p className="font-ui-sm text-[13px] text-text-mid leading-relaxed">
+                   Turnover exceeds ₹ 2 Cr. Audit under Section 44AB is mandatory regardless of profit percentage unless 95% of receipts/payments are digital.
+                 </p>
+               </div>
+             </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-export default function PageWrapper() { return <Suspense><Page /></Suspense>; }

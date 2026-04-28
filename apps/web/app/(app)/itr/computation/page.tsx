@@ -1,107 +1,113 @@
 // @ts-nocheck
 "use client";
-import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+
 import { useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
+import { formatIndianNumber } from "@/lib/format";
 
-const incomeHeads = [
-  { key: "salary", label: "Salary", icon: "💼", description: "Income from salary and pension" },
-  { key: "houseProperty", label: "House Property", icon: "🏠", description: "Income from let-out and deemed let-out property" },
-  { key: "businessProfit", label: "Business & Profession", icon: "💼", description: "Profits from business or profession" },
-  { key: "capitalGains", label: "Capital Gains", icon: "📈", description: "Short-term and long-term capital gains" },
-  { key: "otherSources", label: "Other Sources", icon: "📋", description: "Interest, dividends, and other income" },
+const computationRows = [
+  { label: "Income from Business/Profession", amount: 3500000, type: "income" },
+  { label: "Income from House Property", amount: 450000, type: "income" },
+  { label: "Income from Other Sources", amount: 125000, type: "income" },
+  { label: "Gross Total Income", amount: 4075000, type: "total" },
+  { label: "Chapter VI-A Deductions", amount: 150000, type: "deduction" },
+  { label: "Total Taxable Income", amount: 3925000, type: "total" },
 ];
 
-const Page = function ITRComputationPage() {
-  const searchParams = useSearchParams();
-  const returnId = searchParams.get("returnId") ?? "";
-  const { data: incomeBreakdown } = api.itrComputation.getIncomeBreakdown.useQuery({ tenantId: "" as string, financialYear: "2026-27" });
-  const { data: itrReturn } = api.itrReturns.get.useQuery({ itrReturnId: returnId });
-  const computeIncome = api.itrComputation.computeIncome.useMutation();
-  const computeTax = api.itrComputation.computeTax.useMutation();
-  const [taxRegime, setTaxRegime] = useState<"old" | "new">("old");
-
-  const handleComputeIncome = async () => {
-    if (!returnId) return;
-    try { await computeIncome.mutateAsync({ itrReturnId: returnId }); }
-    catch (error) { console.error("Failed to compute income:", error); }
-  };
-
-  const handleComputeTax = async () => {
-    if (!returnId) return;
-    try { await computeTax.mutateAsync({ itrReturnId: returnId, taxRegime }); }
-    catch (error) { console.error("Failed to compute tax:", error); }
-  };
-
+export default function ITRComputationPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-0 text-left">
+      {/* Page Title & Actions */}
+      <div className="px-8 py-8 border-b border-border-subtle flex justify-between items-end -mx-8 -mt-8 mb-8 bg-white/50 sticky top-0 z-20 backdrop-blur-sm">
         <div>
-          <Link href="/itr/returns" className="font-ui text-[12px] text-amber hover:underline">← Back to ITR Returns</Link>
-          <h1 className="font-display text-[26px] font-normal text-dark mt-1">Income Computation</h1>
-          {itrReturn && <p className="font-ui text-[12px] text-light mt-1">{itrReturn.returnType.toUpperCase()} - {itrReturn.assessmentYear}</p>}
+          <p className="font-ui-xs text-xs text-amber-text uppercase tracking-widest mb-1 font-bold">AY 2024-25 | Individual</p>
+          <h2 className="text-3xl font-display-xl font-bold text-on-surface">ITR Computation</h2>
         </div>
-        <div className="flex gap-2">
-          <button onClick={handleComputeIncome} className="filter-tab active">Compute Income</button>
-          <button onClick={handleComputeTax} className="filter-tab bg-success text-white hover:bg-success/90">Compute Tax</button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {incomeHeads.map((head) => (
-          <div key={head.key} className="card p-5">
-            <div className="text-2xl mb-2">{head.icon}</div>
-            <h3 className="font-display text-[14px] font-normal text-dark mb-1">{head.label}</h3>
-            <p className="font-ui text-[11px] text-light mb-3">{head.description}</p>
-            <p className="font-mono text-[18px] font-medium text-dark">₹{incomeBreakdown ? Number((incomeBreakdown as any)[head.key] ?? "0").toLocaleString("en-IN") : "0"}</p>
-            <Link href={`/itr/computation/${head.key.replace(" ", "-").toLowerCase()}?returnId=${returnId}`} className="font-ui text-[12px] text-amber hover:underline mt-2 inline-block">Edit →</Link>
-          </div>
-        ))}
-      </div>
-
-      <div className="card p-5">
-        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Computation Summary</h2>
-        <div className="space-y-2 font-ui text-[13px]">
-          <div className="flex justify-between py-2 border-b border-hairline">
-            <span className="text-light">Gross Total Income</span>
-            <span className="font-mono text-dark">₹{incomeBreakdown?.grossTotal ?? "0"}</span>
-          </div>
-          <div className="flex justify-between py-2 border-b border-hairline">
-            <span className="text-light">Chapter VI-A Deductions</span>
-            <span className="font-mono text-success">-₹0</span>
-          </div>
-          <div className="flex justify-between py-3 font-medium bg-surface-muted px-4 rounded">
-            <span className="text-dark">Total Income (Rounded)</span>
-            <span className="font-mono text-dark">₹{incomeBreakdown?.grossTotal ?? "0"}</span>
-          </div>
+        <div className="flex gap-3">
+          <button className="border border-stone-300 text-stone-700 px-6 py-2 rounded-sm text-sm font-medium hover:bg-stone-50 transition-colors cursor-pointer bg-white shadow-sm">Save Draft</button>
+          <button className="bg-[#C8860A] text-white px-6 py-2 rounded-sm text-sm font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 cursor-pointer border-none font-bold uppercase tracking-widest">
+            Finalize Return <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
         </div>
       </div>
 
-      <div className="card p-5">
-        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Tax Regime Selection</h2>
-        <div className="flex gap-3 mb-4">
-          <button onClick={() => setTaxRegime("old")} className={`filter-tab ${taxRegime === "old" ? "active" : ""}`}>Old Regime</button>
-          <button onClick={() => setTaxRegime("new")} className={`filter-tab ${taxRegime === "new" ? "active" : ""}`}>New Regime</button>
-        </div>
-        <p className="font-ui text-[12px] text-light mb-3">Selected regime will be used for tax computation. You can compare both regimes on the comparison page.</p>
-        <Link href={`/itr/computation/regime-comparison?returnId=${returnId}`} className="font-ui text-[12px] text-amber hover:underline">Compare Regimes →</Link>
-      </div>
+      <div className="max-w-[1200px] mx-auto space-y-8 pb-12">
+        {/* Summary Bento Grid */}
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white border border-border-subtle border-t-2 border-t-amber-600 p-6 shadow-sm">
+            <p className="text-[10px] text-text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
+            <p className="font-mono text-2xl font-bold text-on-surface">₹ 40,75,000</p>
+          </div>
+          <div className="bg-white border border-border-subtle border-t-2 border-t-stone-800 p-6 shadow-sm">
+            <p className="text-[10px] text-text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
+            <p className="font-mono text-2xl font-bold text-on-surface">₹ 1,50,000</p>
+          </div>
+          <div className="bg-white border border-border-subtle border-t-2 border-t-stone-800 p-6 shadow-sm">
+            <p className="text-[10px] text-text-mid font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
+            <p className="font-mono text-2xl font-bold text-on-surface">₹ 39,25,000</p>
+          </div>
+          <div className="bg-stone-900 border border-stone-950 border-t-2 border-t-stone-700 p-6 shadow-lg text-white">
+            <p className="text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">Net Tax Payable</p>
+            <p className="font-mono text-2xl font-bold text-amber-500">₹ 12,34,500</p>
+          </div>
+        </section>
 
-      <div className="card p-5">
-        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Presumptive Scheme</h2>
-        <p className="font-ui text-[12px] text-light mb-4">Select presumptive taxation scheme if applicable under sections 44AD, 44ADA, or 44AE.</p>
-        <Link href={`/itr/computation/presumptive-scheme?returnId=${returnId}`} className="font-ui text-[12px] text-amber hover:underline">Configure Presumptive Scheme →</Link>
+        {/* Detailed Computation Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white border border-border-subtle shadow-sm overflow-hidden">
+              <div className="px-6 py-4 bg-stone-50 border-b border-border-subtle">
+                <h3 className="font-ui-md font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Income Breakdown</h3>
+              </div>
+              <div className="divide-y-[0.5px] divide-border-subtle">
+                {computationRows.map((row, i) => (
+                  <div key={i} className={`flex justify-between items-center p-6 hover:bg-stone-50 transition-colors ${row.type === 'total' ? 'bg-stone-50/50 border-t border-on-surface' : ''}`}>
+                    <span className={`font-ui-sm ${row.type === 'total' ? 'font-bold uppercase tracking-wider text-xs' : 'text-on-surface'}`}>{row.label}</span>
+                    <span className={`font-mono text-sm ${row.type === 'total' ? 'font-bold' : row.type === 'deduction' ? 'text-red-600' : 'text-on-surface'}`}>
+                      {row.type === 'deduction' ? '-' : ''}₹ {formatIndianNumber(row.amount)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {/* Tax Computation Card */}
+            <div className="bg-stone-900 text-stone-100 overflow-hidden shadow-xl border border-stone-800">
+              <div className="p-6 border-b border-stone-800">
+                <h3 className="font-display-lg text-lg font-bold text-amber-500 mb-1">Tax Computation</h3>
+                <p className="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Old Tax Regime Applied</p>
+              </div>
+              <div className="divide-y divide-stone-800 font-mono text-sm">
+                <div className="flex justify-between items-center px-6 py-4">
+                  <span className="text-xs text-stone-400 uppercase tracking-wide">Tax on Normal Income</span>
+                  <span>₹ 11,62,500</span>
+                </div>
+                <div className="flex justify-between items-center px-6 py-4">
+                  <span className="text-xs text-stone-400 uppercase tracking-wide">Surcharge</span>
+                  <span>₹ 0</span>
+                </div>
+                <div className="flex justify-between items-center px-6 py-4">
+                  <span className="text-xs text-stone-400 uppercase tracking-wide">Health & Education Cess</span>
+                  <span>₹ 72,000</span>
+                </div>
+                <div className="flex justify-between items-center px-6 py-6 bg-stone-950 font-bold text-lg">
+                  <span className="text-xs text-amber-500 uppercase tracking-widest">Total Liability</span>
+                  <span className="text-amber-500">₹ 12,34,500</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#fff8f4] border border-amber/30 p-6 shadow-sm">
+              <h4 className="font-ui-sm font-bold text-amber-900 mb-2 uppercase tracking-widest text-[10px]">Optimization Tips</h4>
+              <p className="font-ui-sm text-[13px] text-amber-800 leading-relaxed">
+                You haven't fully utilized the 80C deduction limit of ₹ 1.5L. Adding ₹ 24,000 more could save ₹ 7,200 in tax.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  );
-}
-
-export default function ITRComputationPageWrapper() {
-  return (
-    <Suspense fallback={<div className="py-12 text-center font-ui text-light">Loading...</div>}>
-      <Page />
-    </Suspense>
   );
 }

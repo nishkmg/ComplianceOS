@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Features Overview - ComplianceOS</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "section-muted": "#F4F2EE",
+                        "on-secondary-container": "#636262",
+                        "inverse-surface": "#362f27",
+                        "surface-container": "#f9ecde",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#e5d8cb",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#fcefe1",
+                        "primary-container": "#c8860a",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "border-subtle": "#E8E4DC",
+                        "section-dark": "#111111",
+                        "on-surface-variant": "#514535",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#309bdb",
+                        "surface-container-highest": "#ede0d3",
+                        "secondary": "#5f5e5e",
+                        "page-bg": "#FAFAF8",
+                        "primary": "#825500",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-primary-container": "#3f2700",
+                        "surface-container-low": "#fff1e4",
+                        "primary-fixed-dim": "#ffb950",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#474746",
+                        "tertiary": "#006494",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#e2dfde",
+                        "primary-fixed": "#ffddb3",
+                        "surface-container-high": "#f3e6d9",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#002f49",
+                        "on-primary-fixed-variant": "#633f00",
+                        "on-background": "#211b13",
+                        "surface-tint": "#825500",
+                        "background": "#fff8f4",
+                        "text-mid": "#555555",
+                        "surface-bright": "#fff8f4",
+                        "on-error": "#ffffff",
+                        "text-light": "#888888",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "outline-variant": "#d6c4af",
+                        "surface-variant": "#ede0d3",
+                        "on-tertiary-fixed": "#001e30",
+                        "amber-text": "#B47500",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "on-primary-fixed": "#291800",
+                        "tertiary-fixed": "#cae6ff",
+                        "surface": "#fff8f4",
+                        "outline": "#847563",
+                        "on-surface": "#211b13",
+                        "inverse-primary": "#ffb950"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-128": "128px",
+                        "margin-mobile": "16px",
+                        "space-96": "96px",
+                        "space-64": "64px",
+                        "space-48": "48px",
+                        "gutter-wide": "32px",
+                        "gutter-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "mono-md": ["DM Mono"],
+                        "ui-md": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "ui-sm": ["Syne"],
+                        "mono-lg": ["DM Mono"],
+                        "ui-lg": ["Syne"],
+                        "display-lg": ["Playfair Display"],
+                        "display-xl": ["Playfair Display"],
+                        "ui-xs": ["Syne"]
+                    },
+                    "fontSize": {
+                        "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                        "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[style*="'FILL' 1"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom scrollbar for ledger feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4F2EE; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6c4af; 
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #847563; 
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface antialiased flex selection:bg-primary-container selection:text-white">
+<!-- Shared Component: SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen flex flex-col h-full w-64 border-r border-[#E8E4DC] dark:border-stone-800 bg-[#F9F8F6] dark:bg-stone-950 font-serif text-stone-900 dark:text-stone-100 z-40">
+<!-- Header -->
+<div class="px-6 py-8 border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-white font-ui-sm font-bold">
+                FL
+            </div>
+<div>
+<h1 class="text-xl font-bold tracking-tighter text-[#1A1A1A] dark:text-stone-50">Fiscal Ledger</h1>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mt-1">Accounting Precision</p>
+</div>
+</div>
+<!-- CTA -->
+<div class="px-4 py-6">
+<button class="w-full bg-primary-container hover:bg-primary text-white font-ui-sm py-3 px-4 rounded flex items-center justify-between transition-colors duration-200">
+<span>New Filing</span>
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<!-- Main Tabs -->
+<div class="flex-1 px-2 py-2 space-y-1 overflow-y-auto">
+<!-- No active match for "Features Overview" in semantic intent that overrides, leaving all inactive to prioritize canvas -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-ui-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-ui-sm">Tax Filings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-ui-sm">ITR Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-ui-sm">Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-ui-sm">Company Profile</span>
+</a>
+</div>
+<!-- Footer Tabs -->
+<div class="p-4 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-ui-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-ui-sm">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<div class="ml-64 w-[calc(100%-16rem)] min-h-screen flex flex-col relative">
+<!-- Shared Component: TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-[#F9F8F6]/80 dark:bg-stone-950/80 backdrop-blur-md font-serif text-sm uppercase tracking-widest text-[#C8860A] dark:text-amber-500 border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800 transition-all duration-300">
+<!-- Left: Brand (Suppressed on Web to avoid doubling SideNav, but keeping space or title if needed. We'll show breadcrumb or section title) -->
+<div class="font-black text-stone-900 dark:text-stone-50">
+<!-- Empty to balance space, as SideNav has the main logo -->
+</div>
+<!-- Center: Navigation -->
+<nav class="flex items-center gap-8">
+<!-- "Modules" is active as it matches Features Overview intent -->
+<a class="text-[#C8860A] font-medium border-b-2 border-[#C8860A] pb-1 hover:opacity-80 transition-opacity" href="#">Modules</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:opacity-80 transition-opacity" href="#">Tax Rates</a>
+<a class="text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:opacity-80 transition-opacity" href="#">Compliance</a>
+</nav>
+<!-- Right: Actions -->
+<div class="flex items-center gap-6">
+<button class="font-ui-xs text-stone-600 hover:text-stone-900 transition-colors uppercase tracking-widest">Accountant Access</button>
+<div class="flex items-center gap-4 text-stone-600">
+<button class="hover:text-stone-900 transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-stone-900 transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<main class="flex-1 flex flex-col items-center px-gutter-desktop md:px-gutter-wide pb-space-128">
+<!-- Hero Section -->
+<section class="w-full max-w-5xl text-center pt-space-128 pb-space-96">
+<h2 class="font-ui-xs text-amber-text uppercase tracking-[0.2em] mb-6 inline-block border-b border-amber-text pb-1">Platform Architecture</h2>
+<h1 class="font-marketing-hero text-marketing-hero text-on-surface mx-auto max-w-4xl">
+                    Every module your accountant wanted. Built together, not bolted on.
+                </h1>
+<p class="font-ui-lg text-ui-lg text-text-mid mt-8 max-w-2xl mx-auto">
+                    A unified ledger system engineered for strict adherence to Indian compliance standards, eliminating reconciliation errors before they occur.
+                </p>
+</section>
+<!-- Modules Zigzag Container -->
+<section class="w-full max-w-6xl space-y-space-96">
+<!-- Module 1: Accounting (Image Right) -->
+<article class="flex flex-col md:flex-row items-center gap-gutter-wide">
+<div class="flex-1 space-y-6 md:pr-12">
+<div class="font-ui-xs text-amber-text uppercase tracking-widest">01 / Core</div>
+<h3 class="font-display-xl text-display-xl text-on-surface">Precision Accounting</h3>
+<p class="font-ui-md text-ui-md text-text-mid">
+                            Double-entry bookkeeping redefined with automated reconciliation and immutable audit trails. Built to satisfy the most rigorous statutory audits.
+                        </p>
+<ul class="space-y-3 font-mono-md text-mono-md text-on-surface-variant pt-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Multi-currency sub-ledgers with real-time forex adjustment.
+                            </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Automated bank feed matching with 99.8% accuracy.
+                            </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Configurable chart of accounts compliant with Schedule III.
+                            </li>
+</ul>
+<div class="pt-6">
+<a class="group inline-flex items-center gap-2 font-ui-sm text-ui-sm text-amber-text font-medium hover:text-primary transition-colors" href="#">
+                                Explore module 
+                                <span class="material-symbols-outlined text-sm transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="flex-1 w-full bg-surface-container-lowest border border-border-subtle border-t-2 border-t-primary-container p-2 shadow-sm rounded-sm">
+<div class="aspect-[4/3] w-full bg-section-muted relative overflow-hidden rounded-sm border border-border-subtle/50">
+<img alt="Accounting dashboard screenshot" class="object-cover w-full h-full opacity-90" data-alt="clean minimalist financial software dashboard interface showing line charts and balance sheets with subtle amber accents on a light background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx3wtiCF_jSuNJbrmkXs5oBFRjIHxlp5o-24wCn6lUCbGsczaasKNNDGC6wrqGnM4R5YJHrgEHpCl0nYQNaVTpTk3ZrygAU_7b5VMHRA0HWEYN8nvhokpp4Db0xw62NxUMeMpCxbFjZwO7nvtGY8i6J5AGmjRG5QjxaNYbxl_3FMg3hKHj5CGkXqK__VshJPMAygKA__kHAsJ-37D1ggVn2_ibqepj5rH65Ss41JxEbS_8vVERSpSqveyVuRKByC_tyljaJbhOqCM"/>
+</div>
+</div>
+</article>
+<!-- Module 2: GST (Image Left) -->
+<article class="flex flex-col md:flex-row-reverse items-center gap-gutter-wide">
+<div class="flex-1 space-y-6 md:pl-12">
+<div class="font-ui-xs text-amber-text uppercase tracking-widest">02 / Taxation</div>
+<h3 class="font-display-xl text-display-xl text-on-surface">GST Intelligence</h3>
+<p class="font-ui-md text-ui-md text-text-mid">
+                            Navigate the complexities of Indian GST with a module that validates data before submission, drastically reducing notice probabilities.
+                        </p>
+<ul class="space-y-3 font-mono-md text-mono-md text-on-surface-variant pt-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Direct API integration with the GSTN portal.
+                            </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Automated GSTR-2A/2B versus Purchase Register reconciliation.
+                            </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                E-way bill generation directly from source invoices.
+                            </li>
+</ul>
+<div class="pt-6">
+<a class="group inline-flex items-center gap-2 font-ui-sm text-ui-sm text-amber-text font-medium hover:text-primary transition-colors" href="#">
+                                Explore module 
+                                <span class="material-symbols-outlined text-sm transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="flex-1 w-full bg-surface-container-lowest border border-border-subtle border-t-2 border-t-primary-container p-2 shadow-sm rounded-sm">
+<div class="aspect-[4/3] w-full bg-section-muted relative overflow-hidden rounded-sm border border-border-subtle/50">
+<img alt="GST module interface" class="object-cover w-full h-full opacity-90" data-alt="crisp analytical dashboard displaying tax brackets and compliance metrics in a structured grid layout with monochrome charts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0ipanUa8XgqGnSilCVCnKjKSvmUZ-Li2bBlWaiD9LwmhTO8hYKCAleys6-I8xXM5QYdiHD1a9XZHKX8H6mCh8EowhnBeioNrYP9k7VJstUkAJK5ABBUWw-_SLFUzhWjbqUYxxhS_RLKLU4JFuGFYuluB-8W4xD67WAMUYZAeTmfl3PyIMdvl7IJj6bVaVGGgL6cXtsWPRvvulUc4OSk1FAiymo5NyW_5VKjFcKrOiweEAP4TFlfIRKPTuMzqctVIIxmXJMgbqOt0"/>
+</div>
+</div>
+</article>
+<!-- Module 3: Invoicing (Image Right) -->
+<article class="flex flex-col md:flex-row items-center gap-gutter-wide">
+<div class="flex-1 space-y-6 md:pr-12">
+<div class="font-ui-xs text-amber-text uppercase tracking-widest">03 / Operations</div>
+<h3 class="font-display-xl text-display-xl text-on-surface">E-Invoicing Standard</h3>
+<p class="font-ui-md text-ui-md text-text-mid">
+                            Issue universally compliant electronic invoices in milliseconds. Formatted perfectly for B2B transactions and immediate government ledgering.
+                        </p>
+<ul class="space-y-3 font-mono-md text-mono-md text-on-surface-variant pt-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Instant IRN and QR code generation via NIC integration.
+                            </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Customizable, professional templates mapping to statutory fields.
+                            </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Automated recurring billing schedules.
+                            </li>
+</ul>
+<div class="pt-6">
+<a class="group inline-flex items-center gap-2 font-ui-sm text-ui-sm text-amber-text font-medium hover:text-primary transition-colors" href="#">
+                                Explore module 
+                                <span class="material-symbols-outlined text-sm transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="flex-1 w-full bg-surface-container-lowest border border-border-subtle border-t-2 border-t-primary-container p-2 shadow-sm rounded-sm">
+<div class="aspect-[4/3] w-full bg-section-muted relative overflow-hidden rounded-sm border border-border-subtle/50">
+<img alt="Invoicing screen" class="object-cover w-full h-full opacity-90" data-alt="close up view of a digital invoice document on a screen showing line items and totals rendered in a stark monospace typography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAESwcU0xXVSdUoUn_ikSdlCRb-_HgbnT7ST8XFzknZtNnl20Oo2QwGWxtbCSFGdTfmCja4LVtlEtrh3Q45ZoucNcI8euwwE7Jt-YyR8KvyoGfKNBHNaXTRdXZFuhXurJ3vJwNHdF_DskXBvDtMZcoxMzbmMPjpiG2kFJ8HODXsp0ebFO1kcnimwFCuy0_31laBr50PAmTtYL7jdXymcVCveXIjwQw5xfKQQXjsn8TFzecQMlAMOIiTXhwTETcyY0lem2STctuM3Q0"/>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Shared Component: Footer -->
+<footer class="w-full py-12 flex flex-col md:flex-row justify-between items-center px-12 bg-[#F9F8F6] dark:bg-stone-950 font-serif text-xs text-stone-500 dark:text-stone-400 border-t border-[#E8E4DC] dark:border-stone-800">
+<div class="font-bold text-stone-800 dark:text-stone-200 mb-4 md:mb-0">
+                © 2024 Fiscal Ledger. Editorial Utility for Indian Compliance.
+            </div>
+<nav class="flex items-center gap-6">
+<a class="text-[#C8860A] underline hover:translate-x-1 transition-transform duration-200" href="#">Privacy Policy</a>
+<a class="text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 hover:translate-x-1 transition-transform duration-200" href="#">Terms of Service</a>
+<a class="text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 hover:translate-x-1 transition-transform duration-200" href="#">GST Guidelines</a>
+<a class="text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 hover:translate-x-1 transition-transform duration-200" href="#">Contact Support</a>
+</nav>
+</footer>
+</div>
+</body></html>

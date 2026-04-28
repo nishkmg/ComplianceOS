@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invoice PDF Preview - ComplianceOS</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#825500",
+                    "section-muted": "#F4F2EE",
+                    "primary-fixed-dim": "#ffb950",
+                    "secondary-container": "#e2dfde",
+                    "page-bg": "#FAFAF8",
+                    "on-background": "#211b13",
+                    "on-secondary-container": "#636262",
+                    "on-primary-container": "#3f2700",
+                    "inverse-primary": "#ffb950",
+                    "tertiary-container": "#309bdb",
+                    "border-subtle": "#E8E4DC",
+                    "tertiary-fixed-dim": "#8ecdff",
+                    "on-tertiary-fixed-variant": "#004b70",
+                    "surface": "#fff8f4",
+                    "on-secondary-fixed-variant": "#474746",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "on-error": "#ffffff",
+                    "text-mid": "#555555",
+                    "surface-container-low": "#fff1e4",
+                    "tertiary": "#006494",
+                    "on-primary-fixed-variant": "#633f00",
+                    "surface-bright": "#fff8f4",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "surface-container-high": "#f3e6d9",
+                    "primary-fixed": "#ffddb3",
+                    "amber-text": "#B47500",
+                    "on-primary": "#ffffff",
+                    "primary": "#825500",
+                    "section-amber": "rgba(200, 134, 10, 0.06)",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#362f27",
+                    "surface-dim": "#e5d8cb",
+                    "surface-variant": "#ede0d3",
+                    "primary-container": "#c8860a",
+                    "tertiary-fixed": "#cae6ff",
+                    "secondary": "#5f5e5e",
+                    "on-primary-fixed": "#291800",
+                    "inverse-on-surface": "#fcefe1",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-surface": "#211b13",
+                    "surface-container-highest": "#ede0d3",
+                    "on-surface-variant": "#514535",
+                    "on-error-container": "#93000a",
+                    "section-dark": "#111111",
+                    "text-light": "#888888",
+                    "surface-container": "#f9ecde",
+                    "on-tertiary-container": "#002f49",
+                    "outline": "#847563",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#d6c4af",
+                    "background": "#fff8f4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "space-48": "48px",
+                    "gutter-desktop": "24px",
+                    "space-64": "64px",
+                    "space-128": "128px",
+                    "margin-mobile": "16px",
+                    "gutter-wide": "32px",
+                    "space-96": "96px"
+            },
+            "fontFamily": {
+                    "mono-md": [
+                            "DM Mono"
+                    ],
+                    "display-lg": [
+                            "Playfair Display"
+                    ],
+                    "marketing-xl": [
+                            "Playfair Display"
+                    ],
+                    "ui-sm": [
+                            "Syne"
+                    ],
+                    "mono-lg": [
+                            "DM Mono"
+                    ],
+                    "marketing-hero": [
+                            "Playfair Display"
+                    ],
+                    "display-xl": [
+                            "Playfair Display"
+                    ],
+                    "ui-lg": [
+                            "Syne"
+                    ],
+                    "ui-xs": [
+                            "Syne"
+                    ],
+                    "ui-md": [
+                            "Syne"
+                    ]
+            },
+            "fontSize": {
+                    "mono-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "26px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "marketing-xl": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.15",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "ui-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "mono-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "marketing-hero": [
+                            "64px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-xl": [
+                            "38px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "ui-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "ui-xs": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "ui-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        /* Base typography enforcement */
+        body { font-family: 'Syne', sans-serif; }
+        .font-mono-md, .font-mono-lg { font-family: 'DM Mono', monospace; }
+        .font-display-lg, .font-display-xl, .font-marketing-xl, .font-marketing-hero { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface antialiased min-h-screen flex flex-col">
+<!-- Contextual Action Bar (Suppressing standard shell for focused task) -->
+<header class="flex justify-between items-center px-8 h-16 border-b-[0.5px] border-border-subtle bg-surface-container-lowest sticky top-0 z-50">
+<a class="flex items-center gap-2 font-ui-sm text-text-mid hover:text-on-surface transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to Compliance Ledger
+        </a>
+<div class="flex items-center gap-4">
+<button class="px-5 py-2 border-[0.5px] border-on-surface font-ui-sm text-on-surface flex items-center gap-2 hover:bg-surface-variant transition-colors duration-200">
+<span class="material-symbols-outlined text-[18px]">print</span>
+                Print
+            </button>
+<button class="px-5 py-2 bg-primary-container text-on-primary font-ui-sm flex items-center gap-2 hover:bg-surface-tint transition-colors duration-200 group">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                Download PDF
+                <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform duration-150">arrow_forward</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas Area -->
+<main class="flex-grow py-12 px-4 sm:px-8 overflow-y-auto">
+<!-- A4 Document Container -->
+<div class="max-w-[850px] mx-auto bg-surface-container-lowest border-[0.5px] border-border-subtle shadow-lg p-12 sm:p-16 relative">
+<!-- Amber Top Focus Border -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start border-b-[0.5px] border-border-subtle pb-8 mb-10">
+<div class="mb-6 md:mb-0">
+<h1 class="font-display-lg text-on-surface mb-3 tracking-tight">ComplianceOS India Ltd.</h1>
+<address class="not-italic font-ui-sm text-text-mid leading-relaxed mb-3">
+                        Level 5, Paradigm Tower, Mindspace<br/>
+                        Malad West, Mumbai, Maharashtra 400064<br/>
+                        India
+                    </address>
+<div class="flex items-center gap-2">
+<span class="font-ui-xs text-text-light uppercase tracking-widest">GSTIN:</span>
+<span class="font-mono-md text-on-surface">27AADCC1234E1Z5</span>
+</div>
+</div>
+<div class="text-left md:text-right">
+<h2 class="font-marketing-xl text-primary-container tracking-widest uppercase mb-2">Invoice</h2>
+<p class="font-ui-sm text-text-mid">Original for Recipient</p>
+</div>
+</div>
+<!-- Meta Details Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+<!-- Billed To -->
+<div>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-3 border-b-[0.5px] border-border-subtle pb-1 w-max">Billed To</p>
+<p class="font-ui-lg text-on-surface mb-2 font-medium">Acme Corp Technologies Pvt. Ltd.</p>
+<address class="not-italic font-ui-sm text-text-mid leading-relaxed mb-4">
+                        Phase 2, Hinjewadi Rajiv Gandhi Infotech Park<br/>
+                        Pune, Maharashtra 411057
+                    </address>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-ui-xs text-text-light uppercase tracking-widest w-24">GSTIN:</span>
+<span class="font-mono-md text-on-surface">27BBBBBBBBBBBBB</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-ui-xs text-text-light uppercase tracking-widest w-24">State Code:</span>
+<span class="font-mono-md text-on-surface">27 (Maharashtra)</span>
+</div>
+</div>
+</div>
+<!-- Invoice Meta -->
+<div class="grid grid-cols-2 gap-y-6 gap-x-8">
+<div>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-1">Invoice No.</p>
+<p class="font-mono-md text-on-surface">INV-2024-0892</p>
+</div>
+<div>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-1">Date</p>
+<p class="font-mono-md text-on-surface">24 Oct 2024</p>
+</div>
+<div>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-1">Place of Supply</p>
+<p class="font-ui-sm text-on-surface">27 (Maharashtra)</p>
+</div>
+<div>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-1">Due Date</p>
+<p class="font-mono-md text-on-surface">08 Nov 2024</p>
+</div>
+</div>
+</div>
+<!-- Line Items Table -->
+<div class="overflow-x-auto mb-8">
+<table class="w-full text-left border-collapse border-[0.5px] border-border-subtle">
+<thead>
+<tr class="bg-section-muted border-b-[0.5px] border-border-subtle">
+<th class="font-ui-xs text-text-mid p-3 border-r-[0.5px] border-border-subtle w-12 text-center">#</th>
+<th class="font-ui-xs text-text-mid p-3 border-r-[0.5px] border-border-subtle">ITEM DESCRIPTION</th>
+<th class="font-ui-xs text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right whitespace-nowrap">HSN/SAC</th>
+<th class="font-ui-xs text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right">QTY</th>
+<th class="font-ui-xs text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right">RATE (₹)</th>
+<th class="font-ui-xs text-text-mid p-3 text-right">TAXABLE VALUE (₹)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b-[0.5px] border-border-subtle">
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-center align-top">1</td>
+<td class="font-ui-sm text-on-surface p-3 border-r-[0.5px] border-border-subtle">
+<p class="font-medium mb-1">Enterprise Audit &amp; Advisory Services</p>
+<p class="text-text-mid font-ui-xs normal-case tracking-normal">Q3 Fiscal Compliance Review and Ledger Reconciliation</p>
+</td>
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right align-top">998222</td>
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right align-top">1.00</td>
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right align-top">1,25,000.00</td>
+<td class="font-mono-md text-on-surface p-3 text-right align-top">1,25,000.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle">
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-center align-top">2</td>
+<td class="font-ui-sm text-on-surface p-3 border-r-[0.5px] border-border-subtle">
+<p class="font-medium mb-1">Entity Management Software Subscription</p>
+<p class="text-text-mid font-ui-xs normal-case tracking-normal">Annual License (Oct 2024 - Sep 2025)</p>
+</td>
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right align-top">998311</td>
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right align-top">1.00</td>
+<td class="font-mono-md text-text-mid p-3 border-r-[0.5px] border-border-subtle text-right align-top">45,000.00</td>
+<td class="font-mono-md text-on-surface p-3 text-right align-top">45,000.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Calculation Section -->
+<div class="flex justify-end mb-12">
+<div class="w-full md:w-1/2 border-[0.5px] border-border-subtle bg-surface-container-lowest">
+<div class="flex justify-between p-3 border-b-[0.5px] border-border-subtle">
+<span class="font-ui-sm text-text-mid">Total Taxable Value</span>
+<span class="font-mono-md text-on-surface">1,70,000.00</span>
+</div>
+<div class="flex justify-between p-3 border-b-[0.5px] border-border-subtle bg-section-amber">
+<span class="font-ui-sm text-text-mid">CGST @ 9%</span>
+<span class="font-mono-md text-on-surface">15,300.00</span>
+</div>
+<div class="flex justify-between p-3 border-b-[0.5px] border-border-subtle bg-section-amber">
+<span class="font-ui-sm text-text-mid">SGST @ 9%</span>
+<span class="font-mono-md text-on-surface">15,300.00</span>
+</div>
+<div class="flex justify-between p-4 bg-surface-container-high border-t-[2px] border-primary-container">
+<span class="font-ui-lg text-on-surface">Invoice Total</span>
+<span class="font-mono-lg font-bold text-on-surface">₹ 2,00,600.00</span>
+</div>
+</div>
+</div>
+<!-- Footer Details -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 border-t-[0.5px] border-border-subtle pt-8">
+<div>
+<div class="mb-8">
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-2">Amount in Words</p>
+<p class="font-ui-sm text-on-surface italic border-l-2 border-border-subtle pl-3">
+                            Rupees Two Lakh Six Hundred Only.
+                        </p>
+</div>
+<div>
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-3">Bank Details</p>
+<div class="font-mono-md text-text-mid text-[13px] leading-relaxed grid grid-cols-[100px_1fr] gap-x-2">
+<span>Bank Name:</span> <span class="text-on-surface">HDFC Bank Ltd.</span>
+<span>Account No:</span> <span class="text-on-surface">50200012345678</span>
+<span>IFSC Code:</span> <span class="text-on-surface">HDFC0001234</span>
+<span>Branch:</span> <span class="text-on-surface">Mindspace, Malad West</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-end items-start md:items-end mt-8 md:mt-0">
+<div class="w-48 border-b-[0.5px] border-on-surface mb-3 h-20 bg-section-muted/20 relative">
+<!-- Placeholder for digital signature if needed, keeping it empty for authentic print look -->
+</div>
+<p class="font-ui-sm text-on-surface font-medium">Authorized Signatory</p>
+<p class="font-ui-xs text-text-mid mt-1">For ComplianceOS India Ltd.</p>
+</div>
+</div>
+<!-- Terms & Conditions -->
+<div class="mt-12 pt-6 border-t-[0.5px] border-border-subtle">
+<p class="font-ui-xs text-text-light uppercase tracking-widest mb-2">Terms &amp; Conditions</p>
+<ol class="list-decimal list-inside font-ui-xs text-text-mid leading-relaxed space-y-1">
+<li>Payment is due within 15 days from the date of invoice.</li>
+<li>Interest @ 18% p.a. will be charged if payment is delayed beyond the due date.</li>
+<li>All disputes are subject to Mumbai jurisdiction.</li>
+</ol>
+<p class="text-center font-ui-xs text-text-light mt-8 tracking-widest uppercase">This is a computer generated invoice</p>
+</div>
+</div>
+</main>
+</body></html>
