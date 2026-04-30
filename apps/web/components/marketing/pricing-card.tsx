@@ -1,13 +1,13 @@
-// @ts-nocheck
 import Link from 'next/link';
 
+// @ts-ignore
 export function PricingCard({ name, price, period, features, cta, href, featured = false, isAnnual = true }) {
   const displayPrice = isAnnual ? price : Math.round(price / 12);
   const displayPeriod = isAnnual ? '/year' : '/month';
 
   const cardClass = featured
-    ? 'pricing-card pricing-card-featured bg-surface border border-[#E8E4DC] rounded-lg p-8 relative'
-    : 'pricing-card bg-surface border border-[#E8E4DC] rounded-lg p-8';
+    ? 'pricing-card pricing-card-featured bg-surface border border-border-subtle rounded-lg p-8 relative'
+    : 'pricing-card bg-surface border border-border-subtle rounded-lg p-8';
 
   return (
     <div className={cardClass}>
@@ -25,7 +25,8 @@ export function PricingCard({ name, price, period, features, cta, href, featured
         <span className="font-ui text-[14px] text-light">{displayPeriod}</span>
       </div>
       <ul className="space-y-3 mb-8 list-none p-0">
-        {features.map((f, i) => (
+// @ts-ignore
+        {/* @ts-ignore */}{features.map((f: string, i: number) => (
           <li key={i} className="flex items-start gap-2 font-ui text-[14px] text-mid">
             <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -38,7 +39,7 @@ export function PricingCard({ name, price, period, features, cta, href, featured
         href={href}
         className={`block text-center w-full py-3 px-4 font-ui text-[14px] font-medium rounded-md transition-colors no-underline ${
           featured
-            ? 'bg-amber text-white hover:bg-[#B27609]'
+            ? 'bg-amber text-white hover:bg-amber-hover'
             : 'bg-transparent text-dark border border-dark hover:bg-section-muted'
         }`}
       >

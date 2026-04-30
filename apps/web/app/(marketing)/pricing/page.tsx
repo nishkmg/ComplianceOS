@@ -1,110 +1,174 @@
-// @ts-nocheck
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
-import { PricingCard } from '@/components/marketing/pricing-card';
-import { FAQItem } from '@/components/marketing/faq-item';
-import { SectionLabel } from '@/components/marketing/section-label';
 
 const plans = [
   {
     name: 'Free',
     price: 0,
-    features: ['Accounting module', '1 fiscal year', 'Basic reports (Trial Balance, P&L)', 'Community support'],
-    cta: 'Start free',
+    desc: 'For individual proprietors just getting started.',
+    features: ['Up to 25 Invoices / month', 'Basic GST Reporting'],
+    notFeatures: ['Automated Reconciliation', 'Custom Tax Audit Support'],
+    cta: 'Get Started',
     href: '/signup',
-    featured: false,
+    popular: false,
   },
   {
     name: 'Pro',
-    price: 12000,
-    features: ['Everything in Free, plus:', 'GST module (GSTR-1/2B/3B)', 'Invoicing with GST compliance', 'Unlimited fiscal years', 'Email support within 24h'],
-    cta: 'Start Pro',
+    price: 8999,
+    desc: 'Advanced tools for growing Indian startups.',
+    features: ['Unlimited Invoicing', 'GSTR-1, 2, & 3B Automations', 'Automated Bank Reconciliation', 'Multi-user access (Up to 5)'],
+    cta: 'Upgrade to Pro',
     href: '/signup',
-    featured: true,
+    popular: true,
   },
   {
     name: 'Business',
-    price: 24000,
-    features: ['Everything in Pro, plus:', 'Payroll module (PF/ESI/PT/TDS)', 'ITR module with computation', 'Priority support (4h response)', 'Dedicated account manager'],
-    cta: 'Contact us',
+    price: 24999,
+    desc: 'Enterprise-grade compliance for scale.',
+    features: ['TDS & TCS Reporting', 'Audit Trail (MCA Compliant)', 'Dedicated Account Manager', 'API Integration Support'],
+    cta: 'Contact Sales',
     href: '/contact',
-    featured: false,
+    popular: false,
   },
+];
+
+const faqs = [
+  { q: 'Is my data hosted in India?', a: 'Yes, all ComplianceOS data is hosted on local Indian servers to ensure compliance with data localization laws and to provide the lowest latency possible for our users.' },
+  { q: 'Can I import data from Tally or Zoho?', a: 'Absolutely. We offer one-click migration tools for Tally, Zoho Books, and Quickbooks, ensuring you can transition your entire financial history without losing a single entry.' },
+  { q: 'Is the Pro plan MCA compliant?', a: 'Yes, our Pro and Business plans include the mandatory Audit Trail (edit log) feature as per the latest Ministry of Corporate Affairs (MCA) guidelines.' },
+  { q: 'Do you offer support for GST filing?', a: 'We provide automated generation of GSTR-1, 2, and 3B reports. For the Pro plan and above, we also offer direct filing via our secure API gateway.' },
+  { q: 'What happens if I cancel my subscription?', a: 'You retain read-only access to your data for up to 7 years, as required by Indian tax laws. You can also export all your data in Excel or PDF formats at any time.' },
+  { q: 'Can my CA access my account for free?', a: 'Yes, every paid plan includes one complimentary "Auditor Seat" specifically designed for your Chartered Accountant to review books and pull reports.' },
 ];
 
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(true);
-  const heroRef = useRef(null);
-  useEffect(() => {
-    const el = heroRef.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }, { threshold: 0.1 });
-    obs.observe(el); return () => obs.disconnect();
-  }, []);
 
   return (
-    <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="bg-page-bg text-on-surface font-ui-md antialiased min-h-screen">
       <MarketingNav />
-      <main id="main-content">
-        <section ref={heroRef} className="animate-in py-24 md:py-32 text-center">
-          <div className="marketing-container">
-            <h1 className="font-display text-[36px] md:text-[48px] font-normal text-dark leading-[1.15] mb-10">
-              Simple pricing for Indian businesses.
-            </h1>
 
-            {/* Billing toggle */}
-            <div className="flex items-center justify-center gap-4 mb-12">
-              <div className="flex items-center bg-section-muted rounded-md p-1" role="radiogroup" aria-label="Billing period">
-                <button
-                  onClick={() => setIsAnnual(true)}
-                  role="radio"
-                  aria-checked={isAnnual}
-                  className={`px-4 py-2 font-ui text-[14px] rounded-md transition-colors cursor-pointer border-none ${isAnnual ? 'bg-surface text-dark shadow-sm' : 'text-mid hover:text-dark'}`}
-                >
-                  Annual
-                </button>
-                <button
-                  onClick={() => setIsAnnual(false)}
-                  role="radio"
-                  aria-checked={!isAnnual}
-                  className={`px-4 py-2 font-ui text-[14px] rounded-md transition-colors cursor-pointer border-none ${!isAnnual ? 'bg-surface text-dark shadow-sm' : 'text-mid hover:text-dark'}`}
-                >
-                  Monthly
-                </button>
-              </div>
-              {isAnnual && (
-                <span className="font-ui text-[13px] text-amber font-medium">Save 20% with annual billing</span>
+      <main className="max-w-[1200px] mx-auto px-8 mt-16">
+        {/* Hero Section */}
+        <section className="pt-space-128 pb-space-96 text-center">
+          <span className="text-ui-xs font-ui-xs uppercase tracking-widest text-amber-text mb-6 block">Our Plans</span>
+          <h1 className="font-marketing-xl text-marketing-xl text-on-surface max-w-2xl mx-auto mb-8">Simple pricing for Indian businesses.</h1>
+          <p className="text-ui-lg font-ui-lg text-secondary max-w-xl mx-auto">Precision accounting and GST compliance designed for the unique needs of Bharat's growing enterprises.</p>
+        </section>
+
+        {/* Pricing Toggle */}
+        <div className="flex items-center justify-center space-x-6 mb-space-64">
+          <span className="text-ui-sm font-ui-sm text-on-surface">Monthly Billing</span>
+          <div 
+            className="w-14 h-7 bg-outline-variant rounded-full p-1 cursor-pointer flex items-center transition-colors"
+            onClick={() => setIsAnnual(!isAnnual)}
+          >
+            <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${isAnnual ? 'translate-x-7' : 'translate-x-0'}`}></div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className={`text-ui-sm font-ui-sm text-on-surface ${isAnnual ? 'font-bold' : ''}`}>Annual Billing</span>
+            <span className="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Save 20%</span>
+          </div>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-space-128 items-stretch">
+          {plans.map((plan) => (
+            <div key={plan.name} className={`bg-white border-[0.5px] border-border-subtle p-10 flex flex-col relative transition-all duration-300 ${plan.popular ? 'border-t-2 border-t-primary shadow-screenshot' : 'shadow-card'}`}>
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] px-4 py-1.5 uppercase font-bold tracking-widest">Most Popular</div>
               )}
+              <div className="mb-8 text-left">
+                <h3 className="text-ui-lg font-ui-lg text-on-surface mb-2">{plan.name}</h3>
+                <p className="text-ui-sm font-ui-sm text-secondary">{plan.desc}</p>
+              </div>
+              <div className="mb-8 text-left">
+                <div className="font-mono-lg text-mono-lg text-on-surface mb-1">
+                  ₹{isAnnual ? plan.price.toLocaleString('en-IN') : Math.round(plan.price * 1.25 / 12).toLocaleString('en-IN')}
+                  <span className="text-ui-sm font-ui-sm text-text-light">/{isAnnual ? 'yr' : 'mo'}</span>
+                </div>
+                <div className="text-[10px] uppercase text-text-light tracking-widest font-bold">
+                  {isAnnual ? 'Billed Annually' : 'Billed Monthly'}
+                </div>
+              </div>
+              <ul className="space-y-4 mb-12 flex-grow list-none p-0 text-left">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start">
+                    <Icon name="check_circle" className="text-amber-text text-sm mr-3 mt-1" />
+                    <span className="text-ui-sm font-ui-sm">{f}</span>
+                  </li>
+                ))}
+                {plan.notFeatures?.map((f) => (
+                  <li key={f} className="flex items-start text-text-light">
+                    <Icon name="cancel" className="text-outline-variant text-sm mr-3 mt-1" />
+                    <span className="text-ui-sm font-ui-sm">{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link 
+                href={plan.href} 
+                className={`w-full py-3 text-ui-sm font-ui-sm font-bold flex justify-center items-center group transition-all no-underline ${plan.popular ? 'bg-primary text-white' : 'border border-on-surface text-on-surface hover:bg-on-surface hover:text-white'}`}
+              >
+                {plan.cta} {plan.popular && <span className="ml-2 transform group-hover:translate-x-1 duration-200">→</span>}
+              </Link>
             </div>
+          ))}
+        </div>
 
-            {/* Pricing cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {plans.map((plan) => (
-                <PricingCard key={plan.name} {...plan} isAnnual={isAnnual} />
-              ))}
+        {/* Trust Section */}
+        <section className="mb-space-128">
+          <div className="bg-section-amber p-16 border-[0.5px] border-border-subtle grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div className="text-left">
+              <h2 className="font-marketing-xl text-marketing-xl mb-6">Built for Indian CA Standards.</h2>
+              <p className="text-ui-md font-ui-md text-secondary mb-8 leading-relaxed">Every pixel and ledger entry in ComplianceOS is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
+              <div className="flex space-x-12">
+                <div>
+                  <div className="font-mono-lg text-mono-lg text-primary font-bold">99.9%</div>
+                  <div className="text-ui-xs font-ui-xs uppercase tracking-widest text-text-light font-bold">Accuracy Rate</div>
+                </div>
+                <div>
+                  <div className="font-mono-lg text-mono-lg text-primary font-bold">50k+</div>
+                  <div className="text-ui-xs font-ui-xs uppercase tracking-widest text-text-light font-bold">Businesses</div>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <img 
+                src="/images/pricing/report.jpg" 
+                alt="Trial Balance Report" 
+                className="shadow-screenshot bg-white border border-border-subtle w-full h-auto" 
+              />
             </div>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="py-24 bg-section-muted">
-          <div className="marketing-container max-w-2xl">
-            <SectionLabel>FAQ</SectionLabel>
-            <h2 className="font-display text-display-xl text-dark mb-8">Common questions</h2>
-            <div>
-              <FAQItem question="What happens to my data when my free trial ends?" answer="Your data remains accessible in read-only mode. You can upgrade or export your data at any time. We do not hold your data hostage." />
-              <FAQItem question="Can I switch plans mid-year?" answer="Yes. Upgrades take effect immediately. Downgrades apply at the next billing cycle. No data is lost." />
-              <FAQItem question="Does pricing include GST filing?" answer="GST filing is included in the Pro and Business plans. Free plan includes accounting only. Pricing does not include GST portal fees." />
-              <FAQItem question="Is my data stored in India?" answer="Yes. All data is stored on servers located in India (AWS Mumbai region). Your data never leaves Indian jurisdiction." />
-              <FAQItem question="Can I add multiple businesses?" answer="Each business (tenant) requires a separate subscription. Contact us for multi-business pricing." />
-              <FAQItem question="Is there a setup fee?" answer="No setup fee. No implementation fee. No hidden charges. Free plan is genuinely free." />
-            </div>
+        {/* FAQ Section */}
+        <section className="mb-space-128 max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-ui-xs font-ui-xs uppercase tracking-widest text-amber-text mb-4 block">Knowledge Base</span>
+            <h2 className="font-marketing-xl text-marketing-xl">Frequently Asked Questions</h2>
+          </div>
+          <div className="space-y-4">
+            {faqs.map((faq, i) => (
+              <details key={faq.q} className="group bg-white border-[0.5px] border-border-subtle" open={i === 0}>
+                <summary className="flex justify-between items-center p-6 cursor-pointer select-none text-left">
+                  <span className="font-ui-lg text-ui-lg font-semibold">{faq.q}</span>
+                  <Icon name="expand_more" className="transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="px-6 pb-6 text-ui-sm font-ui-sm text-secondary text-left leading-relaxed">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
           </div>
         </section>
       </main>
+
       <MarketingFooter />
     </div>
   );

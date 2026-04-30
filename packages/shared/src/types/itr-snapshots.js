@@ -1,106 +1,103 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SnapshotGeneratedPayloadSchema = exports.SnapshotSummarySchema = exports.ITRSnapshotSchema = exports.IncomeComputationSnapshotSchema = exports.GSTDataSnapshotSchema = exports.TrialBalanceSnapshotSchema = exports.GenerateSnapshotInputSchema = exports.SnapshotType = void 0;
-const zod_1 = require("zod");
+import { z } from "zod";
 // ============================================================================
 // Enums
 // ============================================================================
-var SnapshotType;
+export var SnapshotType;
 (function (SnapshotType) {
     SnapshotType["TRIAL_BALANCE"] = "trial_balance";
     SnapshotType["GST_DATA"] = "gst_data";
     SnapshotType["INCOME_COMPUTATION"] = "income_computation";
     SnapshotType["FULL_RETURN"] = "full_return";
-})(SnapshotType || (exports.SnapshotType = SnapshotType = {}));
+})(SnapshotType || (SnapshotType = {}));
 // ============================================================================
 // Input Schemas
 // ============================================================================
-exports.GenerateSnapshotInputSchema = zod_1.z.object({
-    financialYear: zod_1.z.string().regex(/^\d{4}-\d{2}$/),
-    snapshotType: zod_1.z.nativeEnum(SnapshotType),
-    returnId: zod_1.z.string().uuid().optional(),
+export const GenerateSnapshotInputSchema = z.object({
+    financialYear: z.string().regex(/^\d{4}-\d{2}$/),
+    snapshotType: z.nativeEnum(SnapshotType),
+    returnId: z.string().uuid().optional(),
 });
 // ============================================================================
 // Output Types
 // ============================================================================
-exports.TrialBalanceSnapshotSchema = zod_1.z.object({
-    asOfDate: zod_1.z.string(),
-    accounts: zod_1.z.array(zod_1.z.object({
-        accountId: zod_1.z.string().uuid(),
-        accountName: zod_1.z.string(),
-        accountCode: zod_1.z.string(),
-        debitBalance: zod_1.z.string(),
-        creditBalance: zod_1.z.string(),
+export const TrialBalanceSnapshotSchema = z.object({
+    asOfDate: z.string(),
+    accounts: z.array(z.object({
+        accountId: z.string().uuid(),
+        accountName: z.string(),
+        accountCode: z.string(),
+        debitBalance: z.string(),
+        creditBalance: z.string(),
     })),
-    totalDebits: zod_1.z.string(),
-    totalCredits: zod_1.z.string(),
+    totalDebits: z.string(),
+    totalCredits: z.string(),
 });
-exports.GSTDataSnapshotSchema = zod_1.z.object({
-    periodMonth: zod_1.z.number(),
-    periodYear: zod_1.z.number(),
-    outwardSupplies: zod_1.z.object({
-        taxableValue: zod_1.z.string(),
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+export const GSTDataSnapshotSchema = z.object({
+    periodMonth: z.number(),
+    periodYear: z.number(),
+    outwardSupplies: z.object({
+        taxableValue: z.string(),
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
-    inwardSupplies: zod_1.z.object({
-        taxableValue: zod_1.z.string(),
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+    inwardSupplies: z.object({
+        taxableValue: z.string(),
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
-    itcAvailable: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+    itcAvailable: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
-    itcUtilized: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+    itcUtilized: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
 });
-exports.IncomeComputationSnapshotSchema = zod_1.z.object({
-    financialYear: zod_1.z.string(),
-    incomeByHead: zod_1.z.record(zod_1.z.string()),
-    deductions: zod_1.z.record(zod_1.z.string()),
-    totalIncome: zod_1.z.string(),
-    taxComputed: zod_1.z.string(),
-    computedAt: zod_1.z.string(),
+export const IncomeComputationSnapshotSchema = z.object({
+    financialYear: z.string(),
+    incomeByHead: z.record(z.string()),
+    deductions: z.record(z.string()),
+    totalIncome: z.string(),
+    taxComputed: z.string(),
+    computedAt: z.string(),
 });
-exports.ITRSnapshotSchema = zod_1.z.object({
-    id: zod_1.z.string().uuid(),
-    tenantId: zod_1.z.string().uuid(),
-    returnId: zod_1.z.string().uuid().nullable(),
-    financialYear: zod_1.z.string(),
-    snapshotType: zod_1.z.nativeEnum(SnapshotType),
-    snapshotData: zod_1.z.record(zod_1.z.unknown()),
-    generatedAt: zod_1.z.date(),
+export const ITRSnapshotSchema = z.object({
+    id: z.string().uuid(),
+    tenantId: z.string().uuid(),
+    returnId: z.string().uuid().nullable(),
+    financialYear: z.string(),
+    snapshotType: z.nativeEnum(SnapshotType),
+    snapshotData: z.record(z.unknown()),
+    generatedAt: z.date(),
 });
 // ============================================================================
 // Summary Types
 // ============================================================================
-exports.SnapshotSummarySchema = zod_1.z.object({
-    snapshotId: zod_1.z.string().uuid(),
-    snapshotType: zod_1.z.nativeEnum(SnapshotType),
-    financialYear: zod_1.z.string(),
-    generatedAt: zod_1.z.date(),
-    keyMetrics: zod_1.z.record(zod_1.z.string()),
+export const SnapshotSummarySchema = z.object({
+    snapshotId: z.string().uuid(),
+    snapshotType: z.nativeEnum(SnapshotType),
+    financialYear: z.string(),
+    generatedAt: z.date(),
+    keyMetrics: z.record(z.string()),
 });
 // ============================================================================
 // Event Payloads
 // ============================================================================
-exports.SnapshotGeneratedPayloadSchema = zod_1.z.object({
-    snapshotId: zod_1.z.string().uuid(),
-    tenantId: zod_1.z.string().uuid(),
-    financialYear: zod_1.z.string(),
-    snapshotType: zod_1.z.nativeEnum(SnapshotType),
-    returnId: zod_1.z.string().uuid().nullable(),
-    generatedAt: zod_1.z.date(),
+export const SnapshotGeneratedPayloadSchema = z.object({
+    snapshotId: z.string().uuid(),
+    tenantId: z.string().uuid(),
+    financialYear: z.string(),
+    snapshotType: z.nativeEnum(SnapshotType),
+    returnId: z.string().uuid().nullable(),
+    generatedAt: z.date(),
 });
 //# sourceMappingURL=itr-snapshots.js.map

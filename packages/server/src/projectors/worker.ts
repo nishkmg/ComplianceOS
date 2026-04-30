@@ -3,6 +3,7 @@ import { createServer } from "http";
 import * as _db from "../../../db/src/index";
 const { db, projectorState, eventStore, tenants } = _db;
 import { eq, and, gt, asc, desc, sql } from "drizzle-orm";
+import { logger } from "../lib/logger";
 import { accountBalanceProjector } from "./account-balance.js";
 import { journalEntryViewProjector } from "./journal-entry-view.js";
 import { snapshotProjector } from "./snapshot.js";
@@ -118,7 +119,12 @@ async function processProjector(projector: Projector, tenantId: string): Promise
         await projector.process(txDb, event);
         lastProcessedEventId = event.id;
       } catch (err) {
-        console.error(`[${projector.name}] Error processing event ${event.id}:`, err);
+        logger.error(`[${projector.name}] Error processing event`, err as Error, {
+          projector: projector.name,
+          eventId: event.id,
+          eventType: event.eventType,
+          aggregateId: event.aggregateId,
+        });
         processingError = err;
         break;
       }
@@ -142,12 +148,15 @@ async function processProjector(projector: Projector, tenantId: string): Promise
   });
 
   if (processingError) {
-    console.error(`[${projector.name}] Stopping at event ${lastProcessedEventId} due to error`);
+    logger.error(`[${projector.name}] Stopping at event due to error`, new Error("Projector processing error"), {
+      projector: projector.name,
+      eventId: lastProcessedEventId,
+    });
   }
 }
 
 async function main(): Promise<void> {
-  console.log(`[Projector Worker] Starting with ${projectors.length} projectors`);
+  logger.info(`[Projector Worker] Starting`, { projectorCount: projectors.length });
 
   while (true) {
     try {
@@ -159,21 +168,44 @@ async function main(): Promise<void> {
         }
       }
     } catch (err) {
-      console.error("[Projector Worker] Error in main loop:", err);
+      logger.error("[Projector Worker] Error in main loop", err as Error);
     }
 
     await new Promise<void>((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
   }
 }
 
-const healthServer = createServer((_req, res) => {
+let lastProcessedAt = Date.now();
+
+function updateLastProcessed() {
+  lastProcessedAt = Date.now();
+}
+
+const healthServer = createServer((req, res) => {
+  const timeSinceLastEvent = Date.now() - lastProcessedAt;
+  const staleThreshold = 60_000;
+  const isHealthy = timeSinceLastEvent < staleThreshold;
+
+  const healthData = {
+    status: isHealthy ? "ok" : "stale",
+    projectors: projectors.map((p) => p.name),
+    lastProcessedMsAgo: timeSinceLastEvent,
+    uptime: Math.floor((Date.now() - process.uptime() * 1000) / 1000),
+  };
+
+  if (req.url === "/health") {
+    res.writeHead(isHealthy ? 200 : 503, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(healthData));
+    return;
+  }
+
   res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ status: "ok", projectors: projectors.map((p) => p.name) }));
+  res.end(JSON.stringify(healthData));
 });
 
 const PORT = parseInt(process.env.PROJECTOR_PORT ?? "3100", 10);
 healthServer.listen(PORT, () => {
-  console.log(`[Projector Worker] Health check on port ${PORT}`);
+  logger.info(`[Projector Worker] Health check listening`, { port: PORT });
 });
 
-main().catch(console.error);
+main().catch((err) => logger.error("[Projector Worker] Fatal error", err as Error));

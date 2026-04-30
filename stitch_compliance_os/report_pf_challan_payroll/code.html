@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PF Challan Report - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {},
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Public Sans", "sans-serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Public Sans", "sans-serif"],
+                        "mono": ["DM Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-[#FDFCFB] text-slate-900 font-body antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="h-screen w-72 border-r-[0.5px] sticky left-0 border-[#E8E4DC] bg-[#FDFCFB] flex flex-col py-8 px-4 gap-2 select-none cursor-default shrink-0">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-[#F5F2ED] flex items-center justify-center text-[#C8860A]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<div>
+<h1 class="font-headline font-bold text-[#1A1A1A] tracking-widest uppercase text-sm">ComplianceOS</h1>
+<p class="font-serif text-[11px] text-stone-500">Enterprise Tier</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto pr-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+                Compliance Ledger
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">corporate_fare</span>
+                Entity Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded font-serif text-[13px] leading-relaxed bg-[#F5F2ED] text-[#C8860A] border-r-2 border-[#C8860A] font-semibold" href="#">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+                Reports Archive
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                Audit Settings
+            </a>
+</div>
+<div class="mt-auto pt-6 border-t border-[#E8E4DC] space-y-1">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-2 mb-4 border border-[#C8860A] text-[#C8860A] rounded font-serif text-[12px] uppercase tracking-wider hover:bg-[#C8860A] hover:text-white transition-colors duration-200">
+<span class="material-symbols-outlined text-[16px]">add</span>
+                Add New Entity
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 rounded font-serif text-[12px] text-stone-600 hover:bg-stone-50 transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">security</span>
+                Security Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 rounded font-serif text-[12px] text-stone-600 hover:bg-stone-50 transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#FDFCFB]">
+<!-- TopAppBar Contextual -->
+<header class="flex justify-between items-center px-8 h-20 border-b-[0.5px] border-[#E8E4DC] shrink-0 bg-white/80 backdrop-blur-sm z-10">
+<div>
+<div class="flex items-center gap-2 text-[11px] font-medium text-stone-500 uppercase tracking-widest mb-1">
+<span>Reports</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span>Statutory Filings</span>
+</div>
+<h2 class="font-headline text-2xl font-semibold text-slate-900 tracking-tight">PF Challan Report</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-stone-50 border border-[#E8E4DC] rounded-sm h-9 px-3">
+<span class="material-symbols-outlined text-stone-400 text-[18px] mr-2">calendar_month</span>
+<select class="bg-transparent border-none text-sm font-medium text-slate-700 focus:ring-0 py-0 pl-0 pr-6 appearance-none cursor-pointer">
+<option>October 2023</option>
+<option>September 2023</option>
+<option>August 2023</option>
+</select>
+</div>
+<button class="flex items-center gap-2 bg-slate-900 text-white h-9 px-4 rounded-sm text-sm font-medium hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Export ECR
+                </button>
+</div>
+</header>
+<!-- Canvas -->
+<div class="flex-1 overflow-auto p-8">
+<div class="max-w-[1200px] mx-auto space-y-6">
+<!-- Summary Cards Bento -->
+<div class="grid grid-cols-4 gap-4">
+<div class="bg-white border border-[#E8E4DC] p-5 rounded-sm shadow-sm flex flex-col justify-between h-28 relative overflow-hidden group hover:border-[#C8860A]/30 transition-colors">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-stone-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+<h3 class="text-xs font-semibold text-stone-500 uppercase tracking-wider relative z-10">Total Employees</h3>
+<p class="font-mono text-2xl font-medium text-slate-900 relative z-10">142</p>
+</div>
+<div class="bg-white border border-[#E8E4DC] p-5 rounded-sm shadow-sm flex flex-col justify-between h-28 relative overflow-hidden group hover:border-[#C8860A]/30 transition-colors">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-stone-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+<h3 class="text-xs font-semibold text-stone-500 uppercase tracking-wider relative z-10">Total Basic Wages</h3>
+<p class="font-mono text-2xl font-medium text-slate-900 relative z-10">₹42,50,000</p>
+</div>
+<div class="bg-white border border-[#E8E4DC] p-5 rounded-sm shadow-sm flex flex-col justify-between h-28 relative overflow-hidden group hover:border-[#C8860A]/30 transition-colors">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-stone-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+<h3 class="text-xs font-semibold text-stone-500 uppercase tracking-wider relative z-10">Total Contribution</h3>
+<p class="font-mono text-2xl font-medium text-slate-900 relative z-10">₹10,20,000</p>
+</div>
+<div class="bg-slate-900 border border-slate-800 p-5 rounded-sm shadow-sm flex flex-col justify-between h-28 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-20 h-20 bg-slate-800 rounded-full opacity-50"></div>
+<h3 class="text-xs font-semibold text-stone-400 uppercase tracking-wider relative z-10">Total Payable</h3>
+<p class="font-mono text-2xl font-medium text-[#C8860A] relative z-10">₹10,41,250</p>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-white border border-[#E8E4DC] rounded-sm shadow-sm overflow-hidden flex flex-col">
+<div class="flex items-center justify-between px-6 py-4 border-b border-[#E8E4DC] bg-stone-50/50">
+<h3 class="font-headline font-semibold text-slate-900">Employee Contribution Ledger</h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]">search</span>
+<input class="h-8 pl-9 pr-3 py-1 text-sm border-[#E8E4DC] rounded-sm focus:border-[#C8860A] focus:ring-[#C8860A] w-64 bg-white" placeholder="Search UAN or Name..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-[#E8E4DC] bg-stone-50 text-[11px] uppercase tracking-wider text-stone-500 font-semibold">
+<th class="px-6 py-3 font-medium">Employee Details</th>
+<th class="px-4 py-3 font-medium text-right">Basic Wages</th>
+<th class="px-4 py-3 font-medium text-right">EPF (12%)</th>
+<th class="px-4 py-3 font-medium text-right">EPS (8.33%)</th>
+<th class="px-4 py-3 font-medium text-right">ER EPF (3.67%)</th>
+<th class="px-6 py-3 font-medium text-right text-slate-900">Total Remittance</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-[#E8E4DC]/50">
+<tr class="hover:bg-stone-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="font-medium text-slate-900">Aarav Sharma</div>
+<div class="font-mono text-[11px] text-stone-500 mt-0.5">UAN: 100987654321</div>
+</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">15,000.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,800.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,250.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">550.00</td>
+<td class="px-6 py-3 text-right font-mono font-medium text-slate-900">3,600.00</td>
+</tr>
+<tr class="hover:bg-stone-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="font-medium text-slate-900">Priya Patel</div>
+<div class="font-mono text-[11px] text-stone-500 mt-0.5">UAN: 100987654322</div>
+</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">22,500.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">2,700.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,250.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,450.00</td>
+<td class="px-6 py-3 text-right font-mono font-medium text-slate-900">5,400.00</td>
+</tr>
+<tr class="hover:bg-stone-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="font-medium text-slate-900">Rahul Desai</div>
+<div class="font-mono text-[11px] text-stone-500 mt-0.5">UAN: 100987654323</div>
+</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">12,000.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,440.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,000.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">440.00</td>
+<td class="px-6 py-3 text-right font-mono font-medium text-slate-900">2,880.00</td>
+</tr>
+<tr class="hover:bg-stone-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="font-medium text-slate-900">Neha Gupta</div>
+<div class="font-mono text-[11px] text-stone-500 mt-0.5">UAN: 100987654324</div>
+</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">35,000.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">4,200.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,250.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">2,950.00</td>
+<td class="px-6 py-3 text-right font-mono font-medium text-slate-900">8,400.00</td>
+</tr>
+<tr class="hover:bg-stone-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="font-medium text-slate-900">Vikram Singh</div>
+<div class="font-mono text-[11px] text-stone-500 mt-0.5">UAN: 100987654325</div>
+</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">18,500.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">2,220.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">1,250.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-700">970.00</td>
+<td class="px-6 py-3 text-right font-mono font-medium text-slate-900">4,440.00</td>
+</tr>
+</tbody>
+<tfoot class="border-t-2 border-[#E8E4DC] bg-stone-50 font-medium">
+<tr>
+<td class="px-6 py-3 text-sm text-slate-900 uppercase tracking-wide text-xs">Page Total</td>
+<td class="px-4 py-3 text-right font-mono text-slate-900">1,03,000.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-900">12,360.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-900">6,000.00</td>
+<td class="px-4 py-3 text-right font-mono text-slate-900">6,360.00</td>
+<td class="px-6 py-3 text-right font-mono text-[#C8860A] text-base">24,720.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="flex items-center justify-between px-6 py-3 border-t border-[#E8E4DC] text-sm text-stone-500 bg-white">
+<span>Showing 1 to 5 of 142 entries</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-stone-100 disabled:opacity-50"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+<button class="w-8 h-8 rounded bg-[#F5F2ED] text-[#C8860A] font-medium flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded hover:bg-stone-100 flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded hover:bg-stone-100 flex items-center justify-center">3</button>
+<span class="px-1">...</span>
+<button class="w-8 h-8 rounded hover:bg-stone-100 flex items-center justify-center">29</button>
+<button class="p-1 rounded hover:bg-stone-100"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Admin Charges Breakdown -->
+<div class="bg-[#FDFCFB] border border-[#E8E4DC] rounded-sm p-6 mt-6">
+<h4 class="font-headline font-semibold text-slate-900 mb-4">Statutory Charges Calculation</h4>
+<div class="grid grid-cols-3 gap-8">
+<div>
+<div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-2">
+<span class="text-sm text-stone-600">A/C 2: Admin Charges (0.5%)</span>
+<span class="font-mono font-medium text-slate-900">₹21,250.00</span>
+</div>
+<p class="text-xs text-stone-500">Minimum ₹500 payable</p>
+</div>
+<div>
+<div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-2">
+<span class="text-sm text-stone-600">A/C 21: EDLI Contribution (0.5%)</span>
+<span class="font-mono font-medium text-slate-900">₹21,250.00</span>
+</div>
+<p class="text-xs text-stone-500">Capped at ₹15,000 basic</p>
+</div>
+<div>
+<div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-2">
+<span class="text-sm text-stone-600">A/C 22: EDLI Admin</span>
+<span class="font-mono font-medium text-slate-900">₹0.00</span>
+</div>
+<p class="text-xs text-stone-500">Waived off</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Contextual -->
+<footer class="w-full border-t-[0.5px] border-[#E8E4DC] mt-24 flex flex-col items-center justify-center py-16 gap-6 max-w-7xl mx-auto bg-[#FDFCFB]">
+<div class="flex gap-6">
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Terms of Service</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Security Architecture</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Privacy Policy</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-[#C8860A] underline underline-offset-4 transition-colors duration-300 ease-in-out" href="#">Regulatory Compliance</a>
+</div>
+<p class="font-serif text-[11px] uppercase tracking-widest text-stone-500">© 2024 ComplianceOS India. Precision Accounting Standards.</p>
+</footer>
+</div>
+</main>
+</body></html>

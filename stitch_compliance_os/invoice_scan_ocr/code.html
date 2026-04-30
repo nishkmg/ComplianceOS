@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invoice Scan - ComplianceOS</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Syne, DM Mono, Playfair Display -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f9ecde",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#3f2700",
+                        "error": "#ba1a1a",
+                        "section-muted": "#F4F2EE",
+                        "on-surface": "#211b13",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "surface-container-low": "#fff1e4",
+                        "border-subtle": "#E8E4DC",
+                        "outline": "#847563",
+                        "secondary": "#5f5e5e",
+                        "surface-variant": "#ede0d3",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#fcefe1",
+                        "tertiary-container": "#309bdb",
+                        "surface-tint": "#825500",
+                        "text-light": "#888888",
+                        "on-secondary-fixed-variant": "#474746",
+                        "surface-dim": "#e5d8cb",
+                        "tertiary-fixed": "#cae6ff",
+                        "primary": "#825500",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "amber-text": "#B47500",
+                        "on-primary-fixed-variant": "#633f00",
+                        "on-secondary-container": "#636262",
+                        "on-background": "#211b13",
+                        "on-error": "#ffffff",
+                        "tertiary": "#006494",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary": "#ffffff",
+                        "background": "#fff8f4",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "secondary-container": "#e2dfde",
+                        "page-bg": "#FAFAF8",
+                        "surface-container-highest": "#ede0d3",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-primary-fixed": "#291800",
+                        "surface-container-high": "#f3e6d9",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-container": "#002f49",
+                        "section-dark": "#111111",
+                        "primary-container": "#c8860a",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffddb3",
+                        "surface": "#fff8f4",
+                        "outline-variant": "#d6c4af",
+                        "on-primary": "#ffffff",
+                        "text-mid": "#555555",
+                        "surface-bright": "#fff8f4",
+                        "primary-fixed-dim": "#ffb950",
+                        "on-surface-variant": "#514535",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "inverse-primary": "#ffb950",
+                        "inverse-surface": "#362f27"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "space-96": "96px",
+                        "space-64": "64px",
+                        "space-48": "48px",
+                        "gutter-desktop": "24px",
+                        "gutter-wide": "32px",
+                        "space-128": "128px"
+                    },
+                    "fontFamily": {
+                        "mono-lg": ["DM Mono"],
+                        "ui-xs": ["Syne"],
+                        "ui-md": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "ui-sm": ["Syne"],
+                        "mono-md": ["DM Mono"],
+                        "ui-lg": ["Syne"],
+                        "display-xl": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                        "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                        "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.page-bg'); color: theme('colors.on-background'); }
+        .shadow-screenshot { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
+        .shadow-card { box-shadow: 0 4px 12px -2px rgba(0,0,0,0.03); }
+        .border-hairline { border-width: 0.5px; border-color: theme('colors.border-subtle'); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col py-8 fixed left-0 top-0 h-screen w-64 border-r-[0.5px] border-stone-200 dark:border-stone-800 bg-[#FDFCFB] dark:bg-stone-950 z-50">
+<div class="px-6">
+<h1 class="text-stone-900 dark:text-stone-50 font-serif text-2xl border-b-[0.5px] border-stone-200 dark:border-stone-800 pb-4 mb-8">ComplianceOS</h1>
+</div>
+<div class="px-6 mb-8">
+<p class="font-ui-xs text-ui-xs text-text-mid uppercase">FY 2024-25 • Ledger Mode</p>
+</div>
+<div class="flex-1 overflow-y-auto space-y-1">
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">menu_book</span>
+                Ledger
+            </a>
+<a class="flex items-center gap-3 bg-stone-50 dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] py-3 px-6 font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+                Invoicing
+            </a>
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">insert_chart</span>
+                Reports
+            </a>
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">gavel</span>
+                GST
+            </a>
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 px-6 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">description</span>
+                ITR
+            </a>
+</div>
+<div class="mt-auto px-6 space-y-1 pt-8 border-t-[0.5px] border-stone-200 dark:border-stone-800 mx-6">
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 hover:translate-x-1 transition-transform font-ui-sm text-ui-sm" href="#">
+<span class="material-symbols-outlined" data-weight="regular">contact_support</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col min-w-0 md:ml-64">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-8 fixed top-0 right-0 border-b-[0.5px] border-stone-200 dark:border-stone-800 bg-[#FDFCFB]/80 dark:bg-stone-950/80 backdrop-blur-md z-40" style="left: 16rem;">
+<div class="flex items-center gap-4">
+<span class="text-stone-900 dark:text-stone-50 font-bold text-lg uppercase tracking-widest font-['Noto_Serif'] font-medium tracking-tight">ComplianceOS</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-[#C8860A] dark:text-[#E6A01C]">
+<button class="hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-200 p-2">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-200 p-2">
+<span class="material-symbols-outlined">history_edu</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<button class="font-ui-sm text-ui-sm text-stone-500 hover:text-stone-900 transition-all duration-200">New Entry</button>
+<button class="bg-[#C8860A] text-white px-4 py-2 font-ui-sm text-ui-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+                        File Return
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-stone-200" data-alt="professional headshot of an indian man in a white shirt and dark blazer, warm studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDynkcflU9E7dX0Qh9131968tT0BqhhiVEyxbJLTacnosFdVoHeQKTLwjywES4gIqNN9C31XueEDLQB7QGTvQ6Bx3lrEiHLq-4UIA6vUGo3rS4cJMgpbEJqTat3dueeBSbyU6PCRyNgdMazWjtp46xnL50jKw893pE0vw_ExmNOv-aAlLKdvm5pHqKXOnF4QijzmrM0lfdsS3Au-pFZIcS-zM2WzxD4qIK7g5mz1Ha68e68NRICH9Xg6-np437XEW5GX-cg02E9OPU"/>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 pt-24 px-8 pb-16 overflow-y-auto">
+<div class="max-w-[1200px] mx-auto space-y-gutter-wide">
+<!-- Header -->
+<div class="mb-8">
+<h2 class="font-display-lg text-display-lg text-on-background mb-2">Invoice Scan</h2>
+<p class="font-ui-sm text-ui-sm text-text-mid">Upload vendor invoices for automated data extraction and ledger entry.</p>
+</div>
+<!-- Upload Zone -->
+<div class="border border-dashed border-border-subtle bg-surface-container-lowest p-12 text-center relative group cursor-pointer hover:border-outline transition-colors">
+<input accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" type="file"/>
+<span class="material-symbols-outlined text-4xl text-outline mb-4 group-hover:text-primary transition-colors">cloud_upload</span>
+<p class="font-ui-md text-ui-md text-on-surface mb-2">Drag and drop invoice file here</p>
+<p class="font-mono-md text-mono-md text-text-mid">Supports PDF, JPG, PNG up to 10MB</p>
+<button class="mt-6 border-hairline border-outline px-6 py-2 font-ui-sm text-ui-sm text-on-surface hover:bg-surface-container-low transition-colors">
+                        Browse Files
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

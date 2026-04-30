@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -10,9 +9,9 @@ export default function EmployeeSalaryPage() {
   const params = useParams();
   const router = useRouter();
   const employeeId = params.id as string;
-  const { data: existingStructure } = api.salaryStructure.get.useQuery(employeeId);
-  const createStructure = api.salaryStructure.create.useMutation({ onSuccess: () => router.push(`/employees/${employeeId}`) });
-  const updateStructure = api.salaryStructure.update.useMutation({ onSuccess: () => router.push(`/employees/${employeeId}`) });
+  const { data: existingStructure }: any = api.salaryStructure.get.useQuery(employeeId);
+  const createStructure: any = api.salaryStructure.create.useMutation({ onSuccess: () => router.push(`/employees/${employeeId}`) });
+  const updateStructure: any = api.salaryStructure.update.useMutation({ onSuccess: () => router.push(`/employees/${employeeId}`) });
 
   const [components, setComponents] = useState<Array<{ componentCode: string; amount?: string; percentageOfBasic?: string }>>(
     existingStructure?.length ? existingStructure.map((c: any) => ({ componentCode: c.componentCode, amount: c.amount, percentageOfBasic: c.percentageOfBasic })) : [{ componentCode: "BASIC", amount: "0" }]

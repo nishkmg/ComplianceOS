@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useParams } from "next/navigation";
+import { Icon } from '@/components/ui/icon';
 import { useState } from "react";
 import { api } from "@/lib/api";
 
@@ -31,7 +31,6 @@ interface GSTR1Data {
     igstAmount: string;
     cgstAmount: string;
     sgstAmount: string;
-    cessAmount: string;
     totalTaxAmount: string;
   }>;
   b2cLarge: Array<{
@@ -42,7 +41,6 @@ interface GSTR1Data {
     igstAmount: string;
     cgstAmount: string;
     sgstAmount: string;
-    cessAmount: string;
   }>;
   b2cSmall: Array<{
     placeOfSupply: string;
@@ -50,7 +48,6 @@ interface GSTR1Data {
     igstAmount: string;
     cgstAmount: string;
     sgstAmount: string;
-    cessAmount: string;
   }>;
   exports: Array<{
     invoiceNumber: string;
@@ -70,7 +67,6 @@ interface GSTR1Data {
     igstAmount: string;
     cgstAmount: string;
     sgstAmount: string;
-    cessAmount: string;
   }>;
 }
 
@@ -79,318 +75,147 @@ export default function GSTR1DetailPage() {
   const [monthStr, yearStr] = (params.period as string).split("-");
   const month = Number(monthStr);
   const year = Number(yearStr);
+  const monthLabel = months.find(m => m.value === month)?.label || "September";
 
-  const [activeTable, setActiveTable] = useState<"b2b" | "b2cLarge" | "b2cSmall" | "exports" | "cdn">("b2b");
-
-  const { data: returnData, isLoading } = api.gstReturns.get.useQuery(
-    { returnId: "" },
-    { enabled: false }
-  );
+  const [activeTable, setActiveTable] = useState("b2b");
 
   // Mock data for demonstration
   const mockData: GSTR1Data = {
     b2bInvoices: [
-      {
-        invoiceNumber: "INV-2026-27-001",
-        invoiceDate: "2026-04-15",
-        gstin: "27AABCU9603R1ZM",
-        partyName: "Acme Corp",
-        placeOfSupply: "27-Maharashtra",
-        taxableValue: "100000",
-        igstAmount: "0",
-        cgstAmount: "9000",
-        sgstAmount: "9000",
-        cessAmount: "0",
-        totalTaxAmount: "18000",
-      },
-      {
-        invoiceNumber: "INV-2026-27-002",
-        invoiceDate: "2026-04-18",
-        gstin: "29AABCT1234R1Z5",
-        partyName: "TechStart Ltd",
-        placeOfSupply: "29-Karnataka",
-        taxableValue: "50000",
-        igstAmount: "9000",
-        cgstAmount: "0",
-        sgstAmount: "0",
-        cessAmount: "0",
-        totalTaxAmount: "9000",
-      },
+      { invoiceNumber: "INV-2026-27-001", invoiceDate: "15 Apr 26", gstin: "27AABCU9603R1ZM", partyName: "Acme Corp", placeOfSupply: "27-Maharashtra", taxableValue: "1,00,000", igstAmount: "0", cgstAmount: "9,000", sgstAmount: "9,000", totalTaxAmount: "18,000" },
+      { invoiceNumber: "INV-2026-27-002", invoiceDate: "18 Apr 26", gstin: "29AABCT1234R1Z5", partyName: "TechStart Ltd", placeOfSupply: "29-Karnataka", taxableValue: "50,000", igstAmount: "9,000", cgstAmount: "0", sgstAmount: "0", totalTaxAmount: "9,000" },
     ],
     b2cLarge: [
-      {
-        invoiceNumber: "INV-2026-27-003",
-        invoiceDate: "2026-04-20",
-        placeOfSupply: "27-Maharashtra",
-        taxableValue: "250000",
-        igstAmount: "0",
-        cgstAmount: "22500",
-        sgstAmount: "22500",
-        cessAmount: "0",
-      },
+      { invoiceNumber: "INV-2026-27-003", invoiceDate: "20 Apr 26", placeOfSupply: "27-Maharashtra", taxableValue: "2,50,000", igstAmount: "0", cgstAmount: "22,500", sgstAmount: "22,500" },
     ],
     b2cSmall: [
-      {
-        placeOfSupply: "27-Maharashtra",
-        taxableValue: "50000",
-        igstAmount: "0",
-        cgstAmount: "4500",
-        sgstAmount: "4500",
-        cessAmount: "0",
-      },
+      { placeOfSupply: "27-Maharashtra", taxableValue: "50,000", igstAmount: "0", cgstAmount: "4,500", sgstAmount: "4,500" },
     ],
     exports: [
-      {
-        invoiceNumber: "EXP-2026-27-001",
-        invoiceDate: "2026-04-22",
-        portCode: "INBOM1",
-        shippingBillNumber: "SB123456",
-        shippingBillDate: "2026-04-21",
-        taxableValue: "500000",
-      },
+      { invoiceNumber: "EXP-2026-27-001", invoiceDate: "22 Apr 26", portCode: "INBOM1", shippingBillNumber: "SB123456", shippingBillDate: "21 Apr 26", taxableValue: "5,00,000" },
     ],
     creditDebitNotes: [
-      {
-        noteNumber: "CN-001",
-        noteDate: "2026-04-25",
-        originalInvoiceNumber: "INV-2026-27-001",
-        originalInvoiceDate: "2026-04-15",
-        gstin: "27AABCU9603R1ZM",
-        taxableValue: "10000",
-        igstAmount: "0",
-        cgstAmount: "900",
-        sgstAmount: "900",
-        cessAmount: "0",
-      },
+      { noteNumber: "CN-001", noteDate: "25 Apr 26", originalInvoiceNumber: "INV-2026-27-001", originalInvoiceDate: "15 Apr 26", gstin: "27AABCU9603R1ZM", taxableValue: "10,000", igstAmount: "0", cgstAmount: "900", sgstAmount: "900" },
     ],
   };
 
-  const handleExportJSON = () => {
-    let dataToExport;
-    switch (activeTable) {
-      case "b2b":
-        dataToExport = mockData.b2bInvoices;
-        break;
-      case "b2cLarge":
-        dataToExport = mockData.b2cLarge;
-        break;
-      case "b2cSmall":
-        dataToExport = mockData.b2cSmall;
-        break;
-      case "exports":
-        dataToExport = mockData.exports;
-        break;
-      case "cdn":
-        dataToExport = mockData.creditDebitNotes;
-        break;
-    }
-
-    const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `GSTR1_${activeTable}_${months.find((m) => m.value === month)?.label}_${year}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  if (isLoading) {
-    return <div className="text-center py-8 text-gray-500">Loading...</div>;
-  }
+  const tabs = [
+    { id: "b2b", label: "4A, 4B, 4C, 6B, 6C - B2B Invoices" },
+    { id: "b2cLarge", label: "5A, 5B - B2C Large Invoices" },
+    { id: "b2cSmall", label: "7 - B2C Small (Others)" },
+    { id: "exports", label: "6A - Exports" },
+    { id: "cdn", label: "9B - Credit / Debit Notes" },
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8">
         <div>
-          <h1 className="text-2xl font-bold">GSTR-1 Detail</h1>
-          <p className="text-sm text-gray-500">
-            {months.find((m) => m.value === month)?.label} {year} - Outward Supplies
-          </p>
+          <p className="font-ui-xs text-amber-text uppercase tracking-widest mb-2">GSTR-1 Outward Supplies</p>
+          <h1 className="font-display-xl text-display-xl text-on-surface">{monthLabel} {year}</h1>
+          <p className="font-ui-sm text-text-mid mt-2 max-w-2xl leading-relaxed">Details of outward supplies of goods or services. Ensure all B2B invoices and B2C aggregates are accurately reconciled before filing.</p>
         </div>
-        <button
-          onClick={handleExportJSON}
-          className="px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-        >
-          Export JSON
-        </button>
+        <div className="text-right">
+          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-1">Status</p>
+          <div className="flex items-center md:justify-end gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span className="font-ui-sm font-medium">Pending Filing</span>
+          </div>
+          <p className="font-ui-xs text-text-mid mt-1">Due: 11 Oct 2024</p>
+        </div>
       </div>
 
-      <div className="border-b">
-        <nav className="flex gap-4 overflow-x-auto">
-          {[
-            { id: "b2b", label: "B2B Invoices", count: mockData.b2bInvoices.length },
-            { id: "b2cLarge", label: "B2C Large", count: mockData.b2cLarge.length },
-            { id: "b2cSmall", label: "B2C Small", count: mockData.b2cSmall.length },
-            { id: "exports", label: "Exports", count: mockData.exports.length },
-            { id: "cdn", label: "Credit/Debit Notes", count: mockData.creditDebitNotes.length },
-          ].map((tab) => (
+      {/* KPI Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm">
+          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Total Taxable Value</p>
+          <p className="font-mono-lg text-on-surface font-bold">₹ 12,45,600.00</p>
+        </div>
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm border-t-2 border-t-primary-container">
+          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Total Tax Liability</p>
+          <p className="font-mono-lg text-primary-container font-bold">₹ 2,24,208.00</p>
+        </div>
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm">
+          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Invoice Count</p>
+          <p className="font-mono-lg text-on-surface font-bold">42</p>
+        </div>
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm">
+          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Amendments</p>
+          <p className="font-mono-lg text-on-surface font-bold">0</p>
+        </div>
+      </div>
+
+      {/* Table Module */}
+      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden">
+        {/* Table Tabs */}
+        <div className="bg-stone-50 border-b-[0.5px] border-border-subtle flex overflow-x-auto no-print">
+          {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTable(tab.id as typeof activeTable)}
-              className={`px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap ${
-                activeTable === tab.id
-                  ? "border-blue-600 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+              onClick={() => setActiveTable(tab.id)}
+              className={`px-6 py-4 font-ui-sm text-xs uppercase tracking-widest font-bold whitespace-nowrap transition-colors cursor-pointer border-none ${
+                activeTable === tab.id ? "bg-white text-on-surface border-r-[0.5px] border-border-subtle relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary-container" : "text-text-mid hover:text-on-surface border-r-[0.5px] border-border-subtle bg-transparent"
               }`}
             >
               {tab.label}
-              {tab.count > 0 && (
-                <span className="ml-2 px-2 py-0.5 text-xs bg-gray-100 rounded-full">{tab.count}</span>
-              )}
             </button>
           ))}
-        </nav>
+        </div>
+
+        {/* Action Bar */}
+        <div className="p-4 border-b-[0.5px] border-border-subtle flex justify-between items-center bg-white">
+          <div className="relative">
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg" />
+            <input className="pl-10 pr-4 py-2 border-[0.5px] border-border-subtle bg-stone-50 rounded-sm text-xs w-64 outline-none focus:border-primary" placeholder="Search invoices..." />
+          </div>
+          <div className="flex gap-3">
+            <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors cursor-pointer bg-transparent">Download Offline Tool (JSON)</button>
+            <button className="px-4 py-2 bg-primary-container text-white font-ui-sm text-xs rounded-sm hover:bg-primary transition-colors cursor-pointer border-none">Import Excel</button>
+          </div>
+        </div>
+
+        {/* Data Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[1200px]">
+            <thead>
+              <tr className="bg-stone-50 border-b-[0.5px] border-border-subtle">
+                {activeTable === "b2b" && (
+                  <>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Invoice #</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Date</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">GSTIN / UIN</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Receiver Name</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">Taxable Value</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">IGST</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">CGST</th>
+                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right">SGST</th>
+                  </>
+                )}
+                {/* Other headers would follow similar pattern */}
+              </tr>
+            </thead>
+            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-on-surface">
+              {activeTable === "b2b" && mockData.b2bInvoices.map((inv, idx) => (
+                <tr key={idx} className="hover:bg-section-muted/30 transition-colors">
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.invoiceNumber}</td>
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.invoiceDate}</td>
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.gstin}</td>
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle font-ui-sm font-medium">{inv.partyName}</td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {inv.taxableValue}</td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-text-mid">{inv.igstAmount}</td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-text-mid">{inv.cgstAmount}</td>
+                  <td className="py-4 px-6 text-right text-text-mid">{inv.sgstAmount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {activeTable === "b2b" && (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Invoice #</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">GSTIN</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Party Name</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Place of Supply</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">Taxable Value</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">IGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">CGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">SGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">Total Tax</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {mockData.b2bInvoices.map((inv, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{inv.invoiceNumber}</td>
-                  <td className="px-4 py-3 text-gray-600">{inv.invoiceDate}</td>
-                  <td className="px-4 py-3 text-gray-600">{inv.gstin}</td>
-                  <td className="px-4 py-3 text-gray-600">{inv.partyName}</td>
-                  <td className="px-4 py-3 text-gray-600">{inv.placeOfSupply}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.taxableValue).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.igstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.cgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.sgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right font-medium">₹{Number(inv.totalTaxAmount).toLocaleString("en-IN")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        {activeTable === "b2cLarge" && (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Invoice #</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Place of Supply</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">Taxable Value</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">IGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">CGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">SGST</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {mockData.b2cLarge.map((inv, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{inv.invoiceNumber}</td>
-                  <td className="px-4 py-3 text-gray-600">{inv.invoiceDate}</td>
-                  <td className="px-4 py-3 text-gray-600">{inv.placeOfSupply}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.taxableValue).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.igstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.cgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.sgstAmount).toLocaleString("en-IN")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        {activeTable === "b2cSmall" && (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Place of Supply</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">Taxable Value</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">IGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">CGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">SGST</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {mockData.b2cSmall.map((inv, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-600">{inv.placeOfSupply}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.taxableValue).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.igstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.cgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(inv.sgstAmount).toLocaleString("en-IN")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        {activeTable === "exports" && (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Invoice #</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Port Code</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Shipping Bill #</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">SB Date</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">Taxable Value</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {mockData.exports.map((exp, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{exp.invoiceNumber}</td>
-                  <td className="px-4 py-3 text-gray-600">{exp.invoiceDate}</td>
-                  <td className="px-4 py-3 text-gray-600">{exp.portCode}</td>
-                  <td className="px-4 py-3 text-gray-600">{exp.shippingBillNumber}</td>
-                  <td className="px-4 py-3 text-gray-600">{exp.shippingBillDate}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(exp.taxableValue).toLocaleString("en-IN")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        {activeTable === "cdn" && (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Note #</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Original Invoice #</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">Original Date</th>
-                <th className="px-4 py-3 text-left text-gray-500 font-medium">GSTIN</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">Taxable Value</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">IGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">CGST</th>
-                <th className="px-4 py-3 text-right text-gray-500 font-medium">SGST</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {mockData.creditDebitNotes.map((note, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{note.noteNumber}</td>
-                  <td className="px-4 py-3 text-gray-600">{note.noteDate}</td>
-                  <td className="px-4 py-3 text-gray-600">{note.originalInvoiceNumber}</td>
-                  <td className="px-4 py-3 text-gray-600">{note.originalInvoiceDate}</td>
-                  <td className="px-4 py-3 text-gray-600">{note.gstin}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(note.taxableValue).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(note.igstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(note.cgstAmount).toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-right text-gray-600">₹{Number(note.sgstAmount).toLocaleString("en-IN")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+      <div className="mt-8 flex justify-end gap-4 no-print">
+        <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent">Discard Return</button>
+        <button className="px-12 py-3 bg-primary-container text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">File Return →</button>
       </div>
     </div>
   );

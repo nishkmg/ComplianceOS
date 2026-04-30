@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ComplianceOS | Precision in Indian Accounting</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Syne:wght@400;500;600;700;800&amp;family=DM+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "outline-variant": "#d6c4af",
+                        "text-light": "#888888",
+                        "tertiary-container": "#309bdb",
+                        "on-secondary-container": "#636262",
+                        "on-surface-variant": "#514535",
+                        "surface": "#fff8f4",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "on-error-container": "#93000a",
+                        "page-bg": "#FAFAF8",
+                        "secondary-container": "#e2dfde",
+                        "primary": "#825500",
+                        "surface-container-high": "#f3e6d9",
+                        "surface-bright": "#fff8f4",
+                        "on-tertiary-fixed": "#001e30",
+                        "primary-fixed-dim": "#ffb950",
+                        "border-subtle": "#E8E4DC",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "outline": "#847563",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#e5d8cb",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#ffb950",
+                        "background": "#fff8f4",
+                        "on-background": "#211b13",
+                        "surface-container-highest": "#ede0d3",
+                        "secondary": "#5f5e5e",
+                        "primary-fixed": "#ffddb3",
+                        "surface-container": "#f9ecde",
+                        "error-container": "#ffdad6",
+                        "amber-text": "#B47500",
+                        "on-surface": "#211b13",
+                        "surface-variant": "#ede0d3",
+                        "on-secondary": "#ffffff",
+                        "section-dark": "#111111",
+                        "on-primary-fixed": "#291800",
+                        "surface-tint": "#825500",
+                        "on-primary-fixed-variant": "#633f00",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#006494",
+                        "section-muted": "#F4F2EE",
+                        "on-primary-container": "#3f2700",
+                        "text-mid": "#555555",
+                        "inverse-surface": "#362f27",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#cae6ff",
+                        "inverse-on-surface": "#fcefe1",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-container": "#002f49",
+                        "surface-container-low": "#fff1e4",
+                        "primary-container": "#c8860a",
+                        "shadow-screenshot": "0 25px 50px -12px rgba(0, 0, 0, 0.15)"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-64": "64px",
+                        "space-96": "96px",
+                        "gutter-desktop": "24px",
+                        "space-48": "48px",
+                        "space-128": "128px",
+                        "margin-mobile": "16px",
+                        "gutter-wide": "32px"
+                    },
+                    "fontFamily": {
+                        "ui-md": ["Syne"],
+                        "ui-sm": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "ui-xs": ["Syne"],
+                        "ui-lg": ["Syne"],
+                        "display-xl": ["Playfair Display"],
+                        "mono-md": ["DM Mono"],
+                        "mono-lg": ["DM Mono"],
+                        "marketing-xl": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                        "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shadow-screenshot {
+            box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.2);
+        }
+        .shadow-card:hover {
+            box-shadow: 0 10px 30px -10px rgba(130, 85, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-page-bg text-on-surface font-ui-md selection:bg-primary-fixed">
+<!-- TopNavBar -->
+<nav class="sticky top-0 w-full z-50 bg-[#F4F2EE]/90 dark:bg-stone-950/90 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1320px] mx-auto">
+<a class="text-2xl font-bold font-serif text-stone-900 dark:text-stone-50" href="/">ComplianceOS</a>
+<div class="hidden md:flex items-center space-x-10">
+<a class="text-[#C8860A] font-bold border-b-2 border-[#C8860A] pb-1 font-ui-sm tracking-tight hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Features</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium font-ui-sm tracking-tight hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Pricing</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium font-ui-sm tracking-tight hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">About Us</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium font-ui-sm tracking-tight hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Resources</a>
+</div>
+<button class="bg-[#C8860A] text-white px-6 py-2.5 rounded-none font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all group">
+                Start Free <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="pt-space-128 pb-space-96 px-8 max-w-[1320px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="max-w-xl">
+<span class="text-ui-xs font-ui-xs text-amber-text uppercase tracking-[0.2em] mb-6 block">Made for India</span>
+<h1 class="font-marketing-hero text-marketing-hero text-on-surface mb-8">
+                    The accounting software that thinks in lakhs, not thousands.
+                </h1>
+<p class="text-ui-lg font-ui-lg text-secondary mb-10 max-w-lg">
+                    Rigorous accounting precision built specifically for Indian fiscal realities. GST, Payroll, and Audit trails that CAs actually trust.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-[#C8860A] text-white px-8 py-4 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all group">
+                        Get Started Today <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</button>
+<button class="border border-on-surface text-on-surface px-8 py-4 font-ui-sm font-bold uppercase tracking-widest hover:bg-on-surface hover:text-white transition-all">
+                        Book a Demo
+                    </button>
+</div>
+</div>
+<div class="relative">
+<img class="w-full h-auto shadow-screenshot border-[0.5px] border-border-subtle grayscale-[0.2] contrast-[1.05]" data-alt="Modern minimalist accounting software dashboard on a laptop screen showing Indian Rupee charts and clean data tables in a professional setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3RBx_wkejxMGF_r2dEFylyL3w5DeWoU5g9BIdZuc5Y6t7EZdM4y6b2hG_Bu3U-od_ldnCI9cr-ZcU_7_Yn4-dhSgQ2Ql3DMMZc5zacusOX979SqFMYrVAsrsbZAikp3lbnheyNty_0RpcJG8IDBlDtWYiAb31Z5JgJE5vHmho3AMGflyDwg2dnjakurlc4YemVeUBHL-p5lFq_1i46IUNuGJ1nAuNOyiExp_ftjRf1a32gAQsJXi9k8tnaM8YNWoIG6qoG7PAeuI"/>
+<div class="absolute -bottom-6 -left-6 bg-white border-[0.5px] border-border-subtle p-6 hidden lg:block">
+<p class="font-mono-md text-mono-md text-primary font-bold">₹ 1,45,00,000.00</p>
+<p class="text-ui-xs font-ui-xs text-text-light uppercase tracking-tighter">Current FY Revenue</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Social Proof -->
+<section class="bg-[#F4F2EE] py-16 border-y-[0.5px] border-border-subtle">
+<div class="max-w-[1200px] mx-auto px-8">
+<p class="text-ui-xs font-ui-xs text-center text-text-light uppercase tracking-widest mb-10">Trusted by India's leading firms &amp; CAs</p>
+<div class="flex flex-wrap justify-center items-center gap-16 grayscale opacity-60 contrast-125">
+<img class="h-8" data-alt="Minimalist corporate logo 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAabS77LlSOd7bQSu7l9raGae-acOuHJr-1Vz6-nU2w34S9KZZHUP7XhNCoQXCDG2u3jnAwRqYnH9V7PP1Wh1QW6AV3jEmGh5awJVrh4IUTXWvuuERH1A9Lm4Fq-c3b_EhBZ0ScAU8qhP7xhhTsLtDL7kQ20D3pUNbFlN2T119SPpQsF_jwKEdbX6KSGgmiDEcipviBhuLWN7NwjN_FYv-ld2aoKl2FfLtQKbhj2-qmfFQwiP9G8jllAg4McmnMdrhXkUwh4gx-S3Y"/>
+<img class="h-8" data-alt="Minimalist corporate logo 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZnAwd3KPwLMT-IvAYbnTpQQnl6nx-mg6JVCfLVhbc2zT3rqjO7u5rXtjyeTo7sdqZcOQyGLUnRwqFZ5vwv2hCbrrCirtQvpv3xPGRJepKOwKmn8M7Gh5Ur675-nvnnsYKRdtTAPQNmHIkZWAttwpCpj5MEAmO-nw6ueYJmXhq41_W5RHotI1ZN-zbVKWnAnd6uoLUrojMHfv6kr_bq4Qpdoz2mGT5-g51pRV6wW-YaRunL66_Qvx2HqtkyjEf-Rt1y1ndAhg5Hbs"/>
+<img class="h-8" data-alt="Minimalist corporate logo 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOjnekloTBAwSYL8NEiyDFPUX6yMzdve4CmPOCdLw0AC6pcxbbeGia-mn_PlQ4vl4OXKi6B8rj9o1Q2lPK7bcz-w-4aolCY0r81faHtQAEZMLElCl_df2QRgOu9K-b-0MzuTjXiAy1oM7oBybWDypk8hDMTU2UXmaj4ndQyn2oPcigoJczapVWg3sVgRv--wlp5JR2i6ggrm61kejitf92yfgCeLf9JPKWzX33kK3ohJMwnHJ6ytMSpub0Z8TmuPAT6kFqpJb51kc"/>
+<img class="h-8" data-alt="Minimalist corporate logo 4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2TeT4-0TX9izAf3cxBQETbTAqi3cy8kPP1R0kuqDsUeSMVdIRXQEMhiMVGHcvex3mVx2Onr41gtTL0jjmhqrfU6qNOiZSLojhnwxCACw2_3rmB4PymM8w8ojEt4C32Y2EexjC09erul5A45nMoAGTngiaGpDyXLUim6HvImTvwBCHw21h0uf7XhsUCklUyz8KasKytnctilSZaA205an0CzIhmjVngRXwj9auX307nUaMgvS-I-l4y4PPc6coODkyBAxZIB6WACk"/>
+<img class="h-8" data-alt="Minimalist corporate logo 5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIWLEsqioDrXPNL04Ax5xk86FnunqbRa7Gpisf9tBtxTC6AIkaO1nfCNbW9WzZB1hnTMfUWraZhEgHA-cYJsUFQ_FlffWlYnH8QpYI60H1oeWXmpCimJIlEM7x_3IKjMh5LS0SUh9Gw1M_qNv6mhHy56z38YXaNbVfUQNDIHhsrfwqtYnVKE97WTeDD6tQxVdSLEOENKYjnqloKNcO8pNN0s6mV6s3eH1_C_niPqjxW5T0-NkSxlD6i-qn6wa0OvbfHKH_UYEIMPM"/>
+</div>
+</div>
+</section>
+<!-- Core Benefits -->
+<section class="py-space-128 px-8 max-w-[1320px] mx-auto">
+<div class="mb-16">
+<span class="text-ui-xs font-ui-xs text-amber-text uppercase tracking-widest">Built for precision</span>
+<h2 class="font-display-xl text-display-xl mt-4 max-w-2xl">Ledger-first design for the modern Indian enterprise.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+<!-- Card 1 -->
+<div class="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] shadow-card transition-all">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="account_balance">account_balance</span>
+<h3 class="font-ui-lg text-ui-lg font-bold mb-4">Books balance</h3>
+<p class="font-ui-sm text-ui-sm text-secondary">Automated double-entry reconciliation that actually adds up to zero.</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] shadow-card transition-all">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="description">description</span>
+<h3 class="font-ui-lg text-ui-lg font-bold mb-4">GST done</h3>
+<p class="font-ui-sm text-ui-sm text-secondary">One-click GSTR filing with auto-matching for ITC claims.</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] shadow-card transition-all">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="analytics">analytics</span>
+<h3 class="font-ui-lg text-ui-lg font-bold mb-4">Reports look like reports</h3>
+<h3 class="sr-only">Professional Reporting</h3>
+<p class="font-ui-sm text-ui-sm text-secondary">Print-ready financial statements formatted for Indian bank compliance.</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] shadow-card transition-all">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="pin">pin</span>
+<h3 class="font-ui-lg text-ui-lg font-bold mb-4">Indian numbers</h3>
+<p class="font-ui-sm text-ui-sm text-secondary">Native support for lakhs, crores, and the Indian comma system.</p>
+</div>
+<!-- Card 5 -->
+<div class="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] shadow-card transition-all">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="event_available">event_available</span>
+<h3 class="font-ui-lg text-ui-lg font-bold mb-4">FY closes</h3>
+<p class="font-ui-sm text-ui-sm text-secondary">Seamless financial year transition with zero data loss or duplication.</p>
+</div>
+</div>
+</section>
+<!-- Product Demo -->
+<section class="bg-[#111111] py-space-128 overflow-hidden">
+<div class="max-w-[1320px] mx-auto px-8">
+<div class="text-center mb-16">
+<h2 class="font-display-xl text-display-xl text-white mb-6">Experience the precision.</h2>
+<div class="flex justify-center gap-8 border-b border-white/10">
+<button class="pb-4 text-white font-ui-sm border-b-2 border-[#C8860A] px-4">Dashboard</button>
+<button class="pb-4 text-stone-500 font-ui-sm px-4 hover:text-stone-300">New Entry</button>
+<button class="pb-4 text-stone-500 font-ui-sm px-4 hover:text-stone-300">P&amp;L</button>
+<button class="pb-4 text-stone-500 font-ui-sm px-4 hover:text-stone-300">GST</button>
+</div>
+</div>
+<div class="relative max-w-5xl mx-auto">
+<div class="bg-[#1A1A1A] rounded-lg border border-white/10 p-2 shadow-2xl">
+<img class="w-full rounded-md opacity-90 contrast-125" data-alt="Professional financial dashboard interface with dark mode theme showing complex data visualizations and ledger entries in a sleek UI" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBslwTe6OQVUfzaa-863NgM_oknDbxeUNE7VQZIzYl7vQPDyy6oqqPHQYYqBcXBirjzMDOxgBsS8necS0M8Ook4ysTrZIuOsGSSyu4Zp9Ukjz9NnvY6680FTug5J6aTGjzKG8nNcYfc2vqU-kjeYSLluiIb7Roo_pABkGVXzTa3oMbPIIIRH5szJmUynFmB1UqkONLIdcnBZM1zVEp_K1IU2exn1BC2ufeJ_es5H8MgI2hUYxDqi0Dbd2_MsH8EeVAgkMpXRsItmBI"/>
+</div>
+<div class="absolute -right-12 top-1/4 bg-[#C8860A] p-6 hidden xl:block">
+<span class="material-symbols-outlined text-white text-4xl" data-icon="lock_reset" data-weight="fill">lock_reset</span>
+<p class="text-white font-ui-xs mt-2 uppercase">Bank-grade Security</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Grid -->
+<section class="py-space-128 px-8 max-w-[1200px] mx-auto">
+<div class="text-center mb-24">
+<span class="text-ui-xs font-ui-xs text-amber-text uppercase tracking-widest">Complete Control</span>
+<h2 class="font-marketing-xl text-marketing-xl mt-4">Modules built for Indian scale.</h2>
+</div>
+<div class="space-y-space-96">
+<!-- Module 1 -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div>
+<h3 class="font-display-lg text-display-lg mb-6">Accounting &amp; Ledger Management</h3>
+<p class="text-ui-md text-secondary mb-8">Maintain a crystal clear audit trail. From journal entries to ledger balancing, ComplianceOS ensures every rupee is accounted for with physical-ledger accuracy.</p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 font-ui-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span>
+                            Real-time double entry validation
+                        </li>
+<li class="flex items-center gap-3 font-ui-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span>
+                            Multi-entity consolidation
+                        </li>
+</ul>
+</div>
+<div class="bg-section-muted p-8 border-[0.5px] border-border-subtle">
+<img class="w-full h-auto shadow-screenshot grayscale contrast-110" data-alt="Detailed view of a financial ledger spreadsheet on a high resolution display with neutral lighting and editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNXThbfELK5AhC0elKySL96OfB0dLGfwyxGnnLZs1_nZ7U5c0p-NpwSJyUIvu9EKLzGNRiG3daLtJ0zK7oN9CxjuI42_nIVnWTCquOkvJuXptM02rZcx4WmTXTV9hqR3h6J5FloUHtDeLhxTWh5kmgmhYCePfZh_v-KcPERqunSW46wE_ymY0LpX6j4gzIf-YWAPNJHS_O1egKCXtW3xdfdielPbDB7FrNLi84ia40FNOrVP9Q1j8PBD1O_WZNkES4LdvVd4c7_g8"/>
+</div>
+</div>
+<!-- Module 2 -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="order-2 md:order-1 bg-section-muted p-8 border-[0.5px] border-border-subtle">
+<img class="w-full h-auto shadow-screenshot contrast-110" data-alt="GST filing confirmation screen showing success message and tax breakdown in a clean professional web interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGQFVxictEH7e8HWK8fhANk-4yHxrtDwhrPwGEDHXQRUYzmIeudBS_Pxro_eZIsTRbus8j22Fm2llDuZ_fJ9FFt7Ov4OXtD1hGTmYb-Qx38CO3GZk5DXnGZ93n1p8WzSRWoO5xfN7IuJ372_IcfDAmthlZrqToD7KxC8AMU4hD51U91S63vcB4zZDXZjSstz8xvhvIFzN5kcgMft6xPOP-eTM6Og7LmUGdyQOA8pK-Gi4Pi44dWqFtOaX7LE4r6gyyCnIGPORBwmU"/>
+</div>
+<div class="order-1 md:order-2">
+<h3 class="font-display-lg text-display-lg mb-6">GST Compliance &amp; Filing</h3>
+<p class="text-ui-md text-secondary mb-8">Never fear an audit again. Our GST module handles HSN/SAC codes, auto-calculates SGST/CGST/IGST, and generates JSON files ready for the GST portal.</p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 font-ui-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span>
+                            Auto-matched GSTR-2B reconciliation
+                        </li>
+<li class="flex items-center gap-3 font-ui-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span>
+                            E-way bill integration
+                        </li>
+</ul>
+</div>
+</div>
+<!-- Module 3 -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div>
+<h3 class="font-display-lg text-display-lg mb-6">Smart Invoicing</h3>
+<p class="text-ui-md text-secondary mb-8">Create professional, GST-compliant invoices in seconds. Manage receivables with automated payment reminders and multi-currency support.</p>
+<button class="text-[#C8860A] font-bold font-ui-sm flex items-center gap-2 group">
+                        Explore Invoicing <span class="transition-transform group-hover:translate-x-1">→</span>
+</button>
+</div>
+<div class="bg-section-muted p-8 border-[0.5px] border-border-subtle">
+<img class="w-full h-auto shadow-screenshot grayscale" data-alt="Professional invoice template shown on a tablet screen with clean typography and amber accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsuB9Zh-ox2KgNp0CyfUm1KQBs0eHJV0hvhWaLMxjmRYszXz2pUuf37iACp7H6qDyVnDJBxNwzrzf0SmocsoxBOM59B2prhc6FXQq-rWWYUaPaPPv7AP5vLT8aQPpZf_thoyrob4pGiENuH7BII6wpJHzQDceyc0QHfRH7do6S4UoNpeqeILFqmtOzOp3VF5I35e9Y_IWLC0j7eXrCCCCIm0Co79-Ks7zjKt8-gMOyAwHgmypzYqzGAzV046yeYpWz5lvn-Fm1DYc"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="bg-section-muted py-space-128 px-8 border-y-[0.5px] border-border-subtle overflow-hidden">
+<div class="max-w-[1320px] mx-auto">
+<div class="text-center mb-16">
+<span class="text-ui-xs font-ui-xs text-amber-text uppercase tracking-widest">Testimonials</span>
+<h2 class="font-display-xl text-display-xl mt-4">Loved by Founders &amp; CAs.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-white p-12 border-[0.5px] border-border-subtle relative">
+<span class="material-symbols-outlined text-[#C8860A] text-6xl opacity-20 absolute top-8 left-8" data-icon="format_quote" data-weight="fill">format_quote</span>
+<p class="text-ui-lg italic font-display-lg text-on-surface mb-8 relative z-10">
+                        "ComplianceOS is the first tool that understands how Indian businesses actually operate. The GST reconciliation alone saves our team 20 hours a week."
+                    </p>
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-none object-cover grayscale" data-alt="Portrait of a professional Indian male entrepreneur in a suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQaPetJ4i07HYgEVhri7injvrMufLjhK91wkcB1GYyZ9ZR87p430Tc3PC6ABKAwp-NxLJTkYpWJ13qjjs764VmK35j5SSvdHhdGpQak0sdLtDYYEMFLth640EI6MkldSJuKbnbZ-qrAT1ex10qMhFbdY98_xzhYeVVW2tU3r5dXDWZdnVKo0RgtLDMAL1zEBfhT_QxfwfZXQAn2V-arP4qgcTtv7jvHPjhJeDYlbtr7C4FKWc9_n8KpDf90cZUE63YOcZwtkiMVG4"/>
+<div>
+<p class="font-bold font-ui-sm">Arjun Mehta</p>
+<p class="text-ui-xs text-text-light uppercase tracking-tighter">CEO, Bharat Logistics</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-12 border-[0.5px] border-border-subtle relative">
+<span class="material-symbols-outlined text-[#C8860A] text-6xl opacity-20 absolute top-8 left-8" data-icon="format_quote" data-weight="fill">format_quote</span>
+<p class="text-ui-lg italic font-display-lg text-on-surface mb-8 relative z-10">
+                        "As a CA, I recommend ComplianceOS to all my clients. The audit trails are bulletproof and the reporting format is exactly what banks need."
+                    </p>
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-none object-cover grayscale" data-alt="Portrait of a professional Indian female chartered accountant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxfmLjDrucO3adtYMhrAeDof4y_K6_eZTK2Szz4M1iAq6gG0jN0X09oXmehzxlBv9tvUwIOc2ortwP2AyYIPPgF3i_1OTtDTkYq9-vJZOymmH8W0QTd1yzE2XRB17JE1riVslFJsxtzzUZuQkOhAydziIParNByc4LBHL5kGQOp_GdZX9GPidd40_cGR4_mgzLngj67IGBn8ciFA2FY8Nwh0tQvyGsZJqxqqQBtzSpSpskDBa7iFY8QU3aFoZDmMy8O7zP53K9Prs"/>
+<div>
+<p class="font-bold font-ui-sm">Priya Sharma</p>
+<p class="text-ui-xs text-text-light uppercase tracking-tighter">Senior Partner, Sharma &amp; Co.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Conversion Section -->
+<section class="py-space-128 px-8 bg-section-amber">
+<div class="max-w-[800px] mx-auto text-center border-[0.5px] border-primary/20 p-16 bg-white/50 backdrop-blur-sm">
+<h2 class="font-marketing-xl text-marketing-xl mb-6">Ready to bring precision to your books?</h2>
+<p class="text-ui-lg text-secondary mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
+<div class="flex flex-col md:flex-row justify-center gap-6">
+<button class="bg-[#C8860A] text-white px-10 py-5 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all group">
+                    Start Free Trial <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</button>
+<button class="border border-on-surface text-on-surface px-10 py-5 font-ui-sm font-bold uppercase tracking-widest hover:bg-on-surface hover:text-white transition-all">
+                    Talk to Us
+                </button>
+</div>
+<p class="text-ui-xs text-text-light mt-8">No credit card required. Cancel anytime.</p>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-[#F4F2EE] dark:bg-stone-900 w-full py-24 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 max-w-[1200px] mx-auto px-8">
+<div class="col-span-1 md:col-span-1">
+<p class="text-xl font-serif text-stone-900 dark:text-stone-50 mb-6">ComplianceOS</p>
+<p class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 leading-relaxed">
+                    © 2024 ComplianceOS. Precision in Indian Accounting.
+                </p>
+</div>
+<div>
+<h4 class="font-['Syne'] text-xs uppercase tracking-widest text-stone-900 dark:text-stone-50 font-semibold mb-6">Resources</h4>
+<ul class="space-y-4">
+<li><a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all" href="#">Compliance Guide</a></li>
+<li><a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all" href="#">GST Tools</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-['Syne'] text-xs uppercase tracking-widest text-stone-900 dark:text-stone-50 font-semibold mb-6">Company</h4>
+<ul class="space-y-4">
+<li><a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all" href="#">Privacy Policy</a></li>
+<li><a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-['Syne'] text-xs uppercase tracking-widest text-stone-900 dark:text-stone-50 font-semibold mb-6">Support</h4>
+<ul class="space-y-4">
+<li><a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all" href="#">Contact Support</a></li>
+<li><a class="font-['Syne'] text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-[#C8860A] transition-all underline decoration-[#C8860A] underline-offset-4" href="#">Schedule a Demo</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

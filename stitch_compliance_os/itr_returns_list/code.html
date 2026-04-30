@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ITR Returns - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "border-subtle": "#E8E4DC",
+                      "section-muted": "#F4F2EE",
+                      "surface-container-highest": "#ede0d3",
+                      "on-secondary-fixed-variant": "#474746",
+                      "outline-variant": "#d6c4af",
+                      "primary-fixed": "#ffddb3",
+                      "primary": "#825500",
+                      "section-dark": "#111111",
+                      "secondary-container": "#e2dfde",
+                      "amber-text": "#B47500",
+                      "page-bg": "#FAFAF8",
+                      "tertiary": "#006494",
+                      "primary-fixed-dim": "#ffb950",
+                      "tertiary-fixed": "#cae6ff",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-container": "#002f49",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#633f00",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container": "#f9ecde",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-surface-variant": "#514535",
+                      "on-surface": "#211b13",
+                      "inverse-primary": "#ffb950",
+                      "surface-tint": "#825500",
+                      "primary-container": "#c8860a",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "error": "#ba1a1a",
+                      "background": "#fff8f4",
+                      "tertiary-container": "#309bdb",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-primary-fixed": "#291800",
+                      "on-primary-container": "#3f2700",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "text-mid": "#555555",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#636262",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "surface": "#fff8f4",
+                      "surface-container-low": "#fff1e4",
+                      "outline": "#847563",
+                      "surface-dim": "#e5d8cb",
+                      "surface-container-high": "#f3e6d9",
+                      "on-primary": "#ffffff",
+                      "text-light": "#888888",
+                      "inverse-on-surface": "#fcefe1",
+                      "surface-variant": "#ede0d3",
+                      "surface-bright": "#fff8f4",
+                      "secondary": "#5f5e5e",
+                      "inverse-surface": "#362f27",
+                      "on-background": "#211b13",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "gutter-wide": "32px",
+                      "gutter-desktop": "24px",
+                      "space-64": "64px",
+                      "space-96": "96px",
+                      "margin-mobile": "16px",
+                      "space-128": "128px"
+              },
+              "fontFamily": {
+                      "ui-lg": [
+                              "Syne"
+                      ],
+                      "ui-sm": [
+                              "Syne"
+                      ],
+                      "marketing-hero": [
+                              "Playfair Display"
+                      ],
+                      "ui-md": [
+                              "Syne"
+                      ],
+                      "marketing-xl": [
+                              "Playfair Display"
+                      ],
+                      "mono-lg": [
+                              "DM Mono"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "mono-md": [
+                              "DM Mono"
+                      ],
+                      "display-xl": [
+                              "Playfair Display"
+                      ],
+                      "ui-xs": [
+                              "Syne"
+                      ]
+              },
+              "fontSize": {
+                      "ui-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "ui-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-hero": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "26px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-xl": [
+                              "38px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-page-bg text-on-background min-h-screen font-ui-md selection:bg-primary-container selection:text-on-primary-container flex">
+<!-- SideNavBar -->
+<nav class="bg-[#FDFCFB] dark:bg-[#121212] font-serif tracking-tight leading-tight mono-numbers h-screen w-64 border-r border-[#E8E4DC] dark:border-[#2A2A2A] fixed left-0 top-0 border-r-[0.5px] flat no-shadows duration-200 ease-in-out flex flex-col h-full py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-serif text-lg font-black tracking-tighter text-[#1A1A1A] dark:text-[#FDFCFB]">ComplianceOS</h1>
+<p class="font-ui-xs text-text-light mt-1">Editorial Ledger v1.0</p>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-primary-container text-on-primary py-3 px-4 flex items-center justify-center gap-2 font-ui-sm font-semibold hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Entry
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-4 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-ui-sm">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-4 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB]" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-ui-sm">General Ledger</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-4 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB]" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-ui-sm">Invoicing</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#C8860A] bg-[#F5F2ED] dark:bg-[#1A1A1A] border-r-2 border-[#C8860A] font-bold px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="font-ui-sm">Tax Returns</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-4 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB]" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-ui-sm">Employees</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="mt-auto border-t border-border-subtle pt-4">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-4 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-ui-sm">Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#6B6B6B] dark:text-[#999999] px-4 py-3 hover:bg-[#F5F2ED] dark:hover:bg-[#1A1A1A] hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB]" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-ui-sm">Support</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-[#FDFCFB]/80 dark:bg-[#121212]/80 backdrop-blur-md sticky top-0 w-full z-40 border-b border-[#E8E4DC] dark:border-[#2A2A2A] border-b-[0.5px] flat no-shadows flex items-center justify-between px-8 py-4">
+<div class="flex items-center gap-8 w-full">
+<div class="hidden md:block text-sm font-bold text-[#1A1A1A] dark:text-[#FDFCFB]">
+                    Tax Returns
+                </div>
+<nav class="flex gap-6 font-serif text-sm uppercase tracking-widest font-medium">
+<a class="text-[#6B6B6B] dark:text-[#999999] pb-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] transition-opacity" href="#">Recent</a>
+<a class="text-[#C8860A] border-b-2 border-[#C8860A] pb-2" href="#">Drafts</a>
+<a class="text-[#6B6B6B] dark:text-[#999999] pb-2 hover:text-[#1A1A1A] dark:hover:text-[#FDFCFB] transition-opacity" href="#">Archived</a>
+</nav>
+<div class="flex-1 flex justify-end items-center gap-4">
+<div class="flex gap-2">
+<button class="text-[#C8860A] dark:text-[#E69B0D] hover:text-[#1A1A1A] transition-opacity p-2">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#C8860A] dark:text-[#E69B0D] hover:text-[#1A1A1A] transition-opacity p-2">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+</div>
+<div class="flex gap-3 border-l border-border-subtle pl-4">
+<button class="font-ui-sm text-on-background border border-[#1A1A1A] py-1.5 px-4 hover:bg-surface-variant transition-colors">
+                            Print Ledger
+                        </button>
+<button class="font-ui-sm bg-primary-container text-white py-1.5 px-4 hover:bg-primary transition-colors flex items-center gap-2">
+                            Export CSV <span class="material-symbols-outlined text-sm">download</span>
+</button>
+<button class="text-[#C8860A] dark:text-[#E69B0D] hover:text-[#1A1A1A] transition-opacity p-2">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-[1200px] mx-auto w-full">
+<div class="flex justify-between items-end mb-space-48">
+<div>
+<h2 class="font-display-lg text-on-surface mb-2">Income Tax Returns</h2>
+<p class="font-ui-sm text-text-mid">Manage and compute statutory filings for the current fiscal period.</p>
+</div>
+<button class="bg-primary-container text-white font-ui-md py-3 px-6 hover:bg-primary transition-colors flex items-center gap-2 group">
+                    Compute Tax
+                    <span class="group-hover:translate-x-1 transition-transform inline-block">→</span>
+</button>
+</div>
+<!-- Ledger Table Container -->
+<div class="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-amber-text">
+<!-- Table Header -->
+<div class="grid grid-cols-6 gap-4 p-4 border-b-[0.5px] border-border-subtle bg-section-muted font-ui-xs text-text-mid uppercase tracking-widest">
+<div class="col-span-1">Financial Year</div>
+<div class="col-span-1">Form Type</div>
+<div class="col-span-2">Assessee Name</div>
+<div class="col-span-1">Status</div>
+<div class="col-span-1 text-right">Actions</div>
+</div>
+<!-- Table Rows -->
+<div class="divide-y-[0.5px] divide-border-subtle font-mono-md text-on-surface">
+<!-- Row 1 -->
+<div class="grid grid-cols-6 gap-4 p-4 items-center hover:bg-surface-variant transition-colors cursor-pointer group">
+<div class="col-span-1">2024-25</div>
+<div class="col-span-1">
+<span class="bg-surface-dim px-2 py-1 border-[0.5px] border-outline font-ui-xs tracking-wider">ITR-3</span>
+</div>
+<div class="col-span-2 font-ui-sm text-on-surface">TechCorp India Pvt Ltd</div>
+<div class="col-span-1">
+<span class="text-amber-text font-ui-xs tracking-wider border-b border-amber-text/30 uppercase">Draft</span>
+</div>
+<div class="col-span-1 flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:text-on-surface font-ui-sm border-b-[0.5px] border-transparent hover:border-on-surface transition-colors">Compute</button>
+<button class="text-text-mid hover:text-on-surface font-ui-sm border-b-[0.5px] border-transparent hover:border-on-surface transition-colors">View</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-6 gap-4 p-4 items-center hover:bg-surface-variant transition-colors cursor-pointer group">
+<div class="col-span-1">2024-25</div>
+<div class="col-span-1">
+<span class="bg-surface-dim px-2 py-1 border-[0.5px] border-outline font-ui-xs tracking-wider">ITR-4</span>
+</div>
+<div class="col-span-2 font-ui-sm text-on-surface">Sharma Associates</div>
+<div class="col-span-1">
+<span class="text-tertiary font-ui-xs tracking-wider border-b border-tertiary/30 uppercase">Generated</span>
+</div>
+<div class="col-span-1 flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-mid hover:text-on-surface font-ui-sm border-b-[0.5px] border-transparent hover:border-on-surface transition-colors">Review</button>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="grid grid-cols-6 gap-4 p-4 items-center hover:bg-surface-variant transition-colors cursor-pointer group">
+<div class="col-span-1">2023-24</div>
+<div class="col-span-1">
+<span class="bg-surface-dim px-2 py-1 border-[0.5px] border-outline font-ui-xs tracking-wider">ITR-3</span>
+</div>
+<div class="col-span-2 font-ui-sm text-text-mid">Global Exports LLC</div>
+<div class="col-span-1">
+<span class="text-outline font-ui-xs tracking-wider uppercase">Filed <span class="font-mono-md lowercase text-text-light ml-1">12 Aug 24</span></span>
+</div>
+<div class="col-span-1 flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-mid hover:text-on-surface font-ui-sm border-b-[0.5px] border-transparent hover:border-on-surface transition-colors">Ack</button>
+</div>
+</div>
+</div>
+<!-- Pagination Footer -->
+<div class="p-4 border-t-[0.5px] border-border-subtle flex justify-between items-center text-text-mid font-ui-sm">
+<div>Showing 1-3 of 24 records</div>
+<div class="flex gap-4">
+<button class="hover:text-on-surface transition-colors disabled:opacity-50" disabled="">Previous</button>
+<button class="hover:text-on-surface transition-colors">Next</button>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="font-mono-md text-text-light text-xs">ComplianceOS ensures alignment with Income Tax Dept schema updates (v1.2.4).</p>
+</div>
+</div>
+</main>
+</body></html>

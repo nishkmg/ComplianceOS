@@ -1,3 +1,2 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+export { accountName, accountCode } from "./helpers";
 //# sourceMappingURL=account.js.map

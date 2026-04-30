@@ -1,105 +1,85 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 
-const months = [
-  { value: 1, label: "April" }, { value: 2, label: "May" }, { value: 3, label: "June" },
-  { value: 4, label: "July" }, { value: 5, label: "August" }, { value: 6, label: "September" },
-  { value: 7, label: "October" }, { value: 8, label: "November" }, { value: 9, label: "December" },
-  { value: 10, label: "January" }, { value: 11, label: "February" }, { value: 12, label: "March" },
-];
+export default function GSTCashLedgerPage() {
+  const mockBalances = {
+    igst: 142500.00,
+    cgst: 45200.00,
+    sgst: 45200.00,
+    cess: 0.00,
+  };
 
-const currentMonth = new Date().getMonth() + 1;
-const currentYear = new Date().getFullYear();
-
-export default function CashLedgerPage() {
-  const [periodMonth, setPeriodMonth] = useState<number>(currentMonth);
-  const [periodYear, setPeriodYear] = useState<number>(currentYear);
-  const [filterTaxType, setFilterTaxType] = useState<string>("all");
-
-  const { data: cashBalance } = api.gstLedger.cashBalance.useQuery({ periodMonth, periodYear });
-  const { data: transactions } = api.gstLedger.ledgerTransactions.useQuery({ type: "cash", periodMonth, periodYear });
-  const filteredTransactions = filterTaxType === "all" ? transactions : transactions?.filter(t => t.taxType === filterTaxType);
-  const totalBalance = cashBalance?.balance ?? { igst: 0, cgst: 0, sgst: 0, cess: 0 };
+  const mockTransactions = [
+    { id: "1", date: "24 Oct 24", desc: "Cash Deposit via Challan", ref: "CPIN-880120421", type: "Deposit", amount: 125000, balance: 232900 },
+    { id: "2", date: "20 Oct 24", desc: "Liability Payment Offset", ref: "GSTR-3B-SEP", type: "Utilization", amount: -45000, balance: 107900 },
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/gst/ledger" className="font-ui text-[12px] text-amber hover:underline">← Back to GST Ledger</Link>
-          <h1 className="font-display text-[26px] font-normal text-dark mt-1">Cash Ledger</h1>
-        </div>
-        <Link href="/gst/payment" className="filter-tab active">Make Payment</Link>
-      </div>
-
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))} className="input-field font-ui">
-            {months.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input type="number" value={periodYear} onChange={(e) => setPeriodYear(Number(e.target.value))} className="input-field font-ui w-24" min={2000} max={2100} />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Tax Type</label>
-          <select value={filterTaxType} onChange={(e) => setFilterTaxType(e.target.value)} className="input-field font-ui">
-            <option value="all">All Tax Types</option>
-            <option value="igst">IGST</option>
-            <option value="cgst">CGST</option>
-            <option value="sgst">SGST</option>
-            <option value="cess">Cess</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {Object.entries(totalBalance).map(([type, amount]) => (
-          <div key={type} className="card p-4">
-            <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">{type.toUpperCase()} Balance</p>
-            <p className="font-mono text-[20px] font-medium text-dark">{formatIndianNumber(amount as number)}</p>
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <header className="bg-white border-b-[0.5px] border-border-subtle px-8 py-10 -mx-8 -mt-8 mb-8 sticky top-0 z-20 backdrop-blur-sm bg-white/50">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="text-amber-text font-ui-xs text-[10px] mb-2 uppercase tracking-widest font-bold">GSTIN: 27AABCU9603R1ZX</div>
+            <h1 className="font-display-xl text-display-xl text-on-surface mb-1 font-bold">Cash Ledger</h1>
+            <p className="font-ui-md text-sm text-text-mid">Electronic tracking of cash deposited to the GST portal.</p>
           </div>
-        ))}
-      </div>
-
-      <div className="card overflow-hidden">
-        <div className="px-4 py-3 border-b border-hairline">
-          <h2 className="font-display text-[16px] font-normal text-dark">Transactions</h2>
+          <div className="flex items-center gap-3 bg-stone-50 p-1 rounded-sm border-[0.5px] border-border-subtle">
+            <button className="px-4 py-1.5 font-ui-sm text-xs text-text-mid hover:text-on-surface transition-colors cursor-pointer border-none bg-transparent font-bold">Oct 2024</button>
+            <div className="w-[1px] h-4 bg-border-subtle"></div>
+            <button className="px-3 py-1.5 flex items-center text-text-mid hover:text-on-surface border-none bg-transparent cursor-pointer">
+              <Icon name="calendar_month" className="text-[18px]" />
+            </button>
+          </div>
         </div>
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Tax Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Balance</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Reference</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTransactions && filteredTransactions.length > 0 ? (
-              filteredTransactions.map((t) => (
-                <tr key={t.id} className="border-b border-hairline">
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.transactionDate || new Date(t.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3"><span className="font-ui text-[11px] px-2 py-0.5 rounded bg-surface-muted text-mid capitalize">{t.ledgerType}</span></td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3 uppercase">{t.taxType}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(t.amount)}</td>
-                  <td className="font-mono text-[13px] text-right text-mid px-4 py-3">{formatIndianNumber(t.balance)}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.referenceNumber || t.challanNumber || "-"}</td>
+      </header>
+
+      <div className="max-w-6xl mx-auto space-y-12 pb-12">
+        {/* KPI Balances */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {Object.entries(mockBalances).map(([key, val]) => (
+            <div key={key} className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+              <div className="font-ui-xs text-[10px] text-text-light mb-3 uppercase tracking-widest font-bold">{key} Balance</div>
+              <div className="font-mono text-xl font-bold text-on-surface">₹ {formatIndianNumber(val)}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Transaction Table */}
+        <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 bg-stone-50 border-b border-border-subtle flex justify-between items-center">
+              <h3 className="font-ui-md font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Electronic Cash Statement</h3>
+              <button className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download CSV</button>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-stone-50 border-b border-stone-100 text-text-light font-ui-xs text-[10px] uppercase tracking-widest">
+                  <th className="py-4 px-6">Date</th>
+                  <th className="py-4 px-6">Description</th>
+                  <th className="py-4 px-6">Reference / CPIN</th>
+                  <th className="py-4 px-6 text-right">Amount (₹)</th>
+                  <th className="py-4 px-6 text-right">Balance (₹)</th>
                 </tr>
-              ))
-            ) : (
-              <tr><td colSpan={6} className="px-4 py-12 text-center font-ui text-light">No transactions found</td></tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
+                {mockTransactions.map((t) => (
+                  <tr key={t.id} className="hover:bg-section-muted/30 transition-colors">
+                    <td className="py-5 px-6 text-text-mid">{t.date}</td>
+                    <td className="py-5 px-6 font-ui-sm font-bold text-on-surface">{t.desc}</td>
+                    <td className="py-5 px-6 text-text-mid uppercase">{t.ref}</td>
+                    <td className={`py-5 px-6 text-right font-bold ${t.amount < 0 ? 'text-red-600' : 'text-green-700'}`}>₹ {formatIndianNumber(t.amount)}</td>
+                    <td className="py-5 px-6 text-right font-bold text-on-surface">₹ {formatIndianNumber(t.balance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

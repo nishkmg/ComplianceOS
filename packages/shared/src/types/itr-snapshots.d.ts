@@ -10,13 +10,13 @@ export declare const GenerateSnapshotInputSchema: z.ZodObject<{
     snapshotType: z.ZodNativeEnum<typeof SnapshotType>;
     returnId: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    financialYear: string;
-    snapshotType: SnapshotType;
-    returnId?: string | undefined;
+    financialYear?: string;
+    returnId?: string;
+    snapshotType?: SnapshotType;
 }, {
-    financialYear: string;
-    snapshotType: SnapshotType;
-    returnId?: string | undefined;
+    financialYear?: string;
+    returnId?: string;
+    snapshotType?: SnapshotType;
 }>;
 export type GenerateSnapshotInput = z.infer<typeof GenerateSnapshotInputSchema>;
 export declare const TrialBalanceSnapshotSchema: z.ZodObject<{
@@ -28,42 +28,42 @@ export declare const TrialBalanceSnapshotSchema: z.ZodObject<{
         debitBalance: z.ZodString;
         creditBalance: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        accountId: string;
-        accountCode: string;
-        accountName: string;
-        debitBalance: string;
-        creditBalance: string;
+        accountId?: string;
+        accountName?: string;
+        accountCode?: string;
+        debitBalance?: string;
+        creditBalance?: string;
     }, {
-        accountId: string;
-        accountCode: string;
-        accountName: string;
-        debitBalance: string;
-        creditBalance: string;
+        accountId?: string;
+        accountName?: string;
+        accountCode?: string;
+        debitBalance?: string;
+        creditBalance?: string;
     }>, "many">;
     totalDebits: z.ZodString;
     totalCredits: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    accounts: {
-        accountId: string;
-        accountCode: string;
-        accountName: string;
-        debitBalance: string;
-        creditBalance: string;
+    accounts?: {
+        accountId?: string;
+        accountName?: string;
+        accountCode?: string;
+        debitBalance?: string;
+        creditBalance?: string;
     }[];
-    asOfDate: string;
-    totalDebits: string;
-    totalCredits: string;
+    asOfDate?: string;
+    totalDebits?: string;
+    totalCredits?: string;
 }, {
-    accounts: {
-        accountId: string;
-        accountCode: string;
-        accountName: string;
-        debitBalance: string;
-        creditBalance: string;
+    accounts?: {
+        accountId?: string;
+        accountName?: string;
+        accountCode?: string;
+        debitBalance?: string;
+        creditBalance?: string;
     }[];
-    asOfDate: string;
-    totalDebits: string;
-    totalCredits: string;
+    asOfDate?: string;
+    totalDebits?: string;
+    totalCredits?: string;
 }>;
 export type TrialBalanceSnapshot = z.infer<typeof TrialBalanceSnapshotSchema>;
 export declare const GSTDataSnapshotSchema: z.ZodObject<{
@@ -76,17 +76,17 @@ export declare const GSTDataSnapshotSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     }, {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     }>;
     inwardSupplies: z.ZodObject<{
         taxableValue: z.ZodString;
@@ -95,17 +95,17 @@ export declare const GSTDataSnapshotSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     }, {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     }>;
     itcAvailable: z.ZodObject<{
         igst: z.ZodString;
@@ -113,15 +113,15 @@ export declare const GSTDataSnapshotSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }>;
     itcUtilized: z.ZodObject<{
         igst: z.ZodString;
@@ -129,73 +129,73 @@ export declare const GSTDataSnapshotSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
-    periodMonth: number;
-    periodYear: number;
-    outwardSupplies: {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    itcAvailable?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    inwardSupplies: {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    itcUtilized?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    itcAvailable: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    periodMonth?: number;
+    periodYear?: number;
+    outwardSupplies?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     };
-    itcUtilized: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    inwardSupplies?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     };
 }, {
-    periodMonth: number;
-    periodYear: number;
-    outwardSupplies: {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    itcAvailable?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    inwardSupplies: {
-        taxableValue: string;
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    itcUtilized?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    itcAvailable: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    periodMonth?: number;
+    periodYear?: number;
+    outwardSupplies?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     };
-    itcUtilized: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    inwardSupplies?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        taxableValue?: string;
     };
 }>;
 export type GSTDataSnapshot = z.infer<typeof GSTDataSnapshotSchema>;
@@ -207,19 +207,19 @@ export declare const IncomeComputationSnapshotSchema: z.ZodObject<{
     taxComputed: z.ZodString;
     computedAt: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    financialYear: string;
-    deductions: Record<string, string>;
-    totalIncome: string;
-    incomeByHead: Record<string, string>;
-    computedAt: string;
-    taxComputed: string;
+    financialYear?: string;
+    totalIncome?: string;
+    deductions?: Record<string, string>;
+    incomeByHead?: Record<string, string>;
+    computedAt?: string;
+    taxComputed?: string;
 }, {
-    financialYear: string;
-    deductions: Record<string, string>;
-    totalIncome: string;
-    incomeByHead: Record<string, string>;
-    computedAt: string;
-    taxComputed: string;
+    financialYear?: string;
+    totalIncome?: string;
+    deductions?: Record<string, string>;
+    incomeByHead?: Record<string, string>;
+    computedAt?: string;
+    taxComputed?: string;
 }>;
 export type IncomeComputationSnapshot = z.infer<typeof IncomeComputationSnapshotSchema>;
 export declare const ITRSnapshotSchema: z.ZodObject<{
@@ -231,21 +231,21 @@ export declare const ITRSnapshotSchema: z.ZodObject<{
     snapshotData: z.ZodRecord<z.ZodString, z.ZodUnknown>;
     generatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    tenantId: string;
-    id: string;
-    financialYear: string;
-    returnId: string | null;
-    generatedAt: Date;
-    snapshotType: SnapshotType;
-    snapshotData: Record<string, unknown>;
+    tenantId?: string;
+    id?: string;
+    financialYear?: string;
+    generatedAt?: Date;
+    returnId?: string;
+    snapshotType?: SnapshotType;
+    snapshotData?: Record<string, unknown>;
 }, {
-    tenantId: string;
-    id: string;
-    financialYear: string;
-    returnId: string | null;
-    generatedAt: Date;
-    snapshotType: SnapshotType;
-    snapshotData: Record<string, unknown>;
+    tenantId?: string;
+    id?: string;
+    financialYear?: string;
+    generatedAt?: Date;
+    returnId?: string;
+    snapshotType?: SnapshotType;
+    snapshotData?: Record<string, unknown>;
 }>;
 export type ITRSnapshot = z.infer<typeof ITRSnapshotSchema>;
 export declare const SnapshotSummarySchema: z.ZodObject<{
@@ -255,17 +255,17 @@ export declare const SnapshotSummarySchema: z.ZodObject<{
     generatedAt: z.ZodDate;
     keyMetrics: z.ZodRecord<z.ZodString, z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    financialYear: string;
-    generatedAt: Date;
-    snapshotType: SnapshotType;
-    snapshotId: string;
-    keyMetrics: Record<string, string>;
+    financialYear?: string;
+    generatedAt?: Date;
+    snapshotType?: SnapshotType;
+    snapshotId?: string;
+    keyMetrics?: Record<string, string>;
 }, {
-    financialYear: string;
-    generatedAt: Date;
-    snapshotType: SnapshotType;
-    snapshotId: string;
-    keyMetrics: Record<string, string>;
+    financialYear?: string;
+    generatedAt?: Date;
+    snapshotType?: SnapshotType;
+    snapshotId?: string;
+    keyMetrics?: Record<string, string>;
 }>;
 export type SnapshotSummary = z.infer<typeof SnapshotSummarySchema>;
 export declare const SnapshotGeneratedPayloadSchema: z.ZodObject<{
@@ -276,19 +276,19 @@ export declare const SnapshotGeneratedPayloadSchema: z.ZodObject<{
     returnId: z.ZodNullable<z.ZodString>;
     generatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    tenantId: string;
-    financialYear: string;
-    returnId: string | null;
-    generatedAt: Date;
-    snapshotType: SnapshotType;
-    snapshotId: string;
+    tenantId?: string;
+    financialYear?: string;
+    generatedAt?: Date;
+    returnId?: string;
+    snapshotType?: SnapshotType;
+    snapshotId?: string;
 }, {
-    tenantId: string;
-    financialYear: string;
-    returnId: string | null;
-    generatedAt: Date;
-    snapshotType: SnapshotType;
-    snapshotId: string;
+    tenantId?: string;
+    financialYear?: string;
+    generatedAt?: Date;
+    returnId?: string;
+    snapshotType?: SnapshotType;
+    snapshotId?: string;
 }>;
 export type SnapshotGeneratedPayload = z.infer<typeof SnapshotGeneratedPayloadSchema>;
 //# sourceMappingURL=itr-snapshots.d.ts.map

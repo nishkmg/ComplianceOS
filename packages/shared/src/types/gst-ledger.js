@@ -1,149 +1,146 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GSTChallanCreatedPayloadSchema = exports.ITCUtilizedPayloadSchema = exports.GSTPaymentMadePayloadSchema = exports.ITCUtilizationResultSchema = exports.GSTChallanOutputSchema = exports.GSTLedgerBalanceSchema = exports.UtilizeITCInputSchema = exports.PayGSTInputSchema = exports.CreateGSTChallanInputSchema = exports.GSTTransactionType = exports.GSTTaxType = void 0;
-const zod_1 = require("zod");
+import { z } from "zod";
 // ============================================================================
 // Enums
 // ============================================================================
-var GSTTaxType;
+export var GSTTaxType;
 (function (GSTTaxType) {
     GSTTaxType["IGST"] = "igst";
     GSTTaxType["CGST"] = "cgst";
     GSTTaxType["SGST"] = "sgst";
     GSTTaxType["CESS"] = "cess";
-})(GSTTaxType || (exports.GSTTaxType = GSTTaxType = {}));
-var GSTTransactionType;
+})(GSTTaxType || (GSTTaxType = {}));
+export var GSTTransactionType;
 (function (GSTTransactionType) {
     GSTTransactionType["PAYMENT"] = "payment";
     GSTTransactionType["INTEREST"] = "interest";
     GSTTransactionType["PENALTY"] = "penalty";
     GSTTransactionType["REFUND"] = "refund";
     GSTTransactionType["ITC_UTILIZATION"] = "itc_utilization";
-})(GSTTransactionType || (exports.GSTTransactionType = GSTTransactionType = {}));
+})(GSTTransactionType || (GSTTransactionType = {}));
 // ============================================================================
 // Input Schemas
 // ============================================================================
-exports.CreateGSTChallanInputSchema = zod_1.z.object({
-    periodMonth: zod_1.z.number().min(1).max(12),
-    periodYear: zod_1.z.number().min(2000),
-    taxAmounts: zod_1.z.object({
-        igst: zod_1.z.string().optional(),
-        cgst: zod_1.z.string().optional(),
-        sgst: zod_1.z.string().optional(),
-        cess: zod_1.z.string().optional(),
-        interest: zod_1.z.string().optional(),
-        penalty: zod_1.z.string().optional(),
+export const CreateGSTChallanInputSchema = z.object({
+    periodMonth: z.number().min(1).max(12),
+    periodYear: z.number().min(2000),
+    taxAmounts: z.object({
+        igst: z.string().optional(),
+        cgst: z.string().optional(),
+        sgst: z.string().optional(),
+        cess: z.string().optional(),
+        interest: z.string().optional(),
+        penalty: z.string().optional(),
     }),
 });
-exports.PayGSTInputSchema = zod_1.z.object({
-    challanId: zod_1.z.string().uuid(),
-    paymentMode: zod_1.z.enum(["NEFT", "RTGS", "UPI", "Credit Card", "Debit Card", "Over the Counter"]),
+export const PayGSTInputSchema = z.object({
+    challanId: z.string().uuid(),
+    paymentMode: z.enum(["NEFT", "RTGS", "UPI", "Credit Card", "Debit Card", "Over the Counter"]),
 });
-exports.UtilizeITCInputSchema = zod_1.z.object({
-    periodMonth: zod_1.z.number().min(1).max(12),
-    periodYear: zod_1.z.number().min(2000),
-    taxType: zod_1.z.nativeEnum(GSTTaxType),
-    utilizationOrder: zod_1.z.array(zod_1.z.nativeEnum(GSTTaxType)).optional(),
+export const UtilizeITCInputSchema = z.object({
+    periodMonth: z.number().min(1).max(12),
+    periodYear: z.number().min(2000),
+    taxType: z.nativeEnum(GSTTaxType),
+    utilizationOrder: z.array(z.nativeEnum(GSTTaxType)).optional(),
 });
 // ============================================================================
 // Output Types
 // ============================================================================
-exports.GSTLedgerBalanceSchema = zod_1.z.object({
-    cashBalance: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+export const GSTLedgerBalanceSchema = z.object({
+    cashBalance: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
-    itcBalance: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+    itcBalance: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
-    liabilityBalance: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
-        interest: zod_1.z.string(),
-        penalty: zod_1.z.string(),
+    liabilityBalance: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
+        interest: z.string(),
+        penalty: z.string(),
     }),
-    asOfDate: zod_1.z.date(),
+    asOfDate: z.date(),
 });
-exports.GSTChallanOutputSchema = zod_1.z.object({
-    challanNumber: zod_1.z.string(),
-    cin: zod_1.z.string().optional(),
-    amount: zod_1.z.string(),
-    generatedAt: zod_1.z.date(),
-    validUntil: zod_1.z.date(),
-    status: zod_1.z.enum(["generated", "paid", "expired"]),
+export const GSTChallanOutputSchema = z.object({
+    challanNumber: z.string(),
+    cin: z.string().optional(),
+    amount: z.string(),
+    generatedAt: z.date(),
+    validUntil: z.date(),
+    status: z.enum(["generated", "paid", "expired"]),
 });
-exports.ITCUtilizationResultSchema = zod_1.z.object({
-    utilized: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
+export const ITCUtilizationResultSchema = z.object({
+    utilized: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
     }),
-    remaining: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
+    remaining: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
     }),
-    cashRequired: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
+    cashRequired: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
     }),
 });
 // ============================================================================
 // Event Payloads
 // ============================================================================
-exports.GSTPaymentMadePayloadSchema = zod_1.z.object({
-    paymentId: zod_1.z.string().uuid(),
-    challanNumber: zod_1.z.string(),
-    cin: zod_1.z.string(),
-    taxpayerGstin: zod_1.z.string(),
-    periodMonth: zod_1.z.number(),
-    periodYear: zod_1.z.number(),
-    amount: zod_1.z.string(),
-    paymentMode: zod_1.z.string(),
-    paidAt: zod_1.z.date(),
-    taxBreakup: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
-        interest: zod_1.z.string(),
-        penalty: zod_1.z.string(),
+export const GSTPaymentMadePayloadSchema = z.object({
+    paymentId: z.string().uuid(),
+    challanNumber: z.string(),
+    cin: z.string(),
+    taxpayerGstin: z.string(),
+    periodMonth: z.number(),
+    periodYear: z.number(),
+    amount: z.string(),
+    paymentMode: z.string(),
+    paidAt: z.date(),
+    taxBreakup: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
+        interest: z.string(),
+        penalty: z.string(),
     }),
 });
-exports.ITCUtilizedPayloadSchema = zod_1.z.object({
-    utilizationId: zod_1.z.string().uuid(),
-    taxpayerGstin: zod_1.z.string(),
-    periodMonth: zod_1.z.number(),
-    periodYear: zod_1.z.number(),
-    utilized: exports.ITCUtilizationResultSchema.shape.utilized,
-    remaining: exports.ITCUtilizationResultSchema.shape.remaining,
-    utilizedAt: zod_1.z.date(),
+export const ITCUtilizedPayloadSchema = z.object({
+    utilizationId: z.string().uuid(),
+    taxpayerGstin: z.string(),
+    periodMonth: z.number(),
+    periodYear: z.number(),
+    utilized: ITCUtilizationResultSchema.shape.utilized,
+    remaining: ITCUtilizationResultSchema.shape.remaining,
+    utilizedAt: z.date(),
 });
-exports.GSTChallanCreatedPayloadSchema = zod_1.z.object({
-    challanId: zod_1.z.string().uuid(),
-    challanNumber: zod_1.z.string(),
-    taxpayerGstin: zod_1.z.string(),
-    periodMonth: zod_1.z.number(),
-    periodYear: zod_1.z.number(),
-    totalAmount: zod_1.z.string(),
-    taxBreakup: zod_1.z.object({
-        igst: zod_1.z.string(),
-        cgst: zod_1.z.string(),
-        sgst: zod_1.z.string(),
-        cess: zod_1.z.string(),
-        interest: zod_1.z.string(),
-        penalty: zod_1.z.string(),
+export const GSTChallanCreatedPayloadSchema = z.object({
+    challanId: z.string().uuid(),
+    challanNumber: z.string(),
+    taxpayerGstin: z.string(),
+    periodMonth: z.number(),
+    periodYear: z.number(),
+    totalAmount: z.string(),
+    taxBreakup: z.object({
+        igst: z.string(),
+        cgst: z.string(),
+        sgst: z.string(),
+        cess: z.string(),
+        interest: z.string(),
+        penalty: z.string(),
     }),
-    validUntil: zod_1.z.date(),
-    createdAt: zod_1.z.date(),
+    validUntil: z.date(),
+    createdAt: z.date(),
 });
 //# sourceMappingURL=gst-ledger.js.map

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -17,7 +16,7 @@ export default function PayrollPage() {
   const [year, setYear] = useState(String(new Date().getFullYear()));
   const [status, setStatus] = useState<string>("all");
 
-  const { data: payrollRuns, isLoading } = api.payroll.list.useQuery({
+  const { data: payrollRuns, isLoading }: any = api.payroll.list.useQuery({
     month,
     year,
     status: status !== "all" ? (status as any) : undefined,

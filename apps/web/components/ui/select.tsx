@@ -1,4 +1,3 @@
-// @ts-nocheck - Shadcn UI component with known type mismatches
 "use client";
 
 import * as React from "react";
@@ -35,6 +34,7 @@ const SelectTrigger = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
 SelectTrigger.displayName = "SelectTrigger";
 
 const SelectValue = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+// @ts-ignore
   ({ className, placeholder, ...props }, ref) => (
     <span ref={ref} className={cn("text-sm text-gray-500", className)} {...props}>
       {placeholder}
@@ -61,6 +61,7 @@ SelectContent.displayName = "SelectContent";
 
 const SelectItem = React.forwardRef<HTMLDivElement, React.OptionHTMLAttributes<HTMLOptionElement>>(
   ({ className, children, ...props }, ref) => (
+// @ts-ignore
     <div
       ref={ref}
       className={cn(

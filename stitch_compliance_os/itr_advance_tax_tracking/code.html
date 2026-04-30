@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Advance Tax Tracking - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 20px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#002f49",
+                        "on-primary-fixed": "#291800",
+                        "outline-variant": "#d6c4af",
+                        "secondary-container": "#e2dfde",
+                        "on-primary-container": "#3f2700",
+                        "on-secondary-container": "#636262",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#cae6ff",
+                        "primary-container": "#c8860a",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "surface-container": "#f9ecde",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "outline": "#847563",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#006494",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#633f00",
+                        "border-subtle": "#E8E4DC",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "primary-fixed-dim": "#ffb950",
+                        "surface-dim": "#e5d8cb",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f4",
+                        "text-light": "#888888",
+                        "text-mid": "#555555",
+                        "surface": "#fff8f4",
+                        "primary": "#825500",
+                        "on-background": "#211b13",
+                        "section-dark": "#111111",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-surface-variant": "#514535",
+                        "inverse-primary": "#ffb950",
+                        "secondary": "#5f5e5e",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "inverse-surface": "#362f27",
+                        "surface-bright": "#fff8f4",
+                        "inverse-on-surface": "#fcefe1",
+                        "tertiary-container": "#309bdb",
+                        "section-muted": "#F4F2EE",
+                        "primary-fixed": "#ffddb3",
+                        "surface-container-highest": "#ede0d3",
+                        "surface-tint": "#825500",
+                        "amber-text": "#B47500",
+                        "page-bg": "#FAFAF8",
+                        "on-surface": "#211b13",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container-low": "#fff1e4",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-container-high": "#f3e6d9",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#ede0d3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-96": "96px",
+                        "margin-mobile": "16px",
+                        "gutter-wide": "32px",
+                        "space-48": "48px",
+                        "space-64": "64px",
+                        "space-128": "128px",
+                        "gutter-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "ui-sm": ["Syne"],
+                        "ui-lg": ["Syne"],
+                        "display-lg": ["Playfair Display"],
+                        "ui-xs": ["Syne"],
+                        "marketing-hero": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "ui-md": ["Syne"],
+                        "display-xl": ["Playfair Display"],
+                        "mono-md": ["DM Mono"],
+                        "mono-lg": ["DM Mono"]
+                    },
+                    "fontSize": {
+                        "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                        "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen text-on-background flex">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-[#F9F8F6] dark:bg-slate-900 h-screen w-64 border-r-[0.5px] border-[#E8E4DC] dark:border-slate-800 fixed left-0 top-0 flex-col z-40">
+<div class="px-6 py-8 border-b-[0.5px] border-[#E8E4DC] dark:border-slate-800">
+<h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">ComplianceOS</h2>
+<p class="font-ui-xs text-ui-xs text-text-light mt-1">Enterprise Console</p>
+</div>
+<nav class="flex-1 py-6 flex flex-col font-ui-sm tracking-tight text-sm">
+<a class="flex items-center gap-3 w-full text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 w-full text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span>GST Ledgers</span>
+</a>
+<a class="flex items-center gap-3 w-full bg-white dark:bg-slate-800 text-[#C8860A] border-l-2 border-[#C8860A] font-semibold py-3 px-6" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span>Advance Tax</span>
+</a>
+<a class="flex items-center gap-3 w-full text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Payroll Reports</span>
+</a>
+<a class="flex items-center gap-3 w-full text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span>Statutory Docs</span>
+</a>
+<a class="flex items-center gap-3 w-full text-slate-500 dark:text-slate-400 py-3 px-6 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t-[0.5px] border-[#E8E4DC] dark:border-slate-800">
+<button class="w-full bg-primary-container text-on-primary py-2 px-4 rounded-DEFAULT font-ui-sm text-ui-sm hover:opacity-90 transition-opacity">
+                New Filing
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-space-64 max-w-[1200px] mx-auto w-full">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:justify-between md:items-end mb-space-48 pb-6 border-b-[0.5px] border-border-subtle gap-6">
+<div>
+<p class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-2">Financial Year 2023-24</p>
+<h1 class="font-display-xl text-display-xl text-on-background">Advance Tax Liability</h1>
+<p class="font-ui-sm text-ui-sm text-text-mid mt-2 max-w-2xl">Track your statutory quarterly installments against estimated annual income to avoid penal interest under sections 234B and 234C.</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-transparent border-[0.5px] border-on-background text-on-background px-6 py-2.5 font-ui-sm text-ui-sm rounded-DEFAULT hover:bg-surface-container transition-colors">
+                    Edit Estimates
+                </button>
+</div>
+</header>
+<!-- Summary KPI Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter-desktop mb-space-64">
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 flex flex-col justify-between hover:shadow-sm transition-shadow">
+<div class="flex justify-between items-start mb-6">
+<p class="font-ui-sm text-ui-sm text-text-mid">Estimated Liability</p>
+<span class="material-symbols-outlined text-text-light">account_balance</span>
+</div>
+<div>
+<span class="font-ui-sm text-ui-sm text-text-light mr-1">₹</span>
+<span class="font-mono-lg text-mono-lg text-on-background">12,50,000</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 flex flex-col justify-between hover:shadow-sm transition-shadow">
+<div class="flex justify-between items-start mb-6">
+<p class="font-ui-sm text-ui-sm text-text-mid">Total Paid</p>
+<span class="material-symbols-outlined text-text-light">payments</span>
+</div>
+<div>
+<span class="font-ui-sm text-ui-sm text-text-light mr-1">₹</span>
+<span class="font-mono-lg text-mono-lg text-on-background">7,50,000</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-error p-6 flex flex-col justify-between hover:shadow-sm transition-shadow">
+<div class="flex justify-between items-start mb-6">
+<p class="font-ui-sm text-ui-sm text-error">Current Shortfall</p>
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div>
+<span class="font-ui-sm text-ui-sm text-error mr-1">₹</span>
+<span class="font-mono-lg text-mono-lg text-error">1,87,500</span>
+</div>
+</div>
+</section>
+<!-- Installments Ledger -->
+<section class="bg-surface-container-lowest border-[0.5px] border-border-subtle overflow-hidden">
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-4 px-6 py-4 bg-section-muted border-b-[0.5px] border-border-subtle">
+<div class="col-span-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-widest">Deadline</div>
+<div class="col-span-2 font-ui-xs text-ui-xs text-text-light uppercase tracking-widest text-right">Target %</div>
+<div class="col-span-3 font-ui-xs text-ui-xs text-text-light uppercase tracking-widest text-right">Required (₹)</div>
+<div class="col-span-2 font-ui-xs text-ui-xs text-text-light uppercase tracking-widest text-right">Paid (₹)</div>
+<div class="col-span-2 font-ui-xs text-ui-xs text-text-light uppercase tracking-widest text-right">Shortfall (₹)</div>
+</div>
+<!-- Q1 Row -->
+<div class="grid grid-cols-12 gap-4 px-6 py-6 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-3">
+<p class="font-ui-md text-ui-md text-on-background mb-1">Jun 15</p>
+<p class="font-ui-xs text-ui-xs text-text-light">1st Installment</p>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-text-mid bg-secondary-container px-2 py-1 rounded-DEFAULT">15%</span>
+</div>
+<div class="col-span-3 text-right">
+<span class="font-mono-md text-mono-md text-on-background">1,87,500</span>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-on-background">1,87,500</span>
+</div>
+<div class="col-span-2 text-right flex items-center justify-end gap-2">
+<span class="font-mono-md text-mono-md text-text-light">0</span>
+<span class="material-symbols-outlined text-green-600 text-[16px]">check_circle</span>
+</div>
+</div>
+<!-- Q2 Row -->
+<div class="grid grid-cols-12 gap-4 px-6 py-6 border-b-[0.5px] border-border-subtle items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-3">
+<p class="font-ui-md text-ui-md text-on-background mb-1">Sep 15</p>
+<p class="font-ui-xs text-ui-xs text-text-light">2nd Installment</p>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-text-mid bg-secondary-container px-2 py-1 rounded-DEFAULT">45%</span>
+</div>
+<div class="col-span-3 text-right">
+<span class="font-mono-md text-mono-md text-on-background">5,62,500</span>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-on-background">5,62,500</span>
+</div>
+<div class="col-span-2 text-right flex items-center justify-end gap-2">
+<span class="font-mono-md text-mono-md text-text-light">0</span>
+<span class="material-symbols-outlined text-green-600 text-[16px]">check_circle</span>
+</div>
+</div>
+<!-- Q3 Row (Active/Shortfall) -->
+<div class="grid grid-cols-12 gap-4 px-6 py-6 border-b-[0.5px] border-border-subtle items-center bg-[#fdf5f5] hover:bg-[#faeded] transition-colors relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="col-span-3 pl-2">
+<p class="font-ui-md text-ui-md text-on-background mb-1">Dec 15</p>
+<p class="font-ui-xs text-ui-xs text-text-light">3rd Installment</p>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-text-mid bg-secondary-container px-2 py-1 rounded-DEFAULT">75%</span>
+</div>
+<div class="col-span-3 text-right">
+<span class="font-mono-md text-mono-md text-on-background">9,37,500</span>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-on-background">-</span>
+</div>
+<div class="col-span-2 text-right flex flex-col items-end">
+<span class="font-mono-md text-mono-md text-error font-medium">1,87,500</span>
+<a class="font-ui-xs text-ui-xs text-primary-container hover:underline mt-1" href="#">Pay Now</a>
+</div>
+</div>
+<!-- Q4 Row (Upcoming) -->
+<div class="grid grid-cols-12 gap-4 px-6 py-6 items-center hover:bg-surface-bright transition-colors opacity-60">
+<div class="col-span-3">
+<p class="font-ui-md text-ui-md text-on-background mb-1">Mar 15</p>
+<p class="font-ui-xs text-ui-xs text-text-light">4th Installment</p>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-text-mid bg-secondary-container px-2 py-1 rounded-DEFAULT">100%</span>
+</div>
+<div class="col-span-3 text-right">
+<span class="font-mono-md text-mono-md text-on-background">12,50,000</span>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-text-light">Upcoming</span>
+</div>
+<div class="col-span-2 text-right">
+<span class="font-mono-md text-mono-md text-text-light">-</span>
+</div>
+</div>
+</section>
+</main>
+</body></html>

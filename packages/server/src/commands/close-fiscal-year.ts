@@ -28,7 +28,33 @@ export async function closeFiscalYear(
     ).then(rows => rows.length);
 
     if (draftCount > 0) {
-      throw new Error(`Cannot close FY with ${draftCount} draft entries. Please post or delete them first.`);
+      // Transition to pending_close — drafts remain, no new entries allowed
+      const updated = await tx.update(fiscalYears)
+        .set({ 
+          status: "pending_close", 
+          closedBy: actorId,
+          closedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(fiscalYears.id, fyId),
+            eq(fiscalYears.tenantId, tenantId),
+            eq(fiscalYears.status, "open"),
+          ),
+        )
+        .returning();
+
+      if (updated.length === 0) {
+        throw new Error("Concurrent modification: fiscal year status changed");
+      }
+
+      await appendEvent(tx, tenantId, "fiscal_year", fyId, "fiscal_year_closed", {
+        fyId,
+        year: fy[0].year,
+        closedAt: new Date().toISOString(),
+        pendingDrafts: draftCount,
+      }, actorId);
+      return;
     }
 
     const updated = await tx.update(fiscalYears)

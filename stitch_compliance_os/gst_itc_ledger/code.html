@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GST ITC Ledger - ComplianceOS</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#825500",
+                    "section-muted": "#F4F2EE",
+                    "primary-fixed-dim": "#ffb950",
+                    "secondary-container": "#e2dfde",
+                    "page-bg": "#FAFAF8",
+                    "on-background": "#211b13",
+                    "on-secondary-container": "#636262",
+                    "on-primary-container": "#3f2700",
+                    "inverse-primary": "#ffb950",
+                    "tertiary-container": "#309bdb",
+                    "border-subtle": "#E8E4DC",
+                    "tertiary-fixed-dim": "#8ecdff",
+                    "on-tertiary-fixed-variant": "#004b70",
+                    "surface": "#fff8f4",
+                    "on-secondary-fixed-variant": "#474746",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "on-error": "#ffffff",
+                    "text-mid": "#555555",
+                    "surface-container-low": "#fff1e4",
+                    "tertiary": "#006494",
+                    "on-primary-fixed-variant": "#633f00",
+                    "surface-bright": "#fff8f4",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "surface-container-high": "#f3e6d9",
+                    "primary-fixed": "#ffddb3",
+                    "amber-text": "#B47500",
+                    "on-primary": "#ffffff",
+                    "primary": "#825500",
+                    "section-amber": "rgba(200, 134, 10, 0.06)",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#362f27",
+                    "surface-dim": "#e5d8cb",
+                    "surface-variant": "#ede0d3",
+                    "primary-container": "#c8860a",
+                    "tertiary-fixed": "#cae6ff",
+                    "secondary": "#5f5e5e",
+                    "on-primary-fixed": "#291800",
+                    "inverse-on-surface": "#fcefe1",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-surface": "#211b13",
+                    "surface-container-highest": "#ede0d3",
+                    "on-surface-variant": "#514535",
+                    "on-error-container": "#93000a",
+                    "section-dark": "#111111",
+                    "text-light": "#888888",
+                    "surface-container": "#f9ecde",
+                    "on-tertiary-container": "#002f49",
+                    "outline": "#847563",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#d6c4af",
+                    "background": "#fff8f4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "space-48": "48px",
+                    "gutter-desktop": "24px",
+                    "space-64": "64px",
+                    "space-128": "128px",
+                    "margin-mobile": "16px",
+                    "gutter-wide": "32px",
+                    "space-96": "96px"
+            },
+            "fontFamily": {
+                    "mono-md": ["DM Mono", "monospace"],
+                    "display-lg": ["Playfair Display", "serif"],
+                    "marketing-xl": ["Playfair Display", "serif"],
+                    "ui-sm": ["Syne", "sans-serif"],
+                    "mono-lg": ["DM Mono", "monospace"],
+                    "marketing-hero": ["Playfair Display", "serif"],
+                    "display-xl": ["Playfair Display", "serif"],
+                    "ui-lg": ["Syne", "sans-serif"],
+                    "ui-xs": ["Syne", "sans-serif"],
+                    "ui-md": ["Syne", "sans-serif"]
+            },
+            "fontSize": {
+                    "mono-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "display-lg": ["26px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "marketing-xl": ["48px", {"lineHeight": "1.15", "fontWeight": "400"}],
+                    "ui-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "mono-lg": ["18px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                    "marketing-hero": ["64px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                    "display-xl": ["38px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "ui-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                    "ui-xs": ["12px", {"lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "ui-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Base specific overrides to maintain strict layout */
+        body { margin: 0; overflow: hidden; }
+        .shadow-card { box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="bg-page-bg font-ui-md text-on-surface flex h-screen antialiased">
+<!-- Shared Component: SideNavBar -->
+<aside class="h-screen w-72 border-r-[0.5px] sticky left-0 border-[#E8E4DC] dark:border-stone-800 flat bg-[#FDFCFB] dark:bg-[#121212] flex flex-col py-8 px-4 gap-2 z-10">
+<!-- Header -->
+<div class="px-3 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-secondary-container">domain</span>
+</div>
+<div>
+<h2 class="font-serif font-bold text-[#1A1A1A] dark:text-white tracking-widest uppercase text-sm">ComplianceOS</h2>
+<p class="font-serif text-[11px] uppercase tracking-widest text-stone-500 mt-1">Enterprise Tier</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed select-none cursor-default hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-[#F5F2ED] dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] font-semibold font-serif text-[13px] leading-relaxed select-none cursor-default hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+                Compliance Ledger
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed select-none cursor-default hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">corporate_fare</span>
+                Entity Management
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed select-none cursor-default hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+                Reports Archive
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed select-none cursor-default hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                Audit Settings
+            </a>
+</nav>
+<!-- CTA & Footer Actions -->
+<div class="mt-auto flex flex-col gap-4">
+<button class="w-full py-2.5 px-4 bg-primary-container text-on-primary rounded font-ui-sm text-ui-sm flex items-center justify-center gap-2 group transition-colors hover:bg-surface-tint">
+                Add New Entity
+                <span class="group-hover:translate-x-1 transition-transform duration-200">→</span>
+</button>
+<div class="border-t-[0.5px] border-border-subtle pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed select-none cursor-default transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">security</span>
+                    Security Settings
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed select-none cursor-default transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+                    Logout
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto bg-page-bg">
+<div class="max-w-[1200px] mx-auto px-12 py-16">
+<!-- Header Section -->
+<header class="flex justify-between items-end mb-16 border-b-[0.5px] border-border-subtle pb-8">
+<div>
+<p class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-3">Financial Year 2023-24  |  GSTIN: 27AACCV1234F1Z5</p>
+<h1 class="font-display-xl text-display-xl text-on-surface">Input Tax Credit Ledger</h1>
+<p class="font-ui-sm text-ui-sm text-text-mid mt-2 max-w-2xl">A rigorous, chronological record of eligible credit availability, utilization against outward tax liability, and mandated reversals as per Rule 42/43.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-4 py-2 border-[0.5px] border-outline text-on-surface rounded font-ui-sm text-ui-sm hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export GSTR-2B
+                    </button>
+<button class="px-4 py-2 border-[0.5px] border-outline text-on-surface rounded font-ui-sm text-ui-sm hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filter Period
+                    </button>
+</div>
+</header>
+<!-- KPI Summary Cards -->
+<section class="grid grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 hover:shadow-card transition-shadow">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary-container text-[18px]">account_balance</span>
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider">Total Available Balance</h3>
+</div>
+<p class="font-mono-lg text-mono-lg text-on-surface">₹ 3,42,850.00</p>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 hover:shadow-card transition-shadow">
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider mb-4">IGST Balance</h3>
+<p class="font-mono-lg text-mono-lg text-on-surface">₹ 1,80,500.00</p>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 hover:shadow-card transition-shadow">
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider mb-4">CGST Balance</h3>
+<p class="font-mono-lg text-mono-lg text-on-surface">₹ 81,175.00</p>
+</div>
+<div class="bg-surface-container-lowest border-[0.5px] border-border-subtle p-6 hover:shadow-card transition-shadow">
+<h3 class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-wider mb-4">SGST Balance</h3>
+<p class="font-mono-lg text-mono-lg text-on-surface">₹ 81,175.00</p>
+</div>
+</section>
+<!-- Detailed Ledger Table -->
+<section class="bg-surface-container-lowest border-[0.5px] border-border-subtle rounded overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-section-muted border-b-[0.5px] border-border-subtle">
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest py-4 pl-6 pr-4 whitespace-nowrap">Date</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest py-4 px-4 whitespace-nowrap">Voucher Type &amp; Ref</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest py-4 px-4 min-w-[200px]">Supplier / Particulars</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest py-4 px-4 text-right">IGST Util/Rev</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest py-4 px-4 text-right">CGST Util/Rev</th>
+<th class="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest py-4 px-4 text-right">SGST Util/Rev</th>
+<th class="font-ui-xs text-ui-xs text-on-surface uppercase tracking-widest py-4 pr-6 pl-4 text-right bg-surface-container-high/30">Net Balance</th>
+</tr>
+</thead>
+<tbody class="divide-y-[0.5px] divide-border-subtle">
+<!-- Opening Balance Row -->
+<tr class="bg-surface-bright/50">
+<td class="py-4 pl-6 pr-4 font-mono-md text-mono-md text-text-mid">01 Apr 2024</td>
+<td class="py-4 px-4 font-ui-sm text-ui-sm text-text-mid">Opening</td>
+<td class="py-4 px-4 font-ui-sm text-ui-sm text-on-surface font-medium">Brought Forward Balance</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 pr-6 pl-4 text-right font-mono-md text-mono-md text-on-surface bg-surface-container-high/10">₹ 2,10,000.00</td>
+</tr>
+<!-- Transaction Rows -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-4 pl-6 pr-4 font-mono-md text-mono-md text-text-mid">05 Apr 2024</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Purchase Invoice</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">INV-2024-081</div>
+</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">TechCorp Solutions Pvt Ltd</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">27AABCT1298E1Z2</div>
+</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">18,000.00</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 pr-6 pl-4 text-right font-mono-md text-mono-md text-on-surface bg-surface-container-high/10">₹ 2,28,000.00</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-4 pl-6 pr-4 font-mono-md text-mono-md text-text-mid">12 Apr 2024</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Payment / Utilized</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">CHL-0019283</div>
+</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Offset against March Liability</div>
+</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">(45,000.00)</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">(10,000.00)</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">(10,000.00)</td>
+<td class="py-4 pr-6 pl-4 text-right font-mono-md text-mono-md text-on-surface bg-surface-container-high/10">₹ 1,63,000.00</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-4 pl-6 pr-4 font-mono-md text-mono-md text-text-mid">18 Apr 2024</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Purchase Invoice</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">BILL/992/24</div>
+</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Apex Office Supplies</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">27XYZPA9876Q1Z9</div>
+</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">2,500.00</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">2,500.00</td>
+<td class="py-4 pr-6 pl-4 text-right font-mono-md text-mono-md text-on-surface bg-surface-container-high/10">₹ 1,68,000.00</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-4 pl-6 pr-4 font-mono-md text-mono-md text-text-mid">25 Apr 2024</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-error">ITC Reversal</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">JV-REV-004</div>
+</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Rule 42 Reversal (Exempted Supply)</div>
+</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-error">(1,500.00)</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 pr-6 pl-4 text-right font-mono-md text-mono-md text-on-surface bg-surface-container-high/10">₹ 1,66,500.00</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-4 pl-6 pr-4 font-mono-md text-mono-md text-text-mid">28 Apr 2024</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Purchase Invoice</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">IMP-2024-002</div>
+</td>
+<td class="py-4 px-4">
+<div class="font-ui-sm text-ui-sm text-on-surface">Global Logistics Ltd (Import)</div>
+<div class="font-mono-md text-[12px] text-text-mid mt-0.5">07AABCG1234H1Z1</div>
+</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-on-surface">1,76,350.00</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 px-4 text-right font-mono-md text-mono-md text-text-light">-</td>
+<td class="py-4 pr-6 pl-4 text-right font-mono-md text-mono-md text-on-surface bg-surface-container-high/10">₹ 3,42,850.00</td>
+</tr>
+</tbody>
+<!-- Totals Footer -->
+<tfoot class="bg-section-muted border-t-[0.5px] border-border-subtle">
+<tr>
+<td class="py-5 pl-6 pr-4 font-ui-sm text-ui-sm text-on-surface font-semibold uppercase tracking-wider text-right" colspan="3">Net Totals (Period)</td>
+<td class="py-5 px-4 text-right font-mono-md text-mono-md text-on-surface border-x-[0.5px] border-border-subtle">1,47,850.00</td>
+<td class="py-5 px-4 text-right font-mono-md text-mono-md text-on-surface border-r-[0.5px] border-border-subtle">(7,500.00)</td>
+<td class="py-5 px-4 text-right font-mono-md text-mono-md text-on-surface border-r-[0.5px] border-border-subtle">(7,500.00)</td>
+<td class="py-5 pr-6 pl-4 text-right font-mono-lg text-mono-lg text-amber-text font-medium bg-surface-container-high/40 border-t-2 border-t-primary-container">₹ 3,42,850.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</section>
+<!-- Pagination / Blank State hint (Editorial style) -->
+<div class="mt-8 flex justify-between items-center text-text-mid font-ui-xs text-ui-xs uppercase tracking-widest">
+<p>Showing 1-5 of 142 Entries</p>
+<div class="flex gap-4">
+<button class="hover:text-on-surface transition-colors cursor-pointer">Previous</button>
+<span>1 / 29</span>
+<button class="hover:text-on-surface transition-colors cursor-pointer text-on-surface">Next</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

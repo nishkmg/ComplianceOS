@@ -1,6 +1,6 @@
 // UI Components - Design System Exports
 export { BalanceBar } from './balance-bar';
-export { Badge } from './badge';
+export { Badge, type BadgeVariant } from './badge';
 export { Button } from './button';
 export { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from './dialog';
 export { Input } from './input';
@@ -9,7 +9,7 @@ export { KpiTile } from './kpi-tile';
 
 // State Components (per UX/UI doc §16)
 export { Skeleton, TableSkeleton, KPISkeleton, CardSkeleton } from './skeleton';
-export { EmptyState, EmptyStateIcons } from './empty-state';
+export { EmptyState } from './empty-state';
 export {
   ErrorState,
   FieldError,

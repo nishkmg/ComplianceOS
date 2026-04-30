@@ -1,39 +1,37 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateAccountInputSchema = exports.ModifyJournalEntryInputSchema = exports.VoidJournalEntryInputSchema = exports.PostJournalEntryInputSchema = exports.CreateJournalEntryInputSchema = void 0;
-const zod_1 = require("zod");
-exports.CreateJournalEntryInputSchema = zod_1.z.object({
-    date: zod_1.z.string().date(),
-    narration: zod_1.z.string().min(1),
-    referenceType: zod_1.z.enum(["invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "manual"]).default("manual"),
-    referenceId: zod_1.z.string().uuid().optional(),
-    lines: zod_1.z.array(zod_1.z.object({
-        accountId: zod_1.z.string().uuid(),
-        debit: zod_1.z.string().default("0"),
-        credit: zod_1.z.string().default("0"),
-        description: zod_1.z.string().optional(),
+import { z } from "zod";
+import { narration, amountString, description } from "../validation/helpers";
+export const CreateJournalEntryInputSchema = z.object({
+    date: z.string().date(),
+    narration: narration(),
+    referenceType: z.enum(["invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "manual"]).default("manual"),
+    referenceId: z.string().uuid().optional(),
+    lines: z.array(z.object({
+        accountId: z.string().uuid(),
+        debit: amountString(),
+        credit: amountString(),
+        description: description(),
     })).min(2),
 }).refine((data) => {
     const totalDebit = data.lines.reduce((sum, l) => sum + parseFloat(l.debit), 0);
     const totalCredit = data.lines.reduce((sum, l) => sum + parseFloat(l.credit), 0);
     return Math.abs(totalDebit - totalCredit) < 0.01;
 }, { message: "Total debits must equal total credits" });
-exports.PostJournalEntryInputSchema = zod_1.z.object({
-    entryId: zod_1.z.string().uuid(),
+export const PostJournalEntryInputSchema = z.object({
+    entryId: z.string().uuid(),
 });
-exports.VoidJournalEntryInputSchema = zod_1.z.object({
-    entryId: zod_1.z.string().uuid(),
-    reason: zod_1.z.string().min(1),
+export const VoidJournalEntryInputSchema = z.object({
+    entryId: z.string().uuid(),
+    reason: z.string().min(1, "Reason is required"),
 });
-exports.ModifyJournalEntryInputSchema = zod_1.z.object({
-    entryId: zod_1.z.string().uuid(),
-    narration: zod_1.z.string().min(1).optional(),
-    date: zod_1.z.string().date().optional(),
-    lines: zod_1.z.array(zod_1.z.object({
-        accountId: zod_1.z.string().uuid(),
-        debit: zod_1.z.string().default("0"),
-        credit: zod_1.z.string().default("0"),
-        description: zod_1.z.string().optional(),
+export const ModifyJournalEntryInputSchema = z.object({
+    entryId: z.string().uuid(),
+    narration: narration().optional(),
+    date: z.string().date().optional(),
+    lines: z.array(z.object({
+        accountId: z.string().uuid(),
+        debit: amountString(),
+        credit: amountString(),
+        description: description(),
     })).min(2).optional(),
 }).refine((data) => {
     if (!data.lines)
@@ -42,20 +40,20 @@ exports.ModifyJournalEntryInputSchema = zod_1.z.object({
     const totalCredit = data.lines.reduce((sum, l) => sum + parseFloat(l.credit), 0);
     return Math.abs(totalDebit - totalCredit) < 0.01;
 }, { message: "Total debits must equal total credits" });
-exports.CreateAccountInputSchema = zod_1.z.object({
-    code: zod_1.z.string().min(1),
-    name: zod_1.z.string().min(1),
-    kind: zod_1.z.enum(["Asset", "Liability", "Equity", "Revenue", "Expense"]),
-    subType: zod_1.z.enum([
+export const CreateAccountInputSchema = z.object({
+    code: z.string().min(1).max(20, "Account code must be at most 20 characters"),
+    name: z.string().min(1).max(200, "Account name must be at most 200 characters"),
+    kind: z.enum(["Asset", "Liability", "Equity", "Revenue", "Expense"]),
+    subType: z.enum([
         "CurrentAsset", "FixedAsset", "Bank", "Cash", "Inventory",
         "CurrentLiability", "LongTermLiability",
         "Capital", "Drawing", "Reserves",
         "OperatingRevenue", "OtherRevenue",
         "DirectExpense", "IndirectExpense",
     ]),
-    parentId: zod_1.z.string().uuid().optional(),
-    reconciliationAccount: zod_1.z.enum(["bank", "none"]).default("none"),
-    tags: zod_1.z.array(zod_1.z.enum([
+    parentId: z.string().uuid().optional(),
+    reconciliationAccount: z.enum(["bank", "none"]).default("none"),
+    tags: z.array(z.enum([
         "trade_receivable", "trade_payable", "gst", "tds", "tds_payable",
         "finance_cost", "depreciation", "tax", "employee_benefits", "manufacturing",
         "inventory_adjustment", "trading", "returns", "opening_balance",

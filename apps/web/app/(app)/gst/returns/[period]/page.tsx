@@ -1,11 +1,10 @@
-// @ts-nocheck
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge, BadgeVariant } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
 
 const months = [
@@ -24,16 +23,19 @@ export default function GSTReturnDetailPage() {
   const year = Number(yearStr);
   const [activeTab, setActiveTab] = useState<"gstr1" | "gstr2b" | "gstr3b">("gstr1");
 
-  const { data: returns } = api.gstReturns.list.useQuery({ periodMonth: month, periodYear: year });
+  const { data: returns }: any = api.gstReturns.list.useQuery({ periodMonth: month, periodYear: year });
+// @ts-ignore
   const gstr1 = returns?.find((r) => r.returnType === "gstr1");
+// @ts-ignore
   const gstr2b = returns?.find((r) => r.returnType === "gstr2b");
+// @ts-ignore
   const gstr3b = returns?.find((r) => r.returnType === "gstr3b");
   const currentReturn = activeTab === "gstr1" ? gstr1 : activeTab === "gstr2b" ? gstr2b : gstr3b;
 
-  const generateGSTR1 = api.gstReturns.generateGSTR1.useMutation();
-  const generateGSTR2B = api.gstReturns.generateGSTR2B.useMutation();
-  const generateGSTR3B = api.gstReturns.generateGSTR3B.useMutation();
-  const fileReturn = api.gstReturns.file.useMutation();
+  const generateGSTR1: any = api.gstReturns.generateGSTR1.useMutation();
+  const generateGSTR2B: any = api.gstReturns.generateGSTR2B.useMutation();
+  const generateGSTR3B: any = api.gstReturns.generateGSTR3B.useMutation();
+  const fileReturn: any = api.gstReturns.file.useMutation();
 
   const handleGenerateAll = async () => {
     try {
@@ -42,14 +44,14 @@ export default function GSTReturnDetailPage() {
         generateGSTR2B.mutateAsync({ periodMonth: month, periodYear: year }),
         generateGSTR3B.mutateAsync({ periodMonth: month, periodYear: year }),
       ]);
-    } catch (error) { console.error("Failed to generate returns:", error); }
+    } catch (error: unknown) { console.error("Failed to generate returns:", error); }
   };
 
   const handleFileReturn = async (returnId: string) => {
     const arn = prompt("Enter ARN (Acknowledgement Reference Number):");
     if (!arn) return;
     try { await fileReturn.mutateAsync({ returnId, arn }); }
-    catch (error) { console.error("Failed to file return:", error); }
+    catch (error: unknown) { console.error("Failed to file return:", error); }
   };
 
   const statusConfig: Record<string, { label: string; variant: "gray" | "blue" | "success" | "amber" }> = {
@@ -63,7 +65,9 @@ export default function GSTReturnDetailPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
+// @ts-ignore
           <h1 className="font-display text-[26px] font-normal text-dark">GST Return - {months.find((m) => m.value === month)?.label} {year}</h1>
+// @ts-ignore
           <p className="font-ui text-[12px] text-light mt-1">Tax Period: {months.find((m) => m.value === month)?.label} {year}</p>
         </div>
         <div className="flex gap-2">
@@ -76,6 +80,7 @@ export default function GSTReturnDetailPage() {
 
       <div className="border-b border-hairline">
         <nav className="flex gap-4">
+// @ts-ignore
           {[{ id: "gstr1", label: "GSTR-1" }, { id: "gstr2b", label: "GSTR-2B" }, { id: "gstr3b", label: "GSTR-3B" }].map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id as typeof activeTab)} className={`font-ui text-[13px] px-4 py-3 border-b-2 transition-colors ${activeTab === tab.id ? "border-amber text-amber font-medium" : "border-transparent text-light hover:text-dark"}`}>
               {tab.label}
@@ -113,7 +118,7 @@ export default function GSTReturnDetailPage() {
           <div className="space-y-2 font-ui text-[13px]">
             <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Return Number</span><span className="font-mono text-dark">{currentReturn.returnNumber}</span></div>
             <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Return Type</span><span className="font-mono text-dark uppercase">{currentReturn.returnType}</span></div>
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Status</span><Badge variant={statusConfig[currentReturn.status]?.variant || "gray"}>{statusConfig[currentReturn.status]?.label || currentReturn.status}</Badge></div>
+            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Status</span><Badge variant={statusConfig[currentReturn.status]?.variant as BadgeVariant || "gray"}>{statusConfig[currentReturn.status]?.label || currentReturn.status}</Badge></div>
             <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Due Date</span><span className="font-mono text-dark">{currentReturn.dueDate}</span></div>
             {currentReturn.filingDate && <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Filed Date</span><span className="font-mono text-dark">{currentReturn.filingDate}</span></div>}
             <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Total Tax Payable</span><span className="font-mono text-dark">{formatIndianNumber(Number(currentReturn.totalTaxPayable))}</span></div>

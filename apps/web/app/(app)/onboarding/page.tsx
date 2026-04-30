@@ -3,30 +3,28 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-// @ts-ignore - tRPC type collision workaround
-import { api } from "@/lib/api";
 import { StepBusinessProfile } from "./step-business-profile";
 import { StepModuleActivation } from "./step-module-activation";
 import { StepCoaTemplate } from "./step-coa-template";
-import { StepCoaReview } from "./step-coa-review";
 import { StepFyGst } from "./step-fy-gst";
 import { StepOpeningBalances } from "./step-opening-balances";
+import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
 
 export const dynamic = "force-dynamic";
 
 const STEPS = [
-  { number: 1, title: "Business Profile", description: "Tell us about your business" },
-  { number: 2, title: "Modules", description: "Activate the features you need" },
-  { number: 3, title: "Chart of Accounts", description: "Customize your accounting structure" },
-  { number: 4, title: "Fiscal Year & GST", description: "Set up your tax configuration" },
-  { number: 5, title: "Opening Balances", description: "Enter starting balances (optional)" },
+  { number: 1, title: "Business Profile" },
+  { number: 2, title: "Modules" },
+  { number: 3, title: "CoA Template" },
+  { number: 4, title: "CoA Review" },
+  { number: 5, title: "Fiscal Year & GST" },
+  { number: 6, title: "Opening Balances" },
 ];
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [tenantId, setTenantId] = useState<string | undefined>();
   const [createdTenantId, setCreatedTenantId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -34,152 +32,59 @@ export default function OnboardingPage() {
     setMounted(true);
   }, []);
 
-  const activeTenantId = createdTenantId || tenantId;
-
   const {
     currentStep,
     completedSteps,
-    data,
     isLoading,
-    updateStep,
     goToStep,
-    completeOnboarding,
-  } = useOnboarding(activeTenantId);
+  } = useOnboarding(createdTenantId ?? undefined);
 
-  if (!mounted || status === "loading") {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-          <p className="mt-4 font-ui text-mid">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const handleTenantCreated = (newTenantId: string) => {
-    setCreatedTenantId(newTenantId);
-    setTenantId(newTenantId);
-  };
-
-  const handleComplete = async () => {
-    if (tenantId) {
-      await completeOnboarding.mutateAsync({ tenantId });
-      router.push("/dashboard");
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-          <p className="mt-4 font-ui text-mid">Loading your setup...</p>
-        </div>
-      </div>
-    );
-  }
+  if (!mounted || status === "loading") return null;
 
   return (
-    <div className="min-h-screen bg-lightest">
-      {/* Progress Steps */}
-      <nav aria-label="Onboarding progress" className="bg-white border-b border-hairline">
-        <div className="max-w-5xl mx-auto px-6 py-8">
-          <ol className="flex items-center justify-between" role="list">
-            {STEPS.map((step, index) => {
-              const isCompleted = completedSteps.includes(step.number);
-              const isCurrent = currentStep === step.number;
-              const isPending = !isCompleted && !isCurrent;
+    <div className="bg-page-bg text-on-surface antialiased min-h-screen pt-12 pb-space-96 flex flex-col items-center">
+      <div className="max-w-4xl w-full mx-auto px-gutter-desktop flex flex-col gap-space-48 text-left">
+        {/* Header */}
+        <header className="flex flex-col gap-6">
+          <div className="flex justify-between items-end border-b border-border-subtle pb-6">
+            <div className="font-display-lg text-display-lg font-bold tracking-tight">ComplianceOS</div>
+            <div className="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">Step {currentStep} of {STEPS.length}</div>
+          </div>
+          {/* Segmented Progress Bar */}
+          <div className="flex gap-2 w-full h-1">
+// @ts-ignore
+            {STEPS.map((s) => (
+              <div key={s.number} className={`flex-1 rounded-sm transition-colors duration-500 ${currentStep >= s.number ? 'bg-primary-container' : 'bg-border-subtle'}`}></div>
+            ))}
+          </div>
+        </header>
 
-              return (
-                <div key={step.number} className="flex items-center">
-                  {/* Step Circle */}
-                  <div className="flex flex-col items-center">
-                    <div
-                      role="step"
-                      aria-current={isCurrent ? "step" : undefined}
-                      aria-label={`Step ${step.number}: ${step.title}`}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-ui text-[13px] font-medium transition-colors ${
-                        isCompleted
-                          ? "bg-amber text-white"
-                          : isCurrent
-                          ? "border-2 border-amber text-amber"
-                          : "border-2 border-lighter text-light"
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ) : (
-                        step.number
-                      )}
-                    </div>
-                    {/* Step Label */}
-                    <div className="mt-2 text-center hidden lg:block">
-                      <p className={`text-[11px] font-medium ${isCurrent ? "text-dark" : "text-light"}`}>
-                        {step.title}
-                      </p>
-                      <p className="text-[9px] text-light mt-0.5">{step.description}</p>
-                    </div>
-                  </div>
-
-                  {/* Connector Line */}
-                  {index < STEPS.length - 1 && (
-                    <div className="w-16 lg:w-24 h-0.5 mx-2 lg:mx-4">
-                      <div
-                        className={`h-full transition-colors ${
-                          completedSteps.includes(step.number + 1)
-                            ? "bg-amber"
-                            : "bg-lighter"
-                        }`}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </ol>
-        </div>
-      </nav>
-
-      {/* Step Content */}
-      <div className="max-w-3xl mx-auto px-6 py-8">
-        <div className="card">
-          <div className="p-8">
+        {/* Main Content */}
+        <main className="flex flex-col gap-12 bg-white border border-border-subtle p-8 md:p-12 shadow-sm relative overflow-hidden">
+          {/* Status line */}
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+          
+          <div className="min-h-[400px]">
             {currentStep === 1 && (
-              <StepBusinessProfile onTenantCreated={handleTenantCreated} />
+              <StepBusinessProfile onTenantCreated={(id) => setCreatedTenantId(id)} />
             )}
-            {currentStep === 2 && activeTenantId && (
-              <StepModuleActivation
-                tenantId={activeTenantId}
-                onComplete={() => goToStep(3)}
-              />
+            {currentStep === 2 && createdTenantId && (
+              <StepModuleActivation tenantId={createdTenantId} onComplete={() => goToStep(3)} />
             )}
-            {currentStep === 3 && activeTenantId && (
-              <StepCoaTemplate
-                tenantId={activeTenantId}
-                onComplete={() => goToStep(4)}
-              />
+            {currentStep === 3 && createdTenantId && (
+              <StepCoaTemplate tenantId={createdTenantId} onComplete={() => goToStep(4)} />
             )}
-            {currentStep === 4 && activeTenantId && (
-              <StepFyGst
-                tenantId={activeTenantId}
-                onComplete={() => goToStep(5)}
-              />
+            {currentStep === 4 && createdTenantId && (
+              <StepCoaReview tenantId={createdTenantId} onComplete={() => goToStep(5)} />
             )}
-            {currentStep === 5 && activeTenantId && (
-              <StepOpeningBalances
-                tenantId={activeTenantId}
-                onComplete={handleComplete}
-              />
+            {currentStep === 5 && createdTenantId && (
+              <StepFyGst tenantId={createdTenantId} onComplete={() => goToStep(6)} />
+            )}
+            {currentStep === 6 && createdTenantId && (
+              <StepOpeningBalances tenantId={createdTenantId} onComplete={() => router.push("/dashboard")} />
             )}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

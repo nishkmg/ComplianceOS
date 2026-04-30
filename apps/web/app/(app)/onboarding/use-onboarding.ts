@@ -1,6 +1,6 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
+import { api } from "@/lib/api";
 import { useState, useEffect, useCallback } from "react";
 
 interface OnboardingData {
@@ -46,7 +46,8 @@ export function useOnboarding(tenantId?: string) {
     isLoading: !tenantId,
   });
 
-  const { data: progressData, refetch } = api.onboarding.getProgress.useQuery(
+  const { data: progressData, refetch }: any = api.onboarding.getProgress.useQuery(
+    // @ts-ignore - overload
     { tenantId: tenantId! },
     { enabled: !!tenantId, retry: false }
   );
@@ -64,13 +65,13 @@ export function useOnboarding(tenantId?: string) {
     }
   }, [progressData]);
 
-  const saveProgress = api.onboarding.saveProgress.useMutation({
+  const saveProgress: any = api.onboarding.saveProgress.useMutation({
     onSuccess: () => {
       refetch();
     },
   });
 
-  const completeOnboarding = api.onboarding.completeOnboarding.useMutation({
+  const completeOnboarding: any = api.onboarding.completeOnboarding.useMutation({
     onSuccess: () => {
       refetch();
     },

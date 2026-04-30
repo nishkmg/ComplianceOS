@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ITRConfigUpdatedPayloadSchema = exports.PresumptiveRateConfigSchema = exports.ITRConfigSchema = exports.DeductionConfigSchema = exports.UpdateITRConfigInputSchema = exports.TDSDeductionSection = void 0;
-const zod_1 = require("zod");
-const itr_returns_1 = require("./itr-returns");
+import { z } from "zod";
+import { TaxRegime, PresumptiveScheme } from "./itr-returns";
 // ============================================================================
 // Enums
 // ============================================================================
-var TDSDeductionSection;
+export var TDSDeductionSection;
 (function (TDSDeductionSection) {
     TDSDeductionSection["SECTION_194A"] = "194A";
     TDSDeductionSection["SECTION_194C"] = "194C";
@@ -15,63 +12,63 @@ var TDSDeductionSection;
     TDSDeductionSection["SECTION_194Q"] = "194Q";
     TDSDeductionSection["SECTION_194R"] = "194R";
     TDSDeductionSection["NONE"] = "none";
-})(TDSDeductionSection || (exports.TDSDeductionSection = TDSDeductionSection = {}));
+})(TDSDeductionSection || (TDSDeductionSection = {}));
 // ============================================================================
 // Input Schemas
 // ============================================================================
-exports.UpdateITRConfigInputSchema = zod_1.z.object({
-    taxRegime: zod_1.z.nativeEnum(itr_returns_1.TaxRegime),
-    presumptiveScheme: zod_1.z.nativeEnum(itr_returns_1.PresumptiveScheme).optional(),
-    presumptiveRate: zod_1.z.string().optional(),
-    eligibleDeductions: zod_1.z.record(zod_1.z.unknown()).optional(),
-    tdsApplicable: zod_1.z.boolean().optional(),
-    advanceTaxApplicable: zod_1.z.boolean().optional(),
-    regimeOptOutDate: zod_1.z.string().optional(),
-    regimeLockinUntil: zod_1.z.string().optional(),
+export const UpdateITRConfigInputSchema = z.object({
+    taxRegime: z.nativeEnum(TaxRegime),
+    presumptiveScheme: z.nativeEnum(PresumptiveScheme).optional(),
+    presumptiveRate: z.string().optional(),
+    eligibleDeductions: z.record(z.unknown()).optional(),
+    tdsApplicable: z.boolean().optional(),
+    advanceTaxApplicable: z.boolean().optional(),
+    regimeOptOutDate: z.string().optional(),
+    regimeLockinUntil: z.string().optional(),
 });
 // ============================================================================
 // Output Types
 // ============================================================================
-exports.DeductionConfigSchema = zod_1.z.object({
-    section80C: zod_1.z.boolean().default(false),
-    section80D: zod_1.z.boolean().default(false),
-    section80E: zod_1.z.boolean().default(false),
-    section80G: zod_1.z.boolean().default(false),
-    section80TTA: zod_1.z.boolean().default(false),
-    section80TTB: zod_1.z.boolean().default(false),
-    section80CCD: zod_1.z.boolean().default(false),
-    other: zod_1.z.array(zod_1.z.string()).default([]),
+export const DeductionConfigSchema = z.object({
+    section80C: z.boolean().default(false),
+    section80D: z.boolean().default(false),
+    section80E: z.boolean().default(false),
+    section80G: z.boolean().default(false),
+    section80TTA: z.boolean().default(false),
+    section80TTB: z.boolean().default(false),
+    section80CCD: z.boolean().default(false),
+    other: z.array(z.string()).default([]),
 });
-exports.ITRConfigSchema = zod_1.z.object({
-    id: zod_1.z.string().uuid(),
-    tenantId: zod_1.z.string().uuid(),
-    taxRegime: zod_1.z.nativeEnum(itr_returns_1.TaxRegime),
-    presumptiveScheme: zod_1.z.nativeEnum(itr_returns_1.PresumptiveScheme),
-    presumptiveRate: zod_1.z.string(),
-    eligibleDeductions: zod_1.z.record(zod_1.z.unknown()),
-    tdsApplicable: zod_1.z.string(),
-    advanceTaxApplicable: zod_1.z.string(),
-    regimeOptOutDate: zod_1.z.string().nullable(),
-    regimeLockinUntil: zod_1.z.string().nullable(),
-    createdAt: zod_1.z.date(),
-    updatedAt: zod_1.z.date(),
+export const ITRConfigSchema = z.object({
+    id: z.string().uuid(),
+    tenantId: z.string().uuid(),
+    taxRegime: z.nativeEnum(TaxRegime),
+    presumptiveScheme: z.nativeEnum(PresumptiveScheme),
+    presumptiveRate: z.string(),
+    eligibleDeductions: z.record(z.unknown()),
+    tdsApplicable: z.string(),
+    advanceTaxApplicable: z.string(),
+    regimeOptOutDate: z.string().nullable(),
+    regimeLockinUntil: z.string().nullable(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
 });
 // ============================================================================
 // Helper Types
 // ============================================================================
-exports.PresumptiveRateConfigSchema = zod_1.z.object({
-    scheme: zod_1.z.nativeEnum(itr_returns_1.PresumptiveScheme),
-    rate: zod_1.z.string(),
-    applicableFrom: zod_1.z.string(),
+export const PresumptiveRateConfigSchema = z.object({
+    scheme: z.nativeEnum(PresumptiveScheme),
+    rate: z.string(),
+    applicableFrom: z.string(),
 });
 // ============================================================================
 // Event Payloads
 // ============================================================================
-exports.ITRConfigUpdatedPayloadSchema = zod_1.z.object({
-    configId: zod_1.z.string().uuid(),
-    tenantId: zod_1.z.string().uuid(),
-    taxRegime: zod_1.z.nativeEnum(itr_returns_1.TaxRegime),
-    presumptiveScheme: zod_1.z.nativeEnum(itr_returns_1.PresumptiveScheme),
-    updatedAt: zod_1.z.date(),
+export const ITRConfigUpdatedPayloadSchema = z.object({
+    configId: z.string().uuid(),
+    tenantId: z.string().uuid(),
+    taxRegime: z.nativeEnum(TaxRegime),
+    presumptiveScheme: z.nativeEnum(PresumptiveScheme),
+    updatedAt: z.date(),
 });
 //# sourceMappingURL=itr-config.js.map

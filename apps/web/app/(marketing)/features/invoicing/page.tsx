@@ -1,101 +1,116 @@
-// @ts-nocheck
 'use client';
 
-import { useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
-import { SectionLabel } from '@/components/marketing/section-label';
+import { formatIndianNumber } from '@/lib/format';
 
 export default function InvoicingPage() {
-  const heroRef = useRef(null);
-  useEffect(() => {
-    const el = heroRef.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }, { threshold: 0.1 });
-    obs.observe(el); return () => obs.disconnect();
-  }, []);
-
   return (
-    <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="bg-page-bg text-on-surface antialiased min-h-screen">
       <MarketingNav />
-      <main id="main-content">
-        <section ref={heroRef} className="animate-in py-24 md:py-32">
-          <div className="marketing-container max-w-3xl">
-            <SectionLabel>Invoicing</SectionLabel>
-            <h1 className="font-display text-[36px] md:text-[48px] font-normal text-dark leading-[1.15] mb-6">
-              Invoices that post to your books automatically. No double entry.
+      <main className="pt-32 pb-24">
+        {/* Hero */}
+        <header className="pt-space-128 pb-space-96 px-8 max-w-[1320px] mx-auto overflow-hidden">
+          <div className="max-w-[800px] text-left">
+            <span className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest block mb-6 font-bold">Automated Invoicing</span>
+            <h1 className="font-marketing-hero text-marketing-hero text-on-surface mb-8 leading-tight">
+              Invoices that post to your books automatically. <span className="italic text-amber-text">No double entry.</span>
             </h1>
+            <p className="font-ui-lg text-ui-lg text-text-mid max-w-[600px] mb-12 leading-relaxed">Every invoice created is instantly reconciled against your GST ledger and bank statements. Precision at the point of transaction.</p>
+            <div className="flex flex-wrap gap-4">
+              <Link href="/signup" className="bg-primary-container text-white px-8 py-4 font-ui-md font-bold group flex items-center no-underline rounded-sm shadow-sm uppercase tracking-widest text-sm">
+                Get Started <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+            </div>
           </div>
-        </section>
-
-        <section className="py-16 border-t border-border">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-8">How it flows</h2>
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              {['Invoice Created', 'JE Auto-generated', 'Receivables Updated', 'GST Liability Updated'].map((step, i) => (
-                <div key={step} className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-amber/10 text-amber flex items-center justify-center font-ui text-[13px] font-medium">{i + 1}</div>
-                  <span className="font-ui text-[13px] text-dark">{step}</span>
-                  {i < 3 && <svg className="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>}
+          {/* Flow Diagram */}
+          <div className="mt-space-96 relative p-12 bg-white border border-border-subtle shadow-sm text-center">
+            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-6 relative z-10">
+              {[
+                { icon: "description", title: "Invoice Created", desc: "GST, HSN & PAN verified" },
+                { icon: "sync", title: "JE Auto-generated", desc: "Double-entry posted" },
+                { icon: "account_balance_wallet", title: "Receivables Updated", desc: "Customer ledger live" },
+                { icon: "gavel", title: "GST Liability Updated", desc: "GSTR-1 ready" },
+              ].map((s, i) => (
+                <div key={s.title} className="text-center p-6 border border-dashed border-border-subtle bg-page-bg rounded-sm">
+                  <Icon name={s.icon} className="text-4xl text-primary-container mb-3 block" />
+                  <h3 className="font-ui-sm font-bold text-on-surface mb-1">{s.title}</h3>
+                  <p className="font-ui-xs text-xs text-text-mid">{s.desc}</p>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </header>
 
-        <section className="py-16">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-8">Invoice preview</h2>
-            <div className="rounded-xl shadow-card overflow-hidden border border-border bg-surface p-8">
-              <div className="border-b border-border pb-4 mb-4 flex justify-between">
+        {/* Invoice Preview */}
+        <section className="py-space-128 bg-section-muted">
+          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="text-left">
+              <span className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest block mb-4 font-bold">Precision Compliance</span>
+              <h2 className="font-display-xl text-display-xl text-on-surface mb-6">Built for the Indian Fiscal Code</h2>
+              <p className="font-ui-md text-ui-md text-text-mid mb-8 leading-relaxed">ComplianceOS understands local complexities. From Rule 46 requirements to automatic CGST/SGST/IGST splitting based on place of supply.</p>
+              <ul className="space-y-4">
+                {[
+                  { title: "E-Invoicing Ready", desc: "One-click IRN and QR code generation for GST compliance." },
+                  { title: "HSN/SAC Validation", desc: "Built-in HSN code validation ensures correct tax rates." },
+                  { title: "Invoice Sequencing", desc: "Gapless invoice numbering enforced per fiscal year." },
+                ].map((item) => (
+                  <li key={item.title} className="flex items-start gap-4">
+                    <Icon name="check_circle" className="text-amber-text" />
+                    <div>
+                      <p className="font-ui-sm font-bold text-on-surface">{item.title}</p>
+                      <p className="font-ui-xs text-xs text-text-mid">{item.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm rounded-sm">
+              <div className="border-b border-border-subtle pb-4 mb-4 flex justify-between">
                 <div>
-                  <div className="font-display text-[20px] mb-1">Mehta Textiles Pvt. Ltd.</div>
-                  <div className="font-ui text-[11px] text-light">GSTIN: 27AABCU1234D1Z5</div>
+                  <div className="font-display-lg text-lg font-bold mb-1">Mehta Textiles</div>
+                  <div className="font-ui text-xs text-text-light">GSTIN: 27AABCU1234D1Z5</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-ui text-[11px] text-light">Invoice # INV-2026-001</div>
-                  <div className="font-mono text-[11px] text-light">01 Apr 2026</div>
+                  <div className="font-ui text-xs text-text-light font-bold uppercase tracking-wider">Invoice #</div>
+                  <div className="font-mono text-sm">INV-2026-001</div>
                 </div>
               </div>
-              <table className="w-full font-mono text-[12px]">
-                <thead><tr className="text-light border-b border-border"><th className="text-left pb-2 font-normal">Item</th><th className="text-right pb-2 font-normal">HSN</th><th className="text-right pb-2 font-normal">Qty</th><th className="text-right pb-2 font-normal">Rate</th><th className="text-right pb-2 font-normal">GST</th><th className="text-right pb-2 font-normal">Amount</th></tr></thead>
+              <table className="w-full font-mono text-sm">
+                <thead><tr className="text-text-light border-b border-border-subtle"><th className="text-left pb-2 font-bold text-[10px] uppercase tracking-widest font-ui">Item</th><th className="text-right pb-2 font-ui text-[10px] uppercase font-bold">HSN</th><th className="text-right pb-2 font-ui text-[10px] uppercase font-bold">Amount</th></tr></thead>
                 <tbody>
-                  <tr className="border-b border-border"><td className="py-3">Cotton fabric — premium</td><td className="text-right">5208</td><td className="text-right">100</td><td className="text-right">₹250</td><td className="text-right">5%</td><td className="text-right">₹26,250</td></tr>
-                  <tr><td className="py-3">Silk thread — bulk</td><td className="text-right">5007</td><td className="text-right">50</td><td className="text-right">₹180</td><td className="text-right">12%</td><td className="text-right">₹10,080</td></tr>
+                  <tr className="border-b border-border-subtle"><td className="py-3">Cotton fabric premium</td><td className="text-right text-text-mid">5208</td><td className="text-right font-bold">₹26,250</td></tr>
+                  <tr><td className="py-3">Silk thread bulk</td><td className="text-right text-text-mid">5007</td><td className="text-right font-bold">₹10,080</td></tr>
                 </tbody>
               </table>
-              <div className="text-right mt-4 pt-4 border-t border-border">
-                <div className="font-ui text-[11px] text-light">CGST: ₹900 · SGST: ₹900</div>
-                <div className="font-mono text-[18px] text-amber font-medium">₹37,230</div>
+              <div className="text-right mt-4 pt-4 border-t border-border-subtle">
+                <div className="font-ui text-xs text-text-light mb-1">CGST: ₹900 · SGST: ₹900</div>
+                <div className="font-mono text-lg text-primary-container font-bold">₹37,230</div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-16 bg-section-muted">
-          <div className="marketing-container max-w-3xl">
-            <h2 className="font-display text-display-lg text-dark mb-4">OCR Scan</h2>
-            <div className="rounded-xl shadow-card overflow-hidden border border-border bg-surface p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-section-muted rounded-lg p-6 flex items-center justify-center min-h-[160px] border-2 border-dashed border-border">
-                  <span className="font-ui text-ui-xs text-light">Uploaded vendor invoice</span>
-                </div>
-                <div>
-                  <div className="font-ui text-ui-xs text-light uppercase tracking-wider mb-3">Extracted</div>
-                  {['Vendor: Sharma Fabrics', 'Invoice #: SF-2026-089', 'Date: 15 Mar 2026', 'Amount: ₹36,330'].map((f) => (
-                    <div key={f} className="font-mono text-[12px] text-dark py-1 border-b border-border">{f}</div>
-                  ))}
-                </div>
-              </div>
+        {/* OCR Section */}
+        <section className="py-space-128">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <div className="text-center max-w-[700px] mx-auto mb-16">
+              <span className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest block mb-4 font-bold">Input Intelligence</span>
+              <h2 className="font-display-xl text-display-xl text-on-surface mb-6">Snap a vendor bill, we do the rest</h2>
+              <p className="font-ui-md text-ui-md text-text-mid leading-relaxed">Our proprietary OCR engine is trained on Indian invoice formats. It extracts PAN, GSTIN, and line items with high accuracy, mapping them to your expense accounts automatically.</p>
             </div>
-            <p className="font-ui text-[13px] text-light mt-2">Scan a vendor bill. Fix what the OCR got wrong. Post it.</p>
           </div>
         </section>
 
-        <section className="py-16 text-center">
-          <div className="marketing-container">
-            <Link href="/signup" className="marketing-btn-primary text-[16px] px-7 py-3.5 no-underline">
-              Start with invoicing <span className="cta-arrow">→</span>
+        {/* CTA */}
+        <section className="py-space-96 px-8 text-center bg-section-amber">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="font-marketing-xl text-marketing-xl text-on-surface mb-6">Start invoicing the right way.</h2>
+            <p className="font-ui-md text-ui-md text-text-mid mb-10">GST-compliant, automatically posted, and ready to send in one click.</p>
+            <Link href="/signup" className="bg-primary-container text-white px-10 py-5 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+              Start Free <span>→</span>
             </Link>
           </div>
         </section>

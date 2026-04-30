@@ -1,181 +1,107 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
-import { Badge, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui";
+import { Icon } from '@/components/ui/icon';
+import Link from "next/link";
 
-const statusLabels: Record<string, string> = {
-  open: "Open",
-  closed: "Closed",
-  pending_close: "Pending Close",
-};
+const fiscalYears = [
+  { id: "1", name: "FY 2024-25", period: "01 Apr 2024 - 31 Mar 2025", status: "open", entries: 12483, lastActivity: "24 Oct 2024" },
+  { id: "2", name: "FY 2023-24", period: "01 Apr 2023 - 31 Mar 2024", status: "closed", entries: 45120, lastActivity: "15 Apr 2024" },
+  { id: "3", name: "FY 2022-23", period: "01 Apr 2022 - 31 Mar 2023", status: "archived", entries: 38902, lastActivity: "10 Apr 2023" },
+];
 
 export default function FiscalYearsPage() {
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showCloseModal, setShowCloseModal] = useState(false);
-  const [fyToClose, setFyToClose] = useState<{ id: string; year: string } | null>(null);
-  const [newFY, setNewFY] = useState({ year: "", startDate: "", endDate: "" });
-
-  const { data: fiscalYears, refetch } = api.fiscalYears.list.useQuery();
-  const createFY = api.fiscalYears.create.useMutation({ onSuccess: () => { setShowCreateModal(false); refetch(); } });
-  const closeFY = api.fiscalYears.close.useMutation({ onSuccess: () => { setShowCloseModal(false); refetch(); } });
-
-  const handleCreate = async () => {
-    if (newFY.year && newFY.startDate && newFY.endDate) {
-      await createFY.mutateAsync(newFY);
-    }
-  };
-
-  const handleClose = async () => {
-    if (fyToClose) {
-      try {
-        await closeFY.mutateAsync({ id: fyToClose.id });
-      } catch (err: any) {
-        alert(err.message);
-      }
-    }
-  };
-
-  const hasDrafts = (fy: any) => fy.draftCount > 0;
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Fiscal Years</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Manage financial year periods</p>
+    <div className="space-y-10 text-left">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+        <div className="text-left">
+          <span className="font-ui-xs text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-4 block">Settings / Fiscal Years</span>
+          <h2 className="font-display-xl text-display-xl text-on-surface mb-2">Fiscal Years</h2>
+          <p className="font-ui-md text-ui-md text-text-mid max-w-2xl leading-relaxed">Manage accounting periods, statutory boundaries, and ledger lifecycle constraints for your organization.</p>
         </div>
-        <button onClick={() => setShowCreateModal(true)} className="filter-tab active">
-          + New FY
-        </button>
+        <div className="flex gap-3 shrink-0">
+          <button className="px-6 py-2.5 border border-stone-300 text-stone-700 font-ui-sm text-sm hover:bg-stone-50 transition-colors cursor-pointer bg-white rounded-sm">
+            Close FY
+          </button>
+          <button className="px-6 py-2.5 bg-primary-container text-white font-ui-sm text-sm hover:bg-primary transition-colors flex items-center gap-2 group border-none cursor-pointer rounded-sm shadow-sm font-bold uppercase tracking-widest">
+            Create FY <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
+          </button>
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">FY</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Start</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">End</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Entries</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Drafts</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fiscalYears?.map((fy: any) => (
-              <tr key={fy.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                <td className="px-4 py-3 font-display text-[14px] font-medium text-dark">{fy.year}</td>
-                <td className="px-4 py-3 font-mono text-[13px] text-light">{fy.startDate}</td>
-                <td className="px-4 py-3 font-mono text-[13px] text-light">{fy.endDate}</td>
-                <td className="px-4 py-3">
-                  <Badge variant={fy.status === "open" ? "success" : fy.status === "pending_close" ? "amber" : "gray"}>
-                    {statusLabels[fy.status]}
-                  </Badge>
-                </td>
-                <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{fy.entryCount || 0}</td>
-                <td className="px-4 py-3 font-mono text-[13px] text-right">
-                  {hasDrafts(fy) ? (
-                    <span className="text-amber font-medium">{fy.draftCount}</span>
-                  ) : (
-                    <span className="text-light">0</span>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  {fy.status === "open" && (
-                    <>
-                      {hasDrafts(fy) ? (
-                        <span className="font-ui text-[11px] text-light">Has drafts</span>
-                      ) : (
-                        <button onClick={() => { setFyToClose({ id: fy.id, year: fy.year }); setShowCloseModal(true); }} className="font-ui text-[12px] text-amber hover:underline">
-                          Close FY
-                        </button>
-                      )}
-                    </>
-                  )}
-                  {fy.status === "closed" && (
-                    <button className="font-ui text-[12px] text-light hover:underline">Reopen</button>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {(!fiscalYears || fiscalYears.length === 0) && (
-              <tr>
-                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                  No fiscal years configured
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {fiscalYears && fiscalYears.filter((fy: any) => fy.status === "open").length >= 2 && (
-        <div className="card p-4 bg-amber/5 border-l-4 border-l-amber">
-          <p className="font-ui text-[12px] text-amber">
-            <strong>Note:</strong> You have {fiscalYears.filter((fy: any) => fy.status === "open").length} open fiscal years. Maximum 2 open FYs allowed.
-          </p>
-        </div>
-      )}
-
-      {/* Create Modal */}
-      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Create Fiscal Year</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="flex flex-col gap-1">
-              <label className="font-ui text-[10px] uppercase tracking-wide text-light">FY Name</label>
-              <input
-                type="text"
-                value={newFY.year}
-                onChange={(e) => setNewFY({ ...newFY, year: e.target.value })}
-                className="input-field font-ui"
-                placeholder="2027-28"
-              />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Main Table */}
+        <div className="lg:col-span-8 space-y-6">
+          <div className="bg-white border-stone-200 border-[0.5px] rounded-sm overflow-hidden shadow-sm relative">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+            <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50/50">
+              <div>
+                <h3 className="font-ui-lg text-lg font-bold text-on-surface">Ledger Periods</h3>
+                <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mt-1">Indian Financial Calendar</p>
+              </div>
+              <button className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
+                <Icon name="filter_list" />
+              </button>
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-ui text-[10px] uppercase tracking-wide text-light">Start Date</label>
-              <input
-                type="date"
-                value={newFY.startDate}
-                onChange={(e) => setNewFY({ ...newFY, startDate: e.target.value })}
-                className="input-field font-ui"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-ui text-[10px] uppercase tracking-wide text-light">End Date</label>
-              <input
-                type="date"
-                value={newFY.endDate}
-                onChange={(e) => setNewFY({ ...newFY, endDate: e.target.value })}
-                className="input-field font-ui"
-              />
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-stone-50 border-b border-stone-100 text-text-light font-ui-xs text-[10px] uppercase tracking-widest">
+                    <th className="py-4 px-6">Financial Year</th>
+                    <th className="py-4 px-6">Reporting Period</th>
+                    <th className="py-4 px-6">Status</th>
+                    <th className="py-4 px-6 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-50 font-ui-sm">
+                  {fiscalYears.map((fy) => (
+                    <tr key={fy.id} className="hover:bg-stone-50/30 transition-colors">
+                      <td className="py-5 px-6">
+                        <Link href={`/settings/fiscal-years/${fy.id}`} className="font-bold text-on-surface hover:text-primary no-underline transition-colors">{fy.name}</Link>
+                        <p className="text-[10px] text-text-light mt-0.5">{fy.entries.toLocaleString()} Entries</p>
+                      </td>
+                      <td className="py-5 px-6 font-mono text-[12px] text-text-mid">{fy.period}</td>
+                      <td className="py-5 px-6">
+                        <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-widest border rounded-sm ${
+                          fy.status === 'open' ? 'bg-green-50 text-green-700 border-green-200' :
+                          fy.status === 'closed' ? 'bg-stone-100 text-stone-600 border-stone-200' :
+                          'bg-stone-50 text-stone-400 border-stone-100'
+                        }`}>
+                          {fy.status}
+                        </span>
+                      </td>
+                      <td className="py-5 px-6 text-right">
+                        <Link href={`/settings/fiscal-years/${fy.id}`} className="text-primary-container hover:text-primary font-bold uppercase text-[10px] tracking-widest no-underline">View Details</Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-          <DialogFooter>
-            <button onClick={() => setShowCreateModal(false)} className="filter-tab">Cancel</button>
-            <button onClick={handleCreate} className="filter-tab active">Create</button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
 
-      {/* Close Modal */}
-      <Dialog open={showCloseModal} onOpenChange={setShowCloseModal}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Close Fiscal Year</DialogTitle></DialogHeader>
-          <p className="font-ui text-[13px] text-light py-4">
-            Are you sure you want to close <span className="font-mono text-dark">{fyToClose?.year}</span>? This action cannot be undone.
-          </p>
-          <DialogFooter>
-            <button onClick={() => setShowCloseModal(false)} className="filter-tab">Cancel</button>
-            <button onClick={handleClose} className="filter-tab bg-danger text-white hover:bg-danger/90">Close FY</button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        {/* Sidebar Info */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-stone-900 text-white p-8 shadow-sm relative overflow-hidden group">
+            <div className="relative z-10 text-left">
+              <h4 className="text-amber-500 font-ui-lg text-lg font-bold mb-3">Statutory Lock</h4>
+              <p className="text-stone-400 text-sm leading-relaxed mb-6">Current policy prevents modifications to any closed fiscal periods. This ensures 100% data integrity for historical audit trails.</p>
+              <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-amber-500/80">
+                <Icon name="verified_user" className="text-sm" />
+                Policy Enforced
+              </div>
+            </div>
+            <Icon name="lock" className="absolute -right-8 -bottom-8 text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform" />
+          </div>
+
+          <div className="bg-amber-50 border border-amber/30 p-8 shadow-sm text-left">
+            <h4 className="font-ui-md font-bold text-on-surface mb-4 uppercase tracking-widest text-[10px]">Data Retention</h4>
+            <p className="text-ui-sm text-sm text-text-mid leading-relaxed">ComplianceOS retains ledger data for up to 8 years as per IT Act requirements. Archived years can be exported as read-only CSV at any time.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

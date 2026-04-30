@@ -1596,14 +1596,14 @@ export declare const fiscalYears: import("drizzle-orm/pg-core").PgTableWithColum
             tableName: "fiscal_years";
             dataType: "string";
             columnType: "PgEnumColumn";
-            data: "open" | "closed";
+            data: "open" | "pending_close" | "closed";
             driverParam: string;
             notNull: true;
             hasDefault: true;
             isPrimaryKey: false;
             isAutoincrement: false;
             hasRuntimeDefault: false;
-            enumValues: ["open", "closed"];
+            enumValues: ["open", "pending_close", "closed"];
             baseColumn: never;
             identity: undefined;
             generated: undefined;
@@ -15049,5 +15049,5 @@ export declare const jeStatusEnum: import("drizzle-orm/pg-core").PgEnum<["draft"
 export declare const aggregateTypeEnum: import("drizzle-orm/pg-core").PgEnum<["journal_entry", "account", "fiscal_year", "invoice", "credit_note", "payment", "payroll_run", "salary_structure", "employee_advance", "gst_challan", "gst_payment", "gst_return", "itr_return"]>;
 export declare const eventTypeEnum: import("drizzle-orm/pg-core").PgEnum<["journal_entry_created", "journal_entry_modified", "journal_entry_deleted", "journal_entry_posted", "journal_entry_voided", "journal_entry_reversed", "account_created", "account_modified", "account_deactivated", "fiscal_year_created", "fiscal_year_closed", "narration_corrected", "invoice_created", "invoice_modified", "invoice_deleted", "invoice_posted", "invoice_voided", "invoice_sent", "credit_note_created", "credit_note_modified", "credit_note_issued", "credit_note_voided", "payment_recorded", "payment_voided", "employee_created", "employee_updated", "employee_deactivated", "salary_structure_created", "salary_structure_updated", "payroll_processed", "payroll_finalized", "payroll_voided", "payslip_generated", "advance_given", "advance_recovered", "gst_challan_created", "gst_payment_made", "itc_reconciled", "itc_utilized", "purchase_posted", "purchase_voided", "itc_reversed", "gst_refund_claimed", "gstr3b_generated", "income_computed", "tax_computed", "itr_generated"]>;
 export declare const cashFlowCategoryEnum: import("drizzle-orm/pg-core").PgEnum<["operating", "investing", "financing"]>;
-export declare const fyStatusEnum: import("drizzle-orm/pg-core").PgEnum<["open", "closed"]>;
+export declare const fyStatusEnum: import("drizzle-orm/pg-core").PgEnum<["open", "pending_close", "closed"]>;
 //# sourceMappingURL=index.d.ts.map

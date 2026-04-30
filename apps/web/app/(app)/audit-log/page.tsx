@@ -1,131 +1,133 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { formatIndianNumber } from "@/lib/format";
 
 interface AuditEntry {
   id: string;
   action: string;
-  entityType: string;
-  entityId: string;
+  module: string;
   performedBy: string;
+  role: string;
   performedAt: string;
   details: string;
+  ip: string;
 }
 
-async function fetchAuditLog(page = 1, pageSize = 50): Promise<{ entries: AuditEntry[]; total: number }> {
-  const response = await fetch(`/api/trpc/auditLog.list?input=${encodeURIComponent(JSON.stringify({ page, pageSize }))}`);
-  if (!response.ok) return { entries: [], total: 0 };
-  const json = await response.json();
-  return json.result?.data ?? { entries: [], total: 0 };
-}
-
-const actionColors: Record<string, string> = {
-  create: "text-success",
-  update: "text-amber",
-  delete: "text-error",
-  post: "text-blue-600",
-  void: "text-error",
-  export: "text-mid",
-  login: "text-mid",
-  logout: "text-mid",
-};
+const mockEntries: AuditEntry[] = [
+  { id: "1", action: "Update", module: "General Ledger", performedBy: "A. Sharma", role: "Senior Partner", performedAt: "2023-10-27 14:32:01", details: "Modified journal entry #JV-2023-1045 - Changed credit account from 4010 to 4015", ip: "192.168.1.45" },
+  { id: "2", action: "Generate", module: "TDS Compliance", performedBy: "System", role: "Automated Task", performedAt: "2023-10-27 13:15:22", details: "Auto-generated Form 16A batch for Q2 FY23-24 (Vendors)", ip: "Localhost" },
+  { id: "3", action: "Delete", module: "Vouchers", performedBy: "R. Desai", role: "Audit Clerk", performedAt: "2023-10-27 11:05:40", details: "Deleted draft payment voucher #PV-8892 (Duplicate entry)", ip: "10.0.0.12" },
+  { id: "4", action: "Login", module: "User Access", performedBy: "K. Mehta", role: "Admin", performedAt: "2023-10-27 09:30:11", details: "Successful authentication via 2FA", ip: "115.240.10.22" },
+  { id: "5", action: "Post", module: "GST Liability", performedBy: "A. Sharma", role: "Senior Partner", performedAt: "2023-10-26 18:45:00", details: "Finalized GSTR-3B return data for September 2023", ip: "192.168.1.45" },
+];
 
 export default function AuditLogPage() {
-  const [entries, setEntries] = useState<AuditEntry[]>([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [filterAction, setFilterAction] = useState<string>("all");
-  const [filterEntity, setFilterEntity] = useState<string>("all");
-
-  useEffect(() => {
-    setLoading(true);
-    fetchAuditLog(page)
-      .then((data) => setEntries(data.entries))
-      .finally(() => setLoading(false));
-  }, [page]);
-
-  const filtered = filterAction === "all" && filterEntity === "all"
-    ? entries
-    : entries.filter(e =>
-        (filterAction === "all" || e.action === filterAction) &&
-        (filterEntity === "all" || e.entityType === filterEntity)
-      );
-
-  const uniqueActions = [...new Set(entries.map(e => e.action))].sort();
-  const uniqueEntities = [...new Set(entries.map(e => e.entityType))].sort();
+  const [filterAction, setFilterAction] = useState("all");
+  const [filterModule, setFilterModule] = useState("all");
+  const [search, setSearch] = useState("");
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 text-left">
+      {/* Header */}
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Audit Log</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Track all changes and actions across the system</p>
+          <h1 className="font-display-xl text-display-xl text-stone-900">System Audit Log</h1>
+          <p className="font-ui-sm text-text-mid mt-1">Immutable record of all postings, modifications, and access events.</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="bg-section-muted border border-border-subtle px-4 py-2 flex items-center gap-2 hover:bg-stone-200 transition-colors cursor-pointer">
+            <Icon name="download" className="text-sm" />
+            <span className="font-ui-xs uppercase tracking-wider">Export CSV</span>
+          </button>
         </div>
       </div>
 
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Action</label>
-          <select value={filterAction} onChange={(e) => setFilterAction(e.target.value)} className="input-field font-ui">
-            <option value="all">All Actions</option>
-            {uniqueActions.map(a => <option key={a} value={a}>{a}</option>)}
-          </select>
+      {/* Filter Bar */}
+      <div className="bg-white border border-border-subtle p-4 mb-8 flex flex-wrap items-center gap-4 shadow-sm">
+        <div className="flex-1 min-w-[200px] relative">
+          <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-mid text-sm" />
+          <input 
+            className="w-full pl-9 pr-3 py-2 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm font-mono outline-none focus:border-primary-container" 
+            placeholder="Search description or IP..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Entity</label>
-          <select value={filterEntity} onChange={(e) => setFilterEntity(e.target.value)} className="input-field font-ui">
-            <option value="all">All Entities</option>
-            {uniqueEntities.map(e => <option key={e} value={e}>{e}</option>)}
+        <div className="flex gap-4 flex-wrap">
+          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm text-text-mid focus:border-primary-container outline-none">
+            <option>All Modules</option>
+            <option>General Ledger</option>
+            <option>Vouchers</option>
+            <option>User Access</option>
           </select>
+          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm text-text-mid focus:border-primary-container outline-none">
+            <option>All Actions</option>
+            <option>CREATE</option>
+            <option>UPDATE</option>
+            <option>DELETE</option>
+            <option>LOGIN</option>
+          </select>
+          <button className="px-4 py-2 bg-section-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-stone-200 transition-colors flex items-center gap-2 border border-border-subtle cursor-pointer">
+            <Icon name="filter_list" className="text-sm" /> More Filters
+          </button>
         </div>
       </div>
 
-      {loading ? (
-        <div className="text-center py-12 font-ui text-light">Loading...</div>
-      ) : (
-        <div className="card overflow-hidden">
-          <table className="table table-dense">
-            <thead>
-              <tr>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date/Time</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Action</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Entity</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Performed By</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Details</th>
+      {/* Data Table */}
+      <div className="overflow-x-auto border border-border-subtle bg-white shadow-sm">
+        <table className="w-full text-left border-collapse whitespace-nowrap">
+          <thead>
+            <tr className="bg-section-muted border-b border-border-subtle">
+              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">Timestamp (IST)</th>
+              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">User / Role</th>
+              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">Module</th>
+              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">Action</th>
+              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid w-full">Description</th>
+              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid text-right">IP Address</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border-subtle">
+            {mockEntries.map((entry) => (
+              <tr key={entry.id} className="hover:bg-stone-50 transition-colors group">
+                <td className="py-4 px-6 font-mono text-[12px] text-text-mid">{entry.performedAt}</td>
+                <td className="py-4 px-6">
+                  <div className="font-ui-sm font-bold text-on-surface">{entry.performedBy}</div>
+                  <div className="font-ui-xs text-[10px] text-text-light uppercase">{entry.role}</div>
+                </td>
+                <td className="py-4 px-6 font-ui-sm text-text-mid">{entry.module}</td>
+                <td className="py-4 px-6">
+                  <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-border-subtle rounded-sm ${
+                    entry.action === 'Delete' ? 'bg-red-50 text-red-800 border-red-100' :
+                    entry.action === 'Generate' ? 'bg-green-50 text-green-800 border-green-100' :
+                    entry.action === 'Login' ? 'bg-blue-50 text-blue-800 border-blue-100' :
+                    'bg-section-muted text-on-surface'
+                  }`}>
+                    {entry.action}
+                  </span>
+                </td>
+                <td className="py-4 px-6 font-ui-sm text-on-surface max-w-[300px] truncate" title={entry.details}>
+                  {entry.details}
+                </td>
+                <td className="py-4 px-6 font-mono text-[12px] text-text-mid text-right">{entry.ip}</td>
               </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center font-ui text-[13px] text-light">No audit entries found</td>
-                </tr>
-              ) : (
-                filtered.map((entry) => (
-                  <tr key={entry.id} className="border-b border-hairline hover:bg-surface-muted">
-                    <td className="font-mono text-[13px] text-light px-4 py-3 whitespace-nowrap">{new Date(entry.performedAt).toLocaleString()}</td>
-                    <td className="px-4 py-3">
-                      <span className={`font-ui text-[11px] px-2 py-0.5 rounded bg-surface-muted ${actionColors[entry.action] || "text-mid"} capitalize`}>
-                        {entry.action}
-                      </span>
-                    </td>
-                    <td className="font-ui text-[13px] text-mid px-4 py-3 capitalize">{entry.entityType}</td>
-                    <td className="font-ui text-[13px] text-dark px-4 py-3">{entry.performedBy}</td>
-                    <td className="font-ui text-[13px] text-mid px-4 py-3 max-w-xs truncate">{entry.details}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <div className="flex justify-center gap-2">
-        <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="filter-tab">Previous</button>
-        <span className="font-ui text-[13px] text-light self-center">Page {page}</span>
-        <button onClick={() => setPage(p => p + 1)} className="filter-tab">Next</button>
+      {/* Pagination */}
+      <div className="mt-6 flex items-center justify-between">
+        <p className="font-ui-xs text-text-mid">Showing 1 to 5 of 1,248 entries</p>
+        <div className="flex gap-1">
+          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white disabled:opacity-50 cursor-pointer"><Icon name="chevron_left" className="text-sm" /></button>
+          <button className="px-3 py-1 bg-white border border-border-subtle rounded font-mono text-sm">1</button>
+          <button className="px-3 py-1 border border-transparent hover:border-border-subtle rounded font-mono text-sm text-text-mid cursor-pointer">2</button>
+          <button className="px-3 py-1 border border-transparent hover:border-border-subtle rounded font-mono text-sm text-text-mid cursor-pointer">3</button>
+          <span className="px-2 py-1 text-text-mid">...</span>
+          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white cursor-pointer"><Icon name="chevron_right" className="text-sm" /></button>
+        </div>
       </div>
     </div>
   );

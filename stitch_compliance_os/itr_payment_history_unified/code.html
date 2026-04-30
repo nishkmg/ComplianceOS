@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ITR Payment History - Fiscal Ledger</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Syne:wght@400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;family=Noto+Serif:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FAFAF8;
+        }
+    </style>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "section-muted": "#F4F2EE",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f9ecde",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#3f2700",
+                    "border-subtle": "#E8E4DC",
+                    "on-tertiary-fixed-variant": "#004b70",
+                    "surface-container-low": "#fff1e4",
+                    "on-surface": "#211b13",
+                    "outline": "#847563",
+                    "surface-variant": "#ede0d3",
+                    "on-error-container": "#93000a",
+                    "secondary": "#5f5e5e",
+                    "surface-tint": "#825500",
+                    "tertiary-container": "#309bdb",
+                    "inverse-on-surface": "#fcefe1",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "tertiary-fixed": "#cae6ff",
+                    "primary": "#825500",
+                    "surface-dim": "#e5d8cb",
+                    "text-light": "#888888",
+                    "on-secondary-fixed-variant": "#474746",
+                    "on-primary-fixed-variant": "#633f00",
+                    "amber-text": "#B47500",
+                    "on-error": "#ffffff",
+                    "on-background": "#211b13",
+                    "on-secondary-container": "#636262",
+                    "background": "#fff8f4",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "tertiary": "#006494",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#8ecdff",
+                    "secondary-container": "#e2dfde",
+                    "surface-container-high": "#f3e6d9",
+                    "page-bg": "#FAFAF8",
+                    "surface-container-highest": "#ede0d3",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-primary-fixed": "#291800",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-tertiary-container": "#002f49",
+                    "primary-fixed": "#ffddb3",
+                    "primary-container": "#c8860a",
+                    "on-tertiary": "#ffffff",
+                    "section-dark": "#111111",
+                    "text-mid": "#555555",
+                    "on-primary": "#ffffff",
+                    "surface": "#fff8f4",
+                    "outline-variant": "#d6c4af",
+                    "surface-bright": "#fff8f4",
+                    "inverse-surface": "#362f27",
+                    "inverse-primary": "#ffb950",
+                    "section-amber": "rgba(200, 134, 10, 0.06)",
+                    "primary-fixed-dim": "#ffb950",
+                    "on-surface-variant": "#514535"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "space-128": "128px",
+                    "space-64": "64px",
+                    "space-48": "48px",
+                    "gutter-desktop": "24px",
+                    "gutter-wide": "32px",
+                    "space-96": "96px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "display-xl": ["Playfair Display"],
+                    "ui-lg": ["Syne"],
+                    "mono-md": ["DM Mono"],
+                    "ui-sm": ["Syne"],
+                    "display-lg": ["Playfair Display"],
+                    "marketing-xl": ["Playfair Display"],
+                    "marketing-hero": ["Playfair Display"],
+                    "ui-xs": ["Syne"],
+                    "ui-md": ["Syne"],
+                    "mono-lg": ["DM Mono"],
+                    "noto-serif": ["Noto Serif"]
+            },
+            "fontSize": {
+                "ui-md": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "ui-sm": ["13px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-page-bg text-on-surface font-ui-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<header class="bg-[#F9F8F6] dark:bg-slate-950/80 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC] dark:border-slate-800 flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-noto-serif antialiased">
+<div class="flex items-center gap-4 lg:ml-64">
+<span class="font-noto-serif font-bold text-lg tracking-tight text-[#1A1A1A] dark:text-slate-100 hidden md:inline">ComplianceOS</span>
+<div class="h-4 w-[0.5px] bg-border-subtle mx-2 hidden md:block"></div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-[#666666] dark:text-slate-400 hover:text-[#1A1A1A] dark:hover:text-white transition-colors text-sm" href="#">Dashboard</a>
+<a class="text-[#C8860A] border-b-2 border-[#C8860A] font-semibold text-sm h-14 flex items-center" href="#">ITR Payments</a>
+<a class="text-[#666666] dark:text-slate-400 hover:text-[#1A1A1A] dark:hover:text-white transition-colors text-sm" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low px-3 py-1.5 border border-border-subtle flex items-center gap-2">
+<span class="material-symbols-outlined text-[#666666] text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-ui-sm font-mono-md w-48" placeholder="Search entries..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white transition-colors p-2 cursor-pointer active:opacity-70" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white transition-colors p-2 cursor-pointer active:opacity-70" data-icon="help_outline">help_outline</button>
+<img alt="User avatar" class="h-8 w-8 rounded-full border border-border-subtle cursor-pointer active:opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_LyZVre3hECu6yTfD6qwQVXPVIx-hNE3wYg1NhX4ee6O4ShNQXYJM5FQsp9RoZUU5NT5ZukjR2O3uQ1khbieCHxqgt3euupJ4s6rSHw4pICGTtIoIZ3jaDWOkbnKR8hfuJz9iBYoOeoPffsUYLBOIx43yfrASD47uis6wiX4RzzUsSxhQJ90g7DlzlNGVVJhNxHvIqKMXajzJE5_MJjoczKPVfDhlYbwigVcqHlMaja2LjwxilHqB1gYPRs6OBjZ8ymBxsiHYDsY"/>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="bg-[#F9F8F6] dark:bg-slate-900 h-full w-64 fixed left-0 top-0 border-r-[0.5px] border-[#E8E4DC] dark:border-slate-800 flex flex-col py-4 gap-1 z-40 hidden lg:flex font-noto-serif text-[13px] tracking-tight transition-all ease-in-out">
+<div class="mb-6 px-6 mt-14">
+<h2 class="font-noto-serif font-black text-[#1A1A1A] dark:text-white text-lg">Core Engine</h2>
+<p class="text-xs text-[#666666] dark:text-slate-400 mt-1">Precision Accounting</p>
+</div>
+<nav class="flex-grow space-y-1 overflow-y-auto px-2">
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="menu_book">menu_book</span>
+<span>Journal</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="account_tree">account_tree</span>
+<span>CoA</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="gavel">gavel</span>
+<span>GST</span>
+</a>
+<a class="bg-white dark:bg-slate-800 text-[#1A1A1A] dark:text-white border-l-2 border-[#C8860A] font-semibold flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-lg text-[#C8860A]" data-icon="description">description</span>
+<span>ITR Filings</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="receipt_long">receipt_long</span>
+<span>Invoicing</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>Payments</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="group">group</span>
+<span>Payroll</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="insert_chart">insert_chart</span>
+<span>Reports</span>
+</a>
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2 pt-4 border-t-[0.5px] border-[#E8E4DC] dark:border-slate-800">
+<a class="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="contact_support">contact_support</span>
+<span>Support</span>
+</a>
+<a class="text-error hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="lg:ml-64 pt-20 pb-20 px-10 min-h-screen">
+<!-- Page Header -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-display-xl text-[42px] leading-tight text-stone-900 mb-2">ITR Payment History</h1>
+<p class="font-ui-sm text-text-mid max-w-xl">Comprehensive ledger of advanced tax and self-assessment challans deposited for the current assessment period.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-section-muted border border-border-subtle px-4 py-2 flex items-center gap-2 hover:bg-stone-200 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+<span class="font-ui-xs uppercase tracking-wider text-[11px] font-bold">Export Ledger</span>
+</button>
+<button class="bg-[#C8860A] text-white px-6 py-2 flex items-center gap-2 hover:bg-amber-700 transition-transform active:scale-95 group">
+<span class="font-ui-xs uppercase tracking-wider text-[11px] font-bold">New Deposit</span>
+<span class="transition-transform group-hover:translate-x-1">→</span>
+</button>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex items-center gap-4 mb-8">
+<div class="relative min-w-[180px]">
+<select class="w-full bg-white border border-border-subtle text-ui-sm py-2 px-4 appearance-none focus:ring-primary focus:border-primary">
+<option>FY 2023-24</option>
+<option>FY 2022-23</option>
+<option>FY 2021-22</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+</div>
+<div class="relative min-w-[220px]">
+<select class="w-full bg-white border border-border-subtle text-ui-sm py-2 px-4 appearance-none focus:ring-primary focus:border-primary">
+<option>All Payment Types</option>
+<option>Advance Tax</option>
+<option>Self Assessment</option>
+<option>TDS on Property</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-white border border-border-subtle shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-section-muted border-b border-border-subtle">
+<th class="px-6 py-4 font-ui-xs text-text-mid uppercase tracking-widest text-[11px] font-bold">Date of Deposit</th>
+<th class="px-6 py-4 font-ui-xs text-text-mid uppercase tracking-widest text-[11px] font-bold">Challan No.</th>
+<th class="px-6 py-4 font-ui-xs text-text-mid uppercase tracking-widest text-[11px] font-bold">Payment Type</th>
+<th class="px-6 py-4 font-ui-xs text-text-mid uppercase tracking-widest text-[11px] font-bold">BSR Code</th>
+<th class="px-6 py-4 font-ui-xs text-text-mid uppercase tracking-widest text-[11px] font-bold text-right">Amount Deposited</th>
+<th class="px-6 py-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle">
+<tr class="hover:bg-section-amber/30 transition-colors group">
+<td class="px-6 py-5 font-ui-sm text-stone-700">15 Mar 2024</td>
+<td class="px-6 py-5 font-mono-md text-amber-text tracking-tight">24031589210</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-2 font-ui-sm text-stone-800">
+<span class="w-1.5 h-1.5 rounded-full bg-[#C8860A]"></span>
+                                Advance Tax
+                            </span>
+</td>
+<td class="px-6 py-5 font-mono-md text-text-mid">0301234</td>
+<td class="px-6 py-5 font-mono-md text-right text-stone-900 font-medium">₹ 1,50,000.00</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-text-light hover:text-stone-900 opacity-0 group-hover:opacity-100 transition-opacity">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-section-amber/30 transition-colors group">
+<td class="px-6 py-5 font-ui-sm text-stone-700">12 Dec 2023</td>
+<td class="px-6 py-5 font-mono-md text-amber-text tracking-tight">23121244501</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-2 font-ui-sm text-stone-800">
+<span class="w-1.5 h-1.5 rounded-full bg-[#C8860A]"></span>
+                                Advance Tax
+                            </span>
+</td>
+<td class="px-6 py-5 font-mono-md text-text-mid">0301234</td>
+<td class="px-6 py-5 font-mono-md text-right text-stone-900 font-medium">₹ 1,25,500.00</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-text-light hover:text-stone-900 opacity-0 group-hover:opacity-100 transition-opacity">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-section-amber/30 transition-colors group">
+<td class="px-6 py-5 font-ui-sm text-stone-700">10 Sep 2023</td>
+<td class="px-6 py-5 font-mono-md text-amber-text tracking-tight">23091011293</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-2 font-ui-sm text-stone-800">
+<span class="w-1.5 h-1.5 rounded-full bg-stone-300"></span>
+                                Self Assessment
+                            </span>
+</td>
+<td class="px-6 py-5 font-mono-md text-text-mid">0299812</td>
+<td class="px-6 py-5 font-mono-md text-right text-stone-900 font-medium">₹ 45,200.00</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-text-light hover:text-stone-900 opacity-0 group-hover:opacity-100 transition-opacity">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-section-amber/30 transition-colors group">
+<td class="px-6 py-5 font-ui-sm text-stone-700">14 Jun 2023</td>
+<td class="px-6 py-5 font-mono-md text-amber-text tracking-tight">23061488712</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-2 font-ui-sm text-stone-800">
+<span class="w-1.5 h-1.5 rounded-full bg-[#C8860A]"></span>
+                                Advance Tax
+                            </span>
+</td>
+<td class="px-6 py-5 font-mono-md text-text-mid">0301234</td>
+<td class="px-6 py-5 font-mono-md text-right text-stone-900 font-medium">₹ 95,000.00</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-text-light hover:text-stone-900 opacity-0 group-hover:opacity-100 transition-opacity">more_vert</button>
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-section-muted/50 border-t border-border-subtle">
+<td class="px-6 py-4 text-right font-ui-xs text-text-mid uppercase tracking-widest text-[11px] font-bold" colspan="4">Total Paid (FY 2023-24)</td>
+<td class="px-6 py-4 font-mono-md text-right text-stone-900 font-bold text-lg">₹ 4,15,700.00</td>
+<td></td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-border-subtle flex items-center justify-between bg-stone-50">
+<span class="font-ui-xs text-text-mid uppercase tracking-widest text-[10px]">Showing 1-4 of 12 records</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center border border-border-subtle rounded-sm text-text-mid hover:text-stone-900 hover:border-stone-400 disabled:opacity-50 transition-all" disabled="">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center border border-border-subtle rounded-sm text-text-mid hover:text-stone-900 hover:border-stone-400 transition-all">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- System Status Footer -->
+<div class="mt-20 border-t-[0.5px] border-border-subtle pt-8 flex justify-between items-center opacity-50">
+<span class="font-mono-md text-[10px] uppercase tracking-widest">End of Ledger Summary • System V.4.2</span>
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-[#C8860A]"></div>
+<div class="w-2 h-2 rounded-full bg-stone-300"></div>
+<div class="w-2 h-2 rounded-full bg-stone-300"></div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-[#F9F8F6] border-t border-border-subtle grid grid-cols-5 py-3 px-2 z-50">
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-[#C8860A]">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">ITR</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Add</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Reports</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-stone-400">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-ui-xs font-bold uppercase">Account</span>
+</button>
+</nav>
+</body></html>

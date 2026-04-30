@@ -1,310 +1,181 @@
-// @ts-nocheck
 "use client";
 
+import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { formatIndianNumber } from "@/lib/format";
+import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 
-interface LineItem {
-  id: string;
-  description: string;
-  account: string;
-  qty: number;
-  unitPrice: number;
-  gstRate: number;
-  cgst: number;
-  sgstIgst: number;
-  amount: number;
-}
-
-interface Payment {
-  id: string;
-  paymentNumber: string;
-  date: string;
-  amount: number;
-  method: string;
-}
-
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  status: "draft" | "sent" | "partially_paid" | "paid" | "voided";
-  customer: {
-    name: string;
-    email: string;
-    gstin: string;
-    address: string;
-    state: string;
-  };
-  date: string;
-  dueDate: string;
-  lineItems: LineItem[];
-  subtotal: number;
-  cgst: number;
-  sgst: number;
-  igst: number;
-  discount: number;
-  grandTotal: number;
-  notes: string;
-  terms: string;
-  payments: Payment[];
-  timeline: { date: string; event: string }[];
-}
-
-const mockInvoice: Invoice = {
-  id: "1",
-  invoiceNumber: "INV-2026-27-001",
+const mockInvoice = {
+  invoiceNumber: "INV-24-089",
+  date: "24 Oct 2023",
+  dueDate: "23 Nov 2023",
   status: "sent",
   customer: {
-    name: "Acme Corporation",
-    email: "billing@acme.com",
-    gstin: "27AABCU9603R1ZM",
-    address: "123 Business Park, Sector 62\nNoida, Uttar Pradesh 201301",
-    state: "Uttar Pradesh",
+    name: "Reliance Industries Ltd.",
+    email: "billing@ril.com",
+    gstin: "27AAACA6873Q1Z2",
+    address: "Maker Chambers IV, 222 Nariman Point, Mumbai, Maharashtra - 400021",
+    state: "Maharashtra (27)",
   },
-  date: "2026-04-15",
-  dueDate: "2026-05-15",
+  company: {
+    name: "ComplianceOS",
+    address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021",
+    gstin: "27AAACC1234E1Z5",
+  },
   lineItems: [
-    { id: "1", description: "Consulting Services - April 2026", account: "Service Revenue", qty: 40, unitPrice: 2500, gstRate: 18, cgst: 9000, sgstIgst: 9000, amount: 59000 },
-    { id: "2", description: "Software Development - Phase 1", account: "Service Revenue", qty: 1, unitPrice: 50000, gstRate: 18, cgst: 4500, sgstIgst: 4500, amount: 59000 },
+    { hsn: "998311", name: "Enterprise Retainer - Q3", desc: "Comprehensive financial advisory and compliance management for Q3 2023.", qty: 1, rate: 125000, amount: 125000 },
+    { hsn: "998312", name: "Tax Audit Assistance", desc: "Preparation of preliminary schedules and representation.", qty: 1, rate: 45000, amount: 45000 },
   ],
-  subtotal: 100000,
-  cgst: 13500,
-  sgst: 13500,
-  igst: 0,
-  discount: 0,
-  grandTotal: 127000,
-  notes: "Thank you for your continued partnership!",
-  terms: "Payment due within 30 days. Please include invoice number with payment.",
-  payments: [
-    { id: "p1", paymentNumber: "PAY-001", date: "2026-04-20", amount: 50000, method: "NEFT" },
-  ],
-  timeline: [
-    { date: "2026-04-15 10:30 AM", event: "Invoice created" },
-    { date: "2026-04-15 10:35 AM", event: "Invoice sent to customer" },
-  ],
+  subtotal: 170000,
+  cgst: 15300,
+  sgst: 15300,
+  grandTotal: 200600,
+  totalWords: "Rupees Two Lakh Six Hundred Only.",
 };
 
 export default function InvoiceDetailPage() {
-  const invoice = mockInvoice;
-  const isIntraState = invoice.customer.state === "Maharashtra";
-  const canEdit = invoice.status === "draft";
-  const canPost = invoice.status === "draft";
-  const canSend = invoice.status === "draft" || invoice.status === "sent";
-  const canVoid = invoice.status === "sent" || invoice.status === "partially_paid";
-  const totalPaid = invoice.payments.reduce((sum, p) => sum + p.amount, 0);
-  const balanceDue = invoice.grandTotal - totalPaid;
+  const [invoice] = useState(mockInvoice);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="font-display text-[26px] font-normal text-dark">{invoice.invoiceNumber}</h1>
-            <InvoiceStatusBadge status={invoice.status} />
-          </div>
-          <p className="font-ui text-[12px] text-light mt-1">Issued to {invoice.customer.name}</p>
-        </div>
-        <div className="flex gap-2">
-          {canEdit && (
-            <Link href={`/invoices/${invoice.id}/edit`} className="filter-tab">
-              Edit
-            </Link>
-          )}
-          {canPost && (
-            <button className="filter-tab active bg-success hover:bg-success/90">
-              Post Invoice
-            </button>
-          )}
-          {canSend && (
-            <button className="filter-tab active">
-              Send
-            </button>
-          )}
-          {canVoid && (
-            <button className="filter-tab bg-danger text-white hover:bg-danger/90">
-              Void
-            </button>
-          )}
-          <button className="filter-tab">Download PDF</button>
-        </div>
+    <div className="bg-page-bg min-h-screen flex flex-col items-center pt-6">
+      {/* Back Navigation */}
+      <div className="w-full max-w-[210mm] mb-6 flex justify-start no-print">
+        <Link href="/invoices" className="flex items-center gap-2 font-ui-sm text-ui-sm text-text-light hover:text-on-surface transition-colors no-underline">
+          <Icon name="arrow_back" className="text-[16px]" />
+          Back to Invoices
+        </Link>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="col-span-2 space-y-6">
-          {/* Customer Info */}
-          <div className="card p-5">
-            <h2 className="font-display text-[16px] font-normal text-dark mb-3">Bill To</h2>
-            <div className="font-ui text-[13px] space-y-0.5">
-              <p className="font-medium text-dark">{invoice.customer.name}</p>
-              <p className="text-mid">{invoice.customer.email}</p>
-              {invoice.customer.gstin && <p className="text-light font-mono">GSTIN: {invoice.customer.gstin}</p>}
-              <p className="text-mid whitespace-pre-line mt-1">{invoice.customer.address}</p>
-              <p className="text-light">{invoice.customer.state}</p>
+      {/* A4 Document Wrapper */}
+      <article className="bg-white w-full max-w-[210mm] shadow-screenshot border-[0.5px] border-border-subtle p-10 lg:p-14 relative text-left">
+        {/* Document Header */}
+        <header className="flex justify-between items-start border-b-[0.5px] border-border-subtle pb-8 mb-8">
+          <div className="flex flex-col">
+            <h2 className="font-display-lg text-2xl text-on-surface font-semibold mb-2">{invoice.company.name}</h2>
+            <p className="font-ui-sm text-ui-sm text-text-mid max-w-[240px] leading-relaxed">{invoice.company.address}</p>
+            <p className="font-ui-sm text-ui-sm text-text-mid mt-2"><span className="font-medium text-on-surface">GSTIN:</span> {invoice.company.gstin}</p>
+          </div>
+          <div className="text-right flex flex-col items-end">
+            <h1 className="font-display text-[32px] uppercase tracking-widest text-text-light mb-4">Tax Invoice</h1>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-left">
+              <span className="font-ui-xs text-[10px] text-text-light uppercase tracking-wider">Invoice No:</span>
+              <span className="font-mono-md text-ui-sm text-on-surface font-medium text-right">{invoice.invoiceNumber}</span>
+              <span className="font-ui-xs text-[10px] text-text-light uppercase tracking-wider">Date:</span>
+              <span className="font-mono-md text-ui-sm text-on-surface text-right">{invoice.date}</span>
+              <span className="font-ui-xs text-[10px] text-text-light uppercase tracking-wider">Due Date:</span>
+              <span className="font-mono-md text-ui-sm text-on-surface text-right">{invoice.dueDate}</span>
             </div>
           </div>
+        </header>
 
-          {/* Line Items */}
-          <div className="card p-5">
-            <h2 className="font-display text-[16px] font-normal text-dark mb-3">Line Items</h2>
-            <table className="table table-dense">
-              <thead>
-                <tr>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-left w-8">#</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-left">Description</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-left">Account</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-right w-16">Qty</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-right w-24">Unit Price</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-right w-16">GST%</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-right w-24">CGST</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-right w-24">{isIntraState ? "SGST" : "IGST"}</th>
-                  <th className="font-ui text-[10px] uppercase tracking-wide text-right w-28">Amount</th>
+        {/* Bill To Section */}
+        <section className="mb-10">
+          <h3 className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-3 border-b-[0.5px] border-border-subtle inline-block pb-1">Billed To</h3>
+          <h4 className="font-ui-lg text-lg font-medium text-on-surface">{invoice.customer.name}</h4>
+          <p className="font-ui-sm text-ui-sm text-text-mid mt-1 max-w-[320px] leading-relaxed">{invoice.customer.address}</p>
+          <p className="font-ui-sm text-ui-sm text-text-mid mt-2"><span className="font-medium text-on-surface">GSTIN:</span> {invoice.customer.gstin}</p>
+          <p className="font-ui-sm text-ui-sm text-text-mid"><span className="font-medium text-on-surface">Place of Supply:</span> {invoice.customer.state}</p>
+        </section>
+
+        {/* Line Items Table */}
+        <section className="mb-10">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-stone-50/30">
+                <th className="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-[10px] text-text-light uppercase tracking-widest w-5/12">Description</th>
+                <th className="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-[10px] text-text-light uppercase tracking-widest w-2/12">HSN/SAC</th>
+                <th className="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-[10px] text-text-light uppercase tracking-widest text-right w-1/12">Qty</th>
+                <th className="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-[10px] text-text-light uppercase tracking-widest text-right w-2/12">Rate (₹)</th>
+                <th className="border-b-[0.5px] border-border-subtle py-3 font-ui-xs text-[10px] text-text-light uppercase tracking-widest text-right w-2/12">Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody className="font-ui-sm text-ui-sm">
+              {invoice.lineItems.map((item, i) => (
+                <tr key={i}>
+                  <td className="border-b-[0.5px] border-border-subtle py-4 align-top pr-4">
+                    <span className="font-medium text-on-surface block">{item.name}</span>
+                    <span className="text-text-mid text-[12px] mt-1 block leading-relaxed">{item.desc}</span>
+                  </td>
+                  <td className="border-b-[0.5px] border-border-subtle py-4 align-top font-mono text-text-mid text-sm">{item.hsn}</td>
+                  <td className="border-b-[0.5px] border-border-subtle py-4 align-top font-mono text-on-surface text-right text-sm">{item.qty.toFixed(2)}</td>
+                  <td className="border-b-[0.5px] border-border-subtle py-4 align-top font-mono text-on-surface text-right text-sm">{formatIndianNumber(item.rate)}</td>
+                  <td className="border-b-[0.5px] border-border-subtle py-4 align-top font-mono text-on-surface text-right text-sm">{formatIndianNumber(item.amount)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {invoice.lineItems.map((item, index) => (
-                  <tr key={item.id} className="border-b border-hairline">
-                    <td className="py-3 font-mono text-[13px] text-light">{index + 1}</td>
-                    <td className="py-3 font-ui text-[13px] text-dark">{item.description}</td>
-                    <td className="py-3 font-ui text-[13px] text-mid">{item.account}</td>
-                    <td className="py-3 font-mono text-[13px] text-right text-dark">{item.qty}</td>
-                    <td className="py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(item.unitPrice)}</td>
-                    <td className="py-3 font-mono text-[13px] text-right text-mid">{item.gstRate}%</td>
-                    <td className="py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(item.cgst)}</td>
-                    <td className="py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(item.sgstIgst)}</td>
-                    <td className="py-3 font-mono text-[13px] text-right font-medium text-dark">{formatIndianNumber(item.amount)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Notes & Terms */}
-          {invoice.notes && (
-            <div className="card p-5">
-              <h2 className="font-display text-[16px] font-normal text-dark mb-2">Notes</h2>
-              <p className="font-ui text-[13px] text-mid">{invoice.notes}</p>
-            </div>
-          )}
-          <div className="card p-5">
-            <h2 className="font-display text-[16px] font-normal text-dark mb-2">Terms & Conditions</h2>
-            <p className="font-ui text-[13px] text-mid">{invoice.terms}</p>
-          </div>
-
-          {/* Payment History */}
-          {invoice.payments.length > 0 && (
-            <div className="card p-5">
-              <h2 className="font-display text-[16px] font-normal text-dark mb-3">Payment History</h2>
-              <table className="table table-dense">
-                <thead>
-                  <tr>
-                    <th className="font-ui text-[10px] uppercase tracking-wide text-left">Payment #</th>
-                    <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-                    <th className="font-ui text-[10px] uppercase tracking-wide text-left">Method</th>
-                    <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoice.payments.map((payment) => (
-                    <tr key={payment.id} className="border-b border-hairline">
-                      <td className="py-3 font-mono text-[13px] text-amber">{payment.paymentNumber}</td>
-                      <td className="py-3 font-mono text-[13px] text-light">{payment.date}</td>
-                      <td className="py-3 font-ui text-[13px] text-mid">{payment.method}</td>
-                      <td className="py-3 font-mono text-[13px] text-right font-medium text-dark">{formatIndianNumber(payment.amount)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* Right Sidebar */}
-        <div className="space-y-6">
-          {/* Invoice Summary */}
-          <div className="card p-5">
-            <h2 className="font-display text-[16px] font-normal text-dark mb-4">Summary</h2>
-            <div className="space-y-2 font-ui text-[13px]">
-              <div className="flex justify-between">
-                <span className="text-light">Invoice Date</span>
-                <span className="font-mono text-dark">{invoice.date}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-light">Due Date</span>
-                <span className="font-mono text-dark">{invoice.dueDate}</span>
-              </div>
-              <hr className="border-hairline" />
-              <div className="flex justify-between">
-                <span className="text-light">Subtotal</span>
-                <span className="font-mono text-dark">{formatIndianNumber(invoice.subtotal)}</span>
-              </div>
-              {isIntraState ? (
-                <>
-                  <div className="flex justify-between">
-                    <span className="text-light">CGST</span>
-                    <span className="font-mono text-dark">{formatIndianNumber(invoice.cgst)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-light">SGST</span>
-                    <span className="font-mono text-dark">{formatIndianNumber(invoice.sgst)}</span>
-                  </div>
-                </>
-              ) : (
-                <div className="flex justify-between">
-                  <span className="text-light">IGST</span>
-                  <span className="font-mono text-dark">{formatIndianNumber(invoice.igst)}</span>
-                </div>
-              )}
-              {invoice.discount > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-light">Discount</span>
-                  <span className="font-mono text-success">-{formatIndianNumber(invoice.discount)}</span>
-                </div>
-              )}
-              <hr className="border-hairline" />
-              <div className="flex justify-between font-display text-[16px] font-medium">
-                <span className="text-dark">Grand Total</span>
-                <span className="text-dark">{formatIndianNumber(invoice.grandTotal)}</span>
-              </div>
-              {invoice.payments.length > 0 && (
-                <>
-                  <hr className="border-hairline" />
-                  <div className="flex justify-between font-ui text-[13px]">
-                    <span className="text-success">Paid</span>
-                    <span className="font-mono text-success">-{formatIndianNumber(totalPaid)}</span>
-                  </div>
-                  <div className="flex justify-between font-display text-[16px] font-medium">
-                    <span className="text-dark">Balance Due</span>
-                    <span className="text-dark">{formatIndianNumber(balanceDue)}</span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Status Timeline */}
-          <div className="card p-5">
-            <h2 className="font-display text-[16px] font-normal text-dark mb-3">Timeline</h2>
-            <div className="space-y-3">
-              {invoice.timeline.map((event, index) => (
-                <div key={index} className="flex gap-3">
-                  <div className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber flex-shrink-0" />
-                  <div>
-                    <p className="font-ui text-[13px] text-dark font-medium">{event.event}</p>
-                    <p className="font-mono text-[11px] text-light">{event.date}</p>
-                  </div>
-                </div>
               ))}
+            </tbody>
+          </table>
+        </section>
+
+        {/* Tax & Totals Breakdown */}
+        <section className="flex justify-end mb-12">
+          <div className="w-1/2">
+            <div className="flex justify-between py-2 border-b-[0.5px] border-border-subtle">
+              <span className="font-ui-sm text-ui-sm text-text-mid">Subtotal</span>
+              <span className="font-mono text-on-surface text-sm">₹ {formatIndianNumber(invoice.subtotal)}</span>
             </div>
-            {invoice.status === "draft" && (
-              <button className="mt-4 font-ui text-[12px] text-amber hover:underline">
-                Mark as Sent
-              </button>
-            )}
+            <div className="flex justify-between py-2 border-b-[0.5px] border-border-subtle">
+              <span className="font-ui-sm text-ui-sm text-text-mid">CGST (9%)</span>
+              <span className="font-mono text-on-surface text-sm">₹ {formatIndianNumber(invoice.cgst)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b-[0.5px] border-border-subtle">
+              <span className="font-ui-sm text-ui-sm text-text-mid">SGST (9%)</span>
+              <span className="font-mono text-on-surface text-sm">₹ {formatIndianNumber(invoice.sgst)}</span>
+            </div>
+            <div className="flex justify-between py-4 border-b-2 border-primary-container mt-2">
+              <span className="font-ui-lg text-lg font-medium text-on-surface uppercase tracking-wide">Grand Total</span>
+              <span className="font-mono text-xl font-medium text-primary-container">₹ {formatIndianNumber(invoice.grandTotal)}</span>
+            </div>
+            <div className="text-right mt-2">
+              <span className="font-ui-xs text-[10px] text-text-light italic">{invoice.totalWords}</span>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Footer: Bank Details & T&C */}
+        <footer className="flex justify-between items-end border-t-[0.5px] border-border-subtle pt-8">
+          <div className="w-2/3 pr-8">
+            <h5 className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2">Bank Details</h5>
+            <div className="grid grid-cols-[100px_1fr] gap-1 font-ui-sm text-ui-sm text-on-surface">
+              <span className="text-text-mid">Bank:</span> <span>HDFC Bank, Fort Branch</span>
+              <span className="text-text-mid">Account Name:</span> <span>ComplianceOS Solutions</span>
+              <span className="text-text-mid">Account No:</span> <span className="font-mono text-sm">50200012345678</span>
+              <span className="text-text-mid">IFSC Code:</span> <span className="font-mono text-sm">HDFC0000060</span>
+            </div>
+            <div className="mt-6">
+              <h5 className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-1">Terms & Conditions</h5>
+              <ol className="list-decimal list-inside font-ui-xs text-[11px] text-text-light leading-relaxed">
+                <li>Payment is due within 30 days of the invoice date.</li>
+                <li>Late payments will incur an interest of 1.5% per month.</li>
+                <li>Subject to Mumbai jurisdiction.</li>
+              </ol>
+            </div>
+          </div>
+          <div className="w-1/3 flex flex-col items-center">
+            <div className="h-16 w-32 border-b-[0.5px] border-border-subtle mb-2"></div>
+            <span className="font-ui-xs text-[10px] text-text-mid text-center block w-full uppercase tracking-widest">Authorized Signatory<br/>{invoice.company.name}</span>
+          </div>
+        </footer>
+      </article>
+
+      {/* Action Buttons */}
+      <div className="w-full max-w-[210mm] mt-8 flex justify-end gap-4 mb-16 no-print">
+        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-dark font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
+          <Icon name="edit" className="text-[18px]" />
+          Edit
+        </button>
+        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-dark font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
+          <Icon name="check_circle" className="text-[18px]" />
+          Mark as Paid
+        </button>
+        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-dark font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer" onClick={() => window.print()}>
+          <Icon name="download" className="text-[18px]" />
+          Download PDF
+        </button>
+        <button className="px-6 py-2.5 bg-primary-container text-white font-ui-sm text-xs font-medium hover:bg-amber-700 transition-transform active:scale-95 flex items-center gap-2 group cursor-pointer border-none">
+          Send
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
+        </button>
       </div>
     </div>
   );

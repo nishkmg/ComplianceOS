@@ -1,182 +1,121 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { formatINR } from "@/lib/format";
-import { Badge } from "@/components/ui";
+import { Icon } from '@/components/ui/icon';
+import { formatIndianNumber } from "@/lib/format";
 
-interface AccountGroup {
-  name: string;
-  items: Array<{ code: string; name: string; amount: number }>;
-  total: number;
+interface ReportLine {
+  note: string;
+  label: string;
+  currentYear: number;
+  previousYear: number;
+  isTotal?: boolean;
+  isSection?: boolean;
+  indent?: number;
 }
 
-interface ReportData {
-  revenue: AccountGroup;
-  costOfGoodsSold: AccountGroup;
-  grossProfit: number;
-  operatingExpenses: AccountGroup;
-  operatingProfit: number;
-  otherIncome: AccountGroup;
-  otherExpenses: AccountGroup;
-  netProfit: number;
-}
+const sections: { title: string; lines: ReportLine[] }[] = [
+  {
+    title: "I. Revenue From Operations",
+    lines: [
+      { note: "1", label: "Revenue from operations", currentYear: 856.4, previousYear: 724.8 },
+      { note: "2", label: "Other income", currentYear: 24.6, previousYear: 18.2 },
+      { note: "", label: "Total Revenue (I+II)", currentYear: 881.0, previousYear: 743.0, isTotal: true },
+    ],
+  },
+  {
+    title: "II. Expenses",
+    lines: [
+      { note: "3", label: "Cost of materials consumed", currentYear: 412.3, previousYear: 356.8 },
+      { note: "4", label: "Employee benefits expense", currentYear: 124.5, previousYear: 108.2 },
+      { note: "5", label: "Finance costs", currentYear: 18.5, previousYear: 15.2 },
+      { note: "6", label: "Depreciation", currentYear: 24.8, previousYear: 22.1 },
+      { note: "7", label: "Other expenses", currentYear: 86.3, previousYear: 72.4 },
+      { note: "", label: "Total Expenses", currentYear: 666.4, previousYear: 574.7, isTotal: true },
+    ],
+  },
+  {
+    title: "III. Profit Before Tax",
+    lines: [
+      { note: "", label: "Profit Before Tax (I - II)", currentYear: 214.6, previousYear: 168.3, isTotal: true },
+      { note: "8", label: "Tax expense", currentYear: 54.2, previousYear: 42.5 },
+      { note: "", label: "Profit for the year", currentYear: 160.4, previousYear: 125.8, isSection: true },
+    ],
+  },
+];
 
-const mockData: ReportData = {
-  revenue: {
-    name: "Revenue",
-    items: [
-      { code: "40100", name: "Sales Revenue", amount: 2800000 },
-      { code: "40200", name: "Service Income", amount: 450000 },
-    ],
-    total: 3250000,
-  },
-  costOfGoodsSold: {
-    name: "Cost of Goods Sold",
-    items: [
-      { code: "50100", name: "Purchase Expenses", amount: 1200000 },
-      { code: "50150", name: "Direct Costs", amount: 180000 },
-    ],
-    total: 1380000,
-  },
-  grossProfit: 1870000,
-  operatingExpenses: {
-    name: "Operating Expenses",
-    items: [
-      { code: "50200", name: "Salaries & Wages", amount: 450000 },
-      { code: "50210", name: "Rent", amount: 120000 },
-      { code: "50220", name: "Utilities", amount: 45000 },
-      { code: "50230", name: "Office Expenses", amount: 68000 },
-    ],
-    total: 683000,
-  },
-  operatingProfit: 1187000,
-  otherIncome: {
-    name: "Other Income",
-    items: [
-      { code: "40300", name: "Interest Income", amount: 25000 },
-    ],
-    total: 25000,
-  },
-  otherExpenses: {
-    name: "Other Expenses",
-    items: [
-      { code: "50300", name: "Interest Expense", amount: 45000 },
-      { code: "50310", name: "Bank Charges", amount: 12000 },
-    ],
-    total: 57000,
-  },
-  netProfit: 1155000,
-};
-
-export default function ProfitAndLossPage() {
-  const [viewMode, setViewMode] = useState<"schedule3" | "proprietorship">("schedule3");
+export default function PLScheduleIIIPage() {
+  const [fiscalYear, setFiscalYear] = useState("2026-27");
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Profit & Loss Statement</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Financial Performance Summary</p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setViewMode("schedule3")}
-            className={`filter-tab ${viewMode === "schedule3" ? "active" : ""}`}
-          >
-            Schedule III
-          </button>
-          <button
-            onClick={() => setViewMode("proprietorship")}
-            className={`filter-tab ${viewMode === "proprietorship" ? "active" : ""}`}
-          >
-            Proprietorship
-          </button>
-          <button className="filter-tab">Export PDF</button>
-        </div>
-      </div>
+    <div className="bg-page-bg text-on-surface font-ui-md min-h-screen">
+      <main className="flex-1 pb-space-64 pt-6">
+        <div className="max-w-[1000px] mx-auto px-gutter-desktop">
+          {/* Report Controls */}
+          <div className="flex justify-between items-end mb-gutter-wide pb-4 border-b-[0.5px] border-border-subtle text-left">
+            <div>
+              <span className="font-ui-xs text-amber-text uppercase tracking-widest block mb-2">Schedule III Document</span>
+              <h1 className="font-display-lg text-display-lg text-on-surface">Profit & Loss</h1>
+            </div>
+            <div className="flex gap-3">
+              <select className="border-[0.5px] border-border-subtle px-4 py-2 text-ui-sm outline-none bg-white" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
+                <option>2026-27</option>
+                <option>2025-26</option>
+              </select>
+              <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
+                <Icon name="download" className="text-[18px]" />
+                Export
+              </button>
+            </div>
+          </div>
 
-      {/* Report Body */}
-      <div className="report-container max-w-4xl mx-auto">
-        <div className="report-header">
-          <h2 className="report-company">Mehta Textiles Private Limited</h2>
-          <p className="report-title">Statement of Profit and Loss</p>
-          <p className="report-period">For the year ended 31 March 2027 • All amounts in ₹</p>
-        </div>
+          {/* Report Container */}
+          <div className="bg-white border-[0.5px] border-border-subtle p-12 shadow-sm">
+            {/* Report Header */}
+            <header className="text-center mb-10 pb-8 border-b-[0.5px] border-border-subtle">
+              <h1 className="font-display text-[26px] font-normal text-dark mb-1">ComplianceOS</h1>
+              <h2 className="font-ui-lg text-text-mid uppercase tracking-widest mb-4">Statement of Profit and Loss</h2>
+              <p className="font-ui-sm text-text-light italic">For the year ended 31 March 2027</p>
+              <p className="font-ui-sm text-text-light mt-1">(All amounts in ₹ Lakhs, unless otherwise stated)</p>
+            </header>
 
-        {/* Revenue */}
-        <div className="report-section">
-          <h3 className="report-section-header">I. Revenue from Operations</h3>
-          <div className="space-y-1">
-            {mockData.revenue.items.map((item) => (
-              <div key={item.code} className="report-line indent">
-                <span>
-                  <span className="font-mono text-[11px] text-amber mr-2">{item.code}</span>
-                  {item.name}
-                </span>
-                <span className="report-amount">{formatINR(item.amount)}</span>
+            {/* Table Header */}
+            <div className="grid grid-cols-12 gap-4 border-b-[1px] border-on-background pb-2 mb-4 font-ui-xs text-text-mid uppercase tracking-widest">
+              <div className="col-span-1 text-center">Note No.</div>
+              <div className="col-span-7">Particulars</div>
+              <div className="col-span-2 text-right">31-Mar-2027</div>
+              <div className="col-span-2 text-right text-text-light">31-Mar-2026</div>
+            </div>
+
+            {/* Sections */}
+            {sections.map((section) => (
+              <div key={section.title} className="mb-6">
+                {/* Section Title */}
+                {section.title !== section.lines[section.lines.length - 1]?.label && (
+                  <div className="grid grid-cols-12 gap-4 py-3 border-b-[0.5px] border-border-subtle bg-section-muted font-ui-sm text-on-surface font-semibold uppercase tracking-wider">
+                    <div className="col-span-12">{section.title}</div>
+                  </div>
+                )}
+                {section.lines.map((line, i) => (
+                  <div key={i} className={`grid grid-cols-12 gap-4 py-3 border-b-[0.5px] border-border-subtle ${
+                    line.isTotal ? 'border-t-[1px] border-on-surface font-bold' : ''
+                  } ${line.isSection ? 'bg-success-bg' : ''} ${line.indent ? '' : ''} hover:bg-surface-muted transition-colors ledger-row`}>
+                    <div className="col-span-1 text-center font-mono text-[12px] text-text-mid">{line.note}</div>
+                    <div className={`col-span-7 font-ui-sm ${line.isTotal ? 'font-bold' : ''}`}>{line.label}</div>
+                    <div className="col-span-2 text-right font-mono text-sm">{line.currentYear.toFixed(1)}</div>
+                    <div className="col-span-2 text-right font-mono text-sm text-text-light">{line.previousYear.toFixed(1)}</div>
+                  </div>
+                ))}
               </div>
             ))}
-          </div>
-          <div className="report-line total">
-            <span>Total Revenue (I)</span>
-            <span className="report-amount">{formatINR(mockData.revenue.total)}</span>
+
+            {/* Footer */}
+            <div className="mt-8 pt-6 border-t-[0.5px] border-border-subtle text-center">
+              <p className="font-ui-xs text-text-light">This is a system-generated statement. E&OE.</p>
+            </div>
           </div>
         </div>
-
-        {/* Expenses */}
-        <div className="report-section">
-          <h3 className="report-section-header">II. Expenses</h3>
-          
-          <div className="report-line indent">
-            <span>Cost of Materials Consumed</span>
-            <span className="report-amount">{formatINR(mockData.costOfGoodsSold.total)}</span>
-          </div>
-
-          <div className="space-y-1 mt-2">
-            {mockData.operatingExpenses.items.map((item) => (
-              <div key={item.code} className="report-line indent">
-                <span>
-                  <span className="font-mono text-[11px] text-amber mr-2">{item.code}</span>
-                  {item.name}
-                </span>
-                <span className="report-amount">{formatINR(item.amount)}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="report-line total">
-            <span>Total Expenses (II)</span>
-            <span className="report-amount">{formatINR(mockData.costOfGoodsSold.total + mockData.operatingExpenses.total)}</span>
-          </div>
-        </div>
-
-        {/* Profit Calculation */}
-        <div className="report-section pt-4 border-t border-hairline">
-          <div className="report-line font-semibold">
-            <span>Profit Before Exceptional Items and Tax (I - II)</span>
-            <span className="report-amount">{formatINR(mockData.revenue.total - (mockData.costOfGoodsSold.total + mockData.operatingExpenses.total))}</span>
-          </div>
-
-          <div className="report-line mt-4 final">
-            <span className="uppercase tracking-wider">Net Profit for the Year</span>
-            <span className="report-amount text-[16px]">{formatINR(mockData.netProfit)}</span>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-hairline flex justify-between items-end">
-          <div className="text-[10px] text-light italic max-w-[300px]">
-            The accompanying notes form an integral part of these financial statements.
-            Prepared in accordance with Indian Accounting Standards (Ind AS).
-          </div>
-          <div className="text-right">
-            <div className="w-32 h-px bg-dark mb-2 ml-auto" />
-            <div className="text-[11px] font-semibold text-dark uppercase tracking-wide">Authorized Signatory</div>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

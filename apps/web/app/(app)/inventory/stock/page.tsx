@@ -1,101 +1,93 @@
-// @ts-nocheck
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
+import Link from "next/link";
 
 interface StockItem {
-  productId: string;
-  productName: string;
+  id: string;
   sku: string;
-  quantity: number;
-  totalValue: number;
-  averageCost: number;
+  name: string;
+  available: number;
+  committed: number;
+  netAvailable: number;
+  unit: string;
+  warehouse: string;
+  status: "healthy" | "low" | "critical";
 }
 
-async function fetchStockSummary(): Promise<StockItem[]> {
-  const response = await fetch("/api/trpc/stockReports.stockSummary");
-  if (!response.ok) return [];
-  const json = await response.json();
-  return json.result?.data ?? [];
-}
-
-function formatINR(amount: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    minimumFractionDigits: 2,
-  }).format(amount);
-}
+const mockStock: StockItem[] = [
+  { id: "1", sku: "RM-001", name: "Cotton Yarn - 40s Count", available: 5000, committed: 1200, netAvailable: 3800, unit: "kg", warehouse: "Main Depot (BOM)", status: "healthy" },
+  { id: "2", sku: "RM-002", name: "Steel Rods 12mm", available: 1000, committed: 800, netAvailable: 200, unit: "pcs", warehouse: "Main Depot (BOM)", status: "low" },
+  { id: "3", sku: "RM-003", name: "Packaging Material - Corrugated", available: 150, committed: 100, netAvailable: 50, unit: "box", warehouse: "Main Depot (BOM)", status: "critical" },
+  { id: "4", sku: "FG-001", name: "Finished Widget A", available: 2000, committed: 500, netAvailable: 1500, unit: "pcs", warehouse: "Unit 2 (Pune)", status: "healthy" },
+  { id: "5", sku: "FG-002", name: "Finished Widget B", available: 500, committed: 450, netAvailable: 50, unit: "pcs", warehouse: "Unit 2 (Pune)", status: "critical" },
+];
 
 export default function StockPage() {
-  const [stock, setStock] = useState<StockItem[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchStockSummary()
-      .then(setStock)
-      .finally(() => setLoading(false));
-  }, []);
-
-  const totalQuantity = stock.reduce((sum, item) => sum + item.quantity, 0);
-  const totalValue = stock.reduce((sum, item) => sum + item.totalValue, 0);
-
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Stock Summary</h1>
-
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Total Products</div>
-          <div className="text-2xl font-bold text-gray-900">{stock.length}</div>
+    <div className="space-y-6 text-left">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
+        <div>
+          <span className="font-ui-xs text-ui-xs text-amber-text tracking-[0.15em] uppercase mb-3 block">Inventory Management</span>
+          <h1 className="font-display-xl text-display-xl text-on-surface leading-none">Stock Levels</h1>
+          <p className="font-ui-sm text-ui-sm text-text-mid mt-3 max-w-lg">Real-time assessment of warehouse commodities, commitments, and procurement statuses.</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Total Quantity</div>
-          <div className="text-2xl font-bold text-gray-900">{totalQuantity.toFixed(2)}</div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Total Value</div>
-          <div className="text-2xl font-bold text-green-600">{formatINR(totalValue)}</div>
-        </div>
+        <button className="group bg-primary-container text-white font-ui-sm text-ui-sm px-6 py-3 hover:shadow-card transition-all flex items-center justify-center gap-2 border-none cursor-pointer">
+          Adjust Stock <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+        </button>
       </div>
 
-      {loading ? (
-        <div className="text-center py-8 text-gray-500">Loading...</div>
-      ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">SKU</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Product</th>
-                <th className="px-4 py-3 text-right font-medium text-gray-600">Quantity</th>
-                <th className="px-4 py-3 text-right font-medium text-gray-600">Avg Cost</th>
-                <th className="px-4 py-3 text-right font-medium text-gray-600">Total Value</th>
+      {/* Table */}
+      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+        <div className="px-6 py-4 border-b-[0.5px] border-border-subtle bg-surface flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Icon name="filter_list" className="text-text-light text-[18px]" />
+            <span className="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
+          </div>
+          <div className="flex gap-4">
+            <button className="font-ui-xs text-ui-xs text-text-mid hover:text-on-surface transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
+            <button className="font-ui-xs text-ui-xs text-text-mid hover:text-on-surface transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr className="bg-stone-50">
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium w-1/3">Product / SKU</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium text-right">Available</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium text-right">Committed</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium text-right">Net Available</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
-              {stock.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                    No stock data available
+            <tbody className="divide-y-[0.5px] divide-border-subtle">
+              {mockStock.map((item) => (
+                <tr key={item.id} className="hover:bg-section-muted/50 transition-colors group">
+                  <td className="px-6 py-5 text-left">
+                    <div className="font-ui-sm text-on-surface font-medium">{item.name}</div>
+                    <div className="font-mono-md text-[12px] text-text-mid mt-0.5">{item.sku} · {item.warehouse}</div>
+                  </td>
+                  <td className="px-6 py-5 font-mono-md text-right text-on-surface">{item.available.toLocaleString('en-IN')} {item.unit}</td>
+                  <td className="px-6 py-5 font-mono-md text-right text-text-mid">{item.committed.toLocaleString('en-IN')} {item.unit}</td>
+                  <td className="px-6 py-5 font-mono-md text-right font-bold text-on-surface">{item.netAvailable.toLocaleString('en-IN')} {item.unit}</td>
+                  <td className="px-6 py-5">
+                    <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border-[0.5px] rounded-sm ${
+                      item.status === 'healthy' ? 'bg-green-50 text-green-700 border-green-200' :
+                      item.status === 'low' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                      'bg-red-50 text-red-700 border-red-200'
+                    }`}>
+                      {item.status === 'healthy' ? 'In Stock' : item.status === 'low' ? 'Low Stock' : 'Critical'}
+                    </span>
                   </td>
                 </tr>
-              ) : (
-                stock.map((item) => (
-                  <tr key={item.productId} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-mono text-gray-700">{item.sku}</td>
-                    <td className="px-4 py-3 text-gray-900">{item.productName}</td>
-                    <td className="px-4 py-3 text-right text-gray-700">{item.quantity.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-right text-gray-600">{formatINR(item.averageCost)}</td>
-                    <td className="px-4 py-3 text-right font-medium text-gray-900">{formatINR(item.totalValue)}</td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
-      )}
+      </div>
     </div>
   );
 }

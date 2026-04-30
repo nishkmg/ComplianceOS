@@ -1,8 +1,8 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useMemo } from "react";
 import { api } from "@/lib/api";
+// @ts-ignore
 import { PaymentAllocationInputSchema } from "@complianceos/shared";
 
 interface Invoice {
@@ -34,7 +34,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
   const [allocations, setAllocations] = useState<Allocation[]>([]);
   const [isRecording, setIsRecording] = useState(false);
 
-  const { data: customerData, isLoading: isLoadingCustomer } = api.receivables.customer.useQuery(
+  const { data: customerData, isLoading: isLoadingCustomer }: any = api.receivables.customer.useQuery(
     { customerName },
     { enabled: customerName.length > 0 }
   );
@@ -53,8 +53,8 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
 
   const isAllocationValid = totalAllocated <= (typeof paymentAmount === "number" ? paymentAmount : 0) + 0.01;
 
-  const recordPayment = api.payments.record.useMutation();
-  const allocatePayment = api.payments.allocate.useMutation();
+  const recordPayment: any = api.payments.record.useMutation();
+  const allocatePayment: any = api.payments.allocate.useMutation();
 
   const handleAutoAllocate = () => {
     if (!outstandingInvoices.length || typeof paymentAmount !== "number") return;
@@ -138,7 +138,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
       setAllocations([]);
       setReferenceNumber("");
       onSuccess?.();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to record payment:", error);
       alert("Failed to record payment. Please try again.");
     } finally {

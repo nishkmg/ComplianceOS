@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Valuation Report - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Syne:wght@400;500;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#211b13",
+                      "surface-container-high": "#f3e6d9",
+                      "on-secondary-fixed-variant": "#474746",
+                      "outline": "#847563",
+                      "outline-variant": "#d6c4af",
+                      "surface-tint": "#825500",
+                      "surface-container": "#f9ecde",
+                      "surface-bright": "#fff8f4",
+                      "secondary-fixed": "#e5e2e1",
+                      "section-muted": "#F4F2EE",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "background": "#fff8f4",
+                      "surface": "#fff8f4",
+                      "inverse-primary": "#ffb950",
+                      "secondary-container": "#e2dfde",
+                      "secondary": "#5f5e5e",
+                      "amber-text": "#B47500",
+                      "tertiary-fixed": "#cae6ff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "tertiary-container": "#309bdb",
+                      "primary-fixed": "#ffddb3",
+                      "surface-container-highest": "#ede0d3",
+                      "text-mid": "#555555",
+                      "error-container": "#ffdad6",
+                      "inverse-on-surface": "#fcefe1",
+                      "on-tertiary-container": "#002f49",
+                      "primary-fixed-dim": "#ffb950",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "surface-container-low": "#fff1e4",
+                      "on-tertiary": "#ffffff",
+                      "tertiary": "#006494",
+                      "on-surface-variant": "#514535",
+                      "text-light": "#888888",
+                      "surface-dim": "#e5d8cb",
+                      "on-primary-fixed-variant": "#633f00",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "section-dark": "#111111",
+                      "page-bg": "#FAFAF8",
+                      "on-secondary-container": "#636262",
+                      "primary-container": "#c8860a",
+                      "on-tertiary-fixed": "#001e30",
+                      "primary": "#825500",
+                      "inverse-surface": "#362f27",
+                      "on-surface": "#211b13",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface-variant": "#ede0d3",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "on-primary-container": "#3f2700",
+                      "on-primary-fixed": "#291800",
+                      "border-subtle": "#E8E4DC",
+                      "section-amber": "rgba(200, 134, 10, 0.06)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-48": "48px",
+                      "space-128": "128px",
+                      "space-64": "64px",
+                      "gutter-wide": "32px",
+                      "gutter-desktop": "24px",
+                      "space-96": "96px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "marketing-xl": [
+                              "Playfair Display"
+                      ],
+                      "ui-xs": [
+                              "Syne"
+                      ],
+                      "ui-sm": [
+                              "Syne"
+                      ],
+                      "ui-lg": [
+                              "Syne"
+                      ],
+                      "mono-md": [
+                              "DM Mono"
+                      ],
+                      "marketing-hero": [
+                              "Playfair Display"
+                      ],
+                      "ui-md": [
+                              "Syne"
+                      ],
+                      "mono-lg": [
+                              "DM Mono"
+                      ],
+                      "display-xl": [
+                              "Playfair Display"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ]
+              },
+              "fontSize": {
+                      "marketing-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "ui-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "mono-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-hero": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-xl": [
+                              "38px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "26px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        @media print {
+            body {
+                background-color: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-ui-sm flex flex-col">
+<!-- TopNavBar (Hidden for print) -->
+<header class="sticky top-0 flex justify-between items-center px-8 h-16 w-full backdrop-blur-md bg-[#F9F7F2] border-b-[0.5px] border-border-subtle z-40 hidden md:flex no-print">
+<div class="flex items-center gap-8">
+<div class="font-display-lg text-on-surface">
+                ComplianceOS
+            </div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-stone-600 hover:text-[#C8860A] transition-colors duration-200 cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="text-stone-600 hover:text-[#C8860A] transition-colors duration-200 cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 relative">
+<!-- SideNavBar (Hidden for print) -->
+<aside class="w-64 border-r-[0.5px] border-border-subtle bg-[#F9F7F2] hidden md:flex flex-col no-print pt-8">
+<nav class="flex flex-col gap-2 px-4">
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 hover:bg-surface-container hover:text-[#C8860A] transition-colors rounded-lg group font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+      Ledger
+    </a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 hover:bg-surface-container hover:text-[#C8860A] transition-colors rounded-lg group font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+      Taxation
+    </a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 hover:bg-surface-container hover:text-[#C8860A] transition-colors rounded-lg group font-ui-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">fact_check</span>
+      Audit
+    </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-section-amber text-[#C8860A] transition-colors rounded-lg group font-ui-sm font-medium border-l-2 border-[#C8860A]" href="#">
+<span class="material-symbols-outlined text-[20px]">bar_chart</span>
+      Reports
+    </a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 max-w-[1200px] mx-auto w-full px-gutter-desktop md:px-gutter-wide py-space-64 bg-surface-container-lowest print:p-0 print:m-0 print:max-w-none">
+<!-- Print Controls -->
+<div class="flex justify-end mb-8 no-print">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary-container text-on-primary border border-[#1A1A1A] hover:shadow-card transition-all group font-ui-sm" onclick="window.print()">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">print</span>
+                    Print Report
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+<!-- Report Document Container -->
+<article class="bg-surface-container-lowest mx-auto w-full border-[0.5px] border-border-subtle p-8 md:p-12 print:border-none print:p-0">
+<!-- Report Header -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-space-48 border-b-[0.5px] border-border-subtle pb-8">
+<div>
+<h1 class="font-display-xl text-display-xl text-on-surface mb-2">Inventory Valuation Report</h1>
+<p class="font-ui-md text-ui-md text-text-mid">As of March 31, 2024</p>
+</div>
+<div class="mt-4 md:mt-0 text-right">
+<div class="font-ui-sm text-ui-sm text-text-mid uppercase tracking-widest mb-1">Company Entity</div>
+<div class="font-ui-md text-ui-md text-on-surface">ComplianceOS Solutions Pvt. Ltd.</div>
+<div class="font-ui-sm text-ui-sm text-text-light">GSTIN: 27AADCB2230M1Z2</div>
+</div>
+</header>
+<!-- Data Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b-[0.5px] border-border-subtle bg-surface">
+<th class="py-4 pr-4 font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest whitespace-nowrap">SKU</th>
+<th class="py-4 px-4 font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest whitespace-nowrap">Category</th>
+<th class="py-4 px-4 font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">Product Name</th>
+<th class="py-4 px-4 text-right font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest whitespace-nowrap">Qty on Hand</th>
+<th class="py-4 px-4 text-right font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest whitespace-nowrap">Avg Cost Unit</th>
+<th class="py-4 pl-4 text-right font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest whitespace-nowrap">Total Valuation</th>
+</tr>
+</thead>
+<tbody class="font-mono-md text-mono-md text-on-surface">
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface transition-colors">
+<td class="py-4 pr-4 align-top">HW-SRV-001</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Hardware</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Enterprise Server Rack</td>
+<td class="py-4 px-4 align-top text-right">12</td>
+<td class="py-4 px-4 align-top text-right">₹ 2,45,000.00</td>
+<td class="py-4 pl-4 align-top text-right">₹ 29,40,000.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface transition-colors">
+<td class="py-4 pr-4 align-top">HW-NWK-022</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Networking</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Managed Gigabit Switch 48-port</td>
+<td class="py-4 px-4 align-top text-right">45</td>
+<td class="py-4 px-4 align-top text-right">₹ 85,500.50</td>
+<td class="py-4 pl-4 align-top text-right">₹ 38,47,522.50</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface transition-colors">
+<td class="py-4 pr-4 align-top">SW-LIC-105</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Software</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Database Mgt System License (Annual)</td>
+<td class="py-4 px-4 align-top text-right">150</td>
+<td class="py-4 px-4 align-top text-right">₹ 15,200.00</td>
+<td class="py-4 pl-4 align-top text-right">₹ 22,80,000.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface transition-colors">
+<td class="py-4 pr-4 align-top">HW-PER-401</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Peripherals</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Professional Monitor 32" 4K</td>
+<td class="py-4 px-4 align-top text-right">88</td>
+<td class="py-4 px-4 align-top text-right">₹ 32,150.00</td>
+<td class="py-4 pl-4 align-top text-right">₹ 28,29,200.00</td>
+</tr>
+<tr class="border-b-[0.5px] border-border-subtle hover:bg-surface transition-colors">
+<td class="py-4 pr-4 align-top">HW-SRV-005</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Hardware</td>
+<td class="py-4 px-4 align-top font-ui-sm text-ui-sm">Backup Storage Array 100TB</td>
+<td class="py-4 px-4 align-top text-right">5</td>
+<td class="py-4 px-4 align-top text-right">₹ 8,90,000.00</td>
+<td class="py-4 pl-4 align-top text-right">₹ 44,50,000.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td class="py-6 pr-4 text-right font-ui-lg text-ui-lg text-on-surface" colspan="5">Grand Total Valuation</td>
+<td class="py-6 pl-4 text-right font-mono-lg text-mono-lg text-on-surface font-bold border-t-[2px] border-amber-text">₹ 1,63,46,722.50</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Report Footer / Meta -->
+<div class="mt-space-64 pt-8 border-t-[0.5px] border-border-subtle flex justify-between items-center text-text-light font-ui-xs text-ui-xs">
+<p>Generated by: System Admin</p>
+<p>Date/Time: 01-Apr-2024 09:15 AM IST</p>
+<p>Page 1 of 1</p>
+</div>
+</article>
+</main>
+</div>
+<!-- BottomNavBar (Hidden on desktop) -->
+</body></html>

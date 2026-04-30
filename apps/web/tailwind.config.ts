@@ -6,31 +6,55 @@ const config: Config = {
     extend: {
       // Font families
       fontFamily: {
-        display: ['var(--font-display)', 'Playfair Display', 'serif'],
-        ui: ['var(--font-ui)', 'Syne', 'sans-serif'],
-        mono: ['var(--font-mono)', 'DM Mono', 'monospace'],
+        display: ['Playfair Display', 'serif'],
+        ui: ['Syne', 'sans-serif'],
+        mono: ['DM Mono', 'monospace'],
+        'ui-md': ['Syne', 'sans-serif'],
+        'ui-sm': ['Syne', 'sans-serif'],
+        'ui-xs': ['Syne', 'sans-serif'],
+        'ui-lg': ['Syne', 'sans-serif'],
+        'mono-md': ['DM Mono', 'monospace'],
+        'mono-lg': ['DM Mono', 'monospace'],
+        'marketing-hero': ['Playfair Display', 'serif'],
+        'marketing-xl': ['Playfair Display', 'serif'],
+        'display-xl': ['Playfair Display', 'serif'],
+        'display-lg': ['Playfair Display', 'serif'],
       },
       
       // Font sizes
       fontSize: {
-        'display-xl': ['38px', '1.2'],
-        'display-lg': ['26px', '1.3'],
-        'display-md': ['20px', '1.3'],
-        'display-sm': ['16px', '1.4'],
-        'ui-lg': ['15px', '1.4'],
-        'ui-md': ['14px', '1.5'],
-        'ui-sm': ['13px', '1.5'],
-        'ui-xs': ['11px', '1.4'],
-        'mono-lg': ['15px', '1.4'],
-        'mono-md': ['13px', '1.4'],
-        'mono-sm': ['11px', '1.4'],
+        'ui-md': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
+        'ui-sm': ['14px', { lineHeight: '1.6', fontWeight: '400' }],
+        'ui-xs': ['12px', { lineHeight: '1.5', letterSpacing: '0.1em', fontWeight: '500' }],
+        'ui-lg': ['18px', { lineHeight: '1.5', fontWeight: '500' }],
+        'mono-md': ['14px', { lineHeight: '1.5', fontWeight: '400' }],
+        'mono-lg': ['18px', { lineHeight: '1.4', fontWeight: '400' }],
+        'marketing-hero': ['64px', { lineHeight: '1.1', fontWeight: '400' }],
+        'marketing-xl': ['48px', { lineHeight: '1.15', fontWeight: '400' }],
+        'display-xl': ['38px', { lineHeight: '1.2', fontWeight: '400' }],
+        'display-lg': ['26px', { lineHeight: '1.3', fontWeight: '400' }],
       },
       
       // Colors
       colors: {
+        primary: "#825500",
+        "primary-container": "#c8860a",
+        "on-surface": "#211b13",
+        "on-surface-variant": "#514535",
+        "border-subtle": "#E8E4DC",
+        "page-bg": "#FAFAF8",
+        "section-amber": "rgba(200, 134, 10, 0.06)",
+        "section-dark": "#111111",
+        "section-muted": "#F4F2EE",
+        "amber-text": "#B47500",
+        "text-light": "#888888",
+        "text-mid": "#555555",
+        "secondary": "#5f5e5e",
+        outline: "#847563",
         amber: {
           DEFAULT: '#B47500',
           hover: '#B07408',
+          stitch: '#825500',
         },
         success: {
           DEFAULT: '#16A34A',
@@ -53,43 +77,28 @@ const config: Config = {
         border: '#E5E5E5',
       },
       
-      // Spacing (extends defaults — keep 6=32px for app, add marketing values)
+      // Spacing
       spacing: {
-        '1': '4px',
-        '2': '8px',
-        '3': '12px',
-        '4': '16px',
-        '5': '24px',
-        '6': '32px',
-        '8': '32px',
-        '10': '40px',
-        '12': '48px',
-        '14': '56px',
-        '16': '64px',
-        '20': '80px',
-        '24': '96px',
-        '28': '112px',
-        '32': '128px',
-        '40': '160px',
+        'space-48': '48px',
+        'space-64': '64px',
+        'space-96': '96px',
+        'space-128': '128px',
+        'gutter-desktop': '24px',
+        'gutter-wide': '32px',
+        'margin-mobile': '16px',
       },
       
       // Border radius
       borderRadius: {
-        'sm': '4px',
-        'md': '8px',
-        'lg': '12px',
-      },
-      
-      // Border widths
-      borderWidth: {
-        'hairline': '0.5px',
+        'DEFAULT': "0.125rem",
+        'lg': "0.25rem",
+        'xl': "0.5rem",
+        'full': "0.75rem"
       },
       
       // Shadows
       boxShadow: {
-        'sm': '0 1px 2px rgba(0, 0, 0, 0.04)',
-        'md': '0 2px 4px rgba(0, 0, 0, 0.06)',
-        'lg': '0 4px 8px rgba(0, 0, 0, 0.08)',
+        'screenshot': "0 20px 60px -15px rgba(0, 0, 0, 0.2)",
       },
     },
   },

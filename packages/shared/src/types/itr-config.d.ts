@@ -19,23 +19,23 @@ export declare const UpdateITRConfigInputSchema: z.ZodObject<{
     regimeOptOutDate: z.ZodOptional<z.ZodString>;
     regimeLockinUntil: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    taxRegime: TaxRegime;
-    tdsApplicable?: boolean | undefined;
-    presumptiveScheme?: PresumptiveScheme | undefined;
-    presumptiveRate?: string | undefined;
-    eligibleDeductions?: Record<string, unknown> | undefined;
-    advanceTaxApplicable?: boolean | undefined;
-    regimeOptOutDate?: string | undefined;
-    regimeLockinUntil?: string | undefined;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    presumptiveRate?: string;
+    eligibleDeductions?: Record<string, unknown>;
+    tdsApplicable?: boolean;
+    advanceTaxApplicable?: boolean;
+    regimeOptOutDate?: string;
+    regimeLockinUntil?: string;
 }, {
-    taxRegime: TaxRegime;
-    tdsApplicable?: boolean | undefined;
-    presumptiveScheme?: PresumptiveScheme | undefined;
-    presumptiveRate?: string | undefined;
-    eligibleDeductions?: Record<string, unknown> | undefined;
-    advanceTaxApplicable?: boolean | undefined;
-    regimeOptOutDate?: string | undefined;
-    regimeLockinUntil?: string | undefined;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    presumptiveRate?: string;
+    eligibleDeductions?: Record<string, unknown>;
+    tdsApplicable?: boolean;
+    advanceTaxApplicable?: boolean;
+    regimeOptOutDate?: string;
+    regimeLockinUntil?: string;
 }>;
 export type UpdateITRConfigInput = z.infer<typeof UpdateITRConfigInputSchema>;
 export declare const DeductionConfigSchema: z.ZodObject<{
@@ -48,23 +48,23 @@ export declare const DeductionConfigSchema: z.ZodObject<{
     section80CCD: z.ZodDefault<z.ZodBoolean>;
     other: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
-    other: string[];
-    section80C: boolean;
-    section80D: boolean;
-    section80E: boolean;
-    section80G: boolean;
-    section80TTA: boolean;
-    section80TTB: boolean;
-    section80CCD: boolean;
+    other?: string[];
+    section80C?: boolean;
+    section80D?: boolean;
+    section80E?: boolean;
+    section80G?: boolean;
+    section80TTA?: boolean;
+    section80TTB?: boolean;
+    section80CCD?: boolean;
 }, {
-    other?: string[] | undefined;
-    section80C?: boolean | undefined;
-    section80D?: boolean | undefined;
-    section80E?: boolean | undefined;
-    section80G?: boolean | undefined;
-    section80TTA?: boolean | undefined;
-    section80TTB?: boolean | undefined;
-    section80CCD?: boolean | undefined;
+    other?: string[];
+    section80C?: boolean;
+    section80D?: boolean;
+    section80E?: boolean;
+    section80G?: boolean;
+    section80TTA?: boolean;
+    section80TTB?: boolean;
+    section80CCD?: boolean;
 }>;
 export type DeductionConfig = z.infer<typeof DeductionConfigSchema>;
 export declare const ITRConfigSchema: z.ZodObject<{
@@ -81,31 +81,31 @@ export declare const ITRConfigSchema: z.ZodObject<{
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    tenantId: string;
-    tdsApplicable: string;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    taxRegime: TaxRegime;
-    presumptiveScheme: PresumptiveScheme;
-    presumptiveRate: string;
-    eligibleDeductions: Record<string, unknown>;
-    advanceTaxApplicable: string;
-    regimeOptOutDate: string | null;
-    regimeLockinUntil: string | null;
+    tenantId?: string;
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    presumptiveRate?: string;
+    eligibleDeductions?: Record<string, unknown>;
+    tdsApplicable?: string;
+    advanceTaxApplicable?: string;
+    regimeOptOutDate?: string;
+    regimeLockinUntil?: string;
 }, {
-    tenantId: string;
-    tdsApplicable: string;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    taxRegime: TaxRegime;
-    presumptiveScheme: PresumptiveScheme;
-    presumptiveRate: string;
-    eligibleDeductions: Record<string, unknown>;
-    advanceTaxApplicable: string;
-    regimeOptOutDate: string | null;
-    regimeLockinUntil: string | null;
+    tenantId?: string;
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    presumptiveRate?: string;
+    eligibleDeductions?: Record<string, unknown>;
+    tdsApplicable?: string;
+    advanceTaxApplicable?: string;
+    regimeOptOutDate?: string;
+    regimeLockinUntil?: string;
 }>;
 export type ITRConfig = z.infer<typeof ITRConfigSchema>;
 export declare const PresumptiveRateConfigSchema: z.ZodObject<{
@@ -113,13 +113,13 @@ export declare const PresumptiveRateConfigSchema: z.ZodObject<{
     rate: z.ZodString;
     applicableFrom: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    scheme: PresumptiveScheme;
-    rate: string;
-    applicableFrom: string;
+    rate?: string;
+    scheme?: PresumptiveScheme;
+    applicableFrom?: string;
 }, {
-    scheme: PresumptiveScheme;
-    rate: string;
-    applicableFrom: string;
+    rate?: string;
+    scheme?: PresumptiveScheme;
+    applicableFrom?: string;
 }>;
 export type PresumptiveRateConfig = z.infer<typeof PresumptiveRateConfigSchema>;
 export declare const ITRConfigUpdatedPayloadSchema: z.ZodObject<{
@@ -129,17 +129,17 @@ export declare const ITRConfigUpdatedPayloadSchema: z.ZodObject<{
     presumptiveScheme: z.ZodNativeEnum<typeof PresumptiveScheme>;
     updatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    tenantId: string;
-    updatedAt: Date;
-    taxRegime: TaxRegime;
-    presumptiveScheme: PresumptiveScheme;
-    configId: string;
+    tenantId?: string;
+    updatedAt?: Date;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    configId?: string;
 }, {
-    tenantId: string;
-    updatedAt: Date;
-    taxRegime: TaxRegime;
-    presumptiveScheme: PresumptiveScheme;
-    configId: string;
+    tenantId?: string;
+    updatedAt?: Date;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    configId?: string;
 }>;
 export type ITRConfigUpdatedPayload = z.infer<typeof ITRConfigUpdatedPayloadSchema>;
 //# sourceMappingURL=itr-config.d.ts.map

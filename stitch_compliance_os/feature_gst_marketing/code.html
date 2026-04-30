@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GST Feature - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed-variant": "#633f00",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "secondary": "#5f5e5e",
+                      "text-light": "#888888",
+                      "surface-container-high": "#f3e6d9",
+                      "amber-text": "#B47500",
+                      "surface-variant": "#ede0d3",
+                      "on-background": "#211b13",
+                      "tertiary-fixed": "#cae6ff",
+                      "primary-fixed-dim": "#ffb950",
+                      "surface-container": "#f9ecde",
+                      "page-bg": "#FAFAF8",
+                      "inverse-on-surface": "#fcefe1",
+                      "on-primary-container": "#3f2700",
+                      "on-surface-variant": "#514535",
+                      "section-muted": "#F4F2EE",
+                      "primary-fixed": "#ffddb3",
+                      "primary-container": "#c8860a",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "inverse-surface": "#362f27",
+                      "section-dark": "#111111",
+                      "on-surface": "#211b13",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#fff8f4",
+                      "surface": "#fff8f4",
+                      "background": "#fff8f4",
+                      "surface-container-highest": "#ede0d3",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#636262",
+                      "surface-container-low": "#fff1e4",
+                      "on-primary-fixed": "#291800",
+                      "border-subtle": "#E8E4DC",
+                      "error-container": "#ffdad6",
+                      "outline": "#847563",
+                      "outline-variant": "#d6c4af",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed": "#001e30",
+                      "tertiary-fixed-dim": "#8ecdff",
+                      "on-secondary": "#ffffff",
+                      "text-mid": "#555555",
+                      "section-amber": "rgba(200, 134, 10, 0.06)",
+                      "on-tertiary-container": "#002f49",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "surface-tint": "#825500",
+                      "secondary-container": "#e2dfde",
+                      "tertiary-container": "#309bdb",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#474746",
+                      "tertiary": "#006494",
+                      "inverse-primary": "#ffb950",
+                      "surface-dim": "#e5d8cb",
+                      "secondary-fixed": "#e5e2e1",
+                      "primary": "#825500"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "space-96": "96px",
+                      "gutter-desktop": "24px",
+                      "space-64": "64px",
+                      "space-128": "128px",
+                      "margin-mobile": "16px",
+                      "gutter-wide": "32px",
+                      "space-48": "48px"
+              },
+              "fontFamily": {
+                      "display-xl": [
+                              "Playfair Display"
+                      ],
+                      "ui-sm": [
+                              "Syne"
+                      ],
+                      "ui-xs": [
+                              "Syne"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "marketing-xl": [
+                              "Playfair Display"
+                      ],
+                      "ui-lg": [
+                              "Syne"
+                      ],
+                      "marketing-hero": [
+                              "Playfair Display"
+                      ],
+                      "mono-md": [
+                              "DM Mono"
+                      ],
+                      "mono-lg": [
+                              "DM Mono"
+                      ],
+                      "ui-md": [
+                              "Syne"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl": [
+                              "38px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "26px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "marketing-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "marketing-hero": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "mono-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "ui-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              },
+              boxShadow: {
+                  'screenshot': '0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 10px 30px -5px rgba(0, 0, 0, 0.04)',
+                  'card': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.page-bg');
+            color: theme('colors.on-background');
+        }
+        .shadow-screenshot {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+        }
+        .shadow-card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+        .hover-translate-x:hover span.arrow {
+            transform: translateX(3px);
+            transition: transform 0.2s ease;
+        }
+    </style>
+</head>
+<body class="antialiased font-ui-md selection:bg-primary-container selection:text-white">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-zinc-950/80 backdrop-blur-md border-b-[0.5px] border-stone-200 dark:border-zinc-800">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+<div class="flex items-center gap-8">
+<a class="font-serif text-xl font-bold tracking-tighter text-zinc-900 dark:text-zinc-50" href="#">ComplianceOS</a>
+<div class="hidden md:flex gap-6">
+<a class="font-serif text-sm tracking-tight text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:text-amber-600 transition-colors duration-200 cursor-pointer active:opacity-70" href="#">Accounting</a>
+<a class="font-serif text-sm tracking-tight text-amber-700 dark:text-amber-500 border-b-2 border-amber-600 font-medium pb-1 cursor-pointer active:opacity-70" href="#">GST</a>
+<a class="font-serif text-sm tracking-tight text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:text-amber-600 transition-colors duration-200 cursor-pointer active:opacity-70" href="#">ITR</a>
+<a class="font-serif text-sm tracking-tight text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:text-amber-600 transition-colors duration-200 cursor-pointer active:opacity-70" href="#">Pricing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<a class="font-ui-sm text-ui-sm text-on-surface hover:text-primary transition-colors duration-200 hidden md:block" href="#">Login</a>
+<a class="bg-primary-container text-white font-ui-sm text-ui-sm px-4 py-2 rounded flex items-center gap-2 hover-translate-x transition-colors duration-200" href="#">
+                    Get Started <span class="arrow inline-block transition-transform duration-200">→</span>
+</a>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-6 mb-space-128 mt-space-48">
+<div class="max-w-4xl">
+<div class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-6">GST Compliance Engine</div>
+<h1 class="font-marketing-hero text-marketing-hero text-on-background mb-8">
+                    GSTR-1, GSTR-2B, GSTR-3B — generated from your own entries. Not re-entered.
+                </h1>
+<p class="font-ui-lg text-ui-lg text-text-mid max-w-2xl mb-10">
+                    Stop manually reconciling spreadsheets. Our engine maps your daily accounting entries directly to Indian GST return formats, highlighting ITC mismatches instantly.
+                </p>
+<div class="flex items-center gap-4">
+<a class="bg-primary-container text-white font-ui-md text-ui-md px-6 py-3 rounded flex items-center gap-2 hover-translate-x transition-colors duration-200 shadow-sm" href="#">
+                        Start Filing <span class="arrow inline-block transition-transform duration-200">→</span>
+</a>
+<a class="border border-outline text-on-surface font-ui-md text-ui-md px-6 py-3 rounded hover:bg-surface-variant transition-colors duration-200" href="#">
+                        View Demo
+                    </a>
+</div>
+</div>
+</section>
+<!-- ITC Reconciliation Screenshot Section -->
+<section class="max-w-7xl mx-auto px-6 mb-space-96">
+<div class="bg-white border-[0.5px] border-border-subtle rounded-xl overflow-hidden shadow-screenshot relative">
+<!-- Browser-like header -->
+<div class="bg-section-muted border-b-[0.5px] border-border-subtle px-4 py-3 flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-red-400"></div>
+<div class="w-3 h-3 rounded-full bg-amber-400"></div>
+<div class="w-3 h-3 rounded-full bg-green-400"></div>
+<div class="ml-4 font-mono-md text-mono-md text-text-light text-xs">ITC_Reconciliation_Dashboard.view</div>
+</div>
+<div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Sidebar/Filters -->
+<div class="col-span-1 border-r-[0.5px] border-border-subtle pr-8 hidden lg:block">
+<div class="mb-6">
+<h3 class="font-ui-sm text-ui-sm font-semibold mb-3">Reconciliation Period</h3>
+<select class="w-full bg-surface-container-lowest border-[0.5px] border-border-subtle rounded px-3 py-2 font-mono-md text-sm">
+<option>Q2 2024 (Jul - Sep)</option>
+<option>Q1 2024 (Apr - Jun)</option>
+</select>
+</div>
+<div class="space-y-4">
+<h3 class="font-ui-sm text-ui-sm font-semibold">Match Status</h3>
+<label class="flex items-center gap-3">
+<input checked="" class="rounded border-border-subtle text-primary-container focus:ring-primary-container" type="checkbox"/>
+<span class="font-ui-sm text-sm">Exact Match (1,245)</span>
+</label>
+<label class="flex items-center gap-3">
+<input checked="" class="rounded border-border-subtle text-primary-container focus:ring-primary-container" type="checkbox"/>
+<span class="font-ui-sm text-sm text-amber-text">Partial Match (42)</span>
+</label>
+<label class="flex items-center gap-3">
+<input checked="" class="rounded border-border-subtle text-primary-container focus:ring-primary-container" type="checkbox"/>
+<span class="font-ui-sm text-sm text-error">Missing in 2B (18)</span>
+</label>
+</div>
+</div>
+<!-- Main Data Area -->
+<div class="col-span-1 lg:col-span-2">
+<div class="flex justify-between items-end mb-6 border-b-[0.5px] border-border-subtle pb-4">
+<div>
+<h2 class="font-display-lg text-display-lg">GSTR-2B vs Purchase Register</h2>
+<p class="font-mono-md text-text-mid text-sm mt-1">Total ITC Available: ₹ 14,52,890.00</p>
+</div>
+<button class="font-ui-xs text-xs border border-outline px-3 py-1.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">download</span> Export Report
+                            </button>
+</div>
+<!-- Data Table Simulation -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-mono-md text-sm">
+<thead>
+<tr class="text-text-light border-b-[0.5px] border-border-subtle">
+<th class="pb-3 font-normal">Invoice No.</th>
+<th class="pb-3 font-normal">Supplier GSTIN</th>
+<th class="pb-3 font-normal text-right">Taxable Val (₹)</th>
+<th class="pb-3 font-normal text-right">ITC (₹)</th>
+<th class="pb-3 font-normal pl-4">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle/50">
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-3 text-on-surface">INV-2024-089</td>
+<td class="py-3 text-text-mid">27AADCB2230M1Z5</td>
+<td class="py-3 text-right">1,50,000</td>
+<td class="py-3 text-right">27,000</td>
+<td class="py-3 pl-4"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 text-xs"><span class="material-symbols-outlined text-[14px]">check_circle</span> Matched</span></td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-3 text-on-surface">INV-2024-092</td>
+<td class="py-3 text-text-mid">07BBEPM1421K1ZW</td>
+<td class="py-3 text-right">85,000</td>
+<td class="py-3 text-right text-amber-text font-medium">12,500</td>
+<td class="py-3 pl-4"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs"><span class="material-symbols-outlined text-[14px]">warning</span> Value Mismatch</span></td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-3 text-on-surface">TAX/24/001</td>
+<td class="py-3 text-text-mid">29ABCDE1234F2Z5</td>
+<td class="py-3 text-right">2,10,000</td>
+<td class="py-3 text-right">37,800</td>
+<td class="py-3 pl-4"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200 text-xs"><span class="material-symbols-outlined text-[14px]">error</span> Missing in 2B</span></td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-3 text-on-surface">INV-2024-098</td>
+<td class="py-3 text-text-mid">27AADCB2230M1Z5</td>
+<td class="py-3 text-right">45,000</td>
+<td class="py-3 text-right">8,100</td>
+<td class="py-3 pl-4"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 text-xs"><span class="material-symbols-outlined text-[14px]">check_circle</span> Matched</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3-Step Filing Flow -->
+<section class="max-w-7xl mx-auto px-6 mb-space-96">
+<div class="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-12 text-center">The Filing Protocol</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Step 1 -->
+<div class="bg-white p-8 rounded-lg border-[0.5px] border-border-subtle border-t-[2px] border-t-amber-text hover:shadow-card transition-shadow relative">
+<div class="absolute -top-4 left-8 bg-surface-container-lowest border-[0.5px] border-border-subtle w-8 h-8 flex items-center justify-center rounded-full font-mono-md text-sm text-primary-container font-semibold">1</div>
+<div class="mb-4 text-text-mid">
+<span class="material-symbols-outlined text-[32px] font-light">receipt_long</span>
+</div>
+<h3 class="font-display-lg text-xl mb-3 text-on-surface">Daily Entries</h3>
+<p class="font-ui-sm text-text-mid">Continue your daily accounting. Create sales invoices, record purchases, and manage expenses. Our system automatically categorizes transactions based on HSN/SAC codes and GSTIN profiles.</p>
+</div>
+<!-- Step 2 -->
+<div class="bg-white p-8 rounded-lg border-[0.5px] border-border-subtle border-t-[2px] border-t-amber-text hover:shadow-card transition-shadow relative">
+<div class="absolute -top-4 left-8 bg-surface-container-lowest border-[0.5px] border-border-subtle w-8 h-8 flex items-center justify-center rounded-full font-mono-md text-sm text-primary-container font-semibold">2</div>
+<div class="mb-4 text-text-mid">
+<span class="material-symbols-outlined text-[32px] font-light">compare_arrows</span>
+</div>
+<h3 class="font-display-lg text-xl mb-3 text-on-surface">Auto-Reconciliation</h3>
+<p class="font-ui-sm text-text-mid">At month-end, fetch your GSTR-2B directly from the GST portal within ComplianceOS. The engine instantly maps it against your Purchase Register, highlighting discrepancies down to the penny.</p>
+</div>
+<!-- Step 3 -->
+<div class="bg-white p-8 rounded-lg border-[0.5px] border-border-subtle border-t-[2px] border-t-amber-text hover:shadow-card transition-shadow relative">
+<div class="absolute -top-4 left-8 bg-surface-container-lowest border-[0.5px] border-border-subtle w-8 h-8 flex items-center justify-center rounded-full font-mono-md text-sm text-primary-container font-semibold">3</div>
+<div class="mb-4 text-text-mid">
+<span class="material-symbols-outlined text-[32px] font-light">upload_file</span>
+</div>
+<h3 class="font-display-lg text-xl mb-3 text-on-surface">One-Click Push</h3>
+<p class="font-ui-sm text-text-mid">Review the generated GSTR-1 and GSTR-3B summaries. Once verified, push the JSON payload directly to the GSTN portal via our secure API. No manual uploads required.</p>
+</div>
+</div>
+</section>
+<!-- The Honest Limitation Banner -->
+<section class="max-w-5xl mx-auto px-6 mb-space-64">
+<div class="bg-surface-container-high border-[0.5px] border-border-subtle p-8 md:p-12 rounded flex flex-col md:flex-row items-start md:items-center gap-8">
+<div class="bg-amber-100 text-amber-800 p-3 rounded-full flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">info</span>
+</div>
+<div>
+<h3 class="font-mono-lg text-lg font-medium text-on-surface mb-2">A note on complete automation</h3>
+<p class="font-ui-sm text-text-mid leading-relaxed">
+                        While we automate the reconciliation and payload generation, human review remains essential. We do not support "blind filing." You must review the final ITC claim figures before executing the final push. It's your financial liability; we just make the math transparent.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-6 border-t-[0.5px] border-stone-200 dark:border-zinc-800 bg-stone-50 dark:bg-zinc-950">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-50">
+                ComplianceOS
+            </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-serif text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 underline decoration-amber-500 decoration-2 underline-offset-4 transition-all duration-300" href="#">Privacy Policy</a>
+<a class="font-serif text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 underline decoration-amber-500 decoration-2 underline-offset-4 transition-all duration-300" href="#">Terms of Service</a>
+<a class="font-serif text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 underline decoration-amber-500 decoration-2 underline-offset-4 transition-all duration-300" href="#">Compliance Guide</a>
+<a class="font-serif text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 underline decoration-amber-500 decoration-2 underline-offset-4 transition-all duration-300" href="#">Support</a>
+</div>
+<div class="font-serif text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-500">
+                © 2024 ComplianceOS. Built for Indian Fiscal Realities.
+            </div>
+</div>
+</footer>
+</body></html>

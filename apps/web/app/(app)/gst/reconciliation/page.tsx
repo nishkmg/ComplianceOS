@@ -1,102 +1,104 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { Icon } from '@/components/ui/icon';
+import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
-const MONTHS = [
-  { value: 1, label: "January" }, { value: 2, label: "February" }, { value: 3, label: "March" },
-  { value: 4, label: "April" }, { value: 5, label: "May" }, { value: 6, label: "June" },
-  { value: 7, label: "July" }, { value: 8, label: "August" }, { value: 9, label: "September" },
-  { value: 10, label: "October" }, { value: 11, label: "November" }, { value: 12, label: "December" },
+const mismatches = [
+  { id: "1", gstin: "27AABCU9603R1ZM", name: "Acme Suppliers", inv: "SUP-001", date: "10 Apr 26", value: "1,00,000", ledgerAmount: "1,18,000", portalAmount: "1,00,000", diff: "18,000", status: "mismatch" },
+  { id: "2", gstin: "29AABCT1234R1Z5", name: "Tech Components", inv: "SUP-002", date: "12 Apr 26", value: "50,000", ledgerAmount: "59,000", portalAmount: "59,000", diff: "0", status: "reconciled" },
 ];
 
-const YEARS = [2025, 2026, 2027, 2028];
-
-export default function GSTReconciliationPage() {
-  const [periodMonth, setPeriodMonth] = useState<number>(4);
-  const [periodYear, setPeriodYear] = useState<number>(2026);
-
-  const { data: summary, refetch } = api.gstReconciliation.matchedSummary.useQuery({ periodMonth, periodYear }, { enabled: false });
-  const { data: mismatches } = api.gstReconciliation.mismatches.useQuery({ periodMonth, periodYear }, { enabled: false });
-
-  const reconcileMutation = api.gstReconciliation.reconcile.useMutation({ onSuccess: () => refetch() });
-
-  const handleReconcile = () => { reconcileMutation.mutateAsync({ periodMonth, periodYear }); };
-
-  const matchedCount = summary?.salesInvoices.matched ?? 0;
-  const matchedValue = summary?.totalMatchedValue ?? 0;
-  const mismatchedCount = (mismatches as any[])?.length ?? 0;
-  const mismatchedValue = (mismatches as any[])?.reduce((sum, m) => sum + Math.abs(m.taxAmount ?? 0), 0) ?? 0;
-  const pendingCount = (summary?.salesInvoices.total ?? 0) - matchedCount;
-
-  const mismatchReasons = (mismatches as any[])?.reduce((acc, m) => { acc[m.type] = (acc[m.type] ?? 0) + 1; return acc; }, {} as Record<string, number>) ?? {};
-  const maxReasonCount = Math.max(...Object.values(mismatchReasons).map(v => Number(v) || 1), 1);
-
+export default function ITCResolutionPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">GST Reconciliation</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Match GSTR-2B with purchase records</p>
+          <p className="font-ui-xs text-amber-text uppercase tracking-widest mb-2">GST Reconciliation</p>
+          <h1 className="font-display-xl text-display-xl text-on-surface">ITC Resolution</h1>
+          <p className="font-ui-sm text-text-mid mt-2 max-w-2xl leading-relaxed">Cross-reference your internal purchase register with the GSTR-2B statement. Resolve discrepancies to maximize claimable Input Tax Credit.</p>
         </div>
-        <div className="flex gap-3 items-center">
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-            <select value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))} className="input-field font-ui">
-              {MONTHS.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-            <select value={periodYear} onChange={(e) => setPeriodYear(Number(e.target.value))} className="input-field font-ui">
-              {YEARS.map((y) => (<option key={y} value={y}>{y}</option>))}
-            </select>
-          </div>
-          <button onClick={handleReconcile} disabled={reconcileMutation.isPending} className="filter-tab active self-end disabled:opacity-50">
-            {reconcileMutation.isPending ? "Reconciling..." : "Run Reconciliation"}
+        <div className="flex gap-3">
+          <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase tracking-widest font-bold">
+            Fetch Latest 2B
+          </button>
+          <button className="bg-primary-container text-white px-8 py-2.5 rounded-sm font-ui-sm text-sm hover:bg-primary transition-colors cursor-pointer border-none shadow-sm font-bold uppercase tracking-widest">
+            Run Auto-Match
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card p-5 border-l-4 border-l-success">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Matched Invoices</p>
-          <p className="font-mono text-[22px] font-medium text-success">{matchedCount}</p>
-          <p className="font-mono text-[13px] text-mid mt-1">{formatIndianNumber(matchedValue)}</p>
+      {/* Stats Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm border-t-2 border-t-green-600">
+          <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-4">Total Matched</p>
+          <p className="font-mono text-xl font-bold text-green-700">₹ 8,45,200.00</p>
         </div>
-        <div className="card p-5 border-l-4 border-l-amber">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Mismatched</p>
-          <p className="font-mono text-[22px] font-medium text-amber">{mismatchedCount}</p>
-          <p className="font-mono text-[13px] text-mid mt-1">{formatIndianNumber(mismatchedValue)}</p>
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm border-t-2 border-t-red-600">
+          <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-4">Unresolved Mismatches</p>
+          <p className="font-mono text-xl font-bold text-red-600">₹ 1,12,040.50</p>
         </div>
-        <div className="card p-5 border-l-4 border-l-gray">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Pending</p>
-          <p className="font-mono text-[22px] font-medium text-mid">{pendingCount}</p>
-          <p className="font-ui text-[11px] text-light mt-1">Awaiting GSTR-2B</p>
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm border-t-2 border-t-amber-500">
+          <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-4">Supplier Missing</p>
+          <p className="font-mono text-xl font-bold text-amber-600">₹ 45,120.00</p>
+        </div>
+        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm border-t-2 border-t-stone-800">
+          <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-4">Potential ITC Saved</p>
+          <p className="font-mono text-xl font-bold text-on-surface">₹ 12,45,600.00</p>
         </div>
       </div>
 
-      {mismatchedCount > 0 && (
-        <div className="card p-5">
-          <h2 className="font-display text-[16px] font-normal text-dark mb-4">Mismatch Analysis</h2>
-          <div className="space-y-3">
-            {Object.entries(mismatchReasons).map(([reason, count]) => (
-              <div key={reason} className="flex items-center gap-4">
-                <span className="font-ui text-[13px] text-dark w-40 capitalize">{reason.replace("_", " ")}</span>
-                <div className="flex-1 h-2 bg-surface-muted rounded-full overflow-hidden">
-                  <div className="h-full bg-amber rounded-full" style={{ width: `${(Number(count) / maxReasonCount) * 100}%` }} />
-                </div>
-                <span className="font-mono text-[13px] text-mid w-12 text-right">{count}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4">
-            <a href="/gst/reconciliation/mismatches" className="font-ui text-[12px] text-amber hover:underline">View all mismatches →</a>
-          </div>
+      {/* Table Module */}
+      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden">
+        <div className="bg-stone-50 border-b-[0.5px] border-border-subtle flex p-2 gap-2 no-print">
+          <button className="px-4 py-1.5 bg-white border border-border-subtle rounded-sm text-[11px] uppercase tracking-widest font-bold text-on-surface cursor-pointer">All Invoices</button>
+          <button className="px-4 py-1.5 hover:bg-stone-100 transition-colors rounded-sm text-[11px] uppercase tracking-widest font-bold text-text-mid cursor-pointer border-none bg-transparent">Mismatch (12)</button>
+          <button className="px-4 py-1.5 hover:bg-stone-100 transition-colors rounded-sm text-[11px] uppercase tracking-widest font-bold text-text-mid cursor-pointer border-none bg-transparent">Reconciled</button>
         </div>
-      )}
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[1200px]">
+            <thead>
+              <tr className="bg-stone-50/50 border-b-[0.5px] border-border-subtle text-text-light font-ui-xs text-[10px] uppercase tracking-widest">
+                <th className="py-3 px-6 border-r-[0.5px] border-border-subtle">Supplier / GSTIN</th>
+                <th className="py-3 px-6 border-r-[0.5px] border-border-subtle">Invoice Details</th>
+                <th className="py-3 px-6 border-r-[0.5px] border-border-subtle text-right">Ledger Amount</th>
+                <th className="py-3 px-6 border-r-[0.5px] border-border-subtle text-right">Portal (2B) Amount</th>
+                <th className="py-3 px-6 border-r-[0.5px] border-border-subtle text-right">Difference</th>
+                <th className="py-3 px-6">Resolution</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-on-surface">
+              {mismatches.map((m) => (
+                <tr key={m.id} className="hover:bg-section-muted/30 transition-colors">
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">
+                    <div className="font-ui-sm font-bold text-on-surface">{m.name}</div>
+                    <div className="text-[11px] text-text-light">{m.gstin}</div>
+                  </td>
+                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">
+                    <div className="font-ui-sm text-sm">{m.inv}</div>
+                    <div className="text-[11px] text-text-light">{m.date}</div>
+                  </td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {m.ledgerAmount}</td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {m.portalAmount}</td>
+                  <td className={`py-4 px-6 text-right border-r-[0.5px] border-border-subtle font-bold ${m.status === 'mismatch' ? 'text-red-600' : 'text-green-600'}`}>₹ {m.diff}</td>
+                  <td className="py-4 px-6">
+                    {m.status === 'mismatch' ? (
+                      <button className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Match Manually</button>
+                    ) : (
+                      <span className="text-green-700 font-bold uppercase text-[10px] tracking-widest flex items-center gap-1">
+                        <Icon name="check_circle" className="text-sm" /> Reconciled
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

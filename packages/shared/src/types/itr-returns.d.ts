@@ -36,13 +36,13 @@ export declare const ComputeITRReturnInputSchema: z.ZodObject<{
     taxRegime: z.ZodNativeEnum<typeof TaxRegime>;
     presumptiveScheme: z.ZodOptional<z.ZodNativeEnum<typeof PresumptiveScheme>>;
 }, "strip", z.ZodTypeAny, {
-    returnId: string;
-    taxRegime: TaxRegime;
-    presumptiveScheme?: PresumptiveScheme | undefined;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    returnId?: string;
 }, {
-    returnId: string;
-    taxRegime: TaxRegime;
-    presumptiveScheme?: PresumptiveScheme | undefined;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    returnId?: string;
 }>;
 export type ComputeITRReturnInput = z.infer<typeof ComputeITRReturnInputSchema>;
 export declare const FileITRReturnInputSchema: z.ZodObject<{
@@ -50,13 +50,13 @@ export declare const FileITRReturnInputSchema: z.ZodObject<{
     itrAckNumber: z.ZodString;
     verificationMode: z.ZodEnum<["EVC", "EVC-AADHAAR", "EVC-DSC"]>;
 }, "strip", z.ZodTypeAny, {
-    returnId: string;
-    itrAckNumber: string;
-    verificationMode: "EVC" | "EVC-AADHAAR" | "EVC-DSC";
+    itrAckNumber?: string;
+    verificationMode?: "EVC" | "EVC-AADHAAR" | "EVC-DSC";
+    returnId?: string;
 }, {
-    returnId: string;
-    itrAckNumber: string;
-    verificationMode: "EVC" | "EVC-AADHAAR" | "EVC-DSC";
+    itrAckNumber?: string;
+    verificationMode?: "EVC" | "EVC-AADHAAR" | "EVC-DSC";
+    returnId?: string;
 }>;
 export type FileITRReturnInput = z.infer<typeof FileITRReturnInputSchema>;
 export declare const VerifyITRReturnInputSchema: z.ZodObject<{
@@ -64,13 +64,13 @@ export declare const VerifyITRReturnInputSchema: z.ZodObject<{
     verificationMode: z.ZodEnum<["EVC", "EVC-AADHAAR", "EVC-DSC", "ITR-V"]>;
     verificationDate: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    returnId: string;
-    verificationMode: "EVC" | "EVC-AADHAAR" | "EVC-DSC" | "ITR-V";
-    verificationDate: Date;
+    verificationDate?: Date;
+    verificationMode?: "EVC" | "EVC-AADHAAR" | "EVC-DSC" | "ITR-V";
+    returnId?: string;
 }, {
-    returnId: string;
-    verificationMode: "EVC" | "EVC-AADHAAR" | "EVC-DSC" | "ITR-V";
-    verificationDate: Date;
+    verificationDate?: Date;
+    verificationMode?: "EVC" | "EVC-AADHAAR" | "EVC-DSC" | "ITR-V";
+    returnId?: string;
 }>;
 export type VerifyITRReturnInput = z.infer<typeof VerifyITRReturnInputSchema>;
 export declare const UpdateITRReturnLineInputSchema: z.ZodObject<{
@@ -80,17 +80,17 @@ export declare const UpdateITRReturnLineInputSchema: z.ZodObject<{
     fieldValue: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    returnId: string;
-    scheduleCode: string;
-    fieldCode: string;
-    fieldValue: string;
-    description?: string | undefined;
+    description?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    fieldCode?: string;
+    fieldValue?: string;
 }, {
-    returnId: string;
-    scheduleCode: string;
-    fieldCode: string;
-    fieldValue: string;
-    description?: string | undefined;
+    description?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    fieldCode?: string;
+    fieldValue?: string;
 }>;
 export type UpdateITRReturnLineInput = z.infer<typeof UpdateITRReturnLineInputSchema>;
 export declare const UpdateITRScheduleInputSchema: z.ZodObject<{
@@ -99,15 +99,15 @@ export declare const UpdateITRScheduleInputSchema: z.ZodObject<{
     scheduleData: z.ZodRecord<z.ZodString, z.ZodUnknown>;
     totalAmount: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    returnId: string;
-    scheduleCode: string;
-    scheduleData: Record<string, unknown>;
-    totalAmount?: string | undefined;
+    totalAmount?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    scheduleData?: Record<string, unknown>;
 }, {
-    returnId: string;
-    scheduleCode: string;
-    scheduleData: Record<string, unknown>;
-    totalAmount?: string | undefined;
+    totalAmount?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    scheduleData?: Record<string, unknown>;
 }>;
 export type UpdateITRScheduleInput = z.infer<typeof UpdateITRScheduleInputSchema>;
 export declare const ITRReturnLineSchema: z.ZodObject<{
@@ -118,19 +118,19 @@ export declare const ITRReturnLineSchema: z.ZodObject<{
     fieldValue: z.ZodString;
     description: z.ZodNullable<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    description: string | null;
-    id: string;
-    returnId: string;
-    scheduleCode: string;
-    fieldCode: string;
-    fieldValue: string;
+    description?: string;
+    id?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    fieldCode?: string;
+    fieldValue?: string;
 }, {
-    description: string | null;
-    id: string;
-    returnId: string;
-    scheduleCode: string;
-    fieldCode: string;
-    fieldValue: string;
+    description?: string;
+    id?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    fieldCode?: string;
+    fieldValue?: string;
 }>;
 export type ITRReturnLine = z.infer<typeof ITRReturnLineSchema>;
 export declare const ITRScheduleSchema: z.ZodObject<{
@@ -140,17 +140,17 @@ export declare const ITRScheduleSchema: z.ZodObject<{
     scheduleData: z.ZodRecord<z.ZodString, z.ZodUnknown>;
     totalAmount: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    id: string;
-    totalAmount: string;
-    returnId: string;
-    scheduleCode: string;
-    scheduleData: Record<string, unknown>;
+    id?: string;
+    totalAmount?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    scheduleData?: Record<string, unknown>;
 }, {
-    id: string;
-    totalAmount: string;
-    returnId: string;
-    scheduleCode: string;
-    scheduleData: Record<string, unknown>;
+    id?: string;
+    totalAmount?: string;
+    returnId?: string;
+    scheduleCode?: string;
+    scheduleData?: Record<string, unknown>;
 }>;
 export type ITRSchedule = z.infer<typeof ITRScheduleSchema>;
 export declare const ITRReturnSchema: z.ZodObject<{
@@ -186,69 +186,69 @@ export declare const ITRReturnSchema: z.ZodObject<{
     createdAt: z.ZodDate;
     updatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    tenantId: string;
-    status: ITRReturnStatus;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    financialYear: string;
-    cess: string;
-    generatedAt: Date | null;
-    taxPayable: string;
-    returnType: ITRReturnType;
-    filedAt: Date | null;
-    taxRegime: TaxRegime | null;
-    presumptiveScheme: PresumptiveScheme | null;
-    itrAckNumber: string | null;
-    verificationMode: string | null;
-    verificationDate: Date | null;
-    assessmentYear: string;
-    grossTotalIncome: string;
-    totalDeductions: string;
-    totalIncome: string;
-    surcharge: string;
-    rebate87a: string;
-    advanceTaxPaid: string;
-    selfAssessmentTax: string;
-    tdsTcsCredit: string;
-    totalTaxPaid: string;
-    balancePayable: string;
-    refundDue: string;
-    itrJsonUrl: string | null;
-    createdBy: string;
-    filedBy: string | null;
+    tenantId?: string;
+    cess?: string;
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    status?: ITRReturnStatus;
+    createdBy?: string;
+    financialYear?: string;
+    generatedAt?: Date;
+    returnType?: ITRReturnType;
+    totalTaxPaid?: string;
+    filedBy?: string;
+    taxPayable?: string;
+    assessmentYear?: string;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    grossTotalIncome?: string;
+    totalDeductions?: string;
+    totalIncome?: string;
+    surcharge?: string;
+    rebate87a?: string;
+    advanceTaxPaid?: string;
+    selfAssessmentTax?: string;
+    tdsTcsCredit?: string;
+    balancePayable?: string;
+    refundDue?: string;
+    filedAt?: Date;
+    itrAckNumber?: string;
+    verificationDate?: Date;
+    verificationMode?: string;
+    itrJsonUrl?: string;
 }, {
-    tenantId: string;
-    status: ITRReturnStatus;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    financialYear: string;
-    cess: string;
-    generatedAt: Date | null;
-    taxPayable: string;
-    returnType: ITRReturnType;
-    filedAt: Date | null;
-    taxRegime: TaxRegime | null;
-    presumptiveScheme: PresumptiveScheme | null;
-    itrAckNumber: string | null;
-    verificationMode: string | null;
-    verificationDate: Date | null;
-    assessmentYear: string;
-    grossTotalIncome: string;
-    totalDeductions: string;
-    totalIncome: string;
-    surcharge: string;
-    rebate87a: string;
-    advanceTaxPaid: string;
-    selfAssessmentTax: string;
-    tdsTcsCredit: string;
-    totalTaxPaid: string;
-    balancePayable: string;
-    refundDue: string;
-    itrJsonUrl: string | null;
-    createdBy: string;
-    filedBy: string | null;
+    tenantId?: string;
+    cess?: string;
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    status?: ITRReturnStatus;
+    createdBy?: string;
+    financialYear?: string;
+    generatedAt?: Date;
+    returnType?: ITRReturnType;
+    totalTaxPaid?: string;
+    filedBy?: string;
+    taxPayable?: string;
+    assessmentYear?: string;
+    taxRegime?: TaxRegime;
+    presumptiveScheme?: PresumptiveScheme;
+    grossTotalIncome?: string;
+    totalDeductions?: string;
+    totalIncome?: string;
+    surcharge?: string;
+    rebate87a?: string;
+    advanceTaxPaid?: string;
+    selfAssessmentTax?: string;
+    tdsTcsCredit?: string;
+    balancePayable?: string;
+    refundDue?: string;
+    filedAt?: Date;
+    itrAckNumber?: string;
+    verificationDate?: Date;
+    verificationMode?: string;
+    itrJsonUrl?: string;
 }>;
 export type ITRReturn = z.infer<typeof ITRReturnSchema>;
 export declare const IncomeByHeadSchema: z.ZodObject<{
@@ -260,38 +260,38 @@ export declare const IncomeByHeadSchema: z.ZodObject<{
         longTerm: z.ZodString;
         total: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        shortTerm: string;
-        longTerm: string;
-        total: string;
+        shortTerm?: string;
+        longTerm?: string;
+        total?: string;
     }, {
-        shortTerm: string;
-        longTerm: string;
-        total: string;
+        shortTerm?: string;
+        longTerm?: string;
+        total?: string;
     }>;
     otherSources: z.ZodString;
     grossTotal: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    salary: string;
-    houseProperty: string;
-    businessProfit: string;
-    capitalGains: {
-        shortTerm: string;
-        longTerm: string;
-        total: string;
+    salary?: string;
+    capitalGains?: {
+        shortTerm?: string;
+        longTerm?: string;
+        total?: string;
     };
-    otherSources: string;
-    grossTotal: string;
+    otherSources?: string;
+    houseProperty?: string;
+    businessProfit?: string;
+    grossTotal?: string;
 }, {
-    salary: string;
-    houseProperty: string;
-    businessProfit: string;
-    capitalGains: {
-        shortTerm: string;
-        longTerm: string;
-        total: string;
+    salary?: string;
+    capitalGains?: {
+        shortTerm?: string;
+        longTerm?: string;
+        total?: string;
     };
-    otherSources: string;
-    grossTotal: string;
+    otherSources?: string;
+    houseProperty?: string;
+    businessProfit?: string;
+    grossTotal?: string;
 }>;
 export type IncomeByHead = z.infer<typeof IncomeByHeadSchema>;
 export declare const DeductionsSchema: z.ZodObject<{
@@ -305,23 +305,23 @@ export declare const DeductionsSchema: z.ZodObject<{
         other: z.ZodString;
         total: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        other: string;
-        total: string;
-        section80C: string;
-        section80D: string;
-        section80E: string;
-        section80G: string;
-        section80TTA: string;
-        section80TTB: string;
+        other?: string;
+        total?: string;
+        section80C?: string;
+        section80D?: string;
+        section80E?: string;
+        section80G?: string;
+        section80TTA?: string;
+        section80TTB?: string;
     }, {
-        other: string;
-        total: string;
-        section80C: string;
-        section80D: string;
-        section80E: string;
-        section80G: string;
-        section80TTA: string;
-        section80TTB: string;
+        other?: string;
+        total?: string;
+        section80C?: string;
+        section80D?: string;
+        section80E?: string;
+        section80G?: string;
+        section80TTA?: string;
+        section80TTB?: string;
     }>;
     otherDeductions: z.ZodObject<{
         section10AA: z.ZodString;
@@ -329,52 +329,52 @@ export declare const DeductionsSchema: z.ZodObject<{
         other: z.ZodString;
         total: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        other: string;
-        total: string;
-        section10AA: string;
-        section80CC: string;
+        other?: string;
+        total?: string;
+        section10AA?: string;
+        section80CC?: string;
     }, {
-        other: string;
-        total: string;
-        section10AA: string;
-        section80CC: string;
+        other?: string;
+        total?: string;
+        section10AA?: string;
+        section80CC?: string;
     }>;
     totalDeductions: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    otherDeductions: {
-        other: string;
-        total: string;
-        section10AA: string;
-        section80CC: string;
+    totalDeductions?: string;
+    otherDeductions?: {
+        other?: string;
+        total?: string;
+        section10AA?: string;
+        section80CC?: string;
     };
-    totalDeductions: string;
-    "chapter VIA": {
-        other: string;
-        total: string;
-        section80C: string;
-        section80D: string;
-        section80E: string;
-        section80G: string;
-        section80TTA: string;
-        section80TTB: string;
+    "chapter VIA"?: {
+        other?: string;
+        total?: string;
+        section80C?: string;
+        section80D?: string;
+        section80E?: string;
+        section80G?: string;
+        section80TTA?: string;
+        section80TTB?: string;
     };
 }, {
-    otherDeductions: {
-        other: string;
-        total: string;
-        section10AA: string;
-        section80CC: string;
+    totalDeductions?: string;
+    otherDeductions?: {
+        other?: string;
+        total?: string;
+        section10AA?: string;
+        section80CC?: string;
     };
-    totalDeductions: string;
-    "chapter VIA": {
-        other: string;
-        total: string;
-        section80C: string;
-        section80D: string;
-        section80E: string;
-        section80G: string;
-        section80TTA: string;
-        section80TTB: string;
+    "chapter VIA"?: {
+        other?: string;
+        total?: string;
+        section80C?: string;
+        section80D?: string;
+        section80E?: string;
+        section80G?: string;
+        section80TTA?: string;
+        section80TTB?: string;
     };
 }>;
 export type Deductions = z.infer<typeof DeductionsSchema>;
@@ -387,21 +387,21 @@ export declare const TaxComputationSchema: z.ZodObject<{
     rebate87a: z.ZodString;
     netTax: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    cess: string;
-    totalIncome: string;
-    surcharge: string;
-    rebate87a: string;
-    taxOnTotalIncome: string;
-    grossTax: string;
-    netTax: string;
+    cess?: string;
+    totalIncome?: string;
+    surcharge?: string;
+    rebate87a?: string;
+    taxOnTotalIncome?: string;
+    grossTax?: string;
+    netTax?: string;
 }, {
-    cess: string;
-    totalIncome: string;
-    surcharge: string;
-    rebate87a: string;
-    taxOnTotalIncome: string;
-    grossTax: string;
-    netTax: string;
+    cess?: string;
+    totalIncome?: string;
+    surcharge?: string;
+    rebate87a?: string;
+    taxOnTotalIncome?: string;
+    grossTax?: string;
+    netTax?: string;
 }>;
 export type TaxComputation = z.infer<typeof TaxComputationSchema>;
 export declare const TaxPaidSchema: z.ZodObject<{
@@ -410,15 +410,15 @@ export declare const TaxPaidSchema: z.ZodObject<{
     tdsTcs: z.ZodString;
     totalTaxPaid: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    selfAssessmentTax: string;
-    totalTaxPaid: string;
-    advanceTax: string;
-    tdsTcs: string;
+    totalTaxPaid?: string;
+    selfAssessmentTax?: string;
+    advanceTax?: string;
+    tdsTcs?: string;
 }, {
-    selfAssessmentTax: string;
-    totalTaxPaid: string;
-    advanceTax: string;
-    tdsTcs: string;
+    totalTaxPaid?: string;
+    selfAssessmentTax?: string;
+    advanceTax?: string;
+    tdsTcs?: string;
 }>;
 export type TaxPaid = z.infer<typeof TaxPaidSchema>;
 export declare const ITRComputationSchema: z.ZodObject<{
@@ -435,38 +435,38 @@ export declare const ITRComputationSchema: z.ZodObject<{
             longTerm: z.ZodString;
             total: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            shortTerm: string;
-            longTerm: string;
-            total: string;
+            shortTerm?: string;
+            longTerm?: string;
+            total?: string;
         }, {
-            shortTerm: string;
-            longTerm: string;
-            total: string;
+            shortTerm?: string;
+            longTerm?: string;
+            total?: string;
         }>;
         otherSources: z.ZodString;
         grossTotal: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        salary: string;
-        houseProperty: string;
-        businessProfit: string;
-        capitalGains: {
-            shortTerm: string;
-            longTerm: string;
-            total: string;
+        salary?: string;
+        capitalGains?: {
+            shortTerm?: string;
+            longTerm?: string;
+            total?: string;
         };
-        otherSources: string;
-        grossTotal: string;
+        otherSources?: string;
+        houseProperty?: string;
+        businessProfit?: string;
+        grossTotal?: string;
     }, {
-        salary: string;
-        houseProperty: string;
-        businessProfit: string;
-        capitalGains: {
-            shortTerm: string;
-            longTerm: string;
-            total: string;
+        salary?: string;
+        capitalGains?: {
+            shortTerm?: string;
+            longTerm?: string;
+            total?: string;
         };
-        otherSources: string;
-        grossTotal: string;
+        otherSources?: string;
+        houseProperty?: string;
+        businessProfit?: string;
+        grossTotal?: string;
     }>;
     deductions: z.ZodObject<{
         "chapter VIA": z.ZodObject<{
@@ -479,23 +479,23 @@ export declare const ITRComputationSchema: z.ZodObject<{
             other: z.ZodString;
             total: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            other: string;
-            total: string;
-            section80C: string;
-            section80D: string;
-            section80E: string;
-            section80G: string;
-            section80TTA: string;
-            section80TTB: string;
+            other?: string;
+            total?: string;
+            section80C?: string;
+            section80D?: string;
+            section80E?: string;
+            section80G?: string;
+            section80TTA?: string;
+            section80TTB?: string;
         }, {
-            other: string;
-            total: string;
-            section80C: string;
-            section80D: string;
-            section80E: string;
-            section80G: string;
-            section80TTA: string;
-            section80TTB: string;
+            other?: string;
+            total?: string;
+            section80C?: string;
+            section80D?: string;
+            section80E?: string;
+            section80G?: string;
+            section80TTA?: string;
+            section80TTB?: string;
         }>;
         otherDeductions: z.ZodObject<{
             section10AA: z.ZodString;
@@ -503,52 +503,52 @@ export declare const ITRComputationSchema: z.ZodObject<{
             other: z.ZodString;
             total: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            other: string;
-            total: string;
-            section10AA: string;
-            section80CC: string;
+            other?: string;
+            total?: string;
+            section10AA?: string;
+            section80CC?: string;
         }, {
-            other: string;
-            total: string;
-            section10AA: string;
-            section80CC: string;
+            other?: string;
+            total?: string;
+            section10AA?: string;
+            section80CC?: string;
         }>;
         totalDeductions: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        otherDeductions: {
-            other: string;
-            total: string;
-            section10AA: string;
-            section80CC: string;
+        totalDeductions?: string;
+        otherDeductions?: {
+            other?: string;
+            total?: string;
+            section10AA?: string;
+            section80CC?: string;
         };
-        totalDeductions: string;
-        "chapter VIA": {
-            other: string;
-            total: string;
-            section80C: string;
-            section80D: string;
-            section80E: string;
-            section80G: string;
-            section80TTA: string;
-            section80TTB: string;
+        "chapter VIA"?: {
+            other?: string;
+            total?: string;
+            section80C?: string;
+            section80D?: string;
+            section80E?: string;
+            section80G?: string;
+            section80TTA?: string;
+            section80TTB?: string;
         };
     }, {
-        otherDeductions: {
-            other: string;
-            total: string;
-            section10AA: string;
-            section80CC: string;
+        totalDeductions?: string;
+        otherDeductions?: {
+            other?: string;
+            total?: string;
+            section10AA?: string;
+            section80CC?: string;
         };
-        totalDeductions: string;
-        "chapter VIA": {
-            other: string;
-            total: string;
-            section80C: string;
-            section80D: string;
-            section80E: string;
-            section80G: string;
-            section80TTA: string;
-            section80TTB: string;
+        "chapter VIA"?: {
+            other?: string;
+            total?: string;
+            section80C?: string;
+            section80D?: string;
+            section80E?: string;
+            section80G?: string;
+            section80TTA?: string;
+            section80TTB?: string;
         };
     }>;
     totalIncome: z.ZodString;
@@ -561,21 +561,21 @@ export declare const ITRComputationSchema: z.ZodObject<{
         rebate87a: z.ZodString;
         netTax: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        cess: string;
-        totalIncome: string;
-        surcharge: string;
-        rebate87a: string;
-        taxOnTotalIncome: string;
-        grossTax: string;
-        netTax: string;
+        cess?: string;
+        totalIncome?: string;
+        surcharge?: string;
+        rebate87a?: string;
+        taxOnTotalIncome?: string;
+        grossTax?: string;
+        netTax?: string;
     }, {
-        cess: string;
-        totalIncome: string;
-        surcharge: string;
-        rebate87a: string;
-        taxOnTotalIncome: string;
-        grossTax: string;
-        netTax: string;
+        cess?: string;
+        totalIncome?: string;
+        surcharge?: string;
+        rebate87a?: string;
+        taxOnTotalIncome?: string;
+        grossTax?: string;
+        netTax?: string;
     }>;
     taxPaid: z.ZodObject<{
         advanceTax: z.ZodString;
@@ -583,129 +583,129 @@ export declare const ITRComputationSchema: z.ZodObject<{
         tdsTcs: z.ZodString;
         totalTaxPaid: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        selfAssessmentTax: string;
-        totalTaxPaid: string;
-        advanceTax: string;
-        tdsTcs: string;
+        totalTaxPaid?: string;
+        selfAssessmentTax?: string;
+        advanceTax?: string;
+        tdsTcs?: string;
     }, {
-        selfAssessmentTax: string;
-        totalTaxPaid: string;
-        advanceTax: string;
-        tdsTcs: string;
+        totalTaxPaid?: string;
+        selfAssessmentTax?: string;
+        advanceTax?: string;
+        tdsTcs?: string;
     }>;
     balancePayable: z.ZodString;
     refundDue: z.ZodString;
     computedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    financialYear: string;
-    deductions: {
-        otherDeductions: {
-            other: string;
-            total: string;
-            section10AA: string;
-            section80CC: string;
+    financialYear?: string;
+    taxPaid?: {
+        totalTaxPaid?: string;
+        selfAssessmentTax?: string;
+        advanceTax?: string;
+        tdsTcs?: string;
+    };
+    assessmentYear?: string;
+    taxRegime?: TaxRegime;
+    totalIncome?: string;
+    balancePayable?: string;
+    refundDue?: string;
+    returnId?: string;
+    deductions?: {
+        totalDeductions?: string;
+        otherDeductions?: {
+            other?: string;
+            total?: string;
+            section10AA?: string;
+            section80CC?: string;
         };
-        totalDeductions: string;
-        "chapter VIA": {
-            other: string;
-            total: string;
-            section80C: string;
-            section80D: string;
-            section80E: string;
-            section80G: string;
-            section80TTA: string;
-            section80TTB: string;
+        "chapter VIA"?: {
+            other?: string;
+            total?: string;
+            section80C?: string;
+            section80D?: string;
+            section80E?: string;
+            section80G?: string;
+            section80TTA?: string;
+            section80TTB?: string;
         };
     };
-    returnId: string;
-    taxPaid: {
-        selfAssessmentTax: string;
-        totalTaxPaid: string;
-        advanceTax: string;
-        tdsTcs: string;
-    };
-    taxRegime: TaxRegime;
-    assessmentYear: string;
-    totalIncome: string;
-    balancePayable: string;
-    refundDue: string;
-    incomeByHead: {
-        salary: string;
-        houseProperty: string;
-        businessProfit: string;
-        capitalGains: {
-            shortTerm: string;
-            longTerm: string;
-            total: string;
+    incomeByHead?: {
+        salary?: string;
+        capitalGains?: {
+            shortTerm?: string;
+            longTerm?: string;
+            total?: string;
         };
-        otherSources: string;
-        grossTotal: string;
+        otherSources?: string;
+        houseProperty?: string;
+        businessProfit?: string;
+        grossTotal?: string;
     };
-    taxComputation: {
-        cess: string;
-        totalIncome: string;
-        surcharge: string;
-        rebate87a: string;
-        taxOnTotalIncome: string;
-        grossTax: string;
-        netTax: string;
+    taxComputation?: {
+        cess?: string;
+        totalIncome?: string;
+        surcharge?: string;
+        rebate87a?: string;
+        taxOnTotalIncome?: string;
+        grossTax?: string;
+        netTax?: string;
     };
-    computedAt: Date;
+    computedAt?: Date;
 }, {
-    financialYear: string;
-    deductions: {
-        otherDeductions: {
-            other: string;
-            total: string;
-            section10AA: string;
-            section80CC: string;
+    financialYear?: string;
+    taxPaid?: {
+        totalTaxPaid?: string;
+        selfAssessmentTax?: string;
+        advanceTax?: string;
+        tdsTcs?: string;
+    };
+    assessmentYear?: string;
+    taxRegime?: TaxRegime;
+    totalIncome?: string;
+    balancePayable?: string;
+    refundDue?: string;
+    returnId?: string;
+    deductions?: {
+        totalDeductions?: string;
+        otherDeductions?: {
+            other?: string;
+            total?: string;
+            section10AA?: string;
+            section80CC?: string;
         };
-        totalDeductions: string;
-        "chapter VIA": {
-            other: string;
-            total: string;
-            section80C: string;
-            section80D: string;
-            section80E: string;
-            section80G: string;
-            section80TTA: string;
-            section80TTB: string;
+        "chapter VIA"?: {
+            other?: string;
+            total?: string;
+            section80C?: string;
+            section80D?: string;
+            section80E?: string;
+            section80G?: string;
+            section80TTA?: string;
+            section80TTB?: string;
         };
     };
-    returnId: string;
-    taxPaid: {
-        selfAssessmentTax: string;
-        totalTaxPaid: string;
-        advanceTax: string;
-        tdsTcs: string;
-    };
-    taxRegime: TaxRegime;
-    assessmentYear: string;
-    totalIncome: string;
-    balancePayable: string;
-    refundDue: string;
-    incomeByHead: {
-        salary: string;
-        houseProperty: string;
-        businessProfit: string;
-        capitalGains: {
-            shortTerm: string;
-            longTerm: string;
-            total: string;
+    incomeByHead?: {
+        salary?: string;
+        capitalGains?: {
+            shortTerm?: string;
+            longTerm?: string;
+            total?: string;
         };
-        otherSources: string;
-        grossTotal: string;
+        otherSources?: string;
+        houseProperty?: string;
+        businessProfit?: string;
+        grossTotal?: string;
     };
-    taxComputation: {
-        cess: string;
-        totalIncome: string;
-        surcharge: string;
-        rebate87a: string;
-        taxOnTotalIncome: string;
-        grossTax: string;
-        netTax: string;
+    taxComputation?: {
+        cess?: string;
+        totalIncome?: string;
+        surcharge?: string;
+        rebate87a?: string;
+        taxOnTotalIncome?: string;
+        grossTax?: string;
+        netTax?: string;
     };
-    computedAt: Date;
+    computedAt?: Date;
 }>;
 export type ITRComputation = z.infer<typeof ITRComputationSchema>;
 export declare const ITRReturnComputedPayloadSchema: z.ZodObject<{
@@ -720,27 +720,27 @@ export declare const ITRReturnComputedPayloadSchema: z.ZodObject<{
     refundDue: z.ZodString;
     computedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    status: ITRReturnStatus.COMPUTED;
-    financialYear: string;
-    returnId: string;
-    taxPayable: string;
-    assessmentYear: string;
-    totalIncome: string;
-    balancePayable: string;
-    refundDue: string;
-    computedAt: Date;
-    taxpayerPan: string;
+    status?: ITRReturnStatus.COMPUTED;
+    financialYear?: string;
+    taxPayable?: string;
+    assessmentYear?: string;
+    totalIncome?: string;
+    balancePayable?: string;
+    refundDue?: string;
+    returnId?: string;
+    computedAt?: Date;
+    taxpayerPan?: string;
 }, {
-    status: ITRReturnStatus.COMPUTED;
-    financialYear: string;
-    returnId: string;
-    taxPayable: string;
-    assessmentYear: string;
-    totalIncome: string;
-    balancePayable: string;
-    refundDue: string;
-    computedAt: Date;
-    taxpayerPan: string;
+    status?: ITRReturnStatus.COMPUTED;
+    financialYear?: string;
+    taxPayable?: string;
+    assessmentYear?: string;
+    totalIncome?: string;
+    balancePayable?: string;
+    refundDue?: string;
+    returnId?: string;
+    computedAt?: Date;
+    taxpayerPan?: string;
 }>;
 export type ITRReturnComputedPayload = z.infer<typeof ITRReturnComputedPayloadSchema>;
 export declare const ITRReturnFiledPayloadSchema: z.ZodObject<{
@@ -754,25 +754,25 @@ export declare const ITRReturnFiledPayloadSchema: z.ZodObject<{
     verificationMode: z.ZodString;
     filedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    status: ITRReturnStatus.FILED;
-    financialYear: string;
-    returnId: string;
-    returnType: ITRReturnType;
-    filedAt: Date;
-    itrAckNumber: string;
-    verificationMode: string;
-    assessmentYear: string;
-    taxpayerPan: string;
+    status?: ITRReturnStatus.FILED;
+    financialYear?: string;
+    returnType?: ITRReturnType;
+    assessmentYear?: string;
+    filedAt?: Date;
+    itrAckNumber?: string;
+    verificationMode?: string;
+    returnId?: string;
+    taxpayerPan?: string;
 }, {
-    status: ITRReturnStatus.FILED;
-    financialYear: string;
-    returnId: string;
-    returnType: ITRReturnType;
-    filedAt: Date;
-    itrAckNumber: string;
-    verificationMode: string;
-    assessmentYear: string;
-    taxpayerPan: string;
+    status?: ITRReturnStatus.FILED;
+    financialYear?: string;
+    returnType?: ITRReturnType;
+    assessmentYear?: string;
+    filedAt?: Date;
+    itrAckNumber?: string;
+    verificationMode?: string;
+    returnId?: string;
+    taxpayerPan?: string;
 }>;
 export type ITRReturnFiledPayload = z.infer<typeof ITRReturnFiledPayloadSchema>;
 export declare const ITRReturnVerifiedPayloadSchema: z.ZodObject<{
@@ -786,25 +786,25 @@ export declare const ITRReturnVerifiedPayloadSchema: z.ZodObject<{
     verificationMode: z.ZodString;
     verifiedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    status: ITRReturnStatus.VERIFIED;
-    financialYear: string;
-    returnId: string;
-    returnType: ITRReturnType;
-    itrAckNumber: string;
-    verificationMode: string;
-    assessmentYear: string;
-    taxpayerPan: string;
-    verifiedAt: Date;
+    status?: ITRReturnStatus.VERIFIED;
+    financialYear?: string;
+    returnType?: ITRReturnType;
+    assessmentYear?: string;
+    itrAckNumber?: string;
+    verificationMode?: string;
+    returnId?: string;
+    taxpayerPan?: string;
+    verifiedAt?: Date;
 }, {
-    status: ITRReturnStatus.VERIFIED;
-    financialYear: string;
-    returnId: string;
-    returnType: ITRReturnType;
-    itrAckNumber: string;
-    verificationMode: string;
-    assessmentYear: string;
-    taxpayerPan: string;
-    verifiedAt: Date;
+    status?: ITRReturnStatus.VERIFIED;
+    financialYear?: string;
+    returnType?: ITRReturnType;
+    assessmentYear?: string;
+    itrAckNumber?: string;
+    verificationMode?: string;
+    returnId?: string;
+    taxpayerPan?: string;
+    verifiedAt?: Date;
 }>;
 export type ITRReturnVerifiedPayload = z.infer<typeof ITRReturnVerifiedPayloadSchema>;
 //# sourceMappingURL=itr-returns.d.ts.map

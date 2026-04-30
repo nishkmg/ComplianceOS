@@ -1,147 +1,109 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
 
-const statusConfig: Record<string, { label: string; variant: "gray" | "blue" | "success" | "purple" | "danger" }> = {
-  draft: { label: "Draft", variant: "gray" },
-  computed: { label: "Computed", variant: "blue" },
-  generated: { label: "Generated", variant: "success" },
-  filed: { label: "Filed", variant: "success" },
-  verified: { label: "Verified", variant: "purple" },
-  voided: { label: "Voided", variant: "danger" },
-};
+interface ITRReturn {
+  id: string;
+  financialYear: string;
+  formType: string;
+  assesseeName: string;
+  status: "draft" | "generated" | "filed";
+  filedDate?: string;
+}
 
-const returnTypes = ["all", "itr3", "itr4"] as const;
-const statuses = ["all", "draft", "computed", "generated", "filed", "verified"] as const;
-const currentFY = `${new Date().getFullYear()}-${(new Date().getFullYear() + 1).toString().slice(-2)}`;
+const mockReturns: ITRReturn[] = [
+  { id: "1", financialYear: "2024-25", formType: "ITR-3", assesseeName: "TechCorp India Pvt Ltd", status: "draft" },
+  { id: "2", financialYear: "2024-25", formType: "ITR-4", assesseeName: "Sharma Associates", status: "generated" },
+  { id: "3", financialYear: "2023-24", formType: "ITR-3", assesseeName: "Global Exports LLC", status: "filed", filedDate: "12 Aug 24" },
+];
 
 export default function ITRReturnsPage() {
-  const [financialYear, setFinancialYear] = useState<string>(currentFY);
-  const [returnType, setReturnType] = useState<(typeof returnTypes)[number]>("all");
-  const [status, setStatus] = useState<(typeof statuses)[number]>("all");
-
-  const { data: returns } = api.itrReturns.list.useQuery({ financialYear, returnType: returnType !== "all" ? returnType : undefined, status: status !== "all" ? status : undefined });
-  const filteredReturns = returns ?? [];
-
-  const createReturn = api.itrReturns.create.useMutation();
-  const generateReturn = api.itrReturns.generate.useMutation();
-  const fileReturn = api.itrReturns.file.useMutation();
-  const amendReturn = api.itrReturns.amend.useMutation();
-  const voidReturn = api.itrReturns.void.useMutation();
-
-  const handleCreate = async (type: "itr3" | "itr4") => {
-    try {
-      const result = await createReturn.mutateAsync({ financialYear, returnType: type });
-      window.location.href = `/itr/returns/${financialYear}/${result.itrReturnId}`;
-    } catch (error) { console.error("Failed to create return:", error); }
-  };
-
-  const handleGenerate = async (returnId: string, type: "itr3" | "itr4") => {
-    try { await generateReturn.mutateAsync({ itrReturnId: returnId, returnType: type }); }
-    catch (error) { console.error("Failed to generate return:", error); }
-  };
-
-  const handleFile = async (returnId: string) => {
-    const acknowledgmentNumber = prompt("Enter Acknowledgment Number:");
-    if (!acknowledgmentNumber) return;
-    const verificationMode = prompt("Verification Mode (EVC, EVC-AADHAAR, EVC-DSC):", "EVC");
-    if (!verificationMode) return;
-    try { await fileReturn.mutateAsync({ itrReturnId: returnId, acknowledgmentNumber, verificationMode }); }
-    catch (error) { console.error("Failed to file return:", error); }
-  };
-
-  const handleAmend = async (returnId: string) => {
-    if (!confirm("This will create a new amended return. Continue?")) return;
-    try { const result = await amendReturn.mutateAsync({ itrReturnId: returnId }); window.location.href = `/itr/returns/${financialYear}/${result.amendedReturnId}`; }
-    catch (error) { console.error("Failed to amend return:", error); }
-  };
-
-  const handleVoid = async (returnId: string) => {
-    const reason = prompt("Enter reason for voiding:");
-    if (!reason) return;
-    try { await voidReturn.mutateAsync({ itrReturnId: returnId, reason }); }
-    catch (error) { console.error("Failed to void return:", error); }
-  };
+  const [filter, setFilter] = useState("drafts");
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">ITR Returns</h1>
-          <p className="font-ui text-[12px] text-light mt-1">File income tax returns</p>
+    <div className="space-y-0 text-left">
+      {/* Top Navigation */}
+      <div className="p-8 max-w-[1200px] mx-auto w-full">
+        {/* Local Sub-Nav */}
+        <div className="flex justify-between items-center mb-8 border-b border-border-subtle pb-4">
+          <nav className="flex gap-8 font-serif text-sm uppercase tracking-[0.15em] font-medium">
+            <button onClick={() => setFilter('recent')} className={`border-none bg-transparent cursor-pointer transition-opacity ${filter === 'recent' ? 'text-primary-container border-b-2 border-primary-container pb-4 -mb-[17px]' : 'text-text-light hover:text-on-surface'}`}>Recent</button>
+            <button onClick={() => setFilter('drafts')} className={`border-none bg-transparent cursor-pointer transition-opacity ${filter === 'drafts' ? 'text-primary-container border-b-2 border-primary-container pb-4 -mb-[17px]' : 'text-text-light hover:text-on-surface'}`}>Drafts</button>
+            <button onClick={() => setFilter('archived')} className={`border-none bg-transparent cursor-pointer transition-opacity ${filter === 'archived' ? 'text-primary-container border-b-2 border-primary-container pb-4 -mb-[17px]' : 'text-text-light hover:text-on-surface'}`}>Archived</button>
+          </nav>
+          <div className="flex gap-3">
+            <button className="font-ui-sm text-on-surface border border-on-surface/20 py-2 px-4 hover:bg-surface-variant transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
+              Print Ledger
+            </button>
+            <button className="font-ui-sm bg-primary-container text-white py-2 px-4 hover:bg-primary transition-colors flex items-center gap-2 border-none cursor-pointer">
+              Export CSV <Icon name="download" className="text-sm" />
+            </button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => handleCreate("itr3")} className="filter-tab active">New ITR-3</button>
-          <button onClick={() => handleCreate("itr4")} className="filter-tab active">New ITR-4</button>
-        </div>
-      </div>
 
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Financial Year</label>
-          <select value={financialYear} onChange={(e) => setFinancialYear(e.target.value)} className="input-field font-ui">
-            <option value="2025-26">FY 2025-26</option>
-            <option value="2026-27">FY 2026-27</option>
-          </select>
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="font-display-lg text-display-lg text-on-surface mb-2">Income Tax Returns</h2>
+            <p className="font-ui-sm text-text-mid">Manage and compute statutory filings for the current fiscal period.</p>
+          </div>
+          <button className="bg-primary-container text-white font-ui-md py-3 px-6 hover:bg-primary transition-colors flex items-center gap-2 group border-none cursor-pointer">
+            Compute Tax
+            <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
+          </button>
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Return Type</label>
-          <select value={returnType} onChange={(e) => setReturnType(e.target.value as (typeof returnTypes)[number])} className="input-field font-ui">
-            {returnTypes.map((t) => (<option key={t} value={t}>{t === "all" ? "All Return Types" : t.toUpperCase()}</option>))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Status</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value as (typeof statuses)[number])} className="input-field font-ui">
-            {statuses.map((s) => (<option key={s} value={s}>{s === "all" ? "All Statuses" : s}</option>))}
-          </select>
-        </div>
-      </div>
 
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Return ID</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">FY</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Filed Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredReturns.length > 0 ? (
-              filteredReturns.map((ret) => {
-                const statusConf = statusConfig[ret.status] ?? { label: ret.status, variant: "gray" as const };
-                return (
-                  <tr key={ret.id} className="border-b border-hairline">
-                    <td className="px-4 py-3"><Link href={`/itr/returns/${financialYear}/${ret.itrReturnId}`} className="font-mono text-[13px] text-amber hover:underline">{ret.returnNumber || "Draft"}</Link></td>
-                    <td className="font-ui text-[13px] text-dark px-4 py-3 uppercase">{ret.returnType}</td>
-                    <td className="font-ui text-[13px] text-mid px-4 py-3">{ret.financialYear}</td>
-                    <td className="px-4 py-3"><Badge variant={statusConf.variant}>{statusConf.label}</Badge></td>
-                    <td className="font-mono text-[13px] text-light px-4 py-3">{ret.filedAt ? new Date(ret.filedAt).toLocaleDateString() : "-"}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2">
-                        <Link href={`/itr/returns/${financialYear}/${ret.itrReturnId}`} className="font-ui text-[12px] text-amber hover:underline">View</Link>
-                        {ret.status === "draft" && <button onClick={() => handleGenerate(ret.itrReturnId, ret.returnType)} className="font-ui text-[12px] text-mid hover:underline">Generate</button>}
-                        {ret.status === "generated" && <button onClick={() => handleFile(ret.itrReturnId)} className="font-ui text-[12px] text-success hover:underline">File</button>}
-                        {ret.status === "filed" && <button onClick={() => handleAmend(ret.itrReturnId)} className="font-ui text-[12px] text-amber hover:underline">Amend</button>}
-                        {ret.status === "computed" && <button onClick={() => handleVoid(ret.itrReturnId)} className="font-ui text-[12px] text-danger hover:underline">Void</button>}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr><td colSpan={6} className="px-4 py-12 text-center font-ui text-light">No returns found</td></tr>
-            )}
-          </tbody>
-        </table>
+        {/* Ledger Table Container */}
+        <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-amber-text shadow-sm overflow-hidden">
+          {/* Table Header */}
+          <div className="grid grid-cols-6 gap-4 p-4 border-b-[0.5px] border-border-subtle bg-section-muted font-ui-xs text-text-mid uppercase tracking-widest text-left">
+            <div className="col-span-1">Financial Year</div>
+            <div className="col-span-1">Form Type</div>
+            <div className="col-span-2">Assessee Name</div>
+            <div className="col-span-1">Status</div>
+            <div className="col-span-1 text-right">Actions</div>
+          </div>
+
+          {/* Table Rows */}
+          <div className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-on-surface">
+            {mockReturns.map((r) => (
+              <div key={r.id} className="grid grid-cols-6 gap-4 p-4 items-center hover:bg-surface-variant transition-colors cursor-pointer group text-left">
+                <div className="col-span-1">{r.financialYear}</div>
+                <div className="col-span-1">
+                  <span className="bg-stone-100 px-2 py-1 border-[0.5px] border-border-subtle font-ui-xs text-[10px] tracking-wider font-bold">{r.formType}</span>
+                </div>
+                <div className="col-span-2 font-ui-sm font-medium">{r.assesseeName}</div>
+                <div className="col-span-1">
+                  <span className={`font-ui-xs text-[10px] tracking-wider border-b uppercase ${
+                    r.status === 'draft' ? 'text-amber-text border-amber-text/30' :
+                    r.status === 'generated' ? 'text-blue-600 border-blue-600/30' :
+                    'text-stone-500 border-transparent'
+                  }`}>
+                    {r.status} {r.filedDate && <span className="font-mono text-text-light ml-1 lowercase">{r.filedDate}</span>}
+                  </span>
+                </div>
+                <div className="col-span-1 flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button className="text-primary-container hover:text-on-surface font-ui-sm text-xs border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-on-surface">Compute</button>
+                  <button className="text-text-mid hover:text-on-surface font-ui-sm text-xs border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-on-surface">View</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination Footer */}
+          <div className="p-4 border-t-[0.5px] border-border-subtle flex justify-between items-center text-text-mid font-ui-sm text-xs">
+            <div>Showing 1-3 of 24 records</div>
+            <div className="flex gap-4">
+              <button className="hover:text-on-surface transition-colors disabled:opacity-30 border-none bg-transparent cursor-pointer" disabled>Previous</button>
+              <button className="hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <p className="font-mono text-text-light text-[10px] uppercase tracking-widest">ComplianceOS ensures alignment with Income Tax Dept schema updates (v1.2.4).</p>
+        </div>
       </div>
     </div>
   );

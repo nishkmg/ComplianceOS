@@ -1,283 +1,147 @@
-// @ts-nocheck
 "use client";
 
-import { useEffect, useState, useCallback, Suspense } from "react";
+import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 
-// Types
-interface InvoiceLineData {
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  gstRate: number;
-  amount: number;
-  cgstAmount: number;
-  sgstAmount: number;
-  igstAmount: number;
-  discountPercent: number;
-  discountAmount: number;
-}
-
-interface InvoiceWithLines {
-  id: string;
-  invoiceNumber: string;
-  date: string;
-  dueDate: string;
-  customerName: string;
-  customerEmail?: string | null;
-  customerGstin?: string | null;
-  customerAddress?: string | null;
-  customerState?: string | null;
-  status: string;
-  subtotal: number;
-  cgstTotal: number;
-  sgstTotal: number;
-  igstTotal: number;
-  discountTotal: number;
-  grandTotal: number;
-  fiscalYear: string;
-  notes?: string | null;
-  terms?: string | null;
-  lines: InvoiceLineData[];
-}
-
-interface InvoiceConfig {
-  company: {
-    name: string;
-    address: string;
-    city: string;
-    state: string;
-    gstin: string;
-    pan?: string;
-    email?: string;
-    phone?: string;
-    bankName?: string;
-    bankAccount?: string;
-    bankIfsc?: string;
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Skeleton
-// ---------------------------------------------------------------------------
-
-function PdfLoadingSkeleton() {
-  return (
-    <div className="flex items-center justify-center h-96">
-      <div className="animate-pulse space-y-4 w-full max-w-2xl">
-        <div className="h-4 bg-gray-200 rounded w-1/4" />
-        <div className="h-32 bg-gray-200 rounded" />
-        <div className="h-64 bg-gray-200 rounded" />
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// PDF Preview Component
-// ---------------------------------------------------------------------------
-
-interface PdfPreviewProps {
-  invoice: InvoiceWithLines;
-  config: InvoiceConfig;
-  pdfUrl: string | null;
-  filename: string;
-  onDownload: () => void;
-  onPrint: () => void;
-}
-
-function PdfPreview({ invoice, config, pdfUrl, filename, onDownload, onPrint }: PdfPreviewProps) {
-  const handlePrint = useCallback(() => {
-    if (pdfUrl) {
-      const printWindow = window.open(pdfUrl, "_blank");
-      printWindow?.print();
-    }
-  }, [pdfUrl]);
-
-  return (
-    <div className="space-y-4">
-      {/* Toolbar */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={onDownload}
-          disabled={!pdfUrl}
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Download PDF
-        </button>
-        <button
-          onClick={handlePrint}
-          disabled={!pdfUrl}
-          className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Print
-        </button>
-      </div>
-
-      {/* PDF Preview */}
-      <div className="bg-white border rounded-lg overflow-hidden">
-        {pdfUrl ? (
-          <iframe
-            src={pdfUrl}
-            className="w-full h-[600px]"
-            title="Invoice PDF Preview"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-96">
-            <p className="text-gray-500">Unable to generate preview</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Main Page
-// ---------------------------------------------------------------------------
-
-function InvoicePdfPageContent() {
-  const params = useParams();
-  const router = useRouter();
-  const id = params.id as string;
-
-  const [config, setConfig] = useState<InvoiceConfig | null>(null);
-  const [pdfData, setPdfData] = useState<{ url: string; filename: string } | null>(null);
-
-  // Fetch invoice data
-  const { data: invoice, isLoading: isLoadingInvoice, error: invoiceError } = api.invoices.get.useQuery({ id });
-
-  // Generate PDF mutation
-  const { mutateAsync: generatePdf, isPending: isGeneratingPdf } = api.invoices.generatePdf.useMutation();
-
-  // Load config and generate PDF on mount
-  useEffect(() => {
-    if (invoice) {
-      // Build config from invoice data
-      const configData: InvoiceConfig = {
-        company: {
-          name: "ComplianceOS Demo",
-          address: invoice.customerAddress || "123 Business Park, Suite 100",
-          city: "Chennai",
-          state: "IN-TN",
-          gstin: "33AAAAA0000A1ZA",
-          pan: "AAAAA0000A",
-          email: "billing@example.com",
-          phone: "+91 98765 43210",
-          bankName: "HDFC Bank",
-          bankAccount: "XXXXXXXX1234",
-          bankIfsc: "HDFC0001234",
-        },
-      };
-      setConfig(configData);
-
-      // Generate PDF
-      generatePdf({ id }).then((result) => {
-        setPdfData({ url: result.pdfUrl, filename: result.filename });
-      }).catch((err) => {
-        console.error("PDF generation failed:", err);
-      });
-    }
-  }, [invoice, id, generatePdf]);
-
-  const handleClose = useCallback(() => {
-    router.back();
-  }, [router]);
-
-  const handleDownload = useCallback(() => {
-    if (pdfData?.url) {
-      const a = document.createElement("a");
-      a.href = pdfData.url;
-      a.download = pdfData.filename;
-      a.click();
-    }
-  }, [pdfData]);
-
-  const isLoading = isLoadingInvoice || isGeneratingPdf || !config;
-
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <PdfLoadingSkeleton />
-      </div>
-    );
-  }
-
-  if (invoiceError || !invoice) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-red-50 border border-red-200 rounded p-4 text-red-700">
-          {invoiceError?.message || "Failed to load invoice"}
-        </div>
-        <div className="mt-4">
-          <button
-            onClick={handleClose}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-          >
-            Go Back
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-4xl mx-auto space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">Invoice Preview</h1>
-          <p className="text-sm text-gray-500">{invoice.invoiceNumber}</p>
-        </div>
-        <button
-          onClick={handleClose}
-          className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200"
-        >
-          Close
-        </button>
-      </div>
-
-      {/* PDF Preview */}
-      {config && pdfData && (
-        <PdfPreview
-          invoice={invoice}
-          config={config}
-          pdfUrl={pdfData.url}
-          filename={pdfData.filename}
-          onDownload={handleDownload}
-          onPrint={() => {}}
-        />
-      )}
-
-      {/* Invoice Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">Invoice Summary</h2>
-        <div className="grid grid-cols-3 gap-4 text-sm">
-          <div>
-            <span className="text-gray-500">Customer</span>
-            <p className="font-medium">{invoice.customerName}</p>
-          </div>
-          <div>
-            <span className="text-gray-500">Date</span>
-            <p className="font-medium">{invoice.date}</p>
-          </div>
-          <div>
-            <span className="text-gray-500">Grand Total</span>
-            <p className="font-medium">
-              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(invoice.grandTotal)}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+const mockInvoice = {
+  invoiceNumber: "INV-2024-0042",
+  date: "24 Oct 2024",
+  dueDate: "23 Nov 2024",
+  client: "Reliance Industries Ltd.",
+  clientAddress: "Maker Chambers IV, 222 Nariman Point, Mumbai, Maharashtra - 400021",
+  clientGstin: "27AAACA6873Q1Z2",
+  items: [
+    { name: "Enterprise Retainer - Q3", hsn: "998311", qty: 1, rate: 125000, amount: 125000 },
+    { name: "Tax Audit Assistance", hsn: "998312", qty: 1, rate: 45000, amount: 45000 },
+  ],
+  subtotal: 170000,
+  tax: 30600,
+  total: 200600,
+  totalWords: "Rupees Two Lakh Six Hundred Only."
+};
 
 export default function InvoicePdfPage() {
+  const router = useRouter();
+  const params = useParams();
+
   return (
-    <Suspense fallback={<PdfLoadingSkeleton />}>
-      <InvoicePdfPageContent />
-    </Suspense>
+    <div className="bg-page-bg min-h-screen flex flex-col antialiased text-left">
+      {/* Header Bar */}
+      <header className="sticky top-0 z-40 bg-white border-b-[0.5px] border-border-subtle px-8 py-4 flex justify-between items-center no-print">
+        <div className="flex items-center gap-4">
+          <button onClick={() => router.back()} className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
+            <Icon name="arrow_back" />
+          </button>
+          <span className="font-ui-sm text-sm font-bold uppercase tracking-widest text-on-surface">Invoice PDF Preview</span>
+        </div>
+        <div className="flex gap-4">
+           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm shadow-sm">
+             Share Link
+           </button>
+           <button onClick={() => window.print()} className="bg-primary-container text-white px-8 py-2 rounded-sm font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-primary transition-all border-none cursor-pointer shadow-sm">
+             Download PDF
+           </button>
+        </div>
+      </header>
+
+      <main className="flex-1 p-12 flex justify-center overflow-y-auto">
+        {/* A4 Document Container */}
+        <article className="bg-white w-full max-w-[210mm] shadow-screenshot border-[0.5px] border-border-subtle p-16 relative flex flex-col text-on-surface">
+           <div className="absolute top-0 left-0 right-0 h-1 bg-primary-container"></div>
+           
+           <div className="flex justify-between items-start border-b-[0.5px] border-border-subtle pb-10 mb-10">
+              <div className="flex flex-col gap-2">
+                 <h2 className="font-display-lg text-2xl font-bold tracking-tight">ComplianceOS</h2>
+                 <div className="text-text-mid font-ui-sm text-[12px] leading-relaxed max-w-[280px]">
+                    1204, Lodha Excelus<br/>
+                    Apollo Bunder, Mumbai 400001<br/>
+                    GSTIN: 27AADCC1234E1Z5
+                 </div>
+              </div>
+              <div className="text-right">
+                 <h1 className="font-display-xl text-[32px] uppercase tracking-[0.2em] text-text-light mb-6">Tax Invoice</h1>
+                 <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-left">
+                    <span className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold">Invoice No:</span>
+                    <span className="font-mono text-sm font-bold text-right">{mockInvoice.invoiceNumber}</span>
+                    <span className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold">Date:</span>
+                    <span className="font-mono text-sm text-right">{mockInvoice.date}</span>
+                 </div>
+              </div>
+           </div>
+
+           <div className="flex justify-between mb-12">
+              <div className="flex flex-col gap-2">
+                 <span className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold">Billed To</span>
+                 <h4 className="font-ui-lg text-lg font-bold">{mockInvoice.client}</h4>
+                 <div className="text-text-mid font-ui-sm text-[13px] leading-relaxed max-w-[340px] mt-1">
+                    {mockInvoice.clientAddress}<br/>
+                    <span className="font-bold text-on-surface block mt-2">GSTIN: {mockInvoice.clientGstin}</span>
+                 </div>
+              </div>
+           </div>
+
+           <table className="w-full text-left border-collapse mb-12">
+              <thead>
+                 <tr className="border-b-[0.5px] border-border-subtle">
+                    <th className="py-4 font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold">Description</th>
+                    <th className="py-4 font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold text-right">HSN/SAC</th>
+                    <th className="py-4 font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold text-right">Qty</th>
+                    <th className="py-4 font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold text-right">Amount (₹)</th>
+                 </tr>
+              </thead>
+              <tbody className="divide-y-[0.5px] divide-border-subtle divide-dashed">
+                 {mockInvoice.items.map((item, i) => (
+                   <tr key={i}>
+                      <td className="py-5 pr-8">
+                         <p className="font-bold font-ui-sm">{item.name}</p>
+                      </td>
+                      <td className="py-5 text-right font-mono text-sm text-text-mid">{item.hsn}</td>
+                      <td className="py-5 text-right font-mono text-sm">{item.qty}</td>
+                      <td className="py-5 text-right font-mono text-sm font-bold">{formatIndianNumber(item.amount)}</td>
+                   </tr>
+                 ))}
+              </tbody>
+           </table>
+
+           <div className="flex justify-end mt-auto">
+              <div className="w-1/2 space-y-3">
+                 <div className="flex justify-between text-text-mid text-sm">
+                    <span>Subtotal</span>
+                    <span className="font-mono">₹ {formatIndianNumber(mockInvoice.subtotal)}</span>
+                 </div>
+                 <div className="flex justify-between text-text-mid text-sm">
+                    <span>GST (18%)</span>
+                    <span className="font-mono">₹ {formatIndianNumber(mockInvoice.tax)}</span>
+                 </div>
+                 <div className="flex justify-between border-t-2 border-primary-container pt-4 mt-2">
+                    <span className="font-ui-lg text-lg font-bold uppercase tracking-widest">Grand Total</span>
+                    <span className="font-mono text-2xl font-bold text-primary-container">₹ {formatIndianNumber(mockInvoice.total)}</span>
+                 </div>
+                 <p className="text-right font-ui-xs text-[10px] text-text-light italic mt-2">{mockInvoice.totalWords}</p>
+              </div>
+           </div>
+
+           <footer className="mt-16 pt-8 border-t-[0.5px] border-border-subtle flex justify-between items-end">
+              <div className="w-2/3">
+                 <h5 className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2 font-bold">Bank Details</h5>
+                 <div className="grid grid-cols-[100px_1fr] gap-x-4 gap-y-1 font-ui-sm text-[12px]">
+                    <span className="text-text-mid">Bank Name:</span> <span className="font-bold">HDFC Bank, Fort Branch</span>
+                    <span className="text-text-mid">Account No:</span> <span className="font-mono">50200012345678</span>
+                    <span className="text-text-mid">IFSC Code:</span> <span className="font-mono">HDFC0000060</span>
+                 </div>
+              </div>
+              <div className="text-right flex flex-col items-center">
+                 <div className="w-32 h-16 border-b border-border-subtle mb-2"></div>
+                 <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold">Authorized Signatory</p>
+                 <p className="font-ui-xs text-[10px] text-text-mid mt-0.5">ComplianceOS Solutions</p>
+              </div>
+           </footer>
+        </article>
+      </main>
+    </div>
   );
 }

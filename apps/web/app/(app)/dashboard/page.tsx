@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { KpiTile, Badge } from "@/components/ui";
 import { formatIndianNumber, formatDateShort } from "@/lib/format";
@@ -45,132 +45,129 @@ export default function DashboardPage() {
   const greeting = today.getHours() < 12 ? "Good morning" : today.getHours() < 18 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">{greeting}, {companyName}</h1>
-          <p className="font-ui text-[12px] text-light mt-1">
-            {today.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • FY 2026-27
-          </p>
+          <h1 className="font-display-xl text-display-xl text-stone-900">{greeting}, {companyName}</h1>
+          <p className="font-ui-sm text-text-mid mt-1">Here is your business summary for {today.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })} • <span className="font-mono-md">FY 2026-27</span></p>
         </div>
-        <div className="flex gap-2">
-          <Link href="/journal/new" className="filter-tab active">New Entry</Link>
-          <Link href="/reports/pl" className="filter-tab">View P&L</Link>
+        <div className="flex gap-3">
+          <button className="bg-section-muted border border-border-subtle px-4 py-2 flex items-center gap-2 hover:bg-stone-200 transition-colors cursor-pointer">
+            <Icon name="download" className="text-sm" />
+            <span className="font-ui-xs uppercase tracking-wider">Export PDF</span>
+          </button>
+          <Link href="/journal/new" className="bg-primary-container text-white px-6 py-2 flex items-center gap-2 hover:bg-amber-700 transition-transform active:scale-95 group no-underline">
+            <span className="font-ui-xs uppercase tracking-wider">Add Entry</span>
+            <span className="transition-transform group-hover:translate-x-1">→</span>
+          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiTile label="Total Revenue (MTD)" value={1245000.00} variant="amber" delta={{ value: 12, label: "vs last month" }} />
-        <KpiTile label="Total Expenses (MTD)" value={845200.00} variant="danger" delta={{ value: 4, label: "vs last month" }} />
-        <KpiTile label="Net Profit (MTD)" value={399800.00} variant="success" delta={{ value: 15, label: "vs last month" }} />
-        <KpiTile label="Cash & Bank Balance" value={2450000.00} variant="neutral" subtext="Updated 5 mins ago" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <KpiTile label="Revenue MTD" value={1245000.00} variant="amber" delta={{ value: 14.2, label: "vs last month" }} icon="trending_up" />
+        <KpiTile label="Expenses MTD" value={412040.50} variant="dark" delta={{ value: 2.1, label: "within budget" }} icon="shopping_cart" />
+        <KpiTile label="Net Profit MTD" value={833559.50} variant="amber" delta={{ value: 67, label: "Gross Margin" }} icon="account_balance_wallet" />
+        <KpiTile label="Cash & Bank" value={4512890.00} variant="neutral" subtext="Reconciled as of today" icon="account_balance" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="card">
-            <div className="card-header flex items-center justify-between">
-              <h2 className="font-display text-[20px] font-normal text-dark">Recent Entries</h2>
-              <Link href="/journal" className="text-[12px] text-light hover:text-amber">View All →</Link>
-            </div>
-            <div className="p-0">
-              {loading ? (
-                <div className="p-6 text-[13px] text-light">Loading...</div>
-              ) : recentEntries.length > 0 ? (
-                <table className="table table-dense">
-                  <thead>
-                    <tr>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Entry #</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Date</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Narration</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Status</th>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 bg-white border border-border-subtle shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-border-subtle flex justify-between items-center bg-stone-50">
+            <h3 className="font-ui-md font-bold text-stone-900">Recent Entries</h3>
+            <Link className="text-ui-xs text-primary-container font-bold uppercase tracking-wider hover:underline no-underline" href="/journal">View Ledger</Link>
+          </div>
+          <div className="overflow-x-auto">
+            {loading ? (
+              <div className="p-12 text-center text-light">Loading entries...</div>
+            ) : recentEntries.length > 0 ? (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-section-muted border-b border-border-subtle">
+                    <th className="px-6 py-3 font-ui-xs text-text-mid uppercase tracking-widest">Entry #</th>
+                    <th className="px-6 py-3 font-ui-xs text-text-mid uppercase tracking-widest">Date</th>
+                    <th className="px-6 py-3 font-ui-xs text-text-mid uppercase tracking-widest">Narration</th>
+                    <th className="px-6 py-3 font-ui-xs text-text-mid uppercase tracking-widest text-right">Amount</th>
+                    <th className="px-6 py-3 font-ui-xs text-text-mid uppercase tracking-widest text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-subtle font-ui-sm">
+                  {recentEntries.map((entry) => (
+                    <tr key={entry.id} className="hover:bg-stone-50 transition-colors group">
+                      <td className="px-6 py-4 font-mono-md text-amber-text">
+                        <Link href={`/journal/${entry.id}`} className="hover:underline no-underline">{entry.entryNumber}</Link>
+                      </td>
+                      <td className="px-6 py-4 text-stone-600 font-mono-md">{formatDateShort(entry.date)}</td>
+                      <td className="px-6 py-4 font-medium">{entry.narration}</td>
+                      <td className="px-6 py-4 font-mono-md text-right">{formatIndianNumber(Math.max(entry.debit, entry.credit), { currency: true, decimals: 2 })}</td>
+                      <td className="px-6 py-4 text-center">
+                        <Badge variant={entry.status === 'posted' ? 'success' : entry.status === 'draft' ? 'amber' : 'gray'}>
+                          {entry.status === 'posted' ? 'Cleared' : entry.status}
+                        </Badge>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {recentEntries.map((entry) => (
-                      <tr key={entry.id}>
-                        <td className="font-mono text-[13px] text-amber">
-                          <Link href={`/journal/${entry.id}`} className="hover:underline">{entry.entryNumber}</Link>
-                        </td>
-                        <td className="font-mono text-[13px] text-light">{formatDateShort(entry.date)}</td>
-                        <td className="font-ui text-[13px] text-mid truncate max-w-[200px]">{entry.narration}</td>
-                        <td className="font-mono text-[13px] text-right">{formatIndianNumber(Math.max(entry.debit, entry.credit), { currency: true, decimals: 2 })}</td>
-                        <td><Badge variant={entry.status === 'posted' ? 'success' : entry.status === 'draft' ? 'amber' : 'gray'}>{entry.status}</Badge></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="p-6">
-                  <p className="text-[13px] text-light">No entries yet. Create your first journal entry.</p>
-                  <Link href="/journal/new" className="mt-3 inline-block btn btn-primary">New Journal Entry</Link>
-                </div>
-              )}
-            </div>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="p-12 text-center">
+                <p className="text-[13px] text-light">No entries yet. Create your first journal entry.</p>
+                <Link href="/journal/new" className="mt-3 inline-block btn btn-primary no-underline">New Journal Entry</Link>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="card">
-            <div className="card-body">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-display text-[16px] font-normal text-dark">FY Progress</h3>
-                <span className="text-[10px] text-light uppercase tracking-wide">Apr 2026 – Mar 2027</span>
+        <div className="lg:col-span-4 space-y-8">
+          <div className="bg-white border border-border-subtle p-6 shadow-sm text-left">
+            <h3 className="font-ui-xs text-text-mid uppercase tracking-widest mb-6">Financial Year Progress</h3>
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <div>
+                  <span className="text-ui-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary-container bg-section-amber">
+                    Q1 Completion
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-mono-md font-semibold inline-block text-primary-container">
+                    62%
+                  </span>
+                </div>
               </div>
-              <div className="w-full bg-border rounded-[4px] h-3 mb-2">
-                <div className="bg-amber h-3 rounded-[4px] transition-all" style={{ width: "25%" }} />
+              <div className="overflow-hidden h-1.5 mb-4 text-xs flex rounded bg-stone-100">
+                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-container transition-all duration-1000" style={{ width: "62%" }}></div>
               </div>
-              <p className="text-[10px] text-light">~3 months elapsed</p>
+              <p className="text-ui-xs text-text-mid leading-relaxed text-left">You are tracking <span className="font-mono-md">15%</span> ahead of your revenue goals for this quarter.</p>
             </div>
           </div>
 
-          <div className="card">
-            <div className="card-header">
-              <h3 className="font-display text-[16px] font-normal text-dark">Quick Actions</h3>
-            </div>
-            <div className="p-4 space-y-2">
-              <Link href="/journal/new" className="block text-[13px] text-mid hover:text-amber py-1">→ New Journal Entry</Link>
-              <Link href="/invoices/new" className="block text-[13px] text-mid hover:text-amber py-1">→ New Invoice</Link>
-              <Link href="/payments/new" className="block text-[13px] text-mid hover:text-amber py-1">→ Record Payment</Link>
-              <Link href="/reports/trial-balance" className="block text-[13px] text-mid hover:text-amber py-1">→ Trial Balance</Link>
+          <div className="bg-stone-900 p-6 shadow-screenshot border-l-4 border-l-primary-container text-left">
+            <h3 className="font-ui-xs text-stone-400 uppercase tracking-widest mb-6">Quick Actions</h3>
+            <div className="space-y-4">
+              <button className="w-full bg-stone-800 border border-stone-700 text-stone-100 px-4 py-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <Icon name="add_circle" className="text-primary-container" />
+                  <span className="font-ui-sm">Record New Entry</span>
+                </div>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
+              </button>
+              <button className="w-full bg-stone-800 border border-stone-700 text-stone-100 px-4 py-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <Icon name="insert_chart" className="text-primary-container" />
+                  <span className="font-ui-sm">View P&L Statement</span>
+                </div>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
+              </button>
             </div>
           </div>
 
-          <div className="card">
-            <div className="card-header flex items-center justify-between">
-              <h3 className="font-display text-[16px] font-normal text-dark">Receivables</h3>
-              <Link href="/receivables" className="text-[12px] text-light hover:text-amber">View All →</Link>
+          <div className="bg-surface-container border border-border-subtle p-6 overflow-hidden relative group text-left">
+            <div className="relative z-10">
+              <Icon name="security" className="text-stone-400 mb-2" />
+              <h4 className="font-ui-sm font-bold text-stone-900">Audit Readiness</h4>
+              <p className="text-ui-xs text-text-mid mt-2 leading-relaxed">All supporting vouchers for the last <span className="font-mono-md">30</span> days have been digitized and linked.</p>
             </div>
-            <div className="p-4">
-              {loading ? (
-                <p className="text-[13px] text-light">Loading...</p>
-              ) : receivables ? (
-                <>
-                  <div className="mb-4">
-                    <p className="text-[12px] text-light mb-1">Total Outstanding</p>
-                    <p className="font-mono text-[20px] text-right">₹{receivables.totalOutstanding.toLocaleString('en-IN')}</p>
-                    {receivables.overdueCount > 0 && (
-                      <p className="text-[10px] text-danger mt-1 text-right">{receivables.overdueCount} overdue</p>
-                    )}
-                  </div>
-                  {receivables.topCustomers.length > 0 ? (
-                    <div className="space-y-2">
-                      <p className="text-[10px] text-light uppercase tracking-wide">Top Customers</p>
-                      {receivables.topCustomers.slice(0, 3).map((c) => (
-                        <div key={c.customerName} className="flex justify-between text-[13px]">
-                          <span className="text-mid">{c.customerName}</span>
-                          <span className="font-mono text-dark">₹{c.outstanding.toLocaleString('en-IN')}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-[13px] text-light">No outstanding receivables</p>
-                  )}
-                </>
-              ) : (
-                <p className="text-[13px] text-light">No data</p>
-              )}
+            <div className="absolute -right-4 -bottom-4 opacity-10 transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
+              <Icon name="verified" className="text-9xl" />
             </div>
           </div>
         </div>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -21,118 +20,105 @@ const months = [
   { value: 12, label: "March" },
 ];
 
-const currentMonth = new Date().getMonth() + 1;
-const currentYear = new Date().getFullYear();
+const mockTransactions = [
+  { id: "1", date: "15 Oct 24", type: "ITC Claim", taxType: "IGST", amount: 124500, balance: 4520500, ref: "GSTR-2B" },
+  { id: "2", date: "10 Oct 24", type: "Tax Offset", taxType: "CGST", amount: -45000, balance: 4396000, ref: "GSTR-3B" },
+  { id: "3", date: "05 Oct 24", type: "Cash Deposit", taxType: "Cess", amount: 25000, balance: 4421000, ref: "CH-88012" },
+];
 
 export default function GSTLedgerPage() {
-  const [periodMonth, setPeriodMonth] = useState<number>(currentMonth);
-  const [periodYear, setPeriodYear] = useState<number>(currentYear);
-
-  const { data: cashBalance } = api.gstLedger.cashBalance.useQuery({ periodMonth, periodYear });
-  const { data: itcBalance } = api.gstLedger.itcBalance.useQuery({ periodMonth, periodYear });
-  const { data: liabilityBalance } = api.gstLedger.liabilityBalance.useQuery({ periodMonth, periodYear });
-  const { data: transactions } = api.gstLedger.ledgerTransactions.useQuery({ type: "cash", periodMonth, periodYear });
-
-  const totalCashBalance = cashBalance?.balance ?? { igst: 0, cgst: 0, sgst: 0, cess: 0 };
-  const totalITC = (itcBalance?.igst.closingBalance ?? 0) + (itcBalance?.cgst.closingBalance ?? 0) + (itcBalance?.sgst.closingBalance ?? 0) + (itcBalance?.cess.closingBalance ?? 0);
-  const totalLiability = (liabilityBalance?.igst.output ?? 0) + (liabilityBalance?.cgst.output ?? 0) + (liabilityBalance?.sgst.output ?? 0) + (liabilityBalance?.cess.output ?? 0);
-  const netLiability = Math.max(0, totalLiability - totalITC);
+  const [month, setMonth] = useState(7);
+  const [year, setYear] = useState(2024);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 text-left">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8 mt-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">GST Ledger</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Track GST liabilities, ITC, and cash balances</p>
+          <h2 className="font-display-xl text-display-xl text-on-surface mb-2 font-bold">Electronic Credit Ledger</h2>
+          <p className="font-ui-sm text-sm text-text-mid">Statement of Input Tax Credit for <span className="font-mono text-on-surface font-bold text-[13px]">GSTIN: 27AACPB1234F1Z5</span></p>
         </div>
-        <div className="flex gap-2">
-          <Link href="/gst/payment" className="filter-tab active">Make Payment</Link>
-          <Link href="/gst/payment/history" className="filter-tab">Payment History</Link>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-1 text-left">
+            <label className="text-[10px] uppercase text-text-mid font-bold tracking-widest">Tax Period</label>
+            <div className="flex gap-2">
+              <select className="bg-stone-50 border border-border-subtle rounded-sm py-2 px-3 text-xs outline-none focus:border-primary" value={month} onChange={e => setMonth(Number(e.target.value))}>
+                {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+              <select className="bg-stone-50 border border-border-subtle rounded-sm py-2 px-3 text-xs outline-none focus:border-primary" value={year} onChange={e => setYear(Number(e.target.value))}>
+                <option>2024</option>
+                <option>2023</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-4 items-center">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))} className="input-field font-ui">
-            {months.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-          </select>
+      {/* Ledger Balances Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+          <h3 className="text-[10px] text-text-light uppercase font-bold tracking-widest mb-4">Integrated Tax (IGST)</h3>
+          <p className="font-mono text-2xl font-bold text-on-surface">₹ 2,45,600.00</p>
+          <div className="mt-4 pt-4 border-t border-stone-50 flex justify-between text-[11px] font-bold uppercase tracking-widest">
+             <span className="text-text-light">Electronic Cash</span>
+             <span className="text-on-surface">₹ 45,000.00</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input type="number" value={periodYear} onChange={(e) => setPeriodYear(Number(e.target.value))} className="input-field font-ui w-24" min={2000} max={2100} />
+        <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+          <h3 className="text-[10px] text-text-light uppercase font-bold tracking-widest mb-4">Central Tax (CGST)</h3>
+          <p className="font-mono text-2xl font-bold text-on-surface">₹ 1,12,040.50</p>
+          <div className="mt-4 pt-4 border-t border-stone-50 flex justify-between text-[11px] font-bold uppercase tracking-widest">
+             <span className="text-text-light">Electronic Cash</span>
+             <span className="text-on-surface">₹ 12,000.00</span>
+          </div>
+        </div>
+        <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+          <h3 className="text-[10px] text-text-light uppercase font-bold tracking-widest mb-4">State Tax (SGST)</h3>
+          <p className="font-mono text-2xl font-bold text-on-surface">₹ 1,12,040.50</p>
+          <div className="mt-4 pt-4 border-t border-stone-50 flex justify-between text-[11px] font-bold uppercase tracking-widest">
+             <span className="text-text-light">Electronic Cash</span>
+             <span className="text-on-surface">₹ 12,000.00</span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card p-5">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Cash Balance</p>
-          <p className="font-mono text-[22px] font-medium text-dark">{formatIndianNumber(Object.values(totalCashBalance).reduce((a, b) => a + b, 0))}</p>
-          <div className="mt-3 space-y-1 font-ui text-[11px] text-mid">
-            <div className="flex justify-between"><span>IGST:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.igst)}</span></div>
-            <div className="flex justify-between"><span>CGST:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.cgst)}</span></div>
-            <div className="flex justify-between"><span>SGST:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.sgst)}</span></div>
-            <div className="flex justify-between"><span>Cess:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.cess)}</span></div>
-          </div>
-          <Link href="/gst/ledger/cash" className="font-ui text-[12px] text-amber hover:underline mt-3 inline-block">View Details →</Link>
+      {/* Transaction Table */}
+      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
+        <div className="px-6 py-4 bg-stone-50 border-b border-border-subtle flex justify-between items-center">
+            <h3 className="font-ui-md font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Ledger Transaction History</h3>
+            <button className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Export CSV</button>
         </div>
-
-        <div className="card p-5">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">ITC Balance</p>
-          <p className="font-mono text-[22px] font-medium text-dark">{formatIndianNumber(totalITC)}</p>
-          <div className="mt-3 space-y-1 font-ui text-[11px] text-mid">
-            <div className="flex justify-between"><span>IGST:</span><span className="font-mono">{formatIndianNumber(itcBalance?.igst.closingBalance ?? 0)}</span></div>
-            <div className="flex justify-between"><span>CGST:</span><span className="font-mono">{formatIndianNumber(itcBalance?.cgst.closingBalance ?? 0)}</span></div>
-            <div className="flex justify-between"><span>SGST:</span><span className="font-mono">{formatIndianNumber(itcBalance?.sgst.closingBalance ?? 0)}</span></div>
-            <div className="flex justify-between"><span>Cess:</span><span className="font-mono">{formatIndianNumber(itcBalance?.cess.closingBalance ?? 0)}</span></div>
-          </div>
-          <Link href="/gst/ledger/itc" className="font-ui text-[12px] text-amber hover:underline mt-3 inline-block">View Details →</Link>
-        </div>
-
-        <div className="card p-5">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Net Liability</p>
-          <p className="font-mono text-[22px] font-medium text-dark">{formatIndianNumber(netLiability)}</p>
-          <div className="mt-3 space-y-1 font-ui text-[11px] text-mid">
-            <div className="flex justify-between"><span>Total Payable:</span><span className="font-mono">{formatIndianNumber(totalLiability)}</span></div>
-            <div className="flex justify-between"><span>Less ITC:</span><span className="font-mono">{formatIndianNumber(totalITC)}</span></div>
-          </div>
-          <Link href="/gst/payment" className="font-ui text-[12px] text-amber hover:underline mt-3 inline-block">Pay Now →</Link>
-        </div>
-      </div>
-
-      <div className="card overflow-hidden">
-        <div className="px-4 py-3 border-b border-hairline flex items-center justify-between">
-          <h2 className="font-display text-[16px] font-normal text-dark">Recent Transactions</h2>
-          <Link href="/gst/ledger/cash" className="font-ui text-[12px] text-amber hover:underline">View All →</Link>
-        </div>
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Tax Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Balance</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Reference</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions && transactions.length > 0 ? (
-              transactions.filter((t): t is typeof transactions[0] & { ledgerType: "cash" } => t.ledgerType === "cash").slice(0, 10).map((t) => (
-                <tr key={t.id} className="border-b border-hairline">
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.transactionDate || new Date(t.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3"><span className="font-ui text-[11px] px-2 py-0.5 rounded bg-surface-muted text-mid capitalize">{t.ledgerType}</span></td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3 uppercase">{t.taxType}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(t.amount)}</td>
-                  <td className="font-mono text-[13px] text-right text-mid px-4 py-3">{formatIndianNumber(t.balance)}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.referenceNumber || t.challanNumber || "-"}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-stone-50 border-b border-stone-100 text-text-light font-ui-xs text-[10px] uppercase tracking-widest">
+                <th className="py-4 px-6">Date</th>
+                <th className="py-4 px-6">Description / Ref</th>
+                <th className="py-4 px-6">Type</th>
+                <th className="py-4 px-6">Tax Type</th>
+                <th className="py-4 px-6 text-right">Amount (₹)</th>
+                <th className="py-4 px-6 text-right">Running Balance (₹)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
+              {mockTransactions.map((t) => (
+                <tr key={t.id} className="hover:bg-section-muted/30 transition-colors">
+                  <td className="py-5 px-6 text-text-mid">{t.date}</td>
+                  <td className="py-5 px-6 text-left">
+                    <div className="font-ui-sm font-bold text-on-surface text-sm">{t.type}</div>
+                    <div className="text-[11px] text-text-light mt-0.5">{t.ref}</div>
+                  </td>
+                  <td className="py-5 px-6 font-ui-xs text-[10px] uppercase font-bold text-stone-500">Credit</td>
+                  <td className="py-5 px-6 font-ui-sm font-bold text-on-surface">{t.taxType}</td>
+                  <td className={`py-5 px-6 text-right font-bold ${t.amount < 0 ? 'text-red-600' : 'text-green-700'}`}>
+                    {t.amount < 0 ? `(${formatIndianNumber(Math.abs(t.amount))})` : formatIndianNumber(t.amount)}
+                  </td>
+                  <td className="py-5 px-6 text-right text-on-surface">₹ {formatIndianNumber(t.balance)}</td>
                 </tr>
-              ))
-            ) : (
-              <tr><td colSpan={6} className="px-4 py-12 text-center font-ui text-light">No transactions yet</td></tr>
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

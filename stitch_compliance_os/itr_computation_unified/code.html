@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ITR Computation - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;600;700&amp;family=Syne:wght@400;500;600;700&amp;family=Noto+Serif:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Syne', sans-serif; }
+        .font-noto { font-family: 'Noto Serif', serif; }
+        .font-mono-md { font-family: 'DM Mono', monospace; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#291800",
+                        "primary-fixed": "#ffddb3",
+                        "on-tertiary-container": "#002f49",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "inverse-surface": "#362f27",
+                        "surface-variant": "#ede0d3",
+                        "outline-variant": "#d6c4af",
+                        "primary-fixed-dim": "#ffb950",
+                        "outline": "#847563",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fff1e4",
+                        "on-surface-variant": "#514535",
+                        "surface-container": "#f9ecde",
+                        "section-muted": "#F4F2EE",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "amber-text": "#B47500",
+                        "on-secondary-fixed-variant": "#474746",
+                        "surface-dim": "#e5d8cb",
+                        "secondary": "#5f5e5e",
+                        "secondary-container": "#e2dfde",
+                        "secondary-fixed": "#e5e2e1",
+                        "page-bg": "#FAFAF8",
+                        "text-mid": "#555555",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "on-primary-fixed-variant": "#633f00",
+                        "on-error-container": "#93000a",
+                        "on-background": "#211b13",
+                        "inverse-primary": "#ffb950",
+                        "primary-container": "#c8860a",
+                        "surface": "#fff8f4",
+                        "primary": "#825500",
+                        "on-secondary-container": "#636262",
+                        "background": "#fff8f4",
+                        "error": "#ba1a1a",
+                        "section-dark": "#111111",
+                        "inverse-on-surface": "#fcefe1",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#211b13",
+                        "text-light": "#888888",
+                        "on-primary-container": "#3f2700",
+                        "on-tertiary-fixed": "#001e30",
+                        "tertiary-fixed": "#cae6ff",
+                        "tertiary": "#006494",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-tint": "#825500",
+                        "on-secondary": "#ffffff",
+                        "border-subtle": "#E8E4DC",
+                        "surface-container-highest": "#ede0d3",
+                        "surface-bright": "#fff8f4",
+                        "surface-container-high": "#f3e6d9",
+                        "tertiary-container": "#309bdb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-48": "48px",
+                        "gutter-wide": "32px",
+                        "gutter-desktop": "24px",
+                        "margin-mobile": "16px",
+                        "space-96": "96px",
+                        "space-128": "128px",
+                        "space-64": "64px"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-page-bg text-on-surface antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar: ComplianceOS master shell component -->
+<nav class="h-screen w-64 border-r-[0.5px] fixed left-0 top-0 border-stone-200 dark:border-stone-800 bg-[#FBF9F6] dark:bg-stone-950 flex flex-col py-6 px-4 font-['Noto_Serif'] font-medium antialiased z-50">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-amber-600 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm">account_balance</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tighter text-stone-900 dark:text-stone-100 uppercase">ComplianceOS</h1>
+<p class="text-[10px] text-stone-500 uppercase tracking-widest leading-none mt-0.5">Editorial Ledger</p>
+</div>
+</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto">
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-sm">Journal</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="text-sm">Chart of Accounts</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="text-sm">Invoicing</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-sm">Payments</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="text-sm">Reports</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span class="text-sm">GST</span>
+</a>
+<!-- Active: ITR -->
+<a class="p-3 flex items-center gap-3 text-amber-700 dark:text-amber-500 border-r-2 border-amber-600 bg-stone-100/50 dark:bg-stone-900/50 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<span class="text-sm font-bold">ITR</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<span class="text-sm">Payroll</span>
+</a>
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="text-sm">Inventory</span>
+</a>
+</div>
+<div class="mt-auto border-t border-stone-200 dark:border-stone-800 pt-4">
+<a class="text-stone-600 dark:text-stone-400 p-3 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors duration-150 scale-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</div>
+</nav>
+<!-- TopAppBar: ComplianceOS master shell component -->
+<div class="flex flex-col flex-1 h-full overflow-hidden">
+<header class="sticky top-0 w-full border-b-[0.5px] z-40 bg-[#FBF9F6]/80 dark:bg-stone-950/80 backdrop-blur-md border-stone-200 dark:border-stone-800 flex items-center justify-between px-8 h-16 ml-64 font-['Noto_Serif'] text-sm tracking-tight">
+<div class="flex items-center gap-8">
+<div class="text-lg font-black text-stone-900 dark:text-stone-100">ComplianceOS</div>
+<nav class="flex gap-6">
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors cursor-pointer active:opacity-80" href="#">Modules</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors cursor-pointer active:opacity-80" href="#">Audit Log</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-64">
+<input class="w-full bg-stone-100 dark:bg-stone-900 border-none rounded-full px-4 py-1.5 text-xs focus:ring-1 focus:ring-amber-500" placeholder="Search accounts, filings..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1.5 text-stone-400 text-sm">search</span>
+</div>
+<div class="flex gap-3 text-stone-500">
+<span class="material-symbols-outlined text-[20px] cursor-pointer hover:text-amber-600 transition-colors">notifications</span>
+<span class="material-symbols-outlined text-[20px] cursor-pointer hover:text-amber-600 transition-colors">help</span>
+<span class="material-symbols-outlined text-[20px] cursor-pointer hover:text-amber-600 transition-colors">apps</span>
+</div>
+<div class="flex items-center gap-3 border-l border-stone-200 pl-6 cursor-pointer group">
+<div class="text-right">
+<p class="font-bold text-xs text-stone-900 dark:text-stone-100 group-hover:text-amber-600 transition-colors">Rajesh Kumar</p>
+<p class="text-[10px] text-stone-500 uppercase tracking-tighter">Sr. Auditor</p>
+</div>
+<img alt="Accountant Profile" class="w-8 h-8 rounded-full border border-stone-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0TeH5H6uI1jYoeQWwd2WDRHcq9ZafRtGZpGw_XeJ6qrZ1ycYd0veMZYsMxA_VJfKNatK5EnOuokalBb-vXMN9aflYoI7j2jHTalS_42A4EPh7NR0eaWiMqYXFUY0SME-CAuxvhQAKvK_MBBeofJ9TWYwrbK9BfrkvU8t3E1NUM9D601lWpRL3iDM2KamQxYVCPR5U4PquUSCLStgXcx-MRpRS7MSLQBBCfFhN5VIz-3zZColEVw0lMVbNzhlAfF4yK5Lw5-JFUww"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 h-full overflow-y-auto bg-page-bg">
+<!-- Page Title & Actions -->
+<div class="px-gutter-wide py-8 border-b border-border-subtle flex justify-between items-end">
+<div>
+<p class="font-noto text-xs text-amber-text uppercase tracking-widest mb-1">AY 2024-25 | Individual</p>
+<h2 class="text-3xl font-noto font-bold text-on-surface">ITR Computation</h2>
+</div>
+<div class="flex gap-3">
+<button class="border border-stone-300 text-stone-700 px-6 py-2 rounded-DEFAULT text-sm font-medium hover:bg-stone-50 transition-colors">Save Draft</button>
+<button class="bg-[#C8860A] text-white px-6 py-2 rounded-DEFAULT text-sm font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2">
+                    Finalize Return <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="p-gutter-wide max-w-[1400px] mx-auto space-y-gutter-wide pb-space-96">
+<!-- Summary Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface border border-border-subtle border-t-2 border-t-amber-600 p-6 rounded-DEFAULT shadow-sm">
+<p class="text-[10px] text-text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
+<p class="font-mono-md text-on-surface text-2xl">₹ 48,50,000</p>
+</div>
+<div class="bg-surface border border-border-subtle border-t-2 border-t-amber-600 p-6 rounded-DEFAULT shadow-sm">
+<p class="text-[10px] text-text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
+<p class="font-mono-md text-on-surface text-2xl">₹ 3,50,000</p>
+</div>
+<div class="bg-section-amber border border-border-subtle border-t-2 border-t-amber-600 p-6 rounded-DEFAULT shadow-sm">
+<p class="text-[10px] text-amber-text font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
+<p class="font-mono-md text-on-surface text-2xl font-bold">₹ 45,00,000</p>
+</div>
+<div class="bg-stone-900 border border-stone-950 border-t-2 border-t-stone-700 p-6 rounded-DEFAULT shadow-lg text-white">
+<p class="text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">Net Tax Payable</p>
+<p class="font-mono-md text-2xl text-amber-500">₹ 12,34,500</p>
+</div>
+</section>
+<!-- Detailed Computation Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-wide">
+<!-- Left Column: Income Sources -->
+<div class="col-span-1 lg:col-span-7 space-y-6">
+<!-- Business & Profession -->
+<div class="bg-surface border border-border-subtle rounded-DEFAULT overflow-hidden shadow-sm">
+<div class="bg-stone-50 border-b border-border-subtle p-4 flex justify-between items-center">
+<h3 class="font-noto font-bold text-stone-800">Income from Business/Profession</h3>
+<span class="material-symbols-outlined text-stone-400">store</span>
+</div>
+<div class="divide-y divide-stone-100">
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600">Net Profit as per P&amp;L Account</span>
+<span class="font-mono-md text-on-surface">₹ 42,00,000</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600 ml-4">Add: Depreciation as per Company Act</span>
+<span class="font-mono-md text-on-surface">₹ 5,50,000</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600 ml-4">Add: Disallowed Expenses (Sec 40A, 43B)</span>
+<span class="font-mono-md text-on-surface">₹ 1,20,000</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600 ml-4">Less: Depreciation as per IT Act</span>
+<span class="font-mono-md text-error">(₹ 6,80,000)</span>
+</div>
+<div class="flex justify-between items-center px-6 py-4 bg-amber-50 font-bold border-t border-amber-100">
+<span class="text-sm text-on-surface">Total Income from Business</span>
+<span class="font-mono-md text-on-surface">₹ 41,90,000</span>
+</div>
+</div>
+</div>
+<!-- Other Sources -->
+<div class="bg-surface border border-border-subtle rounded-DEFAULT overflow-hidden shadow-sm">
+<div class="bg-stone-50 border-b border-border-subtle p-4 flex justify-between items-center">
+<h3 class="font-noto font-bold text-stone-800">Income from Other Sources</h3>
+<span class="material-symbols-outlined text-stone-400">account_balance_wallet</span>
+</div>
+<div class="divide-y divide-stone-100">
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600">Interest from Savings Bank</span>
+<span class="font-mono-md text-on-surface">₹ 25,000</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600">Interest from Fixed Deposits</span>
+<span class="font-mono-md text-on-surface">₹ 5,10,000</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3 hover:bg-stone-50 transition-colors">
+<span class="text-sm text-stone-600">Dividend Income</span>
+<span class="font-mono-md text-on-surface">₹ 1,25,000</span>
+</div>
+<div class="flex justify-between items-center px-6 py-4 bg-amber-50 font-bold border-t border-amber-100">
+<span class="text-sm text-on-surface">Total Income from Other Sources</span>
+<span class="font-mono-md text-on-surface">₹ 6,60,000</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Deductions & Tax -->
+<div class="col-span-1 lg:col-span-5 space-y-6">
+<!-- Chapter VI-A Deductions -->
+<div class="bg-surface border border-border-subtle rounded-DEFAULT overflow-hidden shadow-sm">
+<div class="bg-stone-50 border-b border-border-subtle p-4 flex justify-between items-center">
+<h3 class="font-noto font-bold text-stone-800">Deductions (Chapter VI-A)</h3>
+<span class="material-symbols-outlined text-stone-400">shield</span>
+</div>
+<div class="divide-y divide-stone-100">
+<!-- 80C -->
+<div class="px-6 py-3 hover:bg-stone-50 transition-colors">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm text-stone-800 font-semibold">Sec 80C (LIC, PPF, etc.)</span>
+<span class="font-mono-md text-on-surface">₹ 1,50,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-text-light font-medium uppercase tracking-tight">Claimed: ₹ 2,10,000 | Limit: ₹ 1,50,000</span>
+</div>
+</div>
+<!-- 80D -->
+<div class="px-6 py-3 hover:bg-stone-50 transition-colors">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm text-stone-800 font-semibold">Sec 80D (Health Insurance)</span>
+<span class="font-mono-md text-on-surface">₹ 75,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-text-light font-medium uppercase tracking-tight">Self + Parents (Senior Citizens)</span>
+</div>
+</div>
+<!-- 80TTA -->
+<div class="px-6 py-3 hover:bg-stone-50 transition-colors">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm text-stone-800 font-semibold">Sec 80TTA (SB Interest)</span>
+<span class="font-mono-md text-on-surface">₹ 10,000</span>
+</div>
+</div>
+<!-- Total Deductions -->
+<div class="flex justify-between items-center px-6 py-4 bg-stone-50 font-bold">
+<span class="text-sm text-on-surface">Total Deductions</span>
+<span class="font-mono-md text-on-surface">₹ 2,35,000</span>
+</div>
+</div>
+</div>
+<!-- Final Tax Computation -->
+<div class="bg-stone-900 text-stone-100 rounded-DEFAULT overflow-hidden shadow-xl">
+<div class="p-6 border-b border-stone-800">
+<h3 class="font-noto text-lg font-bold text-amber-500 mb-1">Tax Computation</h3>
+<p class="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Old Tax Regime Applied</p>
+</div>
+<div class="divide-y divide-stone-800">
+<div class="flex justify-between items-center px-6 py-3">
+<span class="text-xs text-stone-400 uppercase tracking-wide">Tax on Normal Income</span>
+<span class="font-mono-md">₹ 11,62,500</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3">
+<span class="text-xs text-stone-400 uppercase tracking-wide">Surcharge</span>
+<span class="font-mono-md">₹ 0</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3">
+<span class="text-xs text-stone-400 uppercase tracking-wide">Health &amp; Education Cess (4%)</span>
+<span class="font-mono-md">₹ 46,500</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3">
+<span class="text-xs text-stone-400 uppercase tracking-wide">Less: Relief u/s 87A</span>
+<span class="font-mono-md text-amber-500">₹ 0</span>
+</div>
+<div class="flex justify-between items-center px-6 py-3">
+<span class="text-xs text-stone-400 uppercase tracking-wide">Less: TDS Claimed</span>
+<span class="font-mono-md text-amber-500">(₹ 4,50,000)</span>
+</div>
+<div class="flex justify-between items-center px-6 py-5 bg-stone-950 font-bold">
+<span class="font-noto text-base text-amber-500">Net Tax Payable</span>
+<span class="font-mono-md text-xl text-amber-500">₹ 7,59,000</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

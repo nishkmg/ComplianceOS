@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ITR Return GSTR-3B Detail - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {},
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {},
+                    fontFamily: {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Public Sans", "sans-serif"],
+                        "mono": ["DM Mono", "monospace"]
+                    },
+                    fontSize: {}
+                },
+            },
+        }
+    </script>
+<style>
+        .font-mono { font-family: 'DM Mono', monospace; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-[#FDFCFB] text-slate-900 font-body min-h-screen flex flex-col antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b-[0.5px] border-[#E8E4DC] flex justify-between items-center px-12 h-16 backdrop-blur-md bg-opacity-90 bg-[#FDFCFB]">
+<div class="flex items-center gap-8">
+<span class="font-serif text-xl font-black tracking-tighter text-slate-900 uppercase">ComplianceOS</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-serif text-sm tracking-tight text-stone-500 hover:text-stone-900 transition-all duration-200 hover:bg-stone-50 px-2 py-1 rounded cursor-pointer active:opacity-80" href="#">Dashboard</a>
+<a class="font-serif text-sm tracking-tight text-stone-500 hover:text-stone-900 transition-all duration-200 hover:bg-stone-50 px-2 py-1 rounded cursor-pointer active:opacity-80" href="#">GST</a>
+<a class="font-serif text-sm tracking-tight text-[#C8860A] border-b-2 border-[#C8860A] pb-1 cursor-pointer active:opacity-80" href="#">ITR</a>
+<a class="font-serif text-sm tracking-tight text-stone-500 hover:text-stone-900 transition-all duration-200 hover:bg-stone-50 px-2 py-1 rounded cursor-pointer active:opacity-80" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-stone-500 hover:text-stone-900 transition-all duration-200 hover:bg-stone-50 p-2 rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-stone-500 hover:text-stone-900 transition-all duration-200 hover:bg-stone-50 p-2 rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+<button class="bg-slate-900 text-white px-4 py-2 text-sm font-medium rounded hover:bg-slate-800 transition-colors">File Return</button>
+</div>
+</header>
+<div class="flex flex-1 pt-16">
+<!-- SideNavBar -->
+<aside class="h-screen w-72 border-r-[0.5px] border-[#E8E4DC] sticky left-0 top-16 bg-[#FDFCFB] flex flex-col py-8 px-4 gap-2 overflow-y-auto hidden lg:flex">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-stone-200 flex items-center justify-center overflow-hidden">
+<img alt="User Workspace Avatar" class="w-full h-full object-cover" data-alt="professional corporate headshot of a business executive in a modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDp-8a13LQlPAXfpGiGI6mkBUcNdwfnOCm3dhNlmjlQX8pBwMYlmu3f4ZZC2YD1PnZTmZ49SWEA1ZKO6U0bI5Ie6rKHSTPMSbyIlMOYbZuWqlNiS9SHxXD6GK5DNdiXZ-ufhxCY0MmA9R-4DsJZiWO3oK9Oufz0whMSAp9m03J8QoQBsTX3yKmYZq0Q-9k-iVAKW-BDLddG68AvQ49g5pKqfA7ADygQA4zDeb-EPSpPlt5ZvqY9txq1g70ujcIwApM3lCmS5DEvgw"/>
+</div>
+<div>
+<div class="font-serif font-bold text-[#1A1A1A] tracking-widest uppercase text-sm">ComplianceOS</div>
+<div class="text-xs text-stone-500">Enterprise Tier</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 rounded hover:translate-x-1 transition-transform duration-150 select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+                    Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 rounded hover:translate-x-1 transition-transform duration-150 select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="menu_book">menu_book</span>
+                    Compliance Ledger
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 rounded hover:translate-x-1 transition-transform duration-150 select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="corporate_fare">corporate_fare</span>
+                    Entity Management
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 font-serif text-[13px] leading-relaxed bg-[#F5F2ED] text-[#C8860A] border-r-2 border-[#C8860A] font-semibold rounded-l select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span>
+                    Reports Archive
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 rounded hover:translate-x-1 transition-transform duration-150 select-none cursor-default" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>
+                    Audit Settings
+                </a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 pt-8 border-t border-stone-100">
+<button class="w-full bg-[#C8860A] text-white py-2 rounded text-sm font-medium mb-4 hover:bg-[#a66f08] transition-colors">Add New Entity</button>
+<a class="flex items-center gap-3 px-4 py-2 font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 rounded hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="security">security</span>
+                    Security Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 font-serif text-[13px] leading-relaxed text-stone-600 hover:bg-stone-50 rounded hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="logout">logout</span>
+                    Logout
+                </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 max-w-6xl mx-auto w-full px-6 py-10">
+<!-- Page Header -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-200 pb-6">
+<div>
+<div class="flex items-center gap-2 text-sm text-stone-500 mb-2 font-serif">
+<span>ITR Returns</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span>AY 2023-24</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-slate-900">GSTR-3B Details</span>
+</div>
+<h1 class="font-headline text-3xl md:text-4xl font-bold text-slate-900">ITR Return GSTR-3B Detail</h1>
+<p class="text-stone-500 mt-2 max-w-2xl text-sm">Review aggregated Goods and Services Tax data for the selected financial period linked to your Income Tax Return filing.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<select class="appearance-none bg-white border border-stone-300 text-stone-700 py-2 pl-4 pr-10 rounded shadow-sm text-sm focus:outline-none focus:ring-1 focus:ring-[#C8860A] focus:border-[#C8860A] font-medium cursor-pointer">
+<option>FY 2022-23 (AY 2023-24)</option>
+<option>FY 2021-22 (AY 2022-23)</option>
+<option>FY 2020-21 (AY 2021-22)</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</div>
+</div>
+<button class="flex items-center gap-2 bg-stone-100 text-slate-900 px-4 py-2 rounded text-sm font-medium hover:bg-stone-200 transition-colors border border-stone-200">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export PDF
+                    </button>
+</div>
+</div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="bg-white border border-stone-200 rounded-lg p-6 shadow-sm">
+<h3 class="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-2">Total Outward Supplies</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-sm text-stone-400 font-mono">₹</span>
+<span class="text-3xl font-bold text-slate-900 font-mono">1,42,50,000</span>
+</div>
+<div class="mt-4 flex items-center text-xs text-emerald-600 gap-1 bg-emerald-50 w-fit px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>12.5% vs Last Year</span>
+</div>
+</div>
+<div class="bg-white border border-stone-200 rounded-lg p-6 shadow-sm">
+<h3 class="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-2">Total ITC Claimed</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-sm text-stone-400 font-mono">₹</span>
+<span class="text-3xl font-bold text-slate-900 font-mono">24,35,400</span>
+</div>
+<div class="mt-4 flex items-center text-xs text-stone-500 gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+<span>Matches 2B records completely</span>
+</div>
+</div>
+<div class="bg-[#F5F2ED] border border-[#E8E4DC] rounded-lg p-6 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-[#C8860A] opacity-5 rounded-bl-full"></div>
+<h3 class="text-sm font-semibold text-[#8c5e07] uppercase tracking-wider mb-2">Net Tax Paid in Cash</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-sm text-[#c49a4f] font-mono">₹</span>
+<span class="text-3xl font-bold text-[#1A1A1A] font-mono">8,45,200</span>
+</div>
+<div class="mt-4 flex items-center text-xs text-[#8c5e07] font-medium">
+                        View payment challans →
+                    </div>
+</div>
+</div>
+<!-- Detailed Tables Section -->
+<div class="bg-white border border-stone-200 rounded-lg shadow-sm overflow-hidden mb-10">
+<div class="flex items-center justify-between px-6 py-4 border-b border-stone-200 bg-stone-50">
+<h2 class="font-headline text-lg font-bold text-slate-900">3.1 Details of Outward Supplies and inward supplies liable to reverse charge</h2>
+<button class="text-stone-400 hover:text-stone-600">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-xs font-semibold text-stone-500 uppercase tracking-wider bg-white border-b border-stone-200">
+<th class="px-6 py-4 w-1/3">Nature of Supplies</th>
+<th class="px-6 py-4 text-right">Taxable Value</th>
+<th class="px-6 py-4 text-right">Integrated Tax</th>
+<th class="px-6 py-4 text-right">Central Tax</th>
+<th class="px-6 py-4 text-right">State/UT Tax</th>
+<th class="px-6 py-4 text-right">Cess</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-stone-100">
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-stone-700">(a) Outward taxable supplies (other than zero rated, nil rated and exempted)</td>
+<td class="px-6 py-4 text-right font-mono font-medium text-slate-900">1,20,00,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-600">12,50,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-600">4,55,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-600">4,55,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-stone-700">(b) Outward taxable supplies (zero rated)</td>
+<td class="px-6 py-4 text-right font-mono font-medium text-slate-900">15,00,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-600">2,70,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-stone-700">(c) Other outward supplies (Nil rated, exempted)</td>
+<td class="px-6 py-4 text-right font-mono font-medium text-slate-900">5,00,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-stone-700">(d) Inward supplies (liable to reverse charge)</td>
+<td class="px-6 py-4 text-right font-mono font-medium text-slate-900">2,50,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-600">45,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+</tr>
+<tr class="bg-stone-50 font-semibold border-t-2 border-stone-200">
+<td class="px-6 py-4 text-slate-900 text-right">Total</td>
+<td class="px-6 py-4 text-right font-mono text-slate-900">1,42,50,000</td>
+<td class="px-6 py-4 text-right font-mono text-slate-900">15,65,000</td>
+<td class="px-6 py-4 text-right font-mono text-slate-900">4,55,000</td>
+<td class="px-6 py-4 text-right font-mono text-slate-900">4,55,000</td>
+<td class="px-6 py-4 text-right font-mono text-stone-400">0.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Call to Action Banner -->
+<div class="bg-slate-900 rounded-lg p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md relative overflow-hidden">
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
+<div class="relative z-10 flex items-center gap-6">
+<div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="receipt_long">receipt_long</span>
+</div>
+<div>
+<h3 class="font-headline text-xl font-bold text-white mb-1">View Complete GSTR-3B Filing</h3>
+<p class="text-stone-300 text-sm max-w-lg">Access the full, unsummarized monthly breakdown of all GSTR-3B filings for this financial year on the GST portal integrated view.</p>
+</div>
+</div>
+<button class="relative z-10 shrink-0 bg-[#C8860A] text-white px-6 py-3 rounded font-medium hover:bg-[#b07609] transition-colors flex items-center gap-2 shadow-lg shadow-[#C8860A]/20">
+                    Go to GST Ledger
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full border-t-[0.5px] border-[#E8E4DC] mt-24 bg-[#FDFCFB]">
+<div class="flex flex-col items-center justify-center py-16 gap-6 max-w-7xl mx-auto">
+<nav class="flex flex-wrap justify-center gap-6 md:gap-10">
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Terms of Service</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Security Architecture</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Privacy Policy</a>
+<a class="font-serif text-[11px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors duration-300 ease-in-out" href="#">Regulatory Compliance</a>
+</nav>
+<p class="font-serif text-[11px] uppercase tracking-widest text-stone-400">© 2024 ComplianceOS India. Precision Accounting Standards.</p>
+</div>
+</footer>
+</body></html>

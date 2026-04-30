@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ITR Presumptive Scheme Calculator - ComplianceOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Syne:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#825500",
+                        "section-muted": "#F4F2EE",
+                        "primary-fixed-dim": "#ffb950",
+                        "secondary-container": "#e2dfde",
+                        "page-bg": "#FAFAF8",
+                        "on-background": "#211b13",
+                        "on-secondary-container": "#636262",
+                        "on-primary-container": "#3f2700",
+                        "inverse-primary": "#ffb950",
+                        "tertiary-container": "#309bdb",
+                        "border-subtle": "#E8E4DC",
+                        "tertiary-fixed-dim": "#8ecdff",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "surface": "#fff8f4",
+                        "on-secondary-fixed-variant": "#474746",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-error": "#ffffff",
+                        "text-mid": "#555555",
+                        "surface-container-low": "#fff1e4",
+                        "tertiary": "#006494",
+                        "on-primary-fixed-variant": "#633f00",
+                        "surface-bright": "#fff8f4",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container-high": "#f3e6d9",
+                        "primary-fixed": "#ffddb3",
+                        "amber-text": "#B47500",
+                        "on-primary": "#ffffff",
+                        "primary": "#825500",
+                        "section-amber": "rgba(200, 134, 10, 0.06)",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#362f27",
+                        "surface-dim": "#e5d8cb",
+                        "surface-variant": "#ede0d3",
+                        "primary-container": "#c8860a",
+                        "tertiary-fixed": "#cae6ff",
+                        "secondary": "#5f5e5e",
+                        "on-primary-fixed": "#291800",
+                        "inverse-on-surface": "#fcefe1",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-surface": "#211b13",
+                        "surface-container-highest": "#ede0d3",
+                        "on-surface-variant": "#514535",
+                        "on-error-container": "#93000a",
+                        "section-dark": "#111111",
+                        "text-light": "#888888",
+                        "surface-container": "#f9ecde",
+                        "on-tertiary-container": "#002f49",
+                        "outline": "#847563",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#d6c4af",
+                        "background": "#fff8f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "space-48": "48px",
+                        "gutter-desktop": "24px",
+                        "space-64": "64px",
+                        "space-128": "128px",
+                        "margin-mobile": "16px",
+                        "gutter-wide": "32px",
+                        "space-96": "96px"
+                    },
+                    "fontFamily": {
+                        "mono-md": ["DM Mono"],
+                        "display-lg": ["Playfair Display"],
+                        "marketing-xl": ["Playfair Display"],
+                        "ui-sm": ["Syne"],
+                        "mono-lg": ["DM Mono"],
+                        "marketing-hero": ["Playfair Display"],
+                        "display-xl": ["Playfair Display"],
+                        "ui-lg": ["Syne"],
+                        "ui-xs": ["Syne"],
+                        "ui-md": ["Syne"]
+                    },
+                    "fontSize": {
+                        "mono-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["26px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "marketing-xl": ["48px", { "lineHeight": "1.15", "fontWeight": "400" }],
+                        "ui-sm": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "mono-lg": ["18px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "marketing-hero": ["64px", { "lineHeight": "1.1", "fontWeight": "400" }],
+                        "display-xl": ["38px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "ui-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "ui-xs": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "ui-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    },
+                    "boxShadow": {
+                        "screenshot": "0 20px 40px -10px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.05)",
+                        "card": "0 4px 12px -4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.05)"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-page-bg font-ui-md text-on-background antialiased selection:bg-primary-container selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b-[0.5px] border-[#E8E4DC] dark:border-stone-800 bg-[#FDFCFB] dark:bg-[#121212] flex justify-between items-center px-12 h-16 backdrop-blur-md bg-opacity-90">
+<div class="flex items-center gap-8">
+<div class="font-serif text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">
+                ComplianceOS
+            </div>
+<nav class="hidden md:flex gap-6 font-serif text-sm tracking-tight text-slate-900 dark:text-slate-100">
+<a class="text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1" href="#">Dashboard</a>
+<a class="text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1" href="#">GST</a>
+<a class="text-[#C8860A] border-b-2 border-[#C8860A] pb-1 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1" href="#">ITR</a>
+<a class="text-stone-500 hover:text-stone-900 dark:text-stone-400 transition-all duration-200 hover:bg-stone-50 dark:hover:bg-stone-900 cursor-pointer active:opacity-80 px-2 py-1" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 text-[#C8860A]">
+<button class="cursor-pointer active:opacity-80 hover:bg-stone-50 dark:hover:bg-stone-900 p-1 rounded-DEFAULT"><span class="material-symbols-outlined">notifications</span></button>
+<button class="cursor-pointer active:opacity-80 hover:bg-stone-50 dark:hover:bg-stone-900 p-1 rounded-DEFAULT"><span class="material-symbols-outlined">help_outline</span></button>
+</div>
+<button class="font-ui-sm font-medium bg-primary-container text-on-primary px-4 py-2 rounded-DEFAULT transition-all duration-200 hover:opacity-90 flex items-center gap-2">
+                File Return
+            </button>
+</div>
+</header>
+<div class="flex pt-16 h-screen w-full overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex h-full w-72 border-r-[0.5px] border-[#E8E4DC] dark:border-stone-800 bg-[#FDFCFB] dark:bg-[#121212] flex-col py-8 px-4 gap-2 flex-shrink-0 z-40">
+<div class="flex items-center gap-3 px-4 mb-6">
+<div class="w-10 h-10 rounded-DEFAULT bg-section-muted border border-border-subtle flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-text-mid" data-weight="fill" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+<div>
+<div class="font-serif font-bold text-[#1A1A1A] dark:text-white tracking-widest uppercase text-[11px]">ComplianceOS</div>
+<div class="font-serif text-[11px] leading-relaxed text-stone-500">Enterprise Tier</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 bg-[#F5F2ED] dark:bg-stone-900 text-[#C8860A] border-r-2 border-[#C8860A] font-semibold font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">menu_book</span> Compliance Ledger
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]">corporate_fare</span> Entity Management
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]">analytics</span> Reports Archive
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]">verified_user</span> Audit Settings
+                </a>
+</nav>
+<button class="mt-4 mb-8 mx-4 font-ui-sm text-center border border-[#1A1A1A] text-[#1A1A1A] py-2 rounded-DEFAULT hover:bg-[#1A1A1A] hover:text-white transition-colors duration-200">
+                Add New Entity
+            </button>
+<div class="mt-auto flex flex-col gap-1 border-t-[0.5px] border-[#E8E4DC] dark:border-stone-800 pt-4">
+<a class="flex items-center gap-3 px-4 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]">security</span> Security Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 font-serif text-[13px] leading-relaxed hover:translate-x-1 transition-transform duration-150 select-none cursor-default rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span> Logout
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto relative bg-page-bg">
+<div class="max-w-[1200px] mx-auto px-gutter-desktop lg:px-gutter-wide py-space-48">
+<!-- Page Header -->
+<div class="mb-space-48">
+<div class="font-ui-xs text-amber-text uppercase tracking-widest mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">calculate</span>
+                        Tax Calculation Engine
+                    </div>
+<h1 class="font-display-xl text-on-background mb-4 text-balance">Presumptive Taxation Model</h1>
+<p class="font-ui-md text-text-mid max-w-2xl">
+                        Evaluate deemed income under sections 44AD (Business) and 44ADA (Profession). Compare presumptive outputs against actual book profit to determine audit applicability.
+                    </p>
+</div>
+<!-- Calculation Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Inputs (Bento Style) -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Configuration Card -->
+<div class="bg-surface-container-lowest border border-border-subtle p-8 rounded-DEFAULT border-t-[2px] border-t-primary-container shadow-sm hover:shadow-card transition-shadow duration-300">
+<h2 class="font-display-lg text-on-background mb-6">Parameter Configuration</h2>
+<form class="space-y-8">
+<!-- Scheme Selection -->
+<div>
+<label class="block font-ui-sm text-on-surface-variant mb-3">Applicable Section</label>
+<div class="grid grid-cols-2 gap-4">
+<label class="relative flex cursor-pointer rounded-DEFAULT border border-primary-container bg-section-amber p-4 focus:outline-none">
+<input checked="" class="sr-only" name="section" type="radio" value="44ad"/>
+<span class="flex flex-col">
+<span class="font-ui-lg text-on-background">Section 44AD</span>
+<span class="font-ui-xs text-text-mid mt-1">Eligible Business</span>
+</span>
+<span class="material-symbols-outlined absolute top-4 right-4 text-primary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<label class="relative flex cursor-pointer rounded-DEFAULT border border-border-subtle bg-surface-container-lowest p-4 hover:bg-surface-container-low transition-colors">
+<input class="sr-only" name="section" type="radio" value="44ada"/>
+<span class="flex flex-col">
+<span class="font-ui-lg text-text-mid">Section 44ADA</span>
+<span class="font-ui-xs text-text-light mt-1">Specified Profession</span>
+</span>
+</label>
+</div>
+</div>
+<!-- Turnover Input -->
+<div>
+<label class="block font-ui-sm text-on-surface-variant mb-2" for="turnover">Total Turnover / Gross Receipts</label>
+<div class="relative mt-1">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+<span class="font-mono-md text-text-mid">₹</span>
+</div>
+<input class="block w-full rounded-DEFAULT border-0 py-3 pl-10 text-on-background ring-1 ring-inset ring-border-subtle placeholder:text-text-light focus:ring-2 focus:ring-inset focus:ring-primary-container font-mono-lg bg-surface-container-lowest" id="turnover" name="turnover" placeholder="0.00" type="text" value="45,00,000"/>
+</div>
+<p class="mt-2 font-ui-xs text-text-light">Limit: ₹3 Crore (44AD) / ₹75 Lakh (44ADA) subject to cash receipt conditions.</p>
+</div>
+<!-- Rate Split (44AD Specific) -->
+<div class="p-4 bg-section-muted rounded-DEFAULT border border-border-subtle">
+<label class="block font-ui-sm text-on-surface-variant mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">account_balance</span>
+                                        Receipt Segregation (For 44AD)
+                                    </label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block font-ui-xs text-text-mid mb-1">Digital/Bank (6% Rate)</label>
+<div class="relative mt-1">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="font-mono-md text-text-light">₹</span>
+</div>
+<input class="block w-full rounded-DEFAULT border-0 py-2 pl-8 text-on-background ring-1 ring-inset ring-border-subtle focus:ring-2 focus:ring-inset focus:ring-primary-container font-mono-md bg-surface-container-lowest" type="text" value="35,00,000"/>
+</div>
+</div>
+<div>
+<label class="block font-ui-xs text-text-mid mb-1">Cash/Other (8% Rate)</label>
+<div class="relative mt-1">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="font-mono-md text-text-light">₹</span>
+</div>
+<input class="block w-full rounded-DEFAULT border-0 py-2 pl-8 text-on-background ring-1 ring-inset ring-border-subtle focus:ring-2 focus:ring-inset focus:ring-primary-container font-mono-md bg-surface-container-lowest" type="text" value="10,00,000"/>
+</div>
+</div>
+</div>
+</div>
+</form>
+</div>
+</div>
+<!-- Right Column: Outputs & Comparison -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Deemed Income Result -->
+<div class="bg-primary-container text-on-primary p-8 rounded-DEFAULT shadow-sm relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute -right-12 -top-12 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div class="relative z-10">
+<div class="font-ui-xs uppercase tracking-widest mb-2 opacity-80">Calculated Deemed Income</div>
+<div class="font-mono-lg text-4xl mb-4 font-medium tracking-tight">₹ 2,90,000</div>
+<div class="border-t border-white/20 pt-4 mt-4 grid grid-cols-2 gap-4">
+<div>
+<div class="font-ui-xs opacity-70">From Digital (6%)</div>
+<div class="font-mono-md">₹ 2,10,000</div>
+</div>
+<div>
+<div class="font-ui-xs opacity-70">From Cash (8%)</div>
+<div class="font-mono-md">₹ 80,000</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Book Profit Comparison -->
+<div class="bg-surface-container-lowest border border-border-subtle p-8 rounded-DEFAULT shadow-sm">
+<h3 class="font-ui-lg text-on-background mb-4 border-b border-border-subtle pb-2 flex justify-between items-center">
+                                Book Profit Verification
+                                <span class="material-symbols-outlined text-text-light text-[18px]">balance</span>
+</h3>
+<div class="mb-6">
+<label class="block font-ui-sm text-on-surface-variant mb-2" for="book_profit">Actual Book Profit (Net Profit)</label>
+<div class="relative mt-1">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+<span class="font-mono-md text-text-mid">₹</span>
+</div>
+<input class="block w-full rounded-DEFAULT border-0 py-3 pl-10 text-on-background ring-1 ring-inset ring-border-subtle focus:ring-2 focus:ring-inset focus:ring-primary-container font-mono-lg bg-surface-container-lowest" id="book_profit" type="text" value="2,50,000"/>
+</div>
+</div>
+<!-- Analysis Result -->
+<div class="bg-surface-container rounded-DEFAULT p-4 flex gap-4 items-start">
+<div class="mt-1">
+<span class="material-symbols-outlined text-error" data-weight="fill" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<div class="font-ui-sm font-semibold text-on-background mb-1">Tax Audit Mandatory</div>
+<p class="font-ui-xs text-on-surface-variant leading-relaxed">
+                                        Your declared book profit (₹2,50,000) is lower than the calculated presumptive income (₹2,90,000). To declare this lower income, maintenance of books under Sec 44AA and Tax Audit under Sec 44AB is mandatory.
+                                    </p>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-on-background text-surface-container-lowest py-4 px-6 rounded-DEFAULT font-ui-md font-medium hover:bg-primary transition-colors duration-300 flex justify-center items-center gap-2 shadow-sm group">
+                            Generate Working Paper
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-200 text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full border-t-[0.5px] mt-24 border-[#E8E4DC] dark:border-stone-800 bg-[#FDFCFB] dark:bg-[#0A0A0A] flex flex-col items-center justify-center py-16 gap-6 max-w-7xl mx-auto flat">
+<nav class="flex flex-wrap justify-center gap-6 font-serif text-[11px] uppercase tracking-widest text-stone-500">
+<a class="text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300 ease-in-out" href="#">Terms of Service</a>
+<a class="text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300 ease-in-out" href="#">Security Architecture</a>
+<a class="text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-300 ease-in-out" href="#">Privacy Policy</a>
+<a class="text-[#C8860A] underline underline-offset-4 transition-colors duration-300 ease-in-out" href="#">Regulatory Compliance</a>
+</nav>
+<div class="font-serif text-[11px] uppercase tracking-widest text-stone-500">
+                    © 2024 ComplianceOS India. Precision Accounting Standards.
+                </div>
+</footer>
+</main>
+</div>
+</body></html>

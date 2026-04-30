@@ -7,19 +7,19 @@ export declare const SalaryComponentInputSchema: z.ZodObject<{
     displayOrder: z.ZodDefault<z.ZodNumber>;
     isActive: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    isActive: boolean;
-    componentCode: string;
-    componentName: string;
-    componentType: "arrears" | "earning" | "deduction" | "statutory" | "advance";
-    isTaxable: boolean;
-    displayOrder: number;
+    isActive?: boolean;
+    componentCode?: string;
+    componentName?: string;
+    componentType?: "earning" | "deduction" | "statutory" | "advance" | "arrears";
+    isTaxable?: boolean;
+    displayOrder?: number;
 }, {
-    componentCode: string;
-    componentName: string;
-    componentType: "arrears" | "earning" | "deduction" | "statutory" | "advance";
-    isActive?: boolean | undefined;
-    isTaxable?: boolean | undefined;
-    displayOrder?: number | undefined;
+    isActive?: boolean;
+    componentCode?: string;
+    componentName?: string;
+    componentType?: "earning" | "deduction" | "statutory" | "advance" | "arrears";
+    isTaxable?: boolean;
+    displayOrder?: number;
 }>;
 export type SalaryComponentInput = z.infer<typeof SalaryComponentInputSchema>;
 export declare const EmployeeSalaryStructureInputSchema: z.ZodObject<{
@@ -30,29 +30,29 @@ export declare const EmployeeSalaryStructureInputSchema: z.ZodObject<{
         amount: z.ZodOptional<z.ZodString>;
         percentageOfBasic: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        componentCode: string;
-        amount?: string | undefined;
-        percentageOfBasic?: string | undefined;
+        amount?: string;
+        componentCode?: string;
+        percentageOfBasic?: string;
     }, {
-        componentCode: string;
-        amount?: string | undefined;
-        percentageOfBasic?: string | undefined;
+        amount?: string;
+        componentCode?: string;
+        percentageOfBasic?: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    employeeId: string;
-    effectiveFrom: string;
-    components: {
-        componentCode: string;
-        amount?: string | undefined;
-        percentageOfBasic?: string | undefined;
+    employeeId?: string;
+    effectiveFrom?: string;
+    components?: {
+        amount?: string;
+        componentCode?: string;
+        percentageOfBasic?: string;
     }[];
 }, {
-    employeeId: string;
-    effectiveFrom: string;
-    components: {
-        componentCode: string;
-        amount?: string | undefined;
-        percentageOfBasic?: string | undefined;
+    employeeId?: string;
+    effectiveFrom?: string;
+    components?: {
+        amount?: string;
+        componentCode?: string;
+        percentageOfBasic?: string;
     }[];
 }>;
 export type EmployeeSalaryStructureInput = z.infer<typeof EmployeeSalaryStructureInputSchema>;
@@ -63,36 +63,36 @@ export declare const ProcessPayrollInputSchema: z.ZodObject<{
     paymentDate: z.ZodOptional<z.ZodString>;
     narration: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    employeeId: string;
-    month: string;
-    year: string;
-    narration?: string | undefined;
-    paymentDate?: string | undefined;
+    narration?: string;
+    year?: string;
+    employeeId?: string;
+    month?: string;
+    paymentDate?: string;
 }, {
-    employeeId: string;
-    month: string;
-    year: string;
-    narration?: string | undefined;
-    paymentDate?: string | undefined;
+    narration?: string;
+    year?: string;
+    employeeId?: string;
+    month?: string;
+    paymentDate?: string;
 }>;
 export type ProcessPayrollInput = z.infer<typeof ProcessPayrollInputSchema>;
 export declare const FinalizePayrollInputSchema: z.ZodObject<{
     payrollRunId: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    payrollRunId: string;
+    payrollRunId?: string;
 }, {
-    payrollRunId: string;
+    payrollRunId?: string;
 }>;
 export type FinalizePayrollInput = z.infer<typeof FinalizePayrollInputSchema>;
 export declare const VoidPayrollInputSchema: z.ZodObject<{
     payrollRunId: z.ZodString;
     reason: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    reason: string;
-    payrollRunId: string;
+    reason?: string;
+    payrollRunId?: string;
 }, {
-    reason: string;
-    payrollRunId: string;
+    reason?: string;
+    payrollRunId?: string;
 }>;
 export type VoidPayrollInput = z.infer<typeof VoidPayrollInputSchema>;
 export declare const CreateAdvanceInputSchema: z.ZodObject<{
@@ -104,40 +104,40 @@ export declare const CreateAdvanceInputSchema: z.ZodObject<{
     monthReference: z.ZodString;
     narration: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    totalAmount: string;
-    employeeId: string;
-    monthlyDeduction: string;
-    installments: number;
-    advanceDate: string;
-    monthReference: string;
-    narration?: string | undefined;
+    narration?: string;
+    employeeId?: string;
+    totalAmount?: string;
+    monthlyDeduction?: string;
+    installments?: number;
+    advanceDate?: string;
+    monthReference?: string;
 }, {
-    totalAmount: string;
-    employeeId: string;
-    monthlyDeduction: string;
-    installments: number;
-    advanceDate: string;
-    monthReference: string;
-    narration?: string | undefined;
+    narration?: string;
+    employeeId?: string;
+    totalAmount?: string;
+    monthlyDeduction?: string;
+    installments?: number;
+    advanceDate?: string;
+    monthReference?: string;
 }>;
 export type CreateAdvanceInput = z.infer<typeof CreateAdvanceInputSchema>;
 export declare const RecoverAdvanceInputSchema: z.ZodObject<{
     advanceId: z.ZodString;
     deductedAmount: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    advanceId: string;
-    deductedAmount: string;
+    advanceId?: string;
+    deductedAmount?: string;
 }, {
-    advanceId: string;
-    deductedAmount: string;
+    advanceId?: string;
+    deductedAmount?: string;
 }>;
 export type RecoverAdvanceInput = z.infer<typeof RecoverAdvanceInputSchema>;
 export declare const GeneratePayslipInputSchema: z.ZodObject<{
     payrollRunId: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    payrollRunId: string;
+    payrollRunId?: string;
 }, {
-    payrollRunId: string;
+    payrollRunId?: string;
 }>;
 export type GeneratePayslipInput = z.infer<typeof GeneratePayslipInputSchema>;
 export declare const PayrollRunOutputSchema: z.ZodObject<{
@@ -168,86 +168,86 @@ export declare const PayrollRunOutputSchema: z.ZodObject<{
         amount: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        amount: string;
-        componentCode: string;
-        componentName: string;
-        componentType: string;
-        description?: string | undefined;
+        description?: string;
+        amount?: string;
+        componentCode?: string;
+        componentName?: string;
+        componentType?: string;
     }, {
-        amount: string;
-        componentCode: string;
-        componentName: string;
-        componentType: string;
-        description?: string | undefined;
+        description?: string;
+        amount?: string;
+        componentCode?: string;
+        componentName?: string;
+        componentType?: string;
     }>, "many">;
     journalEntryId: z.ZodOptional<z.ZodString>;
     payslipUrl: z.ZodOptional<z.ZodString>;
     isDistributed: z.ZodBoolean;
     createdAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    status: "draft" | "processing" | "calculated" | "finalized" | "voided" | "failed";
-    lines: {
-        amount: string;
-        componentCode: string;
-        componentName: string;
-        componentType: string;
-        description?: string | undefined;
+    arrears?: string;
+    id?: string;
+    createdAt?: Date;
+    status?: "draft" | "voided" | "processing" | "failed" | "calculated" | "finalized";
+    fiscalYear?: string;
+    journalEntryId?: string;
+    year?: string;
+    employeeCode?: string;
+    employeeId?: string;
+    payrollNumber?: string;
+    month?: string;
+    grossEarnings?: string;
+    grossDeductions?: string;
+    netPay?: string;
+    pfEe?: string;
+    pfEr?: string;
+    esiEe?: string;
+    esiEr?: string;
+    tdsDeducted?: string;
+    professionalTax?: string;
+    advanceDeduction?: string;
+    payslipUrl?: string;
+    isDistributed?: boolean;
+    employeeName?: string;
+    lines?: {
+        description?: string;
+        amount?: string;
+        componentCode?: string;
+        componentName?: string;
+        componentType?: string;
     }[];
-    id: string;
-    createdAt: Date;
-    fiscalYear: string;
-    employeeCode: string;
-    employeeId: string;
-    grossEarnings: string;
-    grossDeductions: string;
-    month: string;
-    year: string;
-    netPay: string;
-    pfEe: string;
-    pfEr: string;
-    esiEe: string;
-    esiEr: string;
-    tdsDeducted: string;
-    professionalTax: string;
-    advanceDeduction: string;
-    arrears: string;
-    payrollNumber: string;
-    employeeName: string;
-    isDistributed: boolean;
-    journalEntryId?: string | undefined;
-    payslipUrl?: string | undefined;
 }, {
-    status: "draft" | "processing" | "calculated" | "finalized" | "voided" | "failed";
-    lines: {
-        amount: string;
-        componentCode: string;
-        componentName: string;
-        componentType: string;
-        description?: string | undefined;
+    arrears?: string;
+    id?: string;
+    createdAt?: Date;
+    status?: "draft" | "voided" | "processing" | "failed" | "calculated" | "finalized";
+    fiscalYear?: string;
+    journalEntryId?: string;
+    year?: string;
+    employeeCode?: string;
+    employeeId?: string;
+    payrollNumber?: string;
+    month?: string;
+    grossEarnings?: string;
+    grossDeductions?: string;
+    netPay?: string;
+    pfEe?: string;
+    pfEr?: string;
+    esiEe?: string;
+    esiEr?: string;
+    tdsDeducted?: string;
+    professionalTax?: string;
+    advanceDeduction?: string;
+    payslipUrl?: string;
+    isDistributed?: boolean;
+    employeeName?: string;
+    lines?: {
+        description?: string;
+        amount?: string;
+        componentCode?: string;
+        componentName?: string;
+        componentType?: string;
     }[];
-    id: string;
-    createdAt: Date;
-    fiscalYear: string;
-    employeeCode: string;
-    employeeId: string;
-    grossEarnings: string;
-    grossDeductions: string;
-    month: string;
-    year: string;
-    netPay: string;
-    pfEe: string;
-    pfEr: string;
-    esiEe: string;
-    esiEr: string;
-    tdsDeducted: string;
-    professionalTax: string;
-    advanceDeduction: string;
-    arrears: string;
-    payrollNumber: string;
-    employeeName: string;
-    isDistributed: boolean;
-    journalEntryId?: string | undefined;
-    payslipUrl?: string | undefined;
 }>;
 export type PayrollRunOutput = z.infer<typeof PayrollRunOutputSchema>;
 export declare const PayrollRegisterEntrySchema: z.ZodObject<{
@@ -270,43 +270,43 @@ export declare const PayrollRegisterEntrySchema: z.ZodObject<{
     paymentDate: z.ZodString;
     status: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    status: string;
-    employeeCode: string;
-    employeeId: string;
-    grossEarnings: string;
-    netPay: string;
-    pfEe: string;
-    pfEr: string;
-    esiEe: string;
-    esiEr: string;
-    tdsDeducted: string;
-    professionalTax: string;
-    advanceDeduction: string;
-    paymentDate: string;
-    employeeName: string;
-    daysPresent: number;
-    otherDeductions: string;
-    designation?: string | undefined;
-    department?: string | undefined;
+    status?: string;
+    employeeCode?: string;
+    designation?: string;
+    department?: string;
+    employeeId?: string;
+    paymentDate?: string;
+    grossEarnings?: string;
+    netPay?: string;
+    pfEe?: string;
+    pfEr?: string;
+    esiEe?: string;
+    esiEr?: string;
+    tdsDeducted?: string;
+    professionalTax?: string;
+    advanceDeduction?: string;
+    employeeName?: string;
+    daysPresent?: number;
+    otherDeductions?: string;
 }, {
-    status: string;
-    employeeCode: string;
-    employeeId: string;
-    grossEarnings: string;
-    netPay: string;
-    pfEe: string;
-    pfEr: string;
-    esiEe: string;
-    esiEr: string;
-    tdsDeducted: string;
-    professionalTax: string;
-    advanceDeduction: string;
-    paymentDate: string;
-    employeeName: string;
-    daysPresent: number;
-    otherDeductions: string;
-    designation?: string | undefined;
-    department?: string | undefined;
+    status?: string;
+    employeeCode?: string;
+    designation?: string;
+    department?: string;
+    employeeId?: string;
+    paymentDate?: string;
+    grossEarnings?: string;
+    netPay?: string;
+    pfEe?: string;
+    pfEr?: string;
+    esiEe?: string;
+    esiEr?: string;
+    tdsDeducted?: string;
+    professionalTax?: string;
+    advanceDeduction?: string;
+    employeeName?: string;
+    daysPresent?: number;
+    otherDeductions?: string;
 }>;
 export type PayrollRegisterEntry = z.infer<typeof PayrollRegisterEntrySchema>;
 export declare const PFCalculationResultSchema: z.ZodObject<{
@@ -317,19 +317,19 @@ export declare const PFCalculationResultSchema: z.ZodObject<{
     grossSalary: z.ZodNumber;
     wageCeiling: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    ee: number;
-    er: number;
-    eps: number;
-    epf: number;
-    grossSalary: number;
-    wageCeiling: number;
+    wageCeiling?: number;
+    ee?: number;
+    er?: number;
+    eps?: number;
+    epf?: number;
+    grossSalary?: number;
 }, {
-    ee: number;
-    er: number;
-    eps: number;
-    epf: number;
-    grossSalary: number;
-    wageCeiling: number;
+    wageCeiling?: number;
+    ee?: number;
+    er?: number;
+    eps?: number;
+    epf?: number;
+    grossSalary?: number;
 }>;
 export type PFCalculationResult = z.infer<typeof PFCalculationResultSchema>;
 export declare const ESICalculationResultSchema: z.ZodObject<{
@@ -338,15 +338,15 @@ export declare const ESICalculationResultSchema: z.ZodObject<{
     grossSalary: z.ZodNumber;
     wageCeiling: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    ee: number;
-    er: number;
-    grossSalary: number;
-    wageCeiling: number;
+    wageCeiling?: number;
+    ee?: number;
+    er?: number;
+    grossSalary?: number;
 }, {
-    ee: number;
-    er: number;
-    grossSalary: number;
-    wageCeiling: number;
+    wageCeiling?: number;
+    ee?: number;
+    er?: number;
+    grossSalary?: number;
 }>;
 export type ESICalculationResult = z.infer<typeof ESICalculationResultSchema>;
 export declare const TDSCalculationResultSchema: z.ZodObject<{
@@ -358,21 +358,21 @@ export declare const TDSCalculationResultSchema: z.ZodObject<{
     regime: z.ZodEnum<["old", "new"]>;
     deductions: z.ZodRecord<z.ZodString, z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    regime: "old" | "new";
-    projectedAnnualIncome: number;
-    taxableIncome: number;
-    annualTDS: number;
-    monthlyTDS: number;
-    remainingMonths: number;
-    deductions: Record<string, number>;
+    regime?: "old" | "new";
+    projectedAnnualIncome?: number;
+    taxableIncome?: number;
+    annualTDS?: number;
+    monthlyTDS?: number;
+    remainingMonths?: number;
+    deductions?: Record<string, number>;
 }, {
-    regime: "old" | "new";
-    projectedAnnualIncome: number;
-    taxableIncome: number;
-    annualTDS: number;
-    monthlyTDS: number;
-    remainingMonths: number;
-    deductions: Record<string, number>;
+    regime?: "old" | "new";
+    projectedAnnualIncome?: number;
+    taxableIncome?: number;
+    annualTDS?: number;
+    monthlyTDS?: number;
+    remainingMonths?: number;
+    deductions?: Record<string, number>;
 }>;
 export type TDSCalculationResult = z.infer<typeof TDSCalculationResultSchema>;
 export declare const ArrearsCalculationResultSchema: z.ZodObject<{
@@ -384,21 +384,21 @@ export declare const ArrearsCalculationResultSchema: z.ZodObject<{
     effectiveFrom: z.ZodString;
     currentMonth: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    effectiveFrom: string;
-    oldMonthlyCTC: number;
-    newMonthlyCTC: number;
-    monthlyDifference: number;
-    arrearsMonths: number;
-    totalArrears: number;
-    currentMonth: string;
+    effectiveFrom?: string;
+    oldMonthlyCTC?: number;
+    newMonthlyCTC?: number;
+    monthlyDifference?: number;
+    arrearsMonths?: number;
+    totalArrears?: number;
+    currentMonth?: string;
 }, {
-    effectiveFrom: string;
-    oldMonthlyCTC: number;
-    newMonthlyCTC: number;
-    monthlyDifference: number;
-    arrearsMonths: number;
-    totalArrears: number;
-    currentMonth: string;
+    effectiveFrom?: string;
+    oldMonthlyCTC?: number;
+    newMonthlyCTC?: number;
+    monthlyDifference?: number;
+    arrearsMonths?: number;
+    totalArrears?: number;
+    currentMonth?: string;
 }>;
 export type ArrearsCalculationResult = z.infer<typeof ArrearsCalculationResultSchema>;
 //# sourceMappingURL=payroll-commands.d.ts.map

@@ -121,7 +121,7 @@ function AppShell({ children }: { children: ReactNode }) {
                 </span>
                 <div className="flex items-center gap-2">
                   <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-[4px] ${
-                    currentFy.status === "open" ? "bg-success-bg text-success" : "bg-[#E5E5E5] text-mid"
+                    currentFy.status === "open" ? "bg-success-bg text-success" : "bg-lighter text-mid"
                   }`}>
                     {currentFy.status === "open" ? "Open" : "Closed"}
                   </span>
@@ -160,7 +160,7 @@ function AppShell({ children }: { children: ReactNode }) {
                       <div className="flex items-center justify-between">
                         <span className="text-[12px] font-medium">{fy.name}</span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded ${
-                          fy.status === "open" ? "bg-success-bg text-success" : "bg-[#E5E5E5] text-mid"
+                          fy.status === "open" ? "bg-success-bg text-success" : "bg-lighter text-mid"
                         }`}>
                           {fy.status}
                         </span>

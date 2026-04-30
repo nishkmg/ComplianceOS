@@ -1,8 +1,8 @@
-// @ts-nocheck
 
+// @ts-ignore
 export function FAQItem({ question, answer }) {
   return (
-    <details className="faq-item group border-b border-[#E8E4DC] py-4">
+    <details className="faq-item group border-b border-border-subtle py-4">
       <summary className="flex items-center justify-between cursor-pointer font-ui text-[15px] font-medium text-dark hover:bg-section-muted rounded-sm px-3 py-2 -mx-3 -my-2 list-none">
         {question}
         <svg className="faq-chevron w-4 h-4 text-light flex-shrink-0 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

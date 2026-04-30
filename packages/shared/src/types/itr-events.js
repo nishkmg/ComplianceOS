@@ -1,77 +1,74 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ItrEventPayloadSchema = exports.ItrEventTypeSchema = exports.ITRGeneratedPayloadSchema = exports.TaxComputedPayloadSchema = exports.IncomeComputedPayloadSchema = exports.DeductionsEventSchema = exports.IncomeByHeadEventSchema = void 0;
-const zod_1 = require("zod");
-const itr_returns_1 = require("./itr-returns");
-const itr_ledgers_1 = require("./itr-ledgers");
+import { z } from "zod";
+import { TaxRegime, ITRReturnType } from "./itr-returns";
+import { AdvanceTaxPaidPayloadSchema, SelfAssessmentTaxPaidPayloadSchema } from "./itr-ledgers";
 // ============================================================================
 // Income Computation Events
 // ============================================================================
-exports.IncomeByHeadEventSchema = zod_1.z.object({
-    salary: zod_1.z.number(),
-    houseProperty: zod_1.z.number(),
-    businessProfit: zod_1.z.number(),
-    capitalGains: zod_1.z.number(),
-    otherSources: zod_1.z.number(),
+export const IncomeByHeadEventSchema = z.object({
+    salary: z.number(),
+    houseProperty: z.number(),
+    businessProfit: z.number(),
+    capitalGains: z.number(),
+    otherSources: z.number(),
 });
-exports.DeductionsEventSchema = zod_1.z.object({
-    chapterVIA: zod_1.z.object({
-        section80C: zod_1.z.number(),
-        section80D: zod_1.z.number(),
-        section80E: zod_1.z.number(),
-        section80G: zod_1.z.number(),
-        section80TTA: zod_1.z.number(),
-        section80TTB: zod_1.z.number(),
-        other: zod_1.z.number(),
-        total: zod_1.z.number(),
+export const DeductionsEventSchema = z.object({
+    chapterVIA: z.object({
+        section80C: z.number(),
+        section80D: z.number(),
+        section80E: z.number(),
+        section80G: z.number(),
+        section80TTA: z.number(),
+        section80TTB: z.number(),
+        other: z.number(),
+        total: z.number(),
     }),
-    otherDeductions: zod_1.z.object({
-        section10AA: zod_1.z.number(),
-        section80CC: zod_1.z.number(),
-        other: zod_1.z.number(),
-        total: zod_1.z.number(),
+    otherDeductions: z.object({
+        section10AA: z.number(),
+        section80CC: z.number(),
+        other: z.number(),
+        total: z.number(),
     }),
-    totalDeductions: zod_1.z.number(),
+    totalDeductions: z.number(),
 });
-exports.IncomeComputedPayloadSchema = zod_1.z.object({
-    itrReturnId: zod_1.z.string().uuid(),
-    financialYear: zod_1.z.string().regex(/^\d{4}-\d{2}$/),
-    incomeByHead: exports.IncomeByHeadEventSchema,
-    grossTotalIncome: zod_1.z.number(),
-    deductions: exports.DeductionsEventSchema,
-    totalIncome: zod_1.z.number(),
-    computedAt: zod_1.z.date(),
+export const IncomeComputedPayloadSchema = z.object({
+    itrReturnId: z.string().uuid(),
+    financialYear: z.string().regex(/^\d{4}-\d{2}$/),
+    incomeByHead: IncomeByHeadEventSchema,
+    grossTotalIncome: z.number(),
+    deductions: DeductionsEventSchema,
+    totalIncome: z.number(),
+    computedAt: z.date(),
 });
 // ============================================================================
 // Tax Computation Events
 // ============================================================================
-exports.TaxComputedPayloadSchema = zod_1.z.object({
-    itrReturnId: zod_1.z.string().uuid(),
-    taxRegime: zod_1.z.nativeEnum(itr_returns_1.TaxRegime),
-    taxOnTotalIncome: zod_1.z.number(),
-    rebate87A: zod_1.z.number(),
-    surcharge: zod_1.z.number(),
-    cess: zod_1.z.number(),
-    totalTaxPayable: zod_1.z.number(),
-    tdsTcsCredit: zod_1.z.number(),
-    advanceTaxPaid: zod_1.z.number(),
-    balancePayable: zod_1.z.number(),
-    computedAt: zod_1.z.date(),
+export const TaxComputedPayloadSchema = z.object({
+    itrReturnId: z.string().uuid(),
+    taxRegime: z.nativeEnum(TaxRegime),
+    taxOnTotalIncome: z.number(),
+    rebate87A: z.number(),
+    surcharge: z.number(),
+    cess: z.number(),
+    totalTaxPayable: z.number(),
+    tdsTcsCredit: z.number(),
+    advanceTaxPaid: z.number(),
+    balancePayable: z.number(),
+    computedAt: z.date(),
 });
 // ============================================================================
 // ITR Generation Events
 // ============================================================================
-exports.ITRGeneratedPayloadSchema = zod_1.z.object({
-    itrReturnId: zod_1.z.string().uuid(),
-    returnType: zod_1.z.nativeEnum(itr_returns_1.ITRReturnType),
-    itrJson: zod_1.z.record(zod_1.z.unknown()),
-    acknowledgmentNumber: zod_1.z.string().optional(),
-    generatedAt: zod_1.z.date(),
+export const ITRGeneratedPayloadSchema = z.object({
+    itrReturnId: z.string().uuid(),
+    returnType: z.nativeEnum(ITRReturnType),
+    itrJson: z.record(z.unknown()),
+    acknowledgmentNumber: z.string().optional(),
+    generatedAt: z.date(),
 });
 // ============================================================================
 // Event Type Union for ITR Domain
 // ============================================================================
-exports.ItrEventTypeSchema = zod_1.z.enum([
+export const ItrEventTypeSchema = z.enum([
     "income_computed",
     "tax_computed",
     "itr_generated",
@@ -79,11 +76,11 @@ exports.ItrEventTypeSchema = zod_1.z.enum([
     "self_assessment_tax_paid",
 ]);
 // Union without discriminator - events have different shapes
-exports.ItrEventPayloadSchema = zod_1.z.union([
-    exports.IncomeComputedPayloadSchema,
-    exports.TaxComputedPayloadSchema,
-    exports.ITRGeneratedPayloadSchema,
-    itr_ledgers_1.AdvanceTaxPaidPayloadSchema,
-    itr_ledgers_1.SelfAssessmentTaxPaidPayloadSchema,
+export const ItrEventPayloadSchema = z.union([
+    IncomeComputedPayloadSchema,
+    TaxComputedPayloadSchema,
+    ITRGeneratedPayloadSchema,
+    AdvanceTaxPaidPayloadSchema,
+    SelfAssessmentTaxPaidPayloadSchema,
 ]);
 //# sourceMappingURL=itr-events.js.map
