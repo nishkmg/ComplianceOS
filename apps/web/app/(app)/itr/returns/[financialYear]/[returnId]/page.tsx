@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -18,7 +18,7 @@ export default function ITRReturnDetailPage() {
         <div>
           <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light mb-2 uppercase tracking-widest">
             <Link className="hover:text-primary transition-colors no-underline" href="/itr/returns">Returns</Link>
-            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <Icon name="chevron_right" className="text-[14px]" />
             <span className="text-on-surface font-bold">ITR Detail</span>
           </div>
           <h2 className="font-display-xl text-3xl text-on-surface font-bold">Financial Year {fy || "2023-24"}</h2>
@@ -26,7 +26,7 @@ export default function ITRReturnDetailPage() {
         </div>
         <div className="flex items-center gap-3">
           <button className="border-[0.5px] border-on-surface text-on-surface px-6 py-2.5 font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Export Data
           </button>
           <button className="bg-primary-container text-white px-6 py-2.5 font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2 border-none shadow-sm cursor-pointer">

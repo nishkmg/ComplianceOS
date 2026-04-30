@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
@@ -14,7 +13,7 @@ const sections = [
   { id: 'contact', title: 'Contact' },
 ];
 
-export default function LegalPage({ title, lastUpdated, children }) {
+export default function LegalPage({ title, lastUpdated, children }: { title: string; lastUpdated: string; children: React.ReactNode }) {
   return (
     <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
       <MarketingNav />

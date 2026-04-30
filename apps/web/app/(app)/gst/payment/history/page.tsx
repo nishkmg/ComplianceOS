@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -23,10 +23,10 @@ export default function GSTPaymentHistoryPage() {
         </div>
         <div className="flex gap-4">
           <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">filter_list</span> Filter
+            <Icon name="filter_list" className="text-[18px]" /> Filter
           </button>
           <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export CSV
+            <Icon name="download" className="text-[18px]" /> Export CSV
           </button>
         </div>
       </header>

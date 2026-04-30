@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import { formatIndianNumber, calculateBalance } from '@/lib/format';

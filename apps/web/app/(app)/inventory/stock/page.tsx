@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 interface StockItem {
@@ -44,7 +44,7 @@ export default function StockPage() {
         <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
         <div className="px-6 py-4 border-b-[0.5px] border-border-subtle bg-surface flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-text-light text-[18px]">filter_list</span>
+            <Icon name="filter_list" className="text-text-light text-[18px]" />
             <span className="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
           </div>
           <div className="flex gap-4">

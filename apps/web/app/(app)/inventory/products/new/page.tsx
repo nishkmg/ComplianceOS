@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
@@ -33,7 +33,7 @@ export default function NewProductPage() {
           <div>
             <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-mid mb-2 uppercase tracking-widest">
               <Link className="hover:text-on-surface transition-colors flex items-center gap-1 no-underline" href="/inventory/products">
-                <span className="material-symbols-outlined text-xs">arrow_back</span> Inventory
+                <Icon name="arrow_back" className="text-xs" /> Inventory
               </Link>
               <span className="text-border-subtle">/</span>
               <span className="text-on-surface font-bold">New Entry</span>
@@ -45,7 +45,7 @@ export default function NewProductPage() {
             <button onClick={() => router.back()} className="font-ui-sm text-xs text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest">Cancel</button>
             <button onClick={handleSubmit} className="bg-primary-container text-white px-8 py-3 font-ui-sm text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-colors border-none cursor-pointer shadow-sm rounded-sm">
               Save Product
-              <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function NewProductPage() {
                         <option>Finished Good</option>
                         <option>Service</option>
                       </select>
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light pointer-events-none">expand_more</span>
+                      <Icon name="expand_more" className="absolute right-0 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
                     </div>
                   </div>
                 </div>
@@ -99,7 +99,7 @@ export default function NewProductPage() {
                         <option>box</option>
                         <option>ltr</option>
                       </select>
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light pointer-events-none">expand_more</span>
+                      <Icon name="expand_more" className="absolute right-0 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -128,7 +128,7 @@ export default function NewProductPage() {
                       <option value={18}>GST 18%</option>
                       <option value={28}>GST 28%</option>
                     </select>
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light pointer-events-none">expand_more</span>
+                    <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
                   </div>
                 </div>
               </div>

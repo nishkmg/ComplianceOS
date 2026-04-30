@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import { StepModuleActivation } from "./step-module-activation";
 import { StepCoaTemplate } from "./step-coa-template";
 import { StepFyGst } from "./step-fy-gst";
 import { StepOpeningBalances } from "./step-opening-balances";
+import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +25,7 @@ const STEPS = [
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [createdTenantId, setCreatedTenantId] = useState(null);
+  const [createdTenantId, setCreatedTenantId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function OnboardingPage() {
     completedSteps,
     isLoading,
     goToStep,
-  } = useOnboarding(createdTenantId);
+  } = useOnboarding(createdTenantId ?? undefined);
 
   if (!mounted || status === "loading") return null;
 
@@ -52,6 +52,7 @@ export default function OnboardingPage() {
           </div>
           {/* Segmented Progress Bar */}
           <div className="flex gap-2 w-full h-1">
+// @ts-ignore
             {STEPS.map((s) => (
               <div key={s.number} className={`flex-1 rounded-sm transition-colors duration-500 ${currentStep >= s.number ? 'bg-primary-container' : 'bg-border-subtle'}`}></div>
             ))}

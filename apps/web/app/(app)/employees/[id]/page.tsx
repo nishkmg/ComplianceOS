@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -43,7 +43,7 @@ export default function EmployeeDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-6">
         <Link className="hover:text-primary transition-colors no-underline" href="/employees">Employees</Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon name="chevron_right" className="text-[14px]" />
         <span className="text-on-surface">{mockEmployee.name}</span>
       </div>
 
@@ -61,10 +61,10 @@ export default function EmployeeDetailPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">edit</span> Edit Profile
+            <Icon name="edit" className="text-[18px]" /> Edit Profile
           </button>
           <button className="px-5 py-2 bg-primary-container text-white font-ui-sm text-xs rounded-sm hover:bg-primary transition-colors flex items-center gap-2 border-none shadow-sm cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export Data
+            <Icon name="download" className="text-[18px]" /> Export Data
           </button>
         </div>
       </div>
@@ -144,7 +144,7 @@ export default function EmployeeDetailPage() {
               </div>
               <div className="pt-4 border-t border-border-subtle">
                 <div className="flex items-center gap-2 text-green-700 font-bold uppercase text-[10px] tracking-widest">
-                  <span className="material-symbols-outlined text-sm">verified</span>
+                  <Icon name="verified" className="text-sm" />
                   KYC Verified
                 </div>
               </div>

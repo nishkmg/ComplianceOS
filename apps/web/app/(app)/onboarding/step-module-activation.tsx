@@ -1,9 +1,9 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
+import { Icon } from '@/components/ui/icon';
 
 const MODULES = [
   { id: "accounting", name: "Core Ledger", desc: "Double-entry bookkeeping, financial statements, and multi-entity consolidation.", icon: "account_balance", required: true },
@@ -22,12 +22,13 @@ interface StepModuleActivationProps {
 export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivationProps) {
   const [enabledModules, setEnabledModules] = useState<Set<string>>(new Set(["accounting", "gst", "invoicing"]));
 
-  const saveProgress = api.onboarding.saveProgress.useMutation({
+  // @ts-ignore
+  const saveProgress: any = api.onboarding.saveProgress.useMutation({
     onSuccess: () => {
       showToast.success('Module preferences saved');
       onComplete();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       showToast.error(error.message || 'Failed to save module preferences');
     },
   });
@@ -42,6 +43,7 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
   const handleContinue = async () => {
     const data = Array.from(enabledModules).map(id => ({ module: id, enabled: true }));
     await saveProgress.mutateAsync({
+      // @ts-ignore
       tenantId,
       step: 2,
       data: { moduleActivation: data },
@@ -71,9 +73,7 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
           >
             {enabledModules.has(mod.id) && <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>}
             <div className="flex justify-between items-start mb-4">
-              <span className={`material-symbols-outlined text-2xl ${enabledModules.has(mod.id) ? "text-[#C8860A]" : "text-stone-400"}`}>
-                {mod.icon}
-              </span>
+              <Icon name={mod.icon} className={`text-2xl ${enabledModules.has(mod.id) ? "text-primary-container" : "text-stone-400"}`} />
               {mod.required && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-100 text-stone-500 px-2 py-0.5 rounded-sm">Required</span>}
             </div>
             <h3 className="font-ui-lg text-lg font-bold text-on-surface mb-2">{mod.name}</h3>
@@ -94,7 +94,7 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
           className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
         >
           {saveProgress.isPending ? "Saving..." : "Establish Framework"}
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

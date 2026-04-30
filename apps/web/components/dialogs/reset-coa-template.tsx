@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import {
@@ -8,6 +7,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Icon } from '@/components/ui/icon';
 
 interface ResetCoaDialogProps {
   isOpen: boolean;
@@ -25,7 +25,7 @@ export function ResetCoaDialog({
       <DialogContent className="max-w-sm p-0 overflow-hidden border border-border-subtle shadow-xl flex flex-col items-center text-center rounded-sm">
         <div className="p-8 flex flex-col items-center">
           <div className="w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-6">
-            <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+            <Icon name="warning" className="text-4xl" />
           </div>
           
           <DialogTitle className="font-display-lg text-lg font-bold text-on-surface mb-3">Reset to Template?</DialogTitle>

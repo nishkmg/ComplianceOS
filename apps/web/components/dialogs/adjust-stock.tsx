@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -61,7 +61,7 @@ export function AdjustStockDialog({
               <div className="flex-1">
                 <label className="block font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold mb-2">Adjustment Qty (+/-)</label>
                 <div className="relative flex items-center border-[0.5px] border-stone-300 bg-white focus-within:border-primary-container h-12 rounded-sm">
-                  <span className="material-symbols-outlined text-text-light pl-4 pr-2 text-[20px]">calculate</span>
+                  <Icon name="calculate" className="text-text-light pl-4 pr-2 text-[20px]" />
                   <input 
                     className="w-full bg-transparent border-none p-0 font-mono text-sm text-on-surface focus:ring-0 outline-none" 
                     type="number" 
@@ -82,7 +82,7 @@ export function AdjustStockDialog({
                     <option>Main Depot</option>
                     <option>Unit 2 (Pune)</option>
                   </select>
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined pointer-events-none text-text-mid">expand_more</span>
+                  <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-mid" />
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@ export function AdjustStockDialog({
                   <option value="shrinkage">Shrinkage / Damage</option>
                   <option value="return">Customer Return</option>
                 </select>
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined pointer-events-none text-text-mid">expand_more</span>
+                <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-mid" />
               </div>
             </div>
           </div>

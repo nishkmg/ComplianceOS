@@ -1,7 +1,8 @@
-// @ts-nocheck
 'use client';
 
 import { formatIndianNumber } from '@/lib/format';
+import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 
 interface AccountPreviewSlideOverProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export function AccountPreviewSlideOver({
             <p className="font-mono text-[11px] text-text-light uppercase tracking-wider mt-1">{account.code} · {account.kind}</p>
           </div>
           <button onClick={onClose} className="text-text-light hover:text-on-surface transition-colors cursor-pointer border-none bg-transparent">
-            <span className="material-symbols-outlined text-2xl">close</span>
+            <Icon name="close" className="text-2xl" />
           </button>
         </header>
 
@@ -86,8 +87,10 @@ export function AccountPreviewSlideOver({
 
         {/* Footer Actions */}
         <footer className="px-8 py-6 border-t border-border-subtle bg-stone-50 flex gap-4">
+// @ts-ignore
           <Link href={`/accounts/${account.id}`} className="flex-1 bg-white border border-on-surface text-on-surface py-3 text-center font-ui-sm text-xs font-bold uppercase tracking-widest no-underline hover:bg-stone-100 transition-colors rounded-sm shadow-sm">
             Full History
+// @ts-ignore
           </Link>
           <button className="flex-1 bg-primary-container text-white py-3 font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-primary transition-all rounded-sm border-none cursor-pointer shadow-sm">
             New Journal

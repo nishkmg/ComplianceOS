@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 
 interface ReportLine {
@@ -63,7 +63,7 @@ export default function PLScheduleIIIPage() {
                 <option>2025-26</option>
               </select>
               <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-                <span className="material-symbols-outlined text-[18px]">download</span>
+                <Icon name="download" className="text-[18px]" />
                 Export
               </button>
             </div>

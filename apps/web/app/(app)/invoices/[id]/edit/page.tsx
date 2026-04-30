@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -36,7 +36,7 @@ export default function EditInvoicePage() {
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 <Link href="/invoices" className="text-text-mid hover:text-on-surface transition-colors flex items-center no-underline">
-                  <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+                  <Icon name="arrow_back" className="text-[20px]" />
                 </Link>
                 <span className="font-ui-xs text-ui-xs text-amber-text tracking-widest uppercase">EDIT INVOICE</span>
                 <span className="bg-surface-variant text-on-surface px-2 py-0.5 rounded text-[10px] font-mono font-medium ml-auto">{invoice.status}</span>
@@ -71,14 +71,14 @@ export default function EditInvoicePage() {
 
               <h3 className="font-ui-sm text-ui-sm font-semibold text-on-surface mb-4 uppercase tracking-wider text-[11px] text-text-light border-b border-border-subtle pb-2 flex justify-between items-center">
                 Line Items
-                <button className="text-primary-container hover:text-amber-stitch flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer font-ui-sm font-bold"><span className="material-symbols-outlined text-[14px]">add</span> Add Item</button>
+                <button className="text-primary-container hover:text-amber-stitch flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer font-ui-sm font-bold"><Icon name="add" className="text-[14px]" /> Add Item</button>
               </h3>
               
               <div className="flex flex-col gap-4 mb-8">
                 {invoice.items.map((item) => (
                   <div key={item.id} className="flex flex-col gap-2 p-3 border border-border-subtle bg-page-bg relative group">
                     <button className="absolute -right-2 -top-2 bg-white border border-border-subtle rounded-full w-6 h-6 flex items-center justify-center text-text-light hover:text-red-600 hover:border-red-600 opacity-0 group-hover:opacity-100 transition-all cursor-pointer">
-                      <span className="material-symbols-outlined text-[14px]">close</span>
+                      <Icon name="close" className="text-[14px]" />
                     </button>
                     <input className="bg-transparent border-b border-border-subtle border-dashed pb-1 font-ui-sm text-ui-sm focus:outline-none focus:border-primary-container outline-none" placeholder="Item description" type="text" defaultValue={item.description} />
                     <div className="flex gap-4 mt-2">
@@ -105,7 +105,7 @@ export default function EditInvoicePage() {
               {/* Notes */}
               <div className="flex flex-col gap-1 mb-8">
                 <label className="font-ui-xs text-ui-xs text-text-mid">Notes / Terms</label>
-                <textarea className="bg-page-bg border border-border-subtle rounded px-3 py-2 font-ui-sm text-ui-sm focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" rows="2" defaultValue={invoice.notes}></textarea>
+                <textarea className="bg-page-bg border border-border-subtle rounded px-3 py-2 font-ui-sm text-ui-sm focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" rows={2} defaultValue={invoice.notes}></textarea>
               </div>
 
               {/* Actions */}
@@ -114,7 +114,7 @@ export default function EditInvoicePage() {
                 <div className="flex gap-3">
                   <button className="border border-on-surface text-on-surface font-ui-sm text-ui-sm px-4 py-2 rounded hover:bg-surface-variant transition-colors cursor-pointer bg-transparent">Save Draft</button>
                   <button className="bg-[#C8860A] text-white font-ui-sm text-ui-sm px-4 py-2 rounded flex items-center gap-2 hover:bg-amber-700 transition-colors group cursor-pointer border-none">
-                    Finalize & Send <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">send</span>
+                    Finalize & Send <Icon name="send" className="text-[16px] group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>

@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -33,7 +33,7 @@ export function DeleteEntityDialog({
         <div className="p-10 flex flex-col gap-6">
           <DialogHeader className="flex items-start gap-4">
             <div className="w-12 h-12 shrink-0 bg-red-50 text-red-600 flex items-center justify-center rounded-sm">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+              <Icon name="warning" />
             </div>
             <div>
               <DialogTitle className="font-display-lg text-lg font-bold text-on-surface mb-2">Delete Entity</DialogTitle>

@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
@@ -9,10 +9,11 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const form = e.target;
-    const data = { name: form.name.value, email: form.email.value, businessType: form.businessType.value, message: form.message.value };
+    const form = e.currentTarget as HTMLFormElement;
+    const fd = new FormData(form);
+    const data = { name: fd.get('name') as string, email: fd.get('email') as string, businessType: fd.get('businessType') as string, message: fd.get('message') as string };
     try {
       const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
       if (res.ok) setSubmitted(true);
@@ -40,7 +41,7 @@ export default function ContactPage() {
             <div className="lg:col-span-7 bg-white p-12 border-[0.5px] border-border-subtle border-t-2 border-t-primary-container">
               {submitted ? (
                 <div className="flex items-center gap-3 p-4 bg-surface-container-low border-[0.5px] border-primary-container/20">
-                  <span className="material-symbols-outlined text-primary">check_circle</span>
+                  <Icon name="check_circle" className="text-primary" />
                   <span className="text-ui-sm font-ui-sm text-on-surface">Message sent successfully. We'll be in touch soon.</span>
                 </div>
               ) : (
@@ -67,7 +68,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex flex-col gap-2 text-left">
                     <label className="text-ui-xs font-ui-xs text-on-surface-variant uppercase">Message</label>
-                    <textarea name="message" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui-sm transition-colors outline-none resize-none" placeholder="How can we help your compliance journey?" rows="4" required></textarea>
+                    <textarea name="message" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui-sm transition-colors outline-none resize-none" placeholder="How can we help your compliance journey?" rows={4} required></textarea>
                   </div>
                   {error && <p className="text-sm text-error">{error}</p>}
                   <div className="pt-4">
@@ -83,17 +84,17 @@ export default function ContactPage() {
             {/* Right: Contact Info */}
             <div className="lg:col-span-5 space-y-gutter-wide">
               <div className="bg-section-muted border-[0.5px] border-border-subtle p-8 text-left">
-                <span className="material-symbols-outlined text-primary text-2xl mb-4">mail</span>
+                <Icon name="mail" className="text-primary text-2xl mb-4" />
                 <h3 className="font-ui-md font-bold text-on-surface mb-2">Email</h3>
                 <p className="font-ui-sm text-text-mid">hello@complianceos.in</p>
               </div>
               <div className="bg-section-muted border-[0.5px] border-border-subtle p-8 text-left">
-                <span className="material-symbols-outlined text-primary text-2xl mb-4">phone</span>
+                <Icon name="phone" className="text-primary text-2xl mb-4" />
                 <h3 className="font-ui-md font-bold text-on-surface mb-2">Phone</h3>
                 <p className="font-ui-sm text-text-mid">+91 95677 41714</p>
               </div>
               <div className="bg-section-muted border-[0.5px] border-border-subtle p-8 text-left">
-                <span className="material-symbols-outlined text-primary text-2xl mb-4">location_on</span>
+                <Icon name="location_on" className="text-primary text-2xl mb-4" />
                 <h3 className="font-ui-md font-bold text-on-surface mb-2">Office</h3>
                 <p className="font-ui-sm text-text-mid leading-relaxed">COM 07, First Floor, Vipul World, Sector 29, Gurgaon, Haryana 122001, India</p>
               </div>

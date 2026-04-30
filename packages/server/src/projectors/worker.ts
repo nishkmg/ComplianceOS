@@ -138,7 +138,6 @@ async function processProjector(projector: Projector, tenantId: string): Promise
           lastProcessedSequence: String(lastEvent.sequence),
           updatedAt: new Date(),
         })
-      updateLastProcessed();
         .where(
           and(
             eq(projectorState.tenantId, tenantId),

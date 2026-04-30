@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -12,8 +12,8 @@ export default function AccountDetailPage() {
   const id = params.id as string;
   const fiscalYear = "2026-27";
 
-  const { data: accounts } = api.accounts.list.useQuery();
-  const { data: ledgerData, isLoading } = api.balances.ledger.useQuery(
+  const { data: accounts }: any = api.accounts.list.useQuery();
+  const { data: ledgerData, isLoading }: any = api.balances.ledger.useQuery(
     { accountId: id, fiscalYear },
     { enabled: !!id }
   );
@@ -30,7 +30,7 @@ export default function AccountDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-6">
         <Link className="hover:text-primary transition-colors no-underline" href="/coa">Chart of Accounts</Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon name="chevron_right" className="text-[14px]" />
         <span className="text-on-surface">{account?.name || "Account Detail"}</span>
       </div>
 
@@ -43,10 +43,10 @@ export default function AccountDetailPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-surface-container-highest transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export
+            <Icon name="download" className="text-[18px]" /> Export
           </button>
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-surface-container-highest transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">edit</span> Edit Details
+            <Icon name="edit" className="text-[18px]" /> Edit Details
           </button>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default function AccountDetailPage() {
         <div className="flex justify-between items-center p-4 border-b-[0.5px] border-border-subtle bg-[#FBF9F6]">
           <h2 className="font-ui-lg text-lg font-medium text-on-surface">Transactions</h2>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-light text-[18px]">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light text-[18px]" />
             <input className="pl-9 pr-4 py-1.5 border-[0.5px] border-border-subtle rounded-sm text-xs w-64 outline-none focus:border-primary" placeholder="Search entries..." />
           </div>
         </div>

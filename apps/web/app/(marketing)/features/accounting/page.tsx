@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
@@ -58,7 +58,7 @@ export default function AccountingPage() {
                 { icon: "analytics", title: "Financial Reports", desc: "Schedule III P&L and Balance Sheet. Typeset for print, not for a software screenshot." },
               ].map((m) => (
                 <div key={m.title} className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm border-t-2 border-t-primary-container text-left">
-                  <span className="material-symbols-outlined text-primary-container text-3xl mb-6 block">{m.icon}</span>
+                  <Icon name={m.icon} className="text-primary-container text-3xl mb-6 block" />
                   <h3 className="font-display-lg text-lg font-bold text-on-surface mb-4">{m.title}</h3>
                   <p className="font-ui-sm text-sm text-text-mid leading-relaxed">{m.desc}</p>
                 </div>

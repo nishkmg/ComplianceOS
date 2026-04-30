@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -24,7 +24,7 @@ export default function ITRAdvanceTaxPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-white shadow-sm uppercase font-bold tracking-widest">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export Ledger
+            <Icon name="download" className="text-[18px]" /> Export Ledger
           </button>
           <button className="bg-primary-container text-white px-8 py-2.5 rounded-sm font-ui-sm text-sm hover:bg-primary transition-colors cursor-pointer border-none shadow-sm uppercase font-bold tracking-widest">
             Record Payment

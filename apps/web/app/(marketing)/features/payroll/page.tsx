@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
@@ -41,7 +41,7 @@ export default function PayrollPage() {
                   "TDS projection updated monthly",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-primary-container">check_circle</span>
+                    <Icon name="check_circle" className="text-primary-container" />
                     <span className="font-ui-sm text-sm text-text-mid">{item}</span>
                   </li>
                 ))}

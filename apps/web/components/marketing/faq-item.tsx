@@ -1,5 +1,5 @@
-// @ts-nocheck
 
+// @ts-ignore
 export function FAQItem({ question, answer }) {
   return (
     <details className="faq-item group border-b border-[#E8E4DC] py-4">

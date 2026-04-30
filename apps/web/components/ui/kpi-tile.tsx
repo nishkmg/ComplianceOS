@@ -1,4 +1,4 @@
-// @ts-nocheck
+import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from '@/lib/format';
 
 export type KpiTileVariant = 'amber' | 'success' | 'danger' | 'neutral' | 'dark';
@@ -48,9 +48,7 @@ export function KpiTile({
       <div className="flex justify-between items-start mb-4">
         <span className="font-ui-xs text-text-mid uppercase tracking-widest">{label}</span>
         {icon && (
-          <span className={`material-symbols-outlined ${iconColors[variant]}`}>
-            {icon}
-          </span>
+          <Icon name={icon} className={iconColors[variant]} size={16} />
         )}
       </div>
       <div className="font-mono text-xl text-stone-900">

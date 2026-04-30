@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -18,21 +18,21 @@ export default function PFChallanPage() {
         <div>
           <div className="flex items-center gap-2 text-[11px] font-bold text-stone-500 uppercase tracking-widest mb-1">
             <span>Reports</span>
-            <span className="material-symbols-outlined text-[12px]">chevron_right</span>
+            <Icon name="chevron_right" className="text-[12px]" />
             <span>Statutory Filings</span>
           </div>
           <h2 className="font-display-lg text-lg font-bold text-on-surface tracking-tight">PF Challan Report</h2>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-stone-50 border border-border-subtle rounded-sm h-9 px-3">
-            <span className="material-symbols-outlined text-stone-400 text-[18px] mr-2">calendar_month</span>
+            <Icon name="calendar_month" className="text-stone-400 text-[18px] mr-2" />
             <select className="bg-transparent border-none text-sm font-medium outline-none cursor-pointer">
               <option>October 2024</option>
               <option>September 2024</option>
             </select>
           </div>
           <button className="bg-primary-container text-white font-ui-sm text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 border-none cursor-pointer shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export ECR
+            <Icon name="download" className="text-[18px]" /> Export ECR
           </button>
         </div>
       </header>
@@ -63,7 +63,7 @@ export default function PFChallanPage() {
           <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-stone-50">
             <h3 className="font-ui-md font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Employee Contribution Ledger</h3>
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]">search</span>
+              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]" />
               <input className="h-8 pl-9 pr-3 py-1 text-sm border border-border-subtle rounded-sm focus:border-primary w-64 bg-white outline-none" placeholder="Search UAN or Name..." />
             </div>
           </div>
@@ -109,8 +109,8 @@ export default function PFChallanPage() {
           <div className="flex items-center justify-between px-6 py-3 border-t border-border-subtle text-sm text-stone-500 bg-white">
             <span>Showing 1 to {employees.length} of 142 entries</span>
             <div className="flex items-center gap-1">
-              <button className="p-1 rounded hover:bg-stone-100 disabled:opacity-50 border-none bg-transparent cursor-pointer"><span className="material-symbols-outlined text-[20px]">chevron_left</span></button>
-              <button className="p-1 rounded hover:bg-stone-100 border-none bg-transparent cursor-pointer"><span className="material-symbols-outlined text-[20px]">chevron_right</span></button>
+              <button className="p-1 rounded hover:bg-stone-100 disabled:opacity-50 border-none bg-transparent cursor-pointer"><Icon name="chevron_left" className="text-[20px]" /></button>
+              <button className="p-1 rounded hover:bg-stone-100 border-none bg-transparent cursor-pointer"><Icon name="chevron_right" className="text-[20px]" /></button>
             </div>
           </div>
         </div>

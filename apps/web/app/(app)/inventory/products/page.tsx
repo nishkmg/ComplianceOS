@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 interface Product {
@@ -52,7 +52,7 @@ export default function ProductsPage() {
         <div className="p-4 border-b-[0.5px] border-border-subtle flex flex-wrap gap-4 items-center justify-between bg-[#FBF9F6]">
           <div className="flex flex-wrap gap-4 items-center">
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-light">search</span>
+              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" />
               <input className="pl-10 pr-4 py-2 border-[0.5px] border-border-subtle bg-white text-on-surface font-ui-sm text-ui-sm outline-none focus:border-primary w-64" placeholder="Search SKU or name..." value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
             <div className="relative">
@@ -64,7 +64,7 @@ export default function ProductsPage() {
             </div>
           </div>
           <button className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid hover:text-on-surface transition-colors flex items-center gap-1 cursor-pointer border-none bg-transparent">
-            <span className="material-symbols-outlined text-[16px]">filter_list</span>
+            <Icon name="filter_list" className="text-[16px]" />
             More Filters
           </button>
         </div>

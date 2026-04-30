@@ -1,7 +1,7 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 
@@ -29,7 +29,7 @@ interface StepCoaReviewProps {
 export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9"]));
 
-  const saveProgress = api.onboarding.saveProgress.useMutation({
+  const saveProgress: any = api.onboarding.saveProgress.useMutation({
     onSuccess: onComplete,
     onError: (error) => showToast.error(error.message || 'Failed to save review'),
   });
@@ -53,7 +53,7 @@ export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
             setSelectedIds(next);
           }}
         >
-          {selectedIds.has(node.id) && <span className="material-symbols-outlined text-white text-[16px]">check</span>}
+          {selectedIds.has(node.id) && <Icon name="check" className="text-white text-[16px]" />}
         </div>
         <div className="flex-1 flex items-center gap-3" style={{ paddingLeft: `${node.level * 24}px` }}>
           <span className="font-mono text-[12px] text-text-light">{node.code}</span>
@@ -96,7 +96,7 @@ export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
           className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
         >
           {saveProgress.isPending ? "Finalizing..." : "Confirm Structure"}
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
+import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
 import Link from 'next/link';
 
@@ -75,7 +75,7 @@ export default function FeaturesPage() {
                 <ul className="space-y-3 font-mono-md text-mono-md text-on-surface-variant pt-4 list-none p-0">
                   {m.bullets.map((b) => (
                     <li key={b} className="flex items-start gap-3">
-                      <span className="material-symbols-outlined text-primary text-lg mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                      <Icon name="check_circle" className="text-primary text-lg mt-0.5" />
                       <span>{b}</span>
                     </li>
                   ))}
@@ -83,7 +83,7 @@ export default function FeaturesPage() {
                 <div className="pt-6">
                   <Link href={m.href} className="group inline-flex items-center gap-2 font-ui-sm text-ui-sm text-amber-text font-medium hover:text-primary transition-colors no-underline">
                     Explore module 
-                    <span className="material-symbols-outlined text-sm transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    <Icon name="arrow_forward" className="text-sm transform group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>

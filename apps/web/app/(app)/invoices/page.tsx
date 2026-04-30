@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { formatIndianNumber } from "@/lib/format";
@@ -47,11 +47,11 @@ export default function InvoicesPage() {
           </div>
           <div className="flex items-center gap-3">
             <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm rounded hover:bg-surface-container-highest transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-              <span className="material-symbols-outlined text-[18px]">download</span>
+              <Icon name="download" className="text-[18px]" />
               Export List
             </button>
             <Link href="/invoices/new" className="px-5 py-2 bg-primary-container text-white font-ui-sm rounded hover:bg-primary/90 transition-colors flex items-center gap-2 group no-underline">
-              <span className="material-symbols-outlined text-[18px]">add</span>
+              <Icon name="add" className="text-[18px]" />
               New Invoice
               <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
             </Link>
@@ -85,7 +85,7 @@ export default function InvoicesPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
           <button className="p-2 border-[0.5px] border-border-subtle bg-white text-text-mid hover:text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">filter_list</span>
+            <Icon name="filter_list" className="text-[18px]" />
           </button>
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function InvoicesPage() {
                   </td>
                   <td className="py-4 px-6 text-right">
                     <button className="text-text-light hover:text-on-surface transition-colors opacity-0 group-hover:opacity-100 cursor-pointer border-none bg-transparent">
-                      <span className="material-symbols-outlined text-[18px]">edit</span>
+                      <Icon name="edit" className="text-[18px]" />
                     </button>
                   </td>
                 </tr>
@@ -139,8 +139,8 @@ export default function InvoicesPage() {
         <div className="px-6 py-4 border-t-[0.5px] border-border-subtle flex items-center justify-between">
           <span className="font-mono-md text-[12px] text-text-light">Showing {filtered.length} of {mockInvoices.length} invoices</span>
           <div className="flex gap-2">
-            <button className="p-2 border-[0.5px] border-border-subtle bg-stone-50 text-text-light cursor-pointer hover:bg-stone-100 transition-colors"><span className="material-symbols-outlined text-[16px]">chevron_left</span></button>
-            <button className="p-2 border-[0.5px] border-border-subtle bg-stone-50 text-text-light cursor-pointer hover:bg-stone-100 transition-colors"><span className="material-symbols-outlined text-[16px]">chevron_right</span></button>
+            <button className="p-2 border-[0.5px] border-border-subtle bg-stone-50 text-text-light cursor-pointer hover:bg-stone-100 transition-colors"><Icon name="chevron_left" className="text-[16px]" /></button>
+            <button className="p-2 border-[0.5px] border-border-subtle bg-stone-50 text-text-light cursor-pointer hover:bg-stone-100 transition-colors"><Icon name="chevron_right" className="text-[16px]" /></button>
           </div>
         </div>
       </div>

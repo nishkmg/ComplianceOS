@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ITRReturnVerifiedPayloadSchema = exports.ITRReturnFiledPayloadSchema = exports.ITRReturnComputedPayloadSchema = exports.ITRComputationSchema = exports.TaxPaidSchema = exports.TaxComputationSchema = exports.DeductionsSchema = exports.IncomeByHeadSchema = exports.ITRReturnSchema = exports.ITRScheduleSchema = exports.ITRReturnLineSchema = exports.UpdateITRScheduleInputSchema = exports.UpdateITRReturnLineInputSchema = exports.VerifyITRReturnInputSchema = exports.FileITRReturnInputSchema = exports.ComputeITRReturnInputSchema = exports.PresumptiveScheme = exports.TaxRegime = exports.IncomeHead = exports.ITRReturnStatus = exports.ITRReturnType = void 0;
-const zod_1 = require("zod");
+import { z } from "zod";
 // ============================================================================
 // Enums
 // ============================================================================
-var ITRReturnType;
+export var ITRReturnType;
 (function (ITRReturnType) {
     ITRReturnType["ITR1"] = "itr1";
     ITRReturnType["ITR2"] = "itr2";
     ITRReturnType["ITR3"] = "itr3";
     ITRReturnType["ITR4"] = "itr4";
     ITRReturnType["ITR5"] = "itr5";
-})(ITRReturnType || (exports.ITRReturnType = ITRReturnType = {}));
-var ITRReturnStatus;
+})(ITRReturnType || (ITRReturnType = {}));
+export var ITRReturnStatus;
 (function (ITRReturnStatus) {
     ITRReturnStatus["DRAFT"] = "draft";
     ITRReturnStatus["COMPUTED"] = "computed";
@@ -21,213 +18,213 @@ var ITRReturnStatus;
     ITRReturnStatus["FILED"] = "filed";
     ITRReturnStatus["VERIFIED"] = "verified";
     ITRReturnStatus["VOIDED"] = "voided";
-})(ITRReturnStatus || (exports.ITRReturnStatus = ITRReturnStatus = {}));
-var IncomeHead;
+})(ITRReturnStatus || (ITRReturnStatus = {}));
+export var IncomeHead;
 (function (IncomeHead) {
     IncomeHead["SALARY"] = "salary";
     IncomeHead["HOUSE_PROPERTY"] = "house_property";
     IncomeHead["BUSINESS_PROFIT"] = "business_profit";
     IncomeHead["CAPITAL_GAINS"] = "capital_gains";
     IncomeHead["OTHER_SOURCES"] = "other_sources";
-})(IncomeHead || (exports.IncomeHead = IncomeHead = {}));
-var TaxRegime;
+})(IncomeHead || (IncomeHead = {}));
+export var TaxRegime;
 (function (TaxRegime) {
     TaxRegime["OLD"] = "old";
     TaxRegime["NEW"] = "new";
-})(TaxRegime || (exports.TaxRegime = TaxRegime = {}));
-var PresumptiveScheme;
+})(TaxRegime || (TaxRegime = {}));
+export var PresumptiveScheme;
 (function (PresumptiveScheme) {
     PresumptiveScheme["SCHEME_44AD"] = "44ad";
     PresumptiveScheme["SCHEME_44ADA"] = "44ada";
     PresumptiveScheme["SCHEME_44AE"] = "44ae";
     PresumptiveScheme["NONE"] = "none";
-})(PresumptiveScheme || (exports.PresumptiveScheme = PresumptiveScheme = {}));
+})(PresumptiveScheme || (PresumptiveScheme = {}));
 // ============================================================================
 // Input Schemas
 // ============================================================================
-exports.ComputeITRReturnInputSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    taxRegime: zod_1.z.nativeEnum(TaxRegime),
-    presumptiveScheme: zod_1.z.nativeEnum(PresumptiveScheme).optional(),
+export const ComputeITRReturnInputSchema = z.object({
+    returnId: z.string().uuid(),
+    taxRegime: z.nativeEnum(TaxRegime),
+    presumptiveScheme: z.nativeEnum(PresumptiveScheme).optional(),
 });
-exports.FileITRReturnInputSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    itrAckNumber: zod_1.z.string(),
-    verificationMode: zod_1.z.enum(["EVC", "EVC-AADHAAR", "EVC-DSC"]),
+export const FileITRReturnInputSchema = z.object({
+    returnId: z.string().uuid(),
+    itrAckNumber: z.string(),
+    verificationMode: z.enum(["EVC", "EVC-AADHAAR", "EVC-DSC"]),
 });
-exports.VerifyITRReturnInputSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    verificationMode: zod_1.z.enum(["EVC", "EVC-AADHAAR", "EVC-DSC", "ITR-V"]),
-    verificationDate: zod_1.z.date(),
+export const VerifyITRReturnInputSchema = z.object({
+    returnId: z.string().uuid(),
+    verificationMode: z.enum(["EVC", "EVC-AADHAAR", "EVC-DSC", "ITR-V"]),
+    verificationDate: z.date(),
 });
-exports.UpdateITRReturnLineInputSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    scheduleCode: zod_1.z.string(),
-    fieldCode: zod_1.z.string(),
-    fieldValue: zod_1.z.string(),
-    description: zod_1.z.string().optional(),
+export const UpdateITRReturnLineInputSchema = z.object({
+    returnId: z.string().uuid(),
+    scheduleCode: z.string(),
+    fieldCode: z.string(),
+    fieldValue: z.string(),
+    description: z.string().optional(),
 });
-exports.UpdateITRScheduleInputSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    scheduleCode: zod_1.z.string(),
-    scheduleData: zod_1.z.record(zod_1.z.unknown()),
-    totalAmount: zod_1.z.string().optional(),
+export const UpdateITRScheduleInputSchema = z.object({
+    returnId: z.string().uuid(),
+    scheduleCode: z.string(),
+    scheduleData: z.record(z.unknown()),
+    totalAmount: z.string().optional(),
 });
 // ============================================================================
 // Output Types - ITR Return Lines
 // ============================================================================
-exports.ITRReturnLineSchema = zod_1.z.object({
-    id: zod_1.z.string().uuid(),
-    returnId: zod_1.z.string().uuid(),
-    scheduleCode: zod_1.z.string(),
-    fieldCode: zod_1.z.string(),
-    fieldValue: zod_1.z.string(),
-    description: zod_1.z.string().nullable(),
+export const ITRReturnLineSchema = z.object({
+    id: z.string().uuid(),
+    returnId: z.string().uuid(),
+    scheduleCode: z.string(),
+    fieldCode: z.string(),
+    fieldValue: z.string(),
+    description: z.string().nullable(),
 });
 // ============================================================================
 // Output Types - ITR Schedules
 // ============================================================================
-exports.ITRScheduleSchema = zod_1.z.object({
-    id: zod_1.z.string().uuid(),
-    returnId: zod_1.z.string().uuid(),
-    scheduleCode: zod_1.z.string(),
-    scheduleData: zod_1.z.record(zod_1.z.unknown()),
-    totalAmount: zod_1.z.string(),
+export const ITRScheduleSchema = z.object({
+    id: z.string().uuid(),
+    returnId: z.string().uuid(),
+    scheduleCode: z.string(),
+    scheduleData: z.record(z.unknown()),
+    totalAmount: z.string(),
 });
 // ============================================================================
 // Output Types - ITR Return
 // ============================================================================
-exports.ITRReturnSchema = zod_1.z.object({
-    id: zod_1.z.string().uuid(),
-    tenantId: zod_1.z.string().uuid(),
-    assessmentYear: zod_1.z.string(),
-    financialYear: zod_1.z.string().regex(/^\d{4}-\d{2}$/),
-    returnType: zod_1.z.nativeEnum(ITRReturnType),
-    status: zod_1.z.nativeEnum(ITRReturnStatus),
-    taxRegime: zod_1.z.nativeEnum(TaxRegime).nullable(),
-    presumptiveScheme: zod_1.z.nativeEnum(PresumptiveScheme).nullable(),
-    grossTotalIncome: zod_1.z.string(),
-    totalDeductions: zod_1.z.string(),
-    totalIncome: zod_1.z.string(),
-    taxPayable: zod_1.z.string(),
-    surcharge: zod_1.z.string(),
-    cess: zod_1.z.string(),
-    rebate87a: zod_1.z.string(),
-    advanceTaxPaid: zod_1.z.string(),
-    selfAssessmentTax: zod_1.z.string(),
-    tdsTcsCredit: zod_1.z.string(),
-    totalTaxPaid: zod_1.z.string(),
-    balancePayable: zod_1.z.string(),
-    refundDue: zod_1.z.string(),
-    generatedAt: zod_1.z.date().nullable(),
-    filedAt: zod_1.z.date().nullable(),
-    itrAckNumber: zod_1.z.string().nullable(),
-    verificationDate: zod_1.z.date().nullable(),
-    verificationMode: zod_1.z.string().nullable(),
-    itrJsonUrl: zod_1.z.string().nullable(),
-    createdBy: zod_1.z.string().uuid(),
-    filedBy: zod_1.z.string().uuid().nullable(),
-    createdAt: zod_1.z.date(),
-    updatedAt: zod_1.z.date(),
+export const ITRReturnSchema = z.object({
+    id: z.string().uuid(),
+    tenantId: z.string().uuid(),
+    assessmentYear: z.string(),
+    financialYear: z.string().regex(/^\d{4}-\d{2}$/),
+    returnType: z.nativeEnum(ITRReturnType),
+    status: z.nativeEnum(ITRReturnStatus),
+    taxRegime: z.nativeEnum(TaxRegime).nullable(),
+    presumptiveScheme: z.nativeEnum(PresumptiveScheme).nullable(),
+    grossTotalIncome: z.string(),
+    totalDeductions: z.string(),
+    totalIncome: z.string(),
+    taxPayable: z.string(),
+    surcharge: z.string(),
+    cess: z.string(),
+    rebate87a: z.string(),
+    advanceTaxPaid: z.string(),
+    selfAssessmentTax: z.string(),
+    tdsTcsCredit: z.string(),
+    totalTaxPaid: z.string(),
+    balancePayable: z.string(),
+    refundDue: z.string(),
+    generatedAt: z.date().nullable(),
+    filedAt: z.date().nullable(),
+    itrAckNumber: z.string().nullable(),
+    verificationDate: z.date().nullable(),
+    verificationMode: z.string().nullable(),
+    itrJsonUrl: z.string().nullable(),
+    createdBy: z.string().uuid(),
+    filedBy: z.string().uuid().nullable(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
 });
 // ============================================================================
 // Output Types - ITR Computation
 // ============================================================================
-exports.IncomeByHeadSchema = zod_1.z.object({
-    salary: zod_1.z.string(),
-    houseProperty: zod_1.z.string(),
-    businessProfit: zod_1.z.string(),
-    capitalGains: zod_1.z.object({
-        shortTerm: zod_1.z.string(),
-        longTerm: zod_1.z.string(),
-        total: zod_1.z.string(),
+export const IncomeByHeadSchema = z.object({
+    salary: z.string(),
+    houseProperty: z.string(),
+    businessProfit: z.string(),
+    capitalGains: z.object({
+        shortTerm: z.string(),
+        longTerm: z.string(),
+        total: z.string(),
     }),
-    otherSources: zod_1.z.string(),
-    grossTotal: zod_1.z.string(),
+    otherSources: z.string(),
+    grossTotal: z.string(),
 });
-exports.DeductionsSchema = zod_1.z.object({
-    "chapter VIA": zod_1.z.object({
-        section80C: zod_1.z.string(),
-        section80D: zod_1.z.string(),
-        section80E: zod_1.z.string(),
-        section80G: zod_1.z.string(),
-        section80TTA: zod_1.z.string(),
-        section80TTB: zod_1.z.string(),
-        other: zod_1.z.string(),
-        total: zod_1.z.string(),
+export const DeductionsSchema = z.object({
+    "chapter VIA": z.object({
+        section80C: z.string(),
+        section80D: z.string(),
+        section80E: z.string(),
+        section80G: z.string(),
+        section80TTA: z.string(),
+        section80TTB: z.string(),
+        other: z.string(),
+        total: z.string(),
     }),
-    otherDeductions: zod_1.z.object({
-        section10AA: zod_1.z.string(),
-        section80CC: zod_1.z.string(),
-        other: zod_1.z.string(),
-        total: zod_1.z.string(),
+    otherDeductions: z.object({
+        section10AA: z.string(),
+        section80CC: z.string(),
+        other: z.string(),
+        total: z.string(),
     }),
-    totalDeductions: zod_1.z.string(),
+    totalDeductions: z.string(),
 });
-exports.TaxComputationSchema = zod_1.z.object({
-    totalIncome: zod_1.z.string(),
-    taxOnTotalIncome: zod_1.z.string(),
-    surcharge: zod_1.z.string(),
-    cess: zod_1.z.string(),
-    grossTax: zod_1.z.string(),
-    rebate87a: zod_1.z.string(),
-    netTax: zod_1.z.string(),
+export const TaxComputationSchema = z.object({
+    totalIncome: z.string(),
+    taxOnTotalIncome: z.string(),
+    surcharge: z.string(),
+    cess: z.string(),
+    grossTax: z.string(),
+    rebate87a: z.string(),
+    netTax: z.string(),
 });
-exports.TaxPaidSchema = zod_1.z.object({
-    advanceTax: zod_1.z.string(),
-    selfAssessmentTax: zod_1.z.string(),
-    tdsTcs: zod_1.z.string(),
-    totalTaxPaid: zod_1.z.string(),
+export const TaxPaidSchema = z.object({
+    advanceTax: z.string(),
+    selfAssessmentTax: z.string(),
+    tdsTcs: z.string(),
+    totalTaxPaid: z.string(),
 });
-exports.ITRComputationSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    assessmentYear: zod_1.z.string(),
-    financialYear: zod_1.z.string(),
-    taxRegime: zod_1.z.nativeEnum(TaxRegime),
-    incomeByHead: exports.IncomeByHeadSchema,
-    deductions: exports.DeductionsSchema,
-    totalIncome: zod_1.z.string(),
-    taxComputation: exports.TaxComputationSchema,
-    taxPaid: exports.TaxPaidSchema,
-    balancePayable: zod_1.z.string(),
-    refundDue: zod_1.z.string(),
-    computedAt: zod_1.z.date(),
+export const ITRComputationSchema = z.object({
+    returnId: z.string().uuid(),
+    assessmentYear: z.string(),
+    financialYear: z.string(),
+    taxRegime: z.nativeEnum(TaxRegime),
+    incomeByHead: IncomeByHeadSchema,
+    deductions: DeductionsSchema,
+    totalIncome: z.string(),
+    taxComputation: TaxComputationSchema,
+    taxPaid: TaxPaidSchema,
+    balancePayable: z.string(),
+    refundDue: z.string(),
+    computedAt: z.date(),
 });
 // ============================================================================
 // Event Payloads
 // ============================================================================
-exports.ITRReturnComputedPayloadSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    assessmentYear: zod_1.z.string(),
-    financialYear: zod_1.z.string(),
-    taxpayerPan: zod_1.z.string(),
-    status: zod_1.z.literal(ITRReturnStatus.COMPUTED),
-    totalIncome: zod_1.z.string(),
-    taxPayable: zod_1.z.string(),
-    balancePayable: zod_1.z.string(),
-    refundDue: zod_1.z.string(),
-    computedAt: zod_1.z.date(),
+export const ITRReturnComputedPayloadSchema = z.object({
+    returnId: z.string().uuid(),
+    assessmentYear: z.string(),
+    financialYear: z.string(),
+    taxpayerPan: z.string(),
+    status: z.literal(ITRReturnStatus.COMPUTED),
+    totalIncome: z.string(),
+    taxPayable: z.string(),
+    balancePayable: z.string(),
+    refundDue: z.string(),
+    computedAt: z.date(),
 });
-exports.ITRReturnFiledPayloadSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    assessmentYear: zod_1.z.string(),
-    financialYear: zod_1.z.string(),
-    taxpayerPan: zod_1.z.string(),
-    returnType: zod_1.z.nativeEnum(ITRReturnType),
-    status: zod_1.z.literal(ITRReturnStatus.FILED),
-    itrAckNumber: zod_1.z.string(),
-    verificationMode: zod_1.z.string(),
-    filedAt: zod_1.z.date(),
+export const ITRReturnFiledPayloadSchema = z.object({
+    returnId: z.string().uuid(),
+    assessmentYear: z.string(),
+    financialYear: z.string(),
+    taxpayerPan: z.string(),
+    returnType: z.nativeEnum(ITRReturnType),
+    status: z.literal(ITRReturnStatus.FILED),
+    itrAckNumber: z.string(),
+    verificationMode: z.string(),
+    filedAt: z.date(),
 });
-exports.ITRReturnVerifiedPayloadSchema = zod_1.z.object({
-    returnId: zod_1.z.string().uuid(),
-    assessmentYear: zod_1.z.string(),
-    financialYear: zod_1.z.string(),
-    taxpayerPan: zod_1.z.string(),
-    returnType: zod_1.z.nativeEnum(ITRReturnType),
-    status: zod_1.z.literal(ITRReturnStatus.VERIFIED),
-    itrAckNumber: zod_1.z.string(),
-    verificationMode: zod_1.z.string(),
-    verifiedAt: zod_1.z.date(),
+export const ITRReturnVerifiedPayloadSchema = z.object({
+    returnId: z.string().uuid(),
+    assessmentYear: z.string(),
+    financialYear: z.string(),
+    taxpayerPan: z.string(),
+    returnType: z.nativeEnum(ITRReturnType),
+    status: z.literal(ITRReturnStatus.VERIFIED),
+    itrAckNumber: z.string(),
+    verificationMode: z.string(),
+    verifiedAt: z.date(),
 });
 //# sourceMappingURL=itr-returns.js.map

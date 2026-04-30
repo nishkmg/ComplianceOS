@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -46,7 +46,7 @@ export function CriticalActionDialog({
           <ul className="space-y-3 font-ui-sm text-[13px] text-on-surface-variant list-none p-0">
             {consequences.map((c, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-text-mid text-[18px] mt-0.5">remove</span>
+                <Icon name="remove" className="text-text-mid text-[18px] mt-0.5" />
                 <span>{c}</span>
               </li>
             ))}

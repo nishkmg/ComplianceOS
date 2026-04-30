@@ -1,6 +1,6 @@
-// @ts-nocheck
 import Link from 'next/link';
 
+// @ts-ignore
 export function TeamCard({ name, role, bio }) {
   return (
     <div className="bg-surface border border-[#E8E4DC] rounded-lg p-7">

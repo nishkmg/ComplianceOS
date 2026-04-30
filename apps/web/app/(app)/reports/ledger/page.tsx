@@ -1,7 +1,7 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
@@ -10,8 +10,8 @@ export default function LedgerReportPage() {
   const [selectedAccount, setSelectedAccount] = useState("");
   const [fiscalYear, setFiscalYear] = useState("2026-27");
 
-  const { data: accounts } = api.accounts.list.useQuery();
-  const { data: ledgerData } = api.balances.ledger.useQuery(
+  const { data: accounts }: any = api.accounts.list.useQuery();
+  const { data: ledgerData }: any = api.balances.ledger.useQuery(
     { accountId: selectedAccount, fiscalYear },
     { enabled: !!selectedAccount }
   );
@@ -30,7 +30,7 @@ export default function LedgerReportPage() {
         <div>
           <h1 className="font-display-xl text-display-xl text-on-surface mb-2">General Ledger</h1>
           <p className="font-mono-md text-text-mid flex items-center gap-2">
-            <span className="material-symbols-outlined text-[16px]">calendar_month</span>
+            <Icon name="calendar_month" className="text-[16px]" />
             01 Apr {fiscalYear.split("-")[0]} — 31 Mar {fiscalYear.split("-")[1]}
           </p>
         </div>
@@ -46,11 +46,11 @@ export default function LedgerReportPage() {
             <option>2025-26</option>
           </select>
           <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">filter_list</span>
+            <Icon name="filter_list" className="text-[18px]" />
             Filters
           </button>
           <button className="px-4 py-2 bg-primary-container text-white font-ui-sm hover:bg-surface-tint transition-colors flex items-center gap-2 group cursor-pointer border-none">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Export CSV
           </button>
         </div>

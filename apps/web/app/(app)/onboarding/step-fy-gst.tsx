@@ -1,7 +1,7 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
@@ -26,7 +26,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
     tdsApplicable: false,
   });
 
-  const saveProgress = api.onboarding.saveProgress.useMutation({
+  const saveProgress: any = api.onboarding.saveProgress.useMutation({
     onSuccess: () => {
       showToast.success('Fiscal settings established');
       onComplete();
@@ -169,7 +169,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
           className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
         >
           {saveProgress.isPending ? "Validating..." : "Finalize Config"}
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

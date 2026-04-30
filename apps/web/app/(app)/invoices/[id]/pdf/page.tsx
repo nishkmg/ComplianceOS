@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -34,7 +34,7 @@ export default function InvoicePdfPage() {
       <header className="sticky top-0 z-40 bg-white border-b-[0.5px] border-border-subtle px-8 py-4 flex justify-between items-center no-print">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-            <span className="material-symbols-outlined">arrow_back</span>
+            <Icon name="arrow_back" />
           </button>
           <span className="font-ui-sm text-sm font-bold uppercase tracking-widest text-on-surface">Invoice PDF Preview</span>
         </div>

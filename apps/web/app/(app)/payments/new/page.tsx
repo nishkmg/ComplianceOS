@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useMemo } from "react";
@@ -7,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { Icon } from '@/components/ui/icon';
 
 export default function NewPaymentPage() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function NewPaymentPage() {
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b-[0.5px] border-border-subtle flex justify-between items-center w-full px-8 py-4 -mx-8 -mt-8 mb-8">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-stone-400 hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-            <span className="material-symbols-outlined">arrow_back</span>
+            <Icon name="arrow_back" />
           </button>
           <h2 className="font-display-lg text-2xl text-on-surface font-bold">Record Transaction</h2>
         </div>
@@ -80,9 +80,7 @@ export default function NewPaymentPage() {
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-ui-lg text-lg font-bold">Payment Receipt</span>
-                <span className={`material-symbols-outlined ${type === 'receipt' ? 'text-primary-container' : 'text-stone-300'}`}>
-                  {type === 'receipt' ? 'radio_button_checked' : 'radio_button_unchecked'}
-                </span>
+                <Icon name={type === 'receipt' ? 'radio_button_checked' : 'radio_button_unchecked'} className={type === 'receipt' ? 'text-primary-container' : 'text-stone-300'} />
               </div>
               <p className="font-ui-sm text-sm text-text-mid leading-relaxed">Recording funds received from a customer or client against invoices.</p>
             </div>
@@ -92,9 +90,7 @@ export default function NewPaymentPage() {
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-ui-lg text-lg font-bold">Vendor Payment</span>
-                <span className={`material-symbols-outlined ${type === 'payment' ? 'text-primary-container' : 'text-stone-300'}`}>
-                  {type === 'payment' ? 'radio_button_checked' : 'radio_button_unchecked'}
-                </span>
+                <Icon name={type === 'payment' ? 'radio_button_checked' : 'radio_button_unchecked'} className={type === 'payment' ? 'text-primary-container' : 'text-stone-300'} />
               </div>
               <p className="font-ui-sm text-sm text-text-mid leading-relaxed">Recording outward payments to suppliers or statutory bodies.</p>
             </div>
@@ -133,7 +129,7 @@ export default function NewPaymentPage() {
         </section>
 
         {/* Allocation Info (Mock) */}
-        {paymentAmount > 0 && (
+        {parseFloat(String(paymentAmount)) > 0 && (
           <div className="bg-[#fff8f4] border border-amber/30 p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-sm animate-in">
              <div className="text-left flex-1">
                 <h4 className="font-ui-lg text-lg font-bold text-on-surface mb-2 uppercase tracking-widest text-[10px] text-amber-900">Allocation Required</h4>

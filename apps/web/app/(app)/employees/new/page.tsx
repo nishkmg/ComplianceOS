@@ -1,14 +1,14 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 
 export default function NewEmployeePage() {
   const router = useRouter();
-  const createEmployee = api.employees.create.useMutation({
+  const createEmployee: any = api.employees.create.useMutation({
     onSuccess: () => {
       showToast.success("Employee record created successfully");
       router.push("/employees");
@@ -40,7 +40,7 @@ export default function NewEmployeePage() {
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b-[0.5px] border-border-subtle px-8 py-4 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-            <span className="material-symbols-outlined">arrow_back</span>
+            <Icon name="arrow_back" />
           </button>
           <h1 className="font-display-lg text-lg font-bold uppercase tracking-widest">Statutory Register</h1>
         </div>
@@ -94,7 +94,7 @@ export default function NewEmployeePage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">PAN Number *</label>
-                  <input className="w-full bg-stone-50 border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm uppercase outline-none focus:border-primary" value={formData.pan} onChange={e => setFormData({...formData, pan: e.target.value.toUpperCase()})} maxlength={10} placeholder="ABCDE1234F" required />
+                  <input className="w-full bg-stone-50 border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm uppercase outline-none focus:border-primary" value={formData.pan} onChange={e => setFormData({...formData, pan: e.target.value.toUpperCase()})} maxLength={10} placeholder="ABCDE1234F" required />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">UAN Number</label>

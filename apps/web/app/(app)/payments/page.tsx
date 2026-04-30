@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { Badge } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
@@ -45,11 +45,11 @@ export default function PaymentsPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2.5 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-ui-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Export CSV
           </button>
           <Link href="/payments/new" className="px-5 py-2.5 bg-primary-container text-white font-ui-sm text-ui-sm hover:opacity-90 transition-opacity flex items-center gap-2 no-underline">
-            <span className="material-symbols-outlined text-[18px]">add</span>
+            <Icon name="add" className="text-[18px]" />
             New Entry
           </Link>
         </div>
@@ -59,7 +59,7 @@ export default function PaymentsPage() {
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white border-[0.5px] border-border-subtle p-4">
         <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
           <div className="relative flex-1 md:w-64">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
             <input className="w-full pl-10 pr-4 py-2 border-[0.5px] border-border-subtle rounded-none text-ui-sm outline-none focus:border-primary transition-colors" placeholder="Search entries..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
           <div className="relative">
@@ -70,7 +70,7 @@ export default function PaymentsPage() {
             </select>
           </div>
           <div className="flex items-center gap-2 text-ui-sm text-stone-400 w-full md:w-auto justify-end">
-            <span className="material-symbols-outlined text-[18px]">filter_list</span>
+            <Icon name="filter_list" className="text-[18px]" />
             <span>Filters active</span>
           </div>
         </div>

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 export default function InvoiceConfigPage() {
@@ -44,13 +44,13 @@ export default function InvoiceConfigPage() {
           <div className="space-y-8">
             <div className="flex flex-col gap-2">
               <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">Invoice Header Address</label>
-              <textarea className="w-full bg-stone-50 border border-border-subtle rounded-sm px-4 py-3 font-ui-sm text-sm text-on-surface focus:border-primary outline-none resize-none" rows="3" defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
+              <textarea className="w-full bg-stone-50 border border-border-subtle rounded-sm px-4 py-3 font-ui-sm text-sm text-on-surface focus:border-primary outline-none resize-none" rows={3} defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <div className="flex flex-col gap-2">
                   <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">Logo (B&W Recommended)</label>
                   <div className="border-2 border-dashed border-border-subtle p-8 flex flex-col items-center justify-center bg-stone-50 hover:bg-stone-100 transition-colors cursor-pointer">
-                    <span className="material-symbols-outlined text-text-light text-3xl mb-2">upload_file</span>
+                    <Icon name="upload_file" className="text-text-light text-3xl mb-2" />
                     <span className="font-ui-xs text-[10px] uppercase font-bold text-text-mid">Upload PNG/JPG</span>
                   </div>
                </div>

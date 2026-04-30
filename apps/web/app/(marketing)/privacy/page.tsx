@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
+import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
 import Link from 'next/link';
 
@@ -129,7 +129,7 @@ export default function PrivacyPage() {
                   {section.highlight && (
                     <div className="bg-surface-container-low border border-border-subtle p-6 mt-6">
                       <p className="font-ui-sm text-ui-sm text-text-mid">
-                        <span className="material-symbols-outlined text-primary align-middle mr-2">lock</span>
+                        <Icon name="lock" className="text-primary align-middle mr-2" />
                         {section.highlight}
                       </p>
                     </div>

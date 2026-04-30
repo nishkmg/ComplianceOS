@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -23,10 +23,10 @@ export default function ITRPaymentHistoryPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2.5 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase font-bold tracking-widest shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">print</span> Print History
+            <Icon name="print" className="text-[18px]" /> Print History
           </button>
           <button className="bg-[#C8860A] text-white px-6 py-2.5 rounded-sm font-ui-sm text-sm hover:bg-amber-700 transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">add</span> New Challan
+            <Icon name="add" className="text-[18px]" /> New Challan
           </button>
         </div>
       </div>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 type InvoiceStatus = "draft" | "sent" | "partially_paid" | "paid" | "voided" | string;

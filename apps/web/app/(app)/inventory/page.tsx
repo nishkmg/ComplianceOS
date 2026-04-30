@@ -1,9 +1,9 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { Icon } from '@/components/ui/icon';
 
 const kpiTiles = [
   { label: "Inventory Value", value: "45,20,500.00", delta: "+2.4% vs last period", variant: "neutral", icon: "account_balance_wallet" },
@@ -49,18 +49,18 @@ export default function InventoryDashboardPage() {
           }`}>
             <div className="flex justify-between items-start mb-4">
               <span className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">{tile.label}</span>
-              <span className={`material-symbols-outlined ${
-                tile.variant === 'amber' ? 'text-[#C8860A]' :
-                tile.variant === 'danger' ? 'text-red-600' :
-                tile.variant === 'success' ? 'text-green-600' :
+              <Icon name={tile.icon} className={`${
+                tile.variant === 'amber' ? 'text-primary-container' :
+                tile.variant === 'danger' ? 'text-danger' :
+                tile.variant === 'success' ? 'text-success' :
                 'text-stone-400'
-              }`}>{tile.icon}</span>
+              }`} />
             </div>
             <div className={`font-mono text-2xl font-bold mb-2 ${tile.variant === 'amber' ? 'text-[#C8860A]' : 'text-on-surface'}`}>
               {tile.variant !== 'success' && tile.label.includes('Value') ? '₹ ' : ''}{tile.value}
             </div>
             <p className="text-[10px] font-mono text-text-light flex items-center gap-1">
-              <span className="material-symbols-outlined text-sm">info</span>
+              <Icon name="info" className="text-sm" />
               {tile.delta}
             </p>
           </div>
@@ -126,35 +126,35 @@ export default function InventoryDashboardPage() {
             <div className="flex flex-col gap-4">
               <button className="bg-stone-800 border border-stone-700 text-stone-100 p-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary-container">inventory</span>
+                  <Icon name="inventory" className="text-primary-container" />
                   <span className="font-ui-sm">Inward Stock</span>
                 </div>
-                <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-all text-stone-500">chevron_right</span>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
               </button>
               <button className="bg-stone-800 border border-stone-700 text-stone-100 p-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary-container">local_shipping</span>
+                  <Icon name="local_shipping" className="text-primary-container" />
                   <span className="font-ui-sm">Dispatch Order</span>
                 </div>
-                <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-all text-stone-500">chevron_right</span>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
               </button>
               <button className="bg-stone-800 border border-stone-700 text-stone-100 p-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary-container">assessment</span>
+                  <Icon name="assessment" className="text-primary-container" />
                   <span className="font-ui-sm">Valuation Report</span>
                 </div>
-                <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-all text-stone-500">chevron_right</span>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
               </button>
             </div>
           </div>
 
           <div className="bg-[#fff8f4] border-[0.5px] border-amber/30 p-8 shadow-sm text-left relative overflow-hidden group">
             <div className="relative z-10">
-              <span className="material-symbols-outlined text-[#C8860A] mb-4">analytics</span>
+              <Icon name="analytics" className="text-[#C8860A] mb-4" />
               <h4 className="font-ui-lg text-lg font-bold text-on-surface mb-2">Dead Stock Analysis</h4>
               <p className="font-ui-sm text-sm text-text-mid leading-relaxed">System has identified items worth ₹ 2.4L that haven't moved in 180 days. Consider liquidation or write-down.</p>
             </div>
-            <span className="absolute -right-8 -bottom-8 material-symbols-outlined text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform">inventory_2</span>
+            <Icon name="inventory_2" className="absolute -right-8 -bottom-8 text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform" />
           </div>
         </div>
       </div>

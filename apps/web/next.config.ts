@@ -69,7 +69,6 @@ export default withSentryConfig(nextConfig, {
   project: process.env.SENTRY_PROJECT || "complianceos-web",
   silent: !process.env.CI,
   widenClientFileUpload: true,
-  hideSourceMaps: true,
-  disableLogger: true,
+    disableLogger: true,
   tunnelRoute: "/monitoring",
 });

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import Link from "next/link";
+import { Icon } from '@/components/ui/icon';
 
 export default function AccessDeniedPage() {
   return (
@@ -17,7 +17,7 @@ export default function AccessDeniedPage() {
         <div className="max-w-md w-full space-y-12">
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 rounded-sm border-[0.5px] border-border-subtle flex items-center justify-center bg-white mb-6 shadow-sm">
-              <span className="material-symbols-outlined text-text-mid text-3xl">lock</span>
+              <Icon name="lock" className="text-text-mid text-3xl" />
             </div>
             <h1 className="font-display-xl text-3xl text-on-surface mb-4 font-bold">Access Denied</h1>
             <p className="font-ui-md text-sm text-text-mid max-w-sm mx-auto leading-relaxed">
@@ -28,7 +28,7 @@ export default function AccessDeniedPage() {
           <div className="w-full border-[0.5px] border-border-subtle bg-white p-8 relative">
             <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
             <div className="flex flex-col items-center justify-center space-y-2">
-              <span className="material-symbols-outlined text-text-light text-xl">admin_panel_settings</span>
+              <Icon name="admin_panel_settings" className="text-text-light text-xl" />
               <p className="font-ui-sm text-xs text-on-surface uppercase tracking-widest font-bold">
                 Contact your Organization Administrator to request access.
               </p>
@@ -38,7 +38,7 @@ export default function AccessDeniedPage() {
           <div className="pt-4">
             <Link href="/dashboard" className="group inline-flex items-center justify-center bg-primary-container text-white px-10 py-4 font-ui-sm text-sm font-bold uppercase tracking-widest shadow-sm hover:bg-primary transition-all no-underline">
               Go to Dashboard
-              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform ml-2">arrow_forward</span>
+              <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform ml-2" />
             </Link>
           </div>
         </div>

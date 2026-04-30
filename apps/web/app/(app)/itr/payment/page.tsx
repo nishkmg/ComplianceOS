@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -11,8 +10,8 @@ const currentAY = `${new Date().getFullYear() + 1}-${(new Date().getFullYear() +
 
 export default function ITRPaymentPage() {
   const [assessmentYear, setAssessmentYear] = useState<string>(currentAY);
-  const { data: advanceTaxLedger } = api.itrPayment.getAdvanceTaxLedger.useQuery({ assessmentYear });
-  const { data: selfAssessmentDetails } = api.itrPayment.getSelfAssessmentDetails.useQuery({ assessmentYear });
+  const { data: advanceTaxLedger }: any = api.itrPayment.getAdvanceTaxLedger.useQuery({ assessmentYear });
+  const { data: selfAssessmentDetails }: any = api.itrPayment.getSelfAssessmentDetails.useQuery({ assessmentYear });
   const installments = advanceTaxLedger?.installments ?? [];
   const totalAdvanceTaxPayable = Number(advanceTaxLedger?.totalPayable ?? "0");
   const totalAdvanceTaxPaid = Number(advanceTaxLedger?.totalPaid ?? "0");

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -13,13 +13,13 @@ export default function GSTLiabilityLedgerPage() {
         <div>
           <h1 className="font-display-xl text-display-xl text-on-surface mb-2 font-bold">Liability Ledger</h1>
           <p className="font-ui-sm text-sm text-text-mid flex items-center gap-2">
-            <span className="material-symbols-outlined text-[16px]">calendar_today</span>
+            <Icon name="calendar_today" className="text-[16px]" />
             Current Period: April 2023 - March 2024
           </p>
         </div>
         <div className="flex gap-4">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">print</span> Print
+            <Icon name="print" className="text-[18px]" /> Print
           </button>
         </div>
       </header>
@@ -30,7 +30,7 @@ export default function GSTLiabilityLedgerPage() {
           <span className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold">Total Liability Generated</span>
           <div className="flex items-end justify-between mt-4">
             <span className="font-mono text-xl font-bold text-on-surface">₹ 12,45,800.00</span>
-            <span className="material-symbols-outlined text-stone-300 group-hover:text-primary-container transition-colors">trending_up</span>
+            <Icon name="trending_up" className="text-stone-300 group-hover:text-primary-container transition-colors" />
           </div>
         </div>
         <div className="bg-white border-[0.5px] border-border-subtle p-6 flex flex-col justify-between shadow-sm text-left">

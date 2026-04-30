@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -30,7 +30,7 @@ export default function AuditLogDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-6">
         <Link className="hover:text-primary transition-colors no-underline" href="/audit-log">System Audit Log</Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon name="chevron_right" className="text-[14px]" />
         <span className="text-on-surface">Event Detail</span>
       </div>
 
@@ -45,7 +45,7 @@ export default function AuditLogDetailPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">print</span> Print Event
+            <Icon name="print" className="text-[18px]" /> Print Event
           </button>
         </div>
       </div>

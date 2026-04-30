@@ -1,6 +1,6 @@
 // UI Components - Design System Exports
 export { BalanceBar } from './balance-bar';
-export { Badge } from './badge';
+export { Badge, type BadgeVariant } from './badge';
 export { Button } from './button';
 export { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from './dialog';
 export { Input } from './input';

@@ -1,7 +1,7 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 
 const tradingAccount = {
@@ -52,7 +52,7 @@ export default function ProfitLossPage() {
                 <option>2025-26</option>
               </select>
               <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent rounded-sm uppercase font-bold tracking-widest text-xs">
-                <span className="material-symbols-outlined text-[18px]">print</span>
+                <Icon name="print" className="text-[18px]" />
                 Print
               </button>
             </div>

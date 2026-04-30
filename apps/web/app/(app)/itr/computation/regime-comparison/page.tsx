@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -27,7 +27,7 @@ export default function ITRRegimeComparisonPage() {
         </div>
         <div className="flex items-center gap-3">
           <button className="border border-stone-200 text-on-surface py-2 px-4 rounded-sm font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-white shadow-sm">
-            <span className="material-symbols-outlined text-sm">print</span> Print Analysis
+            <Icon name="print" className="text-sm" /> Print Analysis
           </button>
           <button className="bg-primary-container text-white py-2 px-6 rounded-sm font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-primary transition-colors flex items-center gap-2 cursor-pointer border-none shadow-sm">
             Select Regime
@@ -37,7 +37,7 @@ export default function ITRRegimeComparisonPage() {
 
       {/* Recommendation Banner */}
       <div className="bg-green-50 border-[0.5px] border-green-200 p-6 mb-12 flex items-start gap-4">
-        <span className="material-symbols-outlined text-green-600 text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+        <Icon name="check_circle" className="text-green-600 text-3xl" />
         <div>
           <h3 className="font-display-lg text-lg font-bold text-on-surface mb-1">New Regime Recommended</h3>
           <p className="font-ui-sm text-sm text-text-mid">Opting for the New Regime saves <span className="font-mono text-on-surface font-bold text-base">₹ 45,200</span> in total tax liability for the current assessment year.</p>

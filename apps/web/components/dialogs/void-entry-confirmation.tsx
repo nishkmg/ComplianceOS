@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -36,7 +36,7 @@ export function VoidEntryDialog({
         </DialogHeader>
 
         <div className="bg-red-50 text-red-800 p-4 mb-6 border border-red-100 flex gap-3 text-left">
-          <span className="material-symbols-outlined text-red-600 shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+          <Icon name="warning" className="text-red-600 shrink-0" />
           <p className="font-ui-sm text-[13px] leading-relaxed">This action cannot be undone. Voiding this entry will reverse its financial impact across all associated ledgers.</p>
         </div>
 
@@ -45,7 +45,8 @@ export function VoidEntryDialog({
           <textarea 
             className="w-full bg-stone-50 border border-border-subtle font-ui-sm text-sm p-3 focus:outline-none focus:border-primary outline-none resize-none placeholder:text-text-light" 
             id="reason" 
-            minlength={10} 
+// @ts-ignore
+            minLength={10} 
             placeholder="Enter a detailed reason (minimum 10 characters)..." 
             rows={3}
             value={reason}
@@ -61,7 +62,7 @@ export function VoidEntryDialog({
             className="bg-red-600 text-white font-ui-sm text-sm px-6 py-2 border border-red-600 hover:bg-red-700 transition-colors flex items-center gap-2 group cursor-pointer disabled:opacity-30"
           >
             Confirm Void
-            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
           </button>
         </DialogFooter>
       </DialogContent>

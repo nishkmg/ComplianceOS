@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
@@ -56,7 +56,7 @@ export default function ITRFeaturePage() {
                 <ul className="space-y-4 font-ui-sm text-sm">
                   {['Actual P&L data, not estimate', 'Section-by-section regime comparison', 'One click to select the optimal regime'].map((item) => (
                     <li key={item} className="flex items-center gap-3">
-                      <span className="material-symbols-outlined text-primary-container text-sm">check_circle</span>
+                      <Icon name="check_circle" className="text-primary-container text-sm" />
                       <span className="text-text-mid">{item}</span>
                     </li>
                   ))}

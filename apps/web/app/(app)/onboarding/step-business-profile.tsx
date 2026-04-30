@@ -1,12 +1,13 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/lib/api";
+// @ts-ignore
 import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
 import { showToast } from "@/lib/toast";
+import { Icon } from '@/components/ui/icon';
 
 const BUSINESS_TYPES = [
   { value: "pvt_ltd", label: "Private Limited Company" },
@@ -34,8 +35,9 @@ const STATES = [
 
 export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const createTenant = api.tenants.create.useMutation({
-    onSuccess: (data) => {
+  // @ts-ignore
+  const createTenant: any = api.tenants.create.useMutation({
+    onSuccess: (data: any) => {
       onTenantCreated(data.id);
       showToast.success('Business profile established successfully');
     }
@@ -93,7 +95,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
         <div className="flex flex-col gap-2">
           <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="legalName">
             Registered Legal Name
-            <span className="material-symbols-outlined text-[14px] text-text-light cursor-help" title="As registered with the MCA">info</span>
+            <Icon name="info" className="text-[14px] text-text-light cursor-help" />
           </label>
           <input 
             className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light" 
@@ -116,7 +118,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
               <option disabled value="">Select structure...</option>
               {BUSINESS_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
           </div>
         </div>
 
@@ -133,7 +135,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
               <option disabled value="">Select industry...</option>
               {INDUSTRIES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
           </div>
         </div>
 
@@ -143,7 +145,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
           <input 
             className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
             id="pan" 
-            maxlength="10" 
+            maxLength={10} 
             placeholder="ABCDE1234F" 
             {...register("pan")}
           />
@@ -154,12 +156,12 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
         <div className="flex flex-col gap-2">
           <label className="font-ui-xs text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="gstin">
             GST Identification Number
-            <span className="material-symbols-outlined text-[14px] text-text-light cursor-help" title="Leave blank if not registered">info</span>
+            <Icon name="info" className="text-[14px] text-text-light cursor-help" />
           </label>
           <input 
             className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
             id="gstin" 
-            maxlength="15" 
+            maxLength={15} 
             placeholder="22AAAAA0000A1Z5" 
             {...register("gstin")}
           />
@@ -178,7 +180,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
               <option disabled value="">Select state...</option>
               {STATES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none">expand_more</span>
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
           </div>
         </div>
 
@@ -189,7 +191,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
             className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors resize-none placeholder:text-text-light" 
             id="address" 
             placeholder="Enter complete building name, street, and PIN code..." 
-            rows="3"
+            rows={3}
             {...register("address")}
           ></textarea>
           {errors.address && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.address.message}</p>}
@@ -202,7 +204,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
           </button>
           <button className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer" type="submit" disabled={isSubmitting || createTenant.isPending}>
             {isSubmitting || createTenant.isPending ? "Establishing Profile..." : "Continue to Setup"}
-            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

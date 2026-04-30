@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 export default function PayrollReportsPage() {
@@ -17,7 +17,7 @@ export default function PayrollReportsPage() {
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm shadow-sm">Filter Records</button>
           <button className="px-5 py-2 bg-primary-container text-white font-ui-sm text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-colors group border-none cursor-pointer rounded-sm shadow-sm">
             Generate Report
-            <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </header>
@@ -28,9 +28,9 @@ export default function PayrollReportsPage() {
           <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-8 hover:shadow-sm transition-shadow cursor-pointer group text-left">
             <div className="flex justify-between items-start mb-6">
               <div className="p-3 bg-stone-50 rounded text-amber-text">
-                <span className="material-symbols-outlined">receipt_long</span>
+                <Icon name="receipt_long" />
               </div>
-              <span className="material-symbols-outlined text-text-light group-hover:text-amber-text transition-colors">open_in_new</span>
+              <Icon name="open_in_new" className="text-text-light group-hover:text-amber-text transition-colors" />
             </div>
             <h3 className="font-ui-lg text-lg font-bold text-on-surface mb-3">PF Challans</h3>
             <p className="font-ui-sm text-sm text-text-mid leading-relaxed">Generate Provident Fund remittance files for EPFO portal upload.</p>
@@ -39,9 +39,9 @@ export default function PayrollReportsPage() {
           <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-8 hover:shadow-sm transition-shadow cursor-pointer group text-left">
             <div className="flex justify-between items-start mb-6">
               <div className="p-3 bg-stone-50 rounded text-amber-text">
-                <span className="material-symbols-outlined">health_and_safety</span>
+                <Icon name="health_and_safety" />
               </div>
-              <span className="material-symbols-outlined text-text-light group-hover:text-amber-text transition-colors">open_in_new</span>
+              <Icon name="open_in_new" className="text-text-light group-hover:text-amber-text transition-colors" />
             </div>
             <h3 className="font-ui-lg text-lg font-bold text-on-surface mb-3">ESI Challans</h3>
             <p className="font-ui-sm text-sm text-text-mid leading-relaxed">Prepare ESI contribution files with employee-wise breakup.</p>
@@ -50,9 +50,9 @@ export default function PayrollReportsPage() {
           <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-8 hover:shadow-sm transition-shadow cursor-pointer group text-left">
             <div className="flex justify-between items-start mb-6">
               <div className="p-3 bg-stone-50 rounded text-amber-text">
-                <span className="material-symbols-outlined">description</span>
+                <Icon name="description" />
               </div>
-              <span className="material-symbols-outlined text-text-light group-hover:text-amber-text transition-colors">open_in_new</span>
+              <Icon name="open_in_new" className="text-text-light group-hover:text-amber-text transition-colors" />
             </div>
             <h3 className="font-ui-lg text-lg font-bold text-on-surface mb-3">Professional Tax</h3>
             <p className="font-ui-sm text-sm text-text-mid leading-relaxed">Compute and file professional tax returns by state jurisdiction.</p>

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -24,11 +24,11 @@ export default function InventoryReportsPage() {
         </div>
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 border-[0.5px] border-on-surface text-on-surface px-5 py-2.5 font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">print</span>
+            <Icon name="print" className="text-[18px]" />
             Print Report
           </button>
           <button className="bg-primary-container text-white font-ui-sm text-xs px-6 py-2.5 rounded-sm hover:bg-primary transition-all flex items-center justify-center gap-2 border-none cursor-pointer shadow-sm font-bold uppercase tracking-widest">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Export CSV
           </button>
         </div>
@@ -48,7 +48,7 @@ export default function InventoryReportsPage() {
               <option value="movement">Stock Movement Log</option>
               <option value="expiry">Expiry & Obsolescence</option>
             </select>
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light pointer-events-none">expand_more</span>
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
           </div>
         </div>
         <div className="w-full lg:w-1/4 text-left">

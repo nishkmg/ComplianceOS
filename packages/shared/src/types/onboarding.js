@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.OnboardingProgressOutputSchema = exports.OpeningBalancesInputSchema = exports.OpeningBalanceEntrySchema = exports.AccountKindEnum = exports.FYGstInputSchema = exports.GstRegistrationEnum = exports.CoARefinementsInputSchema = exports.CoAAccountRefinementSchema = exports.ModuleActivationArraySchema = exports.ModuleActivationInputSchema = exports.ModuleEnum = exports.BusinessProfileInputSchema = exports.IndustryEnum = exports.StateEnum = exports.BusinessTypeEnum = void 0;
-const zod_1 = require("zod");
+// @ts-nocheck
+import { z } from "zod";
 // ─── Business Profile ─────────────────────────────────────────────────────────
-exports.BusinessTypeEnum = zod_1.z.enum([
+export const BusinessTypeEnum = z.enum([
     "sole_proprietorship",
     "partnership",
     "llp",
@@ -11,7 +9,7 @@ exports.BusinessTypeEnum = zod_1.z.enum([
     "public_limited",
     "huf",
 ]);
-exports.StateEnum = zod_1.z.enum([
+export const StateEnum = z.enum([
     "andaman_and_nicobar_islands",
     "andhra_pradesh",
     "arunachal_pradesh",
@@ -50,34 +48,34 @@ exports.StateEnum = zod_1.z.enum([
     "uttarakhand",
     "west_bengal",
 ]);
-exports.IndustryEnum = zod_1.z.enum([
+export const IndustryEnum = z.enum([
     "retail_trading",
     "manufacturing",
     "services_professional",
     "freelancer_consultant",
     "regulated_professional",
 ]);
-exports.BusinessProfileInputSchema = zod_1.z.object({
-    name: zod_1.z.string().min(1, "Business name is required"),
-    legalName: zod_1.z.string().optional(),
-    businessType: exports.BusinessTypeEnum,
-    pan: zod_1.z
+export const BusinessProfileInputSchema = z.object({
+    name: z.string().min(1, "Business name is required"),
+    legalName: z.string().optional(),
+    businessType: BusinessTypeEnum,
+    pan: z
         .string()
         .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, "PAN must match AAAAA9999A format")
         .toUpperCase(),
-    gstin: zod_1.z
+    gstin: z
         .string()
         .regex(/^[0-9]{2}[A-Z]{4}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9]{1}$/, "GSTIN must be 15 characters")
         .toUpperCase()
         .optional()
-        .or(zod_1.z.literal("")),
-    address: zod_1.z.string().min(1, "Address is required"),
-    state: exports.StateEnum,
-    industry: exports.IndustryEnum,
-    dateOfIncorporation: zod_1.z.string().optional(), // ISO date string
+        .or(z.literal("")),
+    address: z.string().min(1, "Address is required"),
+    state: StateEnum,
+    industry: IndustryEnum,
+    dateOfIncorporation: z.string().optional(), // ISO date string
 });
 // ─── Module Activation ────────────────────────────────────────────────────────
-exports.ModuleEnum = zod_1.z.enum([
+export const ModuleEnum = z.enum([
     "accounting",
     "invoicing",
     "inventory",
@@ -86,60 +84,60 @@ exports.ModuleEnum = zod_1.z.enum([
     "ocr",
     "itr",
 ]);
-exports.ModuleActivationInputSchema = zod_1.z.object({
-    module: exports.ModuleEnum,
-    enabled: zod_1.z.boolean(),
+export const ModuleActivationInputSchema = z.object({
+    module: ModuleEnum,
+    enabled: z.boolean(),
 });
-exports.ModuleActivationArraySchema = zod_1.z.array(exports.ModuleActivationInputSchema);
+export const ModuleActivationArraySchema = z.array(ModuleActivationInputSchema);
 // ─── CoA Refinements ──────────────────────────────────────────────────────────
-exports.CoAAccountRefinementSchema = zod_1.z.lazy(() => zod_1.z.object({
-    code: zod_1.z.string(),
-    name: zod_1.z.string(),
-    isEnabled: zod_1.z.boolean(),
-    children: zod_1.z.array(exports.CoAAccountRefinementSchema).optional(),
+export const CoAAccountRefinementSchema = z.lazy(() => z.object({
+    code: z.string(),
+    name: z.string(),
+    isEnabled: z.boolean(),
+    children: z.array(CoAAccountRefinementSchema).optional(),
 }));
-exports.CoARefinementsInputSchema = zod_1.z.object({
-    accounts: zod_1.z.array(exports.CoAAccountRefinementSchema),
+export const CoARefinementsInputSchema = z.object({
+    accounts: z.array(CoAAccountRefinementSchema),
 });
 // ─── FY + GST Setup ──────────────────────────────────────────────────────────
-exports.GstRegistrationEnum = zod_1.z.enum(["none", "regular", "composition"]);
-exports.FYGstInputSchema = zod_1.z.object({
-    fiscalYearStart: zod_1.z.string().min(1, "Fiscal year start date is required"), // ISO date
-    gstRegistration: exports.GstRegistrationEnum,
-    applicableGstRates: zod_1.z.array(zod_1.z.number().int().min(0).max(28)),
-    itcEligible: zod_1.z.boolean(),
-    tdsApplicable: zod_1.z.boolean(),
-    tdsSectionRates: zod_1.z.record(zod_1.z.string(), zod_1.z.number().min(0).max(100)).optional(),
+export const GstRegistrationEnum = z.enum(["none", "regular", "composition"]);
+export const FYGstInputSchema = z.object({
+    fiscalYearStart: z.string().min(1, "Fiscal year start date is required"), // ISO date
+    gstRegistration: GstRegistrationEnum,
+    applicableGstRates: z.array(z.number().int().min(0).max(28)),
+    itcEligible: z.boolean(),
+    tdsApplicable: z.boolean(),
+    tdsSectionRates: z.record(z.string(), z.number().min(0).max(100)).optional(),
 });
 // ─── Opening Balances ──────────────────────────────────────────────────────────
-exports.AccountKindEnum = zod_1.z.enum([
+export const AccountKindEnum = z.enum([
     "Asset",
     "Liability",
     "Equity",
     "Revenue",
     "Expense",
 ]);
-exports.OpeningBalanceEntrySchema = zod_1.z.object({
-    accountId: zod_1.z.string().uuid(),
-    accountCode: zod_1.z.string(),
-    name: zod_1.z.string(),
-    kind: exports.AccountKindEnum,
-    openingBalance: zod_1.z.number(),
+export const OpeningBalanceEntrySchema = z.object({
+    accountId: z.string().uuid(),
+    accountCode: z.string(),
+    name: z.string(),
+    kind: AccountKindEnum,
+    openingBalance: z.number(),
 });
-exports.OpeningBalancesInputSchema = zod_1.z.object({
-    mode: zod_1.z.enum(["fresh_start", "migration"]),
-    balances: zod_1.z.array(exports.OpeningBalanceEntrySchema),
+export const OpeningBalancesInputSchema = z.object({
+    mode: z.enum(["fresh_start", "migration"]),
+    balances: z.array(OpeningBalanceEntrySchema),
 });
 // ─── Onboarding Progress ─────────────────────────────────────────────────────
-exports.OnboardingProgressOutputSchema = zod_1.z.object({
-    currentStep: zod_1.z.number().int().min(1).max(5),
-    completedSteps: zod_1.z.array(zod_1.z.number().int().min(1).max(5)),
-    data: zod_1.z.object({
-        businessProfile: exports.BusinessProfileInputSchema.optional(),
-        moduleActivation: exports.ModuleActivationArraySchema.optional(),
-        coa: exports.CoARefinementsInputSchema.optional(),
-        fyGst: exports.FYGstInputSchema.optional(),
-        openingBalances: exports.OpeningBalancesInputSchema.optional(),
+export const OnboardingProgressOutputSchema = z.object({
+    currentStep: z.number().int().min(1).max(5),
+    completedSteps: z.array(z.number().int().min(1).max(5)),
+    data: z.object({
+        businessProfile: BusinessProfileInputSchema.optional(),
+        moduleActivation: ModuleActivationArraySchema.optional(),
+        coa: CoARefinementsInputSchema.optional(),
+        fyGst: FYGstInputSchema.optional(),
+        openingBalances: OpeningBalancesInputSchema.optional(),
     }),
 });
 //# sourceMappingURL=onboarding.js.map

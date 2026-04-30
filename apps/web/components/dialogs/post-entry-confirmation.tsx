@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import {
@@ -8,6 +7,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from '@/lib/format';
 
 interface PostEntryDialogProps {
@@ -30,7 +30,7 @@ export function PostEntryDialog({
       <DialogContent className="max-w-md p-0 overflow-hidden border border-border-subtle shadow-sm rounded-sm text-left">
         <DialogHeader className="flex flex-row items-center p-6 border-b-[0.5px] border-stone-200 bg-[#F9F7F2] gap-3">
           <div className="flex-shrink-0 bg-amber-50 p-2 rounded-full border-[0.5px] border-amber-200">
-            <span className="material-symbols-outlined text-[#C8860A]" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+            <Icon name="warning" className="text-[#C8860A]" />
           </div>
           <DialogTitle className="font-display-lg text-lg font-bold text-on-surface tracking-tight">Confirm Post Entry</DialogTitle>
         </DialogHeader>
@@ -56,7 +56,7 @@ export function PostEntryDialog({
           </div>
 
           <div className="mt-4 flex items-start gap-2 text-[11px] text-stone-500 bg-stone-50/50 p-3 rounded-sm border-[0.5px] border-stone-100 italic">
-            <span className="material-symbols-outlined text-[16px] text-stone-400 mt-0.5">info</span>
+            <Icon name="info" className="text-[16px] text-stone-400 mt-0.5" />
             <p className="leading-tight">This entry affects multiple accounts and will be logged under fiscal period {entry.period}.</p>
           </div>
         </div>

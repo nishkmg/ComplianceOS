@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useCallback } from "react";
+import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
@@ -69,7 +69,7 @@ export default function NewJournalEntryPage() {
       await new Promise((resolve) => setTimeout(resolve, 800));
       showToast.success(status === 'draft' ? 'Voucher draft saved' : 'Journal entry posted to ledger');
       router.push("/journal");
-    } catch (e) {
+    } catch (e: unknown) {
       showToast.error('An error occurred while saving.');
     } finally {
       setSaving(false);
@@ -82,7 +82,7 @@ export default function NewJournalEntryPage() {
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b-[0.5px] border-border-subtle flex justify-between items-center w-full px-8 py-4 -mx-8 -mt-8 mb-8">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-stone-400 hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-            <span className="material-symbols-outlined">arrow_back</span>
+            <Icon name="arrow_back" />
           </button>
           <h2 className="font-display-lg text-2xl text-on-surface font-bold">New Journal Entry</h2>
         </div>
@@ -93,8 +93,8 @@ export default function NewJournalEntryPage() {
           </div>
           <div className="h-8 w-[0.5px] bg-border-subtle"></div>
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-stone-400">notifications</span>
-            <span className="material-symbols-outlined text-stone-400">help_outline</span>
+            <Icon name="notifications" className="text-stone-400" />
+            <Icon name="help_outline" className="text-stone-400" />
           </div>
         </div>
       </header>
@@ -121,7 +121,7 @@ export default function NewJournalEntryPage() {
                   <option>Payment Voucher</option>
                   <option>Contra Voucher</option>
                 </select>
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light pointer-events-none">expand_more</span>
+                <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
               </div>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function NewJournalEntryPage() {
               onClick={addLine}
               className="text-primary-container hover:text-primary font-bold uppercase tracking-widest text-[11px] flex items-center gap-2 border-none bg-transparent cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">add_circle</span> Add Row
+              <Icon name="add_circle" className="text-[18px]" /> Add Row
             </button>
           </div>
 
@@ -203,7 +203,7 @@ export default function NewJournalEntryPage() {
                           onClick={() => removeLine(index)}
                           className="text-stone-300 hover:text-red-600 transition-colors border-none bg-transparent cursor-pointer"
                         >
-                          <span className="material-symbols-outlined text-[18px]">delete</span>
+                          <Icon name="delete" className="text-[18px]" />
                         </button>
                       </td>
                     </tr>
@@ -223,7 +223,7 @@ export default function NewJournalEntryPage() {
 
           <div className={`p-6 border-[0.5px] rounded-sm flex items-center justify-between transition-colors duration-500 ${isBalanced ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined">{isBalanced ? 'check_circle' : 'warning'}</span>
+              <Icon name={isBalanced ? 'check_circle' : 'warning'} />
               <p className="font-ui-sm font-bold uppercase tracking-widest text-xs">
                 {isBalanced ? 'Voucher is balanced' : totalDebit > 0 ? `Out of Balance: ₹ ${formatIndianNumber(diff)}` : 'Entry Required'}
               </p>

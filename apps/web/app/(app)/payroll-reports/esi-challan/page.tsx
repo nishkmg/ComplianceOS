@@ -1,5 +1,5 @@
-// @ts-nocheck
 "use client";
+import { Icon } from '@/components/ui/icon';
 
 const employees = [
   { id: "EMP-001", name: "Rahul Sharma", days: 28, gross: 45000, empESI: 338, emprESI: 1463, totalESI: 1801 },
@@ -15,7 +15,7 @@ export default function ESIChallanPage() {
           <p className="text-sm text-text-mid">Generate data for Employee State Insurance filings.</p>
         </div>
         <button className="bg-primary-container text-white px-5 py-2.5 rounded-sm flex items-center gap-2 hover:bg-primary cursor-pointer border-none shadow-sm text-xs font-bold uppercase tracking-widest">
-          <span className="material-symbols-outlined text-[18px]">download</span> Export
+          <Icon name="download" className="text-[18px]" /> Export
         </button>
       </header>
       <div className="grid grid-cols-4 gap-4">

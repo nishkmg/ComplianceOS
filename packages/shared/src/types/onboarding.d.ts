@@ -16,25 +16,25 @@ export declare const BusinessProfileInputSchema: z.ZodObject<{
     industry: z.ZodEnum<["retail_trading", "manufacturing", "services_professional", "freelancer_consultant", "regulated_professional"]>;
     dateOfIncorporation: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    name: string;
-    businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-    pan: string;
-    address: string;
-    state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-    industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-    legalName?: string | undefined;
-    gstin?: string | undefined;
-    dateOfIncorporation?: string | undefined;
+    state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+    industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+    name?: string;
+    legalName?: string;
+    businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+    pan?: string;
+    gstin?: string;
+    address?: string;
+    dateOfIncorporation?: string;
 }, {
-    name: string;
-    businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-    pan: string;
-    address: string;
-    state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-    industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-    legalName?: string | undefined;
-    gstin?: string | undefined;
-    dateOfIncorporation?: string | undefined;
+    state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+    industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+    name?: string;
+    legalName?: string;
+    businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+    pan?: string;
+    gstin?: string;
+    address?: string;
+    dateOfIncorporation?: string;
 }>;
 export type BusinessProfileInput = z.infer<typeof BusinessProfileInputSchema>;
 export declare const ModuleEnum: z.ZodEnum<["accounting", "invoicing", "inventory", "payroll", "gst", "ocr", "itr"]>;
@@ -43,22 +43,22 @@ export declare const ModuleActivationInputSchema: z.ZodObject<{
     module: z.ZodEnum<["accounting", "invoicing", "inventory", "payroll", "gst", "ocr", "itr"]>;
     enabled: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
-    module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-    enabled: boolean;
+    module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+    enabled?: boolean;
 }, {
-    module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-    enabled: boolean;
+    module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+    enabled?: boolean;
 }>;
 export type ModuleActivationInput = z.infer<typeof ModuleActivationInputSchema>;
 export declare const ModuleActivationArraySchema: z.ZodArray<z.ZodObject<{
     module: z.ZodEnum<["accounting", "invoicing", "inventory", "payroll", "gst", "ocr", "itr"]>;
     enabled: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
-    module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-    enabled: boolean;
+    module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+    enabled?: boolean;
 }, {
-    module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-    enabled: boolean;
+    module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+    enabled?: boolean;
 }>, "many">;
 export type ModuleActivationArray = z.infer<typeof ModuleActivationArraySchema>;
 export declare const CoAAccountRefinementSchema: z.ZodType<{
@@ -95,7 +95,7 @@ export declare const CoARefinementsInputSchema: z.ZodObject<{
         }>;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    accounts: {
+    accounts?: {
         code: string;
         name: string;
         isEnabled: boolean;
@@ -107,7 +107,7 @@ export declare const CoARefinementsInputSchema: z.ZodObject<{
         }>;
     }[];
 }, {
-    accounts: {
+    accounts?: {
         code: string;
         name: string;
         isEnabled: boolean;
@@ -130,19 +130,19 @@ export declare const FYGstInputSchema: z.ZodObject<{
     tdsApplicable: z.ZodBoolean;
     tdsSectionRates: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodNumber>>;
 }, "strip", z.ZodTypeAny, {
-    fiscalYearStart: string;
-    gstRegistration: "none" | "regular" | "composition";
-    applicableGstRates: number[];
-    itcEligible: boolean;
-    tdsApplicable: boolean;
-    tdsSectionRates?: Record<string, number> | undefined;
+    gstRegistration?: "regular" | "composition" | "none";
+    tdsApplicable?: boolean;
+    fiscalYearStart?: string;
+    applicableGstRates?: number[];
+    itcEligible?: boolean;
+    tdsSectionRates?: Record<string, number>;
 }, {
-    fiscalYearStart: string;
-    gstRegistration: "none" | "regular" | "composition";
-    applicableGstRates: number[];
-    itcEligible: boolean;
-    tdsApplicable: boolean;
-    tdsSectionRates?: Record<string, number> | undefined;
+    gstRegistration?: "regular" | "composition" | "none";
+    tdsApplicable?: boolean;
+    fiscalYearStart?: string;
+    applicableGstRates?: number[];
+    itcEligible?: boolean;
+    tdsSectionRates?: Record<string, number>;
 }>;
 export type FYGstInput = z.infer<typeof FYGstInputSchema>;
 export declare const AccountKindEnum: z.ZodEnum<["Asset", "Liability", "Equity", "Revenue", "Expense"]>;
@@ -154,17 +154,17 @@ export declare const OpeningBalanceEntrySchema: z.ZodObject<{
     kind: z.ZodEnum<["Asset", "Liability", "Equity", "Revenue", "Expense"]>;
     openingBalance: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    accountId: string;
-    name: string;
-    kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-    accountCode: string;
-    openingBalance: number;
+    name?: string;
+    kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+    accountId?: string;
+    openingBalance?: number;
+    accountCode?: string;
 }, {
-    accountId: string;
-    name: string;
-    kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-    accountCode: string;
-    openingBalance: number;
+    name?: string;
+    kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+    accountId?: string;
+    openingBalance?: number;
+    accountCode?: string;
 }>;
 export type OpeningBalanceEntry = z.infer<typeof OpeningBalanceEntrySchema>;
 export declare const OpeningBalancesInputSchema: z.ZodObject<{
@@ -176,35 +176,35 @@ export declare const OpeningBalancesInputSchema: z.ZodObject<{
         kind: z.ZodEnum<["Asset", "Liability", "Equity", "Revenue", "Expense"]>;
         openingBalance: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        accountId: string;
-        name: string;
-        kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-        accountCode: string;
-        openingBalance: number;
+        name?: string;
+        kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+        accountId?: string;
+        openingBalance?: number;
+        accountCode?: string;
     }, {
-        accountId: string;
-        name: string;
-        kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-        accountCode: string;
-        openingBalance: number;
+        name?: string;
+        kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+        accountId?: string;
+        openingBalance?: number;
+        accountCode?: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    mode: "fresh_start" | "migration";
-    balances: {
-        accountId: string;
-        name: string;
-        kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-        accountCode: string;
-        openingBalance: number;
+    mode?: "fresh_start" | "migration";
+    balances?: {
+        name?: string;
+        kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+        accountId?: string;
+        openingBalance?: number;
+        accountCode?: string;
     }[];
 }, {
-    mode: "fresh_start" | "migration";
-    balances: {
-        accountId: string;
-        name: string;
-        kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-        accountCode: string;
-        openingBalance: number;
+    mode?: "fresh_start" | "migration";
+    balances?: {
+        name?: string;
+        kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+        accountId?: string;
+        openingBalance?: number;
+        accountCode?: string;
     }[];
 }>;
 export type OpeningBalancesInput = z.infer<typeof OpeningBalancesInputSchema>;
@@ -223,35 +223,35 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
             industry: z.ZodEnum<["retail_trading", "manufacturing", "services_professional", "freelancer_consultant", "regulated_professional"]>;
             dateOfIncorporation: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
-            name: string;
-            businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-            pan: string;
-            address: string;
-            state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-            industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-            legalName?: string | undefined;
-            gstin?: string | undefined;
-            dateOfIncorporation?: string | undefined;
+            state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+            industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+            name?: string;
+            legalName?: string;
+            businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+            pan?: string;
+            gstin?: string;
+            address?: string;
+            dateOfIncorporation?: string;
         }, {
-            name: string;
-            businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-            pan: string;
-            address: string;
-            state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-            industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-            legalName?: string | undefined;
-            gstin?: string | undefined;
-            dateOfIncorporation?: string | undefined;
+            state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+            industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+            name?: string;
+            legalName?: string;
+            businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+            pan?: string;
+            gstin?: string;
+            address?: string;
+            dateOfIncorporation?: string;
         }>>;
         moduleActivation: z.ZodOptional<z.ZodArray<z.ZodObject<{
             module: z.ZodEnum<["accounting", "invoicing", "inventory", "payroll", "gst", "ocr", "itr"]>;
             enabled: z.ZodBoolean;
         }, "strip", z.ZodTypeAny, {
-            module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-            enabled: boolean;
+            module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+            enabled?: boolean;
         }, {
-            module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-            enabled: boolean;
+            module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+            enabled?: boolean;
         }>, "many">>;
         coa: z.ZodOptional<z.ZodObject<{
             accounts: z.ZodArray<z.ZodType<{
@@ -276,7 +276,7 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                 }>;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
-            accounts: {
+            accounts?: {
                 code: string;
                 name: string;
                 isEnabled: boolean;
@@ -288,7 +288,7 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                 }>;
             }[];
         }, {
-            accounts: {
+            accounts?: {
                 code: string;
                 name: string;
                 isEnabled: boolean;
@@ -308,19 +308,19 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
             tdsApplicable: z.ZodBoolean;
             tdsSectionRates: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodNumber>>;
         }, "strip", z.ZodTypeAny, {
-            fiscalYearStart: string;
-            gstRegistration: "none" | "regular" | "composition";
-            applicableGstRates: number[];
-            itcEligible: boolean;
-            tdsApplicable: boolean;
-            tdsSectionRates?: Record<string, number> | undefined;
+            gstRegistration?: "regular" | "composition" | "none";
+            tdsApplicable?: boolean;
+            fiscalYearStart?: string;
+            applicableGstRates?: number[];
+            itcEligible?: boolean;
+            tdsSectionRates?: Record<string, number>;
         }, {
-            fiscalYearStart: string;
-            gstRegistration: "none" | "regular" | "composition";
-            applicableGstRates: number[];
-            itcEligible: boolean;
-            tdsApplicable: boolean;
-            tdsSectionRates?: Record<string, number> | undefined;
+            gstRegistration?: "regular" | "composition" | "none";
+            tdsApplicable?: boolean;
+            fiscalYearStart?: string;
+            applicableGstRates?: number[];
+            itcEligible?: boolean;
+            tdsSectionRates?: Record<string, number>;
         }>>;
         openingBalances: z.ZodOptional<z.ZodObject<{
             mode: z.ZodEnum<["fresh_start", "migration"]>;
@@ -331,55 +331,55 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                 kind: z.ZodEnum<["Asset", "Liability", "Equity", "Revenue", "Expense"]>;
                 openingBalance: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }, {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
-            mode: "fresh_start" | "migration";
-            balances: {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+            mode?: "fresh_start" | "migration";
+            balances?: {
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }[];
         }, {
-            mode: "fresh_start" | "migration";
-            balances: {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+            mode?: "fresh_start" | "migration";
+            balances?: {
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }[];
         }>>;
     }, "strip", z.ZodTypeAny, {
         businessProfile?: {
-            name: string;
-            businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-            pan: string;
-            address: string;
-            state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-            industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-            legalName?: string | undefined;
-            gstin?: string | undefined;
-            dateOfIncorporation?: string | undefined;
-        } | undefined;
+            state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+            industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+            name?: string;
+            legalName?: string;
+            businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+            pan?: string;
+            gstin?: string;
+            address?: string;
+            dateOfIncorporation?: string;
+        };
         moduleActivation?: {
-            module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-            enabled: boolean;
-        }[] | undefined;
+            module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+            enabled?: boolean;
+        }[];
         coa?: {
-            accounts: {
+            accounts?: {
                 code: string;
                 name: string;
                 isEnabled: boolean;
@@ -390,43 +390,43 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                     children?: unknown[];
                 }>;
             }[];
-        } | undefined;
+        };
         fyGst?: {
-            fiscalYearStart: string;
-            gstRegistration: "none" | "regular" | "composition";
-            applicableGstRates: number[];
-            itcEligible: boolean;
-            tdsApplicable: boolean;
-            tdsSectionRates?: Record<string, number> | undefined;
-        } | undefined;
+            gstRegistration?: "regular" | "composition" | "none";
+            tdsApplicable?: boolean;
+            fiscalYearStart?: string;
+            applicableGstRates?: number[];
+            itcEligible?: boolean;
+            tdsSectionRates?: Record<string, number>;
+        };
         openingBalances?: {
-            mode: "fresh_start" | "migration";
-            balances: {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+            mode?: "fresh_start" | "migration";
+            balances?: {
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }[];
-        } | undefined;
+        };
     }, {
         businessProfile?: {
-            name: string;
-            businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-            pan: string;
-            address: string;
-            state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-            industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-            legalName?: string | undefined;
-            gstin?: string | undefined;
-            dateOfIncorporation?: string | undefined;
-        } | undefined;
+            state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+            industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+            name?: string;
+            legalName?: string;
+            businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+            pan?: string;
+            gstin?: string;
+            address?: string;
+            dateOfIncorporation?: string;
+        };
         moduleActivation?: {
-            module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-            enabled: boolean;
-        }[] | undefined;
+            module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+            enabled?: boolean;
+        }[];
         coa?: {
-            accounts: {
+            accounts?: {
                 code: string;
                 name: string;
                 isEnabled: boolean;
@@ -437,47 +437,45 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                     children?: unknown[];
                 }>;
             }[];
-        } | undefined;
+        };
         fyGst?: {
-            fiscalYearStart: string;
-            gstRegistration: "none" | "regular" | "composition";
-            applicableGstRates: number[];
-            itcEligible: boolean;
-            tdsApplicable: boolean;
-            tdsSectionRates?: Record<string, number> | undefined;
-        } | undefined;
+            gstRegistration?: "regular" | "composition" | "none";
+            tdsApplicable?: boolean;
+            fiscalYearStart?: string;
+            applicableGstRates?: number[];
+            itcEligible?: boolean;
+            tdsSectionRates?: Record<string, number>;
+        };
         openingBalances?: {
-            mode: "fresh_start" | "migration";
-            balances: {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+            mode?: "fresh_start" | "migration";
+            balances?: {
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }[];
-        } | undefined;
+        };
     }>;
 }, "strip", z.ZodTypeAny, {
-    currentStep: number;
-    completedSteps: number[];
-    data: {
+    data?: {
         businessProfile?: {
-            name: string;
-            businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-            pan: string;
-            address: string;
-            state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-            industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-            legalName?: string | undefined;
-            gstin?: string | undefined;
-            dateOfIncorporation?: string | undefined;
-        } | undefined;
+            state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+            industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+            name?: string;
+            legalName?: string;
+            businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+            pan?: string;
+            gstin?: string;
+            address?: string;
+            dateOfIncorporation?: string;
+        };
         moduleActivation?: {
-            module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-            enabled: boolean;
-        }[] | undefined;
+            module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+            enabled?: boolean;
+        }[];
         coa?: {
-            accounts: {
+            accounts?: {
                 code: string;
                 name: string;
                 isEnabled: boolean;
@@ -488,47 +486,47 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                     children?: unknown[];
                 }>;
             }[];
-        } | undefined;
+        };
         fyGst?: {
-            fiscalYearStart: string;
-            gstRegistration: "none" | "regular" | "composition";
-            applicableGstRates: number[];
-            itcEligible: boolean;
-            tdsApplicable: boolean;
-            tdsSectionRates?: Record<string, number> | undefined;
-        } | undefined;
+            gstRegistration?: "regular" | "composition" | "none";
+            tdsApplicable?: boolean;
+            fiscalYearStart?: string;
+            applicableGstRates?: number[];
+            itcEligible?: boolean;
+            tdsSectionRates?: Record<string, number>;
+        };
         openingBalances?: {
-            mode: "fresh_start" | "migration";
-            balances: {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+            mode?: "fresh_start" | "migration";
+            balances?: {
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }[];
-        } | undefined;
+        };
     };
+    currentStep?: number;
+    completedSteps?: number[];
 }, {
-    currentStep: number;
-    completedSteps: number[];
-    data: {
+    data?: {
         businessProfile?: {
-            name: string;
-            businessType: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
-            pan: string;
-            address: string;
-            state: "andaman_and_nicobar_islands" | "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chandigarh" | "chhattisgarh" | "dadra_and_nagar_haveli" | "daman_and_diu" | "delhi" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jammu_and_kashmir" | "jharkhand" | "karnataka" | "kerala" | "ladakh" | "lakshadweep" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "puducherry" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal";
-            industry: "manufacturing" | "retail_trading" | "services_professional" | "freelancer_consultant" | "regulated_professional";
-            legalName?: string | undefined;
-            gstin?: string | undefined;
-            dateOfIncorporation?: string | undefined;
-        } | undefined;
+            state?: "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "chandigarh" | "delhi" | "ladakh" | "lakshadweep" | "puducherry" | "andaman_and_nicobar_islands" | "dadra_and_nagar_haveli" | "daman_and_diu" | "jammu_and_kashmir";
+            industry?: "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional";
+            name?: string;
+            legalName?: string;
+            businessType?: "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf";
+            pan?: string;
+            gstin?: string;
+            address?: string;
+            dateOfIncorporation?: string;
+        };
         moduleActivation?: {
-            module: "payroll" | "inventory" | "gst" | "accounting" | "invoicing" | "ocr" | "itr";
-            enabled: boolean;
-        }[] | undefined;
+            module?: "accounting" | "invoicing" | "inventory" | "payroll" | "gst" | "ocr" | "itr";
+            enabled?: boolean;
+        }[];
         coa?: {
-            accounts: {
+            accounts?: {
                 code: string;
                 name: string;
                 isEnabled: boolean;
@@ -539,26 +537,28 @@ export declare const OnboardingProgressOutputSchema: z.ZodObject<{
                     children?: unknown[];
                 }>;
             }[];
-        } | undefined;
+        };
         fyGst?: {
-            fiscalYearStart: string;
-            gstRegistration: "none" | "regular" | "composition";
-            applicableGstRates: number[];
-            itcEligible: boolean;
-            tdsApplicable: boolean;
-            tdsSectionRates?: Record<string, number> | undefined;
-        } | undefined;
+            gstRegistration?: "regular" | "composition" | "none";
+            tdsApplicable?: boolean;
+            fiscalYearStart?: string;
+            applicableGstRates?: number[];
+            itcEligible?: boolean;
+            tdsSectionRates?: Record<string, number>;
+        };
         openingBalances?: {
-            mode: "fresh_start" | "migration";
-            balances: {
-                accountId: string;
-                name: string;
-                kind: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
-                accountCode: string;
-                openingBalance: number;
+            mode?: "fresh_start" | "migration";
+            balances?: {
+                name?: string;
+                kind?: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
+                accountId?: string;
+                openingBalance?: number;
+                accountCode?: string;
             }[];
-        } | undefined;
+        };
     };
+    currentStep?: number;
+    completedSteps?: number[];
 }>;
 export type OnboardingProgressOutput = z.infer<typeof OnboardingProgressOutputSchema>;
 //# sourceMappingURL=onboarding.d.ts.map

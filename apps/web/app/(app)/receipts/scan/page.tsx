@@ -1,13 +1,13 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useCallback } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { UploadZone } from "@/components/ocr/upload-zone";
 
 export default function ScanReceiptPage() {
   const [scanStatus, setScanStatus] = useState("idle");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleUploadComplete = useCallback(() => {
     setScanStatus("processing");
@@ -30,7 +30,7 @@ export default function ScanReceiptPage() {
               Clear Form
             </button>
             <button className="px-6 py-2 bg-[#C8860A] text-white font-ui-sm text-ui-sm flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer border-none shadow-sm">
-              Save to Ledger <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              Save to Ledger <Icon name="arrow_forward" className="text-[18px]" />
             </button>
           </div>
         </div>
@@ -43,10 +43,10 @@ export default function ScanReceiptPage() {
               {/* Toolbar */}
               <div className="h-12 border-b-[0.5px] border-border-subtle bg-stone-50 flex items-center justify-between px-4">
                 <div className="flex items-center gap-3 text-text-mid">
-                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><span className="material-symbols-outlined text-[20px]">zoom_in</span></button>
-                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><span className="material-symbols-outlined text-[20px]">zoom_out</span></button>
+                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_in" className="text-[20px]" /></button>
+                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_out" className="text-[20px]" /></button>
                   <div className="w-[1px] h-4 bg-border-subtle mx-1"></div>
-                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><span className="material-symbols-outlined text-[20px]">rotate_right</span></button>
+                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="rotate_right" className="text-[20px]" /></button>
                 </div>
                 <span className="font-mono text-[12px] text-text-light">HDFC_TRANSFER_VOUCHER.pdf</span>
               </div>
@@ -99,7 +99,7 @@ export default function ScanReceiptPage() {
                 </label>
                 <input className="w-full border-[1px] border-amber-400 bg-stone-50 px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:ring-1 focus:ring-amber-400" type="text" defaultValue="45,200.00" />
                 <span className="font-ui-xs text-[10px] text-[#C8860A] flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px]">warning</span> Verify amount extracted
+                  <Icon name="warning" className="text-[14px]" /> Verify amount extracted
                 </span>
               </div>
 
@@ -122,7 +122,7 @@ export default function ScanReceiptPage() {
 
             <div className="p-4 border-t-[0.5px] border-border-subtle bg-stone-50">
               <div className="flex items-start gap-3 p-3 bg-white border-[0.5px] border-border-subtle">
-                <span className="material-symbols-outlined text-[#C8860A]">lightbulb</span>
+                <Icon name="lightbulb" className="text-[#C8860A]" />
                 <p className="font-ui-xs text-[11px] text-text-mid leading-relaxed">
                   Click on any highlighted region in the document to automatically map it to the active field.
                 </p>

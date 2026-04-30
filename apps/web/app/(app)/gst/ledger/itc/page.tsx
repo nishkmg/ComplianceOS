@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
@@ -25,7 +25,7 @@ export default function ITCSubLedgerPage() {
         </div>
         <div className="flex gap-4 no-print">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface rounded-sm font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">filter_list</span> Filter Period
+            <Icon name="filter_list" className="text-[18px]" /> Filter Period
           </button>
         </div>
       </header>
@@ -34,7 +34,7 @@ export default function ITCSubLedgerPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
         <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center gap-2 mb-4 text-text-mid">
-            <span className="material-symbols-outlined text-primary-container text-[18px]">account_balance</span>
+            <Icon name="account_balance" className="text-primary-container text-[18px]" />
             <h3 className="font-ui-xs text-[10px] uppercase font-bold tracking-widest">Total Available</h3>
           </div>
           <p className="font-mono text-2xl font-bold text-on-surface">₹ 2,45,600.00</p>

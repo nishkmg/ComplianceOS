@@ -23,41 +23,41 @@ export declare const CreateGSTChallanInputSchema: z.ZodObject<{
         interest: z.ZodOptional<z.ZodString>;
         penalty: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        igst?: string | undefined;
-        cgst?: string | undefined;
-        sgst?: string | undefined;
-        cess?: string | undefined;
-        interest?: string | undefined;
-        penalty?: string | undefined;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }, {
-        igst?: string | undefined;
-        cgst?: string | undefined;
-        sgst?: string | undefined;
-        cess?: string | undefined;
-        interest?: string | undefined;
-        penalty?: string | undefined;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
-    periodMonth: number;
-    periodYear: number;
-    taxAmounts: {
-        igst?: string | undefined;
-        cgst?: string | undefined;
-        sgst?: string | undefined;
-        cess?: string | undefined;
-        interest?: string | undefined;
-        penalty?: string | undefined;
+    periodMonth?: number;
+    periodYear?: number;
+    taxAmounts?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
 }, {
-    periodMonth: number;
-    periodYear: number;
-    taxAmounts: {
-        igst?: string | undefined;
-        cgst?: string | undefined;
-        sgst?: string | undefined;
-        cess?: string | undefined;
-        interest?: string | undefined;
-        penalty?: string | undefined;
+    periodMonth?: number;
+    periodYear?: number;
+    taxAmounts?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
 }>;
 export type CreateGSTChallanInput = z.infer<typeof CreateGSTChallanInputSchema>;
@@ -65,11 +65,11 @@ export declare const PayGSTInputSchema: z.ZodObject<{
     challanId: z.ZodString;
     paymentMode: z.ZodEnum<["NEFT", "RTGS", "UPI", "Credit Card", "Debit Card", "Over the Counter"]>;
 }, "strip", z.ZodTypeAny, {
-    challanId: string;
-    paymentMode: "NEFT" | "RTGS" | "UPI" | "Credit Card" | "Debit Card" | "Over the Counter";
+    challanId?: string;
+    paymentMode?: "NEFT" | "RTGS" | "UPI" | "Credit Card" | "Debit Card" | "Over the Counter";
 }, {
-    challanId: string;
-    paymentMode: "NEFT" | "RTGS" | "UPI" | "Credit Card" | "Debit Card" | "Over the Counter";
+    challanId?: string;
+    paymentMode?: "NEFT" | "RTGS" | "UPI" | "Credit Card" | "Debit Card" | "Over the Counter";
 }>;
 export type PayGSTInput = z.infer<typeof PayGSTInputSchema>;
 export declare const UtilizeITCInputSchema: z.ZodObject<{
@@ -78,15 +78,15 @@ export declare const UtilizeITCInputSchema: z.ZodObject<{
     taxType: z.ZodNativeEnum<typeof GSTTaxType>;
     utilizationOrder: z.ZodOptional<z.ZodArray<z.ZodNativeEnum<typeof GSTTaxType>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    periodMonth: number;
-    periodYear: number;
-    taxType: GSTTaxType;
-    utilizationOrder?: GSTTaxType[] | undefined;
+    taxType?: GSTTaxType;
+    periodMonth?: number;
+    periodYear?: number;
+    utilizationOrder?: GSTTaxType[];
 }, {
-    periodMonth: number;
-    periodYear: number;
-    taxType: GSTTaxType;
-    utilizationOrder?: GSTTaxType[] | undefined;
+    taxType?: GSTTaxType;
+    periodMonth?: number;
+    periodYear?: number;
+    utilizationOrder?: GSTTaxType[];
 }>;
 export type UtilizeITCInput = z.infer<typeof UtilizeITCInputSchema>;
 export declare const GSTLedgerBalanceSchema: z.ZodObject<{
@@ -96,15 +96,15 @@ export declare const GSTLedgerBalanceSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }>;
     itcBalance: z.ZodObject<{
         igst: z.ZodString;
@@ -112,15 +112,15 @@ export declare const GSTLedgerBalanceSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }>;
     liabilityBalance: z.ZodObject<{
         igst: z.ZodString;
@@ -130,65 +130,65 @@ export declare const GSTLedgerBalanceSchema: z.ZodObject<{
         interest: z.ZodString;
         penalty: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }>;
     asOfDate: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    cashBalance: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    cashBalance?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    itcBalance: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    itcBalance?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    liabilityBalance: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+    liabilityBalance?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
-    asOfDate: Date;
+    asOfDate?: Date;
 }, {
-    cashBalance: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    cashBalance?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    itcBalance: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    itcBalance?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
-    liabilityBalance: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+    liabilityBalance?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
-    asOfDate: Date;
+    asOfDate?: Date;
 }>;
 export type GSTLedgerBalance = z.infer<typeof GSTLedgerBalanceSchema>;
 export declare const GSTChallanOutputSchema: z.ZodObject<{
@@ -199,19 +199,19 @@ export declare const GSTChallanOutputSchema: z.ZodObject<{
     validUntil: z.ZodDate;
     status: z.ZodEnum<["generated", "paid", "expired"]>;
 }, "strip", z.ZodTypeAny, {
-    status: "generated" | "paid" | "expired";
-    amount: string;
-    generatedAt: Date;
-    challanNumber: string;
-    validUntil: Date;
-    cin?: string | undefined;
+    status?: "paid" | "generated" | "expired";
+    amount?: string;
+    generatedAt?: Date;
+    challanNumber?: string;
+    cin?: string;
+    validUntil?: Date;
 }, {
-    status: "generated" | "paid" | "expired";
-    amount: string;
-    generatedAt: Date;
-    challanNumber: string;
-    validUntil: Date;
-    cin?: string | undefined;
+    status?: "paid" | "generated" | "expired";
+    amount?: string;
+    generatedAt?: Date;
+    challanNumber?: string;
+    cin?: string;
+    validUntil?: Date;
 }>;
 export type GSTChallanOutput = z.infer<typeof GSTChallanOutputSchema>;
 export declare const ITCUtilizationResultSchema: z.ZodObject<{
@@ -220,26 +220,26 @@ export declare const ITCUtilizationResultSchema: z.ZodObject<{
         cgst: z.ZodString;
         sgst: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }>;
     remaining: z.ZodObject<{
         igst: z.ZodString;
         cgst: z.ZodString;
         sgst: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }>;
     cashRequired: z.ZodObject<{
         igst: z.ZodString;
@@ -247,49 +247,49 @@ export declare const ITCUtilizationResultSchema: z.ZodObject<{
         sgst: z.ZodString;
         cess: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
-    utilized: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    utilized?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    remaining: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    remaining?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    cashRequired: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    cashRequired?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
 }, {
-    utilized: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    utilized?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    remaining: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    remaining?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    cashRequired: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
+    cashRequired?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
     };
 }>;
 export type ITCUtilizationResult = z.infer<typeof ITCUtilizationResultSchema>;
@@ -311,55 +311,55 @@ export declare const GSTPaymentMadePayloadSchema: z.ZodObject<{
         interest: z.ZodString;
         penalty: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
-    amount: string;
-    paymentId: string;
-    periodMonth: number;
-    periodYear: number;
-    taxpayerGstin: string;
-    paymentMode: string;
-    challanNumber: string;
-    cin: string;
-    paidAt: Date;
-    taxBreakup: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+    paidAt?: Date;
+    amount?: string;
+    paymentId?: string;
+    challanNumber?: string;
+    periodMonth?: number;
+    periodYear?: number;
+    taxpayerGstin?: string;
+    paymentMode?: string;
+    cin?: string;
+    taxBreakup?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
 }, {
-    amount: string;
-    paymentId: string;
-    periodMonth: number;
-    periodYear: number;
-    taxpayerGstin: string;
-    paymentMode: string;
-    challanNumber: string;
-    cin: string;
-    paidAt: Date;
-    taxBreakup: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+    paidAt?: Date;
+    amount?: string;
+    paymentId?: string;
+    challanNumber?: string;
+    periodMonth?: number;
+    periodYear?: number;
+    taxpayerGstin?: string;
+    paymentMode?: string;
+    cin?: string;
+    taxBreakup?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
 }>;
 export type GSTPaymentMadePayload = z.infer<typeof GSTPaymentMadePayloadSchema>;
@@ -373,60 +373,60 @@ export declare const ITCUtilizedPayloadSchema: z.ZodObject<{
         cgst: z.ZodString;
         sgst: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }>;
     remaining: z.ZodObject<{
         igst: z.ZodString;
         cgst: z.ZodString;
         sgst: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     }>;
     utilizedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    periodMonth: number;
-    periodYear: number;
-    taxpayerGstin: string;
-    utilized: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    periodMonth?: number;
+    periodYear?: number;
+    taxpayerGstin?: string;
+    utilized?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    remaining: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    remaining?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    utilizationId: string;
-    utilizedAt: Date;
+    utilizationId?: string;
+    utilizedAt?: Date;
 }, {
-    periodMonth: number;
-    periodYear: number;
-    taxpayerGstin: string;
-    utilized: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    periodMonth?: number;
+    periodYear?: number;
+    taxpayerGstin?: string;
+    utilized?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    remaining: {
-        igst: string;
-        cgst: string;
-        sgst: string;
+    remaining?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
     };
-    utilizationId: string;
-    utilizedAt: Date;
+    utilizationId?: string;
+    utilizedAt?: Date;
 }>;
 export type ITCUtilizedPayload = z.infer<typeof ITCUtilizedPayloadSchema>;
 export declare const GSTChallanCreatedPayloadSchema: z.ZodObject<{
@@ -444,55 +444,55 @@ export declare const GSTChallanCreatedPayloadSchema: z.ZodObject<{
         interest: z.ZodString;
         penalty: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }, {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     }>;
     validUntil: z.ZodDate;
     createdAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    createdAt: Date;
-    totalAmount: string;
-    periodMonth: number;
-    periodYear: number;
-    taxpayerGstin: string;
-    challanId: string;
-    challanNumber: string;
-    validUntil: Date;
-    taxBreakup: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+    createdAt?: Date;
+    totalAmount?: string;
+    challanNumber?: string;
+    periodMonth?: number;
+    periodYear?: number;
+    taxpayerGstin?: string;
+    challanId?: string;
+    validUntil?: Date;
+    taxBreakup?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
 }, {
-    createdAt: Date;
-    totalAmount: string;
-    periodMonth: number;
-    periodYear: number;
-    taxpayerGstin: string;
-    challanId: string;
-    challanNumber: string;
-    validUntil: Date;
-    taxBreakup: {
-        igst: string;
-        cgst: string;
-        sgst: string;
-        cess: string;
-        interest: string;
-        penalty: string;
+    createdAt?: Date;
+    totalAmount?: string;
+    challanNumber?: string;
+    periodMonth?: number;
+    periodYear?: number;
+    taxpayerGstin?: string;
+    challanId?: string;
+    validUntil?: Date;
+    taxBreakup?: {
+        igst?: string;
+        cgst?: string;
+        sgst?: string;
+        cess?: string;
+        interest?: string;
+        penalty?: string;
     };
 }>;
 export type GSTChallanCreatedPayload = z.infer<typeof GSTChallanCreatedPayloadSchema>;

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -32,7 +32,7 @@ export default function GSTCashLedgerPage() {
             <button className="px-4 py-1.5 font-ui-sm text-xs text-text-mid hover:text-on-surface transition-colors cursor-pointer border-none bg-transparent font-bold">Oct 2024</button>
             <div className="w-[1px] h-4 bg-border-subtle"></div>
             <button className="px-3 py-1.5 flex items-center text-text-mid hover:text-on-surface border-none bg-transparent cursor-pointer">
-              <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+              <Icon name="calendar_month" className="text-[18px]" />
             </button>
           </div>
         </div>

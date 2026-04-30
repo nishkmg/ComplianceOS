@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
+import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
 import Link from 'next/link';
 
@@ -36,7 +36,7 @@ export default function SecurityPage() {
             {features.map((f) => (
               <div key={f.title} className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-10 flex flex-col gap-6 hover:shadow-sm transition-shadow duration-300 text-left">
                 <div className="flex items-center gap-4">
-                  <span className="material-symbols-outlined text-primary-container text-3xl">{f.icon}</span>
+                  <Icon name={f.icon} className="text-primary-container text-3xl" />
                   <h3 className="font-display-lg text-display-lg text-on-surface">{f.title}</h3>
                 </div>
                 <p className="font-ui-md text-ui-md text-text-mid leading-relaxed">{f.desc}</p>

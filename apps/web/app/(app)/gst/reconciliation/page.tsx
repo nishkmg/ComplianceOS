@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -89,7 +89,7 @@ export default function ITCResolutionPage() {
                       <button className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Match Manually</button>
                     ) : (
                       <span className="text-green-700 font-bold uppercase text-[10px] tracking-widest flex items-center gap-1">
-                        <span className="material-symbols-outlined text-sm">check_circle</span> Reconciled
+                        <Icon name="check_circle" className="text-sm" /> Reconciled
                       </span>
                     )}
                   </td>

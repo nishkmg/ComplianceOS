@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { KpiTile, Badge } from "@/components/ui";
 import { formatIndianNumber, formatDateShort } from "@/lib/format";
@@ -53,7 +53,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex gap-3">
           <button className="bg-section-muted border border-border-subtle px-4 py-2 flex items-center gap-2 hover:bg-stone-200 transition-colors cursor-pointer">
-            <span className="material-symbols-outlined text-sm">download</span>
+            <Icon name="download" className="text-sm" />
             <span className="font-ui-xs uppercase tracking-wider">Export PDF</span>
           </button>
           <Link href="/journal/new" className="bg-[#C8860A] text-white px-6 py-2 flex items-center gap-2 hover:bg-amber-700 transition-transform active:scale-95 group no-underline">
@@ -145,29 +145,29 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <button className="w-full bg-stone-800 border border-stone-700 text-stone-100 px-4 py-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[#C8860A]">add_circle</span>
+                  <Icon name="add_circle" className="text-[#C8860A]" />
                   <span className="font-ui-sm">Record New Entry</span>
                 </div>
-                <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-all text-stone-500">chevron_right</span>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
               </button>
               <button className="w-full bg-stone-800 border border-stone-700 text-stone-100 px-4 py-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[#C8860A]">insert_chart</span>
+                  <Icon name="insert_chart" className="text-[#C8860A]" />
                   <span className="font-ui-sm">View P&L Statement</span>
                 </div>
-                <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-all text-stone-500">chevron_right</span>
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
               </button>
             </div>
           </div>
 
           <div className="bg-surface-container border border-border-subtle p-6 overflow-hidden relative group text-left">
             <div className="relative z-10">
-              <span className="material-symbols-outlined text-stone-400 mb-2">security</span>
+              <Icon name="security" className="text-stone-400 mb-2" />
               <h4 className="font-ui-sm font-bold text-stone-900">Audit Readiness</h4>
               <p className="text-ui-xs text-text-mid mt-2 leading-relaxed">All supporting vouchers for the last <span className="font-mono-md">30</span> days have been digitized and linked.</p>
             </div>
             <div className="absolute -right-4 -bottom-4 opacity-10 transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
-              <span className="material-symbols-outlined text-9xl">verified</span>
+              <Icon name="verified" className="text-9xl" />
             </div>
           </div>
         </div>

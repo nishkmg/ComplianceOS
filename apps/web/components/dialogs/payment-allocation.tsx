@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -49,7 +49,7 @@ export function PaymentAllocationDialog({
             <span className="font-mono text-lg text-on-surface font-bold">₹ {formatIndianNumber(totalAmount)}</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="material-symbols-outlined text-text-light">arrow_right_alt</span>
+            <Icon name="arrow_right_alt" className="text-text-light" />
           </div>
           <div className="flex flex-col text-right">
             <span className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest mb-1 font-bold">Unallocated Balance</span>
@@ -61,7 +61,7 @@ export function PaymentAllocationDialog({
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-ui-lg text-md font-bold text-on-surface">Outstanding Invoices</h3>
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-text-light text-sm">filter_list</span>
+              <Icon name="filter_list" className="text-text-light text-sm" />
               <span className="font-ui-sm text-xs text-text-mid uppercase tracking-widest font-bold">Oldest First</span>
             </div>
           </div>
@@ -119,7 +119,7 @@ export function PaymentAllocationDialog({
 
         <DialogFooter className="px-8 py-6 border-t border-border-subtle bg-stone-50 flex flex-row items-center justify-between">
           <button className="font-ui-sm text-xs text-text-mid hover:text-on-surface transition-colors flex items-center gap-2 border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest">
-            <span className="material-symbols-outlined text-sm">auto_fix_high</span>
+            <Icon name="auto_fix_high" className="text-sm" />
             Auto-Allocate (FIFO)
           </button>
           <div className="flex gap-4">
@@ -131,7 +131,7 @@ export function PaymentAllocationDialog({
               className="px-6 py-2 bg-primary-container text-white font-ui-sm text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-colors group border-none cursor-pointer shadow-sm"
             >
               Save Allocation
-              <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </DialogFooter>

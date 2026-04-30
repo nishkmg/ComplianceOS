@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -30,21 +30,21 @@ export default function ITRSelfAssessmentPage() {
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
                   <div className="flex items-center">
-                    <span className="material-symbols-outlined text-text-light mr-2 text-sm">remove</span>
+                    <Icon name="remove" className="text-text-light mr-2 text-sm" />
                     <span className="font-ui-sm text-sm text-text-mid">Less: TDS Credit Claimed</span>
                   </div>
                   <div className="font-mono text-sm text-text-mid">- ₹ 1,20,000</div>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
                   <div className="flex items-center">
-                    <span className="material-symbols-outlined text-text-light mr-2 text-sm">remove</span>
+                    <Icon name="remove" className="text-text-light mr-2 text-sm" />
                     <span className="font-ui-sm text-sm text-text-mid">Less: TCS Credit Claimed</span>
                   </div>
                   <div className="font-mono text-sm text-text-mid">- ₹ 15,000</div>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
                   <div className="flex items-center">
-                    <span className="material-symbols-outlined text-text-light mr-2 text-sm">remove</span>
+                    <Icon name="remove" className="text-text-light mr-2 text-sm" />
                     <span className="font-ui-sm text-sm text-text-mid">Less: Advance Tax Paid</span>
                   </div>
                   <div className="font-mono text-sm text-text-mid">- ₹ 2,00,000</div>
@@ -70,7 +70,7 @@ export default function ITRSelfAssessmentPage() {
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-white border border-border-subtle p-6 rounded-sm">
             <div className="flex items-start gap-3">
-              <span className="material-symbols-outlined text-amber-700 mt-1">info</span>
+              <Icon name="info" className="text-amber-700 mt-1" />
               <div>
                 <h4 className="font-ui-md font-bold text-on-surface mb-2">Payment Required</h4>
                 <p className="font-ui-sm text-sm text-on-surface-variant leading-relaxed">

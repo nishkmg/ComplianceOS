@@ -1,9 +1,9 @@
-// @ts-nocheck
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { Icon } from '@/components/ui/icon';
 
 export default function PayrollSuccessPage() {
   const router = useRouter();
@@ -14,9 +14,7 @@ export default function PayrollSuccessPage() {
       <main className="w-full max-w-xl">
         <div className="bg-white border-[0.5px] border-border-subtle border-t-2 border-t-primary-container p-8 md:p-12 flex flex-col gap-8 shadow-sm">
           <div className="flex flex-col items-center text-center gap-4">
-            <span className="material-symbols-outlined text-[56px] text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-              check_circle
-            </span>
+            <Icon name="check_circle" className="text-[56px] text-primary-container" />
             <div className="space-y-3">
               <h1 className="font-display-xl text-display-xl text-on-surface tracking-tight">Payroll Processed</h1>
               <p className="font-ui-md text-ui-md text-text-mid max-w-md mx-auto leading-relaxed">
@@ -42,7 +40,7 @@ export default function PayrollSuccessPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <Link href="/payroll" className="flex-1 bg-primary-container text-white py-3 px-6 font-ui-sm text-sm font-bold uppercase tracking-widest transition-all no-underline rounded-sm shadow-sm text-center inline-flex items-center justify-center gap-2">
-              Back to Payroll <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              Back to Payroll <Icon name="arrow_forward" className="text-sm" />
             </Link>
             <Link href="/payroll/process" className="flex-1 bg-transparent border border-border-subtle text-on-surface py-3 px-6 font-ui-sm text-sm transition-colors no-underline rounded-sm text-center font-bold uppercase tracking-widest">
               View Payroll Detail

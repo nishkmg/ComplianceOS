@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import Link from 'next/link';
 
 export function MobileNav() {
@@ -14,7 +14,7 @@ export function MobileNav() {
         className="md:hidden p-2 text-stone-600 border-none bg-transparent cursor-pointer"
         aria-label="Open navigation"
       >
-        <span className="material-symbols-outlined">menu</span>
+        <Icon name="menu" />
       </button>
 
       {isOpen && (
@@ -23,7 +23,7 @@ export function MobileNav() {
             <div className="flex justify-between items-center w-full mb-16">
               <span className="font-marketing-xl text-[28px] text-white tracking-tighter font-bold">ComplianceOS</span>
               <button onClick={() => setIsOpen(false)} className="text-white hover:text-stone-400 transition-colors border-none bg-transparent cursor-pointer">
-                <span className="material-symbols-outlined text-3xl">close</span>
+                <Icon name="close" className="text-3xl" />
               </button>
             </div>
             <nav className="flex flex-col space-y-8 w-full max-w-sm mx-auto">
@@ -40,7 +40,7 @@ export function MobileNav() {
                   className="font-display-lg text-[20px] text-white hover:text-primary-container transition-colors border-b border-stone-800 pb-4 flex justify-between items-center group no-underline"
                 >
                   {item.label}
-                  <span className="material-symbols-outlined text-stone-600 group-hover:text-primary-container transition-colors">arrow_forward</span>
+                  <Icon name="arrow_forward" className="text-stone-600 group-hover:text-primary-container transition-colors" />
                 </Link>
               ))}
             </nav>

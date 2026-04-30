@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -57,7 +57,7 @@ export function AmendGstReturnDialog({
               <span className="font-mono text-[12px] text-text-mid">return_payload.json</span>
               <div className="flex gap-2">
                 <button className="text-text-mid hover:text-primary transition-colors border-none bg-transparent cursor-pointer">
-                  <span className="material-symbols-outlined text-[16px]">content_copy</span>
+                  <Icon name="content_copy" className="text-[16px]" />
                 </button>
               </div>
             </div>
@@ -73,7 +73,7 @@ export function AmendGstReturnDialog({
           {error && (
             <div className="mt-4 p-4 border border-red-100 bg-red-50 rounded-sm">
               <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-red-600 text-sm">error</span>
+                <Icon name="error" className="text-red-600 text-sm" />
                 <p className="font-ui-xs text-[12px] text-red-800 leading-relaxed">{error}</p>
               </div>
             </div>
@@ -86,7 +86,7 @@ export function AmendGstReturnDialog({
             onClick={handleUpdate}
             className="bg-primary-container text-white px-8 py-3 font-ui-sm text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-primary transition-all border-none shadow-sm cursor-pointer flex items-center gap-2"
           >
-            Update Return <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            Update Return <Icon name="arrow_forward" className="text-sm" />
           </button>
         </DialogFooter>
       </DialogContent>

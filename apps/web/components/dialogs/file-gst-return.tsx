@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -50,7 +50,7 @@ export function FileGstReturnDialog({
                 onChange={(e) => setArn(e.target.value.toUpperCase())}
                 maxLength={15}
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light">numbers</span>
+              <Icon name="numbers" className="absolute right-3 top-1/2 -translate-y-1/2 text-text-light" />
             </div>
             <p className="font-ui-xs text-[11px] text-text-light mt-1 italic">Found on your GST portal acknowledgement receipt.</p>
           </div>
@@ -66,7 +66,7 @@ export function FileGstReturnDialog({
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-light pointer-events-none">calendar_today</span>
+              <Icon name="calendar_today" className="absolute right-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@ export function FileGstReturnDialog({
             className="bg-primary-container text-white font-ui-sm text-sm px-6 py-3 flex items-center gap-2 rounded-sm hover:bg-primary transition-opacity shadow-sm group border-none cursor-pointer"
           >
             <span>Commit to Ledger</span>
-            <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
           </button>
         </DialogFooter>
       </DialogContent>

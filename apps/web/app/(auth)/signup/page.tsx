@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -106,7 +106,7 @@ export default function SignupPage() {
             <div className="pt-4">
               <button className="group w-full flex items-center justify-center gap-2 bg-primary-container border-[0.5px] border-primary-container px-6 py-3 font-ui-sm text-ui-sm text-white hover:bg-[#825500] hover:border-[#825500] transition-all duration-300 cursor-pointer" type="submit">
                 Continue to Firm Details
-                <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-300">arrow_forward</span>
+                <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-300" />
               </button>
             </div>
           </form>

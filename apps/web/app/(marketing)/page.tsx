@@ -1,10 +1,10 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
+import { Icon } from '@/components/ui/icon';
 
 export default function HomePage() {
   const [demoTab, setDemoTab] = useState('Dashboard');
@@ -17,7 +17,7 @@ export default function HomePage() {
     { icon: 'event_available', title: 'FY closes', desc: 'Seamless financial year transition with zero data loss or duplication.' },
   ];
 
-  const modules = [
+  const modules: Array<{ title: string; desc: string; points: string[]; image: string; alt: string; cta?: { label: string; href: string }; reverse?: boolean }> = [
     {
       title: 'Accounting & Ledger Management',
       desc: 'Maintain a crystal clear audit trail. From journal entries to ledger balancing, ComplianceOS ensures every rupee is accounted for with physical-ledger accuracy.',
@@ -125,7 +125,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {benefits.map((b) => (
               <div key={b.title} className="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-[#C8860A] shadow-card transition-all hover:shadow-lg group rounded-none">
-                <span className="material-symbols-outlined text-primary mb-6 block group-hover:scale-110 transition-transform" style={{ fontSize: '32px' }}>{b.icon}</span>
+                <Icon name={b.icon} className="text-primary mb-6 block group-hover:scale-110 transition-transform" size={32} />
                 <h3 className="font-ui text-ui-lg font-bold mb-4 text-dark">{b.title}</h3>
                 <p className="font-ui text-ui-sm text-secondary leading-relaxed">{b.desc}</p>
               </div>
@@ -164,7 +164,7 @@ export default function HomePage() {
                 />
               </div>
               <div className="absolute -right-12 top-1/4 bg-[#C8860A] p-6 hidden xl:block shadow-2xl">
-                <span className="material-symbols-outlined text-white text-4xl block mb-2">lock_reset</span>
+                <Icon name="lock_reset" className="text-white text-4xl block mb-2" />
                 <p className="text-white font-ui-xs mt-2 uppercase tracking-widest font-bold">Bank-grade Security</p>
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
                     <ul className="space-y-4 list-none p-0 m-0">
                       {m.points.map((p) => (
                         <li key={p} className="flex items-center gap-3 font-ui text-ui-sm text-secondary">
-                          <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+                          <Icon name="check_circle" className="text-primary text-sm" />
                           {p}
                         </li>
                       ))}
@@ -231,7 +231,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
               {testimonials.map((t) => (
                 <div key={t.author} className="bg-white p-12 border-[0.5px] border-border-subtle relative group hover:border-[#C8860A] transition-all rounded-none">
-                  <span className="material-symbols-outlined text-[#C8860A] text-6xl opacity-20 absolute top-8 left-8 select-none">format_quote</span>
+                  <Icon name="format_quote" className="text-[#C8860A] text-6xl opacity-20 absolute top-8 left-8 select-none" />
                   <p className="text-ui-lg italic font-display text-on-surface mb-8 relative z-10 leading-relaxed font-normal" style={{ fontSize: '26px' }}>
                     "{t.quote}"
                   </p>

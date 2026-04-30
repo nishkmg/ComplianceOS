@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useParams } from "next/navigation";
@@ -10,7 +9,7 @@ export default function ITRGSTR3BPage() {
   const returnId = params.returnId as string;
   const financialYear = params.financialYear as string;
 
-  const { data: itrReturn } = api.itrReturns.get.useQuery({ itrReturnId: returnId });
+  const { data: itrReturn }: any = api.itrReturns.get.useQuery({ itrReturnId: returnId });
 
   if (!itrReturn) {
     return (

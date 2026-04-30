@@ -10,7 +10,7 @@ export const CreateJournalEntryInputSchema = z.object({
     accountId: z.string().uuid(),
     debit: amountString(),
     credit: amountString(),
-    description,
+    description: description(),
   })).min(2),
 }).refine(
   (data) => {
@@ -44,7 +44,7 @@ export const ModifyJournalEntryInputSchema = z.object({
     accountId: z.string().uuid(),
     debit: amountString(),
     credit: amountString(),
-    description,
+    description: description(),
   })).min(2).optional(),
 }).refine(
   (data) => {

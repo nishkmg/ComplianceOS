@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
@@ -10,7 +10,7 @@ export default function EmployeesPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const { data: employees, isLoading } = api.employees.list.useQuery({
+  const { data: employees, isLoading }: any = api.employees.list.useQuery({
     status: statusFilter !== "all" ? (statusFilter as any) : undefined,
     search: search || undefined,
   });
@@ -28,11 +28,11 @@ export default function EmployeesPage() {
           </div>
           <div className="flex items-center gap-4">
             <button className="px-5 py-2.5 border-[0.5px] border-on-surface text-on-surface bg-white hover:bg-stone-50 rounded font-ui-sm text-xs transition-colors flex items-center gap-2 cursor-pointer">
-              <span className="material-symbols-outlined text-lg">download</span>
+              <Icon name="download" className="text-lg" />
               Export PDF/Excel
             </button>
             <Link href="/employees/new" className="px-5 py-2.5 bg-primary-container text-white rounded font-ui-sm text-xs hover:bg-primary transition-colors flex items-center gap-2 no-underline shadow-sm">
-              <span className="material-symbols-outlined text-lg">person_add</span>
+              <Icon name="person_add" className="text-lg" />
               Add New Employee
             </Link>
           </div>
@@ -56,7 +56,7 @@ export default function EmployeesPage() {
         </div>
         <div className="flex items-center gap-3 w-full lg:w-auto">
           <div className="relative flex-1 lg:w-72">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg" />
             <input
               className="w-full pl-10 pr-4 py-2 bg-stone-50 border-[0.5px] border-border-subtle rounded font-ui-sm text-xs focus:ring-1 focus:ring-amber-600/20 outline-none"
               placeholder="Filter by Name, ID or PAN..."
@@ -65,7 +65,7 @@ export default function EmployeesPage() {
             />
           </div>
           <button className="p-2 border-[0.5px] border-border-subtle rounded text-stone-500 hover:bg-stone-50 transition-colors cursor-pointer bg-white">
-            <span className="material-symbols-outlined text-lg">filter_list</span>
+            <Icon name="filter_list" className="text-lg" />
           </button>
         </div>
       </div>
@@ -108,7 +108,7 @@ export default function EmployeesPage() {
                   </td>
                   <td className="py-4 px-6 text-right">
                     <button className="text-stone-400 hover:text-stone-600 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer border-none bg-transparent">
-                      <span className="material-symbols-outlined text-lg">more_vert</span>
+                      <Icon name="more_vert" className="text-lg" />
                     </button>
                   </td>
                 </tr>

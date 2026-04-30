@@ -1,9 +1,9 @@
-// @ts-nocheck
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
@@ -52,9 +52,7 @@ export function AppSidebar() {
                   : 'text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 rounded-r'
               }`}
             >
-              <span className={`material-symbols-outlined text-lg ${isActive ? 'text-[#C8860A]' : ''}`}>
-                {item.icon}
-              </span>
+              <Icon name={item.icon} className={`text-lg ${isActive ? 'text-primary-container' : ''}`} />
               <span>{item.label}</span>
             </Link>
           );
@@ -108,7 +106,7 @@ export function AppSidebar() {
                   </div>
                 </div>
                 {activeFy === fy.name.split(" ")[1] && (
-                  <span className="material-symbols-outlined text-primary-container text-[20px] opacity-100">check</span>
+                  <Icon name="check" className="text-primary-container text-[20px] opacity-100" />
                 )}
               </button>
             ))}
@@ -121,11 +119,11 @@ export function AppSidebar() {
           href="/support"
           className="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r no-underline"
         >
-          <span className="material-symbols-outlined text-lg">contact_support</span>
+          <Icon name="contact_support" className="text-lg" />
           <span>Support</span>
         </Link>
         <button className="w-full text-[#ba1a1a] hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r border-none bg-transparent cursor-pointer">
-          <span className="material-symbols-outlined text-lg">logout</span>
+          <Icon name="logout" className="text-lg" />
           <span className="text-[13px]">Sign Out</span>
         </button>
       </div>

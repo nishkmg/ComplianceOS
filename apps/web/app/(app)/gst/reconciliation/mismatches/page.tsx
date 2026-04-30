@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -38,7 +37,7 @@ export default function GSTMismatchesPage() {
   const [periodMonth, setPeriodMonth] = useState<number>(4);
   const [periodYear, setPeriodYear] = useState<number>(2026);
 
-  const { data: mismatches, isLoading } = api.gstReconciliation.mismatches.useQuery({
+  const { data: mismatches, isLoading }: any = api.gstReconciliation.mismatches.useQuery({
     periodMonth,
     periodYear,
   });

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { formatIndianNumber } from "@/lib/format";
+import { Icon } from '@/components/ui/icon';
 
 export default function TeamSalaryPreviewPage() {
   return (
@@ -13,7 +13,7 @@ export default function TeamSalaryPreviewPage() {
           <p className="font-ui-sm text-sm text-text-mid mt-2">Review individual employee compensation details for October 2023 before final authorization.</p>
         </div>
         <button className="bg-primary-container text-white px-6 py-3 rounded-sm flex items-center gap-2 hover:bg-primary cursor-pointer border-none shadow-sm text-xs font-bold uppercase tracking-widest">
-          Authorize Payroll <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          Authorize Payroll <Icon name="arrow_forward" className="text-sm" />
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 border border-border-subtle bg-white rounded-sm overflow-hidden shadow-sm mb-8">

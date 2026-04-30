@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -33,7 +33,7 @@ export default function CustomerDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-6">
         <Link className="hover:text-primary transition-colors no-underline" href="/receivables">Receivables</Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon name="chevron_right" className="text-[14px]" />
         <span className="text-on-surface">{mockCustomer.name}</span>
       </div>
 
@@ -48,10 +48,10 @@ export default function CustomerDetailPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">edit</span> Edit Details
+            <Icon name="edit" className="text-[18px]" /> Edit Details
           </button>
           <button className="px-5 py-2 bg-primary-container text-white font-ui-sm text-xs rounded-sm hover:bg-primary transition-colors flex items-center gap-2 cursor-pointer border-none shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">add</span> Record Payment
+            <Icon name="add" className="text-[18px]" /> Record Payment
           </button>
         </div>
       </div>

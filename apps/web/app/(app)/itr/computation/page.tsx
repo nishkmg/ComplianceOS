@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -26,7 +26,7 @@ export default function ITRComputationPage() {
         <div className="flex gap-3">
           <button className="border border-stone-300 text-stone-700 px-6 py-2 rounded-sm text-sm font-medium hover:bg-stone-50 transition-colors cursor-pointer bg-white shadow-sm">Save Draft</button>
           <button className="bg-[#C8860A] text-white px-6 py-2 rounded-sm text-sm font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 cursor-pointer border-none font-bold uppercase tracking-widest">
-            Finalize Return <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            Finalize Return <Icon name="arrow_forward" className="text-sm" />
           </button>
         </div>
       </div>

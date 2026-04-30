@@ -1,5 +1,5 @@
-// @ts-nocheck
 "use client";
+import { Icon } from '@/components/ui/icon';
 
 const products = [
   { sku: "RM-045", name: "Polyester Resin", batch: "BATCH-2401", qty: 500, unit: "kg", expiry: "15 Jun 2025", days: 48, status: "expiring" },
@@ -14,7 +14,7 @@ export default function InventoryExpiryPage() {
         <div className="flex items-center gap-4">
           <select className="border border-border-subtle rounded-sm py-1.5 px-3 text-xs bg-stone-50"><option>30 Days</option><option>60 Days</option></select>
           <button className="bg-primary-container text-white px-4 py-1.5 rounded-sm flex items-center gap-2 hover:bg-primary cursor-pointer border-none shadow-sm text-xs font-bold uppercase tracking-widest">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export CSV
+            <Icon name="download" className="text-[18px]" /> Export CSV
           </button>
         </div>
       </header>

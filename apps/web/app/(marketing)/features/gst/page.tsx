@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
@@ -59,7 +59,7 @@ export default function GSTFeaturePage() {
               </div>
               <div className={`bg-section-muted border-[0.5px] border-border-subtle p-8 ${m.reversed ? 'lg:order-1' : ''}`}>
                 <div className="aspect-[4/3] bg-white border border-border-subtle flex items-center justify-center">
-                  <span className="material-symbols-outlined text-6xl text-text-light/30">{m.icon}</span>
+                  <Icon name={m.icon} className="text-6xl text-text-light/30" />
                 </div>
               </div>
             </div>
@@ -77,7 +77,7 @@ export default function GSTFeaturePage() {
                 { icon: "summarize", title: "3B with Drill-down", desc: "Every line in your GSTR-3B can be traced back to the source invoice or journal entry." },
               ].map((f) => (
                 <div key={f.title} className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm border-t-2 border-t-primary-container text-left">
-                  <span className="material-symbols-outlined text-primary-container text-3xl mb-4 block">{f.icon}</span>
+                  <Icon name={f.icon} className="text-primary-container text-3xl mb-4 block" />
                   <h3 className="font-ui-lg font-bold text-on-surface mb-3">{f.title}</h3>
                   <p className="font-ui-sm text-sm text-text-mid leading-relaxed">{f.desc}</p>
                 </div>

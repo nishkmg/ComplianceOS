@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
@@ -11,14 +11,16 @@ export default function PayrollRunDetailPage() {
   const params = useParams();
   const router = useRouter();
   const runId = params.id as string;
-  const { data: runData, isLoading, refetch } = api.payroll.get.useQuery(runId);
+  const { data: runData, isLoading, refetch }: any = api.payroll.get.useQuery(runId);
 
   if (isLoading) return <div className="p-12 text-center text-light">Loading payroll details...</div>;
   if (!runData?.run) return <div className="p-12 text-center text-light">Payroll run not found.</div>;
 
   const run = runData.run;
   const lines = runData.lines ?? [];
+// @ts-ignore
   const totalGross = lines.reduce((sum, line) => sum + parseFloat(line.grossSalary || "0"), 0);
+// @ts-ignore
   const totalNet = lines.reduce((sum, line) => sum + parseFloat(line.netSalary || "0"), 0);
   const totalDeductions = totalGross - totalNet;
 
@@ -27,7 +29,7 @@ export default function PayrollRunDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-8">
         <Link className="hover:text-primary transition-colors no-underline" href="/payroll">Payroll Ledger</Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon name="chevron_right" className="text-[14px]" />
         <span className="text-on-surface">Payroll Detail</span>
       </div>
 
@@ -37,18 +39,18 @@ export default function PayrollRunDetailPage() {
           <h1 className="font-display-xl text-display-xl text-on-surface mb-4 font-bold">Payroll Detail</h1>
           <div className="flex items-center gap-6 font-ui-sm text-sm text-text-mid">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[16px]">calendar_month</span>
+              <Icon name="calendar_month" className="text-[16px]" />
               <span>{run.month} {run.year}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[16px]">groups</span>
+              <Icon name="groups" className="text-[16px]" />
               <span>{lines.length} Employees</span>
             </div>
           </div>
         </div>
         <div className="flex gap-4">
           <button className="px-6 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">print</span> Print Statement
+            <Icon name="print" className="text-[18px]" /> Print Statement
           </button>
           <button className="px-6 py-2 bg-primary-container text-white font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2 border-none shadow-sm cursor-pointer rounded-sm">
             Finalize & Disburse
@@ -93,7 +95,7 @@ export default function PayrollRunDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
-              {lines.map((line) => (
+              {(lines as any[]).map((line: any) => (
                 <tr key={line.id} className="hover:bg-section-muted/30 transition-colors">
                   <td className="py-5 px-6 text-left">
                     <div className="font-ui-sm font-bold text-on-surface text-sm">{line.employeeName}</div>

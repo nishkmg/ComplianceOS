@@ -1,14 +1,14 @@
-// @ts-nocheck
 "use client";
 
 import Link from "next/link";
+import { Icon } from '@/components/ui/icon';
 
 export default function NotFoundPage() {
   return (
     <div className="bg-page-bg text-on-surface min-h-screen flex flex-col items-center justify-center font-ui-md antialiased p-6">
       <main className="w-full max-w-2xl mx-auto text-center flex flex-col items-center justify-center space-y-12">
         <div className="space-y-6">
-          <span className="material-symbols-outlined text-6xl text-text-light/50">search_off</span>
+          <Icon name="search_off" className="text-6xl text-text-light/50" />
           <h1 className="font-marketing-hero text-marketing-hero text-on-surface">404 — Page not found</h1>
           <p className="font-ui-lg text-lg text-text-mid max-w-lg mx-auto leading-relaxed">
             The ledger entry you are looking for might have been moved or archived. Please check the URL or return to your main dashboard.

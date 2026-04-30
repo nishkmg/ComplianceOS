@@ -1,7 +1,7 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState, useMemo } from "react";
+import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
@@ -25,11 +25,11 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
 
-  const { data: accounts } = api.accounts.list.useQuery(undefined, {
+  const { data: accounts }: any = api.accounts.list.useQuery(undefined, {
     enabled: mode === "migration",
   });
 
-  const setupOpeningBalances = api.onboarding.setupOpeningBalances.useMutation({
+  const setupOpeningBalances: any = api.onboarding.setupOpeningBalances.useMutation({
     onSuccess: () => {
       showToast.success('Opening balances initialized');
       onComplete();
@@ -42,6 +42,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   const totals = useMemo(() => {
     let dr = 0;
     let cr = 0;
+// @ts-ignore
     Object.values(balances).forEach(b => {
       dr += b.debit;
       cr += b.credit;
@@ -61,6 +62,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
         showToast.error('Trial balance must be equal. Please ensure debits match credits.');
         return;
       }
+// @ts-ignore
       const data = Object.entries(balances).map(([id, b]) => ({
         accountId: id,
         openingBalance: b.debit > 0 ? b.debit : -b.credit
@@ -94,7 +96,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
         >
           <div className="flex items-start gap-4">
             <div className={`w-5 h-5 rounded-sm border flex items-center justify-center mt-1 transition-colors ${mode === 'fresh_start' ? 'bg-amber border-amber' : 'border-stone-300'}`}>
-              {mode === 'fresh_start' && <span className="material-symbols-outlined text-white text-[16px]">check</span>}
+              {mode === 'fresh_start' && <Icon name="check" className="text-white text-[16px]" />}
             </div>
             <div className="flex flex-col">
               <span className={`font-ui-lg text-lg font-bold ${mode === 'fresh_start' ? 'text-primary' : 'text-on-surface'}`}>Fresh Start</span>
@@ -110,7 +112,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
         >
           <div className="flex items-start gap-4">
             <div className={`w-5 h-5 rounded-sm border flex items-center justify-center mt-1 transition-colors ${mode === 'migration' ? 'bg-amber border-amber' : 'border-stone-300'}`}>
-              {mode === 'migration' && <span className="material-symbols-outlined text-white text-[16px]">check</span>}
+              {mode === 'migration' && <Icon name="check" className="text-white text-[16px]" />}
             </div>
             <div className="flex flex-col">
               <span className={`font-ui-lg text-lg font-bold ${mode === 'migration' ? 'text-primary' : 'text-on-surface'}`}>Balance Migration</span>
@@ -132,7 +134,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
                 </tr>
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
-                {accounts.filter(a => a.isLeaf).map((a) => (
+                {(accounts as any[]).filter((a: any) => a.isLeaf).map((a: any, idx: number) => (
                   <tr key={a.id} className="hover:bg-stone-50 transition-colors">
                     <td className="py-4 px-6">
                       <div className="font-ui-sm font-bold text-on-surface">{a.name}</div>
@@ -177,7 +179,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
 
           <div className={`p-6 border-[0.5px] rounded-sm flex items-center justify-between ${totals.diff === 0 ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined">{totals.diff === 0 ? 'check_circle' : 'warning'}</span>
+              <Icon name={totals.diff === 0 ? 'check_circle' : 'warning'} />
               <p className="font-ui-sm font-bold uppercase tracking-widest text-xs">
                 {totals.diff === 0 ? 'Trial Balance in Sync' : `Out of Balance: ₹ ${formatIndianNumber(totals.diff)}`}
               </p>
@@ -197,7 +199,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
           className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-30"
         >
           {setupOpeningBalances.isPending ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">rocket_launch</span>
+          <Icon name="rocket_launch" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

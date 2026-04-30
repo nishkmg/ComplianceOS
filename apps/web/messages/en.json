@@ -1,0 +1,45 @@
+{
+  "home": {
+    "title": "The accounting software that thinks in lakhs, not thousands.",
+    "subtitle": "Made for India",
+    "cta": "Get Started Today",
+    "bookDemo": "Book a Demo"
+  },
+  "auth": {
+    "login": {
+      "title": "ComplianceOS",
+      "subtitle": "Secure access to your fiscal ledger.",
+      "email": "Email Address",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "submit": "Access Account",
+      "noAccount": "New to ComplianceOS?",
+      "createAccount": "Create Account",
+      "invalidCredentials": "Invalid email or password"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "journal": "Journal Entries",
+    "accounts": "Chart of Accounts",
+    "invoices": "Invoices",
+    "gst": "GST",
+    "itr": "ITR",
+    "reports": "Reports",
+    "settings": "Settings",
+    "support": "Support",
+    "signOut": "Sign Out"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "export": "Export",
+    "search": "Search...",
+    "loading": "Loading...",
+    "noData": "No data to display",
+    "error": "Something went wrong. Please try again.",
+    "offline": "You are offline. Changes will sync when connected."
+  }
+}

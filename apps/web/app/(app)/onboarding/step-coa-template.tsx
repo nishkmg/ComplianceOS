@@ -1,9 +1,9 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
+import { Icon } from '@/components/ui/icon';
 
 const TEMPLATES = [
   { id: "trading", name: "Trading & Retail", desc: "For wholesale and retail firms managing physical stock. Includes Inventory, COGS, and standard GST tax ledgers.", icon: "shopping_cart", recommended: true },
@@ -22,12 +22,13 @@ interface StepCoaTemplateProps {
 export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) {
   const [selectedTemplate, setSelectedTemplate] = useState("trading");
 
-  const seedCoa = api.onboarding.seedChartOfAccounts.useMutation({
+  // @ts-ignore
+  const seedCoa: any = api.onboarding.seedChartOfAccounts.useMutation({
     onSuccess: () => {
       showToast.success('Chart of accounts initialized');
       onComplete();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       showToast.error(error.message || 'Failed to initialize CoA');
     },
   });
@@ -61,9 +62,7 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
           >
             {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>}
             <div className="flex justify-between items-start mb-6">
-              <span className={`material-symbols-outlined text-3xl ${selectedTemplate === t.id ? "text-[#C8860A]" : "text-stone-300"}`}>
-                {t.icon}
-              </span>
+              <Icon name={t.icon} className={`text-3xl ${selectedTemplate === t.id ? "text-primary-container" : "text-stone-300"}`} />
               {t.recommended && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-900 text-white px-2 py-0.5 rounded-sm">Recommended</span>}
             </div>
             <h3 className="font-display-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
@@ -72,7 +71,7 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
             </p>
             {selectedTemplate === t.id && (
               <div className="mt-6 flex items-center gap-2 text-primary font-ui-xs text-[11px] uppercase tracking-widest font-bold">
-                <span className="material-symbols-outlined text-sm">check_circle</span>
+                <Icon name="check_circle" className="text-sm" />
                 Selection Confirmed
               </div>
             )}
@@ -90,7 +89,7 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
           className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
         >
           {seedCoa.isPending ? "Generating Ledgers..." : "Initialise Ledgers"}
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

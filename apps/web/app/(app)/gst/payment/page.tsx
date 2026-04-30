@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
@@ -27,7 +27,7 @@ export default function GSTPaymentPage() {
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b-[0.5px] border-border-subtle px-8 py-6 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/gst/ledger" className="text-text-mid hover:text-on-surface transition-colors no-underline flex items-center gap-1">
-            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <Icon name="arrow_back" className="text-[18px]" />
             <span className="font-ui-xs text-xs uppercase font-bold">GST Ledger</span>
           </Link>
           <div className="h-6 w-[0.5px] bg-border-subtle"></div>
@@ -49,7 +49,7 @@ export default function GSTPaymentPage() {
                  <option>October 2024 (Q3)</option>
                  <option>September 2024 (Q2)</option>
                </select>
-               <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-light pointer-events-none">expand_more</span>
+               <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
              </div>
            </div>
         </section>

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -15,7 +15,7 @@ export default function FiscalYearDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-12">
         <Link className="hover:text-on-surface transition-colors no-underline flex items-center gap-1" href="/settings/fiscal-years">
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          <Icon name="arrow_back" className="text-[16px]" />
           Fiscal Years
         </Link>
         <span className="text-border-subtle">/</span>
@@ -33,7 +33,7 @@ export default function FiscalYearDetailPage() {
         </div>
         <div className="flex gap-4">
           <button className="flex items-center gap-2 border-[0.5px] border-on-surface px-5 py-2.5 font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-colors cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Export Ledger
           </button>
         </div>
@@ -44,11 +44,11 @@ export default function FiscalYearDetailPage() {
         <div className="bg-white border-[0.5px] border-border-subtle p-8 border-t-2 border-t-primary-container shadow-sm hover:shadow-md transition-shadow text-left">
           <div className="flex justify-between items-start mb-6 text-text-light">
             <span className="font-ui-xs text-[10px] uppercase tracking-widest font-bold">Voucher Count</span>
-            <span className="material-symbols-outlined text-lg">receipt_long</span>
+            <Icon name="receipt_long" className="text-lg" />
           </div>
           <div className="font-mono text-3xl text-on-surface font-bold mb-2">12,483</div>
           <div className="font-ui-sm text-xs text-text-light flex items-center gap-1">
-            <span className="material-symbols-outlined text-[14px] text-green-600">trending_up</span>
+            <Icon name="trending_up" className="text-[14px] text-green-600" />
             <span className="text-green-700 font-bold">+4.2%</span> vs previous year
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function FiscalYearDetailPage() {
         <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm hover:shadow-md transition-shadow text-left">
           <div className="flex justify-between items-start mb-6 text-text-light">
             <span className="font-ui-xs text-[10px] uppercase tracking-widest font-bold">GST Liability</span>
-            <span className="material-symbols-outlined text-lg">gavel</span>
+            <Icon name="gavel" className="text-lg" />
           </div>
           <div className="font-mono text-3xl text-on-surface font-bold mb-2">₹ 8.42L</div>
           <div className="font-ui-sm text-xs text-text-light">
@@ -67,7 +67,7 @@ export default function FiscalYearDetailPage() {
         <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm hover:shadow-md transition-shadow text-left">
           <div className="flex justify-between items-start mb-6 text-text-light">
             <span className="font-ui-xs text-[10px] uppercase tracking-widest font-bold">Last Activity</span>
-            <span className="material-symbols-outlined text-lg">update</span>
+            <Icon name="update" className="text-lg" />
           </div>
           <div className="font-mono text-xl text-on-surface font-bold mb-2 mt-2 leading-relaxed">24 Oct 2024<br/>14:32:01 IST</div>
           <div className="font-ui-sm text-xs text-text-light uppercase tracking-widest font-bold">
@@ -86,7 +86,7 @@ export default function FiscalYearDetailPage() {
             </p>
             <div className="bg-[#fff8f4] border-[0.5px] border-amber/30 p-6 rounded-sm">
                <p className="font-ui-sm text-xs text-amber-900 font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
-                 <span className="material-symbols-outlined text-sm">info</span>
+                 <Icon name="info" className="text-sm" />
                  Closure Requirements
                </p>
                <ul className="space-y-2 list-none p-0">

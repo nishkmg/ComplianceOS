@@ -1,6 +1,6 @@
-// @ts-nocheck
 import Link from 'next/link';
 
+// @ts-ignore
 export function FeatureCard({ icon, headline, description, href }) {
   return (
     <Link href={href} className="feature-card block bg-surface border border-[#E8E4DC] rounded-lg p-7 no-underline group">

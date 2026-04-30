@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import Link from 'next/link';
+import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 import { formatIndianNumber } from '@/lib/format';
@@ -35,7 +35,7 @@ export default function InvoicingPage() {
                 { icon: "gavel", title: "GST Liability Updated", desc: "GSTR-1 ready" },
               ].map((s, i) => (
                 <div key={s.title} className="text-center p-6 border border-dashed border-border-subtle bg-page-bg rounded-sm">
-                  <span className="material-symbols-outlined text-4xl text-primary-container mb-3 block">{s.icon}</span>
+                  <Icon name={s.icon} className="text-4xl text-primary-container mb-3 block" />
                   <h3 className="font-ui-sm font-bold text-on-surface mb-1">{s.title}</h3>
                   <p className="font-ui-xs text-xs text-text-mid">{s.desc}</p>
                 </div>
@@ -58,7 +58,7 @@ export default function InvoicingPage() {
                   { title: "Invoice Sequencing", desc: "Gapless invoice numbering enforced per fiscal year." },
                 ].map((item) => (
                   <li key={item.title} className="flex items-start gap-4">
-                    <span className="material-symbols-outlined text-amber-text" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                    <Icon name="check_circle" className="text-amber-text" />
                     <div>
                       <p className="font-ui-sm font-bold text-on-surface">{item.title}</p>
                       <p className="font-ui-xs text-xs text-text-mid">{item.desc}</p>

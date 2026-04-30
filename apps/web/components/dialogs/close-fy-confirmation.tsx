@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import {
@@ -8,6 +7,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Icon } from '@/components/ui/icon';
 
 interface CloseFiscalYearDialogProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ export function CloseFiscalYearDialog({
       <DialogContent className="max-w-xl p-0 overflow-hidden border border-border-subtle shadow-2xl rounded-sm flex flex-col text-left">
         <div className="h-1 w-full bg-red-600"></div>
         <div className="p-8 border-b-[0.5px] border-border-subtle flex items-start gap-4 bg-stone-50">
-          <span className="material-symbols-outlined text-red-600 text-3xl shrink-0 mt-1" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+          <Icon name="warning" className="text-red-600 text-3xl shrink-0 mt-1" />
           <div className="text-left">
             <DialogTitle className="font-display-lg text-lg font-bold text-on-surface mb-2">Close Fiscal Year — {fiscalYear}</DialogTitle>
             <p className="font-ui-sm text-sm text-text-mid leading-relaxed">Closing a fiscal year is an <span className="font-bold text-on-surface italic underline decoration-red-600/30 decoration-2">irreversible action</span> that freezes all ledger entries for the period.</p>
@@ -39,15 +39,15 @@ export function CloseFiscalYearDialog({
              <h3 className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold mb-4">Finalization Checklist</h3>
              <ul className="space-y-4 font-ui-sm text-[13px] text-on-surface-variant list-none p-0">
                <li className="flex items-start gap-3">
-                 <span className="material-symbols-outlined text-green-600 text-[18px]">check_circle</span>
+                 <Icon name="check_circle" className="text-green-600 text-[18px]" />
                  <span>All 2,481 journal entries have been posted or cleared.</span>
                </li>
                <li className="flex items-start gap-3">
-                 <span className="material-symbols-outlined text-green-600 text-[18px]">check_circle</span>
+                 <Icon name="check_circle" className="text-green-600 text-[18px]" />
                  <span>GSTR-1, 2B, and 3B reconciliations are finalized for all 12 months.</span>
                </li>
                <li className="flex items-start gap-3">
-                 <span className="material-symbols-outlined text-green-600 text-[18px]">check_circle</span>
+                 <Icon name="check_circle" className="text-green-600 text-[18px]" />
                  <span>Inventory valuation (FIFO) has been computed and audited.</span>
                </li>
              </ul>

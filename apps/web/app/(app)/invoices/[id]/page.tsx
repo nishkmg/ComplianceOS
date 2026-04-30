@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
@@ -42,7 +42,7 @@ export default function InvoiceDetailPage() {
       {/* Back Navigation */}
       <div className="w-full max-w-[210mm] mb-6 flex justify-start no-print">
         <Link href="/invoices" className="flex items-center gap-2 font-ui-sm text-ui-sm text-text-light hover:text-on-surface transition-colors no-underline">
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          <Icon name="arrow_back" className="text-[16px]" />
           Back to Invoices
         </Link>
       </div>
@@ -161,20 +161,20 @@ export default function InvoiceDetailPage() {
       {/* Action Buttons */}
       <div className="w-full max-w-[210mm] mt-8 flex justify-end gap-4 mb-16 no-print">
         <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-[#1A1A1A] font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
-          <span className="material-symbols-outlined text-[18px]">edit</span>
+          <Icon name="edit" className="text-[18px]" />
           Edit
         </button>
         <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-[#1A1A1A] font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
-          <span className="material-symbols-outlined text-[18px]">check_circle</span>
+          <Icon name="check_circle" className="text-[18px]" />
           Mark as Paid
         </button>
         <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-[#1A1A1A] font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer" onClick={() => window.print()}>
-          <span className="material-symbols-outlined text-[18px]">download</span>
+          <Icon name="download" className="text-[18px]" />
           Download PDF
         </button>
         <button className="px-6 py-2.5 bg-[#C8860A] text-white font-ui-sm text-xs font-medium hover:bg-amber-700 transition-transform active:scale-95 flex items-center gap-2 group cursor-pointer border-none">
           Send
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </div>

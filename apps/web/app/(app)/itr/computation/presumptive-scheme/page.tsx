@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -19,7 +19,7 @@ export default function ITRPresumptivePage() {
       {/* Page Header */}
       <div className="mb-10 text-left">
         <div className="font-ui-xs text-amber-text uppercase tracking-widest mb-2 flex items-center gap-2 font-bold">
-          <span className="material-symbols-outlined text-[14px]">calculate</span>
+          <Icon name="calculate" className="text-[14px]" />
           Tax Calculation Engine
         </div>
         <h1 className="font-display-xl text-display-xl text-on-surface mb-4">Presumptive Taxation Model</h1>
@@ -44,7 +44,7 @@ export default function ITRPresumptivePage() {
                   >
                     <span className="font-ui-lg text-on-surface font-bold">Section 44AD</span>
                     <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Eligible Business</span>
-                    {section === '44ad' && <span className="material-symbols-outlined absolute top-4 right-4 text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>}
+                    {section === '44ad' && <Icon name="check_circle" className="absolute top-4 right-4 text-primary-container" />}
                   </div>
                   <div 
                     onClick={() => setSection("44ada")}
@@ -52,7 +52,7 @@ export default function ITRPresumptivePage() {
                   >
                     <span className="font-ui-lg text-on-surface font-bold">Section 44ADA</span>
                     <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Specified Profession</span>
-                    {section === '44ada' && <span className="material-symbols-outlined absolute top-4 right-4 text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>}
+                    {section === '44ada' && <Icon name="check_circle" className="absolute top-4 right-4 text-primary-container" />}
                   </div>
                 </div>
               </div>
@@ -110,14 +110,14 @@ export default function ITRPresumptivePage() {
             <div className="mt-auto pt-12">
                <button className="w-full bg-[#C8860A] text-white py-4 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all rounded-sm border-none cursor-pointer flex items-center justify-center gap-2">
                  Apply to Computation
-                 <span className="material-symbols-outlined">arrow_forward</span>
+                 <Icon name="arrow_forward" />
                </button>
             </div>
           </div>
 
           <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm text-left">
              <div className="flex items-start gap-3">
-               <span className="material-symbols-outlined text-primary-container">info</span>
+               <Icon name="info" className="text-primary-container" />
                <div>
                  <h4 className="font-ui-sm font-bold text-on-surface text-xs uppercase tracking-widest mb-1">Audit Applicability</h4>
                  <p className="font-ui-sm text-[13px] text-text-mid leading-relaxed">

@@ -1,7 +1,7 @@
-// @ts-nocheck - tRPC v11 type generation collision workaround
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 import { Badge } from "@/components/ui";
@@ -10,12 +10,12 @@ export default function BalanceSheetPage() {
   const [fiscalYear, setFiscalYear] = useState("2026-27");
   const [asOfDate, setAsOfDate] = useState("2027-03-31");
 
-  const { data: balanceSheet, isLoading } = api.balances.balanceSheet.useQuery({
+  const { data: balanceSheet, isLoading }: any = api.balances.balanceSheet.useQuery({
     fiscalYear,
     asOf: asOfDate,
   });
 
-  const { data: accounts } = api.accounts.list.useQuery();
+  const { data: accounts }: any = api.accounts.list.useQuery();
 
   if (isLoading) {
     return <div className="p-12 text-center text-light">Loading report...</div>;
@@ -58,7 +58,7 @@ export default function BalanceSheetPage() {
             className="border-[0.5px] border-border-subtle px-4 py-2 text-ui-sm outline-none bg-white"
           />
           <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             Export PDF
           </button>
         </div>

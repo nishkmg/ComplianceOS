@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api";
@@ -13,12 +13,14 @@ export default function JournalEntryDetailPage() {
   const params = useParams();
   const entryId = params.id as string;
 
-  const { data: entry, isLoading } = api.journalEntries.get.useQuery({ id: entryId });
+  const { data: entry, isLoading }: any = api.journalEntries.get.useQuery({ id: entryId });
 
   if (isLoading) return <div className="p-12 text-center text-light">Loading entry details...</div>;
   if (!entry) return <div className="p-12 text-center text-light">Entry not found.</div>;
 
+// @ts-ignore
   const totalDebit = entry.lines?.reduce((sum, line) => sum + parseFloat(line.debit || "0"), 0) || 0;
+// @ts-ignore
   const totalCredit = entry.lines?.reduce((sum, line) => sum + parseFloat(line.credit || "0"), 0) || 0;
   const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
 
@@ -27,7 +29,7 @@ export default function JournalEntryDetailPage() {
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-6">
         <Link className="hover:text-primary transition-colors no-underline" href="/journal">General Ledger</Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon name="chevron_right" className="text-[14px]" />
         <span className="text-on-surface">Voucher Detail</span>
       </div>
 
@@ -44,7 +46,7 @@ export default function JournalEntryDetailPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">print</span> Print Voucher
+            <Icon name="print" className="text-[18px]" /> Print Voucher
           </button>
           {entry.status === 'draft' && (
             <button className="px-5 py-2 bg-primary-container text-white font-ui-sm text-xs rounded-sm hover:bg-primary transition-colors flex items-center gap-2 border-none shadow-sm cursor-pointer">
@@ -81,7 +83,7 @@ export default function JournalEntryDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
-              {entry.lines?.map((line, i) => (
+              {(entry as any).lines?.map((line: any, i: number) => (
                 <tr key={i} className="hover:bg-stone-50/50 transition-colors">
                   <td className="py-5 px-6">
                     <div className="font-ui-sm font-bold text-on-surface">{line.accountName || line.accountId}</div>
@@ -105,7 +107,7 @@ export default function JournalEntryDetailPage() {
 
       {!isBalanced && (
         <div className="bg-red-50 border-[0.5px] border-red-200 p-4 flex items-center gap-3 text-red-700 font-bold uppercase text-[10px] tracking-widest">
-          <span className="material-symbols-outlined text-sm">warning</span>
+          <Icon name="warning" className="text-sm" />
           Voucher is out of balance by ₹ {formatIndianNumber(Math.abs(totalDebit - totalCredit))}
         </div>
       )}

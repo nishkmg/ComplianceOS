@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -74,7 +74,7 @@ export function AddAccountDialog({
                   <option value="2">2000 - Liabilities</option>
                 </select>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-text-mid">
-                  <span className="material-symbols-outlined">expand_more</span>
+                  <Icon name="expand_more" />
                 </span>
               </div>
             </div>
@@ -94,7 +94,7 @@ export function AddAccountDialog({
           </div>
 
           <div className="flex items-start gap-3 p-4 bg-stone-50 border-l-2 border-primary-container rounded-r-sm">
-            <span className="material-symbols-outlined text-primary-container mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+            <Icon name="warning" className="text-primary-container mt-0.5" />
             <div>
               <p className="font-ui-sm text-sm font-bold text-on-surface">Account Type Immutability</p>
               <p className="font-ui-sm text-[12px] text-text-mid mt-1">Once transactions are posted to this account, its fundamental type cannot be altered to maintain ledger integrity.</p>

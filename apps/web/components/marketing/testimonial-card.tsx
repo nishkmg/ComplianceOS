@@ -1,5 +1,5 @@
-// @ts-nocheck
 
+// @ts-ignore
 export function TestimonialCard({ quote, name, role, location }) {
   return (
     <div className="testimonial-card bg-surface border border-[#E8E4DC] rounded-lg p-8 md:p-10">

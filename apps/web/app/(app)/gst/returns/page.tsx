@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
@@ -48,7 +48,7 @@ export default function GSTRturnsHubPage() {
             <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container opacity-20 group-hover:opacity-100 transition-opacity"></div>
             <div className="flex justify-between items-start mb-4">
               <span className="font-ui-xs text-text-light uppercase tracking-widest">{t.id}</span>
-              <span className="material-symbols-outlined text-primary-container">article</span>
+              <Icon name="article" className="text-primary-container" />
             </div>
             <h3 className="font-display-lg text-display-lg text-on-surface mb-1">{t.name}</h3>
             <p className="font-ui-sm text-text-mid mb-6">{t.desc}</p>

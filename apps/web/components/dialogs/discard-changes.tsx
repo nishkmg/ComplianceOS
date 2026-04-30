@@ -1,5 +1,6 @@
-// @ts-nocheck
 'use client';
+
+import { Icon } from '@/components/ui/icon';
 
 import {
   Dialog,
@@ -27,9 +28,7 @@ export function DiscardChangesDialog({
         <div className="p-6">
           <div className="flex items-start mb-4 text-left">
             <div className="flex-shrink-0 mr-4">
-              <span className="material-symbols-outlined text-[#C8860A] text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                warning
-              </span>
+              <Icon name="warning" className="text-primary-container" size={32} />
             </div>
             <div>
               <h3 className="text-lg font-bold text-stone-900 leading-tight">

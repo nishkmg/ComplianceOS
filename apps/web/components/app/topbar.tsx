@@ -1,9 +1,9 @@
-// @ts-nocheck
 'use client';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 
 export function AppTopBar() {
   const pathname = usePathname();
@@ -37,15 +37,15 @@ export function AppTopBar() {
       </div>
       <div className="flex items-center gap-4 relative">
         <div className="bg-[#fff1e4] px-3 py-1.5 border border-border-subtle flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#666666] text-lg">search</span>
+          <Icon name="search" className="text-[#666666] text-lg" />
           <input 
             className="bg-transparent border-none focus:ring-0 text-[13px] font-mono w-48 outline-none" 
             placeholder="Search entries..." 
             type="text"
           />
         </div>
-        <button className="material-symbols-outlined text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70">
-          notifications
+        <button aria-label="Notifications" className="text-mid hover:text-dark dark:hover:text-white transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70">
+          <Icon name="notifications" />
         </button>
         
         {/* User Profile Trigger */}
@@ -65,17 +65,17 @@ export function AppTopBar() {
              </div>
              <nav className="flex flex-col py-2">
                 <Link href="/settings" className="flex items-center gap-3 px-4 py-2 hover:bg-[#fff8f4] text-text-mid hover:text-primary-container no-underline transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">person</span>
+                  <Icon name="person" className="text-[18px]" />
                   <span className="font-ui-sm text-xs font-bold uppercase tracking-widest">Profile Settings</span>
                 </Link>
                 <Link href="/settings/users" className="flex items-center gap-3 px-4 py-2 hover:bg-[#fff8f4] text-text-mid hover:text-primary-container no-underline transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">group</span>
+                  <Icon name="group" className="text-[18px]" />
                   <span className="font-ui-sm text-xs font-bold uppercase tracking-widest">User Management</span>
                 </Link>
              </nav>
              <div className="border-t-[0.5px] border-border-subtle p-2">
                 <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 text-red-600 rounded-sm border-none bg-transparent cursor-pointer transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                  <Icon name="logout" className="text-[18px]" />
                   <span className="font-ui-sm text-xs font-bold uppercase tracking-widest">Sign Out</span>
                 </button>
              </div>

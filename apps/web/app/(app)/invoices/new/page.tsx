@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useMemo } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
@@ -60,7 +60,7 @@ export default function NewInvoicePage() {
             <div className="flex flex-col gap-2">
                <div className="flex items-center gap-3">
                  <button onClick={() => router.back()} className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-                    <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+                    <Icon name="arrow_back" className="text-[20px]" />
                  </button>
                  <span className="font-ui-xs text-[10px] text-amber-text tracking-widest uppercase font-bold">New Invoice</span>
                </div>
@@ -93,7 +93,7 @@ export default function NewInvoicePage() {
 
               <h3 className="font-ui-sm text-[11px] font-bold text-text-light uppercase tracking-widest border-b border-border-subtle pb-2 mb-6 flex justify-between items-center">
                 Line Items
-                <button onClick={addLine} className="text-primary-container hover:text-primary font-bold flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"><span className="material-symbols-outlined text-sm">add</span> Add Item</button>
+                <button onClick={addLine} className="text-primary-container hover:text-primary font-bold flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"><Icon name="add" className="text-sm" /> Add Item</button>
               </h3>
 
               <div className="space-y-4 mb-8">
@@ -125,7 +125,7 @@ export default function NewInvoicePage() {
                  <div className="flex gap-4">
                     <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm">Save Draft</button>
                     <button className="px-8 py-3 bg-[#C8860A] text-white font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm rounded-sm flex items-center gap-2">
-                       Finalize & Send <span className="material-symbols-outlined text-[18px]">send</span>
+                       Finalize & Send <Icon name="send" className="text-[18px]" />
                     </button>
                  </div>
               </div>

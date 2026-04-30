@@ -1,5 +1,5 @@
-// @ts-nocheck
 "use client";
+import { Icon } from '@/components/ui/icon';
 
 export default function Form16Page() {
   return (
@@ -7,7 +7,7 @@ export default function Form16Page() {
       <header className="flex justify-between items-center px-8 py-6 border-b border-border-subtle bg-white/80 -mx-8 -mt-8 mb-8">
         <div>
           <div className="flex items-center gap-2 text-xs font-bold text-stone-500 uppercase tracking-widest mb-1">
-            <span className="material-symbols-outlined text-sm">description</span> Form 16 Data Export
+            <Icon name="description" className="text-sm" /> Form 16 Data Export
           </div>
           <h1 className="font-display-lg text-lg font-bold text-on-surface">Employee Tax Report</h1>
           <p className="text-xs text-text-mid">Under Section 203 of the Income-tax Act, 1961</p>
@@ -17,7 +17,7 @@ export default function Form16Page() {
             <option>2023 - 2024</option><option>2022 - 2023</option>
           </select>
           <button className="bg-primary-container text-white px-5 py-2.5 rounded-sm flex items-center gap-2 hover:bg-primary cursor-pointer border-none shadow-sm text-xs font-bold uppercase tracking-widest">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export
+            <Icon name="download" className="text-[18px]" /> Export
           </button>
         </div>
       </header>

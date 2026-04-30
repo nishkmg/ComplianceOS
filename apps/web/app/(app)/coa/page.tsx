@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -79,10 +79,10 @@ export default function CoAPage() {
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm rounded hover:bg-surface-container-highest transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export
+            <Icon name="download" className="text-[18px]" /> Export
           </button>
           <Link href="/accounts/new" className="px-5 py-2 bg-primary-container text-white font-ui-sm rounded hover:bg-primary/90 transition-colors flex items-center gap-2 group no-underline">
-            <span className="material-symbols-outlined text-[18px]">add</span> Add Account
+            <Icon name="add" className="text-[18px]" /> Add Account
           </Link>
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function CoAPage() {
                     <div className="flex items-center gap-2">
                       {acct.hasChildren && (
                         <button onClick={() => toggle(acct.id)} className="text-text-light hover:text-on-surface cursor-pointer border-none bg-transparent p-0">
-                          <span className="material-symbols-outlined text-[16px] transition-transform">{collapsed.has(acct.id) ? 'chevron_right' : 'expand_more'}</span>
+                          <Icon name={collapsed.has(acct.id) ? 'chevron_right' : 'expand_more'} className="text-[16px] transition-transform" />
                         </button>
                       )}
                       {acct.name}

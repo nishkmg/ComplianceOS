@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
+import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
 
 export default function CookiesPage() {
@@ -20,7 +20,7 @@ export default function CookiesPage() {
             {/* What are cookies */}
             <section>
               <h2 className="font-display-lg text-display-lg text-on-surface mb-6 flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary-container">cookie</span>
+                <Icon name="cookie" className="text-primary-container" />
                 What are cookies?
               </h2>
               <p className="font-ui-md text-ui-md text-text-mid leading-relaxed">
@@ -34,7 +34,7 @@ export default function CookiesPage() {
             {/* Why cookies */}
             <section>
               <h2 className="font-display-lg text-display-lg text-on-surface mb-6 flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary-container">manage_search</span>
+                <Icon name="manage_search" className="text-primary-container" />
                 Why do we use cookies?
               </h2>
               <p className="font-ui-md text-ui-md text-text-mid leading-relaxed mb-6">
@@ -58,7 +58,7 @@ export default function CookiesPage() {
               <p className="font-ui-md text-ui-md text-text-mid mb-6">If you have any questions about our use of cookies or other technologies, please email us at privacy@complianceos.in.</p>
               <a href="mailto:privacy@complianceos.in" className="inline-flex items-center gap-2 text-primary font-ui-sm hover:text-primary-container transition-colors group no-underline">
                 Contact Privacy Team
-                <span className="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform" style={{ fontSize: '18px' }}>arrow_forward</span>
+                <Icon name="arrow_forward" className="ml-2 group-hover:translate-x-1 transition-transform" />
               </a>
             </section>
           </div>

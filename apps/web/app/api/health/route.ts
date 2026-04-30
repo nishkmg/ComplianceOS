@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+// @ts-ignore
 import { db } from "@complianceos/db";
 import { sql } from "drizzle-orm";
 

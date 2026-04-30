@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
@@ -99,13 +99,13 @@ export default function PricingPage() {
               <ul className="space-y-4 mb-12 flex-grow list-none p-0 text-left">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start">
-                    <span className="material-symbols-outlined text-amber-text text-sm mr-3 mt-1" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                    <Icon name="check_circle" className="text-amber-text text-sm mr-3 mt-1" />
                     <span className="text-ui-sm font-ui-sm">{f}</span>
                   </li>
                 ))}
                 {plan.notFeatures?.map((f) => (
                   <li key={f} className="flex items-start text-text-light">
-                    <span className="material-symbols-outlined text-outline-variant text-sm mr-3 mt-1">cancel</span>
+                    <Icon name="cancel" className="text-outline-variant text-sm mr-3 mt-1" />
                     <span className="text-ui-sm font-ui-sm">{f}</span>
                   </li>
                 ))}
@@ -158,7 +158,7 @@ export default function PricingPage() {
               <details key={faq.q} className="group bg-white border-[0.5px] border-border-subtle" open={i === 0}>
                 <summary className="flex justify-between items-center p-6 cursor-pointer select-none text-left">
                   <span className="font-ui-lg text-ui-lg font-semibold">{faq.q}</span>
-                  <span className="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+                  <Icon name="expand_more" className="transition-transform group-open:rotate-180" />
                 </summary>
                 <div className="px-6 pb-6 text-ui-sm font-ui-sm text-secondary text-left leading-relaxed">
                   {faq.a}

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -32,12 +32,12 @@ export default function MyPayslipsPage() {
               <option value="2024">2024</option>
               <option value="2023">2023</option>
             </select>
-            <span className="absolute right-3 pointer-events-none text-text-light text-[18px] material-symbols-outlined">calendar_today</span>
+            <Icon name="calendar_today" className="absolute right-3 pointer-events-none text-text-light text-[18px]" />
           </div>
           <button className="bg-primary-container text-white font-ui-sm text-xs py-2.5 px-6 flex items-center gap-2 hover:bg-primary transition-all rounded-sm group shadow-sm cursor-pointer border-none">
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <Icon name="download" className="text-[18px]" />
             <span className="uppercase tracking-widest font-bold">Download PDF</span>
-            <span className="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1 ml-1">arrow_forward</span>
+            <Icon name="arrow_forward" className="text-[16px] transition-transform group-hover:translate-x-1 ml-1" />
           </button>
         </div>
       </div>

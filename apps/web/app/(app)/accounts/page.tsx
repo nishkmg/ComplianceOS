@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -27,10 +27,10 @@ export default function AccountsFlatPage() {
         </div>
         <div className="flex gap-3">
           <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-on-surface text-on-surface bg-white rounded-sm hover:bg-stone-50 transition-colors font-ui-sm text-xs font-bold uppercase tracking-widest cursor-pointer shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">download</span> Export
+            <Icon name="download" className="text-[18px]" /> Export
           </button>
           <Link href="/accounts/new" className="flex items-center gap-2 px-5 py-2 bg-primary-container text-white rounded-sm hover:bg-primary transition-opacity font-ui-sm text-xs font-bold uppercase tracking-widest no-underline shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">add</span> New Account
+            <Icon name="add" className="text-[18px]" /> New Account
           </Link>
         </div>
       </div>
@@ -39,15 +39,15 @@ export default function AccountsFlatPage() {
       <div className="flex items-center justify-between bg-white p-4 border-[0.5px] border-border-subtle shadow-sm mb-6">
         <div className="flex gap-4 items-center">
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]" />
             <input className="pl-9 pr-4 py-2 bg-stone-50 border-[0.5px] border-border-subtle rounded-sm text-sm outline-none focus:border-primary w-64" placeholder="Search accounts..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
         <div className="flex items-center gap-2 font-ui-sm text-xs text-text-mid">
           <span>Showing {ACCOUNTS.length} of {ACCOUNTS.length} accounts</span>
           <div className="flex border-[0.5px] border-border-subtle rounded-sm overflow-hidden">
-            <button className="p-1 bg-white hover:bg-stone-50 transition-colors border-none cursor-pointer disabled:opacity-50"><span className="material-symbols-outlined text-[20px]">chevron_left</span></button>
-            <button className="p-1 bg-white hover:bg-stone-50 transition-colors border-none cursor-pointer"><span className="material-symbols-outlined text-[20px]">chevron_right</span></button>
+            <button className="p-1 bg-white hover:bg-stone-50 transition-colors border-none cursor-pointer disabled:opacity-50"><Icon name="chevron_left" className="text-[20px]" /></button>
+            <button className="p-1 bg-white hover:bg-stone-50 transition-colors border-none cursor-pointer"><Icon name="chevron_right" className="text-[20px]" /></button>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function AccountsFlatPage() {
                   </td>
                   <td className="py-4 px-4 text-right font-bold text-on-surface">{formatIndianNumber(a.balance)} {a.balanceType}</td>
                   <td className="py-4 px-4 text-right opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="border-none bg-transparent cursor-pointer text-stone-400 hover:text-on-surface"><span className="material-symbols-outlined text-[18px]">more_vert</span></button>
+                    <button className="border-none bg-transparent cursor-pointer text-stone-400 hover:text-on-surface"><Icon name="more_vert" className="text-[18px]" /></button>
                   </td>
                 </tr>
               ))}

@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 interface AuditEntry {
@@ -38,7 +38,7 @@ export default function AuditLogPage() {
         </div>
         <div className="flex gap-3">
           <button className="bg-section-muted border border-border-subtle px-4 py-2 flex items-center gap-2 hover:bg-stone-200 transition-colors cursor-pointer">
-            <span className="material-symbols-outlined text-sm">download</span>
+            <Icon name="download" className="text-sm" />
             <span className="font-ui-xs uppercase tracking-wider">Export CSV</span>
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function AuditLogPage() {
       {/* Filter Bar */}
       <div className="bg-white border border-border-subtle p-4 mb-8 flex flex-wrap items-center gap-4 shadow-sm">
         <div className="flex-1 min-w-[200px] relative">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-mid text-sm">search</span>
+          <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-mid text-sm" />
           <input 
             className="w-full pl-9 pr-3 py-2 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm font-mono outline-none focus:border-primary-container" 
             placeholder="Search description or IP..." 
@@ -70,7 +70,7 @@ export default function AuditLogPage() {
             <option>LOGIN</option>
           </select>
           <button className="px-4 py-2 bg-section-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-stone-200 transition-colors flex items-center gap-2 border border-border-subtle cursor-pointer">
-            <span className="material-symbols-outlined text-sm">filter_list</span> More Filters
+            <Icon name="filter_list" className="text-sm" /> More Filters
           </button>
         </div>
       </div>
@@ -121,12 +121,12 @@ export default function AuditLogPage() {
       <div className="mt-6 flex items-center justify-between">
         <p className="font-ui-xs text-text-mid">Showing 1 to 5 of 1,248 entries</p>
         <div className="flex gap-1">
-          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white disabled:opacity-50 cursor-pointer"><span className="material-symbols-outlined text-sm">chevron_left</span></button>
+          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white disabled:opacity-50 cursor-pointer"><Icon name="chevron_left" className="text-sm" /></button>
           <button className="px-3 py-1 bg-white border border-border-subtle rounded font-mono text-sm">1</button>
           <button className="px-3 py-1 border border-transparent hover:border-border-subtle rounded font-mono text-sm text-text-mid cursor-pointer">2</button>
           <button className="px-3 py-1 border border-transparent hover:border-border-subtle rounded font-mono text-sm text-text-mid cursor-pointer">3</button>
           <span className="px-2 py-1 text-text-mid">...</span>
-          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white cursor-pointer"><span className="material-symbols-outlined text-sm">chevron_right</span></button>
+          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white cursor-pointer"><Icon name="chevron_right" className="text-sm" /></button>
         </div>
       </div>
     </div>

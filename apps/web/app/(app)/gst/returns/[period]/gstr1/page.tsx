@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useParams } from "next/navigation";
+import { Icon } from '@/components/ui/icon';
 import { useState } from "react";
 import { api } from "@/lib/api";
 
@@ -166,7 +166,7 @@ export default function GSTR1DetailPage() {
         {/* Action Bar */}
         <div className="p-4 border-b-[0.5px] border-border-subtle flex justify-between items-center bg-white">
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg">search</span>
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg" />
             <input className="pl-10 pr-4 py-2 border-[0.5px] border-border-subtle bg-stone-50 rounded-sm text-xs w-64 outline-none focus:border-primary" placeholder="Search invoices..." />
           </div>
           <div className="flex gap-3">

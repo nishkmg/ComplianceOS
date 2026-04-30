@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 const fiscalYears = [
@@ -41,7 +41,7 @@ export default function FiscalYearsPage() {
                 <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mt-1">Indian Financial Calendar</p>
               </div>
               <button className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-                <span className="material-symbols-outlined">filter_list</span>
+                <Icon name="filter_list" />
               </button>
             </div>
             <div className="overflow-x-auto">
@@ -89,11 +89,11 @@ export default function FiscalYearsPage() {
               <h4 className="text-amber-500 font-ui-lg text-lg font-bold mb-3">Statutory Lock</h4>
               <p className="text-stone-400 text-sm leading-relaxed mb-6">Current policy prevents modifications to any closed fiscal periods. This ensures 100% data integrity for historical audit trails.</p>
               <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-amber-500/80">
-                <span className="material-symbols-outlined text-sm">verified_user</span>
+                <Icon name="verified_user" className="text-sm" />
                 Policy Enforced
               </div>
             </div>
-            <span className="absolute -right-8 -bottom-8 material-symbols-outlined text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform">lock</span>
+            <Icon name="lock" className="absolute -right-8 -bottom-8 text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform" />
           </div>
 
           <div className="bg-[#fff8f4] border border-amber/30 p-8 shadow-sm text-left">

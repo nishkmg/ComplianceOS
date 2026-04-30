@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -49,7 +49,7 @@ export function ExportDataDialog({
                   <option value="2023-24">FY 2023-24</option>
                 </select>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-text-mid">
-                  <span className="material-symbols-outlined">expand_more</span>
+                  <Icon name="expand_more" />
                 </span>
               </div>
             </div>
@@ -86,7 +86,7 @@ export function ExportDataDialog({
                 <label key={f.id} className="cursor-pointer flex-1">
                   <input type="radio" className="sr-only peer" name="format" checked={format === f.id} onChange={() => setFormat(f.id)} />
                   <div className="border-[0.5px] border-border-subtle rounded-sm p-4 text-center peer-checked:border-primary-container peer-checked:bg-[#fff8f4] hover:bg-stone-50 transition-colors flex flex-col items-center gap-2">
-                    <span className={`material-symbols-outlined text-text-mid ${format === f.id ? 'text-primary-container' : ''}`}>{f.icon}</span>
+                    <Icon name={f.icon} className="text-text-mid ${format === f.id ? 'text-primary-container' : ''}" />
                     <span className={`font-ui-sm text-xs ${format === f.id ? 'font-bold' : ''}`}>{f.name}</span>
                   </div>
                 </label>
@@ -101,7 +101,7 @@ export function ExportDataDialog({
             onClick={() => onExport({ fiscalYear, format })}
             className="bg-primary-container text-white font-ui-sm text-sm px-8 py-3 rounded-sm hover:bg-primary transition-all shadow-sm border-none cursor-pointer flex items-center gap-2"
           >
-            <span className="material-symbols-outlined text-sm">download</span>
+            <Icon name="download" className="text-sm" />
             Generate Report
           </button>
         </DialogFooter>

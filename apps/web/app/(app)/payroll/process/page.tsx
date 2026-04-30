@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -26,7 +26,7 @@ export default function ProcessPayrollPage() {
           <button className="px-4 py-2 border border-border-subtle font-ui-sm text-sm rounded-sm hover:bg-stone-50 transition-colors text-on-surface cursor-pointer bg-white">Save Draft</button>
           <button className="px-6 py-2 bg-primary-container text-white font-ui-sm text-sm rounded-sm flex items-center gap-2 hover:bg-primary transition-colors group cursor-pointer border-none shadow-sm">
             Process & Execute
-            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function ProcessPayrollPage() {
 
       {/* Warning Panel */}
       <div className="bg-amber-50 border-l-4 border-amber-500 p-6 mb-8 flex gap-4 text-left">
-        <span className="material-symbols-outlined text-amber-600">warning</span>
+        <Icon name="warning" className="text-amber-600" />
         <div>
           <h4 className="font-ui-sm text-sm font-bold text-amber-900 mb-1">Compliance Check Required</h4>
           <p className="font-ui-sm text-[13px] text-amber-800 leading-relaxed">System detected missing PAN for 1 employee. TDS will be calculated at 20% (higher rate) unless updated before execution.</p>

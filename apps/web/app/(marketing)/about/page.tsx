@@ -1,7 +1,7 @@
-// @ts-nocheck
 'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
+import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
 import Link from 'next/link';
 
@@ -134,7 +134,7 @@ export default function AboutPage() {
                 { icon: 'gavel', title: 'Authoritative Focus', desc: 'Amber accents direct attention to critical actions.', accent: true },
               ].map((item) => (
                 <div key={item.title} className={`border-[0.5px] border-border-subtle bg-white p-6 flex flex-col justify-center text-left ${item.accent ? 'border-t-2 border-t-primary-container' : ''}`}>
-                  <span className="material-symbols-outlined text-amber-text text-3xl mb-4">{item.icon}</span>
+                  <Icon name={item.icon} className="text-amber-text text-3xl mb-4" />
                   <h4 className="font-mono-md text-mono-md text-on-surface mb-2">{item.title}</h4>
                   <p className="font-ui-sm text-ui-sm text-text-light">{item.desc}</p>
                 </div>

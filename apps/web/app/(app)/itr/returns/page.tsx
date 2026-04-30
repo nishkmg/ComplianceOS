@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 
 interface ITRReturn {
@@ -38,7 +38,7 @@ export default function ITRReturnsPage() {
               Print Ledger
             </button>
             <button className="font-ui-sm bg-primary-container text-white py-2 px-4 hover:bg-primary transition-colors flex items-center gap-2 border-none cursor-pointer">
-              Export CSV <span className="material-symbols-outlined text-sm">download</span>
+              Export CSV <Icon name="download" className="text-sm" />
             </button>
           </div>
         </div>
