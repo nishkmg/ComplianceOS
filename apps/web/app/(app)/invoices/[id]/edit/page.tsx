@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
+import { InlineConfirmation } from "@/components/ui";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -110,7 +111,13 @@ export default function EditInvoicePage() {
 
               {/* Actions */}
               <div className="flex justify-between items-center pt-4 border-t border-border-subtle">
-                <button className="text-red-600 font-ui-sm text-ui-sm hover:underline border-none bg-transparent cursor-pointer">Delete Draft</button>
+                <InlineConfirmation
+                  trigger={<button className="text-red-600 font-ui-sm text-ui-sm hover:underline border-none bg-transparent cursor-pointer">Delete Draft</button>}
+                  message="Are you sure you want to delete this draft invoice? This cannot be undone."
+                  confirmLabel="Delete Draft"
+                  risk="medium"
+                  onConfirm={() => console.log("Delete draft")}
+                />
                 <div className="flex gap-3">
                   <button className="border border-on-surface text-on-surface font-ui-sm text-ui-sm px-4 py-2 rounded hover:bg-surface-variant transition-colors cursor-pointer bg-transparent">Save Draft</button>
                   <button className="bg-primary-container text-white font-ui-sm text-ui-sm px-4 py-2 rounded flex items-center gap-2 hover:bg-amber-700 transition-colors group cursor-pointer border-none">
