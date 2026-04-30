@@ -40,7 +40,7 @@ export default function ITRPresumptivePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div 
                     onClick={() => setSection("44ad")}
-                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ad' ? 'border-primary-container bg-[#fff8f4]' : 'border-border-subtle hover:bg-stone-50'}`}
+                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ad' ? 'border-primary-container bg-amber-50' : 'border-border-subtle hover:bg-stone-50'}`}
                   >
                     <span className="font-ui-lg text-on-surface font-bold">Section 44AD</span>
                     <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Eligible Business</span>
@@ -48,7 +48,7 @@ export default function ITRPresumptivePage() {
                   </div>
                   <div 
                     onClick={() => setSection("44ada")}
-                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ada' ? 'border-primary-container bg-[#fff8f4]' : 'border-border-subtle hover:bg-stone-50'}`}
+                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ada' ? 'border-primary-container bg-amber-50' : 'border-border-subtle hover:bg-stone-50'}`}
                   >
                     <span className="font-ui-lg text-on-surface font-bold">Section 44ADA</span>
                     <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Specified Profession</span>
@@ -108,7 +108,7 @@ export default function ITRPresumptivePage() {
             </div>
 
             <div className="mt-auto pt-12">
-               <button className="w-full bg-[#C8860A] text-white py-4 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all rounded-sm border-none cursor-pointer flex items-center justify-center gap-2">
+               <button className="w-full bg-primary-container text-white py-4 font-ui-sm font-bold uppercase tracking-widest hover:bg-primary transition-all rounded-sm border-none cursor-pointer flex items-center justify-center gap-2">
                  Apply to Computation
                  <Icon name="arrow_forward" />
                </button>

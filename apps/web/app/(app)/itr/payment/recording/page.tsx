@@ -47,7 +47,7 @@ export default function ITRRecordPaymentPage() {
                   <div 
                     key={item.id}
                     onClick={() => setType(item.id)}
-                    className={`relative p-4 border-[0.5px] rounded-sm transition-all cursor-pointer ${type === item.id ? 'border-primary-container bg-[#fff8f4] ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
+                    className={`relative p-4 border-[0.5px] rounded-sm transition-all cursor-pointer ${type === item.id ? 'border-primary-container bg-amber-50 ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
                   >
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-ui-sm font-bold text-on-surface">{item.name}</span>
@@ -79,7 +79,7 @@ export default function ITRRecordPaymentPage() {
                </div>
             </div>
           </div>
-          <Icon name="account_balance" className="absolute -right-12 -bottom-12   text-[200px] text-[#F4F2EE] opacity-30 pointer-events-none" />
+          <Icon name="account_balance" className="absolute -right-12 -bottom-12   text-[200px] text-section-muted opacity-30 pointer-events-none" />
         </div>
       </div>
     </div>

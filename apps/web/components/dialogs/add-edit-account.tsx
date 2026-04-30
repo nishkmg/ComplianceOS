@@ -84,7 +84,7 @@ export function AddAccountDialog({
             <label className="block font-ui-xs text-[10px] text-on-surface mb-2 tracking-widest uppercase font-bold">Account Type</label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {['asset', 'liability', 'equity', 'revenue'].map((t) => (
-                <label key={t} className={`flex flex-col p-4 border-[0.5px] rounded-sm cursor-pointer transition-colors ${formData.type === t ? 'bg-[#fff8f4] border-amber' : 'bg-white border-border-subtle hover:bg-stone-50'}`}>
+                <label key={t} className={`flex flex-col p-4 border-[0.5px] rounded-sm cursor-pointer transition-colors ${formData.type === t ? 'bg-amber-50 border-amber' : 'bg-white border-border-subtle hover:bg-stone-50'}`}>
                   <input type="radio" className="sr-only" name="type" checked={formData.type === t} onChange={() => setFormData({ ...formData, type: t })} />
                   <span className="font-ui-sm font-bold text-on-surface capitalize">{t}</span>
                   <span className="font-ui-xs text-[10px] text-text-light">{t === 'asset' || t === 'expense' ? 'Debit normal' : 'Credit normal'}</span>

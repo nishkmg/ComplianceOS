@@ -35,7 +35,7 @@ export default function GSTRturnsHubPage() {
             <option>May 2024</option>
             <option>Apr 2024</option>
           </select>
-          <button className="bg-[#C8860A] text-white px-6 py-2.5 rounded font-ui-sm text-sm hover:bg-amber-700 transition-colors cursor-pointer border-none shadow-sm">
+          <button className="bg-primary-container text-white px-6 py-2.5 rounded font-ui-sm text-sm hover:bg-amber-700 transition-colors cursor-pointer border-none shadow-sm">
             Refresh Data
           </button>
         </div>
@@ -61,7 +61,7 @@ export default function GSTRturnsHubPage() {
 
       {/* Recent Activity Table */}
       <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b-[0.5px] border-border-subtle bg-[#F9F8F6]">
+        <div className="px-6 py-4 border-b-[0.5px] border-border-subtle bg-sidebar">
           <h3 className="font-ui-md font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Return Filing History</h3>
         </div>
         <div className="overflow-x-auto">

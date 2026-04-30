@@ -78,7 +78,7 @@ export default function JournalPage() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <Link href="/journal/new" className="bg-[#C8860A] text-white px-4 py-2 text-xs font-ui-xs uppercase tracking-widest hover:translate-x-1 duration-200 transition-all no-underline inline-flex items-center gap-1">
+            <Link href="/journal/new" className="bg-primary-container text-white px-4 py-2 text-xs font-ui-xs uppercase tracking-widest hover:translate-x-1 duration-200 transition-all no-underline inline-flex items-center gap-1">
               Add Entry <span className="inline-block">→</span>
             </Link>
           </div>
@@ -88,7 +88,7 @@ export default function JournalPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#F9F8F6] border-b-[0.5px] border-border-subtle">
+              <tr className="bg-sidebar border-b-[0.5px] border-border-subtle">
                 <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Entry #</th>
                 <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Date</th>
                 <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Narration</th>

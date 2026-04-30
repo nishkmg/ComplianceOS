@@ -25,7 +25,7 @@ export default function ITRPaymentHistoryPage() {
           <button className="px-5 py-2.5 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase font-bold tracking-widest shadow-sm">
             <Icon name="print" className="text-[18px]" /> Print History
           </button>
-          <button className="bg-[#C8860A] text-white px-6 py-2.5 rounded-sm font-ui-sm text-sm hover:bg-amber-700 transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
+          <button className="bg-primary-container text-white px-6 py-2.5 rounded-sm font-ui-sm text-sm hover:bg-amber-700 transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
             <Icon name="add" className="text-[18px]" /> New Challan
           </button>
         </div>
@@ -88,7 +88,7 @@ export default function ITRPaymentHistoryPage() {
                     {p.status === 'completed' ? (
                       <button className="text-primary-container hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Download</button>
                     ) : (
-                      <button className="text-[#C8860A] hover:text-amber-700 font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Record Info</button>
+                      <button className="text-primary-container hover:text-amber-700 font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Record Info</button>
                     )}
                   </td>
                 </tr>

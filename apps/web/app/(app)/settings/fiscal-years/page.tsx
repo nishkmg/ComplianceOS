@@ -24,7 +24,7 @@ export default function FiscalYearsPage() {
           <button className="px-6 py-2.5 border border-stone-300 text-stone-700 font-ui-sm text-sm hover:bg-stone-50 transition-colors cursor-pointer bg-white rounded-sm">
             Close FY
           </button>
-          <button className="px-6 py-2.5 bg-[#C8860A] text-white font-ui-sm text-sm hover:bg-primary transition-colors flex items-center gap-2 group border-none cursor-pointer rounded-sm shadow-sm font-bold uppercase tracking-widest">
+          <button className="px-6 py-2.5 bg-primary-container text-white font-ui-sm text-sm hover:bg-primary transition-colors flex items-center gap-2 group border-none cursor-pointer rounded-sm shadow-sm font-bold uppercase tracking-widest">
             Create FY <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
           </button>
         </div>
@@ -34,7 +34,7 @@ export default function FiscalYearsPage() {
         {/* Main Table */}
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-white border-stone-200 border-[0.5px] rounded-sm overflow-hidden shadow-sm relative">
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
             <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50/50">
               <div>
                 <h3 className="font-ui-lg text-lg font-bold text-on-surface">Ledger Periods</h3>
@@ -96,7 +96,7 @@ export default function FiscalYearsPage() {
             <Icon name="lock" className="absolute -right-8 -bottom-8 text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform" />
           </div>
 
-          <div className="bg-[#fff8f4] border border-amber/30 p-8 shadow-sm text-left">
+          <div className="bg-amber-50 border border-amber/30 p-8 shadow-sm text-left">
             <h4 className="font-ui-md font-bold text-on-surface mb-4 uppercase tracking-widest text-[10px]">Data Retention</h4>
             <p className="text-ui-sm text-sm text-text-mid leading-relaxed">ComplianceOS retains ledger data for up to 8 years as per IT Act requirements. Archived years can be exported as read-only CSV at any time.</p>
           </div>

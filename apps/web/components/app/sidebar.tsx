@@ -33,10 +33,10 @@ export function AppSidebar() {
   const currentFy = fiscalYears.find(fy => fy.name.includes(activeFy)) || fiscalYears[0];
 
   return (
-    <aside className="bg-[#F9F8F6] dark:bg-slate-900 h-full w-64 fixed left-0 top-0 border-r-[0.5px] border-[#E8E4DC] dark:border-slate-800 flex flex-col py-4 gap-1 z-40 hidden lg:flex font-serif text-[13px] tracking-tight transition-all ease-in-out">
+    <aside className="bg-sidebar dark:bg-slate-900 h-full w-64 fixed left-0 top-0 border-r-[0.5px] border-border-subtle dark:border-slate-800 flex flex-col py-4 gap-1 z-40 hidden lg:flex font-serif text-[13px] tracking-tight transition-all ease-in-out">
       <div className="mb-6 px-6 mt-14 text-left">
-        <h2 className="font-bold text-[#1A1A1A] dark:text-white text-lg">Core Engine</h2>
-        <p className="text-xs text-[#666666] dark:text-slate-400 mt-1">Precision Accounting</p>
+        <h2 className="font-bold text-dark dark:text-white text-lg">Core Engine</h2>
+        <p className="text-xs text-mid dark:text-slate-400 mt-1">Precision Accounting</p>
       </div>
       
       <nav className="flex-grow space-y-1 overflow-y-auto px-2">
@@ -48,8 +48,8 @@ export function AppSidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 no-underline ${
                 isActive 
-                  ? 'bg-white dark:bg-slate-800 text-[#1A1A1A] dark:text-white border-l-2 border-[#C8860A] font-semibold shadow-sm' 
-                  : 'text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 rounded-r'
+                  ? 'bg-white dark:bg-slate-800 text-dark dark:text-white border-l-2 border-primary-container font-semibold shadow-sm' 
+                  : 'text-mid dark:text-slate-400 hover:bg-lighter/30 rounded-r'
               }`}
             >
               <Icon name={item.icon} className={`text-lg ${isActive ? 'text-primary-container' : ''}`} />
@@ -62,7 +62,7 @@ export function AppSidebar() {
       {/* FY Footer */}
       <div className="relative mt-auto border-t border-lighter">
         <div 
-          className="p-3 cursor-pointer hover:bg-[#E8E4DC]/20 transition-colors"
+          className="p-3 cursor-pointer hover:bg-lighter/20 transition-colors"
           onClick={() => setShowFyPopover(!showFyPopover)}
         >
           <div className="text-[10px] text-light uppercase tracking-wide mb-1">Active Fiscal Year</div>
@@ -86,7 +86,7 @@ export function AppSidebar() {
                   setActiveFy(fy.name.split(" ")[1]);
                   setShowFyPopover(false);
                 }}
-                className={`w-full text-left px-4 py-3 hover:bg-[#fff8f4] transition-colors border-none bg-transparent cursor-pointer flex items-center justify-between ${
+                className={`w-full text-left px-4 py-3 hover:bg-amber-50 transition-colors border-none bg-transparent cursor-pointer flex items-center justify-between ${
                   activeFy === fy.name.split(" ")[1] ? 'border-l-[3px] border-primary-container bg-section-amber' : 'border-l-[3px] border-transparent'
                 }`}
               >
@@ -114,15 +114,15 @@ export function AppSidebar() {
         )}
       </div>
 
-      <div className="px-2 pt-2 pb-4 border-t-[0.5px] border-[#E8E4DC] dark:border-slate-800">
+      <div className="px-2 pt-2 pb-4 border-t-[0.5px] border-border-subtle dark:border-slate-800">
         <Link 
           href="/support"
-          className="text-[#666666] dark:text-slate-400 hover:bg-[#E8E4DC]/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r no-underline"
+          className="text-mid dark:text-slate-400 hover:bg-lighter/30 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r no-underline"
         >
           <Icon name="contact_support" className="text-lg" />
           <span>Support</span>
         </Link>
-        <button className="w-full text-[#ba1a1a] hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r border-none bg-transparent cursor-pointer">
+        <button className="w-full text-error hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 px-4 py-2 hover:translate-x-1 transition-transform duration-200 rounded-r border-none bg-transparent cursor-pointer">
           <Icon name="logout" className="text-lg" />
           <span className="text-[13px]">Sign Out</span>
         </button>

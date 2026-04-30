@@ -117,9 +117,9 @@ export default function InvoicePdfPage() {
                     <span>GST (18%)</span>
                     <span className="font-mono">₹ {formatIndianNumber(mockInvoice.tax)}</span>
                  </div>
-                 <div className="flex justify-between border-t-2 border-[#C8860A] pt-4 mt-2">
+                 <div className="flex justify-between border-t-2 border-primary-container pt-4 mt-2">
                     <span className="font-ui-lg text-lg font-bold uppercase tracking-widest">Grand Total</span>
-                    <span className="font-mono text-2xl font-bold text-[#C8860A]">₹ {formatIndianNumber(mockInvoice.total)}</span>
+                    <span className="font-mono text-2xl font-bold text-primary-container">₹ {formatIndianNumber(mockInvoice.total)}</span>
                  </div>
                  <p className="text-right font-ui-xs text-[10px] text-text-light italic mt-2">{mockInvoice.totalWords}</p>
               </div>

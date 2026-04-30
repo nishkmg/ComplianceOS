@@ -54,7 +54,7 @@ export default function PFChallanPage() {
           </div>
           <div className="bg-stone-900 border border-stone-950 p-5 rounded-sm shadow-sm text-left">
             <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider">Total Payable</h3>
-            <p className="font-mono text-2xl font-bold text-[#C8860A] mt-2">₹10,41,250</p>
+            <p className="font-mono text-2xl font-bold text-primary-container mt-2">₹10,41,250</p>
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export default function PFChallanPage() {
                   <th className="px-4 py-3 text-right">PF (12%)</th>
                   <th className="px-4 py-3 text-right">EPS (8.33%)</th>
                   <th className="px-4 py-3 text-right">EPF (3.67%)</th>
-                  <th className="px-6 py-3 text-right font-bold text-[#C8860A]">Total (₹)</th>
+                  <th className="px-6 py-3 text-right font-bold text-primary-container">Total (₹)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-50 font-mono text-sm">

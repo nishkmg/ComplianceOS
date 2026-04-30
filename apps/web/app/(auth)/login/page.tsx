@@ -91,7 +91,7 @@ export default function LoginPage() {
             )}
 
             {/* Submit Button */}
-            <button className="w-full mt-4 bg-[#c8860a] text-white font-ui-md text-[16px] rounded-sm py-4 px-6 flex justify-center items-center group transition-colors duration-300 hover:bg-[#825500] cursor-pointer border-none" type="submit">
+            <button className="w-full mt-4 bg-primary-container text-white font-ui-md text-[16px] rounded-sm py-4 px-6 flex justify-center items-center group transition-colors duration-300 hover:bg-primary cursor-pointer border-none" type="submit">
               Access Account
               <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300 ease-in-out font-mono text-[18px]">→</span>
             </button>

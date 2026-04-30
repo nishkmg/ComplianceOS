@@ -28,9 +28,9 @@ export function PostEntryDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0 overflow-hidden border border-border-subtle shadow-sm rounded-sm text-left">
-        <DialogHeader className="flex flex-row items-center p-6 border-b-[0.5px] border-stone-200 bg-[#F9F7F2] gap-3">
+        <DialogHeader className="flex flex-row items-center p-6 border-b-[0.5px] border-stone-200 bg-section-muted gap-3">
           <div className="flex-shrink-0 bg-amber-50 p-2 rounded-full border-[0.5px] border-amber-200">
-            <Icon name="warning" className="text-[#C8860A]" />
+            <Icon name="warning" className="text-primary-container" />
           </div>
           <DialogTitle className="font-display-lg text-lg font-bold text-on-surface tracking-tight">Confirm Post Entry</DialogTitle>
         </DialogHeader>
@@ -51,7 +51,7 @@ export function PostEntryDialog({
             </div>
             <div className="flex justify-between items-center pt-1">
               <span className="text-[10px] font-bold text-stone-700 uppercase tracking-widest">Total Amount</span>
-              <span className="text-lg font-bold text-[#C8860A]">₹ {formatIndianNumber(entry.amount)}</span>
+              <span className="text-lg font-bold text-primary-container">₹ {formatIndianNumber(entry.amount)}</span>
             </div>
           </div>
 
@@ -67,7 +67,7 @@ export function PostEntryDialog({
           </button>
           <button 
             onClick={onConfirm}
-            className="px-6 py-2.5 bg-[#C8860A] text-white font-bold uppercase tracking-widest text-sm rounded-sm hover:bg-amber-700 transition-colors shadow-sm border-none cursor-pointer"
+            className="px-6 py-2.5 bg-primary-container text-white font-bold uppercase tracking-widest text-sm rounded-sm hover:bg-amber-700 transition-colors shadow-sm border-none cursor-pointer"
           >
             Post Entry
           </button>

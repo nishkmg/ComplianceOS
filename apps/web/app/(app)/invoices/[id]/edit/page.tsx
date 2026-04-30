@@ -113,7 +113,7 @@ export default function EditInvoicePage() {
                 <button className="text-red-600 font-ui-sm text-ui-sm hover:underline border-none bg-transparent cursor-pointer">Delete Draft</button>
                 <div className="flex gap-3">
                   <button className="border border-on-surface text-on-surface font-ui-sm text-ui-sm px-4 py-2 rounded hover:bg-surface-variant transition-colors cursor-pointer bg-transparent">Save Draft</button>
-                  <button className="bg-[#C8860A] text-white font-ui-sm text-ui-sm px-4 py-2 rounded flex items-center gap-2 hover:bg-amber-700 transition-colors group cursor-pointer border-none">
+                  <button className="bg-primary-container text-white font-ui-sm text-ui-sm px-4 py-2 rounded flex items-center gap-2 hover:bg-amber-700 transition-colors group cursor-pointer border-none">
                     Finalize & Send <Icon name="send" className="text-[16px] group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>

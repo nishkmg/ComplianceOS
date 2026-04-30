@@ -57,10 +57,10 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
             key={t.id}
             onClick={() => setSelectedTemplate(t.id)}
             className={`group border-[0.5px] border-border-subtle p-8 flex flex-col relative transition-all duration-300 cursor-pointer ${
-              selectedTemplate === t.id ? "bg-[#fff8f4] border-amber shadow-sm" : "bg-white hover:bg-stone-50"
+              selectedTemplate === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-white hover:bg-stone-50"
             }`}
           >
-            {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>}
+            {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>}
             <div className="flex justify-between items-start mb-6">
               <Icon name={t.icon} className={`text-3xl ${selectedTemplate === t.id ? "text-primary-container" : "text-stone-300"}`} />
               {t.recommended && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-900 text-white px-2 py-0.5 rounded-sm">Recommended</span>}

@@ -70,7 +70,7 @@ export function AccountPreviewSlideOver({
           </section>
 
           {/* Statutory Mapping */}
-          <section className="bg-[#fff8f4] border border-amber/30 p-6 rounded-sm">
+          <section className="bg-amber-50 border border-amber/30 p-6 rounded-sm">
              <h4 className="font-ui-sm font-bold text-amber-900 mb-4 uppercase tracking-widest text-[10px]">Statutory Mapping</h4>
              <div className="grid grid-cols-2 gap-4">
                 <div>

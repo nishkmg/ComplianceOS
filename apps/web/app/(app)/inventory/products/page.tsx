@@ -49,7 +49,7 @@ export default function ProductsPage() {
 
       {/* Filters */}
       <div className="bg-white border-[0.5px] border-border-subtle">
-        <div className="p-4 border-b-[0.5px] border-border-subtle flex flex-wrap gap-4 items-center justify-between bg-[#FBF9F6]">
+        <div className="p-4 border-b-[0.5px] border-border-subtle flex flex-wrap gap-4 items-center justify-between bg-section-muted">
           <div className="flex flex-wrap gap-4 items-center">
             <div className="relative">
               <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" />

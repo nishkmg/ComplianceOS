@@ -92,14 +92,14 @@ export declare const fiscalYears: import("drizzle-orm/pg-core").PgTableWithColum
             tableName: "fiscal_years";
             dataType: "string";
             columnType: "PgEnumColumn";
-            data: "open" | "closed";
+            data: "open" | "pending_close" | "closed";
             driverParam: string;
             notNull: true;
             hasDefault: true;
             isPrimaryKey: false;
             isAutoincrement: false;
             hasRuntimeDefault: false;
-            enumValues: ["open", "closed"];
+            enumValues: ["open", "pending_close", "closed"];
             baseColumn: never;
             identity: undefined;
             generated: undefined;

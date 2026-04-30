@@ -10,34 +10,34 @@ export function AppTopBar() {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
-    <header className="bg-[#F9F8F6] dark:bg-slate-950/80 backdrop-blur-md border-b-[0.5px] border-[#E8E4DC] dark:border-slate-800 flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-serif antialiased no-print">
+    <header className="bg-sidebar dark:bg-slate-950/80 backdrop-blur-md border-b-[0.5px] border-border-subtle dark:border-slate-800 flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-serif antialiased no-print">
       <div className="flex items-center gap-4 lg:ml-64">
-        <span className="font-bold text-lg tracking-tight text-[#1A1A1A] dark:text-slate-100 hidden md:inline">ComplianceOS</span>
+        <span className="font-bold text-lg tracking-tight text-dark dark:text-slate-100 hidden md:inline">ComplianceOS</span>
         <div className="h-4 w-[0.5px] bg-border-subtle mx-2 hidden md:block"></div>
         <nav className="hidden md:flex items-center gap-6">
           <Link 
             href="/dashboard" 
-            className={`text-sm h-14 flex items-center no-underline transition-colors ${pathname === '/dashboard' ? 'text-[#C8860A] border-b-2 border-[#C8860A] font-semibold' : 'text-[#666666] hover:text-[#1A1A1A]'}`}
+            className={`text-sm h-14 flex items-center no-underline transition-colors ${pathname === '/dashboard' ? 'text-primary-container border-b-2 border-primary-container font-semibold' : 'text-mid hover:text-dark'}`}
           >
             Dashboard
           </Link>
           <Link 
             href="/journal" 
-            className={`text-sm h-14 flex items-center no-underline transition-colors ${pathname === '/journal' ? 'text-[#C8860A] border-b-2 border-[#C8860A] font-semibold' : 'text-[#666666] hover:text-[#1A1A1A]'}`}
+            className={`text-sm h-14 flex items-center no-underline transition-colors ${pathname === '/journal' ? 'text-primary-container border-b-2 border-primary-container font-semibold' : 'text-mid hover:text-dark'}`}
           >
             Journal
           </Link>
           <Link 
             href="/reports/ledger" 
-            className={`text-sm h-14 flex items-center no-underline transition-colors ${pathname.startsWith('/reports') ? 'text-[#C8860A] border-b-2 border-[#C8860A] font-semibold' : 'text-[#666666] hover:text-[#1A1A1A]'}`}
+            className={`text-sm h-14 flex items-center no-underline transition-colors ${pathname.startsWith('/reports') ? 'text-primary-container border-b-2 border-primary-container font-semibold' : 'text-mid hover:text-dark'}`}
           >
             Reports
           </Link>
         </nav>
       </div>
       <div className="flex items-center gap-4 relative">
-        <div className="bg-[#fff1e4] px-3 py-1.5 border border-border-subtle flex items-center gap-2">
-          <Icon name="search" className="text-[#666666] text-lg" />
+        <div className="bg-amber-50 px-3 py-1.5 border border-border-subtle flex items-center gap-2">
+          <Icon name="search" className="text-mid text-lg" />
           <input 
             className="bg-transparent border-none focus:ring-0 text-[13px] font-mono w-48 outline-none" 
             placeholder="Search entries..." 
@@ -64,11 +64,11 @@ export function AppTopBar() {
                 <p className="text-[10px] text-text-light">rahul@complianceos.in</p>
              </div>
              <nav className="flex flex-col py-2">
-                <Link href="/settings" className="flex items-center gap-3 px-4 py-2 hover:bg-[#fff8f4] text-text-mid hover:text-primary-container no-underline transition-colors">
+                <Link href="/settings" className="flex items-center gap-3 px-4 py-2 hover:bg-amber-50 text-text-mid hover:text-primary-container no-underline transition-colors">
                   <Icon name="person" className="text-[18px]" />
                   <span className="font-ui-sm text-xs font-bold uppercase tracking-widest">Profile Settings</span>
                 </Link>
-                <Link href="/settings/users" className="flex items-center gap-3 px-4 py-2 hover:bg-[#fff8f4] text-text-mid hover:text-primary-container no-underline transition-colors">
+                <Link href="/settings/users" className="flex items-center gap-3 px-4 py-2 hover:bg-amber-50 text-text-mid hover:text-primary-container no-underline transition-colors">
                   <Icon name="group" className="text-[18px]" />
                   <span className="font-ui-sm text-xs font-bold uppercase tracking-widest">User Management</span>
                 </Link>

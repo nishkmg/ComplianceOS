@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.itrFieldMappings = void 0;
-const pg_core_1 = require("drizzle-orm/pg-core");
-const enums_1 = require("./enums");
-exports.itrFieldMappings = (0, pg_core_1.pgTable)("itr_field_mappings", {
-    id: (0, pg_core_1.uuid)("id").defaultRandom().primaryKey(),
-    returnType: (0, enums_1.itrReturnTypeEnum)("return_type").notNull(),
-    fieldCode: (0, pg_core_1.text)("field_code").notNull(),
-    fieldName: (0, pg_core_1.text)("field_name").notNull(),
-    description: (0, pg_core_1.text)("description"),
-    sourceTable: (0, pg_core_1.text)("source_table"),
-    sourceField: (0, pg_core_1.text)("source_field"),
-    calculationLogic: (0, pg_core_1.jsonb)("calculation_logic").default({}),
+import { pgTable, uuid, text, jsonb, index, } from "drizzle-orm/pg-core";
+import { itrReturnTypeEnum } from "./enums";
+export const itrFieldMappings = pgTable("itr_field_mappings", {
+    id: uuid("id").defaultRandom().primaryKey(),
+    returnType: itrReturnTypeEnum("return_type").notNull(),
+    fieldCode: text("field_code").notNull(),
+    fieldName: text("field_name").notNull(),
+    description: text("description"),
+    sourceTable: text("source_table"),
+    sourceField: text("source_field"),
+    calculationLogic: jsonb("calculation_logic").default({}),
 }, (table) => [
-    (0, pg_core_1.index)("itr_field_mappings_return_type_idx").on(table.returnType),
-    (0, pg_core_1.index)("itr_field_mappings_field_code_idx").on(table.fieldCode),
+    index("itr_field_mappings_return_type_idx").on(table.returnType),
+    index("itr_field_mappings_field_code_idx").on(table.fieldCode),
 ]);
 //# sourceMappingURL=itr-mappings.js.map

@@ -43,7 +43,7 @@ export function PaymentAllocationDialog({
           </div>
         </DialogHeader>
 
-        <div className="px-8 py-4 bg-[#fff8f4] border-b border-border-subtle flex justify-between items-center text-left">
+        <div className="px-8 py-4 bg-amber-50 border-b border-border-subtle flex justify-between items-center text-left">
           <div className="flex flex-col">
             <span className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest mb-1 font-bold">Total to Allocate</span>
             <span className="font-mono text-lg text-on-surface font-bold">₹ {formatIndianNumber(totalAmount)}</span>

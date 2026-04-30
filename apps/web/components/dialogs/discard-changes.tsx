@@ -23,8 +23,8 @@ export function DiscardChangesDialog({
 }: DiscardChangesDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm p-0 overflow-hidden border-[0.5px] border-border-subtle rounded-sm shadow-2xl bg-[#F9F7F2]">
-        <div className="h-1 w-full bg-[#C8860A]"></div>
+      <DialogContent className="max-w-sm p-0 overflow-hidden border-[0.5px] border-border-subtle rounded-sm shadow-2xl bg-section-muted">
+        <div className="h-1 w-full bg-primary-container"></div>
         <div className="p-6">
           <div className="flex items-start mb-4 text-left">
             <div className="flex-shrink-0 mr-4">
@@ -52,7 +52,7 @@ export function DiscardChangesDialog({
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-white bg-[#C8860A] rounded-sm hover:bg-[#9A6605] transition-colors shadow-sm border-none cursor-pointer"
+              className="px-4 py-2 text-sm font-semibold text-white bg-primary-container rounded-sm hover:bg-primary transition-colors shadow-sm border-none cursor-pointer"
             >
               Keep Editing
             </button>

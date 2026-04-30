@@ -6,8 +6,8 @@ export function PricingCard({ name, price, period, features, cta, href, featured
   const displayPeriod = isAnnual ? '/year' : '/month';
 
   const cardClass = featured
-    ? 'pricing-card pricing-card-featured bg-surface border border-[#E8E4DC] rounded-lg p-8 relative'
-    : 'pricing-card bg-surface border border-[#E8E4DC] rounded-lg p-8';
+    ? 'pricing-card pricing-card-featured bg-surface border border-border-subtle rounded-lg p-8 relative'
+    : 'pricing-card bg-surface border border-border-subtle rounded-lg p-8';
 
   return (
     <div className={cardClass}>
@@ -39,7 +39,7 @@ export function PricingCard({ name, price, period, features, cta, href, featured
         href={href}
         className={`block text-center w-full py-3 px-4 font-ui text-[14px] font-medium rounded-md transition-colors no-underline ${
           featured
-            ? 'bg-amber text-white hover:bg-[#B27609]'
+            ? 'bg-amber text-white hover:bg-amber-hover'
             : 'bg-transparent text-dark border border-dark hover:bg-section-muted'
         }`}
       >

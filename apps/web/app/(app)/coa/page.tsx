@@ -113,7 +113,7 @@ export default function CoAPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#F9F8F6] border-b-[0.5px] border-border-subtle">
+              <tr className="bg-sidebar border-b-[0.5px] border-border-subtle">
                 <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Code</th>
                 <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Account Name</th>
                 <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest">Type</th>

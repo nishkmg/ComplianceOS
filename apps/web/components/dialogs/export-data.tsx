@@ -62,7 +62,7 @@ export function ExportDataDialog({
             <label className="font-ui-xs text-[10px] text-amber-text uppercase tracking-widest font-bold">Select Modules</label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {['General Ledger', 'GST Data', 'Employee Records', 'ITR Computation'].map((m) => (
-                <label key={m} className="flex items-start gap-3 p-4 border-[0.5px] border-border-subtle rounded-sm hover:bg-stone-50 cursor-pointer transition-colors has-[:checked]:border-primary-container has-[:checked]:bg-[#fff8f4]">
+                <label key={m} className="flex items-start gap-3 p-4 border-[0.5px] border-border-subtle rounded-sm hover:bg-stone-50 cursor-pointer transition-colors has-[:checked]:border-primary-container has-[:checked]:bg-amber-50">
                   <input type="checkbox" className="mt-1 accent-primary" defaultChecked={m === 'General Ledger'} />
                   <div className="flex flex-col">
                     <span className="font-ui-sm font-bold text-on-surface">{m}</span>
@@ -85,7 +85,7 @@ export function ExportDataDialog({
               ].map((f) => (
                 <label key={f.id} className="cursor-pointer flex-1">
                   <input type="radio" className="sr-only peer" name="format" checked={format === f.id} onChange={() => setFormat(f.id)} />
-                  <div className="border-[0.5px] border-border-subtle rounded-sm p-4 text-center peer-checked:border-primary-container peer-checked:bg-[#fff8f4] hover:bg-stone-50 transition-colors flex flex-col items-center gap-2">
+                  <div className="border-[0.5px] border-border-subtle rounded-sm p-4 text-center peer-checked:border-primary-container peer-checked:bg-amber-50 hover:bg-stone-50 transition-colors flex flex-col items-center gap-2">
                     <Icon name={f.icon} className="text-text-mid ${format === f.id ? 'text-primary-container' : ''}" />
                     <span className={`font-ui-sm text-xs ${format === f.id ? 'font-bold' : ''}`}>{f.name}</span>
                   </div>

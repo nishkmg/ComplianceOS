@@ -94,7 +94,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
                 key={t.id}
                 onClick={() => setFormData({ ...formData, gstRegistration: t.id })}
                 className={`p-6 border-[0.5px] rounded-sm transition-all cursor-pointer ${
-                  formData.gstRegistration === t.id ? "bg-[#fff8f4] border-amber shadow-sm" : "bg-white border-border-subtle hover:bg-stone-50"
+                  formData.gstRegistration === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-white border-border-subtle hover:bg-stone-50"
                 }`}
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -134,7 +134,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, itcEligible: !formData.itcEligible })}
-                    className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${formData.itcEligible ? "bg-[#C8860A]" : "bg-stone-200"}`}
+                    className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${formData.itcEligible ? "bg-primary-container" : "bg-stone-200"}`}
                   >
                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${formData.itcEligible ? "left-5" : "left-1"}`} />
                   </button>
@@ -152,7 +152,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
           <button
             type="button"
             onClick={() => setFormData({ ...formData, tdsApplicable: !formData.tdsApplicable })}
-            className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${formData.tdsApplicable ? "bg-[#C8860A]" : "bg-stone-200"}`}
+            className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${formData.tdsApplicable ? "bg-primary-container" : "bg-stone-200"}`}
           >
             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${formData.tdsApplicable ? "left-5" : "left-1"}`} />
           </button>

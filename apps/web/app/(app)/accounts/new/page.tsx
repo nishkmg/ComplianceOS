@@ -109,7 +109,7 @@ export default function NewAccountPage() {
                   <div 
                     key={st}
                     onClick={() => setFormData({ ...formData, subType: st })}
-                    className={`p-4 border rounded-sm transition-all cursor-pointer text-center ${formData.subType === st ? 'border-primary-container bg-[#fff8f4] ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
+                    className={`p-4 border rounded-sm transition-all cursor-pointer text-center ${formData.subType === st ? 'border-primary-container bg-amber-50 ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
                   >
                     <span className="font-ui-xs text-[10px] font-bold uppercase tracking-wider">{st}</span>
                   </div>

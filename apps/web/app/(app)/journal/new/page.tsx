@@ -149,7 +149,7 @@ export default function NewJournalEntryPage() {
           </div>
 
           <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
-            <div className="h-[2px] w-full bg-[#C8860A]"></div>
+            <div className="h-[2px] w-full bg-primary-container"></div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>

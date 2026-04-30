@@ -163,7 +163,7 @@ export default function GSTR3BDetailPage() {
           </div>
           <div className="flex gap-4 shrink-0">
             <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm font-bold uppercase tracking-widest hover:bg-white transition-colors cursor-pointer bg-transparent">Generate Challan</button>
-            <button className="px-8 py-3 bg-[#C8860A] text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">File Return →</button>
+            <button className="px-8 py-3 bg-primary-container text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">File Return →</button>
           </div>
         </div>
       </div>

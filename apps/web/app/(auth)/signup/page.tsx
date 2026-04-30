@@ -104,7 +104,7 @@ export default function SignupPage() {
 
             {/* Action Button */}
             <div className="pt-4">
-              <button className="group w-full flex items-center justify-center gap-2 bg-primary-container border-[0.5px] border-primary-container px-6 py-3 font-ui-sm text-ui-sm text-white hover:bg-[#825500] hover:border-[#825500] transition-all duration-300 cursor-pointer" type="submit">
+              <button className="group w-full flex items-center justify-center gap-2 bg-primary-container border-[0.5px] border-primary-container px-6 py-3 font-ui-sm text-ui-sm text-white hover:bg-primary hover:border-primary transition-all duration-300 cursor-pointer" type="submit">
                 Continue to Firm Details
                 <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-300" />
               </button>
@@ -116,7 +116,7 @@ export default function SignupPage() {
         <div className="mt-8 text-center">
           <p className="font-ui-sm text-ui-sm text-text-mid">
             Already maintaining a ledger? 
-            <Link className="text-primary hover:text-[#825500] underline decoration-primary-container/30 decoration-2 underline-offset-4 transition-colors ml-1" href="/login">Log in</Link>
+            <Link className="text-primary hover:text-primary underline decoration-primary-container/30 decoration-2 underline-offset-4 transition-colors ml-1" href="/login">Log in</Link>
           </p>
         </div>
       </main>

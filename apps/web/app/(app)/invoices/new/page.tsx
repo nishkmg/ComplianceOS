@@ -124,7 +124,7 @@ export default function NewInvoicePage() {
                  <button className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer font-ui-sm text-sm font-bold uppercase tracking-widest">Discard</button>
                  <div className="flex gap-4">
                     <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm">Save Draft</button>
-                    <button className="px-8 py-3 bg-[#C8860A] text-white font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm rounded-sm flex items-center gap-2">
+                    <button className="px-8 py-3 bg-primary-container text-white font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm rounded-sm flex items-center gap-2">
                        Finalize & Send <Icon name="send" className="text-[18px]" />
                     </button>
                  </div>

@@ -76,7 +76,7 @@ export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
       </div>
 
       <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
-        <div className="h-[2px] w-full bg-[#C8860A]"></div>
+        <div className="h-[2px] w-full bg-primary-container"></div>
         <div className="overflow-y-auto max-h-[500px] border-b-[0.5px] border-border-subtle">
           {MOCK_COA.map(renderNode)}
         </div>

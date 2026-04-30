@@ -18,7 +18,7 @@ export function MobileNav() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-[#111111] z-[100] flex flex-col justify-between p-8 overflow-y-auto md:hidden">
+        <div className="fixed inset-0 bg-section-dark z-[100] flex flex-col justify-between p-8 overflow-y-auto md:hidden">
           <div>
             <div className="flex justify-between items-center w-full mb-16">
               <span className="font-marketing-xl text-[28px] text-white tracking-tighter font-bold">ComplianceOS</span>

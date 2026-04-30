@@ -24,15 +24,15 @@ export function KpiTile({
   subtext,
 }: KpiTileProps) {
   const borderColors = {
-    amber: 'border-t-[#C8860A]',
-    success: 'border-t-[#16A34A]',
-    danger: 'border-t-[#DC2626]',
+    amber: 'border-t-primary-container',
+    success: 'border-t-success',
+    danger: 'border-t-danger',
     neutral: 'border-t-stone-300',
     dark: 'border-t-stone-800',
   };
 
   const iconColors = {
-    amber: 'text-[#C8860A]',
+    amber: 'text-primary-container',
     success: 'text-green-600',
     danger: 'text-red-600',
     neutral: 'text-stone-400',

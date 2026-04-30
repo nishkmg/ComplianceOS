@@ -87,12 +87,12 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
 
       <div className="bg-white border-[0.5px] border-border-subtle shadow-sm flex flex-col overflow-hidden">
         {/* Status Line */}
-        <div className="h-[2px] w-full bg-[#C8860A]"></div>
+        <div className="h-[2px] w-full bg-primary-container"></div>
         
         {/* Mode 1: Fresh Start */}
         <div 
           onClick={() => setMode("fresh_start")}
-          className={`p-8 border-b-[0.5px] border-border-subtle transition-colors cursor-pointer ${mode === 'fresh_start' ? 'bg-[#fff8f4]' : 'bg-white hover:bg-stone-50'}`}
+          className={`p-8 border-b-[0.5px] border-border-subtle transition-colors cursor-pointer ${mode === 'fresh_start' ? 'bg-amber-50' : 'bg-white hover:bg-stone-50'}`}
         >
           <div className="flex items-start gap-4">
             <div className={`w-5 h-5 rounded-sm border flex items-center justify-center mt-1 transition-colors ${mode === 'fresh_start' ? 'bg-amber border-amber' : 'border-stone-300'}`}>
@@ -108,7 +108,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
         {/* Mode 2: Migration */}
         <div 
           onClick={() => setMode("migration")}
-          className={`p-8 transition-colors cursor-pointer ${mode === 'migration' ? 'bg-[#fff8f4]' : 'bg-white hover:bg-stone-50'}`}
+          className={`p-8 transition-colors cursor-pointer ${mode === 'migration' ? 'bg-amber-50' : 'bg-white hover:bg-stone-50'}`}
         >
           <div className="flex items-start gap-4">
             <div className={`w-5 h-5 rounded-sm border flex items-center justify-center mt-1 transition-colors ${mode === 'migration' ? 'bg-amber border-amber' : 'border-stone-300'}`}>

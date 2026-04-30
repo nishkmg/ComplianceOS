@@ -18,7 +18,7 @@ export default function TeamSalaryPreviewPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 border border-border-subtle bg-white rounded-sm overflow-hidden shadow-sm mb-8">
         <div className="p-6 border-r border-border-subtle"><div className="font-ui-xs text-[10px] text-text-light mb-1 font-bold uppercase">Total Employees</div><div className="font-mono text-xl font-bold text-on-surface">142</div></div>
-        <div className="p-6 border-r border-border-subtle bg-[#fff8f4]"><div className="font-ui-xs text-[10px] text-text-light mb-1 font-bold uppercase">Total Gross</div><div className="font-mono text-xl font-bold text-on-surface">₹ 42,50,000.00</div></div>
+        <div className="p-6 border-r border-border-subtle bg-amber-50"><div className="font-ui-xs text-[10px] text-text-light mb-1 font-bold uppercase">Total Gross</div><div className="font-mono text-xl font-bold text-on-surface">₹ 42,50,000.00</div></div>
         <div className="p-6 border-r border-border-subtle"><div className="font-ui-xs text-[10px] text-text-light mb-1 font-bold uppercase">Total Deductions</div><div className="font-mono text-xl font-bold text-text-mid">₹ 4,85,200.00</div></div>
         <div className="p-6 bg-stone-50 border-t-2 border-t-primary-container"><div className="font-ui-xs text-[10px] text-text-light mb-1 font-bold uppercase">Net Payable</div><div className="font-mono text-xl font-bold text-primary">₹ 37,64,800.00</div></div>
       </div>

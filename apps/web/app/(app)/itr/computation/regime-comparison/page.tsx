@@ -70,7 +70,7 @@ export default function ITRRegimeComparisonPage() {
         {/* New Regime Card */}
         <div className="bg-white border-[0.5px] border-primary-container shadow-lg flex flex-col relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
-          <div className="p-6 border-b-[0.5px] border-primary-container/20 bg-[#fff8f4]">
+          <div className="p-6 border-b-[0.5px] border-primary-container/20 bg-amber-50">
             <div className="flex justify-between items-center">
               <h3 className="font-display-lg text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
               <span className="bg-primary text-white px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-widest">Recommended</span>
@@ -78,13 +78,13 @@ export default function ITRRegimeComparisonPage() {
           </div>
           <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
             {comparisonData.map((row, i) => (
-              <div key={i} className="flex justify-between items-center p-6 hover:bg-[#fff8f4]/50 transition-colors">
+              <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-50/50 transition-colors">
                 <span className="font-ui-sm text-text-mid text-xs uppercase tracking-wider">{row.label}</span>
                 <span className={row.new === 0 ? "text-text-light opacity-50" : "text-on-surface"}>₹ {formatIndianNumber(row.new)}</span>
               </div>
             ))}
           </div>
-          <div className="p-8 bg-[#fff8f4] border-t-2 border-primary">
+          <div className="p-8 bg-amber-50 border-t-2 border-primary">
             <div className="flex justify-between items-center">
               <span className="font-ui-sm font-bold uppercase tracking-widest text-xs text-primary">Final Liability</span>
               <span className="font-mono text-xl font-bold text-primary">₹ {formatIndianNumber(1000000)}</span>

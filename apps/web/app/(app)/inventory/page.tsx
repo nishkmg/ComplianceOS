@@ -56,7 +56,7 @@ export default function InventoryDashboardPage() {
                 'text-stone-400'
               }`} />
             </div>
-            <div className={`font-mono text-2xl font-bold mb-2 ${tile.variant === 'amber' ? 'text-[#C8860A]' : 'text-on-surface'}`}>
+            <div className={`font-mono text-2xl font-bold mb-2 ${tile.variant === 'amber' ? 'text-primary-container' : 'text-on-surface'}`}>
               {tile.variant !== 'success' && tile.label.includes('Value') ? '₹ ' : ''}{tile.value}
             </div>
             <p className="text-[10px] font-mono text-text-light flex items-center gap-1">
@@ -73,7 +73,7 @@ export default function InventoryDashboardPage() {
           {/* Distribution Chart Placeholder */}
           <div className="bg-white border-[0.5px] border-border-subtle p-8 shadow-sm h-[400px] flex flex-col">
             <h3 className="font-ui-lg text-lg font-bold text-on-surface mb-6">Stock Valuation Distribution</h3>
-            <div className="flex-1 bg-[#FBF9F6] border border-dashed border-border-subtle flex items-center justify-center relative overflow-hidden">
+            <div className="flex-1 bg-section-muted border border-dashed border-border-subtle flex items-center justify-center relative overflow-hidden">
                <div className="text-center">
                  <div className="w-48 h-48 rounded-full border-[12px] border-primary-container border-r-transparent border-b-stone-200 rotate-45 mb-4 mx-auto"></div>
                  <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest">Weighted Value by Category</p>
@@ -148,9 +148,9 @@ export default function InventoryDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-[#fff8f4] border-[0.5px] border-amber/30 p-8 shadow-sm text-left relative overflow-hidden group">
+          <div className="bg-amber-50 border-[0.5px] border-amber/30 p-8 shadow-sm text-left relative overflow-hidden group">
             <div className="relative z-10">
-              <Icon name="analytics" className="text-[#C8860A] mb-4" />
+              <Icon name="analytics" className="text-primary-container mb-4" />
               <h4 className="font-ui-lg text-lg font-bold text-on-surface mb-2">Dead Stock Analysis</h4>
               <p className="font-ui-sm text-sm text-text-mid leading-relaxed">System has identified items worth ₹ 2.4L that haven't moved in 180 days. Consider liquidation or write-down.</p>
             </div>

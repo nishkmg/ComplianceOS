@@ -56,7 +56,7 @@ export default function DashboardPage() {
             <Icon name="download" className="text-sm" />
             <span className="font-ui-xs uppercase tracking-wider">Export PDF</span>
           </button>
-          <Link href="/journal/new" className="bg-[#C8860A] text-white px-6 py-2 flex items-center gap-2 hover:bg-amber-700 transition-transform active:scale-95 group no-underline">
+          <Link href="/journal/new" className="bg-primary-container text-white px-6 py-2 flex items-center gap-2 hover:bg-amber-700 transition-transform active:scale-95 group no-underline">
             <span className="font-ui-xs uppercase tracking-wider">Add Entry</span>
             <span className="transition-transform group-hover:translate-x-1">→</span>
           </Link>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-8 bg-white border border-border-subtle shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-border-subtle flex justify-between items-center bg-stone-50">
             <h3 className="font-ui-md font-bold text-stone-900">Recent Entries</h3>
-            <Link className="text-ui-xs text-[#C8860A] font-bold uppercase tracking-wider hover:underline no-underline" href="/journal">View Ledger</Link>
+            <Link className="text-ui-xs text-primary-container font-bold uppercase tracking-wider hover:underline no-underline" href="/journal">View Ledger</Link>
           </div>
           <div className="overflow-x-auto">
             {loading ? (
@@ -123,36 +123,36 @@ export default function DashboardPage() {
             <div className="relative pt-1">
               <div className="flex mb-2 items-center justify-between">
                 <div>
-                  <span className="text-ui-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-[#C8860A] bg-section-amber">
+                  <span className="text-ui-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary-container bg-section-amber">
                     Q1 Completion
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-mono-md font-semibold inline-block text-[#C8860A]">
+                  <span className="text-mono-md font-semibold inline-block text-primary-container">
                     62%
                   </span>
                 </div>
               </div>
               <div className="overflow-hidden h-1.5 mb-4 text-xs flex rounded bg-stone-100">
-                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[#C8860A] transition-all duration-1000" style={{ width: "62%" }}></div>
+                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-container transition-all duration-1000" style={{ width: "62%" }}></div>
               </div>
               <p className="text-ui-xs text-text-mid leading-relaxed text-left">You are tracking <span className="font-mono-md">15%</span> ahead of your revenue goals for this quarter.</p>
             </div>
           </div>
 
-          <div className="bg-stone-900 p-6 shadow-screenshot border-l-4 border-l-[#C8860A] text-left">
+          <div className="bg-stone-900 p-6 shadow-screenshot border-l-4 border-l-primary-container text-left">
             <h3 className="font-ui-xs text-stone-400 uppercase tracking-widest mb-6">Quick Actions</h3>
             <div className="space-y-4">
               <button className="w-full bg-stone-800 border border-stone-700 text-stone-100 px-4 py-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <Icon name="add_circle" className="text-[#C8860A]" />
+                  <Icon name="add_circle" className="text-primary-container" />
                   <span className="font-ui-sm">Record New Entry</span>
                 </div>
                 <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />
               </button>
               <button className="w-full bg-stone-800 border border-stone-700 text-stone-100 px-4 py-4 flex items-center justify-between hover:bg-stone-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <Icon name="insert_chart" className="text-[#C8860A]" />
+                  <Icon name="insert_chart" className="text-primary-container" />
                   <span className="font-ui-sm">View P&L Statement</span>
                 </div>
                 <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-stone-500" />

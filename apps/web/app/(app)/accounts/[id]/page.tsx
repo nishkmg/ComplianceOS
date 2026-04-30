@@ -66,7 +66,7 @@ export default function AccountDetailPage() {
 
       {/* Transactions Table */}
       <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
-        <div className="flex justify-between items-center p-4 border-b-[0.5px] border-border-subtle bg-[#FBF9F6]">
+        <div className="flex justify-between items-center p-4 border-b-[0.5px] border-border-subtle bg-section-muted">
           <h2 className="font-ui-lg text-lg font-medium text-on-surface">Transactions</h2>
           <div className="relative">
             <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light text-[18px]" />
@@ -117,7 +117,7 @@ export default function AccountDetailPage() {
 
       {/* Closing Balance Card */}
       <div className="bg-white border-[0.5px] border-border-subtle p-6 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
         <div className="flex items-center justify-between">
           <div>
             <p className="font-ui-xs text-text-mid uppercase tracking-wider">Closing Balance</p>

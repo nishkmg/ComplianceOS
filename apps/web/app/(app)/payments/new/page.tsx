@@ -76,7 +76,7 @@ export default function NewPaymentPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div 
               onClick={() => setType("receipt")}
-              className={`relative p-6 border rounded-sm cursor-pointer transition-all ${type === 'receipt' ? 'border-primary-container bg-[#fff8f4] ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
+              className={`relative p-6 border rounded-sm cursor-pointer transition-all ${type === 'receipt' ? 'border-primary-container bg-amber-50 ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-ui-lg text-lg font-bold">Payment Receipt</span>
@@ -86,7 +86,7 @@ export default function NewPaymentPage() {
             </div>
             <div 
               onClick={() => setType("payment")}
-              className={`relative p-6 border rounded-sm cursor-pointer transition-all ${type === 'payment' ? 'border-primary-container bg-[#fff8f4] ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
+              className={`relative p-6 border rounded-sm cursor-pointer transition-all ${type === 'payment' ? 'border-primary-container bg-amber-50 ring-1 ring-primary-container' : 'border-border-subtle bg-white hover:bg-stone-50'}`}
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-ui-lg text-lg font-bold">Vendor Payment</span>
@@ -130,7 +130,7 @@ export default function NewPaymentPage() {
 
         {/* Allocation Info (Mock) */}
         {parseFloat(String(paymentAmount)) > 0 && (
-          <div className="bg-[#fff8f4] border border-amber/30 p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-sm animate-in">
+          <div className="bg-amber-50 border border-amber/30 p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-sm animate-in">
              <div className="text-left flex-1">
                 <h4 className="font-ui-lg text-lg font-bold text-on-surface mb-2 uppercase tracking-widest text-[10px] text-amber-900">Allocation Required</h4>
                 <p className="font-ui-sm text-sm text-amber-800 leading-relaxed">This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.</p>

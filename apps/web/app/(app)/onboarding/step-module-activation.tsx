@@ -68,10 +68,10 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
             key={mod.id}
             onClick={() => toggleModule(mod.id)}
             className={`group border-[0.5px] border-border-subtle p-6 flex flex-col relative transition-all duration-300 cursor-pointer ${
-              enabledModules.has(mod.id) ? "bg-[#fff8f4] border-amber shadow-sm" : "bg-white hover:bg-stone-50"
+              enabledModules.has(mod.id) ? "bg-amber-50 border-amber shadow-sm" : "bg-white hover:bg-stone-50"
             }`}
           >
-            {enabledModules.has(mod.id) && <div className="absolute top-0 left-0 w-full h-[2px] bg-[#C8860A]"></div>}
+            {enabledModules.has(mod.id) && <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>}
             <div className="flex justify-between items-start mb-4">
               <Icon name={mod.icon} className={`text-2xl ${enabledModules.has(mod.id) ? "text-primary-container" : "text-stone-400"}`} />
               {mod.required && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-100 text-stone-500 px-2 py-0.5 rounded-sm">Required</span>}

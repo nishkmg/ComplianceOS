@@ -25,7 +25,7 @@ export default function ITRComputationPage() {
         </div>
         <div className="flex gap-3">
           <button className="border border-stone-300 text-stone-700 px-6 py-2 rounded-sm text-sm font-medium hover:bg-stone-50 transition-colors cursor-pointer bg-white shadow-sm">Save Draft</button>
-          <button className="bg-[#C8860A] text-white px-6 py-2 rounded-sm text-sm font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 cursor-pointer border-none font-bold uppercase tracking-widest">
+          <button className="bg-primary-container text-white px-6 py-2 rounded-sm text-sm font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 cursor-pointer border-none font-bold uppercase tracking-widest">
             Finalize Return <Icon name="arrow_forward" className="text-sm" />
           </button>
         </div>
@@ -99,7 +99,7 @@ export default function ITRComputationPage() {
               </div>
             </div>
 
-            <div className="bg-[#fff8f4] border border-amber/30 p-6 shadow-sm">
+            <div className="bg-amber-50 border border-amber/30 p-6 shadow-sm">
               <h4 className="font-ui-sm font-bold text-amber-900 mb-2 uppercase tracking-widest text-[10px]">Optimization Tips</h4>
               <p className="font-ui-sm text-[13px] text-amber-800 leading-relaxed">
                 You haven't fully utilized the 80C deduction limit of ₹ 1.5L. Adding ₹ 24,000 more could save ₹ 7,200 in tax.

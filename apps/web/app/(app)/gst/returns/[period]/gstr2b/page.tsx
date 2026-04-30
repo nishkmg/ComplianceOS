@@ -140,7 +140,7 @@ export default function GSTR2BDetailPage() {
 
       <div className="mt-8 flex justify-end gap-4 no-print">
         <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent">Fetch from Portal</button>
-        <button className="px-12 py-3 bg-[#C8860A] text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">Confirm ITC →</button>
+        <button className="px-12 py-3 bg-primary-container text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">Confirm ITC →</button>
       </div>
     </div>
   );

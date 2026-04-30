@@ -122,9 +122,9 @@ export default function InvoiceDetailPage() {
               <span className="font-ui-sm text-ui-sm text-text-mid">SGST (9%)</span>
               <span className="font-mono text-on-surface text-sm">₹ {formatIndianNumber(invoice.sgst)}</span>
             </div>
-            <div className="flex justify-between py-4 border-b-2 border-[#C8860A] mt-2">
+            <div className="flex justify-between py-4 border-b-2 border-primary-container mt-2">
               <span className="font-ui-lg text-lg font-medium text-on-surface uppercase tracking-wide">Grand Total</span>
-              <span className="font-mono text-xl font-medium text-[#C8860A]">₹ {formatIndianNumber(invoice.grandTotal)}</span>
+              <span className="font-mono text-xl font-medium text-primary-container">₹ {formatIndianNumber(invoice.grandTotal)}</span>
             </div>
             <div className="text-right mt-2">
               <span className="font-ui-xs text-[10px] text-text-light italic">{invoice.totalWords}</span>
@@ -160,19 +160,19 @@ export default function InvoiceDetailPage() {
 
       {/* Action Buttons */}
       <div className="w-full max-w-[210mm] mt-8 flex justify-end gap-4 mb-16 no-print">
-        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-[#1A1A1A] font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
+        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-dark font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
           <Icon name="edit" className="text-[18px]" />
           Edit
         </button>
-        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-[#1A1A1A] font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
+        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-dark font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer">
           <Icon name="check_circle" className="text-[18px]" />
           Mark as Paid
         </button>
-        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-[#1A1A1A] font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer" onClick={() => window.print()}>
+        <button className="px-5 py-2.5 bg-stone-100 border border-border-subtle text-dark font-ui-sm text-xs font-medium hover:bg-stone-200 transition-colors flex items-center gap-2 cursor-pointer" onClick={() => window.print()}>
           <Icon name="download" className="text-[18px]" />
           Download PDF
         </button>
-        <button className="px-6 py-2.5 bg-[#C8860A] text-white font-ui-sm text-xs font-medium hover:bg-amber-700 transition-transform active:scale-95 flex items-center gap-2 group cursor-pointer border-none">
+        <button className="px-6 py-2.5 bg-primary-container text-white font-ui-sm text-xs font-medium hover:bg-amber-700 transition-transform active:scale-95 flex items-center gap-2 group cursor-pointer border-none">
           Send
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
         </button>

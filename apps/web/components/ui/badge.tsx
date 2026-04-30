@@ -27,7 +27,7 @@ export function Badge({ variant = 'gray', children, className = '' }: BadgeProps
   const variantClasses = {
     amber: 'bg-amber text-white',
     success: 'bg-success text-white',
-    gray: 'bg-[#E5E5E5] text-mid',
+    gray: 'bg-lighter text-mid',
     danger: 'bg-danger text-white',
   };
 
