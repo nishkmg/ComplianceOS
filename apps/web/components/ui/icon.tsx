@@ -61,6 +61,12 @@ import {
   Moon,
   Languages,
   Package,
+  User,
+  FolderOpen,
+  Folder,
+  List,
+  ArrowLeftRight,
+  Calculator,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -134,6 +140,13 @@ const iconMap: Record<string, LucideIcon> = {
   light_mode: Sun,
   dark_mode: Moon,
   translate: Languages,
+  // Added for sidebar nav and topbar
+  person: User,
+  folder_open: FolderOpen,
+  folder: Folder,
+  list: List,
+  compare_arrows: ArrowLeftRight,
+  calculate: Calculator,
 };
 
 export { iconMap };
