@@ -10,27 +10,28 @@ import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
 
 const BUSINESS_TYPES = [
-  { value: "pvt_ltd", label: "Private Limited Company" },
+  { value: "private_limited", label: "Private Limited Company" },
   { value: "llp", label: "Limited Liability Partnership (LLP)" },
-  { value: "proprietorship", label: "Sole Proprietorship" },
+  { value: "sole_proprietorship", label: "Sole Proprietorship" },
   { value: "partnership", label: "Partnership Firm" },
-  { value: "public_ltd", label: "Public Limited Company" },
+  { value: "public_limited", label: "Public Limited Company" },
+  { value: "huf", label: "Hindu Undivided Family" },
 ];
 
 const INDUSTRIES = [
-  { value: "it_services", label: "Information Technology" },
+  { value: "services_professional", label: "Professional Services" },
   { value: "manufacturing", label: "Manufacturing" },
-  { value: "retail", label: "Retail & E-commerce" },
-  { value: "services", label: "Professional Services" },
-  { value: "other", label: "Other" },
+  { value: "retail_trading", label: "Retail & Trading" },
+  { value: "freelancer_consultant", label: "Freelancer / Consultant" },
+  { value: "regulated_professional", label: "Regulated Professional" },
 ];
 
 const STATES = [
-  { value: "MH", label: "Maharashtra" },
-  { value: "KA", label: "Karnataka" },
-  { value: "DL", label: "Delhi" },
-  { value: "TN", label: "Tamil Nadu" },
-  { value: "GJ", label: "Gujarat" },
+  { value: "maharashtra", label: "Maharashtra" },
+  { value: "karnataka", label: "Karnataka" },
+  { value: "delhi", label: "Delhi" },
+  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "gujarat", label: "Gujarat" },
 ];
 
 export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
@@ -51,9 +52,9 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
   } = useForm<BusinessProfileInput>({
     resolver: zodResolver(BusinessProfileInputSchema),
     defaultValues: {
-      businessType: "pvt_ltd",
-      industry: "it_services",
-      state: "MH",
+      businessType: "private_limited",
+      industry: "services_professional",
+      state: "maharashtra",
     }
   });
 
@@ -113,7 +114,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
               className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
               id="businessType"
               {...register("businessType")}
-              onChange={(e) => setValue("businessType", e.target.value)}
+              onChange={(e) => setValue("businessType", e.target.value as any)}
             >
               <option disabled value="">Select structure...</option>
               {BUSINESS_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
@@ -130,7 +131,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
               className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
               id="industry"
               {...register("industry")}
-              onChange={(e) => setValue("industry", e.target.value)}
+              onChange={(e) => setValue("industry", e.target.value as any)}
             >
               <option disabled value="">Select industry...</option>
               {INDUSTRIES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
@@ -175,7 +176,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
               className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-ui-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
               id="state"
               {...register("state")}
-              onChange={(e) => setValue("state", e.target.value)}
+              onChange={(e) => setValue("state", e.target.value as any)}
             >
               <option disabled value="">Select state...</option>
               {STATES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}

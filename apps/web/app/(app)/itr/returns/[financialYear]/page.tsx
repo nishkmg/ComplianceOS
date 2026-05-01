@@ -70,7 +70,7 @@ export default function ITRFinancialYearPage() {
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-[16px] font-normal text-dark">{currentReturn.returnType.toUpperCase()} Return</h2>
-            <Badge variant={statusConfig[currentReturn.status].variant as BadgeVariant}>{statusConfig[currentReturn.status].label}</Badge>
+            <Badge variant={statusConfig[currentReturn.status as ITRReturnStatus].variant as BadgeVariant}>{statusConfig[currentReturn.status as ITRReturnStatus].label}</Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
