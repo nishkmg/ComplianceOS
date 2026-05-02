@@ -1,165 +1,161 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-const tradingAccount = {
-  credits: [
-    { label: "Sales Revenue", amount: 12450000 },
-    { label: "Closing Stock", amount: 850000 },
-  ],
-  debits: [
-    { label: "Opening Stock", amount: 450000 },
-    { label: "Purchases", amount: 8240000 },
-    { label: "Direct Expenses", amount: 124500 },
-  ],
-  grossProfit: 4485500
-};
+// ─── Mock data — Schedule III format ──────────────────────────────────────────
 
-const profitLossAccount = {
-  credits: [
-    { label: "Gross Profit b/d", amount: 4485500 },
-    { label: "Other Income", amount: 24600 },
-  ],
-  debits: [
-    { label: "Salaries & Wages", amount: 1245000 },
-    { label: "Rent & Rates", amount: 450000 },
-    { label: "Electricity & Water", amount: 85200 },
-    { label: "Depreciation", amount: 248000 },
-    { label: "Audit Fees", amount: 45000 },
-    { label: "Miscellaneous Expenses", amount: 12400 },
-  ],
-  netProfit: 2684500
-};
+const revenueItems = [
+  { label: "Revenue from Operations", amount: 12450000, note: "1" },
+  { label: "Other Income", amount: 24600, note: "2" },
+];
+
+const expenseItems = [
+  { label: "Cost of Materials Consumed", amount: 8240000, note: "3" },
+  { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -400000, note: "4" },
+  { label: "Employee Benefits Expense", amount: 1245000, note: "5" },
+  { label: "Finance Costs", amount: 18500, note: "6" },
+  { label: "Depreciation and Amortisation Expense", amount: 248000, note: "7" },
+  { label: "Other Expenses", amount: 570000, note: "8" },
+];
+
+const totalRevenue = revenueItems.reduce((s, i) => s + i.amount, 0);
+const totalExpenses = expenseItems.reduce((s, i) => s + i.amount, 0);
+const netProfit = totalRevenue - totalExpenses;
+const isProfit = netProfit >= 0;
+
+// ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ProfitLossPage() {
   const [fiscalYear, setFiscalYear] = useState("2026-27");
 
   return (
-    <div className="bg-page-bg text-on-surface font-ui-md min-h-screen">
-      <main className="flex-1 pb-space-64 pt-6">
-        <div className="max-w-[1000px] mx-auto px-gutter-desktop">
-          {/* Header */}
-          <div className="flex justify-between items-end mb-12 pb-4 border-b-[0.5px] border-border-subtle text-left">
-            <div>
-              <span className="font-ui-xs text-amber-text uppercase tracking-widest block mb-2 font-bold">Financial Performance</span>
-              <h1 className="font-display-lg text-display-lg text-on-surface">Profit & Loss Account</h1>
-            </div>
-            <div className="flex gap-3">
-              <select className="border-[0.5px] border-border-subtle px-4 py-2 text-ui-sm outline-none bg-white" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
-                <option>2026-27</option>
-                <option>2025-26</option>
-              </select>
-              <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-stone-50 transition-colors flex items-center gap-2 cursor-pointer bg-transparent rounded-sm uppercase font-bold tracking-widest text-xs">
-                <Icon name="print" className="text-[18px]" />
-                Print
-              </button>
-            </div>
-          </div>
-
-          {/* Report Paper */}
-          <div className="bg-white border-[0.5px] border-border-subtle p-12 shadow-sm text-left">
-            {/* Report Header */}
-            <header className="text-center mb-12 pb-8 border-b-[0.5px] border-border-subtle">
-              <h1 className="font-display text-[26px] font-normal text-dark mb-1 uppercase tracking-tight">Mehta Textiles Private Limited</h1>
-              <h2 className="font-ui-lg text-text-mid uppercase tracking-widest mb-4">Trading and Profit & Loss Account</h2>
-              <p className="font-ui-sm text-text-light italic">For the year ended 31 March 2027</p>
-            </header>
-
-            {/* Trading Account Section */}
-            <section className="mb-16">
-              <div className="bg-stone-50 px-4 py-2 border-l-2 border-amber-600 mb-4 flex justify-between items-center">
-                 <h3 className="font-ui-sm font-bold text-on-surface text-xs uppercase tracking-widest">Part I: Trading Account</h3>
-                 <span className="font-ui-xs text-[10px] text-text-light">FY 2026-27</span>
-              </div>
-              <div className="grid grid-cols-2 gap-0 border-[0.5px] border-border-subtle">
-                {/* Debits side */}
-                <div className="border-r-[0.5px] border-border-subtle">
-                   <div className="bg-stone-50 p-2 border-b-[0.5px] border-border-subtle text-[10px] uppercase tracking-widest font-bold text-text-light px-4">Debits</div>
-                   <div className="divide-y-[0.5px] divide-stone-50">
-                      {tradingAccount.debits.map(d => (
-                        <div key={d.label} className="flex justify-between p-4 text-ui-sm">
-                           <span>{d.label}</span>
-                           <span className="font-mono">₹ {formatIndianNumber(d.amount)}</span>
-                        </div>
-                      ))}
-                      <div className="flex justify-between p-4 font-bold bg-stone-50/30">
-                         <span>Gross Profit c/d</span>
-                         <span className="font-mono">₹ {formatIndianNumber(tradingAccount.grossProfit)}</span>
-                      </div>
-                   </div>
-                </div>
-                {/* Credits side */}
-                <div>
-                   <div className="bg-stone-50 p-2 border-b-[0.5px] border-border-subtle text-[10px] uppercase tracking-widest font-bold text-text-light px-4 text-right">Credits</div>
-                   <div className="divide-y-[0.5px] divide-stone-50">
-                      {tradingAccount.credits.map(c => (
-                        <div key={c.label} className="flex justify-between p-4 text-ui-sm">
-                           <span>{c.label}</span>
-                           <span className="font-mono">₹ {formatIndianNumber(c.amount)}</span>
-                        </div>
-                      ))}
-                      <div className="p-4 flex justify-between font-bold h-[106px] items-end">
-                         <span className="uppercase text-[10px] tracking-widest opacity-40">Trading Total</span>
-                         <span className="font-mono">₹ {formatIndianNumber(13300000)}</span>
-                      </div>
-                   </div>
-                </div>
-              </div>
-            </section>
-
-            {/* P&L Account Section */}
-            <section className="mb-12">
-              <div className="bg-stone-50 px-4 py-2 border-l-2 border-primary-container mb-4 flex justify-between items-center">
-                 <h3 className="font-ui-sm font-bold text-on-surface text-xs uppercase tracking-widest">Part II: Profit & Loss Account</h3>
-              </div>
-              <div className="grid grid-cols-12 gap-6">
-                 <div className="col-span-8 space-y-4">
-                    <div className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold border-b border-stone-100 pb-2">Administrative & Operating Expenses</div>
-                    {profitLossAccount.debits.map(d => (
-                      <div key={d.label} className="flex justify-between items-center text-ui-sm py-1">
-                         <span className="text-text-mid">{d.label}</span>
-                         <span className="font-mono text-on-surface">₹ {formatIndianNumber(d.amount)}</span>
-                      </div>
-                    ))}
-                 </div>
-                 <div className="col-span-4 flex flex-col gap-6">
-                    <div className="bg-stone-50 p-6 border border-border-subtle rounded-sm">
-                       <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-4">Summary</p>
-                       <div className="space-y-3">
-                          <div className="flex justify-between text-ui-sm">
-                             <span>Gross Operating Margin</span>
-                             <span className="font-mono font-bold">36%</span>
-                          </div>
-                          <div className="flex justify-between text-ui-sm">
-                             <span>Total Expenses</span>
-                             <span className="font-mono">₹ 2.1M</span>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-
-              {/* Net Result */}
-              <div className="mt-12 bg-stone-900 text-white p-8 flex justify-between items-center">
-                 <div className="text-left">
-                    <h4 className="font-ui-lg text-lg font-bold text-amber-500 uppercase tracking-widest">Net Profit</h4>
-                    <p className="text-stone-400 text-[11px] mt-1 uppercase tracking-widest">Transfer to Balance Sheet</p>
-                 </div>
-                 <div className="text-right">
-                    <p className="font-mono text-3xl font-bold text-amber-500">₹ {formatIndianNumber(profitLossAccount.netProfit)}</p>
-                 </div>
-              </div>
-            </section>
-
-            {/* Footer */}
-            <div className="mt-12 pt-6 border-t-[0.5px] border-border-subtle text-center">
-              <p className="font-ui-xs text-text-light uppercase tracking-widest text-[10px]">Indelible Ledger Audit Trail Active · System generated on 24 Oct 2024</p>
-            </div>
-          </div>
+    <div className="space-y-6">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
+        <div>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+            Financial Performance
+          </p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">Schedule III — Section 129 of Companies Act, 2013</p>
         </div>
-      </main>
+        <div className="flex gap-3 items-center">
+          <select
+            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
+            value={fiscalYear}
+            onChange={e => setFiscalYear(e.target.value)}
+          >
+            <option>2026-27</option>
+            <option>2025-26</option>
+          </select>
+          <Button variant="outline" size="sm" className="gap-1.5">
+            <Icon name="print" size={14} /> Print
+          </Button>
+          <Link
+            href="/audit-log?report=pl"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 no-underline"
+          >
+            Audit Trail
+          </Link>
+        </div>
+      </div>
+
+      {/* Report paper */}
+      <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
+        {/* Report header */}
+        <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
+          <h2 className="font-display text-[24px] text-dark print:text-black">Mehta Textiles Private Limited</h2>
+          <p className="font-ui text-[12px] text-mid mt-1 uppercase tracking-widest">Statement of Profit and Loss</p>
+          <p className="font-mono text-[11px] text-light mt-0.5 italic">For the year ended 31 March 2027 · FY {fiscalYear}</p>
+        </div>
+
+        <CardContent className="p-8 space-y-8">
+          {/* Revenue Section */}
+          <section>
+            <div className="px-4 py-2 border-t-2 border-amber mb-0 print:border-black">
+              <h3 className="font-display text-display-sm text-dark uppercase tracking-wider print:text-black">I. Revenue</h3>
+            </div>
+            <div className="divide-y-[0.5px] divide-border-subtle">
+              {revenueItems.map(item => (
+                <div key={item.label} className="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-surface-muted/50 transition-colors">
+                  <div className="col-span-7 font-ui text-[13px] text-dark">{item.label}</div>
+                  <div className="col-span-1 font-mono text-[10px] text-light text-center">{item.note}</div>
+                  <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-light">
+                    {/* Previous period placeholder */}
+                  </div>
+                  <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
+                    ₹ {formatIndianNumber(item.amount)}
+                  </div>
+                </div>
+              ))}
+              <div className="grid grid-cols-12 gap-4 items-center px-4 py-3 bg-surface-muted font-bold border-t border-border">
+                <div className="col-span-8 font-ui text-[11px] uppercase tracking-widest text-dark print:text-black">Total Revenue</div>
+                <div className="col-span-2" />
+                <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">
+                  ₹ {formatIndianNumber(totalRevenue)}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Expenses Section */}
+          <section>
+            <div className="px-4 py-2 border-t-2 border-amber mb-0 print:border-black">
+              <h3 className="font-display text-display-sm text-dark uppercase tracking-wider print:text-black">II. Expenses</h3>
+            </div>
+            <div className="divide-y-[0.5px] divide-border-subtle">
+              {expenseItems.map(item => (
+                <div key={item.label} className="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-surface-muted/50 transition-colors">
+                  <div className="col-span-7 font-ui text-[13px] text-dark">{item.label}</div>
+                  <div className="col-span-1 font-mono text-[10px] text-light text-center">{item.note}</div>
+                  <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-light">
+                    {/* Previous period placeholder */}
+                  </div>
+                  <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
+                    ₹ {formatIndianNumber(Math.abs(item.amount))}
+                  </div>
+                </div>
+              ))}
+              <div className="grid grid-cols-12 gap-4 items-center px-4 py-3 bg-surface-muted font-bold border-t border-border">
+                <div className="col-span-8 font-ui text-[11px] uppercase tracking-widest text-dark print:text-black">Total Expenses</div>
+                <div className="col-span-2" />
+                <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">
+                  ₹ {formatIndianNumber(totalExpenses)}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Net Result */}
+          <div className={`mt-8 px-8 py-6 flex justify-between items-center rounded-md print:rounded-none print:border-2 ${
+            isProfit
+              ? "bg-success-bg text-success border border-success/30 print:bg-transparent print:text-black print:border-black"
+              : "bg-danger-bg text-danger border border-danger/30 print:bg-transparent print:text-black print:border-black"
+          }`}>
+            <div>
+              <h4 className={`font-ui text-[13px] font-bold uppercase tracking-widest ${isProfit ? "text-success" : "text-danger"} print:text-black`}>
+                {isProfit ? "Net Profit for the Period" : "Net Loss for the Period"}
+              </h4>
+              <p className="text-light text-[10px] mt-0.5 uppercase tracking-widest print:text-mid">
+                Transfer to Balance Sheet — Reserves & Surplus
+              </p>
+            </div>
+            <p className={`font-mono text-2xl font-bold tabular-nums ${isProfit ? "text-success" : "text-danger"} print:text-black`}>
+              ₹ {formatIndianNumber(Math.abs(netProfit))}
+            </p>
+          </div>
+        </CardContent>
+
+        {/* Footer */}
+        <div className="text-center pb-6 pt-4 border-t border-border mx-8 print:border-black">
+          <p className="font-ui text-[10px] text-light">System generated · Schedule III compliant · E&OE.</p>
+        </div>
+      </Card>
     </div>
   );
 }

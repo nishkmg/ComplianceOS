@@ -73,16 +73,16 @@ export function InlineConfirmation({
         </div>
       ) : (
         /* Expanded confirmation */
-        <div className="border border-hairline rounded-md p-4 bg-surface-muted">
+        <div className="border border-border-subtle rounded-md p-4 bg-surface-muted">
           {/* Confirmation message */}
-          <p className="font-ui text-ui-md text-dark mb-4">
+          <p className="font-ui text-sm text-dark mb-4">
             {message}
           </p>
-          
+
           {/* Critical risk: type-to-confirm */}
           {isCritical && (
             <div className="mb-4">
-              <label className="block font-ui text-ui-sm text-light mb-2">
+              <label className="block font-ui text-xs text-light mb-2">
                 Type "{confirmText}" to confirm:
               </label>
               <input
@@ -173,13 +173,13 @@ export function InlineConfirmationWithReason({
           {trigger}
         </div>
       ) : (
-        <div className="border border-hairline rounded-md p-4 bg-surface-muted">
-          <p className="font-ui text-ui-md text-dark mb-4">
+        <div className="border border-border-subtle rounded-md p-4 bg-surface-muted">
+          <p className="font-ui text-sm text-dark mb-4">
             {message}
           </p>
-          
+
           <div className="mb-4">
-            <label className="block font-ui text-ui-sm text-light mb-2">
+            <label className="block font-ui text-xs text-light mb-2">
               {reasonLabel} *
             </label>
             <textarea
@@ -189,7 +189,7 @@ export function InlineConfirmationWithReason({
               placeholder={reasonPlaceholder}
               autoFocus
             />
-            <p className="font-ui text-ui-xs text-light mt-1">
+            <p className="font-ui text-xs text-light mt-1">
               Minimum {minReasonLength} characters ({reason.length}/{minReasonLength})
             </p>
           </div>

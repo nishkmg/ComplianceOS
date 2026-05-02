@@ -168,18 +168,3 @@ export async function seedDemoData() {
   console.log("📦 Products: 2 services created");
   console.log("👤 Employee: John Doe (EMP001) created");
 }
-
-// Run if called directly
-if (require.main === module) {
-  seedDemoData()
-    .then(() => {
-      console.log("\n✅ Demo data seeded successfully!");
-      console.log("\n🔐 To remove demo data, run:");
-      console.log("   pnpm --filter @complianceos/db db:seed:demo:clean\n");
-      process.exit(0);
-    })
-    .catch((err) => {
-      console.error("❌ Error seeding demo data:", err);
-      process.exit(1);
-    });
-}

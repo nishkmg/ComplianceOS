@@ -15,7 +15,7 @@ const sections = [
 
 export default function LegalPage({ title, lastUpdated, children }: { title: string; lastUpdated: string; children: React.ReactNode }) {
   return (
-    <div className="bg-page-bg min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="bg-page-bg min-h-screen pt-16">
       <MarketingNav />
       <main id="main-content">
         <article className="py-16 md:py-24">

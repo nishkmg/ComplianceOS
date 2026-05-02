@@ -136,14 +136,14 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
   return (
     <div className="mt-6 bg-white rounded-lg shadow">
       <div className="px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-900">Extracted Receipt Data</h2>
-        <p className="mt-1 text-sm text-gray-500">
+        <h2 className="text-lg font-semibold text-dark">Extracted Receipt Data</h2>
+        <p className="mt-1 text-sm text-mid">
           Review and edit the extracted data before creating the expense entry
         </p>
       </div>
 
       {error && (
-        <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div className="mx-6 mt-4 p-3 bg-danger-bg border border-danger/20 rounded-lg">
           <p className="text-sm text-red-800">{error}</p>
         </div>
       )}
@@ -151,10 +151,10 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
       <div className="px-6 py-4 space-y-6">
         {scan.confidenceScore && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">OCR Confidence:</span>
+            <span className="text-sm text-mid">OCR Confidence:</span>
             <span className={`text-sm font-medium ${
-              parseFloat(scan.confidenceScore) > 70 ? "text-green-600" :
-              parseFloat(scan.confidenceScore) > 40 ? "text-yellow-600" : "text-red-600"
+              parseFloat(scan.confidenceScore) > 70 ? "text-success" :
+              parseFloat(scan.confidenceScore) > 40 ? "text-yellow-600" : "text-danger"
             }`}>
               {parseFloat(scan.confidenceScore).toFixed(0)}%
             </span>
@@ -163,49 +163,49 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Vendor Name *
             </label>
             <input
               type="text"
               value={vendorName}
               onChange={(e) => setVendorName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Vendor or business name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Vendor GSTIN
             </label>
             <input
               type="text"
               value={vendorGstin}
               onChange={(e) => setVendorGstin(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. 27AAAA0000A1ZA"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Receipt Date *
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Total Amount (₹) *
             </label>
             <input
               type="number"
               value={total}
               onChange={(e) => setTotal(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="0.00"
               step="0.01"
               min="0"
@@ -215,13 +215,13 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Expense Category *
             </label>
             <select
               value={expenseCategory}
               onChange={(e) => setExpenseCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select category</option>
               {EXPENSE_CATEGORIES.map((cat) => (
@@ -230,13 +230,13 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Expense Account *
             </label>
             <select
               value={expenseAccountId}
               onChange={(e) => setExpenseAccountId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select account</option>
               {expenseAccounts.map((a) => (
@@ -245,13 +245,13 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
             </select>
           </div>
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Payable / Sundry Creditors Account *
             </label>
             <select
               value={payableAccountId}
               onChange={(e) => setPayableAccountId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select account</option>
               {payableAccounts.map((a) => (
@@ -262,12 +262,12 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Narration</label>
+          <label className="block text-sm font-medium text-dark mb-1">Narration</label>
           <textarea
             value={narration}
             onChange={(e) => setNarration(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Optional description for the journal entry"
           />
         </div>
@@ -276,12 +276,12 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
           <details className="text-sm">
             <summary
               onClick={() => setRawTextExpanded(!rawTextExpanded)}
-              className="cursor-pointer text-gray-500 hover:text-gray-700"
+              className="cursor-pointer text-mid hover:text-dark"
             >
               {rawTextExpanded ? "Hide" : "Show"} raw OCR text
             </summary>
             {rawTextExpanded && (
-              <pre className="mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 overflow-auto max-h-48 whitespace-pre-wrap">
+              <pre className="mt-2 p-3 bg-section-muted rounded-lg text-xs text-mid overflow-auto max-h-48 whitespace-pre-wrap">
                 {scan.rawText}
               </pre>
             )}

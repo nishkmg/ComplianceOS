@@ -59,7 +59,7 @@ export function UploadZone({ tenantId, onUploadComplete, onError }: UploadZonePr
       onDrop={onDrop}
       onClick={() => document.getElementById("ocr-file-input")?.click()}
       className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
-        dragOver ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-gray-50 hover:border-gray-400"
+        dragOver ? "border-blue-500 bg-section-amber" : "border-border-subtle bg-section-muted hover:border-gray-400"
       }`}
     >
       <input
@@ -70,13 +70,13 @@ export function UploadZone({ tenantId, onUploadComplete, onError }: UploadZonePr
         className="hidden"
       />
       {uploading ? (
-        <p className="text-gray-600">Uploading...</p>
+        <p className="text-mid">Uploading...</p>
       ) : (
         <>
-          <p className="text-lg font-medium text-gray-900">
+          <p className="text-lg font-medium text-dark">
             Drop invoice image or PDF here
           </p>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-mid">
             or click to browse · JPG, PNG, WEBP, PDF · Max 10MB
           </p>
         </>

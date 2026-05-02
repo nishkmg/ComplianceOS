@@ -21,15 +21,15 @@ export default function ScanReceiptPage() {
         {/* Page Header */}
         <div className="mb-8 flex justify-between items-end">
           <div>
-            <span className="font-ui-xs text-ui-xs text-primary-container uppercase tracking-widest block mb-2">Automated Ledger</span>
-            <h1 className="font-display-xl text-display-xl text-on-surface">Receipt Scan (OCR)</h1>
-            <p className="font-ui-sm text-ui-sm text-text-mid mt-2 max-w-2xl">Upload payment vouchers and bank receipts for automatic data extraction and ledger reconciliation.</p>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Automated Ledger</p>
+            <h1 className="font-display text-2xl font-semibold text-dark">Receipt Scan (OCR)</h1>
+            <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl">Upload payment vouchers and bank receipts for automatic data extraction and ledger reconciliation.</p>
           </div>
           <div className="flex gap-4">
-            <button className="px-6 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-ui-sm hover:bg-surface-variant transition-colors cursor-pointer bg-transparent">
+            <button className="btn btn-secondary">
               Clear Form
             </button>
-            <button className="px-6 py-2 bg-primary-container text-white font-ui-sm text-ui-sm flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer border-none shadow-sm">
+            <button className="btn btn-primary flex items-center gap-2">
               Save to Ledger <Icon name="arrow_forward" className="text-[18px]" />
             </button>
           </div>
@@ -39,9 +39,9 @@ export default function ScanReceiptPage() {
         <div className="flex flex-col lg:flex-row gap-8 flex-1">
           {/* Left: Document Viewer */}
           <div className="flex-1 flex flex-col">
-            <div className="bg-white border-[0.5px] border-border-subtle flex-1 flex flex-col relative group rounded-sm overflow-hidden min-h-[600px] shadow-sm">
+            <div className="bg-surface border-[0.5px] border-border flex-1 flex flex-col relative group rounded-md overflow-hidden min-h-[600px] shadow-sm">
               {/* Toolbar */}
-              <div className="h-12 border-b-[0.5px] border-border-subtle bg-stone-50 flex items-center justify-between px-4">
+              <div className="h-12 border-b-[0.5px] border-border bg-surface-muted flex items-center justify-between px-4">
                 <div className="flex items-center gap-3 text-text-mid">
                   <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_in" className="text-[20px]" /></button>
                   <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_out" className="text-[20px]" /></button>
@@ -52,7 +52,7 @@ export default function ScanReceiptPage() {
               </div>
               
               {/* Image Area */}
-              <div className="flex-1 bg-section-muted flex items-center justify-center p-8 relative">
+              <div className="flex-1 bg-surface-muted flex items-center justify-center p-8 relative">
                 {scanStatus === "idle" ? (
                   <div className="w-full h-full max-w-md">
                     <UploadZone
@@ -62,11 +62,11 @@ export default function ScanReceiptPage() {
                     />
                   </div>
                 ) : (
-                  <div className="relative max-w-full max-h-full shadow-screenshot bg-white p-4">
+                  <div className="relative max-w-full max-h-full shadow-screenshot bg-surface p-4">
                     <img alt="Payment receipt" className="max-w-full h-auto object-contain opacity-90 sepia-[.1]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_-z1xA_jSWfC0icM1u3GBFq6GMgC35jYumiSRCMSvawozqQlAZSG4jklpkAC8fozvlDQArtmuq93ezOMM6RwqYYLxnMUkCAQLtXYYuQa5NVfPnD5rIEPcqfovUkRQ9_cDo4AcqMhAzLhkXq1rX0pNbEBj-RXfJQn0WjDQMWLsQ4UFK6D_JcF7s5a921KJxlXG7VeK6Ue-oD65u_NJw3cT-DHeCzlNwWYELe28FYmt01Uzjs4cCgFkITF2kfERB_cL2LJ60uWNE9g" />
                     {/* Bounding Boxes */}
                     <div className="absolute border-[1.5px] border-blue-400 bg-blue-400/10 top-[20%] left-[10%] w-[40%] h-[5%] cursor-pointer hover:bg-blue-400/20 transition-colors"></div>
-                    <div className="absolute border-[1.5px] border-primary-container bg-primary-container/10 top-[35%] left-[60%] w-[25%] h-[6%] cursor-pointer hover:bg-primary-container/20 transition-colors"></div>
+                    <div className="absolute border-[1.5px] border-amber bg-amber/10 top-[35%] left-[60%] w-[25%] h-[6%] cursor-pointer hover:bg-amber/20 transition-colors"></div>
                   </div>
                 )}
               </div>
@@ -74,56 +74,56 @@ export default function ScanReceiptPage() {
           </div>
 
           {/* Right: Data Extraction Panel */}
-          <div className="w-full lg:w-[400px] flex flex-col bg-white border-[0.5px] border-border-subtle border-t-[2px] border-t-primary-container shadow-sm text-left">
-            <div className="p-6 border-b-[0.5px] border-border-subtle bg-stone-50 flex justify-between items-center">
-              <h2 className="font-ui-lg text-lg font-medium text-on-surface">Extracted Data</h2>
+          <div className="w-full lg:w-[400px] flex flex-col bg-surface border-[0.5px] border-border border-t-[2px] border-t-amber shadow-sm text-left">
+            <div className="p-6 border-b-[0.5px] border-border bg-surface-muted flex justify-between items-center">
+              <h2 className="font-ui text-lg font-medium text-on-surface">Extracted Data</h2>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                <span className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">High Confidence</span>
+                <span className="font-ui text-[10px] text-text-mid uppercase tracking-widest font-bold">High Confidence</span>
               </div>
             </div>
             
             <div className="p-6 flex flex-col gap-6 flex-1 overflow-y-auto">
               <div className="flex flex-col gap-2">
-                <label className="font-ui-xs text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Payer Name
                   <span className="w-2 h-2 rounded-full bg-green-500"></span>
                 </label>
-                <input className="w-full border-[0.5px] border-border-subtle bg-stone-50 px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="Tech Solutions India Pvt Ltd" />
+                <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="Tech Solutions India Pvt Ltd" />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-ui-xs text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Amount (INR)
                   <span className="w-2 h-2 rounded-full bg-amber-400"></span>
                 </label>
-                <input className="w-full border-[1px] border-amber-400 bg-stone-50 px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:ring-1 focus:ring-amber-400" type="text" defaultValue="45,200.00" />
-                <span className="font-ui-xs text-[10px] text-primary-container flex items-center gap-1">
+                <input className="w-full border-[1px] border-amber-400 bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:ring-1 focus:ring-amber-400" type="text" defaultValue="45,200.00" />
+                <span className="font-ui text-[10px] text-amber flex items-center gap-1">
                   <Icon name="warning" className="text-[14px]" /> Verify amount extracted
                 </span>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-ui-xs text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Transaction Date
                   <span className="w-2 h-2 rounded-full bg-green-500"></span>
                 </label>
-                <input className="w-full border-[0.5px] border-border-subtle bg-stone-50 px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="24-Oct-2023" />
+                <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="24-Oct-2023" />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-ui-xs text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   UTR / Ref Number
                   <span className="w-2 h-2 rounded-full bg-green-500"></span>
                 </label>
-                <input className="w-full border-[0.5px] border-border-subtle bg-stone-50 px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="HDFCR529482710" />
+                <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="HDFCR529482710" />
               </div>
             </div>
 
-            <div className="p-4 border-t-[0.5px] border-border-subtle bg-stone-50">
-              <div className="flex items-start gap-3 p-3 bg-white border-[0.5px] border-border-subtle">
-                <Icon name="lightbulb" className="text-primary-container" />
-                <p className="font-ui-xs text-[11px] text-text-mid leading-relaxed">
+            <div className="p-4 border-t-[0.5px] border-border bg-surface-muted">
+              <div className="flex items-start gap-3 p-3 bg-surface border-[0.5px] border-border">
+                <Icon name="lightbulb" className="text-amber" />
+                <p className="font-ui text-[11px] text-[11px] text-text-mid leading-relaxed">
                   Click on any highlighted region in the document to automatically map it to the active field.
                 </p>
               </div>

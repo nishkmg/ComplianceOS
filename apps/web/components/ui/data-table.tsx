@@ -77,7 +77,7 @@ export function DataTable<T>({
 
   if (loading) {
     return (
-      <div className={cn('bg-white border border-border-subtle shadow-sm overflow-hidden', className)}>
+      <div className={cn('bg-surface border border-border shadow-sm rounded-xl overflow-hidden', className)}>
         <div className="p-6">
           <TableSkeleton rows={8} columns={columns.length} />
         </div>
@@ -87,11 +87,11 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className={cn('bg-white border border-border-subtle shadow-sm overflow-hidden', className)}>
+      <div className={cn('bg-surface border border-border shadow-sm rounded-xl overflow-hidden', className)}>
         {emptyState || (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <Icon name="table_rows" className="text-4xl text-text-light/40 mb-4" />
-            <p className="font-ui-md text-sm text-text-mid">No data to display</p>
+            <Icon name="table_rows" className="text-4xl text-lighter mb-4" />
+            <p className="font-ui text-sm font-medium text-mid">No data to display</p>
           </div>
         )}
       </div>
@@ -99,11 +99,11 @@ export function DataTable<T>({
   }
 
   return (
-    <div className={cn('bg-white border border-border-subtle shadow-sm overflow-hidden flex flex-col', className)}>
+    <div className={cn('bg-surface border border-border shadow-sm rounded-xl overflow-hidden flex flex-col', className)}>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-stone-50 border-b border-border-subtle">
+            <tr className="bg-surface-muted border-b border-border">
               {columns.map(col => {
                 const numeric = col.align === 'right';
                 return (
@@ -111,10 +111,10 @@ export function DataTable<T>({
                     key={col.key}
                     className={cn(
                       headerPadding,
-                      'font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold',
+                      'font-ui text-[10px] text-mid uppercase tracking-widest font-bold',
                       numeric && 'text-right',
-                      col.sortable && 'cursor-pointer select-none hover:text-on-surface transition-colors',
-                      stickyHeader && 'sticky top-0 bg-stone-50 z-10',
+                      col.sortable && 'cursor-pointer select-none hover:text-dark transition-colors',
+                      stickyHeader && 'sticky top-0 bg-surface-muted z-10',
                       col.width
                     )}
                     style={col.width ? { width: col.width } : undefined}
@@ -136,7 +136,7 @@ export function DataTable<T>({
               })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border-subtle">
+          <tbody className="divide-y divide-border">
             {pageData.map((row, i) => {
               const rowKey = keyExtractor(row);
               return (
@@ -144,7 +144,7 @@ export function DataTable<T>({
                   key={rowKey}
                   className={cn(
                     'transition-colors',
-                    onRowClick ? 'cursor-pointer hover:bg-stone-50' : 'hover:bg-stone-50/50'
+                    onRowClick ? 'cursor-pointer hover:bg-surface-muted' : 'hover:bg-surface-muted/50'
                   )}
                   onClick={() => onRowClick?.(row)}
                   tabIndex={onRowClick ? 0 : undefined}
@@ -158,8 +158,8 @@ export function DataTable<T>({
                         key={col.key}
                         className={cn(
                           cellPadding,
-                          numeric ? 'font-mono text-right tabular-nums' : 'font-ui-sm',
-                          'text-on-surface',
+                          numeric ? 'font-mono text-right tabular-nums' : 'font-ui text-sm',
+                          'text-dark',
                           col.cellClassName
                         )}
                       >
@@ -180,8 +180,8 @@ export function DataTable<T>({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-border-subtle bg-stone-50/50">
-          <span className="font-ui-xs text-[11px] text-text-mid">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-surface-muted/50">
+          <span className="font-ui text-[11px] font-medium text-mid">
             {safePage * pageSize + 1}–{Math.min((safePage + 1) * pageSize, sortedData.length)} of {sortedData.length}
           </span>
           <div className="flex items-center gap-1">
@@ -189,7 +189,7 @@ export function DataTable<T>({
               onClick={() => setPage(p => Math.max(0, p - 1))}
               disabled={safePage === 0}
               aria-label="Previous page"
-              className="p-1 rounded hover:bg-stone-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
+              className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
             >
               <Icon name="chevron_left" className="text-[18px]" />
             </button>
@@ -211,8 +211,8 @@ export function DataTable<T>({
                   className={cn(
                     'w-7 h-7 rounded text-[11px] font-mono font-medium transition-colors border-none cursor-pointer',
                     pageNum === safePage
-                      ? 'bg-primary-container text-white'
-                      : 'bg-transparent text-text-mid hover:bg-stone-200'
+                      ? 'bg-amber text-white'
+                      : 'bg-transparent text-mid hover:bg-surface-muted'
                   )}
                 >
                   {pageNum + 1}
@@ -223,7 +223,7 @@ export function DataTable<T>({
               onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
               disabled={safePage >= totalPages - 1}
               aria-label="Next page"
-              className="p-1 rounded hover:bg-stone-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
+              className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
             >
               <Icon name="chevron_right" className="text-[18px]" />
             </button>
@@ -240,13 +240,13 @@ export function DataTable<T>({
 export function TableSkeleton({ rows = 8, columns = 5 }: { rows?: number; columns?: number }) {
   return (
     <div className="w-full animate-pulse">
-      <div className="flex border-b border-border-subtle pb-3 mb-3">
+      <div className="flex border-b border-border pb-3 mb-3">
         {Array.from({ length: columns }).map((_, i) => (
           <div key={i} className="flex-1 h-3 bg-lighter rounded mr-4 last:mr-0" />
         ))}
       </div>
       {Array.from({ length: rows }).map((_, r) => (
-        <div key={r} className="flex border-b border-border-subtle py-3">
+        <div key={r} className="flex border-b border-border py-3">
           {Array.from({ length: columns }).map((_, c) => (
             <div
               key={c}

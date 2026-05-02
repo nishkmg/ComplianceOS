@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
 interface LineItem {
   id: string;
   description: string;
@@ -17,8 +19,11 @@ interface LineItem {
 
 const GST_RATES = [0, 5, 12, 18, 28];
 
+// ─── Page Component ───────────────────────────────────────────────────────────
+
 export default function NewInvoicePage() {
   const router = useRouter();
+
   const [customer, setCustomer] = useState({
     name: "Mehta Textiles Pvt. Ltd.",
     address: "45, Industrial Estate, Phase II, Ahmedabad, Gujarat 380015",
@@ -29,180 +34,241 @@ export default function NewInvoicePage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [dueDate, setDueDate] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
-    { id: '1', description: "Statutory Audit Fees - FY 23-24", hsn: "998221", qty: 1, rate: 150000, gstRate: 18 },
+    { id: "1", description: "Statutory Audit Fees — FY 23-24", hsn: "998221", qty: 1, rate: 150000, gstRate: 18 },
   ]);
 
   const totals = useMemo(() => {
     let subtotal = 0;
     let tax = 0;
     lineItems.forEach(item => {
-      const lineBase = item.qty * item.rate;
-      subtotal += lineBase;
-      tax += lineBase * (item.gstRate / 100);
+      const base = item.qty * item.rate;
+      subtotal += base;
+      tax += base * (item.gstRate / 100);
     });
     return { subtotal, tax, total: subtotal + tax };
   }, [lineItems]);
 
-  const addLine = () => {
-    setLineItems([...lineItems, { id: Math.random().toString(), description: "", hsn: "", qty: 1, rate: 0, gstRate: 18 }]);
-  };
+  const addLine = () =>
+    setLineItems(prev => [...prev, { id: Math.random().toString(36).slice(2), description: "", hsn: "", qty: 1, rate: 0, gstRate: 18 }]);
 
-  const updateLine = (id: string, field: keyof LineItem, val: any) => {
-    setLineItems(lineItems.map(item => item.id === id ? { ...item, [field]: val } : item));
-  };
+  const updateLine = (id: string, field: keyof LineItem, val: any) =>
+    setLineItems(prev => prev.map(item => (item.id === id ? { ...item, [field]: val } : item)));
+
+  const removeLine = (id: string) =>
+    setLineItems(prev => prev.filter(item => item.id !== id));
 
   return (
-    <div className="bg-page-bg min-h-screen flex flex-col antialiased text-left">
-      <main className="flex-1 overflow-y-auto p-8 flex justify-center">
-        <div className="max-w-[1200px] w-full flex flex-col lg:flex-row gap-8">
-          {/* Left: Form */}
-          <div className="w-full lg:w-[45%] flex flex-col gap-8">
-            <div className="flex flex-col gap-2">
-               <div className="flex items-center gap-3">
-                 <button onClick={() => router.back()} className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer">
-                    <Icon name="arrow_back" className="text-[20px]" />
-                 </button>
-                 <span className="font-ui-xs text-[10px] text-amber-text tracking-widest uppercase font-bold">New Invoice</span>
-               </div>
-               <h1 className="font-display-lg text-display-lg text-on-surface">INV-2024-0043</h1>
-            </div>
+    <div className="space-y-6">
+      {/* Page header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.back()}
+            className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer"
+            aria-label="Go back"
+          >
+            <Icon name="arrow_back" size={20} />
+          </button>
+          <div>
+            <h1 className="font-display text-display-lg font-semibold text-dark">New Invoice</h1>
+            <p className="font-ui text-[11px] text-secondary mt-0.5">INV-2024-0043</p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+            Discard
+          </button>
+          <button className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+            Save Draft
+          </button>
+          <button className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+            Finalize & Send <Icon name="arrow_forward" size={14} />
+          </button>
+        </div>
+      </div>
 
-            <div className="bg-white border border-border-subtle p-6 shadow-sm relative">
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
-              
-              <h3 className="font-ui-sm text-[11px] font-bold text-text-light uppercase tracking-widest border-b border-border-subtle pb-2 mb-6">Client Details</h3>
-              <div className="space-y-6 mb-8">
-                <div className="flex flex-col gap-1">
-                  <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">Billed To</label>
-                  <select className="bg-stone-50 border border-border-subtle rounded-sm px-3 py-2 text-sm outline-none focus:border-primary">
-                    <option>{customer.name}</option>
-                    <option>Sharma Associates</option>
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1">
-                    <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">Date of Issue</label>
-                    <input className="bg-stone-50 border border-border-subtle rounded-sm px-3 py-2 font-mono text-sm outline-none focus:border-primary" type="date" value={date} onChange={e => setDate(e.target.value)} />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="font-ui-xs text-[10px] text-text-mid uppercase tracking-widest font-bold">Due Date</label>
-                    <input className="bg-stone-50 border border-border-subtle rounded-sm px-3 py-2 font-mono text-sm outline-none focus:border-primary" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left: form */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* Client details */}
+          <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
+            <div className="h-[2px] w-full bg-amber -mt-6 mb-6" />
+            <h3 className="font-ui text-[10px] font-bold text-light uppercase tracking-widest pb-2 mb-5 border-b border-border">
+              Client Details
+            </h3>
+            <div className="space-y-5">
+              <div className="space-y-1">
+                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Billed To</label>
+                <select className="w-full bg-surface border border-border rounded-md px-3 py-2.5 text-[13px] font-ui text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors">
+                  <option>{customer.name}</option>
+                  <option>Sharma Associates</option>
+                </select>
               </div>
-
-              <h3 className="font-ui-sm text-[11px] font-bold text-text-light uppercase tracking-widest border-b border-border-subtle pb-2 mb-6 flex justify-between items-center">
-                Line Items
-                <button onClick={addLine} className="text-primary-container hover:text-primary font-bold flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"><Icon name="add" className="text-sm" /> Add Item</button>
-              </h3>
-
-              <div className="space-y-4 mb-8">
-                {lineItems.map((item) => (
-                  <div key={item.id} className="p-4 border border-border-subtle bg-stone-50 relative group rounded-sm">
-                    <input className="bg-transparent border-b border-border-subtle border-dashed w-full pb-1 mb-2 font-ui-sm text-sm outline-none focus:border-primary" placeholder="Item description" value={item.description} onChange={e => updateLine(item.id, 'description', e.target.value)} />
-                    <div className="grid grid-cols-3 gap-4">
-                       <div className="flex flex-col gap-1">
-                         <label className="font-ui-xs text-[9px] text-text-light uppercase font-bold">Qty</label>
-                         <input className="bg-transparent border-b border-border-subtle font-mono text-sm outline-none focus:border-primary" type="number" value={item.qty} onChange={e => updateLine(item.id, 'qty', parseFloat(e.target.value) || 0)} />
-                       </div>
-                       <div className="flex flex-col gap-1">
-                         <label className="font-ui-xs text-[9px] text-text-light uppercase font-bold">Rate</label>
-                         <input className="bg-transparent border-b border-border-subtle font-mono text-sm outline-none focus:border-primary" type="number" value={item.rate} onChange={e => updateLine(item.id, 'rate', parseFloat(e.target.value) || 0)} />
-                       </div>
-                       <div className="flex flex-col gap-1">
-                         <label className="font-ui-xs text-[9px] text-text-light uppercase font-bold">Tax</label>
-                         <select className="bg-transparent border-b border-border-subtle font-ui-sm text-sm outline-none focus:border-primary" value={item.gstRate} onChange={e => updateLine(item.id, 'gstRate', parseInt(e.target.value))}>
-                           {GST_RATES.map(r => <option key={r} value={r}>GST {r}%</option>)}
-                         </select>
-                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-between items-center pt-6 border-t border-border-subtle">
-                 <button className="text-text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer font-ui-sm text-sm font-bold uppercase tracking-widest">Discard</button>
-                 <div className="flex gap-4">
-                    <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent rounded-sm">Save Draft</button>
-                    <button className="px-8 py-3 bg-primary-container text-white font-ui-sm text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm rounded-sm flex items-center gap-2">
-                       Finalize & Send <Icon name="send" className="text-[18px]" />
-                    </button>
-                 </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Date</label>
+                  <input
+                    type="date"
+                    className="w-full bg-surface border border-border rounded-md px-3 py-2.5 font-mono text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                    value={date}
+                    onChange={e => setDate(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Due Date</label>
+                  <input
+                    type="date"
+                    className="w-full bg-surface border border-border rounded-md px-3 py-2.5 font-mono text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                    value={dueDate}
+                    onChange={e => setDueDate(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right: Live Preview */}
-          <div className="hidden lg:flex w-[55%] flex-col">
-            <div className="sticky top-24 bg-white p-10 shadow-screenshot border border-border-subtle min-h-[842px] flex flex-col font-ui-sm text-on-surface">
-              <header className="flex justify-between items-start border-b-[0.5px] border-border-subtle pb-8 mb-8">
-                <div className="flex flex-col gap-2">
-                  <span className="font-display-lg text-2xl font-bold tracking-tight">ComplianceOS</span>
-                  <div className="text-text-mid font-ui-xs text-[11px] leading-relaxed">
-                    1204, Lodha Excelus<br/>
-                    Apollo Bunder, Mumbai 400001
+          {/* Line items */}
+          <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
+            <div className="flex items-center justify-between pb-2 mb-5 border-b border-border">
+              <h3 className="font-ui text-[10px] font-bold text-light uppercase tracking-widest">Line Items</h3>
+              <button
+                onClick={addLine}
+                className="text-amber hover:text-amber-hover font-bold text-[11px] flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"
+              >
+                <Icon name="add" size={14} /> Add Item
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {lineItems.map(item => (
+                <div key={item.id} className="p-4 border border-border bg-surface-muted relative group rounded-md">
+                  <button
+                    onClick={() => removeLine(item.id)}
+                    className="absolute -right-2 -top-2 bg-surface border border-border rounded-full w-6 h-6 flex items-center justify-center text-light hover:text-danger hover:border-danger opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                    aria-label="Remove item"
+                  >
+                    <Icon name="close" size={12} />
+                  </button>
+                  <input
+                    className="w-full bg-transparent border-b border-border border-dashed pb-1 mb-3 font-ui text-[13px] outline-none focus:border-amber transition-colors"
+                    placeholder="Item description"
+                    value={item.description}
+                    onChange={e => updateLine(item.id, "description", e.target.value)}
+                  />
+                  <div className="grid grid-cols-4 gap-3">
+                    <div className="space-y-1">
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Qty</label>
+                      <input
+                        type="number"
+                        className="w-full bg-transparent border-b border-border font-mono text-[13px] outline-none focus:border-amber transition-colors"
+                        value={item.qty}
+                        onChange={e => updateLine(item.id, "qty", parseFloat(e.target.value) || 0)}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Rate</label>
+                      <input
+                        type="number"
+                        className="w-full bg-transparent border-b border-border font-mono text-[13px] outline-none focus:border-amber transition-colors"
+                        value={item.rate}
+                        onChange={e => updateLine(item.id, "rate", parseFloat(e.target.value) || 0)}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">GST</label>
+                      <select
+                        className="w-full bg-transparent border-b border-border font-ui text-[13px] outline-none focus:border-amber transition-colors"
+                        value={item.gstRate}
+                        onChange={e => updateLine(item.id, "gstRate", parseInt(e.target.value))}
+                      >
+                        {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-1 text-right">
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Amount</label>
+                      <p className="font-mono text-[13px] pt-1 tabular-nums">{formatIndianNumber(item.qty * item.rate)}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <h1 className="font-display-xl text-2xl uppercase tracking-widest text-text-light mb-4">Tax Invoice</h1>
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-left text-[12px]">
-                    <span className="text-text-light uppercase font-bold">No:</span>
-                    <span className="font-mono font-medium text-right">INV-2024-0043</span>
-                    <span className="text-text-light uppercase font-bold">Date:</span>
-                    <span className="font-mono text-right">{date}</span>
-                  </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: live preview */}
+        <div className="hidden lg:block lg:col-span-7">
+          <div className="sticky top-24 bg-surface p-10 shadow-screenshot border border-border min-h-[842px] flex flex-col text-[13px] font-ui text-[13px] text-dark">
+            {/* Preview header */}
+            <header className="flex justify-between items-start border-b border-border pb-8 mb-8">
+              <div>
+                <p className="font-display text-2xl font-bold tracking-tight">ComplianceOS</p>
+                <p className="text-mid text-[11px] mt-2 leading-relaxed">
+                  1204, Lodha Excelus<br />
+                  Apollo Bunder, Mumbai 400001
+                </p>
+              </div>
+              <div className="text-right">
+                <h2 className="font-display text-xl uppercase tracking-widest text-mid/40 mb-4">Tax Invoice</h2>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-left text-[12px]">
+                  <span className="text-light uppercase font-bold">No:</span>
+                  <span className="font-mono text-right">INV-2024-0043</span>
+                  <span className="text-light uppercase font-bold">Date:</span>
+                  <span className="font-mono text-right">{date}</span>
                 </div>
-              </header>
+              </div>
+            </header>
 
-              <section className="mb-10">
-                <span className="text-[10px] text-amber-text uppercase font-bold tracking-widest block mb-2">Billed To</span>
-                <h4 className="font-ui-lg text-lg font-bold">{customer.name}</h4>
-                <p className="text-text-mid text-sm mt-1 max-w-xs leading-relaxed">{customer.address}</p>
-                <p className="text-text-mid text-sm mt-2 font-bold">GSTIN: {customer.gstin}</p>
-              </section>
+            {/* Bill to */}
+            <section className="mb-10">
+              <p className="text-[10px] text-amber-text uppercase font-bold tracking-widest mb-2">Billed To</p>
+              <h4 className="font-ui text-[13px] text-[15px] font-bold">{customer.name}</h4>
+              <p className="text-mid text-sm mt-1 max-w-xs leading-relaxed">{customer.address}</p>
+              <p className="text-mid text-sm mt-2 font-bold">GSTIN: {customer.gstin}</p>
+            </section>
 
-              <table className="w-full text-left border-collapse mb-8">
-                <thead>
-                  <tr className="border-b-[0.5px] border-border-subtle">
-                    <th className="py-3 font-ui-xs text-[10px] text-text-light uppercase font-bold w-1/2">Description</th>
-                    <th className="py-3 font-ui-xs text-[10px] text-text-light uppercase font-bold text-right">Qty</th>
-                    <th className="py-3 font-ui-xs text-[10px] text-text-light uppercase font-bold text-right">Amount (₹)</th>
+            {/* Items table */}
+            <table className="w-full text-left border-collapse mb-8">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold w-1/2">Description</th>
+                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold text-right">Qty</th>
+                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold text-right">Amount (₹)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-subtle/50">
+                {lineItems.map((item, i) => (
+                  <tr key={i}>
+                    <td className="py-4 pr-4">
+                      <p className="font-medium">{item.description || "Unspecified Item"}</p>
+                      <p className="text-[11px] text-mid">HSN: {item.hsn || "—"}</p>
+                    </td>
+                    <td className="py-4 text-right font-mono text-[13px]">{item.qty}</td>
+                    <td className="py-4 text-right font-mono text-[13px] font-bold">{formatIndianNumber(item.qty * item.rate)}</td>
                   </tr>
-                </thead>
-                <tbody className="divide-y-[0.5px] divide-border-subtle divide-dashed">
-                  {lineItems.map((item, i) => (
-                    <tr key={i}>
-                      <td className="py-4 pr-4">
-                        <p className="font-bold">{item.description || "Unspecified Item"}</p>
-                        <p className="text-[11px] text-text-light">HSN: {item.hsn || "—"}</p>
-                      </td>
-                      <td className="py-4 text-right font-mono text-[13px]">{item.qty}</td>
-                      <td className="py-4 text-right font-mono text-[13px] font-bold">{formatIndianNumber(item.qty * item.rate)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
+            </table>
 
-              <div className="flex justify-end mt-auto pt-8 border-t border-border-subtle">
-                <div className="w-1/2 space-y-2">
-                  <div className="flex justify-between text-text-mid text-sm">
-                    <span>Subtotal</span>
-                    <span className="font-mono">₹ {formatIndianNumber(totals.subtotal)}</span>
-                  </div>
-                  <div className="flex justify-between text-text-mid text-sm">
-                    <span>GST Amount</span>
-                    <span className="font-mono">₹ {formatIndianNumber(totals.tax)}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-border-subtle pt-3 font-bold text-lg">
-                    <span className="uppercase text-xs tracking-widest pt-1">Total</span>
-                    <span className="font-mono text-primary-container">₹ {formatIndianNumber(totals.total)}</span>
-                  </div>
+            {/* Totals */}
+            <div className="flex justify-end mt-auto pt-8 border-t border-border">
+              <div className="w-1/2 space-y-2">
+                <div className="flex justify-between text-mid text-sm">
+                  <span>Subtotal</span>
+                  <span className="font-mono tabular-nums">₹ {formatIndianNumber(totals.subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-mid text-sm">
+                  <span>GST Amount</span>
+                  <span className="font-mono tabular-nums">₹ {formatIndianNumber(totals.tax)}</span>
+                </div>
+                <div className="flex justify-between border-t border-border pt-3 font-bold text-lg">
+                  <span className="uppercase text-xs tracking-widest pt-1">Total</span>
+                  <span className="font-mono text-amber tabular-nums">₹ {formatIndianNumber(totals.total)}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

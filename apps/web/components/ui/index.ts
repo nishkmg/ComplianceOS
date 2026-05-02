@@ -2,6 +2,7 @@
 export { BalanceBar } from './balance-bar';
 export { Badge, type BadgeVariant } from './badge';
 export { Button } from './button';
+export { DataTable, type ColumnDef } from './data-table';
 export { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from './dialog';
 export { Input } from './input';
 export { Label } from './label';
@@ -20,3 +21,5 @@ export {
 } from './error-state';
 export { InlineConfirmation, InlineConfirmationWithReason } from './inline-confirmation';
 export { SkipToMainContent, SrOnly } from './skip-link';
+export { NavigationLoader } from './navigation-loader';
+

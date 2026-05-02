@@ -18,7 +18,7 @@ interface CustomerSummaryProps {
 function AgingBadge({ amount, label }: { amount: number; label: string }) {
   if (amount === 0) return null;
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-gray-100 text-gray-700">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-lighter/40 text-dark">
       {label}: {formatINR(amount)}
     </span>
   );
@@ -42,9 +42,9 @@ export default function CustomerSummaryCard({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{customerName}</h3>
+          <h3 className="font-semibold text-dark truncate">{customerName}</h3>
           {customerGstin && (
-            <p className="text-xs text-gray-500 mt-0.5">GSTIN: {customerGstin}</p>
+            <p className="text-xs text-mid mt-0.5">GSTIN: {customerGstin}</p>
           )}
           <div className="flex flex-wrap gap-1.5 mt-2">
             <AgingBadge amount={currentAmount} label="0-30" />
@@ -64,8 +64,8 @@ export default function CustomerSummaryCard({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-xl font-bold text-gray-900">{formatINR(totalOutstanding)}</p>
-          <p className="text-xs text-gray-500">Outstanding</p>
+          <p className="text-xl font-bold text-dark">{formatINR(totalOutstanding)}</p>
+          <p className="text-xs text-mid">Outstanding</p>
         </div>
       </div>
     </Link>

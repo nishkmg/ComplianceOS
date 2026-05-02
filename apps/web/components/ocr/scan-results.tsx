@@ -163,14 +163,14 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
   return (
     <div className="mt-6 bg-white rounded-lg shadow">
       <div className="px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-900">Extracted Invoice Data</h2>
-        <p className="mt-1 text-sm text-gray-500">
+        <h2 className="text-lg font-semibold text-dark">Extracted Invoice Data</h2>
+        <p className="mt-1 text-sm text-mid">
           Review and edit the extracted data before creating the invoice
         </p>
       </div>
 
       {error && (
-        <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div className="mx-6 mt-4 p-3 bg-danger-bg border border-danger/20 rounded-lg">
           <p className="text-sm text-red-800">{error}</p>
         </div>
       )}
@@ -178,10 +178,10 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
       <div className="px-6 py-4 space-y-6">
         {scan.confidenceScore && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">OCR Confidence:</span>
+            <span className="text-sm text-mid">OCR Confidence:</span>
             <span className={`text-sm font-medium ${
-              parseFloat(scan.confidenceScore) > 70 ? "text-green-600" :
-              parseFloat(scan.confidenceScore) > 40 ? "text-yellow-600" : "text-red-600"
+              parseFloat(scan.confidenceScore) > 70 ? "text-success" :
+              parseFloat(scan.confidenceScore) > 40 ? "text-yellow-600" : "text-danger"
             }`}>
               {parseFloat(scan.confidenceScore).toFixed(0)}%
             </span>
@@ -190,73 +190,73 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Customer Name *
             </label>
             <input
               type="text"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Customer or company name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Customer GSTIN
             </label>
             <input
               type="text"
               value={customerGstin}
               onChange={(e) => setCustomerGstin(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. 27AAAA0000A1ZA"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Customer State *
             </label>
             <input
               type="text"
               value={customerState}
               onChange={(e) => setCustomerState(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. IN-MH"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Customer Email
             </label>
             <input
               type="email"
               value={customerEmail}
               onChange={(e) => setCustomerEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="customer@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Invoice Date *
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark mb-1">
               Due Date
             </label>
             <input
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -265,13 +265,13 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
           <div className="flex gap-8 text-sm">
             {parsedSubtotal > 0 && (
               <div>
-                <span className="text-gray-500">Subtotal: </span>
+                <span className="text-mid">Subtotal: </span>
                 <span className="font-medium">₹{parsedSubtotal.toFixed(2)}</span>
               </div>
             )}
             {parsedTotal > 0 && (
               <div>
-                <span className="text-gray-500">Total: </span>
+                <span className="text-mid">Total: </span>
                 <span className="font-medium">₹{parsedTotal.toFixed(2)}</span>
               </div>
             )}
@@ -280,16 +280,16 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
 
         {lineItems.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Line Items</h3>
+            <h3 className="text-sm font-medium text-dark mb-3">Line Items</h3>
             <div className="border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-section-muted">
                   <tr>
-                    <th className="px-3 py-2 text-left text-gray-600 font-medium">Description</th>
-                    <th className="px-3 py-2 text-right text-gray-600 font-medium w-20">Qty</th>
-                    <th className="px-3 py-2 text-right text-gray-600 font-medium w-28">Unit Price</th>
-                    <th className="px-3 py-2 text-right text-gray-600 font-medium w-24">Amount</th>
-                    <th className="px-3 py-2 text-right text-gray-600 font-medium w-20">GST %</th>
+                    <th className="px-3 py-2 text-left text-mid font-medium">Description</th>
+                    <th className="px-3 py-2 text-right text-mid font-medium w-20">Qty</th>
+                    <th className="px-3 py-2 text-right text-mid font-medium w-28">Unit Price</th>
+                    <th className="px-3 py-2 text-right text-mid font-medium w-24">Amount</th>
+                    <th className="px-3 py-2 text-right text-mid font-medium w-20">GST %</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -304,7 +304,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, description: e.target.value } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                       </td>
                       <td className="px-3 py-2">
@@ -316,7 +316,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, quantity: Number(e.target.value) } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-gray-200 rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
                           min="1"
                         />
                       </td>
@@ -329,12 +329,12 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, unitPrice: Number(e.target.value) } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-gray-200 rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
                           step="0.01"
                           min="0"
                         />
                       </td>
-                      <td className="px-3 py-2 text-right text-gray-700">
+                      <td className="px-3 py-2 text-right text-dark">
                         ₹{item.amount.toFixed(2)}
                       </td>
                       <td className="px-3 py-2">
@@ -346,7 +346,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, gstRate: Number(e.target.value) } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-gray-200 rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
                           min="0"
                           max="100"
                         />
@@ -360,12 +360,12 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+          <label className="block text-sm font-medium text-dark mb-1">Notes</label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Optional notes for the invoice"
           />
         </div>
@@ -374,12 +374,12 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
           <details className="text-sm">
             <summary
               onClick={() => setRawTextExpanded(!rawTextExpanded)}
-              className="cursor-pointer text-gray-500 hover:text-gray-700"
+              className="cursor-pointer text-mid hover:text-dark"
             >
               {rawTextExpanded ? "Hide" : "Show"} raw OCR text
             </summary>
             {rawTextExpanded && (
-              <pre className="mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 overflow-auto max-h-48 whitespace-pre-wrap">
+              <pre className="mt-2 p-3 bg-section-muted rounded-lg text-xs text-mid overflow-auto max-h-48 whitespace-pre-wrap">
                 {scan.rawText}
               </pre>
             )}

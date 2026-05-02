@@ -11,6 +11,7 @@ const DEMO_TENANT_ID = process.env.DEMO_TENANT_ID || "demo-tenant-uuid";
 
 const nextAuth = NextAuth({
   adapter: DrizzleAdapter(db),
+  session: { strategy: "jwt" },
   providers: [
     Credentials({
       credentials: {
@@ -40,31 +41,37 @@ const nextAuth = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, user }: any) {
-      session.user.id = user.id;
+    async jwt({ token, user }: any) {
+      if (user) {
+        token.id = user.id;
 
-      // Look up tenant + onboarding_status for the user
-      const ut = await db
-        .select({ tenantId: userTenants.tenantId })
-        .from(userTenants)
-        .where(eq(userTenants.userId, user.id))
-        .limit(1);
-
-      if (ut[0]) {
-        session.user.tenantId = ut[0].tenantId;
-
-        const t = await db
-          .select({ onboardingStatus: tenants.onboardingStatus })
-          .from(tenants)
-          .where(eq(tenants.id, ut[0].tenantId))
+        // Look up tenant + onboarding_status (runs on server, not middleware)
+        const ut = await db
+          .select({ tenantId: userTenants.tenantId })
+          .from(userTenants)
+          .where(eq(userTenants.userId, user.id))
           .limit(1);
 
-        session.user.onboardingComplete = t[0]?.onboardingStatus === "complete";
-      } else {
-        session.user.tenantId = undefined;
-        session.user.onboardingComplete = false;
+        if (ut[0]) {
+          token.tenantId = ut[0].tenantId;
+          const t = await db
+            .select({ onboardingStatus: tenants.onboardingStatus })
+            .from(tenants)
+            .where(eq(tenants.id, ut[0].tenantId))
+            .limit(1);
+          token.onboardingComplete = t[0]?.onboardingStatus === "complete";
+        } else {
+          token.tenantId = undefined;
+          token.onboardingComplete = false;
+        }
       }
+      return token;
+    },
 
+    async session({ session, token }: any) {
+      session.user.id = token.id;
+      session.user.tenantId = token.tenantId;
+      session.user.onboardingComplete = token.onboardingComplete;
       return session;
     },
   },

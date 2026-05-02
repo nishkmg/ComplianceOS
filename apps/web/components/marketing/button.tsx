@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const base = `inline-flex items-center justify-center gap-2 font-ui text-[16px] font-medium rounded-md transition-all no-underline cursor-pointer`;
+const base = `inline-flex items-center justify-center gap-2 font-ui text-[16px] font-medium rounded-sm transition-all no-underline cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber`;
 
 // @ts-ignore
 export function MarketingButton({ href, variant = 'primary', children, className = '' }) {

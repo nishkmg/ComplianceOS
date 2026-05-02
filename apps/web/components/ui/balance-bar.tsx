@@ -29,26 +29,26 @@ export function BalanceBar({
   const { debit: debitNum, credit: creditNum, difference, balanced } = calculateBalance(debit, credit);
 
   return (
-    <div className="border-t border-hairline bg-surface-muted p-4" role="region" aria-label="Journal entry balance">
+    <div className="border-t border-border bg-surface-muted p-4" role="region" aria-label="Journal entry balance">
       <div className="flex items-center justify-between">
         {/* Balance Summary */}
         <div className="flex items-center gap-6">
           <div>
-            <div className="text-ui-xs text-light mb-1">Total Debit</div>
-            <div className="text-mono font-mono text-right">
+            <div className="font-ui text-[11px] font-medium uppercase tracking-widest text-mid mb-1">Total Debit</div>
+            <div className="font-mono text-lg font-semibold text-dark text-right">
               {formatIndianNumber(debitNum, { currency: true, decimals: 2 })}
             </div>
           </div>
           <div>
-            <div className="text-ui-xs text-light mb-1">Total Credit</div>
-            <div className="text-mono font-mono text-right">
+            <div className="font-ui text-[11px] font-medium uppercase tracking-widest text-mid mb-1">Total Credit</div>
+            <div className="font-mono text-lg font-semibold text-dark text-right">
               {formatIndianNumber(creditNum, { currency: true, decimals: 2 })}
             </div>
           </div>
           <div>
-            <div className="text-ui-xs text-light mb-1">Difference</div>
+            <div className="font-ui text-[11px] font-medium uppercase tracking-widest text-mid mb-1">Difference</div>
             <div
-              className={`text-mono font-mono text-right ${
+              className={`font-mono text-lg font-semibold text-right ${
                 balanced
                   ? 'text-success'
                   : 'text-danger'
@@ -64,9 +64,9 @@ export function BalanceBar({
         {/* Status Indicator */}
         <div className="flex items-center gap-2">
           {balanced ? (
-            <span className="badge badge-success">Ready to Post</span>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-success/10 text-success border border-success/20">Ready to Post</span>
           ) : (
-            <span className="badge badge-gray">Entry must balance</span>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-surface-muted text-mid border border-border">Entry must balance</span>
           )}
         </div>
       </div>

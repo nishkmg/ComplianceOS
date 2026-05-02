@@ -114,7 +114,7 @@ export function Combobox({
         placeholder={placeholder}
         disabled={disabled}
         className={cn(
-          'w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-sm text-sm focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors',
+          'w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors',
           inputClassName
         )}
       />
@@ -130,7 +130,7 @@ export function Combobox({
         <div
           ref={listRef}
           role="listbox"
-          className="absolute z-50 mt-1 w-full bg-white border border-border-subtle shadow-lg rounded-sm max-h-60 overflow-y-auto"
+          className="absolute z-50 mt-1 w-full bg-surface border border-border shadow-md rounded-md max-h-60 overflow-y-auto animate-in fade-in-80"
         >
           {filtered.length > 0 ? (
             filtered.map((item, idx) => (
@@ -141,24 +141,24 @@ export function Combobox({
                 onClick={() => selectItem(item)}
                 onMouseEnter={() => setHighlightIndex(idx)}
                 className={cn(
-                  'w-full text-left px-4 py-3 font-ui-sm transition-colors border-none cursor-pointer flex items-center justify-between',
-                  idx === highlightIndex ? 'bg-section-amber' : 'hover:bg-stone-50',
+                  'w-full text-left px-4 py-3 font-ui transition-colors border-none cursor-pointer flex items-center justify-between',
+                  idx === highlightIndex ? 'bg-surface-muted text-dark' : 'hover:bg-surface-muted/50',
                   item.id === value ? 'font-semibold' : ''
                 )}
               >
                 <div className="flex flex-col">
                   <span>{item.label}</span>
                   {item.subtitle && (
-                    <span className="text-[10px] text-text-mid mt-0.5">{item.subtitle}</span>
+                    <span className="text-[10px] text-mid mt-0.5">{item.subtitle}</span>
                   )}
                 </div>
                 {item.id === value && (
-                  <Icon name="check" className="text-[16px] text-primary-container" />
+                  <Icon name="check" className="text-[16px] text-amber" />
                 )}
               </button>
             ))
           ) : (
-            <div className="px-4 py-6 text-center text-text-mid text-sm">
+            <div className="px-4 py-6 text-center text-mid text-sm">
               <Icon name="search_off" className="text-[20px] mb-1" />
               <p>{emptyMessage}</p>
             </div>

@@ -98,7 +98,7 @@ export function AccountTree({ accounts, onRefine }: AccountTreeProps) {
             className="h-4 w-4 rounded border-gray-300"
           />
 
-          <span className="font-mono text-xs text-gray-500 w-24">{node.code}</span>
+          <span className="font-mono text-xs text-light w-24">{node.code}</span>
 
           <input
             type="text"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 interface CommandItem {
@@ -20,6 +20,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const commands = useMemo<CommandItem[]>(() => [
     { id: "dashboard", name: "Dashboard", category: "screen", onSelect: () => router.push("/dashboard") },
@@ -74,16 +77,35 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         e.preventDefault();
         onClose();
         break;
+      case "Tab": {
+        e.preventDefault();
+        const focusable = getFocusableElements(overlayRef.current);
+        if (focusable.length === 0) return;
+        const currentIndex = focusable.indexOf(document.activeElement as HTMLElement);
+        if (e.shiftKey) {
+          const prevIndex = currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1;
+          focusable[prevIndex]?.focus();
+        } else {
+          const nextIndex = currentIndex >= focusable.length - 1 ? 0 : currentIndex + 1;
+          focusable[nextIndex]?.focus();
+        }
+        break;
+      }
     }
   }, [isOpen, filteredCommands, selectedIndex, onClose]);
 
   useEffect(() => {
+    if (!isOpen) return;
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  }, [handleKeyDown, isOpen]);
 
   useEffect(() => {
-    if (isOpen) { setSearch(""); setSelectedIndex(0); }
+    if (isOpen) {
+      setSearch("");
+      setSelectedIndex(0);
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -101,19 +123,58 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   let flatIndex = 0;
 
   return (
-    <div className="command-palette-overlay" onClick={onClose}>
+    <div
+      ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command palette"
+      className="command-palette-overlay"
+      onClick={onClose}
+    >
       <div className="command-palette" onClick={e => e.stopPropagation()}>
         <input
+          ref={inputRef}
           type="text"
           placeholder="Search commands..."
+          aria-label="Search commands"
+          aria-activedescendant={filteredCommands[selectedIndex] ? `cmd-${filteredCommands[selectedIndex].id}` : undefined}
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="command-list"
+          aria-autocomplete="list"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="command-palette-input"
           autoFocus
         />
-        <div className="command-palette-list">
+        <div
+          id="command-list"
+          ref={listRef}
+          role="listbox"
+          aria-label="Commands"
+          className="command-palette-list"
+        >
           {filteredCommands.length === 0 ? (
-            <div className="p-4 text-center text-light">No commands found</div>
+            <div className="p-8 text-center">
+              <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 text-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <p className="font-ui text-sm text-mid mb-2">No commands found</p>
+              <p className="font-ui text-xs text-light">Try searching for &quot;journal&quot;, &quot;invoice&quot;, or &quot;report&quot;</p>
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                {['Dashboard', 'Journal', 'Invoices', 'Reports'].map(suggestion => (
+                  <button
+                    key={suggestion}
+                    onClick={() => { setSearch(suggestion); }}
+                    className="px-3 py-1.5 text-xs font-ui text-mid bg-surface-muted border border-border rounded-sm hover:border-amber hover:text-amber transition-colors"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </div>
           ) : (
             Object.entries(groupedCommands).map(([category, items]) => (
               <div key={category}>
@@ -126,6 +187,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                   return (
                     <div
                       key={cmd.id}
+                      id={`cmd-${cmd.id}`}
+                      role="option"
+                      aria-selected={isSelected}
                       className={`command-palette-item ${isSelected ? "selected" : ""}`}
                       onClick={() => { cmd.onSelect(); onClose(); }}
                       onMouseEnter={() => setSelectedIndex(currentIndex)}
@@ -141,5 +205,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
+  if (!container) return [];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'input:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
   );
 }

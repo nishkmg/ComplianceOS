@@ -66,9 +66,9 @@ export default function GSTReturnDetailPage() {
       <div className="flex items-center justify-between">
         <div>
 // @ts-ignore
-          <h1 className="font-display text-[26px] font-normal text-dark">GST Return - {months.find((m) => m.value === month)?.label} {year}</h1>
+          <h1 className="font-display text-display-lg font-semibold text-dark">GST Return - {months.find((m) => m.value === month)?.label} {year}</h1>
 // @ts-ignore
-          <p className="font-ui text-[12px] text-light mt-1">Tax Period: {months.find((m) => m.value === month)?.label} {year}</p>
+          <p className="font-ui text-[13px] text-secondary mt-1">Tax Period: {months.find((m) => m.value === month)?.label} {year}</p>
         </div>
         <div className="flex gap-2">
           <button onClick={handleGenerateAll} className="filter-tab active">Generate All</button>
@@ -78,7 +78,7 @@ export default function GSTReturnDetailPage() {
         </div>
       </div>
 
-      <div className="border-b border-hairline">
+      <div className="border-b border-border">
         <nav className="flex gap-4">
 // @ts-ignore
           {[{ id: "gstr1", label: "GSTR-1" }, { id: "gstr2b", label: "GSTR-2B" }, { id: "gstr3b", label: "GSTR-3B" }].map((tab) => (
@@ -116,13 +116,13 @@ export default function GSTReturnDetailPage() {
         <h2 className="font-display text-[16px] font-normal text-dark mb-4">Return Summary</h2>
         {currentReturn ? (
           <div className="space-y-2 font-ui text-[13px]">
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Return Number</span><span className="font-mono text-dark">{currentReturn.returnNumber}</span></div>
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Return Type</span><span className="font-mono text-dark uppercase">{currentReturn.returnType}</span></div>
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Status</span><Badge variant={statusConfig[currentReturn.status]?.variant as BadgeVariant || "gray"}>{statusConfig[currentReturn.status]?.label || currentReturn.status}</Badge></div>
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Due Date</span><span className="font-mono text-dark">{currentReturn.dueDate}</span></div>
-            {currentReturn.filingDate && <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Filed Date</span><span className="font-mono text-dark">{currentReturn.filingDate}</span></div>}
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Total Tax Payable</span><span className="font-mono text-dark">{formatIndianNumber(Number(currentReturn.totalTaxPayable))}</span></div>
-            <div className="flex justify-between py-2 border-b border-hairline"><span className="text-light">Total ITC</span><span className="font-mono text-dark">{formatIndianNumber(Number(currentReturn.totalEligibleItc))}</span></div>
+            <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Return Number</span><span className="font-mono text-dark">{currentReturn.returnNumber}</span></div>
+            <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Return Type</span><span className="font-mono text-dark uppercase">{currentReturn.returnType}</span></div>
+            <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Status</span><Badge variant={statusConfig[currentReturn.status]?.variant as BadgeVariant || "gray"}>{statusConfig[currentReturn.status]?.label || currentReturn.status}</Badge></div>
+            <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Due Date</span><span className="font-mono text-dark">{currentReturn.dueDate}</span></div>
+            {currentReturn.filingDate && <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Filed Date</span><span className="font-mono text-dark">{currentReturn.filingDate}</span></div>}
+            <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Total Tax Payable</span><span className="font-mono text-dark">{formatIndianNumber(Number(currentReturn.totalTaxPayable))}</span></div>
+            <div className="flex justify-between py-2 border-b border-border"><span className="text-light">Total ITC</span><span className="font-mono text-dark">{formatIndianNumber(Number(currentReturn.totalEligibleItc))}</span></div>
             <div className="flex justify-between py-2"><span className="text-light">Tax Paid</span><span className="font-mono text-dark">{formatIndianNumber(Number(currentReturn.totalTaxPaid))}</span></div>
           </div>
         ) : (

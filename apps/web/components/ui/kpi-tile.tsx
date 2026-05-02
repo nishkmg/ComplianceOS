@@ -24,19 +24,19 @@ export function KpiTile({
   subtext,
 }: KpiTileProps) {
   const borderColors = {
-    amber: 'border-t-primary-container',
+    amber: 'border-t-amber',
     success: 'border-t-success',
     danger: 'border-t-danger',
-    neutral: 'border-t-stone-300',
-    dark: 'border-t-stone-800',
+    neutral: 'border-t-border',
+    dark: 'border-t-dark',
   };
 
   const iconColors = {
-    amber: 'text-primary-container',
-    success: 'text-green-600',
-    danger: 'text-red-600',
-    neutral: 'text-stone-400',
-    dark: 'text-stone-400',
+    amber: 'text-amber',
+    success: 'text-success',
+    danger: 'text-danger',
+    neutral: 'text-mid',
+    dark: 'text-mid',
   };
 
   const formattedValue = typeof value === 'number' 
@@ -44,23 +44,23 @@ export function KpiTile({
     : value;
 
   return (
-    <div className={`bg-white p-6 border border-border-subtle border-t-2 ${borderColors[variant]} shadow-sm`}>
+    <div className={`bg-surface p-6 border border-border border-t-[3px] rounded-xl ${borderColors[variant]} shadow-sm transition-shadow hover:shadow-md`}>
       <div className="flex justify-between items-start mb-4">
-        <span className="font-ui-xs text-text-mid uppercase tracking-widest">{label}</span>
+        <span className="font-ui text-[11px] font-bold text-mid uppercase tracking-widest">{label}</span>
         {icon && (
           <Icon name={icon} className={iconColors[variant]} size={16} />
         )}
       </div>
-      <div className="font-mono text-xl text-stone-900">
+      <div className="font-mono text-2xl font-semibold text-dark tracking-tight">
         {formattedValue}
       </div>
       {delta && (
-        <p className={`text-[10px] font-ui-xs mt-2 ${delta.value >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <p className={`text-[11px] font-ui font-medium mt-3 ${delta.value >= 0 ? 'text-success' : 'text-danger'}`}>
           {delta.value >= 0 ? '+' : '-'}{Math.abs(delta.value)}% {delta.label}
         </p>
       )}
       {subtext && (
-        <p className="text-[10px] text-text-mid font-ui-xs mt-2">
+        <p className="text-[11px] text-mid font-ui mt-2">
           {subtext}
         </p>
       )}

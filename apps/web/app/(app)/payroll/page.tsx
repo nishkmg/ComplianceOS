@@ -4,6 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ErrorState } from "@/components/ui/error-state";
 import { formatIndianNumber } from "@/lib/format";
 
 const monthLabels = [
@@ -16,7 +19,7 @@ export default function PayrollPage() {
   const [year, setYear] = useState(String(new Date().getFullYear()));
   const [status, setStatus] = useState<string>("all");
 
-  const { data: payrollRuns, isLoading }: any = api.payroll.list.useQuery({
+  const { data: payrollRuns, isLoading, error, refetch }: any = api.payroll.list.useQuery({
     month,
     year,
     status: status !== "all" ? (status as any) : undefined,
@@ -25,12 +28,13 @@ export default function PayrollPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Payroll</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Process and track employee payroll</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">HR & Compliance</p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Payroll</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">Process and track employee payroll</p>
         </div>
-        <Link href="/payroll/process" className="filter-tab active">
+        <Link href="/payroll/process" className="btn btn-primary no-underline">
           Process Payroll
         </Link>
       </div>
@@ -70,7 +74,14 @@ export default function PayrollPage() {
       {/* Table */}
       <div className="card overflow-hidden">
         {isLoading ? (
-          <div className="text-center py-12 font-ui text-light">Loading payroll runs...</div>
+          <TableSkeleton rows={10} columns={7} />
+        ) : error ? (
+          <ErrorState
+            title="Failed to load payroll"
+            description={error.message || "Unable to fetch payroll data. Please try again."}
+            onRetry={() => refetch()}
+            type="server"
+          />
         ) : (
           <table className="table table-dense">
             <thead>
@@ -86,7 +97,7 @@ export default function PayrollPage() {
             </thead>
             <tbody>
               {payrollRuns?.map((run: any) => (
-                <tr key={run.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                <tr key={run.id} className="border-b border-border hover:bg-surface-muted transition-colors">
                   <td className="font-mono text-[13px] text-amber px-4 py-3">{run.payrollNumber}</td>
                   <td className="font-ui text-[13px] text-dark px-4 py-3">{run.employeeName}</td>
                   <td className="font-mono text-[13px] text-mid px-4 py-3">{run.month}/{run.year}</td>
@@ -106,8 +117,13 @@ export default function PayrollPage() {
               ))}
               {payrollRuns?.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                    No payroll runs found for this period
+                  <td colSpan={7}>
+                    <EmptyState
+                      title="No payroll runs found"
+                      description="No payroll data for the selected period. Process payroll to get started."
+                      action={{ label: "Process Payroll", onClick: () => window.location.href = "/payroll/process" }}
+                      icon="payments"
+                    />
                   </td>
                 </tr>
               )}
