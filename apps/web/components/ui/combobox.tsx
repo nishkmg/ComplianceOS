@@ -142,14 +142,14 @@ export function Combobox({
                 onMouseEnter={() => setHighlightIndex(idx)}
                 className={cn(
                   'w-full text-left px-4 py-3 font-ui-sm transition-colors border-none cursor-pointer flex items-center justify-between',
-                  idx === highlightIndex ? 'bg-section-amber' : 'hover:bg-stone-50',
+                  idx === highlightIndex ? 'bg-section-amber' : 'hover:bg-section-muted',
                   item.id === value ? 'font-semibold' : ''
                 )}
               >
                 <div className="flex flex-col">
                   <span>{item.label}</span>
                   {item.subtitle && (
-                    <span className="text-[10px] text-text-mid mt-0.5">{item.subtitle}</span>
+                    <span className="text-[10px] text-mid mt-0.5">{item.subtitle}</span>
                   )}
                 </div>
                 {item.id === value && (
@@ -158,7 +158,7 @@ export function Combobox({
               </button>
             ))
           ) : (
-            <div className="px-4 py-6 text-center text-text-mid text-sm">
+            <div className="px-4 py-6 text-center text-mid text-sm">
               <Icon name="search_off" className="text-[20px] mb-1" />
               <p>{emptyMessage}</p>
             </div>

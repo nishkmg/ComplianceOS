@@ -31,20 +31,20 @@ export function AddAccountDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl p-0 overflow-hidden border-[0.5px] border-border-subtle rounded-sm shadow-lg">
-        <DialogHeader className="px-8 py-6 border-b-[0.5px] border-border-subtle flex flex-row items-center justify-between bg-stone-50">
+      <DialogContent className="max-w-2xl p-0 overflow-hidden border border-border-subtle rounded-sm shadow-lg">
+        <DialogHeader className="px-8 py-6 border-b-[0.5px] border-border-subtle flex flex-row items-center justify-between bg-section-muted">
           <div className="text-left">
-            <DialogTitle className="font-display-lg text-lg font-normal text-on-surface">Add Account</DialogTitle>
-            <p className="font-ui-sm text-[13px] text-text-mid mt-1">Configure a new entry in the Chart of Accounts.</p>
+            <DialogTitle className="font-display-lg text-lg font-normal text-dark">Add Account</DialogTitle>
+            <p className="font-ui-sm text-[13px] text-mid mt-1">Configure a new entry in the Chart of Accounts.</p>
           </div>
         </DialogHeader>
 
         <div className="px-8 py-8 flex flex-col gap-6 max-h-[70vh] overflow-y-auto text-left">
           <div className="grid grid-cols-2 gap-6">
             <div className="col-span-2">
-              <label className="block font-ui-xs text-[10px] text-on-surface mb-2 tracking-widest uppercase font-bold">Account Name</label>
+              <label className="block font-ui-xs text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Name</label>
               <input 
-                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-sm text-on-surface focus:outline-none focus:border-primary-container outline-none transition-all" 
+                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-sm text-dark focus:outline-none focus:border-primary-container outline-none transition-all" 
                 placeholder="e.g. ICICI Corporate Account"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -52,9 +52,9 @@ export function AddAccountDialog({
             </div>
             
             <div>
-              <label className="block font-ui-xs text-[10px] text-on-surface mb-2 tracking-widest uppercase font-bold">Account Code</label>
+              <label className="block font-ui-xs text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Code</label>
               <input 
-                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-on-surface focus:outline-none focus:border-primary-container outline-none" 
+                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark focus:outline-none focus:border-primary-container outline-none" 
                 placeholder="1000"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -62,10 +62,10 @@ export function AddAccountDialog({
             </div>
 
             <div>
-              <label className="block font-ui-xs text-[10px] text-on-surface mb-2 tracking-widest uppercase font-bold">Parent Account</label>
+              <label className="block font-ui-xs text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Parent Account</label>
               <div className="relative">
                 <select 
-                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-sm text-sm text-on-surface appearance-none focus:outline-none focus:border-primary-container outline-none"
+                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-sm text-sm text-dark appearance-none focus:outline-none focus:border-primary-container outline-none"
                   value={formData.parentId}
                   onChange={(e) => setFormData({ ...formData, parentId: e.target.value })}
                 >
@@ -73,7 +73,7 @@ export function AddAccountDialog({
                   <option value="1">1000 - Assets</option>
                   <option value="2">2000 - Liabilities</option>
                 </select>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-text-mid">
+                <span className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-mid">
                   <Icon name="expand_more" />
                 </span>
               </div>
@@ -81,30 +81,30 @@ export function AddAccountDialog({
           </div>
 
           <div>
-            <label className="block font-ui-xs text-[10px] text-on-surface mb-2 tracking-widest uppercase font-bold">Account Type</label>
+            <label className="block font-ui-xs text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Type</label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {['asset', 'liability', 'equity', 'revenue'].map((t) => (
-                <label key={t} className={`flex flex-col p-4 border-[0.5px] rounded-sm cursor-pointer transition-colors ${formData.type === t ? 'bg-amber-50 border-amber' : 'bg-white border-border-subtle hover:bg-stone-50'}`}>
+                <label key={t} className={`flex flex-col p-4 border rounded-sm cursor-pointer transition-colors ${formData.type === t ? 'bg-section-amber border-amber' : 'bg-white border-border-subtle hover:bg-section-muted'}`}>
                   <input type="radio" className="sr-only" name="type" checked={formData.type === t} onChange={() => setFormData({ ...formData, type: t })} />
-                  <span className="font-ui-sm font-bold text-on-surface capitalize">{t}</span>
-                  <span className="font-ui-xs text-[10px] text-text-light">{t === 'asset' || t === 'expense' ? 'Debit normal' : 'Credit normal'}</span>
+                  <span className="font-ui-sm font-bold text-dark capitalize">{t}</span>
+                  <span className="font-ui-xs text-[10px] text-light">{t === 'asset' || t === 'expense' ? 'Debit normal' : 'Credit normal'}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 bg-stone-50 border-l-2 border-primary-container rounded-r-sm">
+          <div className="flex items-start gap-3 p-4 bg-section-muted border-l-2 border-primary-container rounded-r-sm">
             <Icon name="warning" className="text-primary-container mt-0.5" />
             <div>
-              <p className="font-ui-sm text-sm font-bold text-on-surface">Account Type Immutability</p>
-              <p className="font-ui-sm text-[12px] text-text-mid mt-1">Once transactions are posted to this account, its fundamental type cannot be altered to maintain ledger integrity.</p>
+              <p className="font-ui-sm text-sm font-bold text-dark">Account Type Immutability</p>
+              <p className="font-ui-sm text-[12px] text-mid mt-1">Once transactions are posted to this account, its fundamental type cannot be altered to maintain ledger integrity.</p>
             </div>
           </div>
 
           <div>
-            <label className="block font-ui-xs text-[10px] text-on-surface mb-2 tracking-widest uppercase font-bold">Description (Optional)</label>
+            <label className="block font-ui-xs text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Description (Optional)</label>
             <textarea 
-              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-sm text-on-surface focus:outline-none focus:border-primary-container outline-none resize-none" 
+              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui-md text-sm text-dark focus:outline-none focus:border-primary-container outline-none resize-none" 
               placeholder="Provide context for this ledger..." 
               rows={3}
               value={formData.description}
@@ -113,8 +113,8 @@ export function AddAccountDialog({
           </div>
         </div>
 
-        <DialogFooter className="px-8 py-6 border-t-[0.5px] border-border-subtle bg-stone-50 flex flex-row items-center justify-end gap-4">
-          <button onClick={onClose} className="font-ui-sm text-sm text-text-mid hover:text-on-surface transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
+        <DialogFooter className="px-8 py-6 border-t-[0.5px] border-border-subtle bg-section-muted flex flex-row items-center justify-end gap-4">
+          <button onClick={onClose} className="font-ui-sm text-sm text-mid hover:text-dark transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={() => onConfirm(formData)}
             className="bg-primary-container text-white font-ui-sm text-sm px-8 py-3 rounded-sm hover:bg-primary transition-all shadow-sm border-none cursor-pointer"

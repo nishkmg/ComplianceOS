@@ -23,12 +23,13 @@ const config: Config = {
       
       // Font sizes
       fontSize: {
-        'ui-md': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
-        'ui-sm': ['14px', { lineHeight: '1.6', fontWeight: '400' }],
-        'ui-xs': ['12px', { lineHeight: '1.5', letterSpacing: '0.1em', fontWeight: '500' }],
-        'ui-lg': ['18px', { lineHeight: '1.5', fontWeight: '500' }],
-        'mono-md': ['14px', { lineHeight: '1.5', fontWeight: '400' }],
-        'mono-lg': ['18px', { lineHeight: '1.4', fontWeight: '400' }],
+        'ui-md': ['14px', { lineHeight: '1.6', fontWeight: '400' }],
+        'ui-sm': ['13px', { lineHeight: '1.6', fontWeight: '400' }],
+        'ui-xs': ['11px', { lineHeight: '1.5', letterSpacing: '0.1em', fontWeight: '500' }],
+        'ui-lg': ['15px', { lineHeight: '1.5', fontWeight: '500' }],
+        'mono-sm': ['11px', { lineHeight: '1.5', fontWeight: '400' }],
+        'mono-md': ['13px', { lineHeight: '1.5', fontWeight: '400' }],
+        'mono-lg': ['15px', { lineHeight: '1.4', fontWeight: '400' }],
         'marketing-hero': ['64px', { lineHeight: '1.1', fontWeight: '400' }],
         'marketing-xl': ['48px', { lineHeight: '1.15', fontWeight: '400' }],
         'display-xl': ['38px', { lineHeight: '1.2', fontWeight: '400' }],
@@ -91,8 +92,8 @@ const config: Config = {
       // Border radius
       borderRadius: {
         'DEFAULT': "0.125rem",
-        'lg': "0.25rem",
-        'xl': "0.5rem",
+        'lg': "0.5rem",
+        'xl': "0.75rem",
         'full': "0.75rem"
       },
       

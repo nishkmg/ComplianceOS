@@ -110,7 +110,7 @@ export default function AgingTable({ data }: AgingTableProps) {
     bucket: "current" | "days31to60" | "days61to90" | "days90Plus";
   }) => {
     const colorMap = {
-      current: "bg-green-50 text-green-800",
+      current: "bg-success-bg text-green-800",
       days31to60: "bg-yellow-50 text-yellow-800",
       days61to90: "bg-orange-50 text-orange-800",
       days90Plus: "bg-red-100 text-red-900",
@@ -133,7 +133,7 @@ export default function AgingTable({ data }: AgingTableProps) {
       {/* Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600">Filter:</label>
+          <label className="text-sm text-mid">Filter:</label>
           <select
             value={filterBucket}
             onChange={(e) => setFilterBucket(e.target.value as FilterBucket)}
@@ -158,40 +158,40 @@ export default function AgingTable({ data }: AgingTableProps) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-section-muted border-b">
             <tr>
               <th
-                className="px-4 py-3 text-left text-gray-500 font-medium cursor-pointer hover:bg-gray-100"
+                className="px-4 py-3 text-left text-mid font-medium cursor-pointer hover:bg-lighter/40"
                 onClick={() => handleSort("customerName")}
               >
                 Customer <SortIndicator column="customerName" />
               </th>
               <th
-                className="px-4 py-3 text-right text-gray-500 font-medium cursor-pointer hover:bg-gray-100"
+                className="px-4 py-3 text-right text-mid font-medium cursor-pointer hover:bg-lighter/40"
                 onClick={() => handleSort("current")}
               >
                 Current (0-30) <SortIndicator column="current" />
               </th>
               <th
-                className="px-4 py-3 text-right text-gray-500 font-medium cursor-pointer hover:bg-gray-100"
+                className="px-4 py-3 text-right text-mid font-medium cursor-pointer hover:bg-lighter/40"
                 onClick={() => handleSort("days31to60")}
               >
                 31-60 Days <SortIndicator column="days31to60" />
               </th>
               <th
-                className="px-4 py-3 text-right text-gray-500 font-medium cursor-pointer hover:bg-gray-100"
+                className="px-4 py-3 text-right text-mid font-medium cursor-pointer hover:bg-lighter/40"
                 onClick={() => handleSort("days61to90")}
               >
                 61-90 Days <SortIndicator column="days61to90" />
               </th>
               <th
-                className="px-4 py-3 text-right text-gray-500 font-medium cursor-pointer hover:bg-gray-100"
+                className="px-4 py-3 text-right text-mid font-medium cursor-pointer hover:bg-lighter/40"
                 onClick={() => handleSort("days90Plus")}
               >
                 90+ Days <SortIndicator column="days90Plus" />
               </th>
               <th
-                className="px-4 py-3 text-right text-gray-500 font-medium cursor-pointer hover:bg-gray-100"
+                className="px-4 py-3 text-right text-mid font-medium cursor-pointer hover:bg-lighter/40"
                 onClick={() => handleSort("total")}
               >
                 Total Outstanding <SortIndicator column="total" />
@@ -201,7 +201,7 @@ export default function AgingTable({ data }: AgingTableProps) {
           <tbody>
             {sortedData.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-mid">
                   No customers match the selected filter
                 </td>
               </tr>
@@ -209,13 +209,13 @@ export default function AgingTable({ data }: AgingTableProps) {
               sortedData.map((row) => (
                 <tr
                   key={row.customerName}
-                  className="border-b hover:bg-gray-50 cursor-pointer"
+                  className="border-b hover:bg-section-muted cursor-pointer"
                   onClick={() =>
                     router.push(`/receivables/${encodeURIComponent(row.customerName)}`)
                   }
                 >
                   <td className="px-4 py-3">
-                    <span className="font-medium text-gray-900">{row.customerName}</span>
+                    <span className="font-medium text-dark">{row.customerName}</span>
                     {row.customerGstin && (
                       <span className="ml-2 text-xs text-gray-400">{row.customerGstin}</span>
                     )}
@@ -224,16 +224,16 @@ export default function AgingTable({ data }: AgingTableProps) {
                   <BucketCell amount={row.days31to60} bucket="days31to60" />
                   <BucketCell amount={row.days61to90} bucket="days61to90" />
                   <BucketCell amount={row.days90Plus} bucket="days90Plus" />
-                  <td className="px-4 py-3 text-right font-mono font-semibold text-gray-900">
+                  <td className="px-4 py-3 text-right font-mono font-semibold text-dark">
                     {formatINR(row.total)}
                   </td>
                 </tr>
               ))
             )}
           </tbody>
-          <tfoot className="bg-gray-100 border-t-2">
+          <tfoot className="bg-lighter/40 border-t-2">
             <tr>
-              <td className="px-4 py-3 font-semibold text-gray-700">Total</td>
+              <td className="px-4 py-3 font-semibold text-dark">Total</td>
               <td className="px-4 py-3 text-right font-mono text-sm bg-green-100 font-semibold">
                 {formatINR(totals.current)}
               </td>
@@ -246,7 +246,7 @@ export default function AgingTable({ data }: AgingTableProps) {
               <td className="px-4 py-3 text-right font-mono text-sm bg-red-100 font-semibold">
                 {formatINR(totals.days90Plus)}
               </td>
-              <td className="px-4 py-3 text-right font-mono font-bold text-gray-900">
+              <td className="px-4 py-3 text-right font-mono font-bold text-dark">
                 {formatINR(totals.total)}
               </td>
             </tr>
@@ -255,7 +255,7 @@ export default function AgingTable({ data }: AgingTableProps) {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-mid">
         Showing {sortedData.length} of {data.length} customer{data.length !== 1 ? "s" : ""}
       </p>
     </div>

@@ -24,13 +24,13 @@ export function ResetCoaDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-sm p-0 overflow-hidden border border-border-subtle shadow-xl flex flex-col items-center text-center rounded-sm">
         <div className="p-8 flex flex-col items-center">
-          <div className="w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-6">
+          <div className="w-16 h-16 rounded-full bg-danger-bg text-danger flex items-center justify-center mb-6">
             <Icon name="warning" className="text-4xl" />
           </div>
           
-          <DialogTitle className="font-display-lg text-lg font-bold text-on-surface mb-3">Reset to Template?</DialogTitle>
+          <DialogTitle className="font-display-lg text-lg font-bold text-dark mb-3">Reset to Template?</DialogTitle>
           
-          <p className="font-ui-sm text-sm text-text-mid leading-relaxed mb-8">
+          <p className="font-ui-sm text-sm text-mid leading-relaxed mb-8">
             Are you sure you want to reset to the template? All your customizations to the Chart of Accounts will be lost.
           </p>
           
@@ -43,7 +43,7 @@ export function ResetCoaDialog({
             </button>
             <button 
               onClick={onClose}
-              className="w-full bg-transparent border border-border-subtle text-on-surface-variant font-label font-medium text-sm py-3 rounded-sm transition-colors hover:bg-stone-50 border-none cursor-pointer font-bold uppercase tracking-widest"
+              className="w-full bg-transparent border border-border-subtle text-dark-variant font-label font-medium text-sm py-3 rounded-sm transition-colors hover:bg-section-muted border-none cursor-pointer font-bold uppercase tracking-widest"
             >
               Cancel
             </button>

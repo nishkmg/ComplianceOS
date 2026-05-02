@@ -63,7 +63,7 @@ export function TableSkeleton({
   return (
     <div className="w-full">
       {/* Table header skeleton */}
-      <div className="flex border-b border-hairline pb-2 mb-2">
+      <div className="flex border-b border-border-subtle pb-2 mb-2">
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton key={i} className="flex-1 mr-4" variant="text" />
         ))}
@@ -71,7 +71,7 @@ export function TableSkeleton({
       
       {/* Table body skeleton */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
-        <div key={rowIndex} className="flex border-b border-hairline py-3">
+        <div key={rowIndex} className="flex border-b border-border-subtle py-3">
           {Array.from({ length: columns }).map((_, colIndex) => (
             <Skeleton
               key={colIndex}
@@ -90,7 +90,7 @@ export function TableSkeleton({
  */
 export function KPISkeleton() {
   return (
-    <div className="p-4 border border-hairline rounded-lg bg-surface">
+    <div className="p-4 border border-border-subtle rounded-lg bg-surface">
       <Skeleton className="mb-2" variant="text" width="60%" />
       <Skeleton className="mb-1" variant="number" width="80%" />
       <Skeleton className="mt-2" variant="text" width="40%" />
@@ -103,7 +103,7 @@ export function KPISkeleton() {
  */
 export function CardSkeleton() {
   return (
-    <div className="p-6 border border-hairline rounded-lg bg-surface">
+    <div className="p-6 border border-border-subtle rounded-lg bg-surface">
       <Skeleton className="mb-4" variant="text" width="40%" height="24px" />
       <div className="space-y-2">
         <Skeleton variant="text" />

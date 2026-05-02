@@ -329,7 +329,7 @@ export function AppSidebar() {
                     'border-l-[3px]',
                     selected
                       ? 'border-primary-container bg-section-amber'
-                      : 'border-transparent hover:bg-amber-50',
+                      : 'border-transparent hover:bg-section-amber',
                   ].join(' ')}
                 >
                   <div className="flex items-center justify-between">
@@ -340,7 +340,7 @@ export function AppSidebar() {
                       <span className={[
                         'text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-sm border',
                         fy.status === 'open'
-                          ? 'bg-amber-50 text-amber-700 border-amber-200'
+                          ? 'bg-section-amber text-amber-text border-amber-200'
                           : 'bg-lighter text-mid border-border-subtle',
                       ].join(' ')}>
                         {fy.status}
@@ -371,7 +371,7 @@ export function AppSidebar() {
           <Icon name="contact_support" size={16} />
           <span>Support</span>
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-red-50 transition-colors border-none bg-transparent cursor-pointer">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer">
           <Icon name="logout" size={16} />
           <span>Sign Out</span>
         </button>

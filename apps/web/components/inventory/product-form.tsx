@@ -81,48 +81,48 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+        <div className="p-4 bg-danger-bg border border-danger/20 rounded-lg text-sm text-red-800">
           {error}
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">SKU *</label>
+          <label className="block text-sm font-medium text-dark mb-1">SKU *</label>
           <input
             type="text"
             value={sku}
             onChange={(e) => setSku(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
             placeholder="e.g. PROD-001"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+          <label className="block text-sm font-medium text-dark mb-1">Name *</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
             placeholder="Product name"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-dark mb-1">Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
-          className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+          className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
           placeholder="Optional description"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-1">HSN Code *</label>
+          <label className="block text-sm font-medium text-dark mb-1">HSN Code *</label>
           <input
             type="text"
             value={hsnCode}
@@ -131,33 +131,33 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
               handleHsnSearch(e.target.value);
             }}
             onFocus={() => handleHsnSearch(hsnCode)}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
             placeholder="e.g. 610910"
           />
           {showSuggestions && (
-            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-48 overflow-auto">
+            <div className="absolute z-10 w-full mt-1 bg-white border border-border-subtle rounded shadow-lg max-h-48 overflow-auto">
               {hsnSuggestions.map((s) => (
                 <button
                   key={s.hsnCode}
                   type="button"
                   onClick={() => handleSelectHsn(s)}
-                  className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50"
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-section-muted"
                 >
                   <div className="font-mono">{s.hsnCode}</div>
-                  <div className="text-gray-600">{s.description}</div>
-                  <div className="text-xs text-gray-500">GST: {s.gstRate}%</div>
+                  <div className="text-mid">{s.description}</div>
+                  <div className="text-xs text-mid">GST: {s.gstRate}%</div>
                 </button>
               ))}
             </div>
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">GST Rate (%)</label>
+          <label className="block text-sm font-medium text-dark mb-1">GST Rate (%)</label>
           <input
             type="number"
             value={gstRate ?? ""}
             onChange={(e) => setGstRate(e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
             placeholder="Auto-detected from HSN"
             min="0"
             max="100"
@@ -167,24 +167,24 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Rate (₹)</label>
+          <label className="block text-sm font-medium text-dark mb-1">Purchase Rate (₹)</label>
           <input
             type="number"
             value={purchaseRate ?? ""}
             onChange={(e) => setPurchaseRate(e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
             placeholder="0.00"
             step="0.01"
             min="0"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Sales Rate (₹)</label>
+          <label className="block text-sm font-medium text-dark mb-1">Sales Rate (₹)</label>
           <input
             type="number"
             value={salesRate ?? ""}
             onChange={(e) => setSalesRate(e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm"
             placeholder="0.00"
             step="0.01"
             min="0"
@@ -196,7 +196,7 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50"
+          className="px-4 py-2 text-sm text-dark border border-border-subtle rounded hover:bg-section-muted"
         >
           Cancel
         </button>

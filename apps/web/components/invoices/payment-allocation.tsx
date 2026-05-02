@@ -112,7 +112,7 @@ export default function PaymentAllocation({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-700">Outstanding Invoices</h3>
+        <h3 className="text-sm font-semibold text-dark">Outstanding Invoices</h3>
         <button
           type="button"
           onClick={autoAllocate}
@@ -124,13 +124,13 @@ export default function PaymentAllocation({
 
       <div className="border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-section-muted border-b">
             <tr>
-              <th className="px-3 py-2 text-left text-gray-500 font-medium text-xs">Invoice #</th>
-              <th className="px-3 py-2 text-left text-gray-500 font-medium text-xs">Date</th>
-              <th className="px-3 py-2 text-left text-gray-500 font-medium text-xs">Due Date</th>
-              <th className="px-3 py-2 text-right text-gray-500 font-medium text-xs">Outstanding</th>
-              <th className="px-3 py-2 text-right text-gray-500 font-medium text-xs">Allocate</th>
+              <th className="px-3 py-2 text-left text-mid font-medium text-xs">Invoice #</th>
+              <th className="px-3 py-2 text-left text-mid font-medium text-xs">Date</th>
+              <th className="px-3 py-2 text-left text-mid font-medium text-xs">Due Date</th>
+              <th className="px-3 py-2 text-right text-mid font-medium text-xs">Outstanding</th>
+              <th className="px-3 py-2 text-right text-mid font-medium text-xs">Allocate</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -138,11 +138,11 @@ export default function PaymentAllocation({
               const currentAlloc = allocations.get(inv.id) ?? 0;
               const isFull = currentAlloc >= inv.outstandingAmount;
               return (
-                <tr key={inv.id} className="hover:bg-gray-50">
-                  <td className="px-3 py-2 font-mono text-xs text-blue-600">{inv.invoiceNumber}</td>
-                  <td className="px-3 py-2 text-gray-600">{inv.date}</td>
-                  <td className="px-3 py-2 text-gray-600">{inv.dueDate}</td>
-                  <td className="px-3 py-2 text-right text-gray-900">
+                <tr key={inv.id} className="hover:bg-section-muted">
+                  <td className="px-3 py-2 font-mono text-xs text-primary-container">{inv.invoiceNumber}</td>
+                  <td className="px-3 py-2 text-mid">{inv.date}</td>
+                  <td className="px-3 py-2 text-mid">{inv.dueDate}</td>
+                  <td className="px-3 py-2 text-right text-dark">
                     ₹{inv.outstandingAmount.toLocaleString("en-IN")}
                   </td>
                   <td className="px-3 py-2 text-right">
@@ -168,18 +168,18 @@ export default function PaymentAllocation({
       </div>
 
       <div className="flex justify-end">
-        <div className="bg-gray-50 rounded-lg p-4 w-72 space-y-2 text-sm">
+        <div className="bg-section-muted rounded-lg p-4 w-72 space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total Amount</span>
+            <span className="text-mid">Total Amount</span>
             <span className="font-medium">₹{totalAmount.toLocaleString("en-IN")}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Allocated</span>
-            <span className="font-medium text-blue-600">₹{totalAllocated.toLocaleString("en-IN")}</span>
+            <span className="text-mid">Allocated</span>
+            <span className="font-medium text-primary-container">₹{totalAllocated.toLocaleString("en-IN")}</span>
           </div>
           <div className="flex justify-between border-t pt-2">
-            <span className="text-gray-600">Remaining</span>
-            <span className={`font-semibold ${remaining > 0 ? "text-red-600" : "text-green-600"}`}>
+            <span className="text-mid">Remaining</span>
+            <span className={`font-semibold ${remaining > 0 ? "text-danger" : "text-success"}`}>
               ₹{remaining.toLocaleString("en-IN")}
             </span>
           </div>

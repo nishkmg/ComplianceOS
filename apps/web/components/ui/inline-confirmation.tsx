@@ -73,7 +73,7 @@ export function InlineConfirmation({
         </div>
       ) : (
         /* Expanded confirmation */
-        <div className="border border-hairline rounded-md p-4 bg-surface-muted">
+        <div className="border border-border-subtle rounded-md p-4 bg-surface-muted">
           {/* Confirmation message */}
           <p className="font-ui text-ui-md text-dark mb-4">
             {message}
@@ -173,7 +173,7 @@ export function InlineConfirmationWithReason({
           {trigger}
         </div>
       ) : (
-        <div className="border border-hairline rounded-md p-4 bg-surface-muted">
+        <div className="border border-border-subtle rounded-md p-4 bg-surface-muted">
           <p className="font-ui text-ui-md text-dark mb-4">
             {message}
           </p>

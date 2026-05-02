@@ -90,8 +90,8 @@ export function DataTable<T>({
       <div className={cn('bg-white border border-border-subtle shadow-sm overflow-hidden', className)}>
         {emptyState || (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <Icon name="table_rows" className="text-4xl text-text-light/40 mb-4" />
-            <p className="font-ui-md text-sm text-text-mid">No data to display</p>
+            <Icon name="table_rows" className="text-4xl text-light/40 mb-4" />
+            <p className="font-ui-md text-sm text-mid">No data to display</p>
           </div>
         )}
       </div>
@@ -103,7 +103,7 @@ export function DataTable<T>({
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-stone-50 border-b border-border-subtle">
+            <tr className="bg-section-muted border-b border-border-subtle">
               {columns.map(col => {
                 const numeric = col.align === 'right';
                 return (
@@ -111,10 +111,10 @@ export function DataTable<T>({
                     key={col.key}
                     className={cn(
                       headerPadding,
-                      'font-ui-xs text-[10px] text-text-light uppercase tracking-widest font-bold',
+                      'font-ui-xs text-[10px] text-light uppercase tracking-widest font-bold',
                       numeric && 'text-right',
-                      col.sortable && 'cursor-pointer select-none hover:text-on-surface transition-colors',
-                      stickyHeader && 'sticky top-0 bg-stone-50 z-10',
+                      col.sortable && 'cursor-pointer select-none hover:text-dark transition-colors',
+                      stickyHeader && 'sticky top-0 bg-section-muted z-10',
                       col.width
                     )}
                     style={col.width ? { width: col.width } : undefined}
@@ -144,7 +144,7 @@ export function DataTable<T>({
                   key={rowKey}
                   className={cn(
                     'transition-colors',
-                    onRowClick ? 'cursor-pointer hover:bg-stone-50' : 'hover:bg-stone-50/50'
+                    onRowClick ? 'cursor-pointer hover:bg-section-muted' : 'hover:bg-section-muted/50'
                   )}
                   onClick={() => onRowClick?.(row)}
                   tabIndex={onRowClick ? 0 : undefined}
@@ -159,7 +159,7 @@ export function DataTable<T>({
                         className={cn(
                           cellPadding,
                           numeric ? 'font-mono text-right tabular-nums' : 'font-ui-sm',
-                          'text-on-surface',
+                          'text-dark',
                           col.cellClassName
                         )}
                       >
@@ -180,8 +180,8 @@ export function DataTable<T>({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-border-subtle bg-stone-50/50">
-          <span className="font-ui-xs text-[11px] text-text-mid">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-border-subtle bg-section-muted/50">
+          <span className="font-ui-xs text-[11px] text-mid">
             {safePage * pageSize + 1}–{Math.min((safePage + 1) * pageSize, sortedData.length)} of {sortedData.length}
           </span>
           <div className="flex items-center gap-1">
@@ -212,7 +212,7 @@ export function DataTable<T>({
                     'w-7 h-7 rounded text-[11px] font-mono font-medium transition-colors border-none cursor-pointer',
                     pageNum === safePage
                       ? 'bg-primary-container text-white'
-                      : 'bg-transparent text-text-mid hover:bg-stone-200'
+                      : 'bg-transparent text-mid hover:bg-stone-200'
                   )}
                 >
                   {pageNum + 1}

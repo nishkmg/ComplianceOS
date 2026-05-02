@@ -152,7 +152,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
         <h2 className="text-lg font-semibold mb-4">Payment Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Customer Name *</label>
+            <label className="block text-sm text-mid mb-2">Customer Name *</label>
             <input
               type="text"
               value={customerName}
@@ -163,7 +163,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Payment Date *</label>
+            <label className="block text-sm text-mid mb-2">Payment Date *</label>
             <input
               type="date"
               value={paymentDate}
@@ -173,7 +173,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Payment Amount *</label>
+            <label className="block text-sm text-mid mb-2">Payment Amount *</label>
             <input
               type="number"
               value={paymentAmount}
@@ -186,7 +186,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Payment Method *</label>
+            <label className="block text-sm text-mid mb-2">Payment Method *</label>
             <select
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value as "cash" | "bank" | "online" | "cheque")}
@@ -200,7 +200,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm text-gray-600 mb-2">Reference Number</label>
+            <label className="block text-sm text-mid mb-2">Reference Number</label>
             <input
               type="text"
               value={referenceNumber}
@@ -217,9 +217,9 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Outstanding Invoices</h2>
             {customerData && (
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-mid">
                 Total Outstanding:{" "}
-                <span className="font-bold text-gray-900">
+                <span className="font-bold text-dark">
                   ₹{customerData.totalOutstanding.toLocaleString("en-IN")}
                 </span>
               </span>
@@ -227,30 +227,30 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           </div>
 
           {isLoadingCustomer ? (
-            <p className="text-sm text-gray-500">Loading invoices...</p>
+            <p className="text-sm text-mid">Loading invoices...</p>
           ) : outstandingInvoices.length === 0 ? (
-            <p className="text-sm text-gray-500">No outstanding invoices for this customer.</p>
+            <p className="text-sm text-mid">No outstanding invoices for this customer.</p>
           ) : (
             <div className="space-y-3">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-section-muted border-b">
                   <tr>
-                    <th className="px-4 py-3 text-left text-gray-500 font-medium">Invoice No.</th>
-                    <th className="px-4 py-3 text-left text-gray-500 font-medium">Date</th>
-                    <th className="px-4 py-3 text-right text-gray-500 font-medium">Total</th>
-                    <th className="px-4 py-3 text-right text-gray-500 font-medium">Outstanding</th>
-                    <th className="px-4 py-3 text-right text-gray-500 font-medium">Allocate</th>
+                    <th className="px-4 py-3 text-left text-mid font-medium">Invoice No.</th>
+                    <th className="px-4 py-3 text-left text-mid font-medium">Date</th>
+                    <th className="px-4 py-3 text-right text-mid font-medium">Total</th>
+                    <th className="px-4 py-3 text-right text-mid font-medium">Outstanding</th>
+                    <th className="px-4 py-3 text-right text-mid font-medium">Allocate</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {outstandingInvoices.map((invoice) => (
-                    <tr key={invoice.id} className="hover:bg-gray-50">
+                    <tr key={invoice.id} className="hover:bg-section-muted">
                       <td className="px-4 py-3">{invoice.invoiceNumber}</td>
-                      <td className="px-4 py-3 text-gray-600">{invoice.date}</td>
-                      <td className="px-4 py-3 text-right text-gray-600">
+                      <td className="px-4 py-3 text-mid">{invoice.date}</td>
+                      <td className="px-4 py-3 text-right text-mid">
                         ₹{invoice.grandTotal.toLocaleString("en-IN")}
                       </td>
-                      <td className="px-4 py-3 text-right font-medium text-gray-900">
+                      <td className="px-4 py-3 text-right font-medium text-dark">
                         ₹{invoice.outstandingAmount.toLocaleString("en-IN")}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -280,7 +280,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
                 </button>
                 <button
                   onClick={() => setAllocations([])}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
+                  className="px-4 py-2 bg-gray-200 text-dark text-sm rounded hover:bg-gray-300"
                 >
                   Clear Allocations
                 </button>
@@ -295,20 +295,20 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Allocation Summary</h2>
             <div className="text-right">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-mid">
                 Payment: ₹{typeof paymentAmount === "number" ? paymentAmount.toLocaleString("en-IN") : "0.00"}
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-mid">
                 Allocated: ₹{totalAllocated.toLocaleString("en-IN")}
               </div>
-              <div className={`text-sm font-medium ${remainingAmount > 0.01 ? "text-orange-600" : "text-green-600"}`}>
+              <div className={`text-sm font-medium ${remainingAmount > 0.01 ? "text-orange-600" : "text-success"}`}>
                 Unallocated: ₹{Math.max(0, remainingAmount).toLocaleString("en-IN")}
               </div>
             </div>
           </div>
 
           {!isAllocationValid && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+            <div className="mb-4 p-3 bg-danger-bg border border-danger/20 rounded text-sm text-danger">
               Total allocations (₹{totalAllocated.toLocaleString("en-IN")}) exceed payment amount (₹
               {typeof paymentAmount === "number" ? paymentAmount.toLocaleString("en-IN") : "0.00"})
             </div>
@@ -334,7 +334,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
                 setPaymentAmount("");
                 setReferenceNumber("");
               }}
-              className="px-6 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
+              className="px-6 py-2 bg-gray-200 text-dark text-sm rounded hover:bg-gray-300"
             >
               Reset
             </button>
