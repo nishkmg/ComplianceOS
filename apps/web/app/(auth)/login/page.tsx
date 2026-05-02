@@ -31,23 +31,23 @@ export default function LoginPage() {
     <div className="bg-section-muted min-h-screen flex items-center justify-center p-6 selection:bg-primary-container selection:text-white">
       <main className="w-full max-w-[440px]">
         {/* Surface Card */}
-        <div className="bg-white border-[0.5px] border-border-subtle rounded-lg px-8 py-12 md:px-10 md:py-14 shadow-sm relative overflow-hidden">
+        <div className="bg-white border border-border-subtle rounded-lg px-8 py-12 md:px-10 md:py-14 shadow-sm relative overflow-hidden">
           {/* KPI Top Border Accent */}
           <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
           
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="font-display-xl text-display-xl text-on-surface tracking-tight mb-2">ComplianceOS</h1>
-            <p className="font-ui-sm text-ui-sm text-on-surface-variant">Secure access to your fiscal ledger.</p>
+            <h1 className="font-display-xl text-display-xl text-dark tracking-tight mb-2">ComplianceOS</h1>
+            <p className="font-ui-sm text-ui-sm text-dark-variant">Secure access to your fiscal ledger.</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input Group */}
             <div className="space-y-2 text-left">
-              <label className="block font-ui-xs text-ui-xs text-on-surface uppercase tracking-widest" htmlFor="email">Email Address</label>
+              <label className="block font-ui-xs text-ui-xs text-dark uppercase tracking-widest" htmlFor="email">Email Address</label>
               <input 
-                className="w-full bg-white border-[0.5px] border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-on-surface placeholder:text-text-light focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
+                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" 
                 id="email" 
                 name="email" 
                 placeholder="accountant@firm.in" 
@@ -61,12 +61,12 @@ export default function LoginPage() {
             {/* Password Input Group */}
             <div className="space-y-2 text-left">
               <div className="flex justify-between items-end">
-                <label className="block font-ui-xs text-ui-xs text-on-surface uppercase tracking-widest" htmlFor="password">Password</label>
+                <label className="block font-ui-xs text-ui-xs text-dark uppercase tracking-widest" htmlFor="password">Password</label>
                 <Link className="font-ui-xs text-ui-xs text-amber-text hover:text-primary-container transition-colors focus:outline-none focus:underline underline-offset-4 no-underline" href="/forgot-password">Forgot Password?</Link>
               </div>
               <div className="relative">
                 <input 
-                  className="w-full bg-white border-[0.5px] border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-on-surface placeholder:text-text-light focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors pr-10" 
+                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors pr-10" 
                   id="password" 
                   name="password" 
                   placeholder="••••••••••••" 
@@ -79,7 +79,7 @@ export default function LoginPage() {
                 <button 
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant hover:text-on-surface border-none bg-transparent cursor-pointer"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-dark-variant hover:text-dark border-none bg-transparent cursor-pointer"
                 >
                   <Icon name={showPassword ? 'visibility' : 'visibility_off'} className="text-[20px]" />
                 </button>
@@ -87,7 +87,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-red-600 text-[12px] text-center" role="alert">{error}</p>
+              <p className="text-danger text-[12px] text-center" role="alert">{error}</p>
             )}
 
             {/* Submit Button */}
@@ -99,7 +99,7 @@ export default function LoginPage() {
 
           {/* Footer Links */}
           <div className="mt-8 pt-6 border-t-[0.5px] border-border-subtle text-center">
-            <p className="font-ui-sm text-ui-sm text-on-surface-variant">
+            <p className="font-ui-sm text-ui-sm text-dark-variant">
               New to ComplianceOS? 
               <Link className="text-amber-text font-medium hover:text-primary-container hover:underline underline-offset-4 transition-all ml-1 no-underline" href="/signup">Create Account</Link>
             </p>
@@ -108,7 +108,7 @@ export default function LoginPage() {
 
         {/* Minimal meta footer */}
         <div className="text-center mt-8">
-          <p className="font-ui-xs text-ui-xs text-text-light uppercase tracking-widest">© 2024 ComplianceOS. Built for Indian Fiscal Realities.</p>
+          <p className="font-ui-xs text-ui-xs text-light uppercase tracking-widest">© 2024 ComplianceOS. Built for Indian Fiscal Realities.</p>
         </div>
       </main>
     </div>
