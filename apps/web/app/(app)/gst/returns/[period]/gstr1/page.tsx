@@ -113,49 +113,49 @@ export default function GSTR1DetailPage() {
       <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8">
         <div>
           <p className="font-ui-xs text-amber-text uppercase tracking-widest mb-2">GSTR-1 Outward Supplies</p>
-          <h1 className="font-display-xl text-display-xl text-on-surface">{monthLabel} {year}</h1>
-          <p className="font-ui-sm text-text-mid mt-2 max-w-2xl leading-relaxed">Details of outward supplies of goods or services. Ensure all B2B invoices and B2C aggregates are accurately reconciled before filing.</p>
+          <h1 className="font-display-xl text-display-xl text-dark">{monthLabel} {year}</h1>
+          <p className="font-ui-sm text-mid mt-2 max-w-2xl leading-relaxed">Details of outward supplies of goods or services. Ensure all B2B invoices and B2C aggregates are accurately reconciled before filing.</p>
         </div>
         <div className="text-right">
-          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-1">Status</p>
+          <p className="font-ui-xs text-light uppercase tracking-widest mb-1">Status</p>
           <div className="flex items-center md:justify-end gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span className="w-2 h-2 rounded-full bg-section-amber0"></span>
             <span className="font-ui-sm font-medium">Pending Filing</span>
           </div>
-          <p className="font-ui-xs text-text-mid mt-1">Due: 11 Oct 2024</p>
+          <p className="font-ui-xs text-mid mt-1">Due: 11 Oct 2024</p>
         </div>
       </div>
 
       {/* KPI Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Total Taxable Value</p>
-          <p className="font-mono-lg text-on-surface font-bold">₹ 12,45,600.00</p>
+        <div className="bg-white border border-border-subtle p-6 shadow-sm">
+          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Total Taxable Value</p>
+          <p className="font-mono-lg text-dark font-bold">₹ 12,45,600.00</p>
         </div>
-        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm border-t-2 border-t-primary-container">
-          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Total Tax Liability</p>
+        <div className="bg-white border border-border-subtle p-6 shadow-sm border-t-2 border-t-primary-container">
+          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Total Tax Liability</p>
           <p className="font-mono-lg text-primary-container font-bold">₹ 2,24,208.00</p>
         </div>
-        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Invoice Count</p>
-          <p className="font-mono-lg text-on-surface font-bold">42</p>
+        <div className="bg-white border border-border-subtle p-6 shadow-sm">
+          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Invoice Count</p>
+          <p className="font-mono-lg text-dark font-bold">42</p>
         </div>
-        <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-text-light uppercase tracking-widest mb-4">Amendments</p>
-          <p className="font-mono-lg text-on-surface font-bold">0</p>
+        <div className="bg-white border border-border-subtle p-6 shadow-sm">
+          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Amendments</p>
+          <p className="font-mono-lg text-dark font-bold">0</p>
         </div>
       </div>
 
       {/* Table Module */}
-      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden">
+      <div className="bg-white border border-border-subtle shadow-sm overflow-hidden">
         {/* Table Tabs */}
-        <div className="bg-stone-50 border-b-[0.5px] border-border-subtle flex overflow-x-auto no-print">
+        <div className="bg-section-muted border-b-[0.5px] border-border-subtle flex overflow-x-auto no-print">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTable(tab.id)}
               className={`px-6 py-4 font-ui-sm text-xs uppercase tracking-widest font-bold whitespace-nowrap transition-colors cursor-pointer border-none ${
-                activeTable === tab.id ? "bg-white text-on-surface border-r-[0.5px] border-border-subtle relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary-container" : "text-text-mid hover:text-on-surface border-r-[0.5px] border-border-subtle bg-transparent"
+                activeTable === tab.id ? "bg-white text-dark border-r-[0.5px] border-border-subtle relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary-container" : "text-mid hover:text-dark border-r-[0.5px] border-border-subtle bg-transparent"
               }`}
             >
               {tab.label}
@@ -166,11 +166,11 @@ export default function GSTR1DetailPage() {
         {/* Action Bar */}
         <div className="p-4 border-b-[0.5px] border-border-subtle flex justify-between items-center bg-white">
           <div className="relative">
-            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg" />
-            <input className="pl-10 pr-4 py-2 border-[0.5px] border-border-subtle bg-stone-50 rounded-sm text-xs w-64 outline-none focus:border-primary" placeholder="Search invoices..." />
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-light text-lg" />
+            <input className="pl-10 pr-4 py-2 border border-border-subtle bg-section-muted rounded-sm text-xs w-64 outline-none focus:border-primary" placeholder="Search invoices..." />
           </div>
           <div className="flex gap-3">
-            <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm text-xs rounded-sm hover:bg-stone-50 transition-colors cursor-pointer bg-transparent">Download Offline Tool (JSON)</button>
+            <button className="px-4 py-2 border border-border-subtle text-dark font-ui-sm text-xs rounded-sm hover:bg-section-muted transition-colors cursor-pointer bg-transparent">Download Offline Tool (JSON)</button>
             <button className="px-4 py-2 bg-primary-container text-white font-ui-sm text-xs rounded-sm hover:bg-primary transition-colors cursor-pointer border-none">Import Excel</button>
           </div>
         </div>
@@ -179,23 +179,23 @@ export default function GSTR1DetailPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[1200px]">
             <thead>
-              <tr className="bg-stone-50 border-b-[0.5px] border-border-subtle">
+              <tr className="bg-section-muted border-b-[0.5px] border-border-subtle">
                 {activeTable === "b2b" && (
                   <>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Invoice #</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Date</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">GSTIN / UIN</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Receiver Name</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">Taxable Value</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">IGST</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">CGST</th>
-                    <th className="py-3 px-6 font-ui-xs text-text-light uppercase tracking-widest text-right">SGST</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Invoice #</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Date</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">GSTIN / UIN</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Receiver Name</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">Taxable Value</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">IGST</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">CGST</th>
+                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right">SGST</th>
                   </>
                 )}
                 {/* Other headers would follow similar pattern */}
               </tr>
             </thead>
-            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-on-surface">
+            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-dark">
               {activeTable === "b2b" && mockData.b2bInvoices.map((inv, idx) => (
                 <tr key={idx} className="hover:bg-section-muted/30 transition-colors">
                   <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.invoiceNumber}</td>
@@ -203,9 +203,9 @@ export default function GSTR1DetailPage() {
                   <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.gstin}</td>
                   <td className="py-4 px-6 border-r-[0.5px] border-border-subtle font-ui-sm font-medium">{inv.partyName}</td>
                   <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {inv.taxableValue}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-text-mid">{inv.igstAmount}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-text-mid">{inv.cgstAmount}</td>
-                  <td className="py-4 px-6 text-right text-text-mid">{inv.sgstAmount}</td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-mid">{inv.igstAmount}</td>
+                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-mid">{inv.cgstAmount}</td>
+                  <td className="py-4 px-6 text-right text-mid">{inv.sgstAmount}</td>
                 </tr>
               ))}
             </tbody>
@@ -214,7 +214,7 @@ export default function GSTR1DetailPage() {
       </div>
 
       <div className="mt-8 flex justify-end gap-4 no-print">
-        <button className="px-6 py-3 border border-on-surface text-on-surface font-ui-sm font-bold uppercase tracking-widest hover:bg-stone-50 transition-colors cursor-pointer bg-transparent">Discard Return</button>
+        <button className="px-6 py-3 border border-border-subtle text-dark font-ui-sm font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent">Discard Return</button>
         <button className="px-12 py-3 bg-primary-container text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">File Return →</button>
       </div>
     </div>

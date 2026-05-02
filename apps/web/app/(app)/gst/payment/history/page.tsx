@@ -19,13 +19,13 @@ export default function GSTPaymentHistoryPage() {
       <header className="px-gutter-desktop pt-10 pb-8 flex justify-between items-end mt-4">
         <div>
           <p className="font-ui-xs text-xs text-amber-text uppercase tracking-widest mb-2 font-bold">Electronic Cash Ledger</p>
-          <h1 className="font-display-lg text-display-lg text-on-surface">GST Payment History</h1>
+          <h1 className="font-display-lg text-display-lg text-dark">GST Payment History</h1>
         </div>
         <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
+          <button className="flex items-center gap-2 px-5 py-2 border border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
             <Icon name="filter_list" className="text-[18px]" /> Filter
           </button>
-          <button className="flex items-center gap-2 px-5 py-2 border-[0.5px] border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
+          <button className="flex items-center gap-2 px-5 py-2 border border-border-subtle bg-white font-ui-sm text-xs font-bold uppercase tracking-widest text-mid rounded-sm hover:shadow-sm transition-shadow cursor-pointer">
             <Icon name="download" className="text-[18px]" /> Export CSV
           </button>
         </div>
@@ -33,41 +33,41 @@ export default function GSTPaymentHistoryPage() {
 
       <div className="overflow-y-auto pb-12">
         {/* Summary Bar */}
-        <div className="bg-white border-[0.5px] border-border-subtle p-8 mb-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-white border border-border-subtle p-8 mb-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2 font-bold">Total Paid (FY 2024-25)</p>
-            <p className="font-mono text-3xl font-bold text-on-surface">₹ 42,85,900.00</p>
+            <p className="font-ui-xs text-[10px] text-light uppercase tracking-widest mb-2 font-bold">Total Paid (FY 2024-25)</p>
+            <p className="font-mono text-3xl font-bold text-dark">₹ 42,85,900.00</p>
           </div>
           <div className="w-[1px] h-12 bg-border-subtle hidden md:block"></div>
           <div className="text-left md:text-right">
-            <p className="font-ui-xs text-[10px] text-text-light uppercase tracking-widest mb-2 font-bold">Last Update</p>
-            <p className="font-mono text-sm text-text-mid">12 Nov 2024, 14:32 IST</p>
+            <p className="font-ui-xs text-[10px] text-light uppercase tracking-widest mb-2 font-bold">Last Update</p>
+            <p className="font-mono text-sm text-mid">12 Nov 2024, 14:32 IST</p>
           </div>
         </div>
 
         {/* Ledger Table */}
-        <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden flex flex-col">
+        <div className="bg-white border border-border-subtle shadow-sm overflow-hidden flex flex-col">
           <div className="h-[2px] w-full bg-primary-container"></div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-stone-50 border-b-[0.5px] border-border-subtle">
+              <thead className="bg-section-muted border-b-[0.5px] border-border-subtle">
                 <tr>
-                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest">Payment Date</th>
-                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest">Challan ID (CPIN)</th>
-                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest">Tax Head</th>
-                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest text-right">Amount (₹)</th>
-                  <th className="py-4 px-6 font-ui-xs text-[10px] text-text-light font-bold uppercase tracking-widest text-center">Status</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-light font-bold uppercase tracking-widest">Payment Date</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-light font-bold uppercase tracking-widest">Challan ID (CPIN)</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-light font-bold uppercase tracking-widest">Tax Head</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-light font-bold uppercase tracking-widest text-right">Amount (₹)</th>
+                  <th className="py-4 px-6 font-ui-xs text-[10px] text-light font-bold uppercase tracking-widest text-center">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
                 {mockPayments.map((p) => (
-                  <tr key={p.id} className="hover:bg-stone-50/30 transition-colors">
-                    <td className="py-5 px-6 text-text-mid">{p.date}</td>
-                    <td className="py-5 px-6 font-mono text-sm text-on-surface">{p.cpin}</td>
+                  <tr key={p.id} className="hover:bg-section-muted/30 transition-colors">
+                    <td className="py-5 px-6 text-mid">{p.date}</td>
+                    <td className="py-5 px-6 font-mono text-sm text-dark">{p.cpin}</td>
                     <td className="py-5 px-6 font-ui-sm font-bold uppercase">{p.head}</td>
-                    <td className="py-5 px-6 text-right font-bold text-on-surface">₹ {formatIndianNumber(p.amount)}</td>
+                    <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(p.amount)}</td>
                     <td className="py-5 px-6 text-center">
-                      <span className="inline-block px-2 py-0.5 bg-green-50 text-green-700 border border-green-200 text-[9px] font-bold uppercase rounded-sm">Paid</span>
+                      <span className="inline-block px-2 py-0.5 bg-success-bg text-success border border-green-200 text-[9px] font-bold uppercase rounded-sm">Paid</span>
                     </td>
                   </tr>
                 ))}

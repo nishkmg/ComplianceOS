@@ -165,9 +165,9 @@ export default function GSTMismatchesPage() {
                   <td
                     className={`px-4 py-3 text-right font-medium ${
                       mismatch.difference > 0
-                        ? "text-red-600"
+                        ? "text-danger"
                         : mismatch.difference < 0
-                        ? "text-green-600"
+                        ? "text-success"
                         : "text-gray-600"
                     }`}
                   >
@@ -180,14 +180,14 @@ export default function GSTMismatchesPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleAccept(mismatch)}
-                        className="text-green-600 hover:text-green-700 text-sm"
+                        className="text-success hover:text-success text-sm"
                         title="Accept (book correction)"
                       >
                         Accept
                       </button>
                       <button
                         onClick={() => handleReject(mismatch)}
-                        className="text-red-600 hover:text-red-700 text-sm"
+                        className="text-danger hover:text-danger text-sm"
                         title="Reject (contact supplier)"
                       >
                         Reject
