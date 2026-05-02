@@ -40,7 +40,7 @@ export function MarketingNav() {
           <Link href="/login" className="text-mid dark:text-light font-medium hover:text-amber transition-colors duration-200 no-underline hidden md:block">
             Log In
           </Link>
-          <Link href="/signup" className="bg-amber text-white px-6 py-2 rounded-none font-bold uppercase tracking-widest hover:bg-amber-hover transition-transform active:scale-95 text-sm no-underline inline-block">
+          <Link href="/signup" className="bg-amber text-white px-6 py-2 rounded-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-transform active:scale-95 text-sm no-underline inline-block">
             Start Free
           </Link>
         </div>

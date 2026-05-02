@@ -164,7 +164,7 @@ export default function CoAPage() {
             <button
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1.5 font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-md capitalize ${
+              className={`px-3 py-1.5 font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm capitalize ${
                 typeFilter === t
                   ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
@@ -303,7 +303,7 @@ export default function CoAPage() {
                         </button>
                         <button
                           onClick={() => { setNewAccountName(""); toggleAddForm(type); }}
-                          className="bg-amber text-white text-[11px] font-ui font-bold uppercase tracking-wider px-3 py-1.5 rounded-md hover:bg-amber-hover cursor-pointer border-none"
+                          className="bg-amber text-white text-[11px] font-ui font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm hover:bg-amber-hover cursor-pointer border-none"
                         >
                           Add
                         </button>

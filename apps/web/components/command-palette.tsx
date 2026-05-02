@@ -168,7 +168,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                   <button
                     key={suggestion}
                     onClick={() => { setSearch(suggestion); }}
-                    className="px-3 py-1.5 text-xs font-ui text-mid bg-surface-muted border border-border rounded-md hover:border-amber hover:text-amber transition-colors"
+                    className="px-3 py-1.5 text-xs font-ui text-mid bg-surface-muted border border-border rounded-sm hover:border-amber hover:text-amber transition-colors"
                   >
                     {suggestion}
                   </button>

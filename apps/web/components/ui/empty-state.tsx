@@ -36,7 +36,7 @@ export function EmptyState({
       {action && (
         <button
           onClick={action.onClick}
-          className="bg-amber text-white px-10 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md border-none shadow-sm cursor-pointer flex items-center gap-2 group"
+          className="bg-amber text-white px-10 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-sm border-none shadow-sm cursor-pointer flex items-center gap-2 group"
         >
           {action.label}
           <Icon name="arrow_forward" className="text-lg group-hover:translate-x-1 transition-transform" />

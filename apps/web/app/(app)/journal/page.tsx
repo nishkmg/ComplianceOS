@@ -182,7 +182,7 @@ export default function JournalPage() {
             <button
               key={s.value}
               onClick={() => setFilter(s.value)}
-              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-md ${
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm ${
                 filter === s.value
                   ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"

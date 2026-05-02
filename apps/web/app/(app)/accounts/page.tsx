@@ -67,7 +67,7 @@ const columns: ColumnDef<AccountRow>[] = [
     header: "Type",
     width: "110px",
     render: (row) => (
-      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${typeBadge[row.type] || ''}`}>
+      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-sm ${typeBadge[row.type] || ''}`}>
         {row.type}
       </span>
     ),
@@ -140,7 +140,7 @@ export default function AccountsFlatPage() {
             <button
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-md capitalize ${
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm capitalize ${
                 typeFilter === t
                   ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"

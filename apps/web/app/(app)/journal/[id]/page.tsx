@@ -279,7 +279,7 @@ export default function JournalEntryDetailPage() {
             Void Entry
           </Button>
         )}
-        <Link href={`/audit-log?entryId=${entryId}`} className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 text-[10px] font-bold uppercase tracking-widest no-underline">
+        <Link href={`/audit-log?entryId=${entryId}`} className="inline-flex items-center justify-center rounded-sm text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 text-[10px] font-bold uppercase tracking-widest no-underline">
           View Audit Log
         </Link>
       </div>
