@@ -22,8 +22,8 @@ export default function ITRPresumptivePage() {
           <Icon name="calculate" className="text-[14px]" />
           Tax Calculation Engine
         </div>
-        <h1 className="font-display-xl text-display-xl text-on-surface mb-4">Presumptive Taxation Model</h1>
-        <p className="font-ui-md text-text-mid max-w-2xl leading-relaxed">
+        <h1 className="font-display-xl text-display-xl text-dark mb-4">Presumptive Taxation Model</h1>
+        <p className="font-ui-md text-mid max-w-2xl leading-relaxed">
           Evaluate deemed income under sections 44AD (Business) and 44ADA (Profession). Compare presumptive outputs against actual book profit to determine audit applicability.
         </p>
       </div>
@@ -32,26 +32,26 @@ export default function ITRPresumptivePage() {
         {/* Left Column: Inputs */}
         <div className="lg:col-span-7 flex flex-col gap-6">
           <div className="bg-white border border-border-subtle p-8 rounded-sm border-t-2 border-t-primary-container shadow-sm hover:shadow-md transition-all">
-            <h2 className="font-display-lg text-lg font-bold text-on-surface mb-6">Parameter Configuration</h2>
+            <h2 className="font-display-lg text-lg font-bold text-dark mb-6">Parameter Configuration</h2>
             <form className="space-y-8">
               {/* Scheme Selection */}
               <div className="text-left">
-                <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-text-mid mb-3">Applicable Section</label>
+                <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-mid mb-3">Applicable Section</label>
                 <div className="grid grid-cols-2 gap-4">
                   <div 
                     onClick={() => setSection("44ad")}
-                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ad' ? 'border-primary-container bg-amber-50' : 'border-border-subtle hover:bg-stone-50'}`}
+                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ad' ? 'border-primary-container bg-section-amber' : 'border-border-subtle hover:bg-section-muted'}`}
                   >
-                    <span className="font-ui-lg text-on-surface font-bold">Section 44AD</span>
-                    <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Eligible Business</span>
+                    <span className="font-ui-lg text-dark font-bold">Section 44AD</span>
+                    <span className="font-ui-xs text-[10px] text-mid mt-1 uppercase">Eligible Business</span>
                     {section === '44ad' && <Icon name="check_circle" className="absolute top-4 right-4 text-primary-container" />}
                   </div>
                   <div 
                     onClick={() => setSection("44ada")}
-                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ada' ? 'border-primary-container bg-amber-50' : 'border-border-subtle hover:bg-stone-50'}`}
+                    className={`relative flex flex-col p-4 border rounded-sm cursor-pointer transition-all ${section === '44ada' ? 'border-primary-container bg-section-amber' : 'border-border-subtle hover:bg-section-muted'}`}
                   >
-                    <span className="font-ui-lg text-on-surface font-bold">Section 44ADA</span>
-                    <span className="font-ui-xs text-[10px] text-text-mid mt-1 uppercase">Specified Profession</span>
+                    <span className="font-ui-lg text-dark font-bold">Section 44ADA</span>
+                    <span className="font-ui-xs text-[10px] text-mid mt-1 uppercase">Specified Profession</span>
                     {section === '44ada' && <Icon name="check_circle" className="absolute top-4 right-4 text-primary-container" />}
                   </div>
                 </div>
@@ -59,11 +59,11 @@ export default function ITRPresumptivePage() {
 
               {/* Turnover Input */}
               <div className="text-left">
-                <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-text-mid mb-2" htmlFor="turnover">Total Turnover / Gross Receipts</label>
+                <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-mid mb-2" htmlFor="turnover">Total Turnover / Gross Receipts</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-text-mid">₹</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-mid">₹</span>
                   <input 
-                    className="w-full bg-stone-50 border border-border-subtle rounded-sm py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
+                    className="w-full bg-section-muted border border-border-subtle rounded-sm py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
                     type="number" 
                     value={turnover}
                     onChange={(e) => setTurnover(parseFloat(e.target.value) || 0)}
@@ -73,17 +73,17 @@ export default function ITRPresumptivePage() {
 
               {section === "44ad" && (
                 <div className="text-left">
-                  <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-text-mid mb-2" htmlFor="digital">Turnover via Digital Modes</label>
+                  <label className="block font-ui-sm text-xs uppercase font-bold tracking-widest text-mid mb-2" htmlFor="digital">Turnover via Digital Modes</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-text-mid">₹</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-mid">₹</span>
                     <input 
-                      className="w-full bg-stone-50 border border-border-subtle rounded-sm py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
+                      className="w-full bg-section-muted border border-border-subtle rounded-sm py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
                       type="number" 
                       value={digitalTurnover}
                       onChange={(e) => setDigitalTurnover(parseFloat(e.target.value) || 0)}
                     />
                   </div>
-                  <p className="text-[10px] text-text-light mt-2 italic">Bank transfers, UPI, credit/debit cards, and other prescribed digital modes qualify for 6% rate.</p>
+                  <p className="text-[10px] text-light mt-2 italic">Bank transfers, UPI, credit/debit cards, and other prescribed digital modes qualify for 6% rate.</p>
                 </div>
               )}
             </form>
@@ -92,16 +92,16 @@ export default function ITRPresumptivePage() {
 
         {/* Right Column: Output */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-stone-900 text-white p-8 rounded-sm shadow-xl flex flex-col border border-stone-800">
-            <h3 className="font-display-lg text-lg font-bold text-amber-500 mb-8">Computation Result</h3>
+          <div className="bg-section-dark text-white p-8 rounded-sm shadow-xl flex flex-col border border-stone-800">
+            <h3 className="font-display-lg text-lg font-bold text-amber-text mb-8">Computation Result</h3>
             
             <div className="space-y-6">
               <div className="flex justify-between items-end border-b border-stone-800 pb-4">
-                <span className="font-ui-sm text-sm text-stone-400">Presumptive Income</span>
+                <span className="font-ui-sm text-sm text-light">Presumptive Income</span>
                 <span className="font-mono text-2xl font-bold text-white">₹ {formatIndianNumber(presumptiveIncome)}</span>
               </div>
               
-              <div className="flex justify-between items-center text-stone-400">
+              <div className="flex justify-between items-center text-light">
                 <span className="font-ui-xs text-[10px] uppercase tracking-widest">Effective Rate</span>
                 <span className="font-mono text-sm">{((presumptiveIncome / turnover) * 100).toFixed(2)}%</span>
               </div>
@@ -115,12 +115,12 @@ export default function ITRPresumptivePage() {
             </div>
           </div>
 
-          <div className="bg-white border-[0.5px] border-border-subtle p-6 shadow-sm text-left">
+          <div className="bg-white border border-border-subtle p-6 shadow-sm text-left">
              <div className="flex items-start gap-3">
                <Icon name="info" className="text-primary-container" />
                <div>
-                 <h4 className="font-ui-sm font-bold text-on-surface text-xs uppercase tracking-widest mb-1">Audit Applicability</h4>
-                 <p className="font-ui-sm text-[13px] text-text-mid leading-relaxed">
+                 <h4 className="font-ui-sm font-bold text-dark text-xs uppercase tracking-widest mb-1">Audit Applicability</h4>
+                 <p className="font-ui-sm text-[13px] text-mid leading-relaxed">
                    Turnover exceeds ₹ 2 Cr. Audit under Section 44AB is mandatory regardless of profit percentage unless 95% of receipts/payments are digital.
                  </p>
                </div>

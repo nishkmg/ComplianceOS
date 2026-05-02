@@ -54,7 +54,7 @@ export default function ITRPaymentPage() {
       </div>
 
       <div className="card overflow-hidden">
-        <h2 className="font-display text-[16px] font-normal text-dark px-4 py-3 border-b border-hairline">Advance Tax Installments</h2>
+        <h2 className="font-display text-[16px] font-normal text-dark px-4 py-3 border-b border-border-subtle">Advance Tax Installments</h2>
         <table className="table table-dense">
           <thead>
             <tr>
@@ -69,7 +69,7 @@ export default function ITRPaymentPage() {
           <tbody>
             {installments.length > 0 ? (
               installments.map((inst: any) => (
-                <tr key={inst.id} className="border-b border-hairline">
+                <tr key={inst.id} className="border-b border-border-subtle">
                   <td className="px-4 py-3 font-display text-[13px] font-medium text-dark">Installment {inst.installmentNumber}</td>
                   <td className="font-mono text-[13px] text-light px-4 py-3">{inst.dueDate}</td>
                   <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(Number(inst.payableAmount))}</td>

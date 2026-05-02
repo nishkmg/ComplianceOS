@@ -51,7 +51,7 @@ export default function ITRFinancialYearPage() {
         <p className="font-ui text-[12px] text-light mt-1">Assessment Year: {financialYear.replace(/^(\d{4})-(\d{2})$/, (_, start) => `${Number(start) + 1}-${(Number(start) + 2).toString().slice(-2)}`)}</p>
       </div>
 
-      <div className="border-b border-hairline">
+      <div className="border-b border-border-subtle">
         <nav className="flex gap-4">
 // @ts-ignore
           {[{ id: "itr3", label: "ITR-3" }, { id: "itr4", label: "ITR-4 (Sugam)" }].map((tab) => (
