@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { Icon } from '@/components/ui/icon';
+import Link from "next/link";
 import { UploadZone } from "@/components/ocr/upload-zone";
 import { ScanResults } from "@/components/ocr/scan-results";
 import type { ScanResult } from "@/components/ocr/types";
@@ -9,9 +11,7 @@ type ScanStatus = "idle" | "uploading" | "processing" | "completed" | "failed";
 
 async function fetchScan(scanId: string): Promise<ScanResult | null> {
   const input = JSON.stringify({ scanId });
-  const response = await fetch(
-    `/api/trpc/ocrScan.get?input=${encodeURIComponent(input)}`
-  );
+  const response = await fetch(`/api/trpc/ocrScan.get?input=${encodeURIComponent(input)}`);
   if (!response.ok) return null;
   const json = await response.json();
   return json.result?.data ?? null;
@@ -72,12 +72,24 @@ export default function ScanInvoicePage() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Scan Invoice</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Upload an invoice image or PDF to automatically extract line items and create a draft invoice.
-        </p>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <span className="text-amber-text font-ui-xs text-[10px] uppercase tracking-[0.2em] mb-1 block">
+            Document Capture
+          </span>
+          <h1 className="font-display-lg text-display-lg text-dark leading-tight">Scan Invoice</h1>
+          <p className="font-ui-sm text-sm text-mid mt-1">
+            Upload an invoice image or PDF to automatically extract line items and create a draft invoice.
+          </p>
+        </div>
+        <Link
+          href="/invoices"
+          className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-ui-xs uppercase tracking-widest hover:bg-section-muted transition-colors no-underline rounded-sm flex items-center gap-1.5"
+        >
+          <Icon name="arrow_back" size={14} /> Back to Invoices
+        </Link>
       </div>
 
       <UploadZone
@@ -87,28 +99,26 @@ export default function ScanInvoicePage() {
       />
 
       {error && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="px-5 py-3 bg-danger-bg border border-red-200 rounded-sm flex items-center gap-2">
+          <Icon name="warning" size={16} className="text-danger shrink-0" />
+          <p className="text-sm text-danger font-medium">{error}</p>
         </div>
       )}
 
       {scanStatus === "processing" && (
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm">
+        <div className="text-center py-8">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-50 text-amber-text rounded-sm text-sm font-medium">
             <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            Processing OCR... (usually 5-15 seconds)
+            Processing OCR… (usually 5–15 seconds)
           </div>
         </div>
       )}
 
       {scanStatus === "completed" && scanResult && (
-        <ScanResults
-          scan={scanResult}
-          onInvoiceCreated={handleInvoiceCreated}
-        />
+        <ScanResults scan={scanResult} onInvoiceCreated={handleInvoiceCreated} />
       )}
     </div>
   );
