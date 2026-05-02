@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const EXIT_DURATION = 200;
 
-export function NavigationLoader() {
+export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
@@ -107,9 +107,9 @@ export function NavigationLoader() {
 
   return (
     <div
-      className={`fixed z-30 top-14 left-0 right-0 bottom-0 lg:left-64 flex items-center justify-center transition-opacity duration-200 ${
+      className={`fixed z-50 flex items-center justify-center transition-opacity duration-200 ${
         exiting ? "opacity-0" : "opacity-100"
-      }`}
+      } ${fullScreen ? "inset-0" : "top-14 left-0 right-0 bottom-0 lg:left-64"}`}
       style={{ pointerEvents: exiting ? "none" : "auto" }}
       aria-hidden="true"
       role="status"
