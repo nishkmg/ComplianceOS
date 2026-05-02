@@ -31,8 +31,8 @@ export default function StockPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
         <div>
           <span className="font-ui-xs text-ui-xs text-amber-text tracking-[0.15em] uppercase mb-3 block">Inventory Management</span>
-          <h1 className="font-display-xl text-display-xl text-on-surface leading-none">Stock Levels</h1>
-          <p className="font-ui-sm text-ui-sm text-text-mid mt-3 max-w-lg">Real-time assessment of warehouse commodities, commitments, and procurement statuses.</p>
+          <h1 className="font-display-xl text-display-xl text-dark leading-none">Stock Levels</h1>
+          <p className="font-ui-sm text-ui-sm text-mid mt-3 max-w-lg">Real-time assessment of warehouse commodities, commitments, and procurement statuses.</p>
         </div>
         <button className="group bg-primary-container text-white font-ui-sm text-ui-sm px-6 py-3 hover:shadow-card transition-all flex items-center justify-center gap-2 border-none cursor-pointer">
           Adjust Stock <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
@@ -40,44 +40,44 @@ export default function StockPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white border-[0.5px] border-border-subtle shadow-sm overflow-hidden relative">
+      <div className="bg-white border border-border-subtle shadow-sm overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
         <div className="px-6 py-4 border-b-[0.5px] border-border-subtle bg-surface flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Icon name="filter_list" className="text-text-light text-[18px]" />
-            <span className="font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
+            <Icon name="filter_list" className="text-light text-[18px]" />
+            <span className="font-ui-xs text-ui-xs text-dark-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
           </div>
           <div className="flex gap-4">
-            <button className="font-ui-xs text-ui-xs text-text-mid hover:text-on-surface transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
-            <button className="font-ui-xs text-ui-xs text-text-mid hover:text-on-surface transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
+            <button className="font-ui-xs text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
+            <button className="font-ui-xs text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
           </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr className="bg-stone-50">
-                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium w-1/3">Product / SKU</th>
-                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium text-right">Available</th>
-                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium text-right">Committed</th>
-                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium text-right">Net Available</th>
-                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-on-surface-variant uppercase tracking-[0.1em] font-medium">Status</th>
+              <tr className="bg-section-muted">
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-dark-variant uppercase tracking-[0.1em] font-medium w-1/3">Product / SKU</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-dark-variant uppercase tracking-[0.1em] font-medium text-right">Available</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-dark-variant uppercase tracking-[0.1em] font-medium text-right">Committed</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-dark-variant uppercase tracking-[0.1em] font-medium text-right">Net Available</th>
+                <th className="px-6 py-4 border-b-[0.5px] border-border-subtle font-ui-xs text-ui-xs text-dark-variant uppercase tracking-[0.1em] font-medium">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y-[0.5px] divide-border-subtle">
               {mockStock.map((item) => (
                 <tr key={item.id} className="hover:bg-section-muted/50 transition-colors group">
                   <td className="px-6 py-5 text-left">
-                    <div className="font-ui-sm text-on-surface font-medium">{item.name}</div>
-                    <div className="font-mono-md text-[12px] text-text-mid mt-0.5">{item.sku} · {item.warehouse}</div>
+                    <div className="font-ui-sm text-dark font-medium">{item.name}</div>
+                    <div className="font-mono-md text-[12px] text-mid mt-0.5">{item.sku} · {item.warehouse}</div>
                   </td>
-                  <td className="px-6 py-5 font-mono-md text-right text-on-surface">{item.available.toLocaleString('en-IN')} {item.unit}</td>
-                  <td className="px-6 py-5 font-mono-md text-right text-text-mid">{item.committed.toLocaleString('en-IN')} {item.unit}</td>
-                  <td className="px-6 py-5 font-mono-md text-right font-bold text-on-surface">{item.netAvailable.toLocaleString('en-IN')} {item.unit}</td>
+                  <td className="px-6 py-5 font-mono-md text-right text-dark">{item.available.toLocaleString('en-IN')} {item.unit}</td>
+                  <td className="px-6 py-5 font-mono-md text-right text-mid">{item.committed.toLocaleString('en-IN')} {item.unit}</td>
+                  <td className="px-6 py-5 font-mono-md text-right font-bold text-dark">{item.netAvailable.toLocaleString('en-IN')} {item.unit}</td>
                   <td className="px-6 py-5">
-                    <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border-[0.5px] rounded-sm ${
-                      item.status === 'healthy' ? 'bg-green-50 text-green-700 border-green-200' :
-                      item.status === 'low' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                      'bg-red-50 text-red-700 border-red-200'
+                    <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-sm ${
+                      item.status === 'healthy' ? 'bg-success-bg text-success border-green-200' :
+                      item.status === 'low' ? 'bg-section-amber text-amber-text border-amber-200' :
+                      'bg-danger-bg text-danger border-red-200'
                     }`}>
                       {item.status === 'healthy' ? 'In Stock' : item.status === 'low' ? 'Low Stock' : 'Critical'}
                     </span>
