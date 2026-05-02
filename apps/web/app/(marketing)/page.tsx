@@ -51,7 +51,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="bg-page-bg text-on-surface font-ui-md selection:bg-primary-fixed min-h-screen">
+    <div className="bg-page-bg text-dark font-ui-md selection:bg-primary-fixed min-h-screen">
       <MarketingNav />
 
       <main id="main-content">
@@ -60,7 +60,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="max-w-xl text-left">
               <span className="text-ui-xs font-ui-xs text-amber-text uppercase tracking-[0.2em] mb-6 block">Made for India</span>
-              <h1 className="font-marketing-hero text-marketing-hero text-on-surface mb-8">
+              <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
                 The accounting software that thinks in lakhs, not thousands.
               </h1>
               <p className="text-ui-lg font-ui-lg text-secondary mb-10 max-w-lg leading-relaxed">
@@ -75,7 +75,7 @@ export default function HomePage() {
                 </Link>
                 <Link 
                   href="/contact" 
-                  className="border border-on-surface text-on-surface px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white transition-all rounded-none inline-flex items-center gap-1"
+                  className="border border-border-subtle text-dark px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white transition-all rounded-none inline-flex items-center gap-1"
                 >
                   Book a Demo
                 </Link>
@@ -94,9 +94,9 @@ export default function HomePage() {
                   alt="ComplianceOS Main Dashboard" 
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-white border-[0.5px] border-border-subtle p-6 hidden lg:block shadow-lg">
+              <div className="absolute -bottom-6 -left-6 bg-white border border-border-subtle p-6 hidden lg:block shadow-lg">
                 <p className="font-mono text-[18px] text-primary font-bold">₹ 1,45,00,000.00</p>
-                <p className="text-ui-xs font-ui-xs text-text-light uppercase tracking-tighter">Current FY Revenue</p>
+                <p className="text-ui-xs font-ui-xs text-light uppercase tracking-tighter">Current FY Revenue</p>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function HomePage() {
         {/* ─── Social Proof ─── */}
         <section className="bg-section-muted py-16 border-y-[0.5px] border-border-subtle">
           <div className="max-w-[1200px] mx-auto px-8 text-center">
-            <p className="text-ui-xs font-ui-xs text-center text-text-light uppercase tracking-widest mb-10">Trusted by India's leading firms &amp; CAs</p>
+            <p className="text-ui-xs font-ui-xs text-center text-light uppercase tracking-widest mb-10">Trusted by India's leading firms &amp; CAs</p>
             <div className="flex flex-wrap justify-center items-center gap-16 grayscale opacity-60 contrast-125">
               <img className="h-8" src="/images/homepage/logo1.png" alt="Trusted Brand" />
               <img className="h-8" src="/images/homepage/logo2.png" alt="Trusted Brand" />
@@ -124,7 +124,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {benefits.map((b) => (
-              <div key={b.title} className="bg-white p-8 border-[0.5px] border-border-subtle border-t-2 border-t-primary-container shadow-card transition-all hover:shadow-lg group rounded-none">
+              <div key={b.title} className="bg-white p-8 border border-border-subtle border-t-2 border-t-primary-container shadow-card transition-all hover:shadow-lg group rounded-none">
                 <Icon name={b.icon} className="text-primary mb-6 block group-hover:scale-110 transition-transform" size={32} />
                 <h3 className="font-ui text-ui-lg font-bold mb-4 text-dark">{b.title}</h3>
                 <p className="font-ui text-ui-sm text-secondary leading-relaxed">{b.desc}</p>
@@ -143,7 +143,7 @@ export default function HomePage() {
                   <button 
                     key={tab} 
                     onClick={() => setDemoTab(tab)}
-                    className={`pb-4 text-ui-sm font-ui transition-colors cursor-pointer border-none bg-transparent ${demoTab === tab ? 'text-white border-b-2 border-primary-container px-4' : 'text-stone-500 px-4 hover:text-stone-300'}`}
+                    className={`pb-4 text-ui-sm font-ui transition-colors cursor-pointer border-none bg-transparent ${demoTab === tab ? 'text-white border-b-2 border-primary-container px-4' : 'text-mid px-4 hover:text-lighter'}`}
                   >
                     {tab}
                   </button>
@@ -202,7 +202,7 @@ export default function HomePage() {
                     </Link>
                   )}
                 </div>
-                <div className={`bg-section-muted p-4 md:p-8 border-[0.5px] border-border-subtle ${m.reverse ? 'order-2 md:order-1' : ''}`}>
+                <div className={`bg-section-muted p-4 md:p-8 border border-border-subtle ${m.reverse ? 'order-2 md:order-1' : ''}`}>
                   <div className="shadow-screenshot overflow-hidden rounded-lg">
                     <div className="browser-chrome">
                       <div className="browser-dot bg-[#FF5F56]"></div>
@@ -230,9 +230,9 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
               {testimonials.map((t) => (
-                <div key={t.author} className="bg-white p-12 border-[0.5px] border-border-subtle relative group hover:border-primary-container transition-all rounded-none">
+                <div key={t.author} className="bg-white p-12 border border-border-subtle relative group hover:border-primary-container transition-all rounded-none">
                   <Icon name="format_quote" className="text-primary-container text-6xl opacity-20 absolute top-8 left-8 select-none" />
-                  <p className="text-ui-lg italic font-display text-on-surface mb-8 relative z-10 leading-relaxed font-normal" style={{ fontSize: '26px' }}>
+                  <p className="text-ui-lg italic font-display text-dark mb-8 relative z-10 leading-relaxed font-normal" style={{ fontSize: '26px' }}>
                     "{t.quote}"
                   </p>
                   <div className="flex items-center gap-4">
@@ -250,18 +250,18 @@ export default function HomePage() {
 
         {/* ─── Conversion Section ─── */}
         <section className="py-space-128 px-8 bg-section-amber">
-          <div className="max-w-[800px] mx-auto text-center border-[0.5px] border-primary/20 p-16 bg-white/50 backdrop-blur-sm shadow-xl rounded-none">
+          <div className="max-w-[800px] mx-auto text-center border border-primary/20 p-16 bg-white/50 backdrop-blur-sm shadow-xl rounded-none">
             <h2 className="font-marketing-xl text-marketing-xl mb-6 font-normal">Ready to bring precision to your books?</h2>
             <p className="text-ui-lg text-secondary mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
             <div className="flex flex-col md:flex-row justify-center gap-6">
               <Link href="/signup" className="bg-primary-container text-white px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-primary transition-all group rounded-none inline-flex items-center gap-1">
                 Start Free Trial <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              <Link href="/contact" className="border border-on-surface text-on-surface px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white transition-all rounded-none inline-flex items-center gap-1">
+              <Link href="/contact" className="border border-border-subtle text-dark px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white transition-all rounded-none inline-flex items-center gap-1">
                 Talk to Us
               </Link>
             </div>
-            <p className="text-ui-xs font-ui text-text-light mt-8">No credit card required. Cancel anytime.</p>
+            <p className="text-ui-xs font-ui text-light mt-8">No credit card required. Cancel anytime.</p>
           </div>
         </section>
       </main>

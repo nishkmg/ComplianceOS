@@ -74,24 +74,24 @@ const sections = [
 
 export default function PrivacyPage() {
   return (
-    <div className="bg-page-bg text-on-surface min-h-screen">
+    <div className="bg-page-bg text-dark min-h-screen">
       <MarketingNav />
       <main className="w-full max-w-[1200px] mx-auto px-gutter-desktop py-space-96">
         <header className="mb-space-64">
           <p className="font-ui-xs text-ui-xs text-amber-text uppercase tracking-widest mb-4">Last Updated: October 24, 2024</p>
-          <h1 className="font-display-xl text-display-xl text-on-surface mb-6">Privacy Policy</h1>
-          <p className="font-ui-lg text-ui-lg text-text-mid max-w-2xl">This Privacy Policy describes how ComplianceOS collects, uses, and shares your personal information in connection with our accounting and compliance platform.</p>
+          <h1 className="font-display-xl text-display-xl text-dark mb-6">Privacy Policy</h1>
+          <p className="font-ui-lg text-ui-lg text-mid max-w-2xl">This Privacy Policy describes how ComplianceOS collects, uses, and shares your personal information in connection with our accounting and compliance platform.</p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
           {/* TOC */}
           <aside className="lg:col-span-3 hidden lg:block text-left">
             <nav className="sticky top-32 border-l border-border-subtle pl-6 py-2">
-              <span className="block font-ui-xs text-ui-xs text-text-light uppercase tracking-widest mb-6">Table of Contents</span>
-              <ul className="space-y-4 font-ui-sm text-ui-sm text-text-mid list-none p-0">
+              <span className="block font-ui-xs text-ui-xs text-light uppercase tracking-widest mb-6">Table of Contents</span>
+              <ul className="space-y-4 font-ui-sm text-ui-sm text-mid list-none p-0">
                 {sections.map((s) => (
                   <li key={s.id}>
-                    <a href={`#${s.id}`} className="hover:text-primary transition-colors duration-200 flex items-center group no-underline text-text-mid">
+                    <a href={`#${s.id}`} className="hover:text-primary transition-colors duration-200 flex items-center group no-underline text-mid">
                       <span className="w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 mr-2 transition-opacity"></span>
                       {s.title}
                     </a>
@@ -105,8 +105,8 @@ export default function PrivacyPage() {
           <article className="lg:col-span-9 max-w-3xl">
             {sections.map((section) => (
               <section key={section.id} id={section.id} className="mb-space-48 scroll-mt-32">
-                <h2 className="font-display-lg text-display-lg text-on-surface mb-6 border-b border-border-subtle pb-4">{section.title}</h2>
-                <div className="font-ui-md text-ui-md text-text-mid space-y-4 leading-relaxed text-left">
+                <h2 className="font-display-lg text-display-lg text-dark mb-6 border-b border-border-subtle pb-4">{section.title}</h2>
+                <div className="font-ui-md text-ui-md text-mid space-y-4 leading-relaxed text-left">
                   {section.content.map((p, i) => <p key={i}>{p}</p>)}
                   
                   {section.list && (
@@ -119,7 +119,7 @@ export default function PrivacyPage() {
                     <div className="space-y-6 mt-6">
                       {section.subSections.map((sub) => (
                         <div key={sub.title}>
-                          <h4 className="font-ui-md font-bold text-on-surface mb-1">{sub.title}</h4>
+                          <h4 className="font-ui-md font-bold text-dark mb-1">{sub.title}</h4>
                           <p>{sub.text}</p>
                         </div>
                       ))}
@@ -128,7 +128,7 @@ export default function PrivacyPage() {
 
                   {section.highlight && (
                     <div className="bg-surface-container-low border border-border-subtle p-6 mt-6">
-                      <p className="font-ui-sm text-ui-sm text-text-mid">
+                      <p className="font-ui-sm text-ui-sm text-mid">
                         <Icon name="lock" className="text-primary align-middle mr-2" />
                         {section.highlight}
                       </p>
@@ -138,7 +138,7 @@ export default function PrivacyPage() {
                   {section.contact && (
                     <div className="mt-8 flex flex-col sm:flex-row gap-8 font-mono-md text-mono-md">
                       <div>
-                        <span className="block text-text-light uppercase tracking-wider text-xs mb-2">Email Address</span>
+                        <span className="block text-light uppercase tracking-wider text-xs mb-2">Email Address</span>
                         <a href={`mailto:${section.contact.email}`} className="text-primary hover:text-primary-container transition-colors no-underline">{section.contact.email}</a>
                       </div>
                     </div>
