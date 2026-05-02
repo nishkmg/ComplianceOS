@@ -86,7 +86,7 @@ export default function PayrollPage() {
             </thead>
             <tbody>
               {payrollRuns?.map((run: any) => (
-                <tr key={run.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+                <tr key={run.id} className="border-b border-border-subtle hover:bg-surface-muted transition-colors">
                   <td className="font-mono text-[13px] text-amber px-4 py-3">{run.payrollNumber}</td>
                   <td className="font-ui text-[13px] text-dark px-4 py-3">{run.employeeName}</td>
                   <td className="font-mono text-[13px] text-mid px-4 py-3">{run.month}/{run.year}</td>

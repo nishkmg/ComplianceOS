@@ -16,16 +16,16 @@ export default function PFChallanPage() {
       {/* Header */}
       <header className="flex justify-between items-center px-8 h-20 border-b border-border-subtle bg-white/80 backdrop-blur-sm -mx-8 -mt-8 mb-8">
         <div>
-          <div className="flex items-center gap-2 text-[11px] font-bold text-stone-500 uppercase tracking-widest mb-1">
+          <div className="flex items-center gap-2 text-[11px] font-bold text-mid uppercase tracking-widest mb-1">
             <span>Reports</span>
             <Icon name="chevron_right" className="text-[12px]" />
             <span>Statutory Filings</span>
           </div>
-          <h2 className="font-display-lg text-lg font-bold text-on-surface tracking-tight">PF Challan Report</h2>
+          <h2 className="font-display-lg text-lg font-bold text-dark tracking-tight">PF Challan Report</h2>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center bg-stone-50 border border-border-subtle rounded-sm h-9 px-3">
-            <Icon name="calendar_month" className="text-stone-400 text-[18px] mr-2" />
+          <div className="flex items-center bg-section-muted border border-border-subtle rounded-sm h-9 px-3">
+            <Icon name="calendar_month" className="text-light text-[18px] mr-2" />
             <select className="bg-transparent border-none text-sm font-medium outline-none cursor-pointer">
               <option>October 2024</option>
               <option>September 2024</option>
@@ -41,36 +41,36 @@ export default function PFChallanPage() {
         {/* Summary Cards */}
         <div className="grid grid-cols-4 gap-4">
           <div className="bg-white border border-border-subtle p-5 rounded-sm shadow-sm text-left">
-            <h3 className="text-xs font-bold text-stone-500 uppercase tracking-wider relative z-10">Total Employees</h3>
-            <p className="font-mono text-2xl font-bold text-on-surface relative z-10 mt-2">142</p>
+            <h3 className="text-xs font-bold text-mid uppercase tracking-wider relative z-10">Total Employees</h3>
+            <p className="font-mono text-2xl font-bold text-dark relative z-10 mt-2">142</p>
           </div>
           <div className="bg-white border border-border-subtle p-5 rounded-sm shadow-sm text-left">
-            <h3 className="text-xs font-bold text-stone-500 uppercase tracking-wider relative z-10">Total Basic Wages</h3>
-            <p className="font-mono text-2xl font-bold text-on-surface relative z-10 mt-2">₹42,50,000</p>
+            <h3 className="text-xs font-bold text-mid uppercase tracking-wider relative z-10">Total Basic Wages</h3>
+            <p className="font-mono text-2xl font-bold text-dark relative z-10 mt-2">₹42,50,000</p>
           </div>
           <div className="bg-white border border-border-subtle p-5 rounded-sm shadow-sm text-left">
-            <h3 className="text-xs font-bold text-stone-500 uppercase tracking-wider relative z-10">Total Contribution</h3>
-            <p className="font-mono text-2xl font-bold text-on-surface relative z-10 mt-2">₹10,20,000</p>
+            <h3 className="text-xs font-bold text-mid uppercase tracking-wider relative z-10">Total Contribution</h3>
+            <p className="font-mono text-2xl font-bold text-dark relative z-10 mt-2">₹10,20,000</p>
           </div>
-          <div className="bg-stone-900 border border-stone-950 p-5 rounded-sm shadow-sm text-left">
-            <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider">Total Payable</h3>
+          <div className="bg-section-dark border border-stone-950 p-5 rounded-sm shadow-sm text-left">
+            <h3 className="text-xs font-bold text-light uppercase tracking-wider">Total Payable</h3>
             <p className="font-mono text-2xl font-bold text-primary-container mt-2">₹10,41,250</p>
           </div>
         </div>
 
         {/* Data Table */}
         <div className="bg-white border border-border-subtle rounded-sm shadow-sm overflow-hidden flex flex-col">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-stone-50">
-            <h3 className="font-ui-md font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Employee Contribution Ledger</h3>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-section-muted">
+            <h3 className="font-ui-md font-bold text-dark uppercase tracking-wider text-[11px] text-light">Employee Contribution Ledger</h3>
             <div className="relative">
-              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]" />
+              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-light text-[18px]" />
               <input className="h-8 pl-9 pr-3 py-1 text-sm border border-border-subtle rounded-sm focus:border-primary w-64 bg-white outline-none" placeholder="Search UAN or Name..." />
             </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-border-subtle bg-stone-50 text-[11px] uppercase tracking-wider text-stone-500 font-bold">
+                <tr className="border-b border-border-subtle bg-section-muted text-[11px] uppercase tracking-wider text-mid font-bold">
                   <th className="px-6 py-3">Employee Details</th>
                   <th className="px-4 py-3 text-right">Basic Wages</th>
                   <th className="px-4 py-3 text-right">PF (12%)</th>
@@ -81,21 +81,21 @@ export default function PFChallanPage() {
               </thead>
               <tbody className="divide-y divide-stone-50 font-mono text-sm">
                 {employees.map((e, i) => (
-                  <tr key={i} className="hover:bg-stone-50/50 transition-colors">
+                  <tr key={i} className="hover:bg-section-muted/50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-ui-sm font-bold text-on-surface">{e.name}</div>
-                      <div className="text-xs text-text-mt-1"><span className="text-text-light">{e.code}</span> <span className="text-stone-300 mx-2">|</span> <span className="text-text-light">UAN: {e.uan}</span></div>
+                      <div className="font-ui-sm font-bold text-dark">{e.name}</div>
+                      <div className="text-xs text-text-mt-1"><span className="text-light">{e.code}</span> <span className="text-lighter mx-2">|</span> <span className="text-light">UAN: {e.uan}</span></div>
                     </td>
-                    <td className="px-4 py-4 text-right font-bold text-on-surface">{e.basicWages.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right text-stone-600">{e.pf.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right text-stone-600">{e.eps.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right text-stone-600">{e.epf.toLocaleString()}</td>
+                    <td className="px-4 py-4 text-right font-bold text-dark">{e.basicWages.toLocaleString()}</td>
+                    <td className="px-4 py-4 text-right text-mid">{e.pf.toLocaleString()}</td>
+                    <td className="px-4 py-4 text-right text-mid">{e.eps.toLocaleString()}</td>
+                    <td className="px-4 py-4 text-right text-mid">{e.epf.toLocaleString()}</td>
                     <td className="px-6 py-4 text-right font-bold text-primary-container">{e.total.toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="bg-stone-50 border-t-2 border-on-surface font-bold">
+                <tr className="bg-section-muted border-t-2 border-border-subtle font-bold">
                   <td className="px-6 py-4 font-ui-sm uppercase tracking-widest text-xs">Total</td>
                   <td className="px-4 py-4 text-right">80,000</td>
                   <td className="px-4 py-4 text-right">3,600</td>
@@ -106,7 +106,7 @@ export default function PFChallanPage() {
               </tfoot>
             </table>
           </div>
-          <div className="flex items-center justify-between px-6 py-3 border-t border-border-subtle text-sm text-stone-500 bg-white">
+          <div className="flex items-center justify-between px-6 py-3 border-t border-border-subtle text-sm text-mid bg-white">
             <span>Showing 1 to {employees.length} of 142 entries</span>
             <div className="flex items-center gap-1">
               <button className="p-1 rounded hover:bg-stone-100 disabled:opacity-50 border-none bg-transparent cursor-pointer"><Icon name="chevron_left" className="text-[20px]" /></button>

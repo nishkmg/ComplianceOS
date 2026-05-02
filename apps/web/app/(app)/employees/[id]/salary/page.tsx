@@ -59,7 +59,7 @@ export default function EmployeeSalaryPage() {
         </div>
 
         <div className="card overflow-hidden">
-          <div className="px-4 py-3 border-b border-hairline font-display text-[14px] font-normal text-dark">Components</div>
+          <div className="px-4 py-3 border-b border-border-subtle font-display text-[14px] font-normal text-dark">Components</div>
           <table className="table table-dense">
             <thead>
               <tr>
@@ -71,7 +71,7 @@ export default function EmployeeSalaryPage() {
             </thead>
             <tbody>
               {components.map((comp, idx) => (
-                <tr key={idx} className="border-b border-hairline">
+                <tr key={idx} className="border-b border-border-subtle">
                   <td className="px-4 py-3">
                     <select value={comp.componentCode} onChange={(e) => updateComponent(idx, "componentCode", e.target.value)} className="input-field font-ui w-full">
                       <option value="">Select Component</option>
