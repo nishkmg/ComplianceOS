@@ -48,21 +48,21 @@ export default function PLScheduleIIIPage() {
   const [fiscalYear, setFiscalYear] = useState("2026-27");
 
   return (
-    <div className="bg-page-bg text-on-surface font-ui-md min-h-screen">
+    <div className="bg-page-bg text-on-surface font-ui text-sm font-medium min-h-screen">
       <main className="flex-1 pb-space-64 pt-6">
         <div className="max-w-[1000px] mx-auto px-gutter-desktop">
           {/* Report Controls */}
-          <div className="flex justify-between items-end mb-gutter-wide pb-4 border-b-[0.5px] border-border-subtle text-left">
-            <div>
-              <span className="font-ui-xs text-amber-text uppercase tracking-widest block mb-2">Schedule III Document</span>
-              <h1 className="font-display-lg text-display-lg text-on-surface">Profit & Loss</h1>
-            </div>
+        <div className="flex justify-between items-end mb-gutter-wide pb-4 border-b-[0.5px] border-border text-left">
+          <div>
+            <p className="font-ui text-[10px] text-amber uppercase tracking-widest block mb-2 font-bold">Schedule III Document</p>
+            <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss</h1>
+          </div>
             <div className="flex gap-3">
-              <select className="border-[0.5px] border-border-subtle px-4 py-2 text-ui-sm outline-none bg-white" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
+              <select className="border-[0.5px] border-border px-4 py-2 text-ui-sm outline-none bg-surface" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
                 <option>2026-27</option>
                 <option>2025-26</option>
               </select>
-              <button className="px-4 py-2 border-[0.5px] border-on-surface text-on-surface font-ui-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
+              <button className="btn-secondary flex items-center gap-2">
                 <Icon name="download" className="text-[18px]" />
                 Export
               </button>
@@ -70,17 +70,17 @@ export default function PLScheduleIIIPage() {
           </div>
 
           {/* Report Container */}
-          <div className="bg-white border-[0.5px] border-border-subtle p-12 shadow-sm">
+          <div className="bg-surface border-[0.5px] border-border p-12 shadow-sm">
             {/* Report Header */}
-            <header className="text-center mb-10 pb-8 border-b-[0.5px] border-border-subtle">
-              <h1 className="font-display text-[26px] font-normal text-dark mb-1">ComplianceOS</h1>
-              <h2 className="font-ui-lg text-text-mid uppercase tracking-widest mb-4">Statement of Profit and Loss</h2>
-              <p className="font-ui-sm text-text-light italic">For the year ended 31 March 2027</p>
-              <p className="font-ui-sm text-text-light mt-1">(All amounts in ₹ Lakhs, unless otherwise stated)</p>
+            <header className="text-center mb-10 pb-8 border-b-[0.5px] border-border">
+              <p className="font-display text-[26px] font-normal text-dark mb-1">ComplianceOS</p>
+              <h2 className="font-ui text-text-mid uppercase tracking-widest mb-4">Statement of Profit and Loss</h2>
+              <p className="font-ui text-[13px] text-text-light italic">For the year ended 31 March 2027</p>
+              <p className="font-ui text-[13px] text-text-light mt-1">(All amounts in ₹ Lakhs, unless otherwise stated)</p>
             </header>
 
             {/* Table Header */}
-            <div className="grid grid-cols-12 gap-4 border-b-[1px] border-on-background pb-2 mb-4 font-ui-xs text-text-mid uppercase tracking-widest">
+            <div className="grid grid-cols-12 gap-4 border-b-[1px] border-on-background pb-2 mb-4 font-ui text-[11px] text-text-mid uppercase tracking-widest">
               <div className="col-span-1 text-center">Note No.</div>
               <div className="col-span-7">Particulars</div>
               <div className="col-span-2 text-right">31-Mar-2027</div>
@@ -92,16 +92,16 @@ export default function PLScheduleIIIPage() {
               <div key={section.title} className="mb-6">
                 {/* Section Title */}
                 {section.title !== section.lines[section.lines.length - 1]?.label && (
-                  <div className="grid grid-cols-12 gap-4 py-3 border-b-[0.5px] border-border-subtle bg-section-muted font-ui-sm text-on-surface font-semibold uppercase tracking-wider">
+                  <div className="grid grid-cols-12 gap-4 py-3 border-b-[0.5px] border-border bg-surface-muted font-ui text-[13px] text-on-surface font-semibold uppercase tracking-wider">
                     <div className="col-span-12">{section.title}</div>
                   </div>
                 )}
                 {section.lines.map((line, i) => (
-                  <div key={i} className={`grid grid-cols-12 gap-4 py-3 border-b-[0.5px] border-border-subtle ${
+                  <div key={i} className={`grid grid-cols-12 gap-4 py-3 border-b-[0.5px] border-border ${
                     line.isTotal ? 'border-t-[1px] border-on-surface font-bold' : ''
                   } ${line.isSection ? 'bg-success-bg' : ''} ${line.indent ? '' : ''} hover:bg-surface-muted transition-colors ledger-row`}>
                     <div className="col-span-1 text-center font-mono text-[12px] text-text-mid">{line.note}</div>
-                    <div className={`col-span-7 font-ui-sm ${line.isTotal ? 'font-bold' : ''}`}>{line.label}</div>
+                    <div className={`col-span-7 font-ui text-[13px] ${line.isTotal ? 'font-bold' : ''}`}>{line.label}</div>
                     <div className="col-span-2 text-right font-mono text-sm">{line.currentYear.toFixed(1)}</div>
                     <div className="col-span-2 text-right font-mono text-sm text-text-light">{line.previousYear.toFixed(1)}</div>
                   </div>
@@ -110,8 +110,8 @@ export default function PLScheduleIIIPage() {
             ))}
 
             {/* Footer */}
-            <div className="mt-8 pt-6 border-t-[0.5px] border-border-subtle text-center">
-              <p className="font-ui-xs text-text-light">This is a system-generated statement. E&OE.</p>
+            <div className="mt-8 pt-6 border-t-[0.5px] border-border text-center">
+              <p className="font-ui text-[11px] text-text-light">This is a system-generated statement. E&OE.</p>
             </div>
           </div>
         </div>

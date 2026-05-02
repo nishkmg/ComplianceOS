@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { DataTable, type ColumnDef } from "@/components/ui";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -55,7 +57,7 @@ const columns: ColumnDef<AccountRow>[] = [
     header: "Account Name",
     sortable: true,
     render: (row) => (
-      <Link href={`/accounts/${row.code}`} className="font-ui-sm text-[13px] text-dark font-medium hover:text-primary-container no-underline transition-colors">
+      <Link href={`/accounts/${row.code}`} className="font-ui text-[13px] text-dark font-medium hover:text-amber no-underline transition-colors">
         {row.name}
       </Link>
     ),
@@ -65,7 +67,7 @@ const columns: ColumnDef<AccountRow>[] = [
     header: "Type",
     width: "110px",
     render: (row) => (
-      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-sm ${typeBadge[row.type] || ''}`}>
+      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${typeBadge[row.type] || ''}`}>
         {row.type}
       </span>
     ),
@@ -89,6 +91,11 @@ const columns: ColumnDef<AccountRow>[] = [
 export default function AccountsFlatPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const filtered = useMemo(
     () =>
@@ -107,19 +114,19 @@ export default function AccountsFlatPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-amber-text font-ui-xs text-[10px] uppercase tracking-[0.2em] mb-1 block">
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
             Ledger
-          </span>
-          <h1 className="font-display-lg text-display-lg text-dark leading-tight">Chart of Accounts</h1>
-          <p className="font-ui-sm text-sm text-mid mt-1">Flat ledger view of all registered accounts.</p>
+          </p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-ui-xs uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+          <button className="btn-secondary flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export
           </button>
           <Link
             href="/accounts/new"
-            className="px-4 py-2 bg-primary-container text-white text-[10px] font-ui-xs uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5"
+            className="btn-primary no-underline flex items-center gap-1.5"
           >
             <Icon name="add" size={14} /> New Account
           </Link>
@@ -128,14 +135,14 @@ export default function AccountsFlatPage() {
 
       {/* Filter + search */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-1 bg-section-muted rounded-sm p-0.5 border border-border-subtle">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
           {typeOptions.map(t => (
             <button
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1.5 text-[11px] font-ui-sm font-medium transition-colors cursor-pointer border-none rounded-sm capitalize ${
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-md capitalize ${
                 typeFilter === t
-                  ? "bg-white text-dark shadow-sm"
+                  ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
               }`}
             >
@@ -146,7 +153,7 @@ export default function AccountsFlatPage() {
         <div className="relative">
           <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
           <input
-            className="bg-white border border-border-subtle text-[12px] font-ui px-8 py-1.5 w-56 rounded-sm focus:ring-1 focus:ring-primary-container outline-none placeholder:text-light"
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
             placeholder="Search accounts…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -155,34 +162,34 @@ export default function AccountsFlatPage() {
       </div>
 
       {/* DataTable */}
-      <DataTable<AccountRow>
-        data={filtered}
-        columns={columns}
-        keyExtractor={(row) => row.code}
-        pageSize={20}
-        emptyState={
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <Icon name="account_tree" className="text-4xl text-lighter mb-4" />
-            <p className="font-ui-sm text-sm text-mid mb-1">No accounts found.</p>
-            <Link
-              href="/accounts/new"
-              className="mt-3 bg-primary-container text-white px-5 py-2 text-[11px] font-bold uppercase tracking-wider hover:bg-amber-hover transition-colors no-underline rounded-sm"
-            >
-              Create Account
-            </Link>
-          </div>
-        }
-        footer={
-          <tr className="bg-stone-50 border-t-2 border-border-subtle">
-            <td colSpan={3} className="px-4 py-3 font-ui-xs text-[10px] uppercase tracking-widest text-mid font-bold">
-              Total ({filtered.length} accounts)
-            </td>
-            <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
-              {formatIndianNumber(totalBalance, { currency: true })}
-            </td>
-          </tr>
-        }
-      />
+      {loading ? (
+        <TableSkeleton rows={10} columns={4} />
+      ) : (
+        <DataTable<AccountRow>
+          data={filtered}
+          columns={columns}
+          keyExtractor={(row) => row.code}
+          pageSize={20}
+          emptyState={
+            <EmptyState
+              title="No accounts found"
+              description="Create your first account to start tracking your ledger."
+              action={{ label: "Create Account", onClick: () => window.location.href = "/accounts/new" }}
+              icon="account_tree"
+            />
+          }
+          footer={
+            <tr className="bg-surface-muted border-t-2 border-border">
+              <td colSpan={3} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                Total ({filtered.length} accounts)
+              </td>
+              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                {formatIndianNumber(totalBalance, { currency: true })}
+              </td>
+            </tr>
+          }
+        />
+      )}
     </div>
   );
 }

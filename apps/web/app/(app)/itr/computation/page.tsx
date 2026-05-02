@@ -4,107 +4,295 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-const computationRows = [
-  { label: "Income from Business/Profession", amount: 3500000, type: "income" },
-  { label: "Income from House Property", amount: 450000, type: "income" },
-  { label: "Income from Other Sources", amount: 125000, type: "income" },
-  { label: "Gross Total Income", amount: 4075000, type: "total" },
-  { label: "Chapter VI-A Deductions", amount: 150000, type: "deduction" },
-  { label: "Total Taxable Income", amount: 3925000, type: "total" },
-];
+const incomeData = {
+  salary: {
+    label: "Salaries",
+    items: [
+      { label: "Basic Salary", amount: 1800000 },
+      { label: "House Rent Allowance", amount: 720000 },
+      { label: "Special Allowance", amount: 480000 },
+      { label: "Employer\u2019s Contribution to PF", amount: 216000 },
+    ],
+    total: 3216000,
+  },
+  business: {
+    label: "Profits and Gains of Business or Profession",
+    items: [
+      { label: "Net Profit from Business", amount: 3500000 },
+      { label: "Depreciation under IT Act", amount: 248000 },
+    ],
+    total: 3748000,
+  },
+  capitalGains: {
+    label: "Capital Gains",
+    items: [
+      { label: "Long Term Capital Gains (Equity)", amount: 125000 },
+      { label: "Short Term Capital Gains", amount: 45000 },
+    ],
+    total: 170000,
+  },
+  otherSources: {
+    label: "Income from Other Sources",
+    items: [
+      { label: "Interest on Fixed Deposits", amount: 85000 },
+      { label: "Dividend Income", amount: 24000 },
+      { label: "Income from Royalty", amount: 16000 },
+    ],
+    total: 125000,
+  },
+};
+
+const deductionData = {
+  section80C: {
+    label: "Section 80C",
+    limit: 150000,
+    items: [
+      { label: "Life Insurance Premium", amount: 36000 },
+      { label: "Public Provident Fund (PPF)", amount: 72000 },
+      { label: "ELSS Mutual Funds", amount: 42000 },
+    ],
+    total: 150000,
+  },
+  section80D: {
+    label: "Section 80D — Health Insurance",
+    limit: 25000,
+    items: [
+      { label: "Health Insurance (Self & Family)", amount: 18000 },
+      { label: "Health Insurance (Parents)", amount: 12000 },
+    ],
+    total: 25000,
+  },
+  otherDeductions: {
+    label: "Other Deductions",
+    items: [
+      { label: "Section 80G — Donations", amount: 12000 },
+      { label: "Section 80TTA — Savings Interest", amount: 10000 },
+      { label: "Section 80E — Education Loan Interest", amount: 36000 },
+    ],
+    total: 58000,
+  },
+};
+
+const taxComputationOld = {
+  taxableIncome: 7253000,
+  taxOnIncome: 2090900,
+  rebate: 0,
+  surcharge: 0,
+  cess: 83636,
+  totalTax: 2174536,
+};
+
+const taxComputationNew = {
+  taxableIncome: 7253000,
+  taxOnIncome: 1875900,
+  rebate: 0,
+  surcharge: 0,
+  cess: 75036,
+  totalTax: 1950936,
+};
 
 export default function ITRComputationPage() {
+  const [selectedFY, setSelectedFY] = useState("2026-27");
+  const [regime, setRegime] = useState<"old" | "new">("old");
+
+  const tax = regime === "old" ? taxComputationOld : taxComputationNew;
+  const totalIncome = Object.values(incomeData).reduce((s, sec) => s + sec.total, 0);
+  const totalDeductions = Object.values(deductionData).reduce((s, sec) => s + sec.total, 0);
+
   return (
     <div className="space-y-0 text-left">
-      {/* Page Title & Actions */}
-      <div className="px-8 py-8 border-b border-border-subtle flex justify-between items-end -mx-8 -mt-8 mb-8 bg-white/50 sticky top-0 z-20 backdrop-blur-sm">
+      {/* Sticky Header */}
+      <div className="px-8 py-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 -mx-8 -mt-8 mb-8 bg-surface/50 sticky top-0 z-20 backdrop-blur-sm print:static print:bg-white print:border-black">
         <div>
-          <p className="font-ui-xs text-xs text-amber-text uppercase tracking-widest mb-1 font-bold">AY 2024-25 | Individual</p>
-          <h2 className="text-3xl font-display-xl font-bold text-dark">ITR Computation</h2>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2 print:text-black">AY 2026-27 | Individual</p>
+          <h1 className="font-display text-2xl font-semibold text-dark print:text-black">ITR Computation</h1>
         </div>
-        <div className="flex gap-3">
-          <button className="border border-stone-300 text-dark px-6 py-2 rounded-sm text-sm font-medium hover:bg-section-muted transition-colors cursor-pointer bg-white shadow-sm">Save Draft</button>
-          <button className="bg-primary-container text-white px-6 py-2 rounded-sm text-sm font-medium hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 cursor-pointer border-none font-bold uppercase tracking-widest">
+        <div className="flex flex-wrap gap-3 items-center print:hidden">
+          <select
+            className="bg-surface border border-border px-3 py-2 text-[12px] font-ui outline-none rounded-md"
+            value={selectedFY}
+            onChange={(e) => setSelectedFY(e.target.value)}
+          >
+            <option>FY 2026-27</option>
+            <option>FY 2025-26</option>
+            <option>FY 2024-25</option>
+          </select>
+          <Button variant="outline" size="sm">Save Draft</Button>
+          <Button size="sm" className="gap-2">
             Finalize Return <Icon name="arrow_forward" className="text-sm" />
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="max-w-[1200px] mx-auto space-y-8 pb-12">
-        {/* Summary Bento Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white border border-border-subtle border-t-2 border-t-amber-600 p-6 shadow-sm">
-            <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
-            <p className="font-mono text-2xl font-bold text-dark">₹ 40,75,000</p>
-          </div>
-          <div className="bg-white border border-border-subtle border-t-2 border-t-stone-800 p-6 shadow-sm">
-            <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
-            <p className="font-mono text-2xl font-bold text-dark">₹ 1,50,000</p>
-          </div>
-          <div className="bg-white border border-border-subtle border-t-2 border-t-stone-800 p-6 shadow-sm">
-            <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
-            <p className="font-mono text-2xl font-bold text-dark">₹ 39,25,000</p>
-          </div>
-          <div className="bg-section-dark border border-stone-950 border-t-2 border-t-stone-700 p-6 shadow-lg text-white">
-            <p className="text-[10px] text-light font-bold uppercase tracking-widest mb-2">Net Tax Payable</p>
-            <p className="font-mono text-2xl font-bold text-amber-text">₹ 12,34,500</p>
-          </div>
+        {/* Summary Bento */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="border-t-2 border-t-amber rounded-none rounded-b-xl shadow-sm print:border-black">
+            <CardContent className="p-6">
+              <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
+              <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totalIncome)}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-t-2 border-t-stone-800 rounded-none rounded-b-xl shadow-sm print:border-black">
+            <CardContent className="p-6">
+              <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
+              <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totalDeductions)}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-t-2 border-t-stone-800 rounded-none rounded-b-xl shadow-sm print:border-black">
+            <CardContent className="p-6">
+              <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
+              <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(tax.taxableIncome)}</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-dark text-white border-stone-950 border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-white print:text-black print:border-black">
+            <CardContent className="p-6">
+              <p className="text-[10px] text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
+              <p className="font-mono text-2xl font-bold text-amber-text tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</p>
+            </CardContent>
+          </Card>
         </section>
 
-        {/* Detailed Computation Grid */}
+        {/* Regime Toggle */}
+        <div className="flex items-center gap-4 print:hidden">
+          <span className="font-ui text-[10px] uppercase tracking-widest text-mid font-bold">Tax Regime</span>
+          <div className="flex bg-surface-muted border border-border rounded-md p-1">
+            <button
+              onClick={() => setRegime("old")}
+              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-all cursor-pointer border-none ${regime === "old" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
+            >
+              Old Regime
+            </button>
+            <button
+              onClick={() => setRegime("new")}
+              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-all cursor-pointer border-none ${regime === "new" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
+            >
+              New Regime
+            </button>
+          </div>
+          <span className="font-ui text-[11px] text-amber font-medium">
+            {regime === "old" ? "Higher deductions, lower taxable income" : "Lower rates, fewer deductions"}
+          </span>
+        </div>
+
+        {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white border border-border-subtle shadow-sm overflow-hidden">
-              <div className="px-6 py-4 bg-section-muted border-b border-border-subtle">
-                <h3 className="font-ui-md font-bold text-dark uppercase tracking-wider text-[11px] text-light">Income Breakdown</h3>
-              </div>
-              <div className="divide-y-[0.5px] divide-border-subtle">
-                {computationRows.map((row, i) => (
-                  <div key={i} className={`flex justify-between items-center p-6 hover:bg-section-muted transition-colors ${row.type === 'total' ? 'bg-section-muted/50 border-t border-border-subtle' : ''}`}>
-                    <span className={`font-ui-sm ${row.type === 'total' ? 'font-bold uppercase tracking-wider text-xs' : 'text-dark'}`}>{row.label}</span>
-                    <span className={`font-mono text-sm ${row.type === 'total' ? 'font-bold' : row.type === 'deduction' ? 'text-danger' : 'text-dark'}`}>
-                      {row.type === 'deduction' ? '-' : ''}₹ {formatIndianNumber(row.amount)}
-                    </span>
+          {/* Left: Income + Deductions */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Income Sections */}
+            <Card className="shadow-sm rounded-none border border-border print:border-black">
+              <CardHeader className="px-6 py-4 bg-surface-muted border-b border-border">
+                <h3 className="font-ui text-[11px] font-bold text-dark uppercase tracking-widest">Income Details</h3>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y-[0.5px] divide-border-subtle">
+                  {Object.entries(incomeData).map(([key, section]) => (
+                    <div key={key}>
+                      <div className="flex justify-between items-center px-6 py-3 bg-surface-muted/40">
+                        <span className="font-ui text-[11px] font-bold uppercase tracking-wider text-mid">{section.label}</span>
+                        <span className="font-mono text-[13px] font-bold tabular-nums text-dark">₹ {formatIndianNumber(section.total)}</span>
+                      </div>
+                      {section.items.map((item, i) => (
+                        <div key={i} className="flex justify-between items-center px-6 py-3 hover:bg-surface-muted/50 transition-colors">
+                          <span className="font-ui text-[13px] text-dark pl-4">{item.label}</span>
+                          <span className="font-mono text-[13px] tabular-nums text-dark">₹ {formatIndianNumber(item.amount)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
+                    <span className="font-ui text-[11px] uppercase tracking-widest text-dark">Gross Total Income</span>
+                    <span className="font-mono text-[14px] tabular-nums text-dark">₹ {formatIndianNumber(totalIncome)}</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Deductions */}
+            <Card className="shadow-sm rounded-none border border-border print:border-black">
+              <CardHeader className="px-6 py-4 bg-surface-muted border-b border-border">
+                <h3 className="font-ui text-[11px] font-bold text-dark uppercase tracking-widest">Deductions under Chapter VI-A</h3>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y-[0.5px] divide-border-subtle">
+                  {Object.entries(deductionData).map(([key, section]) => (
+                    <div key={key}>
+                      <div className="flex justify-between items-center px-6 py-3 bg-surface-muted/40">
+                        <span className="font-ui text-[11px] font-bold uppercase tracking-wider text-mid">{section.label}</span>
+                        <span className="font-mono text-[13px] font-bold tabular-nums text-dark">₹ {formatIndianNumber(section.total)}</span>
+                      </div>
+                      {section.items.map((item, i) => (
+                        <div key={i} className="flex justify-between items-center px-6 py-3 hover:bg-surface-muted/50 transition-colors">
+                          <span className="font-ui text-[13px] text-dark pl-4">{item.label}</span>
+                          <span className="font-mono text-[13px] tabular-nums text-danger">−₹ {formatIndianNumber(item.amount)}</span>
+                        </div>
+                      ))}
+                      {"limit" in section && (
+                        <div className="px-6 py-1.5 text-[10px] font-ui text-light">
+                          Limit: ₹ {formatIndianNumber(section.limit)} | Utilized: {Math.round((section.total / section.limit) * 100)}%
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
+                    <span className="font-ui text-[11px] uppercase tracking-widest text-dark">Total Deductions</span>
+                    <span className="font-mono text-[14px] tabular-nums text-danger">−₹ {formatIndianNumber(totalDeductions)}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
+          {/* Right: Tax Computation */}
           <div className="space-y-6">
-            {/* Tax Computation Card */}
-            <div className="bg-section-dark text-stone-100 overflow-hidden shadow-xl border border-stone-800">
-              <div className="p-6 border-b border-stone-800">
-                <h3 className="font-display-lg text-lg font-bold text-amber-text mb-1">Tax Computation</h3>
-                <p className="text-[10px] text-light font-bold uppercase tracking-widest">Old Tax Regime Applied</p>
-              </div>
-              <div className="divide-y divide-stone-800 font-mono text-sm">
-                <div className="flex justify-between items-center px-6 py-4">
-                  <span className="text-xs text-light uppercase tracking-wide">Tax on Normal Income</span>
-                  <span>₹ 11,62,500</span>
+            <Card className="bg-dark text-zinc-100 overflow-hidden shadow-xl border border-stone-800 rounded-none print:bg-white print:text-black print:border-black">
+              <CardHeader className="p-6 border-b border-stone-800 print:border-black">
+                <h3 className="font-display text-lg font-bold text-amber-text mb-1 print:text-black">Tax Computation</h3>
+                <p className="text-[10px] text-light font-bold uppercase tracking-widest print:text-mid">
+                  {regime === "old" ? "Old Tax Regime" : "New Tax Regime"} Applied
+                </p>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y divide-stone-800 font-mono text-sm print:divide-black">
+                  <div className="flex justify-between items-center px-6 py-4">
+                    <span className="text-xs text-light uppercase tracking-wide print:text-mid">Net Taxable Income</span>
+                    <span className="tabular-nums">₹ {formatIndianNumber(tax.taxableIncome)}</span>
+                  </div>
+                  <div className="flex justify-between items-center px-6 py-4">
+                    <span className="text-xs text-light uppercase tracking-wide print:text-mid">Tax on Normal Income</span>
+                    <span className="tabular-nums">₹ {formatIndianNumber(tax.taxOnIncome)}</span>
+                  </div>
+                  <div className="flex justify-between items-center px-6 py-4">
+                    <span className="text-xs text-light uppercase tracking-wide print:text-mid">Rebate u/s 87A</span>
+                    <span className="tabular-nums">₹ {formatIndianNumber(tax.rebate)}</span>
+                  </div>
+                  <div className="flex justify-between items-center px-6 py-4">
+                    <span className="text-xs text-light uppercase tracking-wide print:text-mid">Surcharge</span>
+                    <span className="tabular-nums">₹ {formatIndianNumber(tax.surcharge)}</span>
+                  </div>
+                  <div className="flex justify-between items-center px-6 py-4">
+                    <span className="text-xs text-light uppercase tracking-wide print:text-mid">Health & Education Cess @ 4%</span>
+                    <span className="tabular-nums">₹ {formatIndianNumber(tax.cess)}</span>
+                  </div>
+                  <div className="flex justify-between items-center px-6 py-6 bg-stone-950 font-bold text-lg print:bg-surface-muted">
+                    <span className="text-xs text-amber-text uppercase tracking-widest print:text-black">Total Tax Liability</span>
+                    <span className="text-amber-text tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center px-6 py-4">
-                  <span className="text-xs text-light uppercase tracking-wide">Surcharge</span>
-                  <span>₹ 0</span>
-                </div>
-                <div className="flex justify-between items-center px-6 py-4">
-                  <span className="text-xs text-light uppercase tracking-wide">Health & Education Cess</span>
-                  <span>₹ 72,000</span>
-                </div>
-                <div className="flex justify-between items-center px-6 py-6 bg-stone-950 font-bold text-lg">
-                  <span className="text-xs text-amber-text uppercase tracking-widest">Total Liability</span>
-                  <span className="text-amber-text">₹ 12,34,500</span>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div className="bg-section-amber border border-amber/30 p-6 shadow-sm">
-              <h4 className="font-ui-sm font-bold text-amber-900 mb-2 uppercase tracking-widest text-[10px]">Optimization Tips</h4>
-              <p className="font-ui-sm text-[13px] text-amber-800 leading-relaxed">
-                You haven't fully utilized the 80C deduction limit of ₹ 1.5L. Adding ₹ 24,000 more could save ₹ 7,200 in tax.
-              </p>
-            </div>
+            <Card className="bg-amber-50 border border-amber/30 shadow-sm print:border-black">
+              <CardContent className="p-6">
+                <h4 className="font-ui text-[10px] font-bold text-amber-900 mb-2 uppercase tracking-widest">Optimization Tip</h4>
+                <p className="font-ui text-[13px] text-amber-800 leading-relaxed">
+                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. Adding ₹ 24,000 more could save ₹ 7,200 in tax under the Old Regime.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

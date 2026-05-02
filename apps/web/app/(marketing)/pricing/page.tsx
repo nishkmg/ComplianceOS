@@ -50,20 +50,20 @@ export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(true);
 
   return (
-    <div className="bg-page-bg text-dark font-ui-md antialiased min-h-screen">
+    <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
 
       <main className="max-w-[1200px] mx-auto px-8 mt-16">
         {/* Hero Section */}
         <section className="pt-space-128 pb-space-96 text-center">
-          <span className="text-ui-xs font-ui-xs uppercase tracking-widest text-amber-text mb-6 block">Our Plans</span>
-          <h1 className="font-marketing-xl text-marketing-xl text-dark max-w-2xl mx-auto mb-8">Simple pricing for Indian businesses.</h1>
-          <p className="text-ui-lg font-ui-lg text-secondary max-w-xl mx-auto">Precision accounting and GST compliance designed for the unique needs of Bharat's growing enterprises.</p>
+          <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 block">Our Plans</span>
+          <h1 className="font-display text-marketing-xl text-dark max-w-2xl mx-auto mb-8">Simple pricing for Indian businesses.</h1>
+          <p className="text-ui-lg font-ui text-secondary max-w-xl mx-auto">Precision accounting and GST compliance designed for the unique needs of Bharat's growing enterprises.</p>
         </section>
 
         {/* Pricing Toggle */}
         <div className="flex items-center justify-center space-x-6 mb-space-64">
-          <span className="text-ui-sm font-ui-sm text-dark">Monthly Billing</span>
+          <span className="text-ui-sm font-ui text-dark">Monthly Billing</span>
           <div 
             className="w-14 h-7 bg-outline-variant rounded-full p-1 cursor-pointer flex items-center transition-colors"
             onClick={() => setIsAnnual(!isAnnual)}
@@ -71,7 +71,7 @@ export default function PricingPage() {
             <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${isAnnual ? 'translate-x-7' : 'translate-x-0'}`}></div>
           </div>
           <div className="flex items-center space-x-2">
-            <span className={`text-ui-sm font-ui-sm text-dark ${isAnnual ? 'font-bold' : ''}`}>Annual Billing</span>
+            <span className={`text-ui-sm font-ui text-dark ${isAnnual ? 'font-bold' : ''}`}>Annual Billing</span>
             <span className="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Save 20%</span>
           </div>
         </div>
@@ -84,13 +84,13 @@ export default function PricingPage() {
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] px-4 py-1.5 uppercase font-bold tracking-widest">Most Popular</div>
               )}
               <div className="mb-8 text-left">
-                <h3 className="text-ui-lg font-ui-lg text-dark mb-2">{plan.name}</h3>
-                <p className="text-ui-sm font-ui-sm text-secondary">{plan.desc}</p>
+                <h3 className="text-ui-lg font-ui text-dark mb-2">{plan.name}</h3>
+                <p className="text-ui-sm font-ui text-secondary">{plan.desc}</p>
               </div>
               <div className="mb-8 text-left">
                 <div className="font-mono-lg text-mono-lg text-dark mb-1">
                   ₹{isAnnual ? plan.price.toLocaleString('en-IN') : Math.round(plan.price * 1.25 / 12).toLocaleString('en-IN')}
-                  <span className="text-ui-sm font-ui-sm text-light">/{isAnnual ? 'yr' : 'mo'}</span>
+                  <span className="text-ui-sm font-ui text-light">/{isAnnual ? 'yr' : 'mo'}</span>
                 </div>
                 <div className="text-[10px] uppercase text-light tracking-widest font-bold">
                   {isAnnual ? 'Billed Annually' : 'Billed Monthly'}
@@ -99,20 +99,20 @@ export default function PricingPage() {
               <ul className="space-y-4 mb-12 flex-grow list-none p-0 text-left">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start">
-                    <Icon name="check_circle" className="text-amber-text text-sm mr-3 mt-1" />
-                    <span className="text-ui-sm font-ui-sm">{f}</span>
+                    <Icon name="check_circle" className="text-amber text-sm mr-3 mt-1" />
+                    <span className="text-ui-sm font-ui">{f}</span>
                   </li>
                 ))}
                 {plan.notFeatures?.map((f) => (
                   <li key={f} className="flex items-start text-light">
                     <Icon name="cancel" className="text-outline-variant text-sm mr-3 mt-1" />
-                    <span className="text-ui-sm font-ui-sm">{f}</span>
+                    <span className="text-ui-sm font-ui">{f}</span>
                   </li>
                 ))}
               </ul>
               <Link 
                 href={plan.href} 
-                className={`w-full py-3 text-ui-sm font-ui-sm font-bold flex justify-center items-center group transition-all no-underline ${plan.popular ? 'bg-primary text-white' : 'border border-border-subtle text-dark hover:bg-on-surface hover:text-white'}`}
+                className={`w-full py-3 text-ui-sm font-ui font-bold flex justify-center items-center group transition-all no-underline ${plan.popular ? 'bg-primary text-white' : 'border border-border-subtle text-dark hover:bg-on-surface hover:text-white'}`}
               >
                 {plan.cta} {plan.popular && <span className="ml-2 transform group-hover:translate-x-1 duration-200">→</span>}
               </Link>
@@ -124,16 +124,16 @@ export default function PricingPage() {
         <section className="mb-space-128">
           <div className="bg-section-amber p-16 border border-border-subtle grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="text-left">
-              <h2 className="font-marketing-xl text-marketing-xl mb-6">Built for Indian CA Standards.</h2>
-              <p className="text-ui-md font-ui-md text-secondary mb-8 leading-relaxed">Every pixel and ledger entry in ComplianceOS is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
+              <h2 className="font-display text-marketing-xl mb-6">Built for Indian CA Standards.</h2>
+              <p className="text-ui-md font-ui text-secondary mb-8 leading-relaxed">Every pixel and ledger entry in ComplianceOS is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
               <div className="flex space-x-12">
                 <div>
                   <div className="font-mono-lg text-mono-lg text-primary font-bold">99.9%</div>
-                  <div className="text-ui-xs font-ui-xs uppercase tracking-widest text-light font-bold">Accuracy Rate</div>
+                  <div className="text-ui-xs font-ui uppercase tracking-widest text-light font-bold">Accuracy Rate</div>
                 </div>
                 <div>
                   <div className="font-mono-lg text-mono-lg text-primary font-bold">50k+</div>
-                  <div className="text-ui-xs font-ui-xs uppercase tracking-widest text-light font-bold">Businesses</div>
+                  <div className="text-ui-xs font-ui uppercase tracking-widest text-light font-bold">Businesses</div>
                 </div>
               </div>
             </div>
@@ -150,17 +150,17 @@ export default function PricingPage() {
         {/* FAQ Section */}
         <section className="mb-space-128 max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <span className="text-ui-xs font-ui-xs uppercase tracking-widest text-amber-text mb-4 block">Knowledge Base</span>
-            <h2 className="font-marketing-xl text-marketing-xl">Frequently Asked Questions</h2>
+            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4 block">Knowledge Base</span>
+            <h2 className="font-display text-marketing-xl">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
               <details key={faq.q} className="group bg-white border border-border-subtle" open={i === 0}>
                 <summary className="flex justify-between items-center p-6 cursor-pointer select-none text-left">
-                  <span className="font-ui-lg text-ui-lg font-semibold">{faq.q}</span>
+                  <span className="font-ui text-ui-lg font-semibold">{faq.q}</span>
                   <Icon name="expand_more" className="transition-transform group-open:rotate-180" />
                 </summary>
-                <div className="px-6 pb-6 text-ui-sm font-ui-sm text-secondary text-left leading-relaxed">
+                <div className="px-6 pb-6 text-ui-sm font-ui text-secondary text-left leading-relaxed">
                   {faq.a}
                 </div>
               </details>

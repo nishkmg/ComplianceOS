@@ -14,7 +14,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         id={id}
         ref={ref}
         className={cn(
-          "flex h-10 w-full items-center justify-between rounded-md border border-border-subtle bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-mid focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10 w-full items-center justify-between rounded-md border border-border bg-surface px-3 py-2 font-ui text-sm ring-offset-surface placeholder:text-mid focus:outline-none focus:ring-1 focus:ring-amber focus:border-amber disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
           className
         )}
         {...props}
@@ -48,7 +48,7 @@ const SelectContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
     <div
       ref={ref}
       className={cn(
-        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-border-subtle bg-white text-gray-950 shadow-md",
+        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-surface text-dark shadow-md animate-in fade-in-80",
         className
       )}
       {...props}
@@ -65,7 +65,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, React.OptionHTMLAttributes<H
     <div
       ref={ref}
       className={cn(
-        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-section-amber focus:text-amber-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 font-ui text-sm outline-none focus:bg-surface-muted focus:text-dark data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors",
         className
       )}
       {...props}

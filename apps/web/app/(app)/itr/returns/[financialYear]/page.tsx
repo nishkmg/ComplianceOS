@@ -47,11 +47,11 @@ export default function ITRFinancialYearPage() {
     <div className="space-y-6">
       <div>
         <Link href="/itr/returns" className="font-ui text-[13px] text-light hover:text-amber hover:underline">← Back to ITR Returns</Link>
-        <h1 className="font-display text-[26px] font-normal text-dark mt-1">ITR Returns - FY {financialYear}</h1>
-        <p className="font-ui text-[12px] text-light mt-1">Assessment Year: {financialYear.replace(/^(\d{4})-(\d{2})$/, (_, start) => `${Number(start) + 1}-${(Number(start) + 2).toString().slice(-2)}`)}</p>
+        <h1 className="font-display text-display-lg font-semibold text-dark mt-1">ITR Returns - FY {financialYear}</h1>
+        <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {financialYear.replace(/^(\d{4})-(\d{2})$/, (_, start) => `${Number(start) + 1}-${(Number(start) + 2).toString().slice(-2)}`)}</p>
       </div>
 
-      <div className="border-b border-border-subtle">
+      <div className="border-b border-border">
         <nav className="flex gap-4">
 // @ts-ignore
           {[{ id: "itr3", label: "ITR-3" }, { id: "itr4", label: "ITR-4 (Sugam)" }].map((tab) => (

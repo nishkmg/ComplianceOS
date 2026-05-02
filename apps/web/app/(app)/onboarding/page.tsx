@@ -46,23 +46,23 @@ export default function OnboardingPage() {
       <div className="max-w-4xl w-full mx-auto px-gutter-desktop flex flex-col gap-space-48 text-left">
         {/* Header */}
         <header className="flex flex-col gap-6">
-          <div className="flex justify-between items-end border-b border-border-subtle pb-6">
-            <div className="font-display-lg text-display-lg font-bold tracking-tight">ComplianceOS</div>
-            <div className="font-ui-xs text-ui-xs text-text-mid uppercase tracking-widest">Step {currentStep} of {STEPS.length}</div>
+          <div className="flex justify-between items-end border-b border-border pb-6">
+            <h1 className="font-display text-display-lg font-bold tracking-tight text-dark">Onboarding</h1>
+            <div className="font-ui text-[11px] text-secondary uppercase tracking-widest">Step {currentStep} of {STEPS.length}</div>
           </div>
           {/* Segmented Progress Bar */}
           <div className="flex gap-2 w-full h-1">
 // @ts-ignore
             {STEPS.map((s) => (
-              <div key={s.number} className={`flex-1 rounded-sm transition-colors duration-500 ${currentStep >= s.number ? 'bg-primary-container' : 'bg-border-subtle'}`}></div>
+              <div key={s.number} className={`flex-1 rounded-md transition-colors duration-500 ${currentStep >= s.number ? 'bg-amber' : 'bg-border-subtle'}`}></div>
             ))}
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="flex flex-col gap-12 bg-white border border-border-subtle p-8 md:p-12 shadow-sm relative overflow-hidden">
+        <main className="flex flex-col gap-12 bg-surface border border-border p-8 md:p-12 shadow-sm relative overflow-hidden">
           {/* Status line */}
-          <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
           
           <div className="min-h-[400px]">
             {currentStep === 1 && (

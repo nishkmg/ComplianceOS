@@ -76,17 +76,17 @@ export default function ScanInvoicePage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-amber-text font-ui-xs text-[10px] uppercase tracking-[0.2em] mb-1 block">
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
             Document Capture
-          </span>
-          <h1 className="font-display-lg text-display-lg text-dark leading-tight">Scan Invoice</h1>
-          <p className="font-ui-sm text-sm text-mid mt-1">
+          </p>
+          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Scan Invoice</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">
             Upload an invoice image or PDF to automatically extract line items and create a draft invoice.
           </p>
         </div>
         <Link
           href="/invoices"
-          className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-ui-xs uppercase tracking-widest hover:bg-section-muted transition-colors no-underline rounded-sm flex items-center gap-1.5"
+          className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md flex items-center gap-1.5"
         >
           <Icon name="arrow_back" size={14} /> Back to Invoices
         </Link>
@@ -99,7 +99,7 @@ export default function ScanInvoicePage() {
       />
 
       {error && (
-        <div className="px-5 py-3 bg-danger-bg border border-red-200 rounded-sm flex items-center gap-2">
+        <div className="px-5 py-3 bg-danger-bg border border-red-200 rounded-md flex items-center gap-2">
           <Icon name="warning" size={16} className="text-danger shrink-0" />
           <p className="text-sm text-danger font-medium">{error}</p>
         </div>
@@ -107,7 +107,7 @@ export default function ScanInvoicePage() {
 
       {scanStatus === "processing" && (
         <div className="text-center py-8">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-50 text-amber-text rounded-sm text-sm font-medium">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-50 text-amber-text rounded-md text-sm font-medium">
             <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />

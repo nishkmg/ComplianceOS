@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { DataTable, type ColumnDef } from "@/components/ui";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -47,7 +49,7 @@ const columns: ColumnDef<Invoice>[] = [
     key: "customerName",
     header: "Customer",
     sortable: true,
-    render: (row) => <span className="font-ui-sm text-[13px] text-dark font-medium">{row.customerName}</span>,
+    render: (row) => <span className="font-ui text-[13px] text-dark font-medium">{row.customerName}</span>,
   },
   {
     key: "date",
@@ -93,6 +95,11 @@ const columns: ColumnDef<Invoice>[] = [
 export default function InvoicesPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const filtered = useMemo(
     () =>
@@ -117,25 +124,25 @@ export default function InvoicesPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-amber-text font-ui-xs text-[10px] uppercase tracking-[0.2em] mb-1 block">
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
             Billing
-          </span>
-          <h1 className="font-display-lg text-display-lg text-dark leading-tight">Invoices</h1>
-          <p className="font-ui-sm text-sm text-mid mt-1">Manage and track your fiscal billing documents.</p>
+          </p>
+          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Invoices</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">Manage and track your fiscal billing documents.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-ui-xs uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+          <button className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export List
           </button>
           <Link
             href="/invoices/scan"
-            className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-ui-xs uppercase tracking-widest hover:bg-section-muted transition-colors no-underline rounded-sm"
+            className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md"
           >
             Scan
           </Link>
           <Link
             href="/invoices/new"
-            className="px-4 py-2 bg-primary-container text-white text-[10px] font-ui-xs uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5"
+            className="px-4 py-2 bg-amber text-white text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-md flex items-center gap-1.5"
           >
             <Icon name="add" size={14} /> New Invoice
           </Link>
@@ -144,14 +151,14 @@ export default function InvoicesPage() {
 
       {/* Filter + search */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-1 bg-section-muted rounded-sm p-0.5 border border-border-subtle overflow-x-auto">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border overflow-x-auto">
           {tabs.map(tab => (
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`px-3 py-1.5 text-[11px] font-ui-sm font-medium whitespace-nowrap transition-colors cursor-pointer border-none rounded-sm ${
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium whitespace-nowrap transition-colors cursor-pointer border-none rounded-md ${
                 statusFilter === tab
-                  ? "bg-white text-dark shadow-sm"
+                  ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
               }`}
             >
@@ -163,7 +170,7 @@ export default function InvoicesPage() {
         <div className="relative">
           <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
           <input
-            className="bg-white border border-border-subtle text-[12px] font-ui px-8 py-1.5 w-56 rounded-sm focus:ring-1 focus:ring-primary-container outline-none placeholder:text-light"
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
             placeholder="Search invoices…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -172,39 +179,34 @@ export default function InvoicesPage() {
       </div>
 
       {/* DataTable */}
-      <DataTable<Invoice>
-        data={filtered}
-        columns={columns}
-        keyExtractor={row => row.id}
-        pageSize={15}
-        emptyState={
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <Icon name="receipt_long" className="text-4xl text-lighter mb-4" />
-            <p className="font-ui-sm text-sm text-mid mb-1">No invoices found.</p>
-            <p className="font-ui-xs text-[11px] text-light mb-4">
-              {search || statusFilter !== "all"
-                ? "Try adjusting your search or filter."
-                : "Create your first invoice."}
-            </p>
-            <Link
-              href="/invoices/new"
-              className="bg-primary-container text-white px-5 py-2 text-[11px] font-bold uppercase tracking-wider hover:bg-amber-hover transition-colors no-underline rounded-sm"
-            >
-              New Invoice
-            </Link>
-          </div>
-        }
-        footer={
-          <tr className="bg-stone-50 border-t-2 border-border-subtle">
-            <td colSpan={5} className="px-4 py-3 font-ui-xs text-[10px] uppercase tracking-widest text-mid font-bold">
-              Total ({filtered.length} invoices)
-            </td>
-            <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
-              ₹{totalAmount.toLocaleString("en-IN")}
-            </td>
-          </tr>
-        }
-      />
+      {loading ? (
+        <TableSkeleton rows={10} columns={6} />
+      ) : (
+        <DataTable<Invoice>
+          data={filtered}
+          columns={columns}
+          keyExtractor={row => row.id}
+          pageSize={15}
+          emptyState={
+            <EmptyState
+              title="No invoices found"
+              description={search || statusFilter !== "all" ? "Try adjusting your search or filter." : "Create your first invoice to start billing customers."}
+              action={{ label: "New Invoice", onClick: () => window.location.href = "/invoices/new" }}
+              icon="receipt_long"
+            />
+          }
+          footer={
+            <tr className="bg-surface-muted border-t-2 border-border">
+              <td colSpan={5} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                Total ({filtered.length} invoices)
+              </td>
+              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                ₹{totalAmount.toLocaleString("en-IN")}
+              </td>
+            </tr>
+          }
+        />
+      )}
     </div>
   );
 }

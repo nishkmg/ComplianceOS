@@ -86,8 +86,8 @@ export default function GSTMismatchesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">GST Mismatches</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="font-display text-2xl font-semibold text-dark">GST Mismatches</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">
             {MONTHS.find((m) => m.value === periodMonth)?.label} {periodYear}
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function GSTMismatchesPage() {
           <select
             value={periodMonth}
             onChange={(e) => setPeriodMonth(Number(e.target.value))}
-            className="px-3 py-2 border rounded-md text-sm bg-white"
+            className="px-3 py-2 border rounded-md text-sm bg-surface"
           >
             {MONTHS.map((m) => (
               <option key={m.value} value={m.value}>
@@ -106,7 +106,7 @@ export default function GSTMismatchesPage() {
           <select
             value={periodYear}
             onChange={(e) => setPeriodYear(Number(e.target.value))}
-            className="px-3 py-2 border rounded-md text-sm bg-white"
+            className="px-3 py-2 border rounded-md text-sm bg-surface"
           >
             {YEARS.map((y) => (
               <option key={y} value={y}>
@@ -117,43 +117,43 @@ export default function GSTMismatchesPage() {
           <button
             onClick={handleExportCSV}
             disabled={!mismatches || mismatches.length === 0}
-            className="px-4 py-2 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50"
+            className="px-4 py-2 bg-mid text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50"
           >
             Export CSV
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-surface rounded-lg shadow overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-surface-muted border-b">
             <tr>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Invoice #</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Supplier</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Books Value</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">2B Value</th>
-              <th className="px-4 py-3 text-right text-gray-500 font-medium">Difference</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Reason</th>
-              <th className="px-4 py-3 text-left text-gray-500 font-medium">Actions</th>
+              <th className="px-4 py-3 text-left text-light font-medium">Invoice #</th>
+              <th className="px-4 py-3 text-left text-light font-medium">Supplier</th>
+              <th className="px-4 py-3 text-left text-light font-medium">Books Value</th>
+              <th className="px-4 py-3 text-left text-light font-medium">2B Value</th>
+              <th className="px-4 py-3 text-right text-light font-medium">Difference</th>
+              <th className="px-4 py-3 text-left text-light font-medium">Reason</th>
+              <th className="px-4 py-3 text-left text-light font-medium">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {isLoading ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-light">
                   Loading...
                 </td>
               </tr>
             ) : mismatches && mismatches.length > 0 ? (
               (mismatches as any[]).map((mismatch: any, idx: number) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-900">
+                <tr key={idx} className="hover:bg-surface-muted">
+                  <td className="px-4 py-3 text-dark">
                     {mismatch.invoiceNumber ?? "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="text-gray-900">{mismatch.supplierName ?? "—"}</div>
+                    <div className="text-dark">{mismatch.supplierName ?? "—"}</div>
                     {mismatch.supplierGstin && (
-                      <div className="text-xs text-gray-500">{mismatch.supplierGstin}</div>
+                      <div className="text-xs text-light">{mismatch.supplierGstin}</div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-gray-600">
@@ -198,7 +198,7 @@ export default function GSTMismatchesPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-light">
                   No mismatches found for this period
                 </td>
               </tr>
@@ -208,7 +208,7 @@ export default function GSTMismatchesPage() {
       </div>
 
       {mismatches && mismatches.length > 0 && (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-light">
           Showing {mismatches.length} mismatch{mismatches.length !== 1 ? "es" : ""}
         </div>
       )}

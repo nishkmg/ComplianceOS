@@ -47,18 +47,18 @@ export default function CustomerDetailPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h1 className="font-display-xl text-display-xl text-dark tracking-tight">{customer.name}</h1>
-            <Badge variant="success">Active</Badge>
-          </div>
-          <p className="font-ui-sm text-[13px] text-mid">
+      <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">{customer.name}</h1>
+      <Badge variant="success">Active</Badge>
+    </div>
+    <p className="font-ui text-[13px] text-secondary">
             {customer.gstin} · {customer.email} · {customer.age} days on ledger
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+          <button className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
             <Icon name="edit" size={14} /> Edit Details
           </button>
-          <button className="px-4 py-2 bg-primary-container text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-sm shadow-sm cursor-pointer flex items-center gap-1.5">
+          <button className="px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
             <Icon name="add" size={14} /> Record Payment
           </button>
         </div>
@@ -66,20 +66,20 @@ export default function CustomerDetailPage() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white border border-border-subtle p-6 shadow-sm rounded-sm border-t-4 border-t-border-subtle">
-          <p className="font-ui-xs text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Total Invoiced (LTD)</p>
+        <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-border-subtle">
+          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Total Invoiced (LTD)</p>
           <p className="font-mono text-xl text-dark tabular-nums font-bold">
             {formatIndianNumber(customer.totalInvoiced, { currency: true })}
           </p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm rounded-sm border-t-4 border-t-primary-container">
-          <p className="font-ui-xs text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Outstanding</p>
-          <p className="font-mono text-xl text-primary-container tabular-nums font-bold">
+        <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-amber">
+          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Outstanding</p>
+          <p className="font-mono text-xl text-amber tabular-nums font-bold">
             {formatIndianNumber(customer.outstanding, { currency: true })}
           </p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm rounded-sm border-t-4 border-t-danger">
-          <p className="font-ui-xs text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Overdue</p>
+        <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-danger">
+          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Overdue</p>
           <p className="font-mono text-xl text-danger tabular-nums font-bold">
             {formatIndianNumber(customer.overdue, { currency: true })}
           </p>
@@ -87,13 +87,13 @@ export default function CustomerDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-border-subtle flex gap-6">
+      <div className="border-b border-border flex gap-6">
         {["Invoices", "Payments", "Ledger History"].map(tab => (
           <button
             key={tab}
-            className={`pb-3 px-1 font-ui-sm text-[12px] font-bold uppercase tracking-widest border-b-2 border-none bg-transparent cursor-pointer transition-colors ${
+            className={`pb-3 px-1 font-ui text-[13px] text-[12px] font-bold uppercase tracking-widest border-b-2 border-none bg-transparent cursor-pointer transition-colors ${
               tab === "Invoices"
-                ? "border-primary-container text-primary-container"
+                ? "border-amber text-amber"
                 : "border-transparent text-mid hover:text-dark"
             }`}
           >
@@ -103,26 +103,26 @@ export default function CustomerDetailPage() {
       </div>
 
       {/* Invoices */}
-      <div className="bg-white border border-border-subtle shadow-sm rounded-sm overflow-hidden">
+      <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-stone-50 border-b border-border-subtle">
-                <th className="py-3 px-6 font-ui-xs text-[10px] text-light uppercase tracking-widest">Invoice #</th>
-                <th className="py-3 px-6 font-ui-xs text-[10px] text-light uppercase tracking-widest">Date</th>
-                <th className="py-3 px-6 font-ui-xs text-[10px] text-light uppercase tracking-widest">Due Date</th>
-                <th className="py-3 px-6 font-ui-xs text-[10px] text-light uppercase tracking-widest text-right">Amount (₹)</th>
-                <th className="py-3 px-6 font-ui-xs text-[10px] text-light uppercase tracking-widest text-right">Balance (₹)</th>
-                <th className="py-3 px-6 font-ui-xs text-[10px] text-light uppercase tracking-widest">Status</th>
+              <tr className="bg-surface-muted border-b border-border">
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Invoice #</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Date</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Due Date</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Amount (₹)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance (₹)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-subtle">
               {invoices.map(inv => (
-                <tr key={inv.id} className="hover:bg-stone-50/50 transition-colors">
+                <tr key={inv.id} className="hover:bg-surface-muted/50 transition-colors">
                   <td className="py-4 px-6">
                     <Link
                       href={`/invoices/${inv.id}`}
-                      className="font-mono text-[13px] text-primary-container font-medium hover:underline no-underline"
+                      className="font-mono text-[13px] text-amber font-medium hover:underline no-underline"
                     >
                       {inv.number}
                     </Link>
@@ -140,12 +140,12 @@ export default function CustomerDetailPage() {
                     )}
                   </td>
                   <td className="py-4 px-6">
-                    <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-sm ${
+                    <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
                       inv.status === "paid"
                         ? "bg-success-bg text-success border-green-200"
                         : inv.status === "overdue"
                           ? "bg-danger-bg text-danger border-red-200"
-                          : "bg-section-muted text-mid border-border-subtle"
+                          : "bg-surface-muted text-mid border-border"
                     }`}>
                       {inv.status}
                     </span>

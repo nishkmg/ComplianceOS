@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -43,29 +44,23 @@ const MOCK_ACCOUNTS: Account[] = [
 // ─── Derived summary ──────────────────────────────────────────────────────────
 
 const typeLabels: Record<string, string> = {
-  asset:     "Total Assets",
-  liability: "Total Liabilities",
-  equity:    "Total Equity",
-  income:    "Total Income",
-  expense:   "Total Expenses",
-};
-
-const typeBadgeColors: Record<string, string> = {
-  asset:     "bg-blue-50 text-blue-700 border-blue-200",
-  liability: "bg-amber-50 text-amber-700 border-amber-200",
-  equity:    "bg-green-50 text-green-700 border-green-200",
-  income:    "bg-emerald-50 text-emerald-700 border-emerald-200",
-  expense:   "bg-red-50 text-red-700 border-red-200",
+  asset:     "Assets",
+  liability: "Liabilities",
+  equity:    "Equity",
+  income:    "Income",
+  expense:   "Expenses",
 };
 
 const groupTypes = ["asset", "liability", "equity", "income", "expense"] as const;
 
-// ─── Page Component ───────────────────────────────────────────────────────────
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function CoAPage() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [addFormOpen, setAddFormOpen] = useState<Set<string>>(new Set());
+  const [newAccountName, setNewAccountName] = useState("");
 
   const toggle = (id: string) => {
     setCollapsed(prev => {
@@ -75,10 +70,18 @@ export default function CoAPage() {
     });
   };
 
+  const toggleAddForm = (type: string) => {
+    setAddFormOpen(prev => {
+      const next = new Set(prev);
+      next.has(type) ? next.delete(type) : next.add(type);
+      return next;
+    });
+  };
+
   const summary = useMemo(() => {
     const byType: Record<string, number> = {};
     for (const a of MOCK_ACCOUNTS) {
-      if (a.level <= 1) continue; // only leaf + sub-group balances
+      if (a.level <= 1) continue;
       byType[a.type] = (byType[a.type] || 0) + a.balance;
     }
     const totalAssets  = byType.asset  || 0;
@@ -90,47 +93,47 @@ export default function CoAPage() {
     return { totalAssets, totalLiab, totalEquity, netIncome };
   }, []);
 
-  // Filter and flatten tree
-  const visible = useMemo(() => {
+  const groupedAccounts = useMemo(() => {
     const filtered = MOCK_ACCOUNTS.filter(a => {
       if (typeFilter !== "all" && a.type !== typeFilter) return false;
       if (search && !a.name.toLowerCase().includes(search.toLowerCase()) && !a.code.includes(search)) return false;
       return true;
     });
-    // show if level 0, or any ancestor is not collapsed
-    const result: Account[] = [];
-    for (const a of filtered) {
-      if (a.level === 0) { result.push(a); continue; }
-      // walk up to find parent
-      const ancestors: Account[] = [];
-      let idx = filtered.indexOf(a) - 1;
-      while (idx >= 0) {
-        if (filtered[idx].level < a.level) ancestors.unshift(filtered[idx]);
-        idx--;
-      }
-      const hasCollapsedAncestor = ancestors.some(p => collapsed.has(p.id));
-      if (!hasCollapsedAncestor) result.push(a);
+
+    const groups: Record<string, Account[]> = {};
+    for (const type of groupTypes) {
+      groups[type] = filtered.filter(a => a.type === type);
     }
-    return result;
-  }, [typeFilter, search, collapsed]);
+    return groups;
+  }, [typeFilter, search]);
+
+  const groupTotal = (accounts: Account[]) => {
+    return accounts
+      .filter(a => a.level >= 2)
+      .reduce((sum, a) => sum + a.balance, 0);
+  };
+
+  const groupBalanceType = (type: string): "dr" | "cr" => {
+    return ["asset", "expense"].includes(type) ? "dr" : "cr";
+  };
 
   return (
     <div className="space-y-6">
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-amber-text font-ui-xs text-[10px] uppercase tracking-[0.2em] mb-1 block">
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
             Chart of Accounts
-          </span>
-          <h1 className="font-display-lg text-display-lg text-dark leading-tight">Chart of Accounts</h1>
+          </p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
         </div>
-        <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-ui-xs uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+        <div className="flex gap-3 no-print">
+          <button className="btn-secondary flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export
           </button>
           <Link
             href="/accounts/new"
-            className="px-4 py-2 bg-primary-container text-white text-[10px] font-ui-xs uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5"
+            className="btn-primary no-underline flex items-center gap-1.5"
           >
             <Icon name="add" size={14} /> New Account
           </Link>
@@ -145,8 +148,8 @@ export default function CoAPage() {
           { label: "Total Equity",     value: summary.totalEquity,  accent: "border-l-green-500" },
           { label: "Net Income",       value: summary.netIncome,    accent: summary.netIncome >= 0 ? "border-l-emerald-500" : "border-l-red-500" },
         ].map(s => (
-          <div key={s.label} className={`bg-white border border-border-subtle shadow-sm p-4 border-l-4 ${s.accent}`}>
-            <p className="font-ui-xs text-[10px] text-mid uppercase tracking-widest mb-1">{s.label}</p>
+          <div key={s.label} className={`bg-surface border border-border shadow-sm p-4 border-l-4 ${s.accent}`}>
+            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-1">{s.label}</p>
             <p className={`font-mono text-lg tabular-nums ${s.value >= 0 ? 'text-dark' : 'text-danger'}`}>
               {formatIndianNumber(Math.abs(s.value), { currency: true })}
             </p>
@@ -155,15 +158,15 @@ export default function CoAPage() {
       </div>
 
       {/* Filter + search bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-1 bg-section-muted rounded-sm p-0.5 border border-border-subtle">
+      <div className="flex flex-wrap items-center justify-between gap-4 no-print">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
           {["all", ...groupTypes].map(t => (
             <button
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1.5 text-[11px] font-ui-sm font-medium transition-colors cursor-pointer border-none rounded-sm capitalize ${
+              className={`px-3 py-1.5 font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-md capitalize ${
                 typeFilter === t
-                  ? "bg-white text-dark shadow-sm"
+                  ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
               }`}
             >
@@ -174,7 +177,7 @@ export default function CoAPage() {
         <div className="relative">
           <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
           <input
-            className="bg-white border border-border-subtle text-[12px] font-ui px-8 py-1.5 w-56 rounded-sm focus:ring-1 focus:ring-primary-container outline-none placeholder:text-light"
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
             placeholder="Search accounts…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -182,70 +185,150 @@ export default function CoAPage() {
         </div>
       </div>
 
-      {/* Tree table */}
-      <div className="bg-white border border-border-subtle shadow-sm overflow-hidden rounded-sm">
-        <div className="h-[2px] w-full bg-primary-container" />
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-stone-50 border-b border-border-subtle">
-                <th className="py-3 px-5 font-ui-xs text-[10px] text-light uppercase tracking-widest w-24">Code</th>
-                <th className="py-3 px-5 font-ui-xs text-[10px] text-light uppercase tracking-widest">Account Name</th>
-                <th className="py-3 px-5 font-ui-xs text-[10px] text-light uppercase tracking-widest w-24">Type</th>
-                <th className="py-3 px-5 font-ui-xs text-[10px] text-light uppercase tracking-widest text-right w-44">Debit (₹)</th>
-                <th className="py-3 px-5 font-ui-xs text-[10px] text-light uppercase tracking-widest text-right w-44">Credit (₹)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-subtle">
-              {visible.map(acct => (
-                <tr
-                  key={acct.id}
-                  className={`hover:bg-stone-50/50 transition-colors ${acct.level === 0 ? 'bg-stone-50 font-semibold' : ''}`}
+      {/* Grouped Account Sections */}
+      <div className="space-y-6">
+        {groupTypes.map(type => {
+          const accounts = groupedAccounts[type];
+          if (!accounts || accounts.length === 0) return null;
+
+          const total = groupTotal(accounts);
+          const balType = groupBalanceType(type);
+          const isCollapsed = collapsed.has(type);
+
+          return (
+            <div key={type} className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
+              {/* Section Header */}
+              <div className="border-t-2 border-t-amber bg-surface-muted/50">
+                <button
+                  onClick={() => toggle(type)}
+                  className="w-full flex items-center justify-between px-5 py-3 cursor-pointer border-none bg-transparent"
                 >
-                  <td className="py-3 px-5 font-mono text-[12px] text-mid">{acct.code}</td>
-                  <td
-                    className="py-3 px-5 font-ui-sm text-[13px] text-dark"
-                    style={{ paddingLeft: `${20 + acct.level * 24}px` }}
-                  >
-                    <div className="flex items-center gap-2">
-                      {acct.hasChildren && (
-                        <button
-                          onClick={() => toggle(acct.id)}
-                          className="text-light hover:text-dark cursor-pointer border-none bg-transparent p-0 transition-colors"
-                          aria-label={collapsed.has(acct.id) ? "Expand" : "Collapse"}
-                        >
-                          <Icon
-                            name={collapsed.has(acct.id) ? "chevron_right" : "expand_more"}
-                            size={16}
-                            className="transition-transform"
-                          />
-                        </button>
-                      )}
-                      <span className={acct.level === 0 ? 'font-semibold' : ''}>{acct.name}</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-5">
-                    <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-sm ${typeBadgeColors[acct.type] || ''}`}>
-                      {acct.type}
+                  <div className="flex items-center gap-3">
+                    <Icon
+                      name={isCollapsed ? "chevron_right" : "expand_more"}
+                      size={18}
+                      className="text-mid transition-transform"
+                    />
+                    <h2 className="font-display text-[16px] font-semibold text-dark">
+                      {typeLabels[type]}
+                    </h2>
+                    <span className="font-ui text-[10px] uppercase tracking-widest text-light">
+                      {accounts.length} accounts
                     </span>
-                  </td>
-                  <td className="py-3 px-5 font-mono text-[12px] tabular-nums text-right">
-                    {acct.balanceType === 'dr' && acct.balance > 0 ? formatIndianNumber(acct.balance, { currency: true, decimals: 2 }) : "—"}
-                  </td>
-                  <td className="py-3 px-5 font-mono text-[12px] tabular-nums text-right">
-                    {acct.balanceType === 'cr' && acct.balance > 0 ? formatIndianNumber(acct.balance, { currency: true, decimals: 2 }) : "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {visible.length === 0 && (
-          <div className="py-12 text-center">
-            <p className="font-ui-sm text-[13px] text-mid">No accounts match your criteria.</p>
-          </div>
-        )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={balType === "cr" ? "success" : "amber"}>
+                      {balType === "cr" ? "Cr" : "Dr"}
+                    </Badge>
+                    <span className="font-mono text-[13px] tabular-nums text-dark font-medium">
+                      {formatIndianNumber(total, { currency: true })}
+                    </span>
+                  </div>
+                </button>
+              </div>
+
+              {/* Account Table */}
+              {!isCollapsed && (
+                <>
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-surface-muted border-b border-border">
+                        <th className="py-2 px-5 font-ui text-[10px] text-light uppercase tracking-widest w-24">Code</th>
+                        <th className="py-2 px-5 font-ui text-[10px] text-light uppercase tracking-widest">Account Name</th>
+                        <th className="py-2 px-5 font-ui text-[10px] text-light uppercase tracking-widest text-right w-32">Balance</th>
+                        <th className="py-2 px-5 font-ui text-[10px] text-light uppercase tracking-widest text-center w-16">Type</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border-subtle">
+                      {accounts.map(acct => (
+                        <tr
+                          key={acct.id}
+                          className="hover:bg-surface-muted/50 transition-colors"
+                          style={{ backgroundColor: acct.level === 0 ? 'var(--color-surface-muted)' : undefined }}
+                        >
+                          <td className="py-2.5 px-5 font-mono text-[11px] text-mid">{acct.code}</td>
+                          <td
+                            className="py-2.5 px-5 font-ui text-[13px] text-dark"
+                            style={{ paddingLeft: `${20 + acct.level * 24}px` }}
+                          >
+                            <div className="flex items-center gap-2">
+                              {acct.hasChildren && (
+                                <button
+                                  onClick={() => toggle(acct.id)}
+                                  className="text-light hover:text-dark cursor-pointer border-none bg-transparent p-0 transition-colors"
+                                  aria-label={collapsed.has(acct.id) ? "Expand" : "Collapse"}
+                                >
+                                  <Icon
+                                    name={collapsed.has(acct.id) ? "chevron_right" : "expand_more"}
+                                    size={14}
+                                    className="transition-transform"
+                                  />
+                                </button>
+                              )}
+                              <span className={acct.level <= 1 ? 'font-semibold' : ''}>{acct.name}</span>
+                            </div>
+                          </td>
+                          <td className="py-2.5 px-5 text-right">
+                            <span className="font-mono text-[13px] tabular-nums text-dark">
+                              {formatIndianNumber(acct.balance, { currency: true })}
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-5 text-center">
+                            <Badge variant={acct.balanceType === "cr" ? "success" : "amber"}>
+                              {acct.balanceType.toUpperCase()}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* Inline Add Form */}
+                  <div className="px-5 py-3 bg-surface-muted/30 border-t border-border-subtle no-print">
+                    {addFormOpen.has(type) ? (
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="text"
+                          value={newAccountName}
+                          onChange={e => setNewAccountName(e.target.value)}
+                          placeholder={`New ${typeLabels[type]} account name…`}
+                          className="flex-1 bg-surface border border-border text-[12px] font-ui px-3 py-1.5 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light max-w-xs"
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => { setNewAccountName(""); toggleAddForm(type); }}
+                          className="text-mid hover:text-dark cursor-pointer border-none bg-transparent p-1"
+                        >
+                          <Icon name="close" size={14} />
+                        </button>
+                        <button
+                          onClick={() => { setNewAccountName(""); toggleAddForm(type); }}
+                          className="bg-amber text-white text-[11px] font-ui font-bold uppercase tracking-wider px-3 py-1.5 rounded-md hover:bg-amber-hover cursor-pointer border-none"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => toggleAddForm(type)}
+                        className="flex items-center gap-1.5 text-mid hover:text-amber transition-colors cursor-pointer border-none bg-transparent font-ui text-[11px] uppercase tracking-wider font-bold"
+                      >
+                        <Icon name="add" size={12} /> Add Account
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
+
+      {Object.values(groupedAccounts).every(g => g.length === 0) && (
+        <div className="py-12 text-center">
+          <p className="font-ui text-[13px] text-mid">No accounts match your criteria.</p>
+        </div>
+      )}
     </div>
   );
 }

@@ -36,15 +36,15 @@ export function DeleteEntityDialog({
               <Icon name="warning" />
             </div>
             <div>
-              <DialogTitle className="font-display-lg text-lg font-bold text-dark mb-2">Delete Entity</DialogTitle>
-              <p className="font-ui-sm text-sm text-mid leading-relaxed">
+              <DialogTitle className="font-display text-lg font-bold text-dark mb-2">Delete Entity</DialogTitle>
+              <p className="font-ui text-sm text-mid leading-relaxed">
                 You are about to delete <strong className="text-dark">{entityName}</strong> and all associated records. This action is irreversible.
               </p>
             </div>
           </DialogHeader>
 
           <div className="bg-section-muted border border-danger/20/30 p-6 pl-10 rounded-sm">
-            <ul className="list-disc text-danger font-ui-sm text-sm flex flex-col gap-3">
+            <ul className="list-disc text-danger font-ui text-sm flex flex-col gap-3">
               <li>Permanent erasure of all voucher entries for this entity.</li>
               <li>Invalidation of attached GST reconciliation reports.</li>
               <li>Removal of all associated audit trails for this period.</li>
@@ -52,8 +52,8 @@ export function DeleteEntityDialog({
           </div>
 
           <div className="flex flex-col gap-3 mt-2">
-            <label className="font-ui-xs text-[10px] uppercase tracking-widest text-mid font-bold" htmlFor="delete-confirmation">
-              To verify, type <span className="font-mono font-bold text-dark bg-stone-100 px-2 py-1 border border-border-subtle">DELETE</span> below:
+            <label className="font-ui text-[10px] uppercase tracking-widest text-mid font-bold" htmlFor="delete-confirmation">
+              To verify, type <span className="font-mono font-bold text-dark bg-surface-muted px-2 py-1 border border-border-subtle">DELETE</span> below:
             </label>
             <input 
               autoComplete="off" 
@@ -67,11 +67,11 @@ export function DeleteEntityDialog({
         </div>
 
         <DialogFooter className="bg-section-muted px-10 py-6 border-t-[0.5px] border-border-subtle flex flex-row items-center justify-end gap-4">
-          <button onClick={onClose} className="font-ui-sm text-sm text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
+          <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={onConfirm}
             disabled={input !== 'DELETE'}
-            className="bg-red-600 text-white px-8 py-3 font-ui-sm text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-red-700 transition-all border-none shadow-sm cursor-pointer disabled:opacity-30"
+            className="bg-red-600 text-white px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-red-700 transition-all border-none shadow-sm cursor-pointer disabled:opacity-30"
           >
             Permanently Delete
           </button>

@@ -116,7 +116,7 @@ export default function PaymentAllocation({
         <button
           type="button"
           onClick={autoAllocate}
-          className="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded border"
+          className="px-3 py-1 text-xs bg-slate-100 hover:bg-zinc-200 text-slate-700 rounded border"
         >
           Auto-allocate (FIFO)
         </button>
@@ -139,7 +139,7 @@ export default function PaymentAllocation({
               const isFull = currentAlloc >= inv.outstandingAmount;
               return (
                 <tr key={inv.id} className="hover:bg-section-muted">
-                  <td className="px-3 py-2 font-mono text-xs text-primary-container">{inv.invoiceNumber}</td>
+                  <td className="px-3 py-2 font-mono text-xs text-amber">{inv.invoiceNumber}</td>
                   <td className="px-3 py-2 text-mid">{inv.date}</td>
                   <td className="px-3 py-2 text-mid">{inv.dueDate}</td>
                   <td className="px-3 py-2 text-right text-dark">
@@ -175,7 +175,7 @@ export default function PaymentAllocation({
           </div>
           <div className="flex justify-between">
             <span className="text-mid">Allocated</span>
-            <span className="font-medium text-primary-container">₹{totalAllocated.toLocaleString("en-IN")}</span>
+            <span className="font-medium text-amber">₹{totalAllocated.toLocaleString("en-IN")}</span>
           </div>
           <div className="flex justify-between border-t pt-2">
             <span className="text-mid">Remaining</span>

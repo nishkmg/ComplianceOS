@@ -5,21 +5,18 @@ import { TRPCProvider } from "@/components/trpc-provider";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { CommandPalette } from "@/components/command-palette";
 import { SessionProvider } from "next-auth/react";
-import { ServerAuthCheck } from "./server-auth-check";
-import { SkipToMainContent } from "@/components/ui";
+import { SkipToMainContent, NavigationLoader } from "@/components/ui";
 import { AppSidebar } from "@/components/app/sidebar";
 import { AppTopBar } from "@/components/app/topbar";
 import { MobileNav } from "@/components/app/mobile-nav";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <ServerAuthCheck>
-      <SessionProvider>
-        <TRPCProvider>
-          <AppShell>{children}</AppShell>
-        </TRPCProvider>
-      </SessionProvider>
-    </ServerAuthCheck>
+    <SessionProvider>
+      <TRPCProvider>
+        <AppShell>{children}</AppShell>
+      </TRPCProvider>
+    </SessionProvider>
   );
 }
 
@@ -46,13 +43,14 @@ function AppShell({ children }: { children: ReactNode }) {
         - Desktop: offset right of sidebar (ml-64) and below topbar (pt-14)
         - Mobile:  no left margin, below topbar (pt-14), above mobile nav (pb-16)
       */}
-      <main
-        id="main-content"
-        className="lg:ml-64 pt-14 pb-16 lg:pb-0 min-h-screen p-6"
-        tabIndex={-1}
-      >
-        {children}
-      </main>
+        <main
+          id="main-content"
+          className="lg:ml-64 pt-14 pb-16 lg:pb-0 min-h-screen p-6 relative"
+          tabIndex={-1}
+        >
+          <NavigationLoader />
+          {children}
+        </main>
 
       {/* Fixed bottom nav — mobile only (hidden on lg+) */}
       <MobileNav />

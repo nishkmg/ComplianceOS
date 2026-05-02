@@ -46,8 +46,9 @@ export default function EmployeeSalaryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-[26px] font-normal text-dark">Salary Structure</h1>
-        <p className="font-ui text-[12px] text-light mt-1">Configure employee compensation</p>
+        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Employee Profile</p>
+        <h1 className="font-display text-display-lg font-semibold text-dark">Salary Structure</h1>
+        <p className="text-[13px] text-secondary font-ui mt-1">Configure employee compensation</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 max-w-4xl">
@@ -59,7 +60,7 @@ export default function EmployeeSalaryPage() {
         </div>
 
         <div className="card overflow-hidden">
-          <div className="px-4 py-3 border-b border-border-subtle font-display text-[14px] font-normal text-dark">Components</div>
+          <div className="px-4 py-3 border-b border-border font-display text-[14px] font-normal text-dark">Components</div>
           <table className="table table-dense">
             <thead>
               <tr>
@@ -71,7 +72,7 @@ export default function EmployeeSalaryPage() {
             </thead>
             <tbody>
               {components.map((comp, idx) => (
-                <tr key={idx} className="border-b border-border-subtle">
+                <tr key={idx} className="border-b border-border">
                   <td className="px-4 py-3">
                     <select value={comp.componentCode} onChange={(e) => updateComponent(idx, "componentCode", e.target.value)} className="input-field font-ui w-full">
                       <option value="">Select Component</option>

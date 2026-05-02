@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { Badge, DataTable, type ColumnDef } from "@/components/ui";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -118,6 +120,11 @@ const columns: ColumnDef<JournalEntry>[] = [
 export default function JournalPage() {
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const filteredEntries = useMemo(
     () =>
@@ -150,18 +157,18 @@ export default function JournalPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-amber-text font-ui-xs text-[10px] uppercase tracking-[0.2em] mb-1 block">
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
             General Ledger
-          </span>
-          <h1 className="font-display-lg text-display-lg text-dark leading-tight">Journal Entries</h1>
+          </p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Journal Entries</h1>
         </div>
         <div className="flex gap-3">
-          <button className="border border-border-subtle px-4 py-2 text-[10px] font-ui-xs uppercase tracking-widest text-mid hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm">
+          <button className="btn-secondary">
             <Icon name="download" size={14} className="mr-1.5 inline" />Export CSV
           </button>
           <Link
             href="/journal/new"
-            className="bg-primary-container text-white px-5 py-2 text-[10px] font-ui-xs uppercase tracking-widest hover:bg-amber-hover transition-all no-underline inline-flex items-center gap-1 rounded-sm"
+            className="btn-primary no-underline inline-flex items-center gap-1"
           >
             Add Entry <Icon name="add" size={14} />
           </Link>
@@ -170,14 +177,14 @@ export default function JournalPage() {
 
       {/* Filter tabs + search */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-1 bg-section-muted rounded-sm p-0.5 border border-border-subtle">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
           {statusOptions.map((s) => (
             <button
               key={s.value}
               onClick={() => setFilter(s.value)}
-              className={`px-3 py-1.5 text-[11px] font-ui-sm font-medium transition-colors cursor-pointer border-none rounded-sm ${
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-md ${
                 filter === s.value
-                  ? "bg-white text-dark shadow-sm"
+                  ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
               }`}
             >
@@ -196,7 +203,7 @@ export default function JournalPage() {
           />
           <input
             data-search-input
-            className="bg-white border border-border-subtle text-[12px] font-ui px-8 py-1.5 w-56 rounded-sm focus:ring-1 focus:ring-primary-container outline-none placeholder:text-light"
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
             placeholder="Search entries..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -205,49 +212,40 @@ export default function JournalPage() {
       </div>
 
       {/* DataTable */}
-      <DataTable<JournalEntry>
-        data={filteredEntries}
-        columns={columns}
-        keyExtractor={(row) => row.id}
-        pageSize={15}
-        emptyState={
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <Icon name="menu_book" className="text-4xl text-lighter mb-4" />
-            <p className="font-ui-sm text-sm text-mid mb-1">
-              {search || filter !== "all"
-                ? "No entries match your filter criteria."
-                : "No journal entries yet."}
-            </p>
-            <p className="font-ui-xs text-[11px] text-light mb-4">
-              {search || filter !== "all"
-                ? "Try adjusting your search or filter."
-                : "Create your first entry to start recording transactions."}
-            </p>
-            <Link
-              href="/journal/new"
-              className="bg-primary-container text-white px-5 py-2 text-[11px] font-bold uppercase tracking-wider hover:bg-amber-hover transition-colors no-underline rounded-sm"
-            >
-              New Journal Entry
-            </Link>
-          </div>
-        }
-        footer={
-          filteredEntries.length > 0 ? (
-            <tr className="bg-stone-50 border-t-2 border-border-subtle">
-              <td colSpan={3} className="px-4 py-3 font-ui-xs text-[10px] uppercase tracking-widest text-mid font-bold">
-                Total ({filteredEntries.length} entries)
-              </td>
-              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
-                {formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}
-              </td>
-              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
-                {formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}
-              </td>
-              <td />
-            </tr>
-          ) : undefined
-        }
-      />
+      {loading ? (
+        <TableSkeleton rows={10} columns={6} />
+      ) : (
+        <DataTable<JournalEntry>
+          data={filteredEntries}
+          columns={columns}
+          keyExtractor={(row) => row.id}
+          pageSize={15}
+          emptyState={
+            <EmptyState
+              title={search || filter !== "all" ? "No entries match your filters" : "No journal entries yet"}
+              description={search || filter !== "all" ? "Try adjusting your search or filter criteria." : "Create your first entry to start recording transactions."}
+              action={{ label: "New Journal Entry", onClick: () => window.location.href = "/journal/new" }}
+              icon="menu_book"
+            />
+          }
+          footer={
+            filteredEntries.length > 0 ? (
+              <tr className="bg-surface-muted border-t-2 border-border">
+                <td colSpan={3} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                  Total ({filteredEntries.length} entries)
+                </td>
+                <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                  {formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}
+                </td>
+                <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                  {formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}
+                </td>
+                <td />
+              </tr>
+            ) : undefined
+          }
+        />
+      )}
     </div>
   );
 }

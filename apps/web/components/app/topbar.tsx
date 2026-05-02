@@ -37,7 +37,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
         className={[
           'text-sm h-14 flex items-center no-underline transition-colors',
           active
-            ? 'text-primary-container border-b-2 border-primary-container font-semibold'
+            ? 'text-amber border-b-2 border-amber font-semibold'
             : 'text-mid hover:text-dark',
         ].join(' ')}
       >
@@ -51,7 +51,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
 
       {/* Left: brand + top-level quick-links (offset by sidebar width on desktop) */}
       <div className="flex items-center gap-4 lg:ml-64">
-        <span className="font-bold text-lg tracking-tight text-dark dark:text-slate-100 hidden md:inline">
+        <span className="font-bold text-lg tracking-tight text-dark dark:text-zinc-100 hidden md:inline">
           ComplianceOS
         </span>
         <div className="h-4 w-[0.5px] bg-border-subtle mx-2 hidden md:block" />
@@ -69,7 +69,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
         <button
           type="button"
           onClick={onSearchFocus}
-          className="bg-section-amber px-3 py-1.5 border border-border-subtle flex items-center gap-2 hover:border-primary-container/40 transition-colors cursor-text"
+          className="bg-section-amber px-3 py-1.5 border border-border-subtle flex items-center gap-2 hover:border-amber/40 transition-colors cursor-text"
           aria-label="Open command palette (⌘K)"
         >
           <Icon name="search" className="text-mid" size={16} />
@@ -88,7 +88,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
 
         {/* User avatar */}
         <button
-          className="h-8 w-8 rounded-full border border-border-subtle cursor-pointer active:opacity-70 overflow-hidden bg-primary-container text-white flex items-center justify-center font-bold text-xs border-none"
+          className="h-8 w-8 rounded-full border border-border-subtle cursor-pointer active:opacity-70 overflow-hidden bg-amber text-white flex items-center justify-center font-bold text-xs border-none"
           onClick={() => setShowUserMenu(prev => !prev)}
           aria-label="User menu"
           aria-expanded={showUserMenu}
@@ -118,7 +118,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
                 <Link
                   href="/settings"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-3 px-4 py-2 hover:bg-section-amber text-mid hover:text-primary-container no-underline transition-colors"
+                  className="flex items-center gap-3 px-4 py-2 hover:bg-section-amber text-mid hover:text-amber no-underline transition-colors"
                 >
                   <Icon name="person" size={16} />
                   <span className="text-[11px] font-bold uppercase tracking-widest">Profile Settings</span>
@@ -126,7 +126,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
                 <Link
                   href="/settings/users"
                   onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-3 px-4 py-2 hover:bg-section-amber text-mid hover:text-primary-container no-underline transition-colors"
+                  className="flex items-center gap-3 px-4 py-2 hover:bg-section-amber text-mid hover:text-amber no-underline transition-colors"
                 >
                   <Icon name="group" size={16} />
                   <span className="text-[11px] font-bold uppercase tracking-widest">User Management</span>

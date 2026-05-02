@@ -23,17 +23,12 @@ interface BadgeProps {
  * - ui-xs Syne font
  * - 4px leading dot (when used)
  */
-export function Badge({ variant = 'gray', children, className = '' }: BadgeProps) {
-  const variantClasses = {
-    amber: 'bg-amber text-white',
-    success: 'bg-success text-white',
-    gray: 'bg-lighter text-mid',
-    danger: 'bg-danger text-white',
-  };
+import { cn } from '@/lib/utils';
 
+export function Badge({ variant = 'gray', children, className = '' }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-ui-xs font-ui font-medium uppercase tracking-wide rounded-sm ${variantClasses[variant]} ${className}`}
+      className={cn("badge", `badge-${variant}`, className)}
     >
       {children}
     </span>

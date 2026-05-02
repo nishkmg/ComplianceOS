@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { Icon } from '@/components/ui/icon';
 
 const months = [
   { value: 1, label: "April" },
@@ -41,58 +42,62 @@ export default function GSTR2BDetailPage() {
   return (
     <div className="space-y-0 text-left">
       {/* Page Header */}
-      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8">
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <p className="font-ui-xs text-amber-text uppercase tracking-widest mb-2">GSTR-2B ITC Statement</p>
-          <h1 className="font-display-xl text-display-xl text-dark">{monthLabel} {year}</h1>
-          <p className="font-ui-sm text-mid mt-2 max-w-2xl leading-relaxed">ITC auto-drafted statement. Verify that all purchase invoices uploaded by your suppliers are correctly reflected in your ledger.</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">GSTR-2B ITC Statement</p>
+          <h1 className="font-display text-display-lg font-semibold text-dark">{monthLabel} {year}</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">ITC auto-drafted statement. Verify that all purchase invoices uploaded by your suppliers are correctly reflected in your ledger.</p>
         </div>
         <div className="text-right">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-1">Reconciliation</p>
+          <p className="font-ui text-[11px] text-light uppercase tracking-widest mb-1">Reconciliation</p>
           <div className="flex items-center md:justify-end gap-2">
-            <span className="w-2 h-2 rounded-full bg-success-bg0"></span>
-            <span className="font-ui-sm font-medium">Reconciled</span>
+            <span className="w-2 h-2 rounded-full bg-success"></span>
+            <span className="font-ui text-[13px] font-medium">Reconciled</span>
           </div>
-          <p className="font-ui-xs text-mid mt-1">Updated: 14 Oct 2024</p>
+          <p className="font-ui text-[11px] text-mid mt-1">Updated: 14 Oct 2024</p>
         </div>
       </div>
 
-      {/* KPI Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-white border border-border-subtle p-6 shadow-sm border-t-2 border-t-primary-container">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Total ITC Available</p>
-          <p className="font-mono-lg text-primary-container font-bold">₹ 1,26,500.00</p>
+      {/* ITC Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total ITC Available</p>
+          <p className="font-mono text-[14px] tabular-nums text-amber font-bold">₹ 1,26,500.00</p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">ITC Not Available</p>
-          <p className="font-mono-lg text-dark font-bold">₹ 4,500.00</p>
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">ITC Not Available</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 4,500.00</p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Suppliers Filed</p>
-          <p className="font-mono-lg text-dark font-bold">12 / 14</p>
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Suppliers Filed</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">12 / 14</p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Mismatches</p>
-          <p className="font-mono-lg text-danger font-bold">0</p>
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Mismatches</p>
+          <p className="font-mono text-[14px] tabular-nums text-danger font-bold">0</p>
         </div>
       </div>
 
       {/* Table Module */}
-      <div className="bg-white border border-border-subtle shadow-sm overflow-hidden">
+      <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
         {/* Table Tabs */}
-        <div className="bg-section-muted border-b-[0.5px] border-border-subtle flex no-print">
+        <div className="bg-surface-muted border-b border-border flex no-print">
           <button
             onClick={() => setActiveTable("available")}
-            className={`px-8 py-4 font-ui-sm text-xs uppercase tracking-widest font-bold transition-colors cursor-pointer border-none ${
-              activeTab === "available" ? "bg-white text-dark border-r-[0.5px] border-border-subtle relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary-container" : "text-mid hover:text-dark border-r-[0.5px] border-border-subtle bg-transparent"
+            className={`px-6 py-3 font-ui text-[11px] uppercase tracking-widest font-bold transition-colors cursor-pointer border-none ${
+              activeTab === "available"
+                ? "bg-surface text-dark border-r border-border relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber"
+                : "text-mid hover:text-dark border-r border-border bg-transparent"
             }`}
           >
             ITC Available
           </button>
           <button
             onClick={() => setActiveTable("notAvailable")}
-            className={`px-8 py-4 font-ui-sm text-xs uppercase tracking-widest font-bold transition-colors cursor-pointer border-none ${
-              activeTab === "notAvailable" ? "bg-white text-dark border-r-[0.5px] border-border-subtle relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary-container" : "text-mid hover:text-dark border-r-[0.5px] border-border-subtle bg-transparent"
+            className={`px-6 py-3 font-ui text-[11px] uppercase tracking-widest font-bold transition-colors cursor-pointer border-none ${
+              activeTab === "notAvailable"
+                ? "bg-surface text-dark border-r border-border relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber"
+                : "text-mid hover:text-dark border-r border-border bg-transparent"
             }`}
           >
             ITC Not Available
@@ -101,36 +106,41 @@ export default function GSTR2BDetailPage() {
 
         {/* Data Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[1000px]">
+          <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="bg-section-muted border-b-[0.5px] border-border-subtle">
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">GSTIN</th>
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Supplier Name</th>
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Invoice #</th>
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle text-right">Taxable Value</th>
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle text-right">IGST</th>
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle text-right">CGST</th>
-                <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right">SGST</th>
+              <tr className="bg-surface-muted border-b border-border">
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Supplier</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">GSTIN</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Invoice #</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Date</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">Taxable Value</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">IGST</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">CGST</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">SGST</th>
+                <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right">Eligible ITC</th>
               </tr>
             </thead>
-            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-dark">
+            <tbody className="divide-y divide-border-subtle">
               {activeTab === 'available' ? mockData.available.map((item, idx) => (
-                <tr key={idx} className="hover:bg-section-muted/30 transition-colors">
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{item.gstin}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle font-ui-sm font-medium">{item.name}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{item.inv}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {item.value}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-mid">{item.igst}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-mid">{item.cgst}</td>
-                  <td className="py-4 px-6 text-right text-mid">{item.sgst}</td>
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-2.5 px-4 font-ui text-[12px] text-dark font-medium border-r border-border">{item.name}</td>
+                  <td className="py-2.5 px-4 font-mono text-[11px] text-mid border-r border-border">{item.gstin}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{item.inv}</td>
+                  <td className="py-2.5 px-4 font-mono text-[11px] text-mid border-r border-border">{item.date}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark border-r border-border">₹ {item.value}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{item.igst}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{item.cgst}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{item.sgst}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark font-bold">₹ {item.total}</td>
                 </tr>
               )) : mockData.notAvailable.map((item, idx) => (
-                <tr key={idx} className="hover:bg-section-muted/30 transition-colors opacity-60">
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{item.gstin}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle font-ui-sm font-medium">{item.name}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{item.inv}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {item.value}</td>
-                  <td colSpan={3} className="py-4 px-6 text-center font-ui-xs uppercase tracking-wider text-danger font-bold">{item.reason}</td>
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors opacity-60">
+                  <td className="py-2.5 px-4 font-ui text-[12px] text-dark font-medium border-r border-border">{item.name}</td>
+                  <td className="py-2.5 px-4 font-mono text-[11px] text-mid border-r border-border">{item.gstin}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{item.inv}</td>
+                  <td className="py-2.5 px-4 font-mono text-[11px] text-mid border-r border-border">{item.date}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark border-r border-border">₹ {item.value}</td>
+                  <td colSpan={4} className="py-2.5 px-4 text-center font-ui text-[11px] uppercase tracking-wider text-danger font-bold">{item.reason}</td>
                 </tr>
               ))}
             </tbody>
@@ -138,9 +148,9 @@ export default function GSTR2BDetailPage() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-end gap-4 no-print">
-        <button className="px-6 py-3 border border-border-subtle text-dark font-ui-sm font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent">Fetch from Portal</button>
-        <button className="px-12 py-3 bg-primary-container text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">Confirm ITC →</button>
+      <div className="mt-6 flex justify-end gap-3 no-print">
+        <button className="px-5 py-2.5 border border-border text-dark font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Fetch from Portal</button>
+        <button className="px-10 py-2.5 bg-amber text-white font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none shadow-sm rounded-md">Confirm ITC →</button>
       </div>
     </div>
   );

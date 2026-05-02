@@ -31,83 +31,84 @@ export default function AuditLogPage() {
   return (
     <div className="space-y-6 text-left">
       {/* Header */}
-      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6">
+      <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
         <div>
-          <h1 className="font-display-xl text-display-xl text-stone-900">System Audit Log</h1>
-          <p className="font-ui-sm text-text-mid mt-1">Immutable record of all postings, modifications, and access events.</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">System</p>
+          <h1 className="font-display text-2xl font-semibold text-dark">System Audit Log</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">Immutable record of all postings, modifications, and access events.</p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-section-muted border border-border-subtle px-4 py-2 flex items-center gap-2 hover:bg-stone-200 transition-colors cursor-pointer">
+          <button className="btn-secondary flex items-center gap-2">
             <Icon name="download" className="text-sm" />
-            <span className="font-ui-xs uppercase tracking-wider">Export CSV</span>
+            <span className="font-ui text-[11px] uppercase tracking-wider">Export CSV</span>
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Filter Bar */}
-      <div className="bg-white border border-border-subtle p-4 mb-8 flex flex-wrap items-center gap-4 shadow-sm">
+      <div className="bg-surface border border-border p-4 mb-8 flex flex-wrap items-center gap-4 shadow-sm">
         <div className="flex-1 min-w-[200px] relative">
           <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-mid text-sm" />
           <input 
-            className="w-full pl-9 pr-3 py-2 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm font-mono outline-none focus:border-primary-container" 
+            className="w-full pl-9 pr-3 py-2 bg-transparent border-[0.5px] border-border rounded text-ui-sm font-mono outline-none focus:border-amber" 
             placeholder="Search description or IP..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className="flex gap-4 flex-wrap">
-          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm text-text-mid focus:border-primary-container outline-none">
+          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none">
             <option>All Modules</option>
             <option>General Ledger</option>
             <option>Vouchers</option>
             <option>User Access</option>
           </select>
-          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border-subtle rounded text-ui-sm text-text-mid focus:border-primary-container outline-none">
+          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none">
             <option>All Actions</option>
             <option>CREATE</option>
             <option>UPDATE</option>
             <option>DELETE</option>
             <option>LOGIN</option>
           </select>
-          <button className="px-4 py-2 bg-section-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-stone-200 transition-colors flex items-center gap-2 border border-border-subtle cursor-pointer">
+          <button className="px-4 py-2 bg-surface-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-zinc-200 transition-colors flex items-center gap-2 border border-border cursor-pointer">
             <Icon name="filter_list" className="text-sm" /> More Filters
           </button>
         </div>
       </div>
 
       {/* Data Table */}
-      <div className="overflow-x-auto border border-border-subtle bg-white shadow-sm">
+      <div className="overflow-x-auto border border-border bg-surface shadow-sm">
         <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
-            <tr className="bg-section-muted border-b border-border-subtle">
-              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">Timestamp (IST)</th>
-              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">User / Role</th>
-              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">Module</th>
-              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid">Action</th>
-              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid w-full">Description</th>
-              <th className="py-3 px-6 font-ui-xs uppercase tracking-widest text-text-mid text-right">IP Address</th>
+            <tr className="bg-surface-muted border-b border-border">
+              <th className="py-3 px-6 font-ui text-[11px] uppercase tracking-widest text-text-mid">Timestamp (IST)</th>
+              <th className="py-3 px-6 font-ui text-[11px] uppercase tracking-widest text-text-mid">User / Role</th>
+              <th className="py-3 px-6 font-ui text-[11px] uppercase tracking-widest text-text-mid">Module</th>
+              <th className="py-3 px-6 font-ui text-[11px] uppercase tracking-widest text-text-mid">Action</th>
+              <th className="py-3 px-6 font-ui text-[11px] uppercase tracking-widest text-text-mid w-full">Description</th>
+              <th className="py-3 px-6 font-ui text-[11px] uppercase tracking-widest text-text-mid text-right">IP Address</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-subtle">
             {mockEntries.map((entry) => (
-              <tr key={entry.id} className="hover:bg-stone-50 transition-colors group">
+              <tr key={entry.id} className="hover:bg-surface-muted transition-colors group">
                 <td className="py-4 px-6 font-mono text-[12px] text-text-mid">{entry.performedAt}</td>
                 <td className="py-4 px-6">
-                  <div className="font-ui-sm font-bold text-on-surface">{entry.performedBy}</div>
-                  <div className="font-ui-xs text-[10px] text-text-light uppercase">{entry.role}</div>
+                  <div className="font-ui text-[13px] font-bold text-on-surface">{entry.performedBy}</div>
+                  <div className="font-ui text-[10px] text-text-light uppercase">{entry.role}</div>
                 </td>
-                <td className="py-4 px-6 font-ui-sm text-text-mid">{entry.module}</td>
+                <td className="py-4 px-6 font-ui text-[13px] text-text-mid">{entry.module}</td>
                 <td className="py-4 px-6">
-                  <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-border-subtle rounded-sm ${
+                  <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-border rounded-md ${
                     entry.action === 'Delete' ? 'bg-red-50 text-red-800 border-red-100' :
                     entry.action === 'Generate' ? 'bg-green-50 text-green-800 border-green-100' :
                     entry.action === 'Login' ? 'bg-blue-50 text-blue-800 border-blue-100' :
-                    'bg-section-muted text-on-surface'
+                    'bg-surface-muted text-on-surface'
                   }`}>
                     {entry.action}
                   </span>
                 </td>
-                <td className="py-4 px-6 font-ui-sm text-on-surface max-w-[300px] truncate" title={entry.details}>
+                <td className="py-4 px-6 font-ui text-[13px] text-on-surface max-w-[300px] truncate" title={entry.details}>
                   {entry.details}
                 </td>
                 <td className="py-4 px-6 font-mono text-[12px] text-text-mid text-right">{entry.ip}</td>
@@ -119,14 +120,14 @@ export default function AuditLogPage() {
 
       {/* Pagination */}
       <div className="mt-6 flex items-center justify-between">
-        <p className="font-ui-xs text-text-mid">Showing 1 to 5 of 1,248 entries</p>
+        <p className="font-ui text-[11px] text-text-mid">Showing 1 to 5 of 1,248 entries</p>
         <div className="flex gap-1">
-          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white disabled:opacity-50 cursor-pointer"><Icon name="chevron_left" className="text-sm" /></button>
-          <button className="px-3 py-1 bg-white border border-border-subtle rounded font-mono text-sm">1</button>
-          <button className="px-3 py-1 border border-transparent hover:border-border-subtle rounded font-mono text-sm text-text-mid cursor-pointer">2</button>
-          <button className="px-3 py-1 border border-transparent hover:border-border-subtle rounded font-mono text-sm text-text-mid cursor-pointer">3</button>
+          <button className="p-1 border border-border rounded text-text-mid hover:bg-surface disabled:opacity-50 cursor-pointer"><Icon name="chevron_left" className="text-sm" /></button>
+          <button className="px-3 py-1 bg-surface border border-border rounded font-mono text-sm">1</button>
+          <button className="px-3 py-1 border border-transparent hover:border-border rounded font-mono text-sm text-text-mid cursor-pointer">2</button>
+          <button className="px-3 py-1 border border-transparent hover:border-border rounded font-mono text-sm text-text-mid cursor-pointer">3</button>
           <span className="px-2 py-1 text-text-mid">...</span>
-          <button className="p-1 border border-border-subtle rounded text-text-mid hover:bg-white cursor-pointer"><Icon name="chevron_right" className="text-sm" /></button>
+          <button className="p-1 border border-border rounded text-text-mid hover:bg-surface cursor-pointer"><Icon name="chevron_right" className="text-sm" /></button>
         </div>
       </div>
     </div>

@@ -21,3 +21,5 @@ export {
 } from './error-state';
 export { InlineConfirmation, InlineConfirmationWithReason } from './inline-confirmation';
 export { SkipToMainContent, SrOnly } from './skip-link';
+export { NavigationLoader } from './navigation-loader';
+

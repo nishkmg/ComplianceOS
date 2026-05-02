@@ -110,52 +110,54 @@ export default function GSTR1DetailPage() {
   return (
     <div className="space-y-0 text-left">
       {/* Page Header */}
-      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border-subtle pb-8">
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <p className="font-ui-xs text-amber-text uppercase tracking-widest mb-2">GSTR-1 Outward Supplies</p>
-          <h1 className="font-display-xl text-display-xl text-dark">{monthLabel} {year}</h1>
-          <p className="font-ui-sm text-mid mt-2 max-w-2xl leading-relaxed">Details of outward supplies of goods or services. Ensure all B2B invoices and B2C aggregates are accurately reconciled before filing.</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">GSTR-1 Outward Supplies</p>
+          <h1 className="font-display text-display-lg font-semibold text-dark">{monthLabel} {year}</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">Details of outward supplies of goods or services. Ensure all B2B invoices and B2C aggregates are accurately reconciled before filing.</p>
         </div>
         <div className="text-right">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-1">Status</p>
+          <p className="font-ui text-[11px] text-light uppercase tracking-widest mb-1">Status</p>
           <div className="flex items-center md:justify-end gap-2">
-            <span className="w-2 h-2 rounded-full bg-section-amber0"></span>
-            <span className="font-ui-sm font-medium">Pending Filing</span>
+            <span className="w-2 h-2 rounded-full bg-amber"></span>
+            <span className="font-ui text-[13px] font-medium">Pending Filing</span>
           </div>
-          <p className="font-ui-xs text-mid mt-1">Due: 11 Oct 2024</p>
+          <p className="font-ui text-[11px] text-mid mt-1">Due: 11 Oct 2024</p>
         </div>
       </div>
 
-      {/* KPI Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-white border border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Total Taxable Value</p>
-          <p className="font-mono-lg text-dark font-bold">₹ 12,45,600.00</p>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total Taxable</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 12,45,600.00</p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm border-t-2 border-t-primary-container">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Total Tax Liability</p>
-          <p className="font-mono-lg text-primary-container font-bold">₹ 2,24,208.00</p>
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total IGST</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 2,24,208.00</p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Invoice Count</p>
-          <p className="font-mono-lg text-dark font-bold">42</p>
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total CGST</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 1,12,104.00</p>
         </div>
-        <div className="bg-white border border-border-subtle p-6 shadow-sm">
-          <p className="font-ui-xs text-light uppercase tracking-widest mb-4">Amendments</p>
-          <p className="font-mono-lg text-dark font-bold">0</p>
+        <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total SGST</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 1,12,104.00</p>
         </div>
       </div>
 
       {/* Table Module */}
-      <div className="bg-white border border-border-subtle shadow-sm overflow-hidden">
+      <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
         {/* Table Tabs */}
-        <div className="bg-section-muted border-b-[0.5px] border-border-subtle flex overflow-x-auto no-print">
+        <div className="bg-surface-muted border-b border-border flex overflow-x-auto no-print">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTable(tab.id)}
-              className={`px-6 py-4 font-ui-sm text-xs uppercase tracking-widest font-bold whitespace-nowrap transition-colors cursor-pointer border-none ${
-                activeTable === tab.id ? "bg-white text-dark border-r-[0.5px] border-border-subtle relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary-container" : "text-mid hover:text-dark border-r-[0.5px] border-border-subtle bg-transparent"
+              className={`px-5 py-3 font-ui text-[11px] uppercase tracking-widest font-bold whitespace-nowrap transition-colors cursor-pointer border-none ${
+                activeTable === tab.id
+                  ? "bg-surface text-dark border-r border-border relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber"
+                  : "text-mid hover:text-dark border-r border-border bg-transparent"
               }`}
             >
               {tab.label}
@@ -164,48 +166,127 @@ export default function GSTR1DetailPage() {
         </div>
 
         {/* Action Bar */}
-        <div className="p-4 border-b-[0.5px] border-border-subtle flex justify-between items-center bg-white">
+        <div className="p-3 border-b border-border flex justify-between items-center bg-surface no-print">
           <div className="relative">
-            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-light text-lg" />
-            <input className="pl-10 pr-4 py-2 border border-border-subtle bg-section-muted rounded-sm text-xs w-64 outline-none focus:border-primary" placeholder="Search invoices..." />
+            <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light" />
+            <input className="pl-9 pr-4 py-1.5 border border-border bg-surface-muted rounded-md text-[12px] w-56 outline-none focus:border-primary font-ui" placeholder="Search invoices..." />
           </div>
-          <div className="flex gap-3">
-            <button className="px-4 py-2 border border-border-subtle text-dark font-ui-sm text-xs rounded-sm hover:bg-section-muted transition-colors cursor-pointer bg-transparent">Download Offline Tool (JSON)</button>
-            <button className="px-4 py-2 bg-primary-container text-white font-ui-sm text-xs rounded-sm hover:bg-primary transition-colors cursor-pointer border-none">Import Excel</button>
+          <div className="flex gap-2">
+            <button className="px-3 py-1.5 border border-border text-dark font-ui text-[11px] rounded-md hover:bg-surface-muted transition-colors cursor-pointer bg-transparent">Download JSON</button>
+            <button className="px-3 py-1.5 bg-amber text-white font-ui text-[11px] rounded-md hover:bg-amber-hover transition-colors cursor-pointer border-none">Import Excel</button>
           </div>
         </div>
 
         {/* Data Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[1200px]">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
-              <tr className="bg-section-muted border-b-[0.5px] border-border-subtle">
-                {activeTable === "b2b" && (
-                  <>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Invoice #</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Date</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">GSTIN / UIN</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest border-r-[0.5px] border-border-subtle">Receiver Name</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">Taxable Value</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">IGST</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right border-r-[0.5px] border-border-subtle">CGST</th>
-                    <th className="py-3 px-6 font-ui-xs text-light uppercase tracking-widest text-right">SGST</th>
-                  </>
-                )}
-                {/* Other headers would follow similar pattern */}
-              </tr>
+              {activeTable === "b2b" && (
+                <tr className="bg-surface-muted border-b border-border">
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Invoice #</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Customer</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Date</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">Taxable Value</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">IGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">CGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">SGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right">Total</th>
+                </tr>
+              )}
+              {activeTable === "b2cLarge" && (
+                <tr className="bg-surface-muted border-b border-border">
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Invoice #</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Date</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">POS</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">Taxable Value</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">IGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">CGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right">SGST</th>
+                </tr>
+              )}
+              {activeTable === "b2cSmall" && (
+                <tr className="bg-surface-muted border-b border-border">
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Place of Supply</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">Taxable Value</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">IGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">CGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right">SGST</th>
+                </tr>
+              )}
+              {activeTable === "exports" && (
+                <tr className="bg-surface-muted border-b border-border">
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Invoice #</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Date</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Port Code</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Shipping Bill</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right">Taxable Value</th>
+                </tr>
+              )}
+              {activeTable === "cdn" && (
+                <tr className="bg-surface-muted border-b border-border">
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Note #</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Date</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">Original Inv</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest border-r border-border">GSTIN</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">Taxable Value</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">IGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right border-r border-border">CGST</th>
+                  <th className="py-2.5 px-4 font-ui text-[10px] text-light uppercase tracking-widest text-right">SGST</th>
+                </tr>
+              )}
             </thead>
-            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px] text-dark">
+            <tbody className="divide-y divide-border-subtle">
               {activeTable === "b2b" && mockData.b2bInvoices.map((inv, idx) => (
-                <tr key={idx} className="hover:bg-section-muted/30 transition-colors">
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.invoiceNumber}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.invoiceDate}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle">{inv.gstin}</td>
-                  <td className="py-4 px-6 border-r-[0.5px] border-border-subtle font-ui-sm font-medium">{inv.partyName}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle">₹ {inv.taxableValue}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-mid">{inv.igstAmount}</td>
-                  <td className="py-4 px-6 text-right border-r-[0.5px] border-border-subtle text-mid">{inv.cgstAmount}</td>
-                  <td className="py-4 px-6 text-right text-mid">{inv.sgstAmount}</td>
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.invoiceNumber}</td>
+                  <td className="py-2.5 px-4 font-ui text-[12px] text-dark border-r border-border">{inv.partyName}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-mid border-r border-border">{inv.invoiceDate}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark border-r border-border">₹ {inv.taxableValue}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.igstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.cgstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.sgstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark font-bold">₹ {inv.totalTaxAmount}</td>
+                </tr>
+              ))}
+              {activeTable === "b2cLarge" && mockData.b2cLarge.map((inv, idx) => (
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.invoiceNumber}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-mid border-r border-border">{inv.invoiceDate}</td>
+                  <td className="py-2.5 px-4 font-ui text-[12px] text-dark border-r border-border">{inv.placeOfSupply}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark border-r border-border">₹ {inv.taxableValue}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.igstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.cgstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid">{inv.sgstAmount}</td>
+                </tr>
+              ))}
+              {activeTable === "b2cSmall" && mockData.b2cSmall.map((inv, idx) => (
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-2.5 px-4 font-ui text-[12px] text-dark border-r border-border">{inv.placeOfSupply}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark border-r border-border">₹ {inv.taxableValue}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.igstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.cgstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid">{inv.sgstAmount}</td>
+                </tr>
+              ))}
+              {activeTable === "exports" && mockData.exports.map((inv, idx) => (
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.invoiceNumber}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-mid border-r border-border">{inv.invoiceDate}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.portCode}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.shippingBillNumber}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark">₹ {inv.taxableValue}</td>
+                </tr>
+              ))}
+              {activeTable === "cdn" && mockData.creditDebitNotes.map((inv, idx) => (
+                <tr key={idx} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.noteNumber}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-mid border-r border-border">{inv.noteDate}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.originalInvoiceNumber}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] text-dark border-r border-border">{inv.gstin}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-dark border-r border-border">₹ {inv.taxableValue}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.igstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid border-r border-border">{inv.cgstAmount}</td>
+                  <td className="py-2.5 px-4 font-mono text-[12px] tabular-nums text-right text-mid">{inv.sgstAmount}</td>
                 </tr>
               ))}
             </tbody>
@@ -213,9 +294,9 @@ export default function GSTR1DetailPage() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-end gap-4 no-print">
-        <button className="px-6 py-3 border border-border-subtle text-dark font-ui-sm font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent">Discard Return</button>
-        <button className="px-12 py-3 bg-primary-container text-white font-ui-sm font-bold uppercase tracking-widest hover:bg-amber-700 transition-all cursor-pointer border-none shadow-sm">File Return →</button>
+      <div className="mt-6 flex justify-end gap-3 no-print">
+        <button className="px-5 py-2.5 border border-border text-dark font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Discard Return</button>
+        <button className="px-10 py-2.5 bg-amber text-white font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none shadow-sm rounded-md">File Return →</button>
       </div>
     </div>
   );

@@ -44,8 +44,8 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
     <div className="flex flex-col gap-12 text-left">
       {/* Section Header */}
       <div>
-        <h1 className="font-display-xl text-display-xl text-on-surface mb-6">Select CoA Template</h1>
-        <p className="font-ui-lg text-ui-lg text-text-mid max-w-3xl leading-relaxed">
+        <h1 className="font-display text-display-xl text-on-surface mb-6">Select CoA Template</h1>
+        <p className="font-ui text-ui-lg text-text-mid max-w-3xl leading-relaxed">
           Choose a baseline structure tailored to your business operations. These templates are strictly aligned with standard Indian accounting practices and statutory compliance requirements.
         </p>
       </div>
@@ -56,21 +56,21 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
           <div
             key={t.id}
             onClick={() => setSelectedTemplate(t.id)}
-            className={`group border-[0.5px] border-border-subtle p-8 flex flex-col relative transition-all duration-300 cursor-pointer ${
-              selectedTemplate === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-white hover:bg-stone-50"
+            className={`group border-[0.5px] border-border p-8 flex flex-col relative transition-all duration-300 cursor-pointer ${
+              selectedTemplate === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
             }`}
           >
-            {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-primary-container"></div>}
+            {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>}
             <div className="flex justify-between items-start mb-6">
-              <Icon name={t.icon} className={`text-3xl ${selectedTemplate === t.id ? "text-primary-container" : "text-stone-300"}`} />
-              {t.recommended && <span className="font-ui-xs text-[9px] uppercase tracking-widest bg-stone-900 text-white px-2 py-0.5 rounded-sm">Recommended</span>}
+              <Icon name={t.icon} className={`text-3xl ${selectedTemplate === t.id ? "text-amber" : "text-stone-300"}`} />
+              {t.recommended && <span className="font-ui text-[11px] text-[9px] uppercase tracking-widest bg-stone-900 text-white px-2 py-0.5 rounded-md">Recommended</span>}
             </div>
-            <h3 className="font-display-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
-            <p className="font-ui-sm text-ui-sm text-text-mid leading-relaxed flex-1">
+            <h3 className="font-display text-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
+            <p className="font-ui text-[13px] text-ui-sm text-text-mid leading-relaxed flex-1">
               {t.desc}
             </p>
             {selectedTemplate === t.id && (
-              <div className="mt-6 flex items-center gap-2 text-primary font-ui-xs text-[11px] uppercase tracking-widest font-bold">
+              <div className="mt-6 flex items-center gap-2 text-primary font-ui text-[11px] text-[11px] uppercase tracking-widest font-bold">
                 <Icon name="check_circle" className="text-sm" />
                 Selection Confirmed
               </div>
@@ -79,14 +79,14 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
         ))}
       </div>
 
-      <div className="flex justify-between items-center mt-6 pt-8 border-t border-border-subtle">
-        <p className="font-ui-xs text-[11px] text-text-light uppercase tracking-wider italic">
+      <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
+        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
           You can modify, merge, or add individual ledgers after this step.
         </p>
         <button
           onClick={handleSelect}
           disabled={seedCoa.isPending}
-          className="bg-primary-container text-white font-ui-sm text-ui-sm py-3 px-8 rounded-sm hover:bg-primary transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
         >
           {seedCoa.isPending ? "Generating Ledgers..." : "Initialise Ledgers"}
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />

@@ -46,8 +46,8 @@ export default function NewAccountPage() {
             <Icon name="arrow_back" size={20} />
           </button>
           <div>
-            <h1 className="font-display-lg text-display-lg text-dark">New Ledger Account</h1>
-            <p className="font-ui-xs text-[11px] text-mid mt-0.5">
+            <h1 className="font-display text-display-lg font-semibold text-dark">New Ledger Account</h1>
+            <p className="text-[13px] text-secondary font-ui mt-1">
               Define a new account for the Chart of Accounts.
             </p>
           </div>
@@ -55,13 +55,13 @@ export default function NewAccountPage() {
         <div className="flex gap-3">
           <button
             onClick={() => router.back()}
-            className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm"
+            className="btn-secondary"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-5 py-2 bg-primary-container text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-sm shadow-sm cursor-pointer flex items-center gap-1.5"
+            className="btn-primary flex items-center gap-1.5"
           >
             Create Account <Icon name="arrow_forward" size={14} />
           </button>
@@ -69,14 +69,14 @@ export default function NewAccountPage() {
       </div>
 
       {/* Form card */}
-      <div className="bg-white border border-border-subtle rounded-sm shadow-sm">
-        <div className="h-[2px] w-full bg-primary-container" />
+      <div className="bg-surface border border-border rounded-md shadow-sm">
+        <div className="h-[2px] w-full bg-amber" />
         <form onSubmit={handleSubmit} className="p-7 space-y-7">
           {/* Account Name */}
           <div className="space-y-1.5">
-            <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Account Name *</label>
+            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Name *</label>
             <input
-              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-2.5 font-ui-sm text-[13px] text-dark focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light"
               placeholder="e.g. Accounts Receivable — Domestic"
               value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
@@ -87,9 +87,9 @@ export default function NewAccountPage() {
           {/* Code + Kind */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-1.5">
-              <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Account Code *</label>
+              <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Code *</label>
               <input
-                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors placeholder:text-light"
+                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light"
                 placeholder="10100"
                 value={form.code}
                 onChange={e => setForm(f => ({ ...f, code: e.target.value }))}
@@ -97,10 +97,10 @@ export default function NewAccountPage() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Account Kind</label>
+              <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Kind</label>
               <div className="relative">
                 <select
-                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-2.5 font-ui-sm text-[13px] text-dark appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
+                  className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                   value={form.kind}
                   onChange={e => setForm(f => ({ ...f, kind: e.target.value, subType: subTypes[e.target.value][0] }))}
                 >
@@ -115,19 +115,19 @@ export default function NewAccountPage() {
 
           {/* Sub-type cards */}
           <div className="space-y-1.5">
-            <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Detailed Classification</label>
+            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Detailed Classification</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {subTypes[form.kind].map(st => (
                 <div
                   key={st}
                   onClick={() => setForm(f => ({ ...f, subType: st }))}
-                  className={`p-3 border rounded-sm transition-all cursor-pointer text-center ${
+                  className={`p-3 border rounded-md transition-all cursor-pointer text-center ${
                     form.subType === st
-                      ? "border-primary-container bg-section-amber ring-1 ring-primary-container"
-                      : "border-border-subtle bg-white hover:bg-section-muted"
+                      ? "border-amber bg-amber-50 ring-1 ring-amber"
+                      : "border-border bg-surface hover:bg-surface-muted"
                   }`}
                 >
-                  <span className="font-ui-xs text-[10px] font-bold uppercase tracking-wider">{st}</span>
+                  <span className="font-ui text-[10px] font-bold uppercase tracking-wider">{st}</span>
                 </div>
               ))}
             </div>
@@ -135,9 +135,9 @@ export default function NewAccountPage() {
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Description (Optional)</label>
+            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Description (Optional)</label>
             <textarea
-              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-2.5 font-ui-sm text-[13px] text-dark focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors resize-none placeholder:text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none placeholder:text-light"
               rows={3}
               placeholder="Enter context or specific use-case for this ledger…"
               value={form.description}

@@ -73,7 +73,7 @@ export function MobileNav() {
                 href={tab.href}
                 className={cn(
                   'flex flex-col items-center justify-center gap-0.5 flex-1 h-full no-underline transition-colors',
-                  isActive ? 'text-primary-container' : 'text-mid'
+                  isActive ? 'text-amber' : 'text-mid'
                 )}
               >
                 <Icon name={tab.icon} className="text-2xl" />
@@ -97,11 +97,11 @@ export function MobileNav() {
           <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[70vh] overflow-y-auto shadow-lg">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle sticky top-0 bg-white z-10">
-              <span className="font-ui-sm font-bold text-dark">Navigation</span>
+              <span className="font-ui font-bold text-dark">Navigation</span>
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="p-1 rounded hover:bg-stone-100 transition-colors border-none bg-transparent cursor-pointer"
+                className="p-1 rounded hover:bg-surface-muted transition-colors border-none bg-transparent cursor-pointer"
               >
                 <Icon name="close" className="text-2xl" />
               </button>
@@ -123,8 +123,8 @@ export function MobileNav() {
                           className={cn(
                             'flex items-center gap-3 px-3 py-2.5 rounded-[4px] text-sm transition-colors no-underline',
                             isActive
-                              ? 'bg-primary-container text-white font-semibold'
-                              : 'text-mid hover:bg-stone-100'
+                              ? 'bg-amber text-white font-semibold'
+                              : 'text-mid hover:bg-surface-muted'
                           )}
                         >
                           <Icon name={item.icon} className="text-lg" />

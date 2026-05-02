@@ -14,7 +14,7 @@ export default function ITRGSTR3BPage() {
   if (!itrReturn) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">ITR return not found</p>
+        <p className="text-light">ITR return not found</p>
         <Link href={`/itr/returns/${financialYear}/${returnId}`} className="text-blue-600 hover:underline mt-2 inline-block">
           Back to Return
         </Link>
@@ -26,35 +26,35 @@ export default function ITRGSTR3BPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <Link href={`/itr/returns/${financialYear}/${returnId}`} className="text-sm text-gray-500 hover:underline">
+          <Link href={`/itr/returns/${financialYear}/${returnId}`} className="text-sm text-light hover:underline">
             ← Back to Return
           </Link>
-          <h1 className="text-2xl font-bold mt-1">GSTR-3B Summary (Audit Snapshot)</h1>
-          <p className="text-sm text-gray-500">{itrReturn.returnType.toUpperCase()} - {itrReturn.assessmentYear}</p>
+          <h1 className="font-display text-display-lg font-semibold mt-1">GSTR-3B Summary (Audit Snapshot)</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">{itrReturn.returnType.toUpperCase()} - {itrReturn.assessmentYear}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-surface rounded-lg shadow p-6">
         <h2 className="text-lg font-semibold mb-4">GST Summary for ITR Reconciliation</h2>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-light mb-6">
           This page shows GSTR-3B summary data for reconciliation with ITR income figures.
         </p>
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gray-50 p-4 rounded">
-              <p className="text-sm text-gray-500 mb-1">Total Turnover (GSTR-3B)</p>
-              <p className="text-xl font-bold text-gray-900">₹0</p>
+            <div className="bg-surface-muted p-4 rounded">
+              <p className="text-sm text-light mb-1">Total Turnover (GSTR-3B)</p>
+              <p className="text-xl font-bold text-dark">₹0</p>
               <p className="text-xs text-gray-400 mt-1">From Table 3.1(a)</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded">
-              <p className="text-sm text-gray-500 mb-1">Total Tax Liability</p>
-              <p className="text-xl font-bold text-gray-900">₹0</p>
+            <div className="bg-surface-muted p-4 rounded">
+              <p className="text-sm text-light mb-1">Total Tax Liability</p>
+              <p className="text-xl font-bold text-dark">₹0</p>
               <p className="text-xs text-gray-400 mt-1">From Table 3.1</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded">
-              <p className="text-sm text-gray-500 mb-1">Total ITC Claimed</p>
-              <p className="text-xl font-bold text-gray-900">₹0</p>
+            <div className="bg-surface-muted p-4 rounded">
+              <p className="text-sm text-light mb-1">Total ITC Claimed</p>
+              <p className="text-xl font-bold text-dark">₹0</p>
               <p className="text-xs text-gray-400 mt-1">From Table 4</p>
             </div>
           </div>

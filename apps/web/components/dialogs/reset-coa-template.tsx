@@ -28,9 +28,9 @@ export function ResetCoaDialog({
             <Icon name="warning" className="text-4xl" />
           </div>
           
-          <DialogTitle className="font-display-lg text-lg font-bold text-dark mb-3">Reset to Template?</DialogTitle>
+          <DialogTitle className="font-display text-lg font-bold text-dark mb-3">Reset to Template?</DialogTitle>
           
-          <p className="font-ui-sm text-sm text-mid leading-relaxed mb-8">
+          <p className="font-ui text-sm text-mid leading-relaxed mb-8">
             Are you sure you want to reset to the template? All your customizations to the Chart of Accounts will be lost.
           </p>
           

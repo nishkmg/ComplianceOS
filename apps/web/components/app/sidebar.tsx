@@ -201,7 +201,7 @@ export function AppSidebar() {
                           'w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-left',
                           'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group',
                           groupActive
-                            ? 'border-primary-container text-dark font-semibold'
+                            ? 'border-amber text-dark font-semibold'
                             : 'border-transparent text-mid hover:text-dark hover:bg-lighter/40',
                         ].join(' ')}
                         aria-expanded={isOpen}
@@ -209,7 +209,7 @@ export function AppSidebar() {
                         <Icon
                           name={item.icon}
                           size={16}
-                          className={groupActive ? 'text-primary-container' : 'text-mid group-hover:text-dark'}
+                          className={groupActive ? 'text-amber' : 'text-mid group-hover:text-dark'}
                         />
                         <span className="flex-1 text-[13px]">{item.label}</span>
                         <Icon
@@ -231,7 +231,7 @@ export function AppSidebar() {
                                 className={[
                                   'block px-2 py-1.5 rounded-[4px] text-[12px] transition-colors no-underline',
                                   childActive
-                                    ? 'text-primary-container font-semibold bg-section-amber'
+                                    ? 'text-amber font-semibold bg-section-amber'
                                     : 'text-mid hover:text-dark hover:bg-lighter/40',
                                 ].join(' ')}
                               >
@@ -255,7 +255,7 @@ export function AppSidebar() {
                       'flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px]',
                       'border-l-[3px] transition-colors no-underline group',
                       active
-                        ? 'border-primary-container bg-white text-dark font-semibold shadow-sm dark:bg-slate-800 dark:text-white'
+                        ? 'border-amber bg-white text-dark font-semibold shadow-sm dark:bg-zinc-800 dark:text-white'
                         : 'border-transparent text-mid hover:text-dark hover:bg-lighter/40',
                     ].join(' ')}
                   >
@@ -263,7 +263,7 @@ export function AppSidebar() {
                       <Icon
                         name={item.icon}
                         size={16}
-                        className={active ? 'text-primary-container' : 'text-mid group-hover:text-dark'}
+                        className={active ? 'text-amber' : 'text-mid group-hover:text-dark'}
                       />
                     )}
                     <span>{item.label}</span>
@@ -328,7 +328,7 @@ export function AppSidebar() {
                     'w-full text-left px-4 py-3 transition-colors border-none bg-transparent cursor-pointer',
                     'border-l-[3px]',
                     selected
-                      ? 'border-primary-container bg-section-amber'
+                      ? 'border-amber bg-section-amber'
                       : 'border-transparent hover:bg-section-amber',
                   ].join(' ')}
                 >
@@ -346,7 +346,7 @@ export function AppSidebar() {
                         {fy.status}
                       </span>
                       {selected && (
-                        <Icon name="check" size={14} className="text-primary-container" />
+                        <Icon name="check" size={14} className="text-amber" />
                       )}
                     </div>
                   </div>

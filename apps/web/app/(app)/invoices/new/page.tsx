@@ -70,18 +70,18 @@ export default function NewInvoicePage() {
             <Icon name="arrow_back" size={20} />
           </button>
           <div>
-            <h1 className="font-display-lg text-display-lg text-dark">New Invoice</h1>
-            <p className="font-ui-xs text-[11px] text-mid mt-0.5">INV-2024-0043</p>
+            <h1 className="font-display text-display-lg font-semibold text-dark">New Invoice</h1>
+            <p className="font-ui text-[11px] text-secondary mt-0.5">INV-2024-0043</p>
           </div>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border-subtle text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm">
+          <button className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
             Discard
           </button>
-          <button className="px-4 py-2 border border-border-subtle text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-section-muted transition-colors cursor-pointer bg-transparent rounded-sm">
+          <button className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
             Save Draft
           </button>
-          <button className="px-5 py-2 bg-primary-container text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-sm shadow-sm cursor-pointer flex items-center gap-1.5">
+          <button className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
             Finalize & Send <Icon name="arrow_forward" size={14} />
           </button>
         </div>
@@ -91,34 +91,34 @@ export default function NewInvoicePage() {
         {/* Left: form */}
         <div className="lg:col-span-5 space-y-6">
           {/* Client details */}
-          <div className="bg-white border border-border-subtle p-6 rounded-sm shadow-sm">
-            <div className="h-[2px] w-full bg-primary-container -mt-6 mb-6" />
-            <h3 className="font-ui-xs text-[10px] font-bold text-light uppercase tracking-widest pb-2 mb-5 border-b border-border-subtle">
+          <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
+            <div className="h-[2px] w-full bg-amber -mt-6 mb-6" />
+            <h3 className="font-ui text-[10px] font-bold text-light uppercase tracking-widest pb-2 mb-5 border-b border-border">
               Client Details
             </h3>
             <div className="space-y-5">
               <div className="space-y-1">
-                <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Billed To</label>
-                <select className="w-full bg-white border border-border-subtle rounded-sm px-3 py-2.5 text-[13px] font-ui-sm outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Billed To</label>
+                <select className="w-full bg-surface border border-border rounded-md px-3 py-2.5 text-[13px] font-ui text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors">
                   <option>{customer.name}</option>
                   <option>Sharma Associates</option>
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Date</label>
+                  <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Date</label>
                   <input
                     type="date"
-                    className="w-full bg-white border border-border-subtle rounded-sm px-3 py-2.5 font-mono text-[13px] outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
+                    className="w-full bg-surface border border-border rounded-md px-3 py-2.5 font-mono text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                     value={date}
                     onChange={e => setDate(e.target.value)}
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold">Due Date</label>
+                  <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Due Date</label>
                   <input
                     type="date"
-                    className="w-full bg-white border border-border-subtle rounded-sm px-3 py-2.5 font-mono text-[13px] outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
+                    className="w-full bg-surface border border-border rounded-md px-3 py-2.5 font-mono text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                     value={dueDate}
                     onChange={e => setDueDate(e.target.value)}
                   />
@@ -128,12 +128,12 @@ export default function NewInvoicePage() {
           </div>
 
           {/* Line items */}
-          <div className="bg-white border border-border-subtle p-6 rounded-sm shadow-sm">
-            <div className="flex items-center justify-between pb-2 mb-5 border-b border-border-subtle">
-              <h3 className="font-ui-xs text-[10px] font-bold text-light uppercase tracking-widest">Line Items</h3>
+          <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
+            <div className="flex items-center justify-between pb-2 mb-5 border-b border-border">
+              <h3 className="font-ui text-[10px] font-bold text-light uppercase tracking-widest">Line Items</h3>
               <button
                 onClick={addLine}
-                className="text-primary-container hover:text-amber-hover font-bold text-[11px] flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"
+                className="text-amber hover:text-amber-hover font-bold text-[11px] flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"
               >
                 <Icon name="add" size={14} /> Add Item
               </button>
@@ -141,43 +141,43 @@ export default function NewInvoicePage() {
 
             <div className="space-y-4">
               {lineItems.map(item => (
-                <div key={item.id} className="p-4 border border-border-subtle bg-section-muted relative group rounded-sm">
+                <div key={item.id} className="p-4 border border-border bg-surface-muted relative group rounded-md">
                   <button
                     onClick={() => removeLine(item.id)}
-                    className="absolute -right-2 -top-2 bg-white border border-border-subtle rounded-full w-6 h-6 flex items-center justify-center text-light hover:text-danger hover:border-danger opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                    className="absolute -right-2 -top-2 bg-surface border border-border rounded-full w-6 h-6 flex items-center justify-center text-light hover:text-danger hover:border-danger opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
                     aria-label="Remove item"
                   >
                     <Icon name="close" size={12} />
                   </button>
                   <input
-                    className="w-full bg-transparent border-b border-border-subtle border-dashed pb-1 mb-3 font-ui-sm text-[13px] outline-none focus:border-primary-container transition-colors"
+                    className="w-full bg-transparent border-b border-border border-dashed pb-1 mb-3 font-ui text-[13px] outline-none focus:border-amber transition-colors"
                     placeholder="Item description"
                     value={item.description}
                     onChange={e => updateLine(item.id, "description", e.target.value)}
                   />
                   <div className="grid grid-cols-4 gap-3">
                     <div className="space-y-1">
-                      <label className="font-ui-xs text-[9px] text-light uppercase font-bold">Qty</label>
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Qty</label>
                       <input
                         type="number"
-                        className="w-full bg-transparent border-b border-border-subtle font-mono text-[13px] outline-none focus:border-primary-container transition-colors"
+                        className="w-full bg-transparent border-b border-border font-mono text-[13px] outline-none focus:border-amber transition-colors"
                         value={item.qty}
                         onChange={e => updateLine(item.id, "qty", parseFloat(e.target.value) || 0)}
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="font-ui-xs text-[9px] text-light uppercase font-bold">Rate</label>
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Rate</label>
                       <input
                         type="number"
-                        className="w-full bg-transparent border-b border-border-subtle font-mono text-[13px] outline-none focus:border-primary-container transition-colors"
+                        className="w-full bg-transparent border-b border-border font-mono text-[13px] outline-none focus:border-amber transition-colors"
                         value={item.rate}
                         onChange={e => updateLine(item.id, "rate", parseFloat(e.target.value) || 0)}
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="font-ui-xs text-[9px] text-light uppercase font-bold">GST</label>
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">GST</label>
                       <select
-                        className="w-full bg-transparent border-b border-border-subtle font-ui-sm text-[13px] outline-none focus:border-primary-container transition-colors"
+                        className="w-full bg-transparent border-b border-border font-ui text-[13px] outline-none focus:border-amber transition-colors"
                         value={item.gstRate}
                         onChange={e => updateLine(item.id, "gstRate", parseInt(e.target.value))}
                       >
@@ -185,7 +185,7 @@ export default function NewInvoicePage() {
                       </select>
                     </div>
                     <div className="space-y-1 text-right">
-                      <label className="font-ui-xs text-[9px] text-light uppercase font-bold">Amount</label>
+                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Amount</label>
                       <p className="font-mono text-[13px] pt-1 tabular-nums">{formatIndianNumber(item.qty * item.rate)}</p>
                     </div>
                   </div>
@@ -197,9 +197,9 @@ export default function NewInvoicePage() {
 
         {/* Right: live preview */}
         <div className="hidden lg:block lg:col-span-7">
-          <div className="sticky top-24 bg-white p-10 shadow-screenshot border border-border-subtle min-h-[842px] flex flex-col text-[13px] font-ui-sm text-dark">
+          <div className="sticky top-24 bg-surface p-10 shadow-screenshot border border-border min-h-[842px] flex flex-col text-[13px] font-ui text-[13px] text-dark">
             {/* Preview header */}
-            <header className="flex justify-between items-start border-b border-border-subtle pb-8 mb-8">
+            <header className="flex justify-between items-start border-b border-border pb-8 mb-8">
               <div>
                 <p className="font-display text-2xl font-bold tracking-tight">ComplianceOS</p>
                 <p className="text-mid text-[11px] mt-2 leading-relaxed">
@@ -221,7 +221,7 @@ export default function NewInvoicePage() {
             {/* Bill to */}
             <section className="mb-10">
               <p className="text-[10px] text-amber-text uppercase font-bold tracking-widest mb-2">Billed To</p>
-              <h4 className="font-ui-sm text-[15px] font-bold">{customer.name}</h4>
+              <h4 className="font-ui text-[13px] text-[15px] font-bold">{customer.name}</h4>
               <p className="text-mid text-sm mt-1 max-w-xs leading-relaxed">{customer.address}</p>
               <p className="text-mid text-sm mt-2 font-bold">GSTIN: {customer.gstin}</p>
             </section>
@@ -229,10 +229,10 @@ export default function NewInvoicePage() {
             {/* Items table */}
             <table className="w-full text-left border-collapse mb-8">
               <thead>
-                <tr className="border-b border-border-subtle">
-                  <th className="py-3 font-ui-xs text-[10px] text-light uppercase font-bold w-1/2">Description</th>
-                  <th className="py-3 font-ui-xs text-[10px] text-light uppercase font-bold text-right">Qty</th>
-                  <th className="py-3 font-ui-xs text-[10px] text-light uppercase font-bold text-right">Amount (₹)</th>
+                <tr className="border-b border-border">
+                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold w-1/2">Description</th>
+                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold text-right">Qty</th>
+                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold text-right">Amount (₹)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-subtle/50">
@@ -250,7 +250,7 @@ export default function NewInvoicePage() {
             </table>
 
             {/* Totals */}
-            <div className="flex justify-end mt-auto pt-8 border-t border-border-subtle">
+            <div className="flex justify-end mt-auto pt-8 border-t border-border">
               <div className="w-1/2 space-y-2">
                 <div className="flex justify-between text-mid text-sm">
                   <span>Subtotal</span>
@@ -260,9 +260,9 @@ export default function NewInvoicePage() {
                   <span>GST Amount</span>
                   <span className="font-mono tabular-nums">₹ {formatIndianNumber(totals.tax)}</span>
                 </div>
-                <div className="flex justify-between border-t border-border-subtle pt-3 font-bold text-lg">
+                <div className="flex justify-between border-t border-border pt-3 font-bold text-lg">
                   <span className="uppercase text-xs tracking-widest pt-1">Total</span>
-                  <span className="font-mono text-primary-container tabular-nums">₹ {formatIndianNumber(totals.total)}</span>
+                  <span className="font-mono text-amber tabular-nums">₹ {formatIndianNumber(totals.total)}</span>
                 </div>
               </div>
             </div>

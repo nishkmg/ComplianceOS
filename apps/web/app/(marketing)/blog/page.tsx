@@ -27,14 +27,14 @@ export default function BlogIndexPage() {
               <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800" alt="" />
             </div>
             <div className="flex flex-col justify-center p-12 text-left">
-              <span className="text-ui-xs font-ui-xs text-amber-text uppercase tracking-widest mb-4">{featured.category}</span>
+              <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4">{featured.category}</span>
               <Link href={`/blog/${featured.slug}`} className="no-underline group">
-                <h1 className="font-display-xl text-display-xl text-dark mb-4 group-hover:text-primary transition-colors">{featured.title}</h1>
+                <h1 className="font-display text-marketing-xl text-dark mb-4 group-hover:text-primary transition-colors">{featured.title}</h1>
               </Link>
-              <p className="font-ui-md text-ui-md text-mid leading-relaxed mb-6">{featured.excerpt}</p>
+              <p className="font-ui text-ui-md text-secondary leading-relaxed mb-6">{featured.excerpt}</p>
               <div className="flex items-center justify-between">
                 <span className="text-ui-xs text-light">{featured.author} · {featured.date}</span>
-                <Link href={`/blog/${featured.slug}`} className="text-ui-xs text-amber-text font-bold uppercase tracking-wider hover:underline no-underline">Read →</Link>
+                <Link href={`/blog/${featured.slug}`} className="text-ui-xs text-amber font-bold uppercase tracking-wider hover:underline no-underline">Read →</Link>
               </div>
             </div>
           </div>
@@ -44,12 +44,12 @@ export default function BlogIndexPage() {
         <section className="border-b-[0.5px] border-border-subtle pb-space-48 mb-space-48">
           <div className="bg-section-muted p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-left">
-              <h3 className="font-display-md text-display-md text-dark font-normal">Stay ahead of compliance changes.</h3>
-              <p className="text-ui-sm text-ui-sm text-mid mt-1">Get our weekly newsletter straight to your inbox.</p>
+              <h3 className="font-display text-marketing-xl text-dark font-normal">Stay ahead of compliance changes.</h3>
+              <p className="text-ui-sm text-secondary mt-1">Get our weekly newsletter straight to your inbox.</p>
             </div>
             <div className="flex gap-2">
-              <input className="border border-border-subtle bg-white px-4 py-3 font-ui-sm text-ui-sm w-full md:w-80 focus:outline-none focus:border-primary" placeholder="professional@firm.com" type="email" />
-              <button className="bg-on-surface text-white px-8 py-3 font-ui-xs uppercase tracking-widest whitespace-nowrap hover:bg-primary transition-colors cursor-pointer border-none">Subscribe</button>
+              <input className="border border-border-subtle bg-white px-4 py-3 font-ui text-ui-sm w-full md:w-80 focus:outline-none focus:border-primary" placeholder="professional@firm.com" type="email" />
+              <button className="bg-on-surface text-white px-8 py-3 font-ui uppercase tracking-widest whitespace-nowrap hover:bg-amber-hover transition-colors cursor-pointer border-none">Subscribe</button>
             </div>
           </div>
         </section>
@@ -57,8 +57,8 @@ export default function BlogIndexPage() {
         {/* Blog Grid */}
         <section className="pb-space-128">
           <div className="flex justify-between items-end mb-12 border-b-2 border-border-subtle pb-4">
-            <h2 className="font-display-xl">Latest Despatches</h2>
-            <div className="hidden md:flex gap-6 font-ui-xs text-light uppercase tracking-widest">
+            <h2 className="font-display text-marketing-xl">Latest Despatches</h2>
+            <div className="hidden md:flex gap-6 font-ui text-light uppercase tracking-widest">
               <button className="text-dark font-bold cursor-pointer border-none bg-transparent">All</button>
               <button className="hover:text-dark cursor-pointer border-none bg-transparent">Taxation</button>
               <button className="hover:text-dark cursor-pointer border-none bg-transparent">Audit</button>
@@ -72,11 +72,11 @@ export default function BlogIndexPage() {
                 <div className="aspect-[16/10] overflow-hidden mb-6 bg-white border border-border-subtle">
                   <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
                 </div>
-                <span className="text-ui-xs font-ui-xs text-amber-text uppercase tracking-widest">{post.category}</span>
+                <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">{post.category}</span>
                 <Link href={`/blog/${post.slug}`} className="no-underline">
-                  <h3 className="font-display-lg text-display-lg text-dark mt-2 mb-3 group-hover:text-primary transition-colors">{post.title}</h3>
+                  <h3 className="font-display text-display-lg text-dark mt-2 mb-3 group-hover:text-primary transition-colors">{post.title}</h3>
                 </Link>
-                <p className="font-ui-sm text-ui-sm text-mid mb-4 leading-relaxed">{post.excerpt}</p>
+                <p className="font-ui text-ui-sm text-secondary mb-4 leading-relaxed">{post.excerpt}</p>
                 <span className="text-ui-xs text-light">{post.author} · {post.date}</span>
               </article>
             ))}

@@ -33,10 +33,10 @@ export function FormField({
     <div className={cn('space-y-1.5', className)}>
       <label
         htmlFor={fieldId}
-        className="block font-ui-xs text-[10px] text-mid uppercase tracking-widest font-bold"
+        className="block font-ui text-sm text-dark font-medium"
       >
         {label}
-        {required && <span className="text-danger ml-0.5" aria-hidden="true">*</span>}
+        {required && <span className="text-danger ml-1" aria-hidden="true">*</span>}
       </label>
 
       <div className={cn(
@@ -47,7 +47,7 @@ export function FormField({
       </div>
 
       {helpText && !error && (
-        <p id={helpId} className="font-ui-xs text-[11px] text-mid">
+        <p id={helpId} className="font-ui text-[11px] text-mid">
           {helpText}
         </p>
       )}
@@ -56,7 +56,7 @@ export function FormField({
         <p
           id={errorId}
           role="alert"
-          className="font-ui-xs text-[11px] text-danger flex items-center gap-1"
+          className="font-ui text-[11px] text-danger flex items-center gap-1"
         >
           <Icon name="error" className="text-[14px]" />
           {error}

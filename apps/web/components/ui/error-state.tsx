@@ -41,13 +41,13 @@ export function ErrorState({
       </div>
       
       {/* Error title */}
-      <h3 className="font-display text-display-md text-dark mb-2">
+      <h3 className="font-display text-xl font-semibold text-dark mb-2">
         {title}
       </h3>
-      
+
       {/* Error description */}
       {description && (
-        <p className="font-ui text-ui-md text-light max-w-md mb-6">
+        <p className="font-ui text-sm text-light max-w-md mb-6">
           {description}
         </p>
       )}
@@ -87,7 +87,7 @@ export function FieldError({
   return (
     <p
       id={id}
-      className="font-ui text-ui-sm text-danger mt-1"
+      className="font-ui text-xs text-danger mt-1"
       role="alert"
     >
       {error}
@@ -115,7 +115,7 @@ export function FormErrorSummary({
       role="alert"
       aria-live="assertive"
     >
-      <h4 className="font-ui text-ui-md font-medium text-danger mb-2">
+      <h4 className="font-ui text-sm font-medium text-danger mb-2">
         Please fix {errors.length} error{errors.length > 1 ? 's' : ''} before continuing:
       </h4>
       <ul className="space-y-1">
@@ -123,7 +123,7 @@ export function FormErrorSummary({
           <li key={index}>
             <button
               type="button"
-              className="font-ui text-ui-sm text-danger hover:underline text-left"
+              className="font-ui text-xs text-danger hover:underline text-left"
               onClick={() => onFieldClick?.(error.field)}
             >
               • {error.message}
@@ -142,7 +142,7 @@ export function FormErrorSummary({
  */
 export function OfflineBanner() {
   return (
-    <div className="bg-amber text-white text-ui-sm font-ui py-2 px-4 text-center">
+    <div className="bg-amber text-white text-sm font-ui py-2 px-4 text-center">
       You appear to be offline. Changes will not be saved until you reconnect.
     </div>
   );
@@ -168,11 +168,11 @@ export function NotFound({
         </svg>
       </div>
       
-      <h1 className="font-display text-display-lg text-dark mb-2">
+      <h1 className="font-display text-2xl font-semibold text-dark mb-2">
         {resource} Not Found
       </h1>
-      
-      <p className="font-ui text-ui-md text-light mb-6">
+
+      <p className="font-ui text-sm text-light mb-6">
         The {resource.toLowerCase()} you're looking for doesn't exist or has been moved.
       </p>
       
@@ -207,22 +207,22 @@ export function PermissionDenied({
         </svg>
       </div>
       
-      <h1 className="font-display text-display-lg text-dark mb-2">
+      <h1 className="font-display text-2xl font-semibold text-dark mb-2">
         Access Denied
       </h1>
-      
-      <p className="font-ui text-ui-md text-light mb-2">
+
+      <p className="font-ui text-sm text-light mb-2">
         {resource} requires additional permissions.
       </p>
       
       {reason && (
-        <p className="font-ui text-ui-sm text-light mb-6 max-w-md">
+        <p className="font-ui text-xs text-light mb-6 max-w-md">
           {reason}
         </p>
       )}
       
       {adminEmail && (
-        <p className="font-ui text-ui-sm text-mid">
+        <p className="font-ui text-xs text-mid">
           Contact your administrator at{' '}
           <a href={`mailto:${adminEmail}`} className="text-amber hover:underline">
             {adminEmail}

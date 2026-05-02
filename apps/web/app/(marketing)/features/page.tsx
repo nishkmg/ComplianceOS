@@ -53,11 +53,11 @@ export default function FeaturesPage() {
       <main className="flex flex-col items-center pt-16">
         {/* Hero Section */}
         <section className="w-full max-w-5xl text-center pt-space-128 pb-space-96 px-gutter-desktop">
-          <h2 className="font-ui-xs text-amber-text uppercase tracking-[0.2em] mb-6 inline-block border-b border-amber-text pb-1">Platform Architecture</h2>
+          <h2 className="font-ui text-amber uppercase tracking-[0.2em] mb-6 inline-block border-b border-amber pb-1">Platform Architecture</h2>
           <h1 className="font-marketing-hero text-marketing-hero text-dark mx-auto max-w-4xl">
             Every module your accountant wanted. Built together, not bolted on.
           </h1>
-          <p className="font-ui-lg text-ui-lg text-mid mt-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="font-ui text-ui-lg text-secondary mt-8 max-w-2xl mx-auto leading-relaxed">
             A unified ledger system engineered for strict adherence to Indian compliance standards, eliminating reconciliation errors before they occur.
           </p>
         </section>
@@ -67,12 +67,12 @@ export default function FeaturesPage() {
           {modules.map((m) => (
             <article key={m.name} className={`flex flex-col items-center gap-gutter-wide ${m.reverse ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
               <div className={`flex-1 space-y-6 ${m.reverse ? 'md:pl-12' : 'md:pr-12'} text-left`}>
-                <div className="font-ui-xs text-amber-text uppercase tracking-widest">{m.id}</div>
-                <h3 className="font-display-xl text-display-xl text-dark">{m.name}</h3>
-                <p className="font-ui-md text-ui-md text-mid leading-relaxed">
+                <div className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">{m.id}</div>
+                <h3 className="font-display text-marketing-xl text-dark">{m.name}</h3>
+                <p className="font-ui text-ui-md text-secondary leading-relaxed">
                   {m.desc}
                 </p>
-                <ul className="space-y-3 font-mono-md text-mono-md text-dark-variant pt-4 list-none p-0">
+                <ul className="space-y-3 font-mono text-mono-md text-secondary pt-4 list-none p-0">
                   {m.bullets.map((b) => (
                     <li key={b} className="flex items-start gap-3">
                       <Icon name="check_circle" className="text-primary text-lg mt-0.5" />
@@ -81,7 +81,7 @@ export default function FeaturesPage() {
                   ))}
                 </ul>
                 <div className="pt-6">
-                  <Link href={m.href} className="group inline-flex items-center gap-2 font-ui-sm text-ui-sm text-amber-text font-medium hover:text-primary transition-colors no-underline">
+                  <Link href={m.href} className="group inline-flex items-center gap-2 font-ui text-ui-sm text-amber font-medium hover:text-primary transition-colors no-underline">
                     Explore module 
                     <Icon name="arrow_forward" className="text-sm transform group-hover:translate-x-1 transition-transform" />
                   </Link>

@@ -22,25 +22,25 @@ export function MarketingNav() {
         </Link>
         
         <div className="hidden md:flex items-center space-x-10">
-          <Link href="/features" className={`font-medium transition-colors duration-200 no-underline ${pathname === '/features' ? 'text-dark border-b-2 border-primary-container pb-1' : 'text-mid hover:text-primary-container'}`}>
+          <Link href="/features" className={`font-ui text-sm font-medium transition-colors duration-200 no-underline ${pathname === '/features' ? 'text-dark border-b-2 border-amber pb-1' : 'text-mid hover:text-amber'}`} aria-current={pathname === '/features' ? 'page' : undefined}>
             Features
           </Link>
-          <Link href="/pricing" className={`font-medium transition-colors duration-200 no-underline ${pathname === '/pricing' ? 'text-dark border-b-2 border-primary-container pb-1' : 'text-mid hover:text-primary-container'}`}>
+          <Link href="/pricing" className={`font-ui text-sm font-medium transition-colors duration-200 no-underline ${pathname === '/pricing' ? 'text-dark border-b-2 border-amber pb-1' : 'text-mid hover:text-amber'}`} aria-current={pathname === '/pricing' ? 'page' : undefined}>
             Pricing
           </Link>
-          <Link href="/about" className={`font-medium transition-colors duration-200 no-underline ${pathname === '/about' ? 'text-dark border-b-2 border-primary-container pb-1' : 'text-mid hover:text-primary-container'}`}>
+          <Link href="/about" className={`font-ui text-sm font-medium transition-colors duration-200 no-underline ${pathname === '/about' ? 'text-dark border-b-2 border-amber pb-1' : 'text-mid hover:text-amber'}`} aria-current={pathname === '/about' ? 'page' : undefined}>
             About
           </Link>
-          <Link href="/blog" className={`font-medium transition-colors duration-200 no-underline ${pathname === '/blog' ? 'text-dark border-b-2 border-primary-container pb-1' : 'text-mid hover:text-primary-container'}`}>
+          <Link href="/blog" className={`font-ui text-sm font-medium transition-colors duration-200 no-underline ${pathname === '/blog' ? 'text-dark border-b-2 border-amber pb-1' : 'text-mid hover:text-amber'}`} aria-current={pathname === '/blog' ? 'page' : undefined}>
             Blog
           </Link>
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-mid dark:text-light font-medium hover:text-primary-container transition-colors duration-200 no-underline hidden md:block">
+          <Link href="/login" className="text-mid dark:text-light font-medium hover:text-amber transition-colors duration-200 no-underline hidden md:block">
             Log In
           </Link>
-          <Link href="/signup" className="bg-primary-container text-white px-6 py-2 rounded-none font-bold uppercase tracking-widest hover:bg-primary transition-transform active:scale-95 text-sm no-underline inline-block">
+          <Link href="/signup" className="bg-amber text-white px-6 py-2 rounded-none font-bold uppercase tracking-widest hover:bg-amber-hover transition-transform active:scale-95 text-sm no-underline inline-block">
             Start Free
           </Link>
         </div>
