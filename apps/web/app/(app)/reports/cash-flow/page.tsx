@@ -9,45 +9,87 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const sections = [
-  {
-    title: "A. Cash Flow from Operating Activities",
-    items: [
-      { label: "Profit Before Tax",                    amount: 2146000 },
-      { label: "Adjustments for Depreciation",          amount: 248000 },
-      { label: "Interest Income",                       amount: -24600 },
-      { label: "Working Capital Changes",               amount: -452000 },
-    ],
-    total: 1917400,
-  },
-  {
-    title: "B. Cash Flow from Investing Activities",
-    items: [
-      { label: "Purchase of Property, Plant & Equipment", amount: -450000 },
-      { label: "Proceeds from Sale of Investments",     amount: 125000 },
-      { label: "Interest Received",                     amount: 24600 },
-    ],
-    total: -300400,
-  },
-  {
-    title: "C. Cash Flow from Financing Activities",
-    items: [
-      { label: "Repayment of Long-term Borrowings",     amount: -250000 },
-      { label: "Interest Paid",                         amount: -18500 },
-      { label: "Dividends Paid",                        amount: -100000 },
-    ],
-    total: -368500,
-  },
-];
+interface CfItem { label: string; amount: number }
+interface CfSection { title: string; items: CfItem[]; total: number }
 
-const netChange = sections.reduce((s, sec) => s + sec.total, 0);
-const openingCash = 4876390;
-const closingCash = openingCash + netChange;
+const cfDataByFy: Record<string, { sections: CfSection[]; openingCash: number }> = {
+  '2026-27': {
+    sections: [
+      {
+        title: "A. Cash Flow from Operating Activities",
+        items: [
+          { label: "Profit Before Tax",                    amount: 2146000 },
+          { label: "Adjustments for Depreciation",          amount: 248000 },
+          { label: "Interest Income",                       amount: -24600 },
+          { label: "Working Capital Changes",               amount: -452000 },
+        ],
+        total: 1917400,
+      },
+      {
+        title: "B. Cash Flow from Investing Activities",
+        items: [
+          { label: "Purchase of Property, Plant & Equipment", amount: -450000 },
+          { label: "Proceeds from Sale of Investments",     amount: 125000 },
+          { label: "Interest Received",                     amount: 24600 },
+        ],
+        total: -300400,
+      },
+      {
+        title: "C. Cash Flow from Financing Activities",
+        items: [
+          { label: "Repayment of Long-term Borrowings",     amount: -250000 },
+          { label: "Interest Paid",                         amount: -18500 },
+          { label: "Dividends Paid",                        amount: -100000 },
+        ],
+        total: -368500,
+      },
+    ],
+    openingCash: 4876390,
+  },
+  '2025-26': {
+    sections: [
+      {
+        title: "A. Cash Flow from Operating Activities",
+        items: [
+          { label: "Profit Before Tax",                    amount: 1683000 },
+          { label: "Adjustments for Depreciation",          amount: 220000 },
+          { label: "Interest Income",                       amount: -18200 },
+          { label: "Working Capital Changes",               amount: -380000 },
+        ],
+        total: 1483800,
+      },
+      {
+        title: "B. Cash Flow from Investing Activities",
+        items: [
+          { label: "Purchase of Property, Plant & Equipment", amount: -350000 },
+          { label: "Proceeds from Sale of Investments",     amount: 98000 },
+          { label: "Interest Received",                     amount: 18200 },
+        ],
+        total: -233800,
+      },
+      {
+        title: "C. Cash Flow from Financing Activities",
+        items: [
+          { label: "Repayment of Long-term Borrowings",     amount: -200000 },
+          { label: "Interest Paid",                         amount: -15000 },
+          { label: "Dividends Paid",                        amount: -80000 },
+        ],
+        total: -295000,
+      },
+    ],
+    openingCash: 4120000,
+  },
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function CashFlowPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
+  const fyCf = cfDataByFy[fiscalYear] ?? cfDataByFy['2026-27'];
+  const sections = fyCf.sections;
+  const netChange = sections.reduce((s, sec) => s + sec.total, 0);
+  const openingCash = fyCf.openingCash;
+  const closingCash = openingCash + netChange;
 
   return (
     <div className="space-y-6">

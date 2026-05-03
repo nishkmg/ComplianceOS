@@ -31,23 +31,44 @@ interface JournalEntry {
 
 // ─── Fallback mock data (displayed when tRPC fetch fails or has no data) ──────
 
-const mockReceivables: DashboardData = {
-  totalOutstanding: 2845000,
-  overdueCount: 3,
-  topCustomers: [
-    { customerName: "ABC Corp", outstanding: 850000 },
-    { customerName: "XYZ Industries", outstanding: 620000 },
-    { customerName: "PQR Trading", outstanding: 410000 },
-  ],
+const mockDataByFy: Record<string, { receivables: DashboardData; entries: JournalEntry[] }> = {
+  '2026-27': {
+    receivables: {
+      totalOutstanding: 2845000,
+      overdueCount: 3,
+      topCustomers: [
+        { customerName: "ABC Corp", outstanding: 850000 },
+        { customerName: "XYZ Industries", outstanding: 620000 },
+        { customerName: "PQR Trading", outstanding: 410000 },
+      ],
+    },
+    entries: [
+      { id: "d1", entryNumber: "JE-2026-27-001", date: "2026-04-28", narration: "Office supplies purchase", debit: 45000, credit: 0, status: "posted" },
+      { id: "d2", entryNumber: "JE-2026-27-002", date: "2026-04-27", narration: "Client payment received — ABC Corp", debit: 0, credit: 850000, status: "posted" },
+      { id: "d3", entryNumber: "JE-2026-27-003", date: "2026-04-25", narration: "Salary for April 2026", debit: 320000, credit: 0, status: "draft" },
+      { id: "d4", entryNumber: "JE-2026-27-004", date: "2026-04-22", narration: "Rent payment — April", debit: 75000, credit: 0, status: "posted" },
+      { id: "d5", entryNumber: "JE-2026-27-005", date: "2026-04-20", narration: "IT services invoice — Q1", debit: 0, credit: 234000, status: "posted" },
+    ],
+  },
+  '2025-26': {
+    receivables: {
+      totalOutstanding: 1950000,
+      overdueCount: 1,
+      topCustomers: [
+        { customerName: "Acme Corp", outstanding: 620000 },
+        { customerName: "Beta LLC", outstanding: 480000 },
+        { customerName: "Omega Partners", outstanding: 310000 },
+      ],
+    },
+    entries: [
+      { id: "d101", entryNumber: "JE-2025-26-001", date: "2025-11-15", narration: "Q3 consulting revenue", debit: 0, credit: 520000, status: "posted" },
+      { id: "d102", entryNumber: "JE-2025-26-002", date: "2025-12-20", narration: "Annual software license renewal", debit: 240000, credit: 0, status: "posted" },
+      { id: "d103", entryNumber: "JE-2025-26-003", date: "2026-01-10", narration: "Office rent for Jan 2026", debit: 0, credit: 75000, status: "posted" },
+      { id: "d104", entryNumber: "JE-2025-26-004", date: "2026-02-05", narration: "Statutory audit fees", debit: 185000, credit: 0, status: "draft" },
+      { id: "d105", entryNumber: "JE-2025-26-005", date: "2026-03-28", narration: "Year-end tax provision", debit: 0, credit: 310000, status: "draft" },
+    ],
+  },
 };
-
-const mockEntries: JournalEntry[] = [
-  { id: "1", entryNumber: "JE-2026-0001", date: "2026-04-28", narration: "Office supplies purchase", debit: 45000, credit: 0, status: "posted" },
-  { id: "2", entryNumber: "JE-2026-0002", date: "2026-04-27", narration: "Client payment received — ABC Corp", debit: 0, credit: 850000, status: "posted" },
-  { id: "3", entryNumber: "JE-2026-0003", date: "2026-04-25", narration: "Salary for April 2026", debit: 320000, credit: 0, status: "draft" },
-  { id: "4", entryNumber: "JE-2026-0004", date: "2026-04-22", narration: "Rent payment — April", debit: 75000, credit: 0, status: "posted" },
-  { id: "5", entryNumber: "JE-2026-0005", date: "2026-04-20", narration: "IT services invoice — Q1", debit: 0, credit: 234000, status: "posted" },
-];
 
 // ─── Column definition for the Recent Entries DataTable ────────────────────────
 
@@ -129,15 +150,15 @@ export default function DashboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Filter mock entries by active FY — each entry tagged with a FY suffix in entryNumber
-  const fyFilteredEntries = useMemo(() =>
-    mockEntries.filter(e => e.entryNumber.includes(activeFy.replace('-', ''))),
-    [activeFy]
-  );
+  // Fall back to FY-specific mock data when tRPC returns nothing
+  const fyMock = mockDataByFy[activeFy] ?? mockDataByFy['2026-27'];
+  const displayReceivables = receivables ?? fyMock.receivables;
+  const displayEntries = !loading && entries.length === 0 ? fyMock.entries : entries;
 
-  // Fall back to mock data when tRPC returns nothing
-  const displayReceivables = receivables ?? mockReceivables;
-  const displayEntries = !loading && entries.length === 0 ? fyFilteredEntries : entries;
+  const fyKpis = useMemo(() => ({
+    '2026-27': { revenue: 1245000.00, expenses: 412040.50, netProfit: 833559.50, cash: 4512890.00 },
+    '2025-26': { revenue: 980000.00, expenses: 385000.00, netProfit: 595000.00, cash: 3850000.00 },
+  }[activeFy] ?? { revenue: 0, expenses: 0, netProfit: 0, cash: 0 }), [activeFy]);
 
   const companyName = "Demo Business Pvt Ltd";
   const today = new Date();
@@ -189,28 +210,28 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KpiTile
             label="Revenue MTD"
-            value={1245000.00}
+            value={fyKpis.revenue}
             variant="amber"
             delta={{ value: 14.2, label: "vs last month" }}
             icon="trending_up"
           />
           <KpiTile
             label="Expenses MTD"
-            value={412040.50}
+            value={fyKpis.expenses}
             variant="neutral"
             delta={{ value: 2.1, label: "within budget" }}
             icon="shopping_cart"
           />
           <KpiTile
             label="Net Profit MTD"
-            value={833559.50}
+            value={fyKpis.netProfit}
             variant="amber"
             delta={{ value: 67, label: "Gross Margin" }}
             icon="account_balance_wallet"
           />
           <KpiTile
             label="Cash & Bank"
-            value={4512890.00}
+            value={fyKpis.cash}
             variant="neutral"
             subtext="Reconciled as of today"
             icon="account_balance"

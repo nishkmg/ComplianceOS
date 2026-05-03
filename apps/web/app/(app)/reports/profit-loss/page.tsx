@@ -9,29 +9,48 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data — Schedule III format ──────────────────────────────────────────
 
-const revenueItems = [
-  { label: "Revenue from Operations", amount: 12450000, note: "1" },
-  { label: "Other Income", amount: 24600, note: "2" },
-];
-
-const expenseItems = [
-  { label: "Cost of Materials Consumed", amount: 8240000, note: "3" },
-  { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -400000, note: "4" },
-  { label: "Employee Benefits Expense", amount: 1245000, note: "5" },
-  { label: "Finance Costs", amount: 18500, note: "6" },
-  { label: "Depreciation and Amortisation Expense", amount: 248000, note: "7" },
-  { label: "Other Expenses", amount: 570000, note: "8" },
-];
-
-const totalRevenue = revenueItems.reduce((s, i) => s + i.amount, 0);
-const totalExpenses = expenseItems.reduce((s, i) => s + i.amount, 0);
-const netProfit = totalRevenue - totalExpenses;
-const isProfit = netProfit >= 0;
+interface PlItem { label: string; amount: number; note: string }
+const plDataByFy: Record<string, { revenue: PlItem[]; expenses: PlItem[] }> = {
+  '2026-27': {
+    revenue: [
+      { label: "Revenue from Operations", amount: 12450000, note: "1" },
+      { label: "Other Income", amount: 24600, note: "2" },
+    ],
+    expenses: [
+      { label: "Cost of Materials Consumed", amount: 8240000, note: "3" },
+      { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -400000, note: "4" },
+      { label: "Employee Benefits Expense", amount: 1245000, note: "5" },
+      { label: "Finance Costs", amount: 18500, note: "6" },
+      { label: "Depreciation and Amortisation Expense", amount: 248000, note: "7" },
+      { label: "Other Expenses", amount: 570000, note: "8" },
+    ],
+  },
+  '2025-26': {
+    revenue: [
+      { label: "Revenue from Operations", amount: 9850000, note: "1" },
+      { label: "Other Income", amount: 18200, note: "2" },
+    ],
+    expenses: [
+      { label: "Cost of Materials Consumed", amount: 6500000, note: "3" },
+      { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -300000, note: "4" },
+      { label: "Employee Benefits Expense", amount: 1080000, note: "5" },
+      { label: "Finance Costs", amount: 15000, note: "6" },
+      { label: "Depreciation and Amortisation Expense", amount: 220000, note: "7" },
+      { label: "Other Expenses", amount: 460000, note: "8" },
+    ],
+  },
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ProfitLossPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
+  const fyPl = plDataByFy[fiscalYear] ?? plDataByFy['2026-27'];
+  const { revenue: revenueItems, expenses: expenseItems } = fyPl;
+  const totalRevenue = revenueItems.reduce((s, i) => s + i.amount, 0);
+  const totalExpenses = expenseItems.reduce((s, i) => s + i.amount, 0);
+  const netProfit = totalRevenue - totalExpenses;
+  const isProfit = netProfit >= 0;
 
   return (
     <div className="space-y-6">

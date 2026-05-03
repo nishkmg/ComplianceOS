@@ -24,47 +24,90 @@ interface TbGroup {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const groups: TbGroup[] = [
-  {
-    name: "Assets",
-    items: [
-      { code: "10101", name: "Cash Account",        debit: 500000,  credit: 0 },
-      { code: "10200", name: "Bank Account",         debit: 1250000, credit: 0 },
-      { code: "10300", name: "Trade Receivables",    debit: 350000,  credit: 0 },
-      { code: "10400", name: "GST Input",            debit: 85000,   credit: 0 },
-      { code: "10500", name: "Equipment",            debit: 450000,  credit: 0 },
-    ],
-  },
-  {
-    name: "Liabilities",
-    items: [
-      { code: "20101", name: "Trade Payables",       debit: 0,       credit: 180000 },
-      { code: "20200", name: "GST Output",           debit: 0,       credit: 125000 },
-    ],
-  },
-  {
-    name: "Equity",
-    items: [
-      { code: "30100", name: "Capital Account",      debit: 0,       credit: 1665000 },
-    ],
-  },
-  {
-    name: "Income",
-    items: [
-      { code: "40100", name: "Sales Revenue",        debit: 0,       credit: 2800000 },
-    ],
-  },
-  {
-    name: "Expenses",
-    items: [
-      { code: "50100", name: "Purchase Expenses",    debit: 1200000, credit: 0 },
-      { code: "50200", name: "Operating Expenses",   debit: 450000,  credit: 0 },
-      { code: "50210", name: "Salaries & Wages",     debit: 320000,  credit: 0 },
-      { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
-      { code: "50230", name: "Utilities",            debit: 45000,   credit: 0 },
-    ],
-  },
-];
+const tbDataByFy: Record<string, TbGroup[]> = {
+  '2026-27': [
+    {
+      name: "Assets",
+      items: [
+        { code: "10101", name: "Cash Account",        debit: 500000,  credit: 0 },
+        { code: "10200", name: "Bank Account",         debit: 1250000, credit: 0 },
+        { code: "10300", name: "Trade Receivables",    debit: 350000,  credit: 0 },
+        { code: "10400", name: "GST Input",            debit: 85000,   credit: 0 },
+        { code: "10500", name: "Equipment",            debit: 450000,  credit: 0 },
+      ],
+    },
+    {
+      name: "Liabilities",
+      items: [
+        { code: "20101", name: "Trade Payables",       debit: 0,       credit: 180000 },
+        { code: "20200", name: "GST Output",           debit: 0,       credit: 125000 },
+      ],
+    },
+    {
+      name: "Equity",
+      items: [
+        { code: "30100", name: "Capital Account",      debit: 0,       credit: 1665000 },
+      ],
+    },
+    {
+      name: "Income",
+      items: [
+        { code: "40100", name: "Sales Revenue",        debit: 0,       credit: 2800000 },
+      ],
+    },
+    {
+      name: "Expenses",
+      items: [
+        { code: "50100", name: "Purchase Expenses",    debit: 1200000, credit: 0 },
+        { code: "50200", name: "Operating Expenses",   debit: 450000,  credit: 0 },
+        { code: "50210", name: "Salaries & Wages",     debit: 320000,  credit: 0 },
+        { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
+        { code: "50230", name: "Utilities",            debit: 45000,   credit: 0 },
+      ],
+    },
+  ],
+  '2025-26': [
+    {
+      name: "Assets",
+      items: [
+        { code: "10101", name: "Cash Account",        debit: 420000,  credit: 0 },
+        { code: "10200", name: "Bank Account",         debit: 980000,  credit: 0 },
+        { code: "10300", name: "Trade Receivables",    debit: 280000,  credit: 0 },
+        { code: "10400", name: "GST Input",            debit: 62000,   credit: 0 },
+        { code: "10500", name: "Equipment",            debit: 450000,  credit: 0 },
+      ],
+    },
+    {
+      name: "Liabilities",
+      items: [
+        { code: "20101", name: "Trade Payables",       debit: 0,       credit: 145000 },
+        { code: "20200", name: "GST Output",           debit: 0,       credit: 96000 },
+      ],
+    },
+    {
+      name: "Equity",
+      items: [
+        { code: "30100", name: "Capital Account",      debit: 0,       credit: 1665000 },
+      ],
+    },
+    {
+      name: "Income",
+      items: [
+        { code: "40100", name: "Sales Revenue",        debit: 0,       credit: 2150000 },
+      ],
+    },
+    {
+      name: "Expenses",
+      items: [
+        { code: "50100", name: "Purchase Expenses",    debit: 960000,  credit: 0 },
+        { code: "50200", name: "Operating Expenses",   debit: 380000,  credit: 0 },
+        { code: "50210", name: "Salaries & Wages",     debit: 280000,  credit: 0 },
+        { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
+        { code: "50230", name: "Utilities",            debit: 38000,   credit: 0 },
+      ],
+    },
+  ],
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -72,6 +115,7 @@ export default function TrialBalancePage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [showZero, setShowZero] = useState(false);
 
+  const groups = tbDataByFy[fiscalYear] ?? tbDataByFy['2026-27'];
   const allItems = groups.flatMap(g => g.items);
   const totalDebit = allItems.reduce((s, i) => s + i.debit, 0);
   const totalCredit = allItems.reduce((s, i) => s + i.credit, 0);

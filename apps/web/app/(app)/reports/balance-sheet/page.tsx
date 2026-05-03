@@ -10,35 +10,66 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const equityAccounts = [
-  { id: "e1", name: "Share Capital",        balance: 1000000 },
-  { id: "e2", name: "Reserves & Surplus",   balance: 1358000 },
-  { id: "e3", name: "Net Profit (Current)", balance: 2684500 },
-];
+type BsEquity = { id: string; name: string; balance: number };
+type BsLiability = { id: string; name: string; balance: number };
+type BsAsset = { id: string; name: string; balance: number };
 
-const liabilityAccounts = [
-  { id: "l1", name: "Trade Payables",     balance: 180000 },
-  { id: "l2", name: "GST Output",         balance: 125000 },
-  { id: "l3", name: "TDS Payable",        balance: 12000 },
-  { id: "l4", name: "Short-term Borrowings", balance: 250000 },
-];
-
-const assetAccounts = [
-  { id: "a1", name: "Cash & Cash Equivalents", balance: 500000 },
-  { id: "a2", name: "Bank Balances",          balance: 1250000 },
-  { id: "a3", name: "Trade Receivables",      balance: 350000 },
-  { id: "a4", name: "Inventory",              balance: 450000 },
-  { id: "a5", name: "GST Input (Tax Asset)",  balance: 85000 },
-  { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
-  { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
-  { id: "a8", name: "Intangible Assets",      balance: 120000 },
-];
+const bsDataByFy: Record<string, { equity: BsEquity[]; liabilities: BsLiability[]; assets: BsAsset[] }> = {
+  '2026-27': {
+    equity: [
+      { id: "e1", name: "Share Capital",        balance: 1000000 },
+      { id: "e2", name: "Reserves & Surplus",   balance: 1358000 },
+      { id: "e3", name: "Net Profit (Current)", balance: 2684500 },
+    ],
+    liabilities: [
+      { id: "l1", name: "Trade Payables",     balance: 180000 },
+      { id: "l2", name: "GST Output",         balance: 125000 },
+      { id: "l3", name: "TDS Payable",        balance: 12000 },
+      { id: "l4", name: "Short-term Borrowings", balance: 250000 },
+    ],
+    assets: [
+      { id: "a1", name: "Cash & Cash Equivalents", balance: 500000 },
+      { id: "a2", name: "Bank Balances",          balance: 1250000 },
+      { id: "a3", name: "Trade Receivables",      balance: 350000 },
+      { id: "a4", name: "Inventory",              balance: 450000 },
+      { id: "a5", name: "GST Input (Tax Asset)",  balance: 85000 },
+      { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
+      { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
+      { id: "a8", name: "Intangible Assets",      balance: 120000 },
+    ],
+  },
+  '2025-26': {
+    equity: [
+      { id: "e1", name: "Share Capital",        balance: 1000000 },
+      { id: "e2", name: "Reserves & Surplus",   balance: 1120000 },
+      { id: "e3", name: "Net Profit (Current)", balance: 2145000 },
+    ],
+    liabilities: [
+      { id: "l1", name: "Trade Payables",     balance: 145000 },
+      { id: "l2", name: "GST Output",         balance: 96000 },
+      { id: "l3", name: "TDS Payable",        balance: 8500 },
+      { id: "l4", name: "Short-term Borrowings", balance: 200000 },
+    ],
+    assets: [
+      { id: "a1", name: "Cash & Cash Equivalents", balance: 420000 },
+      { id: "a2", name: "Bank Balances",          balance: 980000 },
+      { id: "a3", name: "Trade Receivables",      balance: 280000 },
+      { id: "a4", name: "Inventory",              balance: 380000 },
+      { id: "a5", name: "GST Input (Tax Asset)",  balance: 62000 },
+      { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
+      { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
+      { id: "a8", name: "Intangible Assets",      balance: 120000 },
+    ],
+  },
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function BalanceSheetPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [asOfDate, setAsOfDate] = useState("2027-03-31");
+  const fyData = bsDataByFy[fiscalYear] ?? bsDataByFy['2026-27'];
+  const { equity: equityAccounts, liabilities: liabilityAccounts, assets: assetAccounts } = fyData;
 
   const totalEquity = equityAccounts.reduce((s, a) => s + a.balance, 0);
   const totalLiabilities = liabilityAccounts.reduce((s, a) => s + a.balance, 0);

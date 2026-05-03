@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { formatIndianNumber } from "@/lib/format";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -24,13 +25,22 @@ interface Payment {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const mockPayments: Payment[] = [
-  { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp",   date: "2026-04-10", amount: 50000,  paymentMethod: "bank",   status: "recorded", type: "received" },
-  { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd",    date: "2026-04-12", amount: 25000,  paymentMethod: "cash",   status: "recorded", type: "received" },
-  { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X",    date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
-  { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt",   date: "2026-04-15", amount: 75000,  paymentMethod: "cheque", status: "recorded", type: "received" },
-  { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp",   date: "2026-04-08", amount: 30000,  paymentMethod: "online", status: "voided",   type: "paid" },
-];
+const mockPaymentsByFy: Record<string, Payment[]> = {
+  '2026-27': [
+    { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp",   date: "2026-04-10", amount: 50000,  paymentMethod: "bank",   status: "recorded", type: "received" },
+    { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd",    date: "2026-04-12", amount: 25000,  paymentMethod: "cash",   status: "recorded", type: "received" },
+    { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X",    date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
+    { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt",   date: "2026-04-15", amount: 75000,  paymentMethod: "cheque", status: "recorded", type: "received" },
+    { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp",   date: "2026-04-08", amount: 30000,  paymentMethod: "online", status: "voided",   type: "paid" },
+  ],
+  '2025-26': [
+    { id: "101", paymentNumber: "PAY-2025-26-001", customerName: "Smith & Co",   date: "2025-08-15", amount: 75000,  paymentMethod: "bank",   status: "recorded", type: "received" },
+    { id: "102", paymentNumber: "PAY-2025-26-002", customerName: "Vendor Y",     date: "2025-10-20", amount: 95000,  paymentMethod: "online", status: "recorded", type: "paid" },
+    { id: "103", paymentNumber: "PAY-2025-26-003", customerName: "Miller Ent.",  date: "2025-12-05", amount: 45000,  paymentMethod: "cheque", status: "recorded", type: "received" },
+    { id: "104", paymentNumber: "PAY-2025-26-004", customerName: "Office Supplies Co", date: "2026-01-18", amount: 28000, paymentMethod: "cash",   status: "recorded", type: "paid" },
+    { id: "105", paymentNumber: "PAY-2025-26-005", customerName: "Beta Ltd",     date: "2026-03-10", amount: 15000,  paymentMethod: "online", status: "voided",   type: "received" },
+  ],
+};
 
 const typeOptions = ["all", "received", "paid"] as const;
 
@@ -106,9 +116,12 @@ const columns: ColumnDef<Payment>[] = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function PaymentsPage() {
+  const { activeFy } = useFiscalYear();
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const mockPayments = mockPaymentsByFy[activeFy] ?? mockPaymentsByFy['2026-27'];
 
   useEffect(() => {
     setLoading(false);
@@ -121,7 +134,7 @@ export default function PaymentsPage() {
         if (search && !p.customerName.toLowerCase().includes(search.toLowerCase()) && !p.paymentNumber.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       }),
-    [typeFilter, search]
+    [typeFilter, search, mockPayments]
   );
 
   const totalAmount = filtered.reduce((s, p) => s + p.amount, 0);
