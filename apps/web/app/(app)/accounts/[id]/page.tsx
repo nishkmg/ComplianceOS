@@ -1,29 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Period options ───────────────────────────────────────────────────────────
 
 const periods = [
-  { value: "current", label: "FY 2026-27" },
-  { value: "last",    label: "FY 2025-26" },
+  { value: "2026-27", label: "FY 2026-27" },
+  { value: "2025-26", label: "FY 2025-26" },
   { value: "custom",  label: "Custom Range" },
 ];
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function AccountDetailPage() {
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const params = useParams();
   const id = params.id as string;
-  const [period, setPeriod] = useState("current");
+  const [period, setPeriod] = useState("fy");
 
-  const fiscalYear = period === "current" ? "2026-27" : period === "last" ? "2025-26" : "2026-27";
+  const handlePeriodChange = (value: string) => {
+    if (value === "custom") { setPeriod("custom"); return; }
+    setFiscalYear(value);
+    setPeriod("fy");
+  };
 
   // tRPC queries
   const { data: accounts }: any = api.accounts.list.useQuery();
@@ -91,9 +97,9 @@ export default function AccountDetailPage() {
           {periods.map(p => (
             <button
               key={p.value}
-              onClick={() => setPeriod(p.value)}
+               onClick={() => handlePeriodChange(p.value)}
               className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm ${
-                period === p.value
+                p.value === "custom" ? (period === "custom") : (fiscalYear === p.value)
                   ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
               }`}

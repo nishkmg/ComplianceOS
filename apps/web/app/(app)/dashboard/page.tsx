@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { KpiTile } from "@/components/ui/kpi-tile";
@@ -9,6 +9,7 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton, KPISkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber, formatDateShort } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -110,6 +111,7 @@ const entryColumns: ColumnDef<JournalEntry>[] = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
+  const { activeFy, currentFy } = useFiscalYear();
   const [receivables, setReceivables] = useState<DashboardData | null>(null);
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -127,9 +129,15 @@ export default function DashboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Filter mock entries by active FY — each entry tagged with a FY suffix in entryNumber
+  const fyFilteredEntries = useMemo(() =>
+    mockEntries.filter(e => e.entryNumber.includes(activeFy.replace('-', ''))),
+    [activeFy]
+  );
+
   // Fall back to mock data when tRPC returns nothing
   const displayReceivables = receivables ?? mockReceivables;
-  const displayEntries = !loading && entries.length === 0 ? mockEntries : entries;
+  const displayEntries = !loading && entries.length === 0 ? fyFilteredEntries : entries;
 
   const companyName = "Demo Business Pvt Ltd";
   const today = new Date();
@@ -146,7 +154,7 @@ export default function DashboardPage() {
               {greeting}, {companyName}
             </h1>
             <span className="font-mono text-[10px] uppercase tracking-wider text-mid bg-surface-muted px-2 py-0.5 rounded-md border border-border shrink-0 font-medium">
-              FY 2026-27
+              FY {activeFy}
             </span>
           </div>
           <p className="text-[13px] text-secondary font-ui mt-1">

@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function LedgerReportPage() {
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [selectedAccount, setSelectedAccount] = useState("");
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
 
   const { data: accounts }: any = api.accounts.list.useQuery();
   const { data: ledgerData }: any = api.balances.ledger.useQuery(

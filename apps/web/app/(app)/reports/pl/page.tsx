@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 interface ReportLine {
   note: string;
@@ -45,7 +45,7 @@ const sections: { title: string; lines: ReportLine[] }[] = [
 ];
 
 export default function PLScheduleIIIPage() {
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
 
   return (
     <div className="bg-page-bg text-on-surface font-ui text-sm font-medium min-h-screen">

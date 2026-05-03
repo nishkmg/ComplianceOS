@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -36,7 +37,7 @@ const assetAccounts = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function BalanceSheetPage() {
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [asOfDate, setAsOfDate] = useState("2027-03-31");
 
   const totalEquity = equityAccounts.reduce((s, a) => s + a.balance, 0);
@@ -63,6 +64,7 @@ export default function BalanceSheetPage() {
           >
             <option value="2026-27">FY 2026-27</option>
             <option value="2025-26">FY 2025-26</option>
+            <option value="2024-25">FY 2024-25</option>
           </select>
           <input
             type="date"

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const incomeData = {
   salary: {
@@ -95,7 +96,7 @@ const taxComputationNew = {
 };
 
 export default function ITRComputationPage() {
-  const [selectedFY, setSelectedFY] = useState("2026-27");
+  const { activeFy: selectedFY, setActiveFy: setSelectedFY } = useFiscalYear();
   const [regime, setRegime] = useState<"old" | "new">("old");
 
   const tax = regime === "old" ? taxComputationOld : taxComputationNew;
@@ -116,9 +117,9 @@ export default function ITRComputationPage() {
             value={selectedFY}
             onChange={(e) => setSelectedFY(e.target.value)}
           >
-            <option>FY 2026-27</option>
-            <option>FY 2025-26</option>
-            <option>FY 2024-25</option>
+            <option value="2026-27">FY 2026-27</option>
+            <option value="2025-26">FY 2025-26</option>
+            <option value="2024-25">FY 2024-25</option>
           </select>
           <Button variant="outline" size="sm">Save Draft</Button>
           <Button size="sm" className="gap-2">

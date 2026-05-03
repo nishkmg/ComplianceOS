@@ -8,6 +8,7 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,14 +24,24 @@ interface JournalEntry {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const mockEntries: JournalEntry[] = [
-  { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0, status: "posted" },
-  { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", debit: 118000, credit: 0, status: "draft" },
-  { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", debit: 0, credit: 75000, status: "posted" },
-  { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 320000, credit: 0, status: "posted" },
-  { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", debit: 0, credit: 75000, status: "draft" },
-  { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0, status: "posted" },
-];
+const mockEntriesByFy: Record<string, JournalEntry[]> = {
+  '2026-27': [
+    { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0, status: "posted" },
+    { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", debit: 118000, credit: 0, status: "draft" },
+    { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", debit: 0, credit: 75000, status: "posted" },
+    { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 320000, credit: 0, status: "posted" },
+    { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", debit: 0, credit: 75000, status: "draft" },
+    { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0, status: "posted" },
+  ],
+  '2025-26': [
+    { id: "101", entryNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 420000, credit: 0, status: "posted" },
+    { id: "102", entryNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", debit: 0, credit: 120000, status: "posted" },
+    { id: "103", entryNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", debit: 680000, credit: 0, status: "posted" },
+    { id: "104", entryNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", debit: 0, credit: 96000, status: "posted" },
+    { id: "105", entryNumber: "JE-2025-26-005", date: "2026-01-15", narration: "Tax provision entry", debit: 185000, credit: 0, status: "draft" },
+    { id: "106", entryNumber: "JE-2025-26-006", date: "2026-03-25", narration: "Year-end adjustments", debit: 0, credit: 45000, status: "draft" },
+  ],
+};
 
 const statusOptions = [
   { value: "all", label: "All" },
@@ -119,9 +130,12 @@ const columns: ColumnDef<JournalEntry>[] = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function JournalPage() {
+  const { activeFy } = useFiscalYear();
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const mockEntries = mockEntriesByFy[activeFy] ?? mockEntriesByFy['2026-27'];
 
   useEffect(() => {
     setLoading(false);
@@ -139,7 +153,7 @@ export default function JournalPage() {
           return false;
         return true;
       }),
-    [filter, search]
+    [filter, search, mockEntries]
   );
 
   const totalDebit = filteredEntries.reduce((s, e) => s + e.debit, 0);
@@ -151,7 +165,7 @@ export default function JournalPage() {
       c[s.value] = s.value === "all" ? mockEntries.length : mockEntries.filter(e => e.status === s.value).length;
     }
     return c;
-  }, []);
+  }, [mockEntries]);
 
   return (
     <div className="space-y-6">
