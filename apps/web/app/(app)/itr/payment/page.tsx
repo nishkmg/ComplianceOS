@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 
 const currentAY = `${new Date().getFullYear() + 1}-${(new Date().getFullYear() + 2).toString().slice(-2)}`;

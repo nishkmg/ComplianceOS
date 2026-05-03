@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 

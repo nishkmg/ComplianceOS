@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 
 export default function EmployeeSalaryPage() {
   const params = useParams();

@@ -1,11 +1,13 @@
 "use client";
 
 import { ReactNode } from "react";
+import { Toaster } from 'sonner';
 import { TRPCProvider } from "@/components/trpc-provider";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { CommandPalette } from "@/components/command-palette";
 import { SessionProvider } from "next-auth/react";
-import { SkipToMainContent, NavigationLoader } from "@/components/ui";
+import { SkipToMainContent } from "@/components/ui/skip-link";
+import { NavigationLoader } from "@/components/ui/navigation-loader";
 import { AppSidebar } from "@/components/app/sidebar";
 import { AppTopBar } from "@/components/app/topbar";
 import { MobileNav } from "@/components/app/mobile-nav";
@@ -54,6 +56,9 @@ function AppShell({ children }: { children: ReactNode }) {
 
       {/* Fixed bottom nav — mobile only (hidden on lg+) */}
       <MobileNav />
+
+      {/* Toast notifications (app-only) */}
+      <Toaster position="top-right" richColors closeButton />
     </div>
   );
 }

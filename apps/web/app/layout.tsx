@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: "ComplianceOS | Precision in Indian Accounting",
@@ -15,7 +14,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
-        <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
   );

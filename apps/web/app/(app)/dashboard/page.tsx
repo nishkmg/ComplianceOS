@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { KpiTile, Badge, DataTable, type ColumnDef } from "@/components/ui";
+import { KpiTile } from "@/components/ui/kpi-tile";
+import { Badge } from "@/components/ui/badge";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton, KPISkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber, formatDateShort } from "@/lib/format";

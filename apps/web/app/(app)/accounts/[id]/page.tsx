@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 
 // ─── Period options ───────────────────────────────────────────────────────────

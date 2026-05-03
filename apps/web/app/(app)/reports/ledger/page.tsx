@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 
 export default function LedgerReportPage() {

@@ -1,4 +1,3 @@
-'use client';
 
 import { MarketingNav } from '@/components/marketing/nav';
 import { Icon } from '@/components/ui/icon';

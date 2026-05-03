@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { Badge, BadgeVariant } from "@/components/ui";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 
 const months = [

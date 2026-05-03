@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 
 const returnTypes = [
   { id: "gstr1", name: "GSTR-1", desc: "Outward Supplies" },

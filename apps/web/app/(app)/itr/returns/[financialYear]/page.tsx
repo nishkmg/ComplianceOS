@@ -6,7 +6,7 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 // @ts-ignore
 import { ITRReturnType, ITRReturnStatus } from "@complianceos/shared";
-import { Badge, BadgeVariant } from "@/components/ui";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 
 const statusConfig: Record<ITRReturnStatus, { variant: "gray" | "blue" | "success" | "purple" | "danger"; label: string }> = {
   draft: { variant: "gray", label: "Draft" },
