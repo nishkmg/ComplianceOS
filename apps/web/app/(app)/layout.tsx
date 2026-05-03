@@ -11,12 +11,15 @@ import { NavigationLoader } from "@/components/ui/navigation-loader";
 import { AppSidebar } from "@/components/app/sidebar";
 import { AppTopBar } from "@/components/app/topbar";
 import { MobileNav } from "@/components/app/mobile-nav";
+import { FiscalYearProvider } from "@/hooks/use-fiscal-year";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <SessionProvider>
       <TRPCProvider>
-        <AppShell>{children}</AppShell>
+        <FiscalYearProvider>
+          <AppShell>{children}</AppShell>
+        </FiscalYearProvider>
       </TRPCProvider>
     </SessionProvider>
   );

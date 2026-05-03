@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { useFiscalYear } from '@/hooks/use-fiscal-year';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -123,20 +124,12 @@ const navSections: NavSection[] = [
   },
 ];
 
-// ─── Fiscal Year Data (mock until tRPC is wired) ──────────────────────────────
-
-const fiscalYears = [
-  { id: 'fy1', name: 'FY 2026-27', status: 'open',   daysRemaining: 245 },
-  { id: 'fy2', name: 'FY 2025-26', status: 'open',   daysRemaining: 67  },
-  { id: 'fy3', name: 'FY 2024-25', status: 'closed', daysRemaining: 0   },
-];
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function AppSidebar() {
   const pathname = usePathname();
   const [showFyPopover, setShowFyPopover] = useState(false);
-  const [activeFy, setActiveFy] = useState('2026-27');
+  const { activeFy, setActiveFy, fiscalYears, currentFy } = useFiscalYear();
 
   // Which collapsible groups are manually open/closed.
   // Auto-expand the group whose basePath matches the current URL.
@@ -156,8 +149,6 @@ export function AppSidebar() {
 
   const toggleGroup = (key: string) =>
     setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
-
-  const currentFy = fiscalYears.find(fy => fy.name.includes(activeFy)) ?? fiscalYears[0];
 
   /** Returns true if a plain nav link should be highlighted. */
   const isActive = (href: string) =>
@@ -314,14 +305,13 @@ export function AppSidebar() {
         {/* FY picker popover */}
         {showFyPopover && (
           <div className="absolute bottom-full left-2 right-2 mb-1 bg-white rounded-sm shadow-lg border border-border-subtle overflow-hidden z-50">
-            {fiscalYears.map(fy => {
-              const fyYear = fy.name.split(' ')[1];
-              const selected = activeFy === fyYear;
+              {fiscalYears.map(fy => {
+              const selected = activeFy === fy.year;
               return (
                 <button
                   key={fy.id}
                   onClick={() => {
-                    setActiveFy(fyYear);
+                    setActiveFy(fy.year);
                     setShowFyPopover(false);
                   }}
                   className={[
