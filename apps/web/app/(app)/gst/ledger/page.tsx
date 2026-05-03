@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const months = [
   { value: 1, label: "April" },
@@ -20,15 +22,75 @@ const months = [
   { value: 12, label: "March" },
 ];
 
-const mockTransactions = [
-  { id: "1", date: "15 Oct 24", type: "ITC Claim", taxType: "IGST", amount: 124500, balance: 4520500, ref: "GSTR-2B" },
-  { id: "2", date: "10 Oct 24", type: "Tax Offset", taxType: "CGST", amount: -45000, balance: 4396000, ref: "GSTR-3B" },
-  { id: "3", date: "05 Oct 24", type: "Cash Deposit", taxType: "Cess", amount: 25000, balance: 4421000, ref: "CH-88012" },
-];
+// Mock transactions by quarter: Q1 (months 1-3: Apr-Jun), Q2 (4-6: Jul-Sep), Q3 (7-9: Oct-Dec), Q4 (10-12: Jan-Mar)
+const mockDataByQuarter: Record<string, Array<{ id: string; date: string; type: string; taxType: string; amount: number; balance: number; ref: string }>> = {
+  Q1: [
+    { id: "1", date: "15 Jun 24", type: "ITC Claim", taxType: "IGST", amount: 98000, balance: 1205000, ref: "GSTR-2B" },
+    { id: "2", date: "20 May 24", type: "Tax Offset", taxType: "CGST", amount: -32000, balance: 1107000, ref: "GSTR-3B" },
+    { id: "3", date: "05 Apr 24", type: "Opening Balance", taxType: "IGST", amount: 124500, balance: 1139500, ref: "Ledger B/F" },
+  ],
+  Q2: [
+    { id: "4", date: "15 Sep 24", type: "ITC Claim", taxType: "IGST", amount: 156000, balance: 2120400, ref: "GSTR-2B" },
+    { id: "5", date: "10 Aug 24", type: "Tax Offset", taxType: "SGST", amount: -28000, balance: 1964400, ref: "GSTR-3B" },
+    { id: "6", date: "25 Jul 24", type: "Cash Deposit", taxType: "Cess", amount: 45000, balance: 1992400, ref: "CH-44102" },
+  ],
+  Q3: [
+    { id: "7", date: "15 Oct 24", type: "ITC Claim", taxType: "IGST", amount: 124500, balance: 4520500, ref: "GSTR-2B" },
+    { id: "8", date: "10 Oct 24", type: "Tax Offset", taxType: "CGST", amount: -45000, balance: 4396000, ref: "GSTR-3B" },
+    { id: "9", date: "05 Oct 24", type: "Cash Deposit", taxType: "Cess", amount: 25000, balance: 4421000, ref: "CH-88012" },
+  ],
+  Q4: [
+    { id: "10", date: "15 Mar 25", type: "ITC Claim", taxType: "IGST", amount: 210000, balance: 6850000, ref: "GSTR-2B" },
+    { id: "11", date: "28 Feb 25", type: "Tax Offset", taxType: "CGST", amount: -52000, balance: 6640000, ref: "GSTR-3B" },
+    { id: "12", date: "10 Jan 25", type: "Cash Deposit", taxType: "IGST", amount: 75000, balance: 6692000, ref: "CH-99123" },
+    { id: "13", date: "05 Jan 25", type: "ITC Claim", taxType: "SGST", amount: 98500, balance: 6617000, ref: "GSTR-2B" },
+  ],
+};
+
+function getQuarter(month: number): string {
+  if (month >= 1 && month <= 3) return "Q1";
+  if (month >= 4 && month <= 6) return "Q2";
+  if (month >= 7 && month <= 9) return "Q3";
+  return "Q4";
+}
 
 export default function GSTLedgerPage() {
+  const { activeFy } = useFiscalYear();
   const [month, setMonth] = useState(7);
   const [year, setYear] = useState(2024);
+
+  const transactions = useMemo(() => {
+    const quarter = getQuarter(month);
+    return mockDataByQuarter[quarter] ?? mockDataByQuarter.Q3;
+  }, [month]);
+
+  const handleExportCSV = () => {
+    const rows = [["Date", "Description", "Type", "Tax Type", "Amount", "Running Balance"]];
+    transactions.forEach(t => {
+      rows.push([t.date, `${t.type} (${t.ref})`, "Credit", t.taxType, String(t.amount), String(t.balance)]);
+    });
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gst-ledger-${month}-${year}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success("CSV exported successfully");
+  };
+
+  const handleDownloadJSON = () => {
+    const json = JSON.stringify(transactions, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gst-ledger-${month}-${year}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success("JSON downloaded successfully");
+  };
 
   return (
     <div className="space-y-8 text-left">
@@ -86,7 +148,10 @@ export default function GSTLedgerPage() {
       <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
         <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
             <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Ledger Transaction History</h3>
-            <button className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Export CSV</button>
+            <div className="flex gap-3">
+              <button onClick={handleDownloadJSON} className="text-mid hover:text-dark font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download JSON</button>
+              <button onClick={handleExportCSV} className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Export CSV</button>
+            </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -101,7 +166,7 @@ export default function GSTLedgerPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
-              {mockTransactions.map((t) => (
+              {transactions.map((t) => (
                 <tr key={t.id} className="hover:bg-surface-muted/30 transition-colors">
                   <td className="py-5 px-6 text-mid">{t.date}</td>
                   <td className="py-5 px-6 text-left">

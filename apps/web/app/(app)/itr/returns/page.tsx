@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { showToast } from "@/lib/toast";
 
 interface ITRReturn {
   id: string;
@@ -28,15 +30,63 @@ const mockReturns: ITRReturn[] = [
 ];
 
 export default function ITRReturnsPage() {
+  const router = useRouter();
   const [filter, setFilter] = useState<"all" | "recent" | "drafts" | "archived">("all");
+  const [returns, setReturns] = useState<ITRReturn[]>(mockReturns);
 
   const filtered = filter === "all"
-    ? mockReturns
+    ? returns
     : filter === "recent"
-    ? mockReturns.filter(r => r.status !== "filed")
+    ? returns.filter(r => r.status !== "filed")
     : filter === "drafts"
-    ? mockReturns.filter(r => r.status === "draft" || r.status === "generated")
-    : mockReturns.filter(r => r.status === "filed");
+    ? returns.filter(r => r.status === "draft" || r.status === "generated")
+    : returns.filter(r => r.status === "filed");
+
+  const handlePrintLedger = () => {
+    window.print();
+    showToast.success("Print dialog opened");
+  };
+
+  const handleExportCSV = () => {
+    const rows = [["FY", "AY", "Form", "Assessee", "Status", "Due Date", "Filed Date"]];
+    returns.forEach(r => {
+      rows.push([r.financialYear, r.assessmentYear, r.formType, r.assesseeName, r.status, r.dueDate, r.filedDate ?? ""]);
+    });
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "itr-returns.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success("CSV exported successfully");
+  };
+
+  const handleComputeTax = () => {
+    router.push("/itr/computation");
+  };
+
+  const handleFileReturn = (id: string) => {
+    setReturns(prev => prev.map(r => r.id === id ? { ...r, status: "filed" as const, filedDate: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }), daysRemaining: 0 } : r));
+    showToast.success(`Return filed successfully!`);
+  };
+
+  const handleView = (id: string) => {
+    router.push(`/itr/returns/${id}`);
+  };
+
+  const handleDownload = (r: ITRReturn) => {
+    const json = JSON.stringify(r, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ITR-${r.formType}-${r.financialYear}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success("Return downloaded");
+  };
 
   return (
     <div className="space-y-0 text-left">
@@ -59,10 +109,10 @@ export default function ITRReturnsPage() {
             ))}
           </nav>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handlePrintLedger}>
               Print Ledger
             </Button>
-            <Button size="sm" className="gap-2">
+            <Button size="sm" className="gap-2" onClick={handleExportCSV}>
               Export CSV <Icon name="download" className="text-sm" />
             </Button>
           </div>
@@ -75,7 +125,7 @@ export default function ITRReturnsPage() {
             <h1 className="font-display text-display-lg font-semibold text-dark mb-2 print:text-black">Income Tax Returns</h1>
             <p className="font-ui text-[13px] text-secondary">Manage and compute statutory filings for the current fiscal period.</p>
           </div>
-          <Button size="sm" className="gap-2 group">
+          <Button size="sm" className="gap-2 group" onClick={handleComputeTax}>
             Compute Tax
             <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
           </Button>
@@ -83,8 +133,8 @@ export default function ITRReturnsPage() {
 
         {/* FY Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
-          {Array.from(new Set(mockReturns.map(r => r.financialYear))).map(fy => {
-            const fyReturns = mockReturns.filter(r => r.financialYear === fy);
+          {Array.from(new Set(returns.map(r => r.financialYear))).map(fy => {
+            const fyReturns = returns.filter(r => r.financialYear === fy);
             const filedCount = fyReturns.filter(r => r.status === "filed").length;
             const pendingCount = fyReturns.filter(r => r.status !== "filed").length;
             const urgent = fyReturns.some(r => r.daysRemaining > 0 && r.daysRemaining <= 30 && r.status !== "filed");
@@ -174,14 +224,14 @@ export default function ITRReturnsPage() {
                   )}
                 </div>
                 <div className="col-span-2 flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100">
-                  {r.status === "draft" && (
-                    <button className="text-amber hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">File</button>
+                  {(r.status === "draft" || r.status === "pending") && (
+                    <button onClick={() => handleFileReturn(r.id)} className="text-amber hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">File</button>
                   )}
                   {r.status === "generated" && (
-                    <button className="text-amber hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">Review</button>
+                    <button onClick={() => router.push(`/itr/returns/review/${r.id}`)} className="text-amber hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">Review</button>
                   )}
-                  <button className="text-mid hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">View</button>
-                  <button className="text-mid hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">Download</button>
+                  <button onClick={() => handleView(r.id)} className="text-mid hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">View</button>
+                  <button onClick={() => handleDownload(r)} className="text-mid hover:text-dark font-ui text-[13px] border-none bg-transparent cursor-pointer border-b-[0.5px] border-transparent hover:border-border">Download</button>
                 </div>
               </div>
             ))}
@@ -189,7 +239,7 @@ export default function ITRReturnsPage() {
 
           {/* Pagination Footer */}
           <div className="p-4 border-t-[0.5px] border-border flex justify-between items-center text-mid font-ui text-[13px]">
-            <div>Showing 1-{filtered.length} of {mockReturns.length} records</div>
+            <div>Showing 1-{filtered.length} of {returns.length} records</div>
             <div className="flex gap-4">
               <button className="hover:text-dark transition-colors disabled:opacity-30 border-none bg-transparent cursor-pointer" disabled>Previous</button>
               <button className="hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Next</button>

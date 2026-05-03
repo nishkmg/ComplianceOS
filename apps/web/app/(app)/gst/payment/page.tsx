@@ -1,24 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+
+type PeriodKey = "oct2024" | "sep2024" | "aug2024" | "jul2024";
+
+interface PeriodData {
+  grossLiability: { igst: number; cgst: number; sgst: number; cess: number; total: number };
+  itcAvailable: { igst: number; cgst: number; sgst: number; cess: number; total: number };
+  netPayable: { igst: number; cgst: number; sgst: number; cess: number; total: number };
+  dueDate: string;
+}
+
+const periodDataMap: Record<PeriodKey, PeriodData> = {
+  oct2024: {
+    grossLiability: { igst: 450000, cgst: 125000, sgst: 125000, cess: 0, total: 700000 },
+    itcAvailable: { igst: 350000, cgst: 100000, sgst: 100000, cess: 0, total: 550000 },
+    netPayable: { igst: 100000, cgst: 25000, sgst: 25000, cess: 0, total: 150000 },
+    dueDate: "20th November 2024",
+  },
+  sep2024: {
+    grossLiability: { igst: 380000, cgst: 110000, sgst: 110000, cess: 5000, total: 605000 },
+    itcAvailable: { igst: 310000, cgst: 90000, sgst: 90000, cess: 0, total: 490000 },
+    netPayable: { igst: 70000, cgst: 20000, sgst: 20000, cess: 5000, total: 115000 },
+    dueDate: "20th October 2024",
+  },
+  aug2024: {
+    grossLiability: { igst: 320000, cgst: 95000, sgst: 95000, cess: 3000, total: 513000 },
+    itcAvailable: { igst: 260000, cgst: 78000, sgst: 78000, cess: 0, total: 416000 },
+    netPayable: { igst: 60000, cgst: 17000, sgst: 17000, cess: 3000, total: 97000 },
+    dueDate: "20th September 2024",
+  },
+  jul2024: {
+    grossLiability: { igst: 290000, cgst: 85000, sgst: 85000, cess: 2000, total: 462000 },
+    itcAvailable: { igst: 240000, cgst: 72000, sgst: 72000, cess: 0, total: 384000 },
+    netPayable: { igst: 50000, cgst: 13000, sgst: 13000, cess: 2000, total: 78000 },
+    dueDate: "20th August 2024",
+  },
+};
 
 export default function GSTPaymentPage() {
-  const [period, setPeriod] = useState("October");
-  const [challanData, setChallanData] = useState(null);
+  const { activeFy } = useFiscalYear();
+  const [period, setPeriod] = useState<PeriodKey>("oct2024");
+  const [challanData, setChallanData] = useState<any>(null);
   const [paymentMode, setPaymentMode] = useState("online");
 
-  const grossLiability = {
-    igst: 450000, cgst: 125000, sgst: 125000, cess: 0, total: 700000
+  const periodData = useMemo(() => periodDataMap[period] ?? periodDataMap.oct2024, [period]);
+  const { grossLiability, itcAvailable, netPayable, dueDate } = periodData;
+
+  const handleGenerateChallan = () => {
+    const ref = "CH-" + Date.now().toString(36).toUpperCase();
+    setChallanData({
+      ref,
+      amount: netPayable.total,
+      period,
+      generatedAt: new Date().toISOString(),
+    });
+    showToast.success(`Challan ${ref} generated for ₹${formatIndianNumber(netPayable.total)}`);
   };
-  const itcAvailable = {
-    igst: 350000, cgst: 100000, sgst: 100000, cess: 0, total: 550000
+
+  const handlePayNow = () => {
+    if (!challanData) {
+      showToast.error("Please generate challan first");
+      return;
+    }
+    showToast.success(`Payment of ₹${formatIndianNumber(netPayable.total)} initiated via ${paymentMode === "online" ? "Net Banking" : "NEFT/RTGS"}`);
+    setChallanData(null);
   };
-  const netPayable = {
-    igst: 100000, cgst: 25000, sgst: 25000, cess: 0, total: 150000
+
+  const handleSaveDraft = () => {
+    showToast.success("Draft saved successfully");
   };
 
   return (
@@ -34,8 +90,8 @@ export default function GSTPaymentPage() {
             <h1 className="font-display text-2xl font-semibold">GST Payment</h1>
         </div>
         <div className="flex gap-4">
-          <button className="px-6 py-2.5 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">Save Draft</button>
-          <button className="px-6 py-2.5 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none rounded-md shadow-sm">Pay Now</button>
+          <button onClick={handleSaveDraft} className="px-6 py-2.5 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">Save Draft</button>
+          <button onClick={handlePayNow} className="px-6 py-2.5 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none rounded-md shadow-sm">Pay Now</button>
         </div>
       </header>
 
@@ -45,9 +101,11 @@ export default function GSTPaymentPage() {
            <div className="flex flex-col gap-2 text-left">
              <label className="font-ui text-[11px] text-xs text-light uppercase tracking-widest font-bold">Return Period</label>
              <div className="relative">
-               <select className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none appearance-none" value={period} onChange={e => setPeriod(e.target.value)}>
-                 <option>October 2024 (Q3)</option>
-                 <option>September 2024 (Q2)</option>
+               <select className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none appearance-none" value={period} onChange={e => { setPeriod(e.target.value as PeriodKey); setChallanData(null); }}>
+                 <option value="oct2024">October 2024 (Q3)</option>
+                 <option value="sep2024">September 2024 (Q2)</option>
+                 <option value="aug2024">August 2024 (Q2)</option>
+                 <option value="jul2024">July 2024 (Q2)</option>
                </select>
                <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
              </div>
@@ -126,11 +184,40 @@ export default function GSTPaymentPage() {
             ))}
           </div>
           <div className="bg-dark text-white p-8 mt-6 flex justify-between items-center shadow-xl border border-stone-950">
-            <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-amber-text">Due by 20th November 2024</span>
+            <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-amber-text">Due by {dueDate}</span>
             <div className="text-right">
               <p className="font-ui text-[10px] text-light uppercase font-bold tracking-widest mb-1">Total Amount Payable</p>
               <span className="font-mono text-3xl font-bold text-amber-text">₹ {formatIndianNumber(netPayable.total)}</span>
             </div>
+          </div>
+        </section>
+
+        {/* 5. Payment Mode & Generate Challan */}
+        <section className="bg-surface border border-border p-8 shadow-sm">
+          <h3 className="font-ui text-lg font-bold text-dark mb-6">4. Payment Mode</h3>
+          <div className="flex gap-6 mb-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="paymentMode" value="online" checked={paymentMode === "online"} onChange={e => setPaymentMode(e.target.value)} className="accent-amber" />
+              <span className="font-ui text-[13px] text-dark">Net Banking / Online</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="paymentMode" value="neft" checked={paymentMode === "neft"} onChange={e => setPaymentMode(e.target.value)} className="accent-amber" />
+              <span className="font-ui text-[13px] text-dark">NEFT / RTGS</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="paymentMode" value="overthecounter" checked={paymentMode === "overthecounter"} onChange={e => setPaymentMode(e.target.value)} className="accent-amber" />
+              <span className="font-ui text-[13px] text-dark">Over the Counter</span>
+            </label>
+          </div>
+          <div className="flex items-center gap-4">
+            <button onClick={handleGenerateChallan} className="px-6 py-2.5 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none rounded-md shadow-sm">
+              {challanData ? "Regenerate Challan" : "Generate Challan"}
+            </button>
+            {challanData && (
+              <span className="font-ui text-[12px] text-success font-bold">
+                Challan {challanData.ref} generated — proceed with payment
+              </span>
+            )}
           </div>
         </section>
       </div>

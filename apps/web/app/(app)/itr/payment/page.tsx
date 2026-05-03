@@ -1,22 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const currentAY = `${new Date().getFullYear() + 1}-${(new Date().getFullYear() + 2).toString().slice(-2)}`;
 
+const mockAdvanceTaxData = {
+  "2025-26": {
+    totalPayable: 450000,
+    totalPaid: 315000,
+    totalBalance: 135000,
+    installments: [
+      { id: "inst-1", installmentNumber: 1, dueDate: "15 Jun 2025", payableAmount: 67500, paidAmount: 67500, balance: 0, paidDate: "12 Jun 2025" },
+      { id: "inst-2", installmentNumber: 2, dueDate: "15 Sep 2025", payableAmount: 135000, paidAmount: 135000, balance: 0, paidDate: "14 Sep 2025" },
+      { id: "inst-3", installmentNumber: 3, dueDate: "15 Dec 2025", payableAmount: 135000, paidAmount: 112500, balance: 22500, paidDate: "10 Dec 2025" },
+      { id: "inst-4", installmentNumber: 4, dueDate: "15 Mar 2026", payableAmount: 112500, paidAmount: 0, balance: 112500, paidDate: null },
+    ],
+  },
+  "2026-27": {
+    totalPayable: 1234500,
+    totalPaid: 555525,
+    totalBalance: 678975,
+    installments: [
+      { id: "inst-1", installmentNumber: 1, dueDate: "15 Jun 2026", payableAmount: 185175, paidAmount: 185175, balance: 0, paidDate: "12 Jun 2026" },
+      { id: "inst-2", installmentNumber: 2, dueDate: "15 Sep 2026", payableAmount: 370350, paidAmount: 370350, balance: 0, paidDate: "14 Sep 2026" },
+      { id: "inst-3", installmentNumber: 3, dueDate: "15 Dec 2026", payableAmount: 370350, paidAmount: 0, balance: 370350, paidDate: null },
+      { id: "inst-4", installmentNumber: 4, dueDate: "15 Mar 2027", payableAmount: 308625, paidAmount: 0, balance: 308625, paidDate: null },
+    ],
+  },
+};
+
+const mockSelfAssessment = {
+  "2025-26": { balancePayable: 45000 },
+  "2026-27": { balancePayable: 115000 },
+};
+
 export default function ITRPaymentPage() {
-  const [assessmentYear, setAssessmentYear] = useState<string>(currentAY);
-  const { data: advanceTaxLedger }: any = api.itrPayment.getAdvanceTaxLedger.useQuery({ assessmentYear });
-  const { data: selfAssessmentDetails }: any = api.itrPayment.getSelfAssessmentDetails.useQuery({ assessmentYear });
-  const installments = advanceTaxLedger?.installments ?? [];
-  const totalAdvanceTaxPayable = Number(advanceTaxLedger?.totalPayable ?? "0");
-  const totalAdvanceTaxPaid = Number(advanceTaxLedger?.totalPaid ?? "0");
-  const totalBalance = Number(advanceTaxLedger?.totalBalance ?? "0");
-  const selfAssessmentBalance = Number(selfAssessmentDetails?.balancePayable ?? "0");
+  const { activeFy } = useFiscalYear();
+  const [assessmentYear, setAssessmentYear] = useState<string>("2026-27");
+
+  const advanceTaxData = useMemo(() => {
+    return (mockAdvanceTaxData as any)[assessmentYear] ?? mockAdvanceTaxData["2026-27"];
+  }, [assessmentYear]);
+
+  const selfAssessment = useMemo(() => {
+    return (mockSelfAssessment as any)[assessmentYear] ?? mockSelfAssessment["2026-27"];
+  }, [assessmentYear]);
+
+  const installments = advanceTaxData.installments ?? [];
+  const totalAdvanceTaxPayable = advanceTaxData.totalPayable;
+  const totalAdvanceTaxPaid = advanceTaxData.totalPaid;
+  const totalBalance = advanceTaxData.totalBalance;
+  const selfAssessmentBalance = selfAssessment.balancePayable;
 
   return (
     <div className="space-y-6">

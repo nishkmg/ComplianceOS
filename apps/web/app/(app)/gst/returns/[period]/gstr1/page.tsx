@@ -2,8 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "@/lib/api";
+import { formatIndianNumber } from "@/lib/format";
 
 const months = [
   { value: 1, label: "April" },
@@ -78,6 +79,12 @@ export default function GSTR1DetailPage() {
   const monthLabel = months.find(m => m.value === month)?.label || "September";
 
   const [activeTable, setActiveTable] = useState("b2b");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Compute totals from mock data
+  function parseAmount(amount: string): number {
+    return parseFloat(amount.replace(/,/g, "")) || 0;
+  }
 
   // Mock data for demonstration
   const mockData: GSTR1Data = {
@@ -97,6 +104,22 @@ export default function GSTR1DetailPage() {
     creditDebitNotes: [
       { noteNumber: "CN-001", noteDate: "25 Apr 26", originalInvoiceNumber: "INV-2026-27-001", originalInvoiceDate: "15 Apr 26", gstin: "27AABCU9603R1ZM", taxableValue: "10,000", igstAmount: "0", cgstAmount: "900", sgstAmount: "900" },
     ],
+  };
+
+  const totals = {
+    taxable: mockData.b2bInvoices.reduce((s, i) => s + parseAmount(i.taxableValue), 0)
+      + mockData.b2cLarge.reduce((s, i) => s + parseAmount(i.taxableValue), 0)
+      + mockData.b2cSmall.reduce((s, i) => s + parseAmount(i.taxableValue), 0)
+      + mockData.exports.reduce((s, i) => s + parseAmount(i.taxableValue), 0),
+    igst: mockData.b2bInvoices.reduce((s, i) => s + parseAmount(i.igstAmount), 0)
+      + mockData.b2cLarge.reduce((s, i) => s + parseAmount(i.igstAmount), 0)
+      + mockData.b2cSmall.reduce((s, i) => s + parseAmount(i.igstAmount), 0),
+    cgst: mockData.b2bInvoices.reduce((s, i) => s + parseAmount(i.cgstAmount), 0)
+      + mockData.b2cLarge.reduce((s, i) => s + parseAmount(i.cgstAmount), 0)
+      + mockData.b2cSmall.reduce((s, i) => s + parseAmount(i.cgstAmount), 0),
+    sgst: mockData.b2bInvoices.reduce((s, i) => s + parseAmount(i.sgstAmount), 0)
+      + mockData.b2cLarge.reduce((s, i) => s + parseAmount(i.sgstAmount), 0)
+      + mockData.b2cSmall.reduce((s, i) => s + parseAmount(i.sgstAmount), 0),
   };
 
   const tabs = [
@@ -122,27 +145,27 @@ export default function GSTR1DetailPage() {
             <span className="w-2 h-2 rounded-full bg-amber"></span>
             <span className="font-ui text-[13px] font-medium">Pending Filing</span>
           </div>
-          <p className="font-ui text-[11px] text-mid mt-1">Due: 11 Oct 2024</p>
+          <p className="font-ui text-[11px] text-mid mt-1">Due: 11 {monthLabel} {year}</p>
         </div>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Cards — computed from mock data */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total Taxable</p>
-          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 12,45,600.00</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ {formatIndianNumber(totals.taxable, { decimals: 2 })}</p>
         </div>
         <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total IGST</p>
-          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 2,24,208.00</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ {formatIndianNumber(totals.igst, { decimals: 2 })}</p>
         </div>
         <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total CGST</p>
-          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 1,12,104.00</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ {formatIndianNumber(totals.cgst, { decimals: 2 })}</p>
         </div>
         <div className="bg-surface border border-border shadow-sm rounded-md p-4 border-t-2 border-t-amber">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Total SGST</p>
-          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ 1,12,104.00</p>
+          <p className="font-mono text-[14px] tabular-nums text-dark font-bold">₹ {formatIndianNumber(totals.sgst, { decimals: 2 })}</p>
         </div>
       </div>
 
@@ -169,7 +192,7 @@ export default function GSTR1DetailPage() {
         <div className="p-3 border-b border-border flex justify-between items-center bg-surface no-print">
           <div className="relative">
             <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light" />
-            <input className="pl-9 pr-4 py-1.5 border border-border bg-surface-muted rounded-md text-[12px] w-56 outline-none focus:border-primary font-ui" placeholder="Search invoices..." />
+            <input className="pl-9 pr-4 py-1.5 border border-border bg-surface-muted rounded-md text-[12px] w-56 outline-none focus:border-primary font-ui" placeholder="Search invoices..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
           </div>
           <div className="flex gap-2">
             <button className="px-3 py-1.5 border border-border text-dark font-ui text-[11px] rounded-md hover:bg-surface-muted transition-colors cursor-pointer bg-transparent">Download JSON</button>

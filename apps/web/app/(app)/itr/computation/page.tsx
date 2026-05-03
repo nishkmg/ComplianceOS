@@ -1,114 +1,332 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
-const incomeData = {
-  salary: {
-    label: "Salaries",
-    items: [
-      { label: "Basic Salary", amount: 1800000 },
-      { label: "House Rent Allowance", amount: 720000 },
-      { label: "Special Allowance", amount: 480000 },
-      { label: "Employer\u2019s Contribution to PF", amount: 216000 },
-    ],
-    total: 3216000,
+interface IncomeSection {
+  label: string;
+  items: { label: string; amount: number }[];
+  total: number;
+}
+
+interface DeductionSection {
+  label: string;
+  limit?: number;
+  items: { label: string; amount: number }[];
+  total: number;
+}
+
+interface TaxComputation {
+  taxableIncome: number;
+  taxOnIncome: number;
+  rebate: number;
+  surcharge: number;
+  cess: number;
+  totalTax: number;
+}
+
+const incomeDataByFY: Record<string, Record<string, IncomeSection>> = {
+  "2026-27": {
+    salary: {
+      label: "Salaries",
+      items: [
+        { label: "Basic Salary", amount: 1800000 },
+        { label: "House Rent Allowance", amount: 720000 },
+        { label: "Special Allowance", amount: 480000 },
+        { label: "Employer\u2019s Contribution to PF", amount: 216000 },
+      ],
+      total: 3216000,
+    },
+    business: {
+      label: "Profits and Gains of Business or Profession",
+      items: [
+        { label: "Net Profit from Business", amount: 3500000 },
+        { label: "Depreciation under IT Act", amount: 248000 },
+      ],
+      total: 3748000,
+    },
+    capitalGains: {
+      label: "Capital Gains",
+      items: [
+        { label: "Long Term Capital Gains (Equity)", amount: 125000 },
+        { label: "Short Term Capital Gains", amount: 45000 },
+      ],
+      total: 170000,
+    },
+    otherSources: {
+      label: "Income from Other Sources",
+      items: [
+        { label: "Interest on Fixed Deposits", amount: 85000 },
+        { label: "Dividend Income", amount: 24000 },
+        { label: "Income from Royalty", amount: 16000 },
+      ],
+      total: 125000,
+    },
   },
-  business: {
-    label: "Profits and Gains of Business or Profession",
-    items: [
-      { label: "Net Profit from Business", amount: 3500000 },
-      { label: "Depreciation under IT Act", amount: 248000 },
-    ],
-    total: 3748000,
+  "2025-26": {
+    salary: {
+      label: "Salaries",
+      items: [
+        { label: "Basic Salary", amount: 1500000 },
+        { label: "House Rent Allowance", amount: 600000 },
+        { label: "Special Allowance", amount: 400000 },
+        { label: "Employer\u2019s Contribution to PF", amount: 180000 },
+      ],
+      total: 2680000,
+    },
+    business: {
+      label: "Profits and Gains of Business or Profession",
+      items: [
+        { label: "Net Profit from Business", amount: 2800000 },
+        { label: "Depreciation under IT Act", amount: 200000 },
+      ],
+      total: 3000000,
+    },
+    capitalGains: {
+      label: "Capital Gains",
+      items: [
+        { label: "Long Term Capital Gains (Equity)", amount: 100000 },
+        { label: "Short Term Capital Gains", amount: 35000 },
+      ],
+      total: 135000,
+    },
+    otherSources: {
+      label: "Income from Other Sources",
+      items: [
+        { label: "Interest on Fixed Deposits", amount: 72000 },
+        { label: "Dividend Income", amount: 18000 },
+        { label: "Income from Royalty", amount: 12000 },
+      ],
+      total: 102000,
+    },
   },
-  capitalGains: {
-    label: "Capital Gains",
-    items: [
-      { label: "Long Term Capital Gains (Equity)", amount: 125000 },
-      { label: "Short Term Capital Gains", amount: 45000 },
-    ],
-    total: 170000,
-  },
-  otherSources: {
-    label: "Income from Other Sources",
-    items: [
-      { label: "Interest on Fixed Deposits", amount: 85000 },
-      { label: "Dividend Income", amount: 24000 },
-      { label: "Income from Royalty", amount: 16000 },
-    ],
-    total: 125000,
+  "2024-25": {
+    salary: {
+      label: "Salaries",
+      items: [
+        { label: "Basic Salary", amount: 1200000 },
+        { label: "House Rent Allowance", amount: 480000 },
+        { label: "Special Allowance", amount: 320000 },
+        { label: "Employer\u2019s Contribution to PF", amount: 144000 },
+      ],
+      total: 2144000,
+    },
+    business: {
+      label: "Profits and Gains of Business or Profession",
+      items: [
+        { label: "Net Profit from Business", amount: 2200000 },
+        { label: "Depreciation under IT Act", amount: 160000 },
+      ],
+      total: 2360000,
+    },
+    capitalGains: {
+      label: "Capital Gains",
+      items: [
+        { label: "Long Term Capital Gains (Equity)", amount: 80000 },
+        { label: "Short Term Capital Gains", amount: 25000 },
+      ],
+      total: 105000,
+    },
+    otherSources: {
+      label: "Income from Other Sources",
+      items: [
+        { label: "Interest on Fixed Deposits", amount: 56000 },
+        { label: "Dividend Income", amount: 12000 },
+      ],
+      total: 68000,
+    },
   },
 };
 
-const deductionData = {
-  section80C: {
-    label: "Section 80C",
-    limit: 150000,
-    items: [
-      { label: "Life Insurance Premium", amount: 36000 },
-      { label: "Public Provident Fund (PPF)", amount: 72000 },
-      { label: "ELSS Mutual Funds", amount: 42000 },
-    ],
-    total: 150000,
+const deductionDataByFY: Record<string, Record<string, DeductionSection>> = {
+  "2026-27": {
+    section80C: {
+      label: "Section 80C",
+      limit: 150000,
+      items: [
+        { label: "Life Insurance Premium", amount: 36000 },
+        { label: "Public Provident Fund (PPF)", amount: 72000 },
+        { label: "ELSS Mutual Funds", amount: 42000 },
+      ],
+      total: 150000,
+    },
+    section80D: {
+      label: "Section 80D — Health Insurance",
+      limit: 25000,
+      items: [
+        { label: "Health Insurance (Self & Family)", amount: 18000 },
+        { label: "Health Insurance (Parents)", amount: 12000 },
+      ],
+      total: 25000,
+    },
+    otherDeductions: {
+      label: "Other Deductions",
+      items: [
+        { label: "Section 80G — Donations", amount: 12000 },
+        { label: "Section 80TTA — Savings Interest", amount: 10000 },
+        { label: "Section 80E — Education Loan Interest", amount: 36000 },
+      ],
+      total: 58000,
+    },
   },
-  section80D: {
-    label: "Section 80D — Health Insurance",
-    limit: 25000,
-    items: [
-      { label: "Health Insurance (Self & Family)", amount: 18000 },
-      { label: "Health Insurance (Parents)", amount: 12000 },
-    ],
-    total: 25000,
+  "2025-26": {
+    section80C: {
+      label: "Section 80C",
+      limit: 150000,
+      items: [
+        { label: "Life Insurance Premium", amount: 30000 },
+        { label: "Public Provident Fund (PPF)", amount: 60000 },
+        { label: "ELSS Mutual Funds", amount: 35000 },
+      ],
+      total: 125000,
+    },
+    section80D: {
+      label: "Section 80D — Health Insurance",
+      limit: 25000,
+      items: [
+        { label: "Health Insurance (Self & Family)", amount: 15000 },
+      ],
+      total: 15000,
+    },
+    otherDeductions: {
+      label: "Other Deductions",
+      items: [
+        { label: "Section 80G — Donations", amount: 10000 },
+        { label: "Section 80TTA — Savings Interest", amount: 10000 },
+        { label: "Section 80E — Education Loan Interest", amount: 30000 },
+      ],
+      total: 50000,
+    },
   },
-  otherDeductions: {
-    label: "Other Deductions",
-    items: [
-      { label: "Section 80G — Donations", amount: 12000 },
-      { label: "Section 80TTA — Savings Interest", amount: 10000 },
-      { label: "Section 80E — Education Loan Interest", amount: 36000 },
-    ],
-    total: 58000,
+  "2024-25": {
+    section80C: {
+      label: "Section 80C",
+      limit: 150000,
+      items: [
+        { label: "Life Insurance Premium", amount: 24000 },
+        { label: "Public Provident Fund (PPF)", amount: 48000 },
+        { label: "ELSS Mutual Funds", amount: 28000 },
+      ],
+      total: 100000,
+    },
+    section80D: {
+      label: "Section 80D — Health Insurance",
+      limit: 25000,
+      items: [
+        { label: "Health Insurance (Self & Family)", amount: 12000 },
+      ],
+      total: 12000,
+    },
+    otherDeductions: {
+      label: "Other Deductions",
+      items: [
+        { label: "Section 80G — Donations", amount: 8000 },
+        { label: "Section 80TTA — Savings Interest", amount: 10000 },
+        { label: "Section 80E — Education Loan Interest", amount: 24000 },
+      ],
+      total: 42000,
+    },
   },
 };
 
-const taxComputationOld = {
-  taxableIncome: 7253000,
-  taxOnIncome: 2090900,
-  rebate: 0,
-  surcharge: 0,
-  cess: 83636,
-  totalTax: 2174536,
-};
+function computeTaxOld(taxableIncome: number): Omit<TaxComputation, 'taxableIncome'> {
+  let tax = 0;
+  if (taxableIncome > 1000000) {
+    tax += (taxableIncome - 1000000) * 0.30;
+    tax += 500000 * 0.20;
+    tax += 250000 * 0.05;
+  } else if (taxableIncome > 500000) {
+    tax += (taxableIncome - 500000) * 0.20;
+    tax += 250000 * 0.05;
+  } else if (taxableIncome > 250000) {
+    tax += (taxableIncome - 250000) * 0.05;
+  }
+  const roundedTax = Math.round(tax);
+  const cess = Math.round(roundedTax * 0.04);
+  return { taxOnIncome: roundedTax, rebate: 0, surcharge: 0, cess, totalTax: roundedTax + cess };
+}
 
-const taxComputationNew = {
-  taxableIncome: 7253000,
-  taxOnIncome: 1875900,
-  rebate: 0,
-  surcharge: 0,
-  cess: 75036,
-  totalTax: 1950936,
+function computeTaxNew(taxableIncome: number): Omit<TaxComputation, 'taxableIncome'> {
+  let tax = 0;
+  if (taxableIncome > 1500000) {
+    tax += (taxableIncome - 1500000) * 0.30;
+    tax += 300000 * 0.20;
+    tax += 300000 * 0.15;
+    tax += 300000 * 0.10;
+    tax += 300000 * 0.05;
+  } else if (taxableIncome > 1200000) {
+    tax += (taxableIncome - 1200000) * 0.20;
+    tax += 300000 * 0.15;
+    tax += 300000 * 0.10;
+    tax += 300000 * 0.05;
+  } else if (taxableIncome > 900000) {
+    tax += (taxableIncome - 900000) * 0.15;
+    tax += 300000 * 0.10;
+    tax += 300000 * 0.05;
+  } else if (taxableIncome > 600000) {
+    tax += (taxableIncome - 600000) * 0.10;
+    tax += 300000 * 0.05;
+  } else if (taxableIncome > 300000) {
+    tax += (taxableIncome - 300000) * 0.05;
+  }
+  const roundedTax = Math.round(tax);
+  const cess = Math.round(roundedTax * 0.04);
+  return { taxOnIncome: roundedTax, rebate: 0, surcharge: 0, cess, totalTax: roundedTax + cess };
+}
+
+const ayLabel: Record<string, string> = {
+  "2026-27": "AY 2027-28",
+  "2025-26": "AY 2026-27",
+  "2024-25": "AY 2025-26",
 };
 
 export default function ITRComputationPage() {
+  const router = useRouter();
   const { activeFy: selectedFY, setActiveFy: setSelectedFY } = useFiscalYear();
   const [regime, setRegime] = useState<"old" | "new">("old");
 
-  const tax = regime === "old" ? taxComputationOld : taxComputationNew;
-  const totalIncome = Object.values(incomeData).reduce((s, sec) => s + sec.total, 0);
-  const totalDeductions = Object.values(deductionData).reduce((s, sec) => s + sec.total, 0);
+  const incomeData = useMemo(() => {
+    return (incomeDataByFY[selectedFY] ?? incomeDataByFY["2026-27"]);
+  }, [selectedFY]);
+
+  const deductionData = useMemo(() => {
+    return (deductionDataByFY[selectedFY] ?? deductionDataByFY["2026-27"]);
+  }, [selectedFY]);
+
+  const totalIncome = useMemo(() => Object.values(incomeData).reduce((s, sec) => s + sec.total, 0), [incomeData]);
+  const totalDeductions = useMemo(() => Object.values(deductionData).reduce((s, sec) => s + sec.total, 0), [deductionData]);
+  const taxableIncome = Math.max(0, totalIncome - totalDeductions);
+
+  const tax = useMemo(() => {
+    const computed = regime === "old" ? computeTaxOld(taxableIncome) : computeTaxNew(taxableIncome);
+    return { taxableIncome, ...computed };
+  }, [taxableIncome, regime]);
+
+  const handleSaveDraft = () => {
+    showToast.success(`Draft saved for FY ${selectedFY} (${regime === "old" ? "Old" : "New"} regime)`);
+  };
+
+  const handleFinalizeReturn = () => {
+    const confirmMsg = `Finalize return for FY ${selectedFY}? This will lock the computation at ₹${formatIndianNumber(tax.totalTax)} total tax liability.`;
+    if (window.confirm(confirmMsg)) {
+      showToast.success(`Return finalized for FY ${selectedFY}. Total tax: ₹${formatIndianNumber(tax.totalTax)}`);
+      setTimeout(() => router.push("/itr/returns"), 1000);
+    }
+  };
 
   return (
     <div className="space-y-0 text-left">
       {/* Sticky Header */}
       <div className="px-8 py-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 -mx-8 -mt-8 mb-8 bg-surface/50 sticky top-0 z-20 backdrop-blur-sm print:static print:bg-white print:border-black">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2 print:text-black">AY 2026-27 | Individual</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2 print:text-black">{ayLabel[selectedFY] ?? "AY 2027-28"} | Individual</p>
           <h1 className="font-display text-2xl font-semibold text-dark print:text-black">ITR Computation</h1>
         </div>
         <div className="flex flex-wrap gap-3 items-center print:hidden">
@@ -121,8 +339,8 @@ export default function ITRComputationPage() {
             <option value="2025-26">FY 2025-26</option>
             <option value="2024-25">FY 2024-25</option>
           </select>
-          <Button variant="outline" size="sm">Save Draft</Button>
-          <Button size="sm" className="gap-2">
+          <Button variant="outline" size="sm" onClick={handleSaveDraft}>Save Draft</Button>
+          <Button size="sm" className="gap-2" onClick={handleFinalizeReturn}>
             Finalize Return <Icon name="arrow_forward" className="text-sm" />
           </Button>
         </div>
@@ -233,7 +451,7 @@ export default function ITRComputationPage() {
                       ))}
                       {"limit" in section && (
                         <div className="px-6 py-1.5 text-[10px] font-ui text-light">
-                          Limit: ₹ {formatIndianNumber(section.limit)} | Utilized: {Math.round((section.total / section.limit) * 100)}%
+                          Limit: ₹ {formatIndianNumber(section.limit!)} | Utilized: {Math.round((section.total / section.limit!) * 100)}%
                         </div>
                       )}
                     </div>
@@ -290,7 +508,7 @@ export default function ITRComputationPage() {
               <CardContent className="p-6">
                 <h4 className="font-ui text-[10px] font-bold text-amber-900 mb-2 uppercase tracking-widest">Optimization Tip</h4>
                 <p className="font-ui text-[13px] text-amber-800 leading-relaxed">
-                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. Adding ₹ 24,000 more could save ₹ 7,200 in tax under the Old Regime.
+                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. Adding more could save tax under the {regime === "old" ? "Old" : "New"} Regime.
                 </p>
               </CardContent>
             </Card>
