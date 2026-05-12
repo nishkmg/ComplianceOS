@@ -26,6 +26,22 @@ const mockStock: StockItem[] = [
 
 export default function StockPage() {
   const { activeFy } = useFiscalYear();
+
+  const handleExportCSV = () => {
+    const header = "SKU,Product Name,Available,Committed,Net Available,Unit,Warehouse,Status";
+    const rows = mockStock.map((item) =>
+      `${item.sku},"${item.name}",${item.available},${item.committed},${item.netAvailable},${item.unit},"${item.warehouse}",${item.status}`
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `stock-levels-${activeFy}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${mockStock.length} items.`);
+  };
   return (
     <div className="space-y-6 text-left">
       {/* Header */}
@@ -49,7 +65,7 @@ export default function StockPage() {
             <span className="font-ui text-[11px] text-ui-xs text-dark-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
           </div>
           <div className="flex gap-4">
-            <button onClick={() => showToast.success("Stock report exported.")} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
+            <button onClick={handleExportCSV} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
             <button onClick={() => window.print()} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
           </div>
         </div>

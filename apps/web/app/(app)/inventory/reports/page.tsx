@@ -33,6 +33,27 @@ export default function InventoryReportsPage() {
   const fyEndDate = `${parseInt(activeFy.split('-')[1]) + 2000}-03-31`;
   const [asOfDate, setAsOfDate] = useState(fyEndDate);
 
+  const handleExportCSV = () => {
+    if (reportData.length === 0) {
+      showToast.error("No data to export. Select a different report type.");
+      return;
+    }
+    const header = "SKU,Product Name,Category,Qty on Hand,Avg Cost (₹),Inventory Value (₹)";
+    const rows = reportData.map((r) =>
+      `${r.sku},"${r.name}","${r.category}",${r.qty},${r.cost},${r.value}`
+    );
+    const total = reportData.reduce((s, r) => s + r.value, 0);
+    const csv = [header, ...rows, `,,,,,${total}`].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `inventory-${reportType}-${activeFy}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${reportData.length} rows.`);
+  };
+
   return (
     <div className="space-y-8 text-left">
       {/* Page Header */}
@@ -47,7 +68,7 @@ export default function InventoryReportsPage() {
             <Icon name="print" className="text-[18px]" />
             Print Report
           </button>
-          <button onClick={() => showToast.success("Report exported.")} className="btn btn-primary flex items-center gap-2">
+          <button onClick={handleExportCSV} className="btn btn-primary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" />
             Export CSV
           </button>

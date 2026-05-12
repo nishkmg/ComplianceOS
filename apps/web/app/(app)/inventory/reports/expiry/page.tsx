@@ -15,6 +15,26 @@ export default function InventoryExpiryPage() {
     if (dayFilter === "60") return p.days <= 60;
     return true;
   });
+
+  const handleExportCSV = () => {
+    if (filtered.length === 0) {
+      showToast.error("No data to export.");
+      return;
+    }
+    const header = "SKU,Product,Batch/Lot,Qty,Unit,Expiry Date,Days Left,Status";
+    const rows = filtered.map((p) =>
+      `${p.sku},"${p.name}","${p.batch}",${p.qty},${p.unit},${p.expiry},${p.days},${p.status}`
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `expiry-report-${dayFilter}d.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} items.`);
+  };
   return (
     <div className="space-y-6 text-left">
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 -mx-8 -mt-8 mb-8">
@@ -24,7 +44,7 @@ export default function InventoryExpiryPage() {
         </div>
         <div className="flex items-center gap-4">
           <select className="border border-border rounded-md py-1.5 px-3 text-xs bg-surface-muted" value={dayFilter} onChange={(e) => setDayFilter(e.target.value)}><option value="30">30 Days</option><option value="60">60 Days</option></select>
-          <button onClick={() => showToast.success("Expiry report exported.")} className="btn btn-primary flex items-center gap-2">
+          <button onClick={handleExportCSV} className="btn btn-primary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" /> Export CSV
           </button>
         </div>
