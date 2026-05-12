@@ -183,6 +183,10 @@ export default function JournalPage() {
   }, [allEntries]);
 
   const handleExportCSV = useCallback(() => {
+    if (filteredEntries.length === 0) {
+      showToast.error("No entries to export. Adjust your filters and try again.");
+      return;
+    }
     const header = "Entry #,Date,Narration,Debit,Credit,Status";
     const rows = filteredEntries.map(e =>
       `${e.entryNumber},${e.date},"${e.narration.replace(/"/g, '""')}",${e.debit},${e.credit},${e.status}`

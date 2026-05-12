@@ -118,6 +118,8 @@ export default function JournalEntryDetailPage() {
   const totalCredit = entry.lines.reduce((sum, l) => sum + l.credit, 0);
   const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
   const cfg = statusConfig[entry.status];
+  const formattedEntryDate = new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  const nowFormatted = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 
   function handlePost() {
     updateEntry(entryId, { status: "posted" as const });
@@ -195,9 +197,7 @@ export default function JournalEntryDetailPage() {
             </Badge>
           </div>
           <p className="text-[13px] text-secondary font-ui">
-            {new Date(entry.date).toLocaleDateString("en-IN", {
-              day: "2-digit", month: "long", year: "numeric",
-            })}
+            {new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
             <span className="mx-2 text-lighter">·</span>
             FY {entry.fiscalYear}
             <span className="mx-2 text-lighter">·</span>
@@ -329,7 +329,7 @@ export default function JournalEntryDetailPage() {
                 <span className="font-semibold">Entry created</span> by accountant@firm.in
               </p>
               <p className="font-mono text-[11px] text-mid mt-0.5">
-                01 Apr 2026 · 09:00:00 · IP 192.168.1.10
+                {formattedEntryDate} · IP 192.168.1.10
               </p>
             </div>
           </div>
@@ -341,7 +341,7 @@ export default function JournalEntryDetailPage() {
                   <span className="font-semibold text-success">Voucher posted</span> to General Ledger
                 </p>
                 <p className="font-mono text-[11px] text-mid mt-0.5">
-                  {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })} · System Verified
+                  {nowFormatted} · System Verified
                 </p>
               </div>
             </div>
@@ -354,7 +354,7 @@ export default function JournalEntryDetailPage() {
                   <span className="font-semibold text-danger">Voucher voided</span>
                 </p>
                 <p className="font-mono text-[11px] text-mid mt-0.5">
-                  {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })} · {voidReason || "Administrative"}
+                  {nowFormatted} · {voidReason || "Administrative"}
                 </p>
               </div>
             </div>

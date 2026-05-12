@@ -105,9 +105,15 @@ export default function NewJournalEntryPage() {
         warnings.push("Each line should have either debit or credit, not both.");
         break;
       }
+      const dVal = parseFloat(line.debit);
+      const cVal = parseFloat(line.credit);
+      if ((dVal && dVal < 0) || (cVal && cVal < 0)) {
+        warnings.push("Negative amounts are not allowed. Debit/Credit must be positive or zero.");
+        break;
+      }
       const acct = accountTypeMap[line.accountId];
       if (!acct) continue;
-      const amt = parseFloat(line.debit || line.credit);
+      const amt = dVal || cVal;
       if (!amt || amt <= 0) continue;
       const isDebit = !!line.debit;
       const normallyDr = acct.type === "asset" || acct.type === "expense";
@@ -127,7 +133,7 @@ export default function NewJournalEntryPage() {
   const updateLine = useCallback((index: number, field: keyof Line, value: string) => {
     setLines(prev => {
       const next = [...prev];
-      if ((field === "debit" || field === "credit") && value) {
+      if (field === "debit" || field === "credit") {
         const other = field === "debit" ? "credit" : "debit";
         next[index] = { ...next[index], [field]: value, [other]: "" };
       } else {
@@ -158,6 +164,10 @@ export default function NewJournalEntryPage() {
       showToast.error('Each line can have either debit or credit, not both.');
       return;
     }
+    if (lines.some(l => (parseFloat(l.debit) || 0) < 0 || (parseFloat(l.credit) || 0) < 0)) {
+      showToast.error('Negative amounts are not allowed.');
+      return;
+    }
     setSaving(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -170,7 +180,7 @@ export default function NewJournalEntryPage() {
         type: voucherType,
         reference,
         status,
-        lines: lines.filter(l => l.accountId).map(l => {
+        lines: lines.filter(l => l.accountId && ((parseFloat(l.debit) || 0) > 0 || (parseFloat(l.credit) || 0) > 0)).map(l => {
           const acct = accountTypeMap[l.accountId];
           return {
             accountName: acct?.name ?? "Unknown",
@@ -200,6 +210,18 @@ export default function NewJournalEntryPage() {
     setDiscardConfirm(false);
     router.back();
   }, [narration, reference, lines, discardConfirm, router]);
+
+  // Warn on navigate away when form has content
+  const hasFormContent = useMemo(
+    () => narration || reference || lines.some(l => l.accountId || l.debit || l.credit || l.description),
+    [narration, reference, lines]
+  );
+  useEffect(() => {
+    if (!hasFormContent || saving) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasFormContent, saving]);
 
   // Keyboard shortcuts
   useEffect(() => {
