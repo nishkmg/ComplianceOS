@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
@@ -17,6 +17,7 @@ export default function NewPaymentPage() {
   const [referenceNumber, setReferenceNumber] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
   const [discardConfirm, setDiscardConfirm] = useState(false);
 
   const hasContent = useMemo(
@@ -24,11 +25,20 @@ export default function NewPaymentPage() {
     [customerName, referenceNumber, paymentAmount, paymentDate]
   );
 
+  useEffect(() => {
+    if (!hasContent || saving) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasContent, saving]);
+
   const handleRecord = async () => {
+    if (savingRef.current) return;
     if (!customerName.trim()) { showToast.error("Party name is required."); return; }
     const amt = parseFloat(paymentAmount);
     if (isNaN(amt) || amt <= 0) { showToast.error("Amount must be greater than zero."); return; }
     setSaving(true);
+    savingRef.current = true;
     try {
       await new Promise(r => setTimeout(r, 800));
       addPayment({
@@ -50,6 +60,7 @@ export default function NewPaymentPage() {
       showToast.error("Failed to record payment");
     } finally {
       setSaving(false);
+      savingRef.current = false;
     }
   };
 
