@@ -5,8 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
-
-const MOCK_PRODUCT_SKUS = ["RM-001", "RM-002", "RM-004", "FG-001"];
+import { addProduct, skuExists } from "@/lib/inventory-store";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -27,9 +26,10 @@ export default function NewProductPage() {
   const validate = (): boolean => {
     const errs: Record<string, string> = {};
     if (!formData.sku.trim()) errs.sku = "SKU code is required";
-    else if (MOCK_PRODUCT_SKUS.includes(formData.sku.trim())) errs.sku = "SKU code already exists";
+    else if (skuExists(formData.sku.trim()) || ["RM-001", "RM-002", "RM-004", "FG-001"].some((s) => s.toLowerCase() === formData.sku.trim().toLowerCase()))
+      errs.sku = "SKU code already exists";
     if (!formData.name.trim()) errs.name = "Product name is required";
-    if (formData.name.length > 100) errs.name = "Product name must be 100 characters or fewer";
+    if (formData.name.trim().length > 100) errs.name = "Product name must be 100 characters or fewer";
     if (!formData.hsn.trim()) errs.hsn = "HSN/SAC code is required";
     else if (!/^\d{4,8}$/.test(formData.hsn.trim())) errs.hsn = "HSN code must be 4-8 digits";
     if (!formData.category) errs.category = "Category is required";
@@ -45,6 +45,16 @@ export default function NewProductPage() {
     if (!validate()) return;
     savingRef.current = true;
     setSaving(true);
+    addProduct({
+      id: Date.now().toString(),
+      sku: formData.sku.trim(),
+      name: formData.name.trim(),
+      hsn: formData.hsn.trim(),
+      category: formData.category,
+      stock: formData.openingStock,
+      unitPrice: formData.unitPrice,
+      status: "active",
+    });
     setTimeout(() => {
       showToast.success("SKU created successfully");
       router.push("/inventory/products");

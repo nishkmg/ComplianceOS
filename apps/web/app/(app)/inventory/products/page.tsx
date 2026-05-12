@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getProducts } from "@/lib/inventory-store";
 
 interface Product {
   id: string;
@@ -29,7 +30,21 @@ export default function ProductsPage() {
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState("");
 
-  const filtered = mockProducts.filter((p) => {
+  const allProducts = useMemo(() => {
+    const stored = getProducts().map((p) => ({
+      id: p.id,
+      sku: p.sku,
+      name: p.name,
+      category: p.category,
+      hsn: p.hsn,
+      stock: p.stock,
+      unitPrice: p.unitPrice,
+      status: p.status,
+    }));
+    return [...stored, ...mockProducts];
+  }, []);
+
+  const filtered = allProducts.filter((p) => {
     if (stockFilter === "in_stock" && p.stock <= 0) return false;
     if (stockFilter === "out_of_stock" && p.stock > 0) return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase()) && !p.sku.toLowerCase().includes(search.toLowerCase())) return false;
