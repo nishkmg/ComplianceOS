@@ -302,12 +302,14 @@ export default function ITRComputationPage() {
 
   const totalIncome = useMemo(() => Object.values(incomeData).reduce((s, sec) => s + sec.total, 0), [incomeData]);
   const totalDeductions = useMemo(() => Object.values(deductionData).reduce((s, sec) => s + sec.total, 0), [deductionData]);
-  const taxableIncome = Math.max(0, totalIncome - totalDeductions);
+  const taxableIncomeOld = Math.max(0, totalIncome - totalDeductions);
+  const taxableIncomeNew = totalIncome; // New regime: no Chapter VI-A deductions
 
   const tax = useMemo(() => {
-    const computed = regime === "old" ? computeTaxOld(taxableIncome) : computeTaxNew(taxableIncome);
-    return { taxableIncome, ...computed };
-  }, [taxableIncome, regime]);
+    const ti = regime === "old" ? taxableIncomeOld : taxableIncomeNew;
+    const computed = regime === "old" ? computeTaxOld(ti) : computeTaxNew(ti);
+    return { taxableIncome: ti, ...computed };
+  }, [taxableIncomeOld, taxableIncomeNew, regime]);
 
   const handleSaveDraft = () => {
     showToast.success(`Draft saved for FY ${selectedFY} (${regime === "old" ? "Old" : "New"} regime)`);
@@ -504,12 +506,12 @@ export default function ITRComputationPage() {
               </CardContent>
             </Card>
 
-            {deductionData.section80C && deductionData.section80C.total < 150000 && (
+            {regime === "old" && deductionData.section80C && deductionData.section80C.total < 150000 && (
             <Card className="bg-amber-50 border border-amber/30 shadow-sm print:border-black">
               <CardContent className="p-6">
                 <h4 className="font-ui text-[10px] font-bold text-amber-900 mb-2 uppercase tracking-widest">Optimization Tip</h4>
                 <p className="font-ui text-[13px] text-amber-800 leading-relaxed">
-                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. You can still save ₹ {formatIndianNumber(150000 - deductionData.section80C.total)} more under the {regime === "old" ? "Old" : "New"} Regime.
+                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. You can still save ₹ {formatIndianNumber(150000 - deductionData.section80C.total)} more under the Old Regime.
                 </p>
               </CardContent>
             </Card>
