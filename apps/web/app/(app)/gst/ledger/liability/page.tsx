@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
-import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function GSTLiabilityLedgerPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-0 text-left">
       {/* Header */}
@@ -14,11 +13,11 @@ export default function GSTLiabilityLedgerPage() {
           <h1 className="font-display text-2xl font-semibold text-dark mb-2">Liability Ledger</h1>
           <p className="font-ui text-[13px] text-secondary flex items-center gap-2">
             <Icon name="calendar_today" className="text-[16px]" />
-            Current Period: April 2023 - March 2024
+            FY {activeFy}
           </p>
         </div>
         <div className="flex gap-4">
-          <button className="px-5 py-2 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">
+          <button onClick={() => window.print()} className="px-5 py-2 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">
             <Icon name="print" className="text-[18px]" /> Print
           </button>
         </div>

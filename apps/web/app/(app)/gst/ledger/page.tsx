@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
@@ -98,7 +96,7 @@ export default function GSTLedgerPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border pb-8 mt-4">
         <div>
           <h1 className="font-display text-2xl font-semibold text-dark mb-2">Electronic Credit Ledger</h1>
-          <p className="font-ui text-[13px] text-secondary">Statement of Input Tax Credit for <span className="font-mono text-dark font-bold text-[13px]">GSTIN: 27AACPB1234F1Z5</span></p>
+          <p className="font-ui text-[13px] text-secondary">Statement of Input Tax Credit for <span className="font-mono text-dark font-bold text-[13px]">GSTIN: 27AACPB1234F1Z5</span> · FY {activeFy}</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex flex-col gap-1 text-left">
