@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { getInvoice, updateInvoice } from "@/lib/invoice-store";
+import { getInvoice, updateInvoice, deleteInvoice } from "@/lib/invoice-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -70,10 +70,11 @@ export default function EditInvoicePage() {
 
   const handleDelete = useCallback(() => {
     if (window.confirm("Delete this draft invoice permanently?")) {
+      if (stored) deleteInvoice(invId);
       showToast.success("Invoice deleted.");
       router.push("/invoices");
     }
-  }, [router]);
+  }, [router, stored, invId]);
 
   const subtotal = useMemo(() => invoice.items.reduce((s, item) => s + item.qty * item.rate, 0), [invoice.items]);
   const taxAmount = subtotal * 0.18;

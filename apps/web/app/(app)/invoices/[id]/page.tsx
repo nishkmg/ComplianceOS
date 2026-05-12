@@ -82,6 +82,8 @@ export default function InvoiceDetailPage() {
   }
 
   function handleSend() {
+    setInv(prev => ({ ...prev, status: "sent" }));
+    updateInvoice(invId, { status: "sent" });
     showToast.success("Invoice sent to customer.");
   }
 
