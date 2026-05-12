@@ -20,29 +20,61 @@ interface MockEntry {
   fiscalYear: string; type: string; status: "draft" | "posted" | "voided"; lines: MockLine[];
 }
 
+function makeLine(acctName: string, acctCode: string, debit: number, credit: number): MockLine {
+  return { accountName: acctName, accountCode: acctCode, debit, credit };
+}
+
 const mockEntriesByFy: Record<string, MockEntry[]> = {
   '2026-27': [
     { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance entry for the financial year 2026-27", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
-      { accountName: "Cash Account", accountCode: "10101", debit: 500000, credit: 0 },
-      { accountName: "Capital Account", accountCode: "30100", debit: 0, credit: 500000 },
+      makeLine("Cash Account", "10101", 500000, 0),
+      makeLine("Capital Account", "30100", 0, 500000),
+    ]},
+    { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Trade Receivables", "10300", 118000, 0),
+      makeLine("Sales Revenue", "40100", 0, 118000),
     ]},
     { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
-      { accountName: "Equipment", accountCode: "10500", debit: 75000, credit: 0 },
-      { accountName: "Bank Account", accountCode: "10200", debit: 0, credit: 75000 },
+      makeLine("Equipment", "10500", 75000, 0),
+      makeLine("Bank Account", "10200", 0, 75000),
     ]},
     { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
-      { accountName: "Operating Expenses", accountCode: "50200", debit: 320000, credit: 0 },
-      { accountName: "Bank Account", accountCode: "10200", debit: 0, credit: 320000 },
+      makeLine("Operating Expenses", "50200", 320000, 0),
+      makeLine("Bank Account", "10200", 0, 320000),
+    ]},
+    { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 75000, 0),
+      makeLine("Bank Account", "10200", 0, 75000),
     ]},
     { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
-      { accountName: "Trade Receivables", accountCode: "10300", debit: 236000, credit: 0 },
-      { accountName: "Sales Revenue", accountCode: "40100", debit: 0, credit: 236000 },
+      makeLine("Trade Receivables", "10300", 236000, 0),
+      makeLine("Sales Revenue", "40100", 0, 236000),
     ]},
   ],
   '2025-26': [
     { id: "101", entryNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance entry for FY 2025-26", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
-      { accountName: "Cash Account", accountCode: "10101", debit: 420000, credit: 0 },
-      { accountName: "Capital Account", accountCode: "30100", debit: 0, credit: 420000 },
+      makeLine("Cash Account", "10101", 420000, 0),
+      makeLine("Capital Account", "30100", 0, 420000),
+    ]},
+    { id: "102", entryNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Furniture & Fixtures", "10700", 120000, 0),
+      makeLine("Bank Account", "10200", 0, 120000),
+    ]},
+    { id: "103", entryNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Trade Receivables", "10300", 680000, 0),
+      makeLine("Sales Revenue", "40100", 0, 680000),
+    ]},
+    { id: "104", entryNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Operating Expenses", "50200", 96000, 0),
+      makeLine("Bank Account", "10200", 0, 96000),
+    ]},
+    { id: "105", entryNumber: "JE-2025-26-005", date: "2026-01-15", narration: "Tax provision entry", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 185000, 0),
+      makeLine("Trade Payables", "20101", 0, 185000),
+    ]},
+    { id: "106", entryNumber: "JE-2025-26-006", date: "2026-03-25", narration: "Year-end adjustments", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 45000, 0),
+      makeLine("Trade Payables", "20101", 0, 45000),
     ]},
   ],
 };

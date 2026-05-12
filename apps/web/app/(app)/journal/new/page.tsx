@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
@@ -80,6 +80,7 @@ export default function NewJournalEntryPage() {
   const [voucherType, setVoucherType] = useState<string>("Journal Entry");
   const [lines, setLines] = useState<Line[]>([newLine(), newLine()]);
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
   const [discardConfirm, setDiscardConfirm] = useState(false);
 
   const entryNumber = useMemo(() => entryNumberForFy(activeFy), [activeFy]);
@@ -133,7 +134,7 @@ export default function NewJournalEntryPage() {
   const updateLine = useCallback((index: number, field: keyof Line, value: string) => {
     setLines(prev => {
       const next = [...prev];
-      if (field === "debit" || field === "credit") {
+      if ((field === "debit" || field === "credit") && value) {
         const other = field === "debit" ? "credit" : "debit";
         next[index] = { ...next[index], [field]: value, [other]: "" };
       } else {
@@ -144,6 +145,7 @@ export default function NewJournalEntryPage() {
   }, []);
 
   const handleSubmit = useCallback(async (status: 'draft' | 'posted' = 'posted') => {
+    if (savingRef.current) return;
     if (!narration.trim()) {
       showToast.error('Narration is required.');
       return;
@@ -169,6 +171,7 @@ export default function NewJournalEntryPage() {
       return;
     }
     setSaving(true);
+    savingRef.current = true;
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
       const entry: StoredEntry = {
@@ -198,6 +201,7 @@ export default function NewJournalEntryPage() {
       showToast.error('An error occurred while saving.');
     } finally {
       setSaving(false);
+      savingRef.current = false;
     }
   }, [isBalanced, narration, dateError, lines, entryNumber, date, activeFy, voucherType, reference, router]);
 
