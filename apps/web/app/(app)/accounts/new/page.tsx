@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
-import { addAccount } from "@/lib/account-store";
+import { addAccount, getAccounts } from "@/lib/account-store";
 
 // ─── Sub-type options per account kind ────────────────────────────────────────
 
@@ -20,7 +20,11 @@ const subTypes: Record<string, string[]> = {
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
-const EXISTING_CODES = ["10101", "10200", "10300", "10400", "10500", "20101", "20200", "20300", "30100", "40100", "50200"];
+function getExistingCodes(): string[] {
+  const builtin = ["10101", "10200", "10300", "10400", "10500", "20101", "20200", "20300", "30100", "40100", "50200"];
+  const stored = getAccounts().map(a => a.code);
+  return [...new Set([...builtin, ...stored])];
+}
 
 export default function NewAccountPage() {
   const router = useRouter();
@@ -35,9 +39,10 @@ export default function NewAccountPage() {
 
   const validate = (): boolean => {
     const errs: Record<string, string> = {};
+    const existingCodes = getExistingCodes();
     if (!form.code.trim()) errs.code = "Account code is required";
     else if (!/^\d{4,5}$/.test(form.code.trim())) errs.code = "Code must be 4-5 digits";
-    else if (EXISTING_CODES.includes(form.code.trim())) errs.code = "Code already exists";
+    else if (existingCodes.includes(form.code.trim())) errs.code = "Code already exists";
     if (!form.name.trim()) errs.name = "Account name is required";
     setErrors(errs);
     return Object.keys(errs).length === 0;

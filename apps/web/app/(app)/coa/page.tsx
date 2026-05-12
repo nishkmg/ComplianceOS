@@ -7,6 +7,7 @@ import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getAccounts, addAccount as storeAccount } from "@/lib/account-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,9 +58,24 @@ const groupTypes = ["asset", "liability", "equity", "income", "expense"] as cons
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+function initAccounts() {
+  const stored = getAccounts();
+  const storedAccounts: Account[] = stored.map(a => ({
+    id: a.id,
+    code: a.code,
+    name: a.name,
+    type: a.kind.toLowerCase() as Account["type"],
+    level: 2,
+    balance: 0,
+    balanceType: (["asset", "expense"].includes(a.kind.toLowerCase()) ? "dr" : "cr") as "dr" | "cr",
+    hasChildren: false,
+  }));
+  return [...MOCK_ACCOUNTS, ...storedAccounts];
+}
+
 export default function CoAPage() {
   const { activeFy } = useFiscalYear();
-  const [accounts, setAccounts] = useState(MOCK_ACCOUNTS);
+  const [accounts, setAccounts] = useState(initAccounts);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -352,6 +368,15 @@ export default function CoAPage() {
                                 hasChildren: false,
                               };
                               setAccounts(prev => [...prev, newAccount]);
+                              storeAccount({
+                                id: newAccount.id,
+                                code: newAccount.code,
+                                name: newAccount.name,
+                                kind: type === "income" ? "Income" : type.charAt(0).toUpperCase() + type.slice(1),
+                                subtype: typeLabels[type],
+                                description: "",
+                                createdAt: new Date().toISOString(),
+                              });
                               setNewAccountNames(prev => { const n = {...prev}; delete n[type]; return n; });
                               toggleAddForm(type);
                             }}

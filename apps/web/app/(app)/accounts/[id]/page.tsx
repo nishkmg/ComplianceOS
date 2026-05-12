@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from '@/lib/toast';
+import { getAccounts } from '@/lib/account-store';
 
 // ─── Mock account data (fallback when tRPC is not wired) ────────────────────
 
@@ -91,10 +92,19 @@ export default function AccountDetailPage() {
     { enabled: !!id }
   );
 
-  // Fall back to mock data
+  // Fall back to mock + stored data
+  const storedAccount = getAccounts().find(a => a.code === id || a.id === id);
   const account = _accounts?.find((a: any) => a.id === id)
     ?? MOCK_ACCOUNTS.find(a => a.id === id)
-    ?? MOCK_ACCOUNTS.find(a => a.code === id);
+    ?? MOCK_ACCOUNTS.find(a => a.code === id)
+    ?? (storedAccount ? {
+      id: storedAccount.id,
+      code: storedAccount.code,
+      name: storedAccount.name,
+      kind: storedAccount.kind.toLowerCase(),
+      balance: 0,
+      balanceType: "Dr",
+    } : undefined);
 
   const mockTx = MOCK_TRANSACTIONS_BY_FY[fiscalYear] ?? MOCK_TRANSACTIONS_BY_FY['2026-27'];
   const transactions: Tx[] = _ledgerData?.transactions ?? mockTx;

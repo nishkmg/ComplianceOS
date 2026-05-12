@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getAccounts } from "@/lib/account-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -90,8 +91,21 @@ const columns: ColumnDef<AccountRow>[] = [
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
+function allAccounts() {
+  const stored = getAccounts();
+  const storedRows: AccountRow[] = stored.map(a => ({
+    code: a.code,
+    name: a.name,
+    type: a.kind,
+    balance: 0,
+    balanceType: (a.kind.toLowerCase() === "asset" || a.kind.toLowerCase() === "expense") ? "Dr" : "Cr",
+  }));
+  return [...ACCOUNTS, ...storedRows];
+}
+
 export default function AccountsFlatPage() {
   const { activeFy } = useFiscalYear();
+  const [allAccts] = useState(allAccounts);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
   const [loading, setLoading] = useState(true);
@@ -102,12 +116,12 @@ export default function AccountsFlatPage() {
 
   const filtered = useMemo(
     () =>
-      ACCOUNTS.filter(a => {
+      allAccts.filter(a => {
         if (typeFilter !== "All" && a.type !== typeFilter) return false;
         if (search && !a.name.toLowerCase().includes(search.toLowerCase()) && !a.code.includes(search)) return false;
         return true;
       }),
-    [typeFilter, search]
+    [typeFilter, search, allAccts]
   );
 
   const totalBalance = filtered.reduce((s, a) => s + a.balance, 0);
