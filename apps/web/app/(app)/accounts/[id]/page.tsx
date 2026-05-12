@@ -39,8 +39,8 @@ const MOCK_TX_BY_ACCOUNT: Record<string, Record<string, Tx[]>> = {
   "10101": { // Cash Account
     "2026-27": [
       { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0 },
-      { id: "2", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Equipment purchase", debit: 0, credit: 75000 },
-      { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 0, credit: 320000 },
+      { id: "3", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", debit: 0, credit: 75000 },
+      { id: "4", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 0, credit: 320000 },
     ],
     "2025-26": [
       { id: "101", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 420000, credit: 0 },
@@ -49,34 +49,36 @@ const MOCK_TX_BY_ACCOUNT: Record<string, Record<string, Tx[]>> = {
   },
   "10200": { // Bank Account
     "2026-27": [
-      { id: "3", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 1250000, credit: 0 },
+      { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 1250000, credit: 0 },
+      { id: "3", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", debit: 75000, credit: 0 },
+      { id: "4", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 320000, credit: 0 },
     ],
     "2025-26": [
-      { id: "103", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 980000, credit: 0 },
+      { id: "101", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 980000, credit: 0 },
     ],
   },
   "10300": { // Trade Receivables
     "2026-27": [
-      { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0 },
+      { id: "6", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0 },
     ],
     "2025-26": [
-      { id: "104", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Consultancy revenue", debit: 680000, credit: 0 },
+      { id: "103", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", debit: 680000, credit: 0 },
     ],
   },
   "40100": { // Sales Revenue
     "2026-27": [
-      { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 0, credit: 236000 },
+      { id: "6", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 0, credit: 236000 },
     ],
     "2025-26": [
-      { id: "104", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Consultancy revenue", debit: 0, credit: 680000 },
+      { id: "103", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", debit: 0, credit: 680000 },
     ],
   },
   "50200": { // Operating Expenses
     "2026-27": [
-      { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 320000, credit: 0 },
+      { id: "4", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 320000, credit: 0 },
     ],
     "2025-26": [
-      { id: "105", voucherNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance", debit: 96000, credit: 0 },
+      { id: "104", voucherNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", debit: 96000, credit: 0 },
     ],
   },
 };
@@ -84,7 +86,7 @@ const MOCK_TX_BY_ACCOUNT: Record<string, Record<string, Tx[]>> = {
 function getTxForAccount(accountCode: string, fy: string): Tx[] {
   const byAcct = MOCK_TX_BY_ACCOUNT[accountCode];
   if (!byAcct) return [];
-  return byAcct[fy] ?? byAcct["2026-27"] ?? [];
+  return byAcct[fy] ?? [];
 }
 
 const MOCK_OPENING_BALANCES: Record<string, number> = {
@@ -178,6 +180,21 @@ export default function AccountDetailPage() {
   const balanceLabel = isDrNormally ? "Dr" : "Cr";
   const negateLabel = isDrNormally ? "Cr" : "Dr";
 
+  const handleExportStatement = () => {
+    if (filteredTxs.length === 0) { showToast.error("No transactions to export."); return; }
+    const header = "Date,Voucher,Narration,Debit,Credit,Running Balance";
+    const rows = filteredTxs.map(t => {
+      const rb = openingBalance + filteredTxs.slice(0, filteredTxs.indexOf(t) + 1).reduce((s, tx) => s + tx.debit - tx.credit, 0);
+      return `${t.date},${t.voucherNumber},"${t.narration.replace(/"/g, '""')}",${t.debit},${t.credit},${rb}`;
+    });
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `ledger-${account.code}-${fiscalYear}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filteredTxs.length} transactions.`);
+  };
+
   return (
     <div className="space-y-8">
       {/* Breadcrumb */}
@@ -201,7 +218,7 @@ export default function AccountDetailPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => { showToast.success("Statement exported."); }} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+          <button onClick={handleExportStatement} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export Statement
           </button>
           <button onClick={() => { showToast.success("Edit mode opened."); }} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
