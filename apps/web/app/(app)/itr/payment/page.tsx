@@ -62,7 +62,7 @@ export default function ITRPaymentPage() {
         <div>
           <Link href="/itr/returns" className="font-ui text-[12px] text-amber hover:underline">← Back to ITR Returns</Link>
           <h1 className="font-display text-2xl font-semibold text-dark mt-1">ITR Payment</h1>
-          <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {assessmentYear}</p>
+          <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {assessmentYear} · FY {activeFy}</p>
         </div>
         <Link href="/itr/payment/history" className="filter-tab">Payment History</Link>
       </div>

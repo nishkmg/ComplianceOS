@@ -73,7 +73,8 @@ export default function ITRReturnsPage() {
   };
 
   const handleView = (id: string) => {
-    router.push(`/itr/returns/${id}`);
+    const r = returns.find(ret => ret.id === id);
+    if (r) router.push(`/itr/returns/${r.financialYear}/${id}`);
   };
 
   const handleDownload = (r: ITRReturn) => {
