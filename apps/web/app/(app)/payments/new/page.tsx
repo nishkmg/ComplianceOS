@@ -21,8 +21,8 @@ export default function NewPaymentPage() {
   const [discardConfirm, setDiscardConfirm] = useState(false);
 
   const hasContent = useMemo(
-    () => customerName || referenceNumber || paymentAmount || paymentDate,
-    [customerName, referenceNumber, paymentAmount, paymentDate]
+    () => customerName || referenceNumber || paymentAmount,
+    [customerName, referenceNumber, paymentAmount]
   );
 
   useEffect(() => {
