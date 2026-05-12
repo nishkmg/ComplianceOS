@@ -504,14 +504,16 @@ export default function ITRComputationPage() {
               </CardContent>
             </Card>
 
+            {deductionData.section80C && deductionData.section80C.total < 150000 && (
             <Card className="bg-amber-50 border border-amber/30 shadow-sm print:border-black">
               <CardContent className="p-6">
                 <h4 className="font-ui text-[10px] font-bold text-amber-900 mb-2 uppercase tracking-widest">Optimization Tip</h4>
                 <p className="font-ui text-[13px] text-amber-800 leading-relaxed">
-                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. Adding more could save tax under the {regime === "old" ? "Old" : "New"} Regime.
+                  You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. You can still save ₹ {formatIndianNumber(150000 - deductionData.section80C.total)} more under the {regime === "old" ? "Old" : "New"} Regime.
                 </p>
               </CardContent>
             </Card>
+            )}
           </div>
         </div>
       </div>

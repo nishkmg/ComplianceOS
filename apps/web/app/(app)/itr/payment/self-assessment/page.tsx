@@ -3,9 +3,9 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 interface TaxBreakdown {
   grossIncome: number;
@@ -37,7 +37,10 @@ function computeTaxSlabOld(grossIncome: number, deductions: number): { taxOnInco
   return { taxOnIncome: Math.round(tax), cess };
 }
 
+const ayLabels: Record<string, string> = { "2026-27": "2027-28", "2025-26": "2026-27", "2024-25": "2025-26" };
+
 export default function ITRSelfAssessmentPage() {
+  const { activeFy } = useFiscalYear();
   const router = useRouter();
   const [grossIncome] = useState(1850000);
   const [deductions] = useState(233000);
@@ -71,7 +74,7 @@ export default function ITRSelfAssessmentPage() {
     <div className="space-y-0 text-left">
       {/* Page Header */}
       <div className="mb-12">
-        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Assessment Year 2024-25</p>
+        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">{ayLabels[activeFy] ?? "2027-28"} · FY {activeFy}</p>
         <h1 className="font-display text-2xl font-semibold text-dark mb-2">Self-Assessment Tax</h1>
         <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">Review your total tax liability, apply available credits, and determine the final self-assessment tax due before filing.</p>
       </div>
