@@ -33,12 +33,20 @@ interface Tx {
   id: string; voucherNumber: string; date: string; narration: string; debit: number; credit: number;
 }
 
-const MOCK_TRANSACTIONS: Tx[] = [
-  { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0 },
-  { id: "2", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Equipment purchase", debit: 0, credit: 75000 },
-  { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 0, credit: 320000 },
-  { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice", debit: 236000, credit: 0 },
-];
+const MOCK_TRANSACTIONS_BY_FY: Record<string, Tx[]> = {
+  '2026-27': [
+    { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0 },
+    { id: "2", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Equipment purchase", debit: 0, credit: 75000 },
+    { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 0, credit: 320000 },
+    { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice", debit: 236000, credit: 0 },
+  ],
+  '2025-26': [
+    { id: "101", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 420000, credit: 0 },
+    { id: "102", voucherNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", debit: 0, credit: 120000 },
+    { id: "103", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Consultancy revenue", debit: 680000, credit: 0 },
+    { id: "104", voucherNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance", debit: 0, credit: 96000 },
+  ],
+};
 
 const MOCK_OPENING_BALANCES: Record<string, number> = {
   "10101": 500000, "10200": 1250000, "10300": 350000, "10400": 45000,
@@ -61,12 +69,19 @@ export default function AccountDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const [period, setPeriod] = useState("fy");
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
   const [txSearch, setTxSearch] = useState("");
 
   const handlePeriodChange = (value: string) => {
     if (value === "custom") { setPeriod("custom"); return; }
     setFiscalYear(value);
     setPeriod("fy");
+  };
+
+  const handleCustomApply = () => {
+    if (!customStart || !customEnd) { showToast.error("Select both start and end dates."); return; }
+    showToast.success(`Filtered from ${customStart} to ${customEnd}`);
   };
 
   // tRPC queries (will be undefined until wired)
@@ -81,7 +96,8 @@ export default function AccountDetailPage() {
     ?? MOCK_ACCOUNTS.find(a => a.id === id)
     ?? MOCK_ACCOUNTS.find(a => a.code === id);
 
-  const transactions: Tx[] = _ledgerData?.transactions ?? MOCK_TRANSACTIONS;
+  const mockTx = MOCK_TRANSACTIONS_BY_FY[fiscalYear] ?? MOCK_TRANSACTIONS_BY_FY['2026-27'];
+  const transactions: Tx[] = _ledgerData?.transactions ?? mockTx;
   const openingBalance = _ledgerData?.openingBalance ?? (MOCK_OPENING_BALANCES[account?.code ?? ""] ?? 0);
   const closingBalance = _ledgerData?.closingBalance ?? (openingBalance + transactions.reduce((s, t) => s + t.debit - t.credit, 0));
 
@@ -160,6 +176,14 @@ export default function AccountDetailPage() {
             </button>
           ))}
         </div>
+        {period === "custom" && (
+          <div className="flex items-center gap-2">
+            <input type="date" className="bg-surface border border-border rounded-md px-3 py-1.5 text-[12px] font-mono" value={customStart} onChange={e => setCustomStart(e.target.value)} />
+            <span className="text-light text-[10px]">to</span>
+            <input type="date" className="bg-surface border border-border rounded-md px-3 py-1.5 text-[12px] font-mono" value={customEnd} onChange={e => setCustomEnd(e.target.value)} />
+            <button onClick={handleCustomApply} className="px-3 py-1.5 bg-amber text-white text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-amber-hover cursor-pointer border-none">Apply</button>
+          </div>
+        )}
       </div>
 
       {/* Balance summary strip */}

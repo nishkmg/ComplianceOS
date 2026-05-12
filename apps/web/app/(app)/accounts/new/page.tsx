@@ -107,6 +107,7 @@ export default function NewAccountPage() {
               value={form.name}
               onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(prev => { const n = {...prev}; delete n.name; return n; }); }}
               required
+              maxLength={100}
             />
           </div>
 
@@ -169,7 +170,9 @@ export default function NewAccountPage() {
               placeholder="Enter context or specific use-case for this ledger…"
               value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+              maxLength={500}
             />
+            <p className="font-ui text-[10px] text-light text-right">{form.description.length}/500</p>
           </div>
         </form>
       </div>
