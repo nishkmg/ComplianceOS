@@ -32,7 +32,8 @@ export default function PayrollPage() {
 
   useEffect(() => {
     const now = new Date();
-    setMonth(String(now.getMonth() + 1).padStart(2, "0"));
+    const fyMonth = ((now.getMonth() - 3 + 12) % 12) + 1;
+    setMonth(String(fyMonth).padStart(2, "0"));
     setYear(String(now.getFullYear()));
     const timer = setTimeout(() => { setLoading(false); }, 600);
     return () => clearTimeout(timer);
