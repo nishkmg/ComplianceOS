@@ -5,17 +5,17 @@ import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-// All values are for a gross income of ₹85L with varying deductions by regime.
-// Old regime: taxable=8075000 → 2235000 tax + 89400 cess = 2324400
-// New regime: taxable=8450000 → 2190000 tax + 87600 cess = 2277600
+// Gross income ₹85L. Old regime has deductions; new regime has none.
+// Old: taxable 8385000 → 2328000 tax + 93120 cess = 2421120
+// New: taxable 8450000 → 2235000 tax + 89400 cess = 2324400
 const comparisonData = [
   { label: "Total Gross Income", old: 8500000, new: 8500000 },
   { label: "Standard Deduction", old: 50000, new: 50000 },
-  { label: "80C Deductions", old: 150000, new: 0 },
-  { label: "80D Health Insurance", old: 25000, new: 0 },
-  { label: "Section 24 (Home Loan)", old: 200000, new: 0 },
-  { label: "Total Taxable Income", old: 8075000, new: 8450000 },
-  { label: "Computed Tax (+Cess)", old: 2324400, new: 2277600 },
+  { label: "80C Deductions", old: 50000, new: 0 },
+  { label: "80D Health Insurance", old: 15000, new: 0 },
+  { label: "Section 24 (Home Loan)", old: 0, new: 0 },
+  { label: "Total Taxable Income", old: 8385000, new: 8450000 },
+  { label: "Computed Tax (+Cess)", old: 2421120, new: 2324400 },
 ];
 
 export default function ITRRegimeComparisonPage() {
@@ -44,7 +44,7 @@ export default function ITRRegimeComparisonPage() {
         <Icon name="check_circle" className="text-success text-3xl" />
         <div>
           <h3 className="font-display text-lg text-lg font-bold text-dark mb-1">New Regime Recommended</h3>
-          <p className="font-ui text-[13px] text-mid">Opting for the New Regime saves <span className="font-mono text-dark font-bold text-base">₹ {formatIndianNumber(2324400 - 2277600)}</span> in total tax liability for the current assessment year.</p>
+          <p className="font-ui text-[13px] text-mid">Opting for the New Regime saves <span className="font-mono text-dark font-bold text-base">₹ {formatIndianNumber(2421120 - 2324400)}</span> in total tax liability for the current assessment year.</p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ export default function ITRRegimeComparisonPage() {
           <div className="p-8 bg-surface-muted border-t-2 border-stone-800">
             <div className="flex justify-between items-center">
               <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-xs text-mid">Final Liability</span>
-              <span className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(2324400)}</span>
+              <span className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(2421120)}</span>
             </div>
           </div>
         </div>

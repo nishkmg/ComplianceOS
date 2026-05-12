@@ -248,9 +248,12 @@ function computeTaxOld(taxableIncome: number): Omit<TaxComputation, 'taxableInco
   } else if (taxableIncome > 250000) {
     tax += (taxableIncome - 250000) * 0.05;
   }
-  const roundedTax = Math.round(tax);
+  let roundedTax = Math.round(tax);
+  // Rebate u/s 87A: up to ₹12,500 if taxable income ≤ ₹5L
+  const rebate = (taxableIncome <= 500000) ? Math.min(roundedTax, 12500) : 0;
+  roundedTax = Math.max(0, roundedTax - rebate);
   const cess = Math.round(roundedTax * 0.04);
-  return { taxOnIncome: roundedTax, rebate: 0, surcharge: 0, cess, totalTax: roundedTax + cess };
+  return { taxOnIncome: roundedTax, rebate, surcharge: 0, cess, totalTax: roundedTax + cess };
 }
 
 function computeTaxNew(taxableIncome: number): Omit<TaxComputation, 'taxableIncome'> {
@@ -276,9 +279,12 @@ function computeTaxNew(taxableIncome: number): Omit<TaxComputation, 'taxableInco
   } else if (taxableIncome > 300000) {
     tax += (taxableIncome - 300000) * 0.05;
   }
-  const roundedTax = Math.round(tax);
+  let roundedTax = Math.round(tax);
+  // Rebate u/s 87A: up to ₹25,000 if taxable income ≤ ₹7L (new regime)
+  const rebate = (taxableIncome <= 700000) ? Math.min(roundedTax, 25000) : 0;
+  roundedTax = Math.max(0, roundedTax - rebate);
   const cess = Math.round(roundedTax * 0.04);
-  return { taxOnIncome: roundedTax, rebate: 0, surcharge: 0, cess, totalTax: roundedTax + cess };
+  return { taxOnIncome: roundedTax, rebate, surcharge: 0, cess, totalTax: roundedTax + cess };
 }
 
 const ayLabel: Record<string, string> = {
