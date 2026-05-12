@@ -3,9 +3,10 @@
 import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { getInvoice, updateInvoice } from "@/lib/invoice-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -38,16 +39,34 @@ const mockInvoice = {
 
 export default function EditInvoicePage() {
   const router = useRouter();
+  const params = useParams();
+  const invId = params.id as string;
+  const stored = getInvoice(invId);
+  const initialData = stored
+    ? {
+        id: stored.id,
+        invoiceNumber: stored.invoiceNumber,
+        status: stored.status.toUpperCase(),
+        client: stored.customerName,
+        date: stored.date,
+        dueDate: stored.dueDate,
+        items: stored.lines.map((l, i) => ({ id: i, description: l.description, qty: l.qty, rate: l.rate, tax: `GST ${l.gstRate}%`, hsn: l.hsn })),
+        notes: "Payment due within 30 days.",
+      }
+    : mockInvoice;
   const [saving, setSaving] = useState(false);
-  const [invoice, setInvoice] = useState(mockInvoice);
+  const [invoice, setInvoice] = useState(initialData);
 
   const handleSave = useCallback(async (status: "draft" | "sent") => {
     setSaving(true);
     await new Promise(resolve => setTimeout(resolve, 500));
+    if (stored) {
+      updateInvoice(invId, { status });
+    }
     setSaving(false);
     showToast.success(status === "draft" ? "Draft saved." : "Invoice finalized and sent.");
     router.push("/invoices");
-  }, [router]);
+  }, [router, stored, invId]);
 
   const handleDelete = useCallback(() => {
     if (window.confirm("Delete this draft invoice permanently?")) {
