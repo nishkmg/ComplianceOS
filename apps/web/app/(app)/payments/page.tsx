@@ -8,7 +8,6 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { getPayments } from "@/lib/payment-store";
 
