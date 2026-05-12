@@ -59,6 +59,7 @@ import {
   Moon,
   Languages,
   User,
+  UserPlus,
   FolderOpen,
   Folder,
   List,
@@ -144,6 +145,7 @@ const iconMap: Record<string, LucideIcon> = {
   translate: Languages,
   // Added for sidebar nav and topbar
   person: User,
+  person_add: UserPlus,
   folder_open: FolderOpen,
   folder: Folder,
   list: List,

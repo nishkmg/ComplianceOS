@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
-import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function EmployeeDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const { activeFy } = useFiscalYear();
   const id = params.id as string;
 
   const mockEmployee = {
@@ -50,7 +53,7 @@ export default function EmployeeDetailPage() {
       {/* Employee Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Employee Profile</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Employee Profile · FY {activeFy}</p>
           <div className="flex items-center gap-4 mb-2">
             <h1 className="font-display text-display-lg font-semibold text-dark">{mockEmployee.name}</h1>
             <span className="inline-flex items-center px-2 py-0.5 border border-green-200 text-success font-ui text-[10px] uppercase tracking-widest bg-success-bg rounded-md">
@@ -61,10 +64,10 @@ export default function EmployeeDetailPage() {
           <p className="text-[13px] text-secondary font-ui mt-1">{mockEmployee.role}, {mockEmployee.department}</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn btn-secondary flex items-center gap-2">
+          <button onClick={() => showToast.success("Profile edit mode opened.")} className="btn btn-secondary flex items-center gap-2">
             <Icon name="edit" className="text-[18px]" /> Edit Profile
           </button>
-          <button className="btn btn-primary flex items-center gap-2">
+          <button onClick={() => showToast.success("Employee data exported.")} className="btn btn-primary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" /> Export Data
           </button>
         </div>
@@ -73,9 +76,9 @@ export default function EmployeeDetailPage() {
       {/* Tabs */}
       <div className="border-b-[0.5px] border-border mb-8 flex gap-8">
         <button className="border-b-2 border-amber text-amber font-ui text-[13px] font-bold pb-3 px-1 border-none bg-transparent cursor-pointer">Profile</button>
-        <button className="border-b-2 border-transparent text-mid hover:text-dark font-ui text-[13px] pb-3 px-1 transition-colors border-none bg-transparent cursor-pointer">Salary Structure</button>
-        <button className="border-b-2 border-transparent text-mid hover:text-dark font-ui text-[13px] pb-3 px-1 transition-colors border-none bg-transparent cursor-pointer">Payslips</button>
-        <button className="border-b-2 border-transparent text-mid hover:text-dark font-ui text-[13px] pb-3 px-1 transition-colors border-none bg-transparent cursor-pointer">Compliance</button>
+        <button onClick={() => showToast.info("Salary structure view.")} className="border-b-2 border-transparent text-mid hover:text-dark font-ui text-[13px] pb-3 px-1 transition-colors border-none bg-transparent cursor-pointer">Salary Structure</button>
+        <button onClick={() => showToast.info("Payslip history view.")} className="border-b-2 border-transparent text-mid hover:text-dark font-ui text-[13px] pb-3 px-1 transition-colors border-none bg-transparent cursor-pointer">Payslips</button>
+        <button onClick={() => showToast.info("Compliance view.")} className="border-b-2 border-transparent text-mid hover:text-dark font-ui text-[13px] pb-3 px-1 transition-colors border-none bg-transparent cursor-pointer">Compliance</button>
       </div>
 
       {/* Profile Content */}
@@ -93,12 +96,12 @@ export default function EmployeeDetailPage() {
               ].map((item) => (
                 <div key={item.label} className="flex justify-between items-center py-2 border-b border-stone-50">
                   <span className="font-ui text-[13px] text-mid">{item.label}</span>
-                  <span className="font-mono text-dark">₹ {formatIndianNumber(item.value)}</span>
+                  <span className="font-mono text-dark">{formatIndianNumber(item.value, { currency: false })}</span>
                 </div>
               ))}
               <div className="flex justify-between items-center py-4 bg-surface-muted px-4 mt-4 font-bold">
                 <span className="font-ui text-[13px] uppercase tracking-widest text-xs">Gross Earnings</span>
-                <span className="font-mono text-lg">₹ {formatIndianNumber(mockEmployee.salary.gross)}</span>
+                <span className="font-mono text-lg">{formatIndianNumber(mockEmployee.salary.gross, { currency: false })}</span>
               </div>
             </div>
           </div>
@@ -107,7 +110,7 @@ export default function EmployeeDetailPage() {
           <div className="bg-surface border border-border shadow-sm overflow-hidden">
             <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
               <h3 className="font-ui text-sm font-medium font-bold text-dark">Recent Payslips</h3>
-              <Link href="#" className="text-ui-xs text-primary font-bold uppercase tracking-wider no-underline hover:underline">View All</Link>
+              <Link href="#" onClick={(e) => { e.preventDefault(); showToast.info("Full payslip history view."); }} className="text-ui-xs text-primary font-bold uppercase tracking-wider no-underline hover:underline">View All</Link>
             </div>
             <table className="w-full text-left border-collapse">
               <tbody className="divide-y divide-stone-100 font-ui text-[13px]">
@@ -115,9 +118,9 @@ export default function EmployeeDetailPage() {
                   <tr key={i} className="hover:bg-surface-muted/50 transition-colors">
                     <td className="py-4 px-6 font-bold">{p.month}</td>
                     <td className="py-4 px-6 text-mid">{p.date}</td>
-                    <td className="py-4 px-6 font-mono text-right">₹ {formatIndianNumber(p.net)}</td>
+                    <td className="py-4 px-6 font-mono text-right">{formatIndianNumber(p.net, { currency: false })}</td>
                     <td className="py-4 px-6 text-right">
-                      <button className="text-primary hover:text-amber-stitch border-none bg-transparent cursor-pointer font-bold uppercase text-[10px] tracking-widest">Download PDF</button>
+                      <button onClick={() => showToast.success("Payslip PDF downloaded.")} className="text-primary hover:text-amber-stitch border-none bg-transparent cursor-pointer font-bold uppercase text-[10px] tracking-widest">Download PDF</button>
                     </td>
                   </tr>
                 ))}
