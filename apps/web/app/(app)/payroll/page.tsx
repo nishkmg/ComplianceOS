@@ -15,7 +15,18 @@ const monthLabels = [
   "October", "November", "December", "January", "February", "March"
 ];
 
-const mockPayrollRuns = [
+interface PayrollRun {
+  id: string;
+  payrollNumber: string;
+  employeeName: string;
+  month: string;
+  year: string;
+  grossEarnings: string;
+  netPay: string;
+  status: string;
+}
+
+const mockPayrollRuns: PayrollRun[] = [
   { id: "pr1", payrollNumber: "PR-2026-04-001", employeeName: "Rahul Sharma", month: "04", year: "2026", grossEarnings: "80000", netPay: "73700", status: "finalized" },
   { id: "pr2", payrollNumber: "PR-2026-04-002", employeeName: "Priya Singh", month: "04", year: "2026", grossEarnings: "65000", netPay: "60712", status: "calculated" },
   { id: "pr3", payrollNumber: "PR-2026-04-003", employeeName: "Vikram Das", month: "04", year: "2026", grossEarnings: "45000", netPay: "42862", status: "voided" },
@@ -117,7 +128,7 @@ export default function PayrollPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((run: any) => (
+              {filtered.map((run: PayrollRun) => (
                 <tr key={run.id} className="border-b border-border hover:bg-surface-muted transition-colors">
                   <td className="font-mono text-[13px] text-amber px-4 py-3">{run.payrollNumber}</td>
                   <td className="font-ui text-[13px] text-dark px-4 py-3">{run.employeeName}</td>

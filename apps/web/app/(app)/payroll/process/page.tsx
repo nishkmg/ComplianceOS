@@ -25,7 +25,7 @@ export default function ProcessPayrollPage() {
           <p className="text-[13px] text-secondary font-ui mt-1">Step {step} of 4 · {mockEmployees.length} Employees</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => showToast.success("Draft saved.")} className="btn btn-secondary">Save Draft</button>
+          <button onClick={() => showToast.success("Draft saved.")} disabled={saving} className="btn btn-secondary">Save Draft</button>
           <button onClick={() => {
             if (saving) return;
             setSaving(true);
