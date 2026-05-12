@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
@@ -87,7 +86,7 @@ export default function GSTPaymentPage() {
             <span className="font-ui text-[11px] text-xs uppercase font-bold">GST Ledger</span>
           </Link>
           <div className="h-6 w-[0.5px] bg-border-subtle"></div>
-            <h1 className="font-display text-2xl font-semibold">GST Payment</h1>
+            <h1 className="font-display text-2xl font-semibold">GST Payment <span className="text-[11px] text-mid font-ui">FY {activeFy}</span></h1>
         </div>
         <div className="flex gap-4">
           <button onClick={handleSaveDraft} className="px-6 py-2.5 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">Save Draft</button>
