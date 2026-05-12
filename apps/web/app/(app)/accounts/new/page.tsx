@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
+import { addAccount } from "@/lib/account-store";
 
 // ─── Sub-type options per account kind ────────────────────────────────────────
 
@@ -45,6 +46,15 @@ export default function NewAccountPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    addAccount({
+      id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+      code: form.code.trim(),
+      name: form.name.trim(),
+      kind: form.kind,
+      subtype: form.subType,
+      description: form.description.trim(),
+      createdAt: new Date().toISOString(),
+    });
     showToast.success(`Ledger account "${form.name}" created successfully`);
     router.push("/coa");
   };
