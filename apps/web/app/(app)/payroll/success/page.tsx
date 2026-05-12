@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
 
 export default function PayrollSuccessPage() {

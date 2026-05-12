@@ -140,7 +140,7 @@ export default function PayrollRunDetailPage() {
                   <td className="py-5 px-6 text-right text-danger">-{formatIndianNumber(line.tdsDeduction || 0)}</td>
                   <td className="py-5 px-6 text-right font-bold text-dark">{formatIndianNumber(line.netSalary, { currency: false })}</td>
                   <td className="py-5 px-6 text-right">
-                    <button className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Payslip</button>
+                    <button onClick={() => showToast.success("Payslip downloaded.")} className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Payslip</button>
                   </td>
                   </tr>
                 ))}

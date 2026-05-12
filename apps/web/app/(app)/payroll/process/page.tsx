@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 
@@ -77,7 +76,7 @@ export default function ProcessPayrollPage() {
         <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
           <h3 className="font-ui text-sm font-medium font-bold text-dark">Employee Earnings Summary</h3>
           <div className="flex gap-4">
-            <button className="text-ui-xs text-primary font-bold uppercase tracking-widest border-none bg-transparent cursor-pointer">Bulk Edit</button>
+            <button onClick={() => showToast.info("Bulk edit mode opened.")} className="text-ui-xs text-primary font-bold uppercase tracking-widest border-none bg-transparent cursor-pointer">Bulk Edit</button>
           </div>
         </div>
         <div className="overflow-x-auto">

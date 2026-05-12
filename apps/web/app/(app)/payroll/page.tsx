@@ -8,7 +8,6 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { formatIndianNumber } from "@/lib/format";
-import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const monthLabels = [
@@ -39,7 +38,12 @@ export default function PayrollPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const filtered = status === "all" ? mockPayrollRuns : mockPayrollRuns.filter((r) => r.status === status);
+  const filtered = mockPayrollRuns.filter((r) => {
+    if (status !== "all" && r.status !== status) return false;
+    if (month && r.month !== month) return false;
+    if (year && r.year !== year) return false;
+    return true;
+  });
 
   return (
     <div className="space-y-6">
