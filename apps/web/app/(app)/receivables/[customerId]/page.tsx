@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -47,28 +48,38 @@ const invoicesByCustomer: Record<string, InvoiceRow[]> = {
   reliance: [
     { id: "1", number: "INV-2026-27-001", date: "15 Apr 2026", dueDate: "15 May 2026", amount: 200600, balance: 0, status: "paid" },
     { id: "2", number: "INV-2026-27-003", date: "10 May 2026", dueDate: "09 Jun 2026", amount: 150000, balance: 150000, status: "overdue" },
+    { id: "101", number: "INV-2025-26-001", date: "12 Jan 2026", dueDate: "11 Feb 2026", amount: 180000, balance: 0, status: "paid" },
   ],
   acme: [
     { id: "3", number: "INV-2026-27-002", date: "18 Apr 2026", dueDate: "18 May 2026", amount: 412000, balance: 250000, status: "partial" },
+    { id: "102", number: "INV-2025-26-002", date: "10 Nov 2025", dueDate: "10 Dec 2025", amount: 310000, balance: 0, status: "paid" },
   ],
   techsol: [
     { id: "4", number: "INV-2026-27-005", date: "25 Apr 2026", dueDate: "25 May 2026", amount: 245000, balance: 245000, status: "pending" },
   ],
   delta: [
     { id: "5", number: "INV-2026-27-004", date: "10 Apr 2026", dueDate: "10 May 2026", amount: 195000, balance: 195000, status: "overdue" },
+    { id: "103", number: "INV-2025-26-003", date: "05 Aug 2025", dueDate: "04 Sep 2025", amount: 280000, balance: 0, status: "paid" },
   ],
 };
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function CustomerDetailPage() {
+  const { activeFy } = useFiscalYear();
   const params = useParams();
   const router = useRouter();
   const customerId = params.customerId as string;
 
   const [activeTab, setActiveTab] = useState("Invoices");
   const customer = customers[customerId];
-  const invoices = invoicesByCustomer[customerId] ?? [];
+
+  // FY-aware invoices — filter by FY prefix in invoice number
+  const allInvoices = invoicesByCustomer[customerId] ?? [];
+  const invoices = useMemo(() =>
+    allInvoices.filter(inv => inv.number.includes(activeFy.replace('-', ''))),
+    [allInvoices, activeFy]
+  );
 
   if (!customer) {
     return (
