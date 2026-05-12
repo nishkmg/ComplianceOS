@@ -33,8 +33,11 @@ function computeTaxSlabOld(grossIncome: number, deductions: number): { taxOnInco
   } else if (taxable > 250000) {
     tax += (taxable - 250000) * 0.05;
   }
-  const cess = Math.round(tax * 0.04);
-  return { taxOnIncome: Math.round(tax), cess };
+  let roundedTax = Math.round(tax);
+  const rebate = (taxable <= 500000) ? Math.min(roundedTax, 12500) : 0;
+  roundedTax = Math.max(0, roundedTax - rebate);
+  const cess = Math.round(roundedTax * 0.04);
+  return { taxOnIncome: roundedTax, cess };
 }
 
 const ayLabels: Record<string, string> = { "2026-27": "2027-28", "2025-26": "2026-27", "2024-25": "2025-26" };
