@@ -1,13 +1,12 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
 
 export default function PayrollSuccessPage() {
   const router = useRouter();
-  const params = useParams();
   
   return (
     <div className="bg-page-bg text-dark min-h-screen flex items-center justify-center p-6">
@@ -42,9 +41,9 @@ export default function PayrollSuccessPage() {
             <Link href="/payroll" className="flex-1 bg-amber text-white py-3 px-6 font-ui text-[13px] font-bold uppercase tracking-widest transition-all no-underline rounded-md shadow-sm text-center inline-flex items-center justify-center gap-2">
               Back to Payroll <Icon name="arrow_forward" className="text-sm" />
             </Link>
-            <Link href="/payroll/process" className="flex-1 bg-transparent border border-border text-dark py-3 px-6 font-ui text-[13px] transition-colors no-underline rounded-md text-center font-bold uppercase tracking-widest">
+            <button onClick={() => router.push("/payroll/pr1")} className="flex-1 bg-transparent border border-border text-dark py-3 px-6 font-ui text-[13px] transition-colors no-underline rounded-md text-center font-bold uppercase tracking-widest cursor-pointer">
               View Payroll Detail
-            </Link>
+            </button>
           </div>
         </div>
       </main>

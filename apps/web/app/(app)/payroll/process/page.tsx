@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 const mockEmployees = [
   { id: "1", name: "Rahul Sharma", code: "EMP-001", gross: 80000, pf: 1800, esi: 0, tds: 4500, net: 73700 },
@@ -12,7 +13,8 @@ const mockEmployees = [
 ];
 
 export default function ProcessPayrollPage() {
-  const [step, setStep] = useState(2); // Mocking middle step
+  const [step, setStep] = useState(2);
+  const [saving, setSaving] = useState(false);
 
   return (
     <div className="space-y-0 text-left">
@@ -21,11 +23,18 @@ export default function ProcessPayrollPage() {
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Management</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Process Payroll</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">October 2023 · {mockEmployees.length} Employees</p>
+          <p className="text-[13px] text-secondary font-ui mt-1">Step {step} of 4 · {mockEmployees.length} Employees</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="btn btn-secondary">Save Draft</button>
-          <button className="btn btn-primary group flex items-center gap-2">
+          <button onClick={() => showToast.success("Draft saved.")} className="btn btn-secondary">Save Draft</button>
+          <button onClick={() => {
+            if (saving) return;
+            setSaving(true);
+            setTimeout(() => {
+              showToast.success("Payroll processed successfully.");
+              setSaving(false);
+            }, 800);
+          }} disabled={saving} className="btn btn-primary group flex items-center gap-2">
             Process & Execute
             <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
           </button>
@@ -94,16 +103,16 @@ export default function ProcessPayrollPage() {
                   <td className="py-4 px-6 text-right text-danger">-{formatIndianNumber(e.pf)}</td>
                   <td className="py-4 px-6 text-right text-danger">{e.esi > 0 ? `-${formatIndianNumber(e.esi)}` : "—"}</td>
                   <td className="py-4 px-6 text-right text-danger">{e.tds > 0 ? `-${formatIndianNumber(e.tds)}` : "—"}</td>
-                  <td className="py-4 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(e.net)}</td>
+                  <td className="py-4 px-6 text-right font-bold text-dark">{formatIndianNumber(e.net, { currency: false })}</td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
               <tr className="bg-surface-muted font-bold border-t-2 border-border">
                 <td className="py-4 px-6 font-ui text-[13px] uppercase tracking-widest text-xs">Total Payroll</td>
-                <td className="py-4 px-6 text-right font-mono text-sm">₹ {formatIndianNumber(mockEmployees.reduce((s, e) => s + e.gross, 0))}</td>
+                <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(mockEmployees.reduce((s, e) => s + e.gross, 0), { currency: false })}</td>
                 <td colSpan={3} className="py-4 px-6 text-right font-ui text-[11px] uppercase tracking-widest text-[10px] text-light">Net Liability</td>
-                <td className="py-4 px-6 text-right font-mono text-lg text-amber">₹ {formatIndianNumber(mockEmployees.reduce((s, e) => s + e.net, 0))}</td>
+                <td className="py-4 px-6 text-right font-mono text-lg text-amber">{formatIndianNumber(mockEmployees.reduce((s, e) => s + e.net, 0), { currency: false })}</td>
               </tr>
             </tfoot>
           </table>
