@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -17,14 +18,15 @@ const agingBuckets = [
 ];
 
 const topDebtors = [
-  { name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
-  { name: "Acme Corporation",         amount: 412000, status: "overdue" },
-  { name: "TechSolutions India",      amount: 245000, status: "pending" },
+  { id: "reliance", name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
+  { id: "acme",     name: "Acme Corporation",         amount: 412000, status: "overdue" },
+  { id: "techsol",  name: "TechSolutions India",      amount: 245000, status: "pending" },
 ];
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ReceivablesSummaryPage() {
+  const { activeFy } = useFiscalYear();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -124,9 +126,7 @@ export default function ReceivablesSummaryPage() {
             <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
               <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
                 <h3 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Top Debtors</h3>
-                <Link href="/receivables/list" className="text-[10px] text-amber font-bold uppercase tracking-widest hover:underline no-underline">
-                  View All
-                </Link>
+                <span className="text-[10px] text-light font-bold uppercase tracking-widest">FY {activeFy}</span>
               </div>
               <div className="divide-y divide-border-subtle">
                 {topDebtors.map(d => (
@@ -148,7 +148,7 @@ export default function ReceivablesSummaryPage() {
                         {formatIndianNumber(d.amount, { currency: true })}
                       </p>
                       <Link
-                        href={`/receivables/1`}
+                        href={`/receivables/${d.id}`}
                         className="text-[10px] text-light hover:text-amber transition-colors no-underline font-bold uppercase tracking-widest"
                       >
                         Statement →
