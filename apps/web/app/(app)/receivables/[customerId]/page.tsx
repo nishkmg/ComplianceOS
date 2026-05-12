@@ -77,7 +77,7 @@ export default function CustomerDetailPage() {
   // FY-aware invoices — filter by FY prefix in invoice number
   const allInvoices = invoicesByCustomer[customerId] ?? [];
   const invoices = useMemo(() =>
-    allInvoices.filter(inv => inv.number.includes(activeFy.replace('-', ''))),
+    allInvoices.filter(inv => inv.number.includes(activeFy)),
     [allInvoices, activeFy]
   );
 
