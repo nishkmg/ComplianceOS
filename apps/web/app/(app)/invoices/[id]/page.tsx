@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { showToast } from "@/lib/toast";
-import { getInvoice, getInvoices } from "@/lib/invoice-store";
+import { getInvoice, updateInvoice } from "@/lib/invoice-store";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -77,6 +77,7 @@ export default function InvoiceDetailPage() {
 
   function handleMarkPaid() {
     setInv(prev => ({ ...prev, status: "paid" }));
+    updateInvoice(invId, { status: "paid" });
     showToast.success("Invoice marked as paid.");
   }
 
