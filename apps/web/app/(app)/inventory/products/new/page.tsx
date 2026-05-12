@@ -45,20 +45,26 @@ export default function NewProductPage() {
     if (!validate()) return;
     savingRef.current = true;
     setSaving(true);
-    addProduct({
-      id: Date.now().toString(),
-      sku: formData.sku.trim(),
-      name: formData.name.trim(),
-      hsn: formData.hsn.trim(),
-      category: formData.category,
-      stock: formData.openingStock,
-      unitPrice: formData.unitPrice,
-      status: "active",
-    });
-    setTimeout(() => {
-      showToast.success("SKU created successfully");
-      router.push("/inventory/products");
-    }, 400);
+    try {
+      addProduct({
+        id: Date.now().toString(),
+        sku: formData.sku.trim(),
+        name: formData.name.trim(),
+        hsn: formData.hsn.trim(),
+        category: formData.category,
+        stock: formData.openingStock,
+        unitPrice: formData.unitPrice,
+        status: "active",
+      });
+      setTimeout(() => {
+        showToast.success("SKU created successfully");
+        router.push("/inventory/products");
+      }, 400);
+    } catch {
+      showToast.error("Failed to save product. Please try again.");
+      savingRef.current = false;
+      setSaving(false);
+    }
   };
 
   return (
