@@ -30,6 +30,9 @@ export default function InventoryReportsPage() {
     ];
   }, [reportType]);
 
+  const fyEndDate = `${parseInt(activeFy.split('-')[1]) + 2000}-03-31`;
+  const [asOfDate, setAsOfDate] = useState(fyEndDate);
+
   return (
     <div className="space-y-8 text-left">
       {/* Page Header */}
@@ -70,9 +73,9 @@ export default function InventoryReportsPage() {
         </div>
         <div className="w-full lg:w-1/4 text-left">
           <label className="block font-ui text-[10px] uppercase tracking-widest text-mid mb-2 font-bold">As of Date</label>
-          <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" type="date" defaultValue="2024-03-31" />
+          <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" type="date" value={asOfDate} onChange={(e) => setAsOfDate(e.target.value)} />
         </div>
-        <button onClick={() => showToast.success("Analysis complete for selected report type.")} className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
+        <button onClick={() => showToast.success(`Analysis complete for ${reportType} report as of ${asOfDate}.`)} className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
           Run Analysis
         </button>
       </div>

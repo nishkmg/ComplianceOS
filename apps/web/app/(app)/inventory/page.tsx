@@ -39,10 +39,10 @@ export default function InventoryDashboardPage() {
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Strategic assessment of working capital locked in commodities and finished goods across all entities.</p>
         </div>
         <div className="flex gap-3">
-          <Link href="/inventory/products/new" className="btn btn-secondary no-underline">
+          <Link href="/inventory/products" className="btn btn-secondary no-underline">
             Manage Products
           </Link>
-          <button onClick={() => showToast.success("Stock adjustment initiated.")} className="btn btn-primary flex items-center gap-2">
+          <button onClick={() => showToast.success("Stock adjustment initiated")} className="btn btn-primary flex items-center gap-2">
             Stock Adjustment <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
