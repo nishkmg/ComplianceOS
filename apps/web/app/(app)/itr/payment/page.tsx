@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-const currentAY = `${new Date().getFullYear() + 1}-${(new Date().getFullYear() + 2).toString().slice(-2)}`;
-
 const mockAdvanceTaxData = {
   "2025-26": {
     totalPayable: 450000,

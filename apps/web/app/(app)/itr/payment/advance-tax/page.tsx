@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
@@ -27,7 +25,6 @@ const initialInstalments: Instalment[] = [
 
 export default function ITRAdvanceTaxPage() {
   const { activeFy } = useFiscalYear();
-  const router = useRouter();
   const [instalments, setInstalments] = useState<Instalment[]>(initialInstalments);
   const [showRecordModal, setShowRecordModal] = useState(false);
   const [recordForm, setRecordForm] = useState({ installmentId: 3, amount: "", date: "" });
