@@ -110,7 +110,7 @@ export default function InventoryReportsPage() {
               <tr className="bg-dark text-white font-bold border-t-2 border-amber">
                 <td colSpan={3} className="py-5 px-6 font-ui text-[13px] uppercase tracking-widest text-xs">Consolidated Value</td>
                 <td className="py-5 px-6 text-right font-mono text-lg" colSpan={3}>
-                  ₹ {formatIndianNumber(reportData.reduce((s, r) => s + r.value, 0))}
+                  ₹ {formatIndianNumber(reportData.reduce((s, r) => s + r.value, 0), { currency: false })}
                 </td>
               </tr>
             </tfoot>

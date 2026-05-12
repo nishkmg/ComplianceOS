@@ -78,8 +78,8 @@ export default function NewProductPage() {
             <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl">Enter product details for compliance tracking and inventory valuation.</p>
           </div>
           <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} className="font-ui text-[13px] text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest">Cancel</button>
-                <button onClick={handleSubmit} disabled={saving} className="bg-amber text-white px-8 py-3 font-ui text-[13px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+          <button onClick={() => router.back()} className="font-ui text-[13px] text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest" type="button">Cancel</button>
+                <button type="submit" disabled={saving} className="bg-amber text-white px-8 py-3 font-ui text-[13px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
                 {saving ? "Saving..." : "Save Product"}
                 <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -87,7 +87,7 @@ export default function NewProductPage() {
         </div>
 
         <div className="max-w-[1200px] mx-auto px-8">
-          <form className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Main Details */}
             <div className="lg:col-span-8 space-y-8">
               <div className="bg-surface border border-border p-8 shadow-sm">
