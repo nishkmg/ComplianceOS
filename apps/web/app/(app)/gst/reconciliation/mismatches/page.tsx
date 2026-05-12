@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
@@ -27,16 +27,27 @@ interface Mismatch {
   status: "pending" | "accepted" | "rejected";
 }
 
-const MOCK_MISMATCHES: Mismatch[] = [
-  { id: "1", invoiceNumber: "SUP-001", supplierName: "Acme Suppliers", supplierGstin: "27AABCU9603R1ZM", description: "Tax rate mismatch (12% vs 18%)", bookValue: 100000, returnValue: 118000, difference: 18000, status: "pending" },
-  { id: "2", invoiceNumber: "SUP-003", supplierName: "Global Freight", supplierGstin: "33BABCR8902H1Z3", description: "ITC mismatch", bookValue: 200000, returnValue: 236000, difference: 36000, status: "pending" },
-  { id: "3", invoiceNumber: "SUP-004", supplierName: "Stationery Mart", supplierGstin: "09AABCS4567K1Z9", description: "Supplier not filed return", bookValue: 12000, returnValue: 14160, difference: 2160, status: "pending" },
-];
+const MOCK_MISMATCHES_BY_PERIOD: Record<string, Mismatch[]> = {
+  "4-2026": [
+    { id: "1", invoiceNumber: "SUP-001", supplierName: "Acme Suppliers", supplierGstin: "27AABCU9603R1ZM", description: "Tax rate mismatch (12% vs 18%)", bookValue: 100000, returnValue: 118000, difference: 18000, status: "pending" },
+    { id: "2", invoiceNumber: "SUP-003", supplierName: "Global Freight", supplierGstin: "33BABCR8902H1Z3", description: "ITC mismatch", bookValue: 200000, returnValue: 236000, difference: 36000, status: "pending" },
+    { id: "3", invoiceNumber: "SUP-004", supplierName: "Stationery Mart", supplierGstin: "09AABCS4567K1Z9", description: "Supplier not filed return", bookValue: 12000, returnValue: 14160, difference: 2160, status: "pending" },
+  ],
+  "5-2026": [
+    { id: "4", invoiceNumber: "SUP-005", supplierName: "Prime Logistics", supplierGstin: "27AAACL1234E1Z5", description: "HSN code mismatch", bookValue: 85000, returnValue: 100300, difference: 15300, status: "pending" },
+  ],
+};
 
 export default function GSTMismatchesPage() {
   const [periodMonth, setPeriodMonth] = useState<number>(4);
   const [periodYear, setPeriodYear] = useState<number>(2026);
-  const [mismatches, setMismatches] = useState<Mismatch[]>(MOCK_MISMATCHES);
+  const periodKey = `${periodMonth}-${periodYear}`;
+  const [mismatches, setMismatches] = useState<Mismatch[]>([]);
+
+  // Load mismatches for the selected period
+  useEffect(() => {
+    setMismatches(MOCK_MISMATCHES_BY_PERIOD[periodKey] ?? []);
+  }, [periodKey]);
 
   const handleExportCSV = () => {
     if (mismatches.length === 0) { showToast.error("No mismatches to export."); return; }
