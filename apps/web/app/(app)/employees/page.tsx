@@ -31,7 +31,8 @@ export default function EmployeesPage() {
   const [search, setSearch] = useState("");
 
   const filtered = mockEmployees.filter((emp) => {
-    if (statusFilter !== "all" && emp.complianceStatus !== statusFilter) return false;
+    if (statusFilter === "active" && emp.complianceStatus !== "complete") return false;
+    if (statusFilter === "inactive" && emp.complianceStatus === "complete") return false;
     if (search && !emp.name.toLowerCase().includes(search.toLowerCase()) && !emp.employeeCode.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
