@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,8 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { getPayments } from "@/lib/payment-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -122,6 +124,20 @@ export default function PaymentsPage() {
   const [loading, setLoading] = useState(true);
 
   const mockPayments = mockPaymentsByFy[activeFy] ?? mockPaymentsByFy['2026-27'];
+  const storedPayments: Payment[] = useMemo(() =>
+    getPayments().filter(p => p.fiscalYear === activeFy).map(p => ({
+      id: p.id,
+      paymentNumber: p.paymentNumber,
+      customerName: p.customerName,
+      date: p.date,
+      amount: p.amount,
+      paymentMethod: p.paymentMethod,
+      status: p.status as "recorded" | "voided",
+      type: p.type as "received" | "paid",
+    })),
+    [activeFy]
+  );
+  const allPayments = useMemo(() => [...storedPayments, ...mockPayments], [storedPayments, mockPayments]);
 
   useEffect(() => {
     setLoading(false);
@@ -129,15 +145,27 @@ export default function PaymentsPage() {
 
   const filtered = useMemo(
     () =>
-      mockPayments.filter(p => {
+      allPayments.filter(p => {
         if (typeFilter !== "all" && p.type !== typeFilter) return false;
         if (search && !p.customerName.toLowerCase().includes(search.toLowerCase()) && !p.paymentNumber.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       }),
-    [typeFilter, search, mockPayments]
+    [typeFilter, search, allPayments]
   );
 
   const totalAmount = filtered.reduce((s, p) => s + p.amount, 0);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No payments to export."); return; }
+    const header = "Payment #,Date,From/To,Method,Type,Amount,Status";
+    const rows = filtered.map(p => `${p.paymentNumber},${p.date},"${p.customerName}",${p.paymentMethod},${p.type},${p.amount},${p.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `payments-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} payments.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -153,7 +181,7 @@ export default function PaymentsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export CSV
           </button>
           <Link
@@ -180,7 +208,7 @@ export default function PaymentsPage() {
             >
               {t === "all" ? "All" : t}
               <span className="ml-1.5 text-[10px] text-light">
-                ({t === "all" ? mockPayments.length : mockPayments.filter(p => p.type === t).length})
+                ({t === "all" ? allPayments.length : allPayments.filter(p => p.type === t).length})
               </span>
             </button>
           ))}

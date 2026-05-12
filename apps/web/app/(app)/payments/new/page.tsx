@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
-
-// ─── Page Component ───────────────────────────────────────────────────────────
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { addPayment } from "@/lib/payment-store";
 
 export default function NewPaymentPage() {
+  const { activeFy } = useFiscalYear();
   const router = useRouter();
   const [type, setType] = useState<"receipt" | "payment">("receipt");
   const [customerName, setCustomerName] = useState("");
@@ -17,15 +17,33 @@ export default function NewPaymentPage() {
   const [referenceNumber, setReferenceNumber] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [saving, setSaving] = useState(false);
+  const [discardConfirm, setDiscardConfirm] = useState(false);
+
+  const hasContent = useMemo(
+    () => customerName || referenceNumber || paymentAmount || paymentDate,
+    [customerName, referenceNumber, paymentAmount, paymentDate]
+  );
 
   const handleRecord = async () => {
-    if (!customerName || !paymentAmount) {
-      showToast.error("Please fill in required fields");
-      return;
-    }
+    if (!customerName.trim()) { showToast.error("Party name is required."); return; }
+    const amt = parseFloat(paymentAmount);
+    if (isNaN(amt) || amt <= 0) { showToast.error("Amount must be greater than zero."); return; }
     setSaving(true);
     try {
       await new Promise(r => setTimeout(r, 800));
+      addPayment({
+        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+        paymentNumber: `PAY-${activeFy}-${String(Date.now()).slice(-4)}`,
+        customerName: customerName.trim(),
+        date: paymentDate,
+        amount: amt,
+        paymentMethod,
+        referenceNumber: referenceNumber.trim(),
+        fiscalYear: activeFy,
+        status: "recorded",
+        type: type === "receipt" ? "received" : "paid",
+        createdAt: new Date().toISOString(),
+      });
       showToast.success("Payment recorded successfully");
       router.push("/payments");
     } catch {
@@ -35,13 +53,19 @@ export default function NewPaymentPage() {
     }
   };
 
+  const handleDiscard = () => {
+    if (hasContent && !discardConfirm) { setDiscardConfirm(true); return; }
+    setDiscardConfirm(false);
+    router.back();
+  };
+
   return (
     <div className="max-w-[800px] mx-auto space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => router.back()}
+            onClick={handleDiscard}
             className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer"
             aria-label="Go back"
           >
@@ -49,12 +73,12 @@ export default function NewPaymentPage() {
           </button>
           <div>
             <h1 className="font-display text-display-lg font-semibold text-dark">Record Transaction</h1>
-            <p className="font-ui text-[11px] text-secondary mt-0.5">Record incoming or outgoing payments</p>
+            <p className="font-ui text-[11px] text-secondary mt-0.5">Record incoming or outgoing payments. FY {activeFy}</p>
           </div>
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => router.back()}
+            onClick={handleDiscard}
             className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md"
           >
             Discard
@@ -68,6 +92,17 @@ export default function NewPaymentPage() {
           </button>
         </div>
       </div>
+
+      {/* Discard confirmation */}
+      {discardConfirm && (
+        <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
+          <span className="font-ui text-[12px] text-amber font-medium">Unsaved changes will be lost. Discard?</span>
+          <div className="flex gap-2">
+            <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
+            <button onClick={() => { setDiscardConfirm(false); router.back(); }} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest bg-danger text-white rounded-sm cursor-pointer border-none">Discard</button>
+          </div>
+        </div>
+      )}
 
       {/* Classification */}
       <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
@@ -112,6 +147,7 @@ export default function NewPaymentPage() {
               placeholder="Search customer or vendor..."
               value={customerName}
               onChange={e => setCustomerName(e.target.value)}
+              maxLength={200}
             />
           </div>
           <div className="space-y-1">
@@ -142,12 +178,14 @@ export default function NewPaymentPage() {
               placeholder="T241024…"
               value={referenceNumber}
               onChange={e => setReferenceNumber(e.target.value)}
+              maxLength={50}
             />
           </div>
           <div className="md:col-span-2 space-y-1">
             <label className="block font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Amount Transacted (₹)</label>
             <input
               type="number"
+              min="0"
               className="w-full bg-surface border border-amber rounded-md px-4 py-3.5 font-mono text-xl font-bold text-dark focus:ring-1 focus:ring-amber outline-none"
               placeholder="0.00"
               value={paymentAmount}
@@ -166,7 +204,7 @@ export default function NewPaymentPage() {
               This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.
             </p>
           </div>
-          <button className="px-6 py-2.5 border border-amber-600 text-amber-700 text-[10px] font-bold uppercase tracking-widest hover:bg-surface transition-all cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
+          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber-600 text-amber-700 text-[10px] font-bold uppercase tracking-widest hover:bg-surface transition-all cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
             Open Allocation Wizard
           </button>
         </div>
