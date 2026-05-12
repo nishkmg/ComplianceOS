@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,8 +29,14 @@ export default function NewInvoicePage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [savedNumber, setSavedNumber] = useState<string | null>(null);
+  const [invoiceNumber, setInvoiceNumber] = useState(`INV-${activeFy}-0001`);
 
-  const invoiceNumber = savedNumber ?? `INV-${activeFy}-${String(Date.now()).slice(-4)}`;
+  // Set a realistic invoice number on mount (avoids hydration mismatch with random values)
+  useEffect(() => {
+    if (!savedNumber) {
+      setInvoiceNumber(`INV-${activeFy}-${String(Date.now()).slice(-5)}`);
+    }
+  }, [activeFy, savedNumber]);
 
   const [customer, setCustomer] = useState({
     name: "Mehta Textiles Pvt. Ltd.",
