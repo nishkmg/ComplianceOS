@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
 
