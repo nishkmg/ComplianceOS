@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
+
 
 interface ReconItem {
   id: string; gstin: string; name: string; inv: string; date: string; value: string;
@@ -22,7 +22,6 @@ const initialMismatches: ReconItem[] = [
 ];
 
 export default function ITCResolutionPage() {
-  const { activeFy } = useFiscalYear();
   const [items, setItems] = useState<ReconItem[]>(initialMismatches);
   const [filter, setFilter] = useState<"all" | "mismatch" | "reconciled">("all");
   const [syncing, setSyncing] = useState(false);
