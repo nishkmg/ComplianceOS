@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 const reportData = [
   { sku: "RM-001", name: "Cotton Yarn 40s", category: "Raw Material", qty: 3800, cost: 245, value: 931000 },
@@ -11,8 +11,28 @@ const reportData = [
   { sku: "FG-001", name: "Finished Widget A", category: "Finished Good", qty: 1500, cost: 850, value: 1275000 },
 ];
 
+const expiryMockData = [
+  { sku: "RM-045", name: "Polyester Resin", category: "Raw Material", qty: 500, cost: 180, value: 90000 },
+  { sku: "RM-078", name: "Adhesive Solvent", category: "Raw Material", qty: 200, cost: 320, value: 64000 },
+];
+
+const movementMockData = [
+  { sku: "RM-001", name: "Cotton Yarn 40s", category: "Raw Material", qty: 500, cost: 245, value: 122500 },
+  { sku: "FG-001", name: "Finished Widget A", category: "Finished Good", qty: 100, cost: 850, value: 85000 },
+];
+
 export default function InventoryReportsPage() {
   const [reportType, setReportType] = useState("valuation");
+
+  const reportData = useMemo(() => {
+    if (reportType === "expiry") return expiryMockData;
+    if (reportType === "movement") return movementMockData;
+    return [
+      { sku: "RM-001", name: "Cotton Yarn 40s", category: "Raw Material", qty: 3800, cost: 245, value: 931000 },
+      { sku: "RM-002", name: "Steel Rods 12mm", category: "Raw Material", qty: 200, cost: 68, value: 13600 },
+      { sku: "FG-001", name: "Finished Widget A", category: "Finished Good", qty: 1500, cost: 850, value: 1275000 },
+    ];
+  }, [reportType]);
 
   return (
     <div className="space-y-8 text-left">
@@ -24,11 +44,11 @@ export default function InventoryReportsPage() {
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Comprehensive breakdown of current stock levels, calculated asset values, and recent movement metrics across all registered warehouses.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="btn btn-secondary flex items-center gap-2">
+          <button onClick={() => window.print()} className="btn btn-secondary flex items-center gap-2">
             <Icon name="print" className="text-[18px]" />
             Print Report
           </button>
-          <button className="btn btn-primary flex items-center gap-2">
+          <button onClick={() => showToast.success("Report exported.")} className="btn btn-primary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" />
             Export CSV
           </button>
@@ -56,7 +76,7 @@ export default function InventoryReportsPage() {
           <label className="block font-ui text-[10px] uppercase tracking-widest text-mid mb-2 font-bold">As of Date</label>
           <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" type="date" defaultValue="2024-03-31" />
         </div>
-        <button className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
+        <button onClick={() => showToast.success("Analysis complete for selected report type.")} className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
           Run Analysis
         </button>
       </div>

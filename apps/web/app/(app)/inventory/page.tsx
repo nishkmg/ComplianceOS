@@ -5,6 +5,8 @@ import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
 import { KPISkeleton, TableSkeleton } from "@/components/ui/skeleton";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const kpiTiles = [
   { label: "Inventory Value", value: "45,20,500.00", delta: "+2.4% vs last period", variant: "neutral", icon: "account_balance_wallet" },
@@ -20,6 +22,7 @@ const lowStock = [
 ];
 
 export default function InventoryDashboardPage() {
+  const { activeFy } = useFiscalYear();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function InventoryDashboardPage() {
           <Link href="/inventory/products/new" className="btn btn-secondary no-underline">
             Manage Products
           </Link>
-          <button className="btn btn-primary flex items-center gap-2">
+          <button onClick={() => showToast.success("Stock adjustment initiated.")} className="btn btn-primary flex items-center gap-2">
             Stock Adjustment <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
@@ -144,21 +147,21 @@ export default function InventoryDashboardPage() {
           <div className="bg-dark p-8 border-l-4 border-l-amber text-left shadow-sm">
             <h3 className="text-white font-ui text-[10px] uppercase tracking-widest font-bold mb-6 opacity-60">Inventory Actions</h3>
             <div className="flex flex-col gap-4">
-              <button className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
+              <button onClick={() => showToast.success("Inward stock form opened.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Icon name="inventory" className="text-amber" />
                   <span className="font-ui text-[13px]">Inward Stock</span>
                 </div>
                 <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-mid" />
               </button>
-              <button className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
+              <button onClick={() => showToast.success("Dispatch order form opened.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Icon name="local_shipping" className="text-amber" />
                   <span className="font-ui text-[13px]">Dispatch Order</span>
                 </div>
                 <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-mid" />
               </button>
-              <button className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
+              <button onClick={() => showToast.success("Valuation report generated.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Icon name="assessment" className="text-amber" />
                   <span className="font-ui text-[13px]">Valuation Report</span>

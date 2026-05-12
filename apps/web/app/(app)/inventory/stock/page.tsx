@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
 
 interface StockItem {
   id: string;
@@ -34,7 +34,7 @@ export default function StockPage() {
           <h1 className="font-display text-2xl font-semibold text-dark">Stock Levels</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Real-time assessment of warehouse commodities, commitments, and procurement statuses.</p>
         </div>
-        <button className="btn btn-primary group flex items-center gap-2">
+        <button onClick={() => showToast.success("Stock adjustment form opened.")} className="btn btn-primary group flex items-center gap-2">
           Adjust Stock <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
         </button>
       </div>
@@ -48,8 +48,8 @@ export default function StockPage() {
             <span className="font-ui text-[11px] text-ui-xs text-dark-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
           </div>
           <div className="flex gap-4">
-            <button className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
-            <button className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
+            <button onClick={() => showToast.success("Stock report exported.")} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
+            <button onClick={() => window.print()} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
           </div>
         </div>
         <div className="overflow-x-auto">

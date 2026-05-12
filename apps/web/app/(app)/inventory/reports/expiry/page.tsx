@@ -1,5 +1,6 @@
 "use client";
 import { Icon } from '@/components/ui/icon';
+import { showToast } from "@/lib/toast";
 
 const products = [
   { sku: "RM-045", name: "Polyester Resin", batch: "BATCH-2401", qty: 500, unit: "kg", expiry: "15 Jun 2025", days: 48, status: "expiring" },
@@ -16,7 +17,7 @@ export default function InventoryExpiryPage() {
         </div>
         <div className="flex items-center gap-4">
           <select className="border border-border rounded-md py-1.5 px-3 text-xs bg-surface-muted"><option>30 Days</option><option>60 Days</option></select>
-          <button className="btn btn-primary flex items-center gap-2">
+          <button onClick={() => showToast.success("Expiry report exported.")} className="btn btn-primary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" /> Export CSV
           </button>
         </div>

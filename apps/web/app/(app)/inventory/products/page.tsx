@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
 
 interface Product {
   id: string;
@@ -64,7 +65,7 @@ export default function ProductsPage() {
               </select>
             </div>
           </div>
-          <button className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid hover:text-dark transition-colors flex items-center gap-1 cursor-pointer border-none bg-transparent">
+          <button onClick={() => showToast.info("Advanced filters panel opened.")} className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid hover:text-dark transition-colors flex items-center gap-1 cursor-pointer border-none bg-transparent">
             <Icon name="filter_list" className="text-[16px]" />
             More Filters
           </button>
