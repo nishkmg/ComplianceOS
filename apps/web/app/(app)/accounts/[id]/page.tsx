@@ -34,20 +34,58 @@ interface Tx {
   id: string; voucherNumber: string; date: string; narration: string; debit: number; credit: number;
 }
 
-const MOCK_TRANSACTIONS_BY_FY: Record<string, Tx[]> = {
-  '2026-27': [
-    { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0 },
-    { id: "2", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Equipment purchase", debit: 0, credit: 75000 },
-    { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 0, credit: 320000 },
-    { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice", debit: 236000, credit: 0 },
-  ],
-  '2025-26': [
-    { id: "101", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 420000, credit: 0 },
-    { id: "102", voucherNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", debit: 0, credit: 120000 },
-    { id: "103", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Consultancy revenue", debit: 680000, credit: 0 },
-    { id: "104", voucherNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance", debit: 0, credit: 96000 },
-  ],
+// Per-account transactions keyed by account code, then by FY
+const MOCK_TX_BY_ACCOUNT: Record<string, Record<string, Tx[]>> = {
+  "10101": { // Cash Account
+    "2026-27": [
+      { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0 },
+      { id: "2", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Equipment purchase", debit: 0, credit: 75000 },
+      { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 0, credit: 320000 },
+    ],
+    "2025-26": [
+      { id: "101", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 420000, credit: 0 },
+      { id: "102", voucherNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", debit: 0, credit: 120000 },
+    ],
+  },
+  "10200": { // Bank Account
+    "2026-27": [
+      { id: "3", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 1250000, credit: 0 },
+    ],
+    "2025-26": [
+      { id: "103", voucherNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 980000, credit: 0 },
+    ],
+  },
+  "10300": { // Trade Receivables
+    "2026-27": [
+      { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0 },
+    ],
+    "2025-26": [
+      { id: "104", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Consultancy revenue", debit: 680000, credit: 0 },
+    ],
+  },
+  "40100": { // Sales Revenue
+    "2026-27": [
+      { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 0, credit: 236000 },
+    ],
+    "2025-26": [
+      { id: "104", voucherNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Consultancy revenue", debit: 0, credit: 680000 },
+    ],
+  },
+  "50200": { // Operating Expenses
+    "2026-27": [
+      { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 320000, credit: 0 },
+    ],
+    "2025-26": [
+      { id: "105", voucherNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance", debit: 96000, credit: 0 },
+    ],
+  },
 };
+
+function getTxForAccount(accountCode: string, fy: string): Tx[] {
+  const byAcct = MOCK_TX_BY_ACCOUNT[accountCode];
+  if (!byAcct) return [];
+  return byAcct[fy] ?? byAcct["2026-27"] ?? [];
+}
 
 const MOCK_OPENING_BALANCES: Record<string, number> = {
   "10101": 500000, "10200": 1250000, "10300": 350000, "10400": 45000,
@@ -106,9 +144,10 @@ export default function AccountDetailPage() {
       balanceType: "Dr",
     } : undefined);
 
-  const mockTx = MOCK_TRANSACTIONS_BY_FY[fiscalYear] ?? MOCK_TRANSACTIONS_BY_FY['2026-27'];
+  const accountCode = account?.code ?? "";
+  const mockTx = getTxForAccount(accountCode, fiscalYear);
   const transactions: Tx[] = _ledgerData?.transactions ?? mockTx;
-  const openingBalance = _ledgerData?.openingBalance ?? (MOCK_OPENING_BALANCES[account?.code ?? ""] ?? 0);
+  const openingBalance = _ledgerData?.openingBalance ?? (MOCK_OPENING_BALANCES[accountCode] ?? 0);
   const closingBalance = _ledgerData?.closingBalance ?? (openingBalance + transactions.reduce((s, t) => s + t.debit - t.credit, 0));
 
   const filteredTxs = useMemo(() =>

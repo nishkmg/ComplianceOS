@@ -147,7 +147,7 @@ export default function AccountsFlatPage() {
             Ledger
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts.</p>
+          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts. FY {activeFy}</p>
         </div>
         <div className="flex gap-3">
           <button onClick={handleExport} className="btn-secondary flex items-center gap-1.5">
