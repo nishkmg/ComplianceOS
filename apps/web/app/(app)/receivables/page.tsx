@@ -9,19 +9,38 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const agingBuckets = [
-  { label: "Current",    amount: 1245000, percentage: 45 },
-  { label: "1-30 Days",  amount: 845200,  percentage: 30 },
-  { label: "31-60 Days", amount: 412040,  percentage: 15 },
-  { label: "61-90 Days", amount: 245000,  percentage: 8 },
-  { label: "> 90 Days",  amount: 45000,   percentage: 2 },
-];
+interface AgingBucket { label: string; amount: number; percentage: number }
+interface DebtorRow { id: string; name: string; amount: number; status: string }
 
-const topDebtors = [
-  { id: "reliance", name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
-  { id: "acme",     name: "Acme Corporation",         amount: 412000, status: "overdue" },
-  { id: "techsol",  name: "TechSolutions India",      amount: 245000, status: "pending" },
-];
+const agingByFy: Record<string, AgingBucket[]> = {
+  '2026-27': [
+    { label: "Current",    amount: 1245000, percentage: 45 },
+    { label: "1-30 Days",  amount: 845200,  percentage: 30 },
+    { label: "31-60 Days", amount: 412040,  percentage: 15 },
+    { label: "61-90 Days", amount: 245000,  percentage: 8 },
+    { label: "> 90 Days",  amount: 45000,   percentage: 2 },
+  ],
+  '2025-26': [
+    { label: "Current",    amount: 980000, percentage: 40 },
+    { label: "1-30 Days",  amount: 620000, percentage: 25 },
+    { label: "31-60 Days", amount: 380000, percentage: 16 },
+    { label: "61-90 Days", amount: 210000, percentage: 9 },
+    { label: "> 90 Days",  amount: 85000,  percentage: 10 },
+  ],
+};
+
+const debtorsByFy: Record<string, DebtorRow[]> = {
+  '2026-27': [
+    { id: "reliance", name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
+    { id: "acme",     name: "Acme Corporation",         amount: 412000, status: "overdue" },
+    { id: "techsol",  name: "TechSolutions India",      amount: 245000, status: "pending" },
+  ],
+  '2025-26': [
+    { id: "reliance", name: "Reliance Industries Ltd.", amount: 620000, status: "pending" },
+    { id: "acme",     name: "Acme Corporation",         amount: 380000, status: "overdue" },
+    { id: "delta",    name: "Delta Systems",            amount: 195000, status: "partial" },
+  ],
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -32,6 +51,9 @@ export default function ReceivablesSummaryPage() {
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  const agingBuckets = agingByFy[activeFy] ?? agingByFy['2026-27'];
+  const topDebtors = debtorsByFy[activeFy] ?? debtorsByFy['2026-27'];
 
   const totalOutstanding = agingBuckets.reduce((s, b) => s + b.amount, 0);
   const totalOverdue = agingBuckets.filter(b => b.label.includes("Days") || b.label.includes(">"))

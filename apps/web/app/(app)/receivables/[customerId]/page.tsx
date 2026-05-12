@@ -36,6 +36,11 @@ const customers: Record<string, CustomerData> = {
     address: "Whitefield Main Road, Bengaluru — 560066",
     email: "finance@techsol.in", totalInvoiced: 980000, outstanding: 245000, overdue: 0, status: "Active", age: 45,
   },
+  delta: {
+    name: "Delta Systems", gstin: "33AABCT9012K1ZL",
+    address: "Cyber City, Hitech City, Hyderabad — 500081",
+    email: "payables@deltasys.in", totalInvoiced: 750000, outstanding: 195000, overdue: 45000, status: "Active", age: 62,
+  },
 };
 
 const invoicesByCustomer: Record<string, InvoiceRow[]> = {
@@ -48,6 +53,9 @@ const invoicesByCustomer: Record<string, InvoiceRow[]> = {
   ],
   techsol: [
     { id: "4", number: "INV-2026-27-005", date: "25 Apr 2026", dueDate: "25 May 2026", amount: 245000, balance: 245000, status: "pending" },
+  ],
+  delta: [
+    { id: "5", number: "INV-2026-27-004", date: "10 Apr 2026", dueDate: "10 May 2026", amount: 195000, balance: 195000, status: "overdue" },
   ],
 };
 
