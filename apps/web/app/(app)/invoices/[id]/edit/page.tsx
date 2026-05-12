@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,7 +37,24 @@ const mockInvoice = {
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function EditInvoicePage() {
+  const router = useRouter();
+  const [saving, setSaving] = useState(false);
   const [invoice, setInvoice] = useState(mockInvoice);
+
+  const handleSave = useCallback(async (status: "draft" | "sent") => {
+    setSaving(true);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setSaving(false);
+    showToast.success(status === "draft" ? "Draft saved." : "Invoice finalized and sent.");
+    router.push("/invoices");
+  }, [router]);
+
+  const handleDelete = useCallback(() => {
+    if (window.confirm("Delete this draft invoice permanently?")) {
+      showToast.success("Invoice deleted.");
+      router.push("/invoices");
+    }
+  }, [router]);
 
   const subtotal = useMemo(() => invoice.items.reduce((s, item) => s + item.qty * item.rate, 0), [invoice.items]);
   const taxAmount = subtotal * 0.18;
@@ -64,14 +83,14 @@ export default function EditInvoicePage() {
           </div>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-danger text-danger text-[10px] font-bold uppercase tracking-widest hover:bg-danger-bg transition-colors cursor-pointer bg-transparent rounded-md">
+          <button onClick={handleDelete} disabled={saving} className="px-4 py-2 border border-danger text-danger text-[10px] font-bold uppercase tracking-widest hover:bg-danger-bg transition-colors cursor-pointer bg-transparent rounded-md">
             Delete Draft
           </button>
-          <button className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
-            Save Draft
+          <button onClick={() => handleSave("draft")} disabled={saving} className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+            {saving ? "Saving…" : "Save Draft"}
           </button>
-          <button className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
-            Finalize & Send <Icon name="arrow_forward" size={14} />
+          <button onClick={() => handleSave("sent")} disabled={saving} className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+            {saving ? "Sending…" : "Finalize & Send"} <Icon name="arrow_forward" size={14} />
           </button>
         </div>
       </div>

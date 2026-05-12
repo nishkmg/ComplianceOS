@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 
 const mockInvoice = {
@@ -39,9 +39,9 @@ export default function InvoicePdfPage() {
           <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-on-surface">Invoice PDF Preview</span>
         </div>
         <div className="flex gap-4">
-           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">
-             Share Link
-           </button>
+           <button onClick={() => { navigator.clipboard.writeText(window.location.href); showToast.success("Link copied to clipboard."); }} className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">
+              Share Link
+            </button>
            <button onClick={() => window.print()} className="bg-amber text-white px-8 py-2 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none cursor-pointer shadow-sm">
              Download PDF
            </button>

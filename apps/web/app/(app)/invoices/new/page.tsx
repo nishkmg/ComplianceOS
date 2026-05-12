@@ -39,8 +39,10 @@ export default function NewInvoicePage() {
     state: "24 - Gujarat",
   });
 
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [dueDate, setDueDate] = useState("");
+  const today = new Date().toISOString().split("T")[0];
+  const defaultDue = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+  const [date, setDate] = useState(today);
+  const [dueDate, setDueDate] = useState(defaultDue);
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { id: "1", description: "Statutory Audit Fees — FY 23-24", hsn: "998221", qty: 1, rate: 150000, gstRate: 18 },
   ]);

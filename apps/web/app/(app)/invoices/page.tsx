@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
+import { getInvoices } from "@/lib/invoice-store";
 
 function parseINRAmount(s: string): number {
   return parseFloat(s.replace(/,/g, "")) || 0;
@@ -114,6 +115,19 @@ export default function InvoicesPage() {
   const [loading, setLoading] = useState(true);
 
   const mockInvoices = mockInvoicesByFy[activeFy] ?? mockInvoicesByFy['2026-27'];
+  const storedInvoices: Invoice[] = useMemo(() =>
+    getInvoices().filter(inv => inv.fiscalYear === activeFy).map(inv => ({
+      id: inv.id,
+      invoiceNumber: inv.invoiceNumber,
+      customerName: inv.customerName,
+      date: inv.date,
+      dueDate: inv.dueDate,
+      amount: inv.total.toLocaleString("en-IN"),
+      status: inv.status === "sent" ? "sent" as const : inv.status as Invoice["status"],
+    })),
+    [activeFy]
+  );
+  const allInvoices = useMemo(() => [...storedInvoices, ...mockInvoices], [storedInvoices, mockInvoices]);
 
   useEffect(() => {
     setLoading(false);
@@ -121,21 +135,21 @@ export default function InvoicesPage() {
 
   const filtered = useMemo(
     () =>
-      mockInvoices.filter(inv => {
+      allInvoices.filter(inv => {
         if (statusFilter !== "all" && inv.status !== statusFilter) return false;
         if (search && !inv.customerName.toLowerCase().includes(search.toLowerCase()) && !inv.invoiceNumber.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       }),
-    [statusFilter, search, mockInvoices]
+    [statusFilter, search, allInvoices]
   );
 
   const totalAmount = filtered.reduce((s, inv) => s + parseINRAmount(inv.amount), 0);
 
   const counts = useMemo(() => {
-    const c: Record<string, number> = { all: mockInvoices.length };
-    for (const tab of tabs) if (tab !== "all") c[tab] = mockInvoices.filter(i => i.status === tab).length;
+    const c: Record<string, number> = { all: allInvoices.length };
+    for (const tab of tabs) if (tab !== "all") c[tab] = allInvoices.filter(i => i.status === tab).length;
     return c;
-  }, [mockInvoices]);
+  }, [allInvoices]);
 
   const handleExport = useCallback(() => {
     if (filtered.length === 0) { showToast.error("No invoices to export."); return; }

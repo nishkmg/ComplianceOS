@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { showToast } from "@/lib/toast";
+import { getInvoice, getInvoices } from "@/lib/invoice-store";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -40,10 +41,39 @@ const mockInvoice = {
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
+function storeInvoiceToMock(s: any): typeof mockInvoice {
+  return {
+    invoiceNumber: s.invoiceNumber,
+    date: new Date(s.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    dueDate: new Date(s.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    status: s.status,
+    customer: { name: s.customerName, email: "", gstin: s.customerGstin, address: s.customerAddress, state: "" },
+    company: { name: "ComplianceOS", address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai — 400021", gstin: "27AAACC1234E1Z5" },
+    lineItems: s.lines.map((l: any) => ({ hsn: l.hsn, name: l.description, desc: "", qty: l.qty, rate: l.rate, amount: l.qty * l.rate })),
+    subtotal: s.subtotal,
+    cgst: s.tax / 2,
+    sgst: s.tax / 2,
+    grandTotal: s.total,
+    totalWords: "As per invoice.",
+  };
+}
+
 export default function InvoiceDetailPage() {
   const params = useParams();
   const invId = params.id as string;
-  const [inv, setInv] = useState(mockInvoice);
+  const stored = getInvoice(invId);
+  const initialInv = stored ? storeInvoiceToMock(stored) : invId === "1" ? mockInvoice : null;
+  const [inv, setInv] = useState(initialInv || mockInvoice);
+
+  if (!stored && invId !== "1") {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <Icon name="search_off" size={48} className="text-lighter mb-4" />
+        <p className="font-ui text-[13px] text-mid">Invoice not found.</p>
+        <Link href="/invoices" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">Back to Invoices</Link>
+      </div>
+    );
+  }
 
   function handleMarkPaid() {
     setInv(prev => ({ ...prev, status: "paid" }));
@@ -67,10 +97,10 @@ export default function InvoiceDetailPage() {
         <div className="flex items-center gap-2">
           <InvoiceStatusBadge status={inv.status as any} />
           <div className="h-4 w-[0.5px] bg-border-subtle mx-1" />
-          <Link
-            href={`/invoices/${invId}/edit`}
-            className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md"
-          >
+          <Link href={`/invoices/${invId}/pdf`} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md">
+            <Icon name="picture_as_pdf" size={12} className="mr-1" /> PDF
+          </Link>
+          <Link href={`/invoices/${invId}/edit`} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md">
             Edit
           </Link>
           <button onClick={handleMarkPaid} disabled={inv.status === "paid"} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1">
