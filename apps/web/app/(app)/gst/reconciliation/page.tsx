@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 interface ReconItem {
   id: string; gstin: string; name: string; inv: string; date: string; value: string;
@@ -20,6 +22,7 @@ const initialMismatches: ReconItem[] = [
 ];
 
 export default function ITCResolutionPage() {
+  const { activeFy } = useFiscalYear();
   const [items, setItems] = useState<ReconItem[]>(initialMismatches);
   const [filter, setFilter] = useState<"all" | "mismatch" | "reconciled">("all");
   const [syncing, setSyncing] = useState(false);
@@ -43,6 +46,7 @@ export default function ITCResolutionPage() {
     setSyncing(true);
     setTimeout(() => {
       setSyncing(false);
+      showToast.success("Latest 2B data fetched.");
     }, 1500);
   };
 
@@ -51,11 +55,13 @@ export default function ITCResolutionPage() {
     setTimeout(() => {
       setItems(prev => prev.map(i => i.status === "mismatch" ? { ...i, status: "reconciled", diff: "0" } : i));
       setMatching(false);
+      showToast.success("Auto-match complete.");
     }, 2000);
   };
 
   const handleMatchManually = (id: string) => {
     setItems(prev => prev.map(i => i.id === id ? { ...i, status: "reconciled" as const, diff: "0" } : i));
+    showToast.success("Item reconciled manually.");
   };
 
   return (
@@ -68,6 +74,9 @@ export default function ITCResolutionPage() {
           <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">Cross-reference your internal purchase register with the GSTR-2B statement. Resolve discrepancies to maximize claimable Input Tax Credit.</p>
         </div>
         <div className="flex gap-3">
+          <Link href="/gst/reconciliation/mismatches" className="px-5 py-2 border border-border text-mid font-ui text-[13px] rounded-md hover:bg-surface-muted transition-colors no-underline flex items-center gap-2 uppercase tracking-widest font-bold">
+            <Icon name="list" size={16} /> Mismatches
+          </Link>
           <button onClick={handleFetch2B} disabled={syncing} className="px-5 py-2 border border-border text-dark font-ui text-[13px] rounded-md hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase tracking-widest font-bold">
             <Icon name={syncing ? "sync" : "cloud_download"} size={16} className={syncing ? "animate-spin" : ""} /> {syncing ? "Fetching..." : "Fetch Latest 2B"}
           </button>
