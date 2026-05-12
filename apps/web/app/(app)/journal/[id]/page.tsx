@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { getEntry, updateEntry, deleteEntry, StoredEntry } from "@/lib/journal-store";
 
 interface MockLine {
@@ -48,10 +47,23 @@ const mockEntriesByFy: Record<string, MockEntry[]> = {
   ],
 };
 
-function getBaseEntry(id: string, fy?: string): MockEntry | undefined {
+function getBaseEntry(id: string): MockEntry | undefined {
   for (const entries of Object.values(mockEntriesByFy)) {
     const found = entries.find(e => e.id === id);
     if (found) return found;
+  }
+  const stored = getEntry(id);
+  if (stored) {
+    return {
+      id: stored.id,
+      entryNumber: stored.entryNumber,
+      date: stored.date,
+      narration: stored.narration,
+      fiscalYear: stored.fiscalYear,
+      type: stored.type,
+      status: stored.status,
+      lines: stored.lines,
+    };
   }
   return undefined;
 }
@@ -63,7 +75,7 @@ const statusConfig = {
 };
 
 function mergeEntry(base: MockEntry): MockEntry {
-  const stored = getEntry(base.id) as StoredEntry | undefined;
+  const stored = getEntry(base.id);
   if (!stored) return base;
   return {
     id: stored.id,
@@ -108,19 +120,20 @@ export default function JournalEntryDetailPage() {
   const cfg = statusConfig[entry.status];
 
   function handlePost() {
-    const updated = updateEntry(entryId, { status: "posted" as const });
-    if (updated) {
-      setEntry(prev => prev ? { ...prev, status: "posted" } : prev);
-      showToast.success("Voucher posted to General Ledger.");
-    } else {
-      setEntry(prev => prev ? { ...prev, status: "posted" } : prev);
-      showToast.success("Voucher posted to General Ledger.");
-    }
+    updateEntry(entryId, { status: "posted" as const });
+    setEntry(prev => prev ? { ...prev, status: "posted" } : prev);
+    showToast.success("Voucher posted to General Ledger.");
   }
 
   function handleVoidConfirm() {
     if (!voidReason.trim()) {
       showToast.error("Please provide a reason for voiding.");
+      return;
+    }
+    if (entry!.narration.toLowerCase().includes("opening balance")) {
+      showToast.error("Opening balance entries cannot be voided.");
+      setIsVoidModalOpen(false);
+      setVoidReason("");
       return;
     }
     updateEntry(entryId, { status: "voided" as const });

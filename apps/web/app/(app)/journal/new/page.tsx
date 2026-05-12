@@ -7,7 +7,7 @@ import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { addEntry, getNextSeq, getEntries, StoredEntry } from "@/lib/journal-store";
+import { addEntry, getEntries, StoredEntry } from "@/lib/journal-store";
 
 const MOCK_ACCOUNTS = [
   { id: "1", name: "Cash Account", code: "10101", type: "asset" },
@@ -61,10 +61,14 @@ function isFutureDate(dateStr: string): boolean {
 }
 
 function entryNumberForFy(fy: string): string {
-  const existing = getEntries().filter(e => e.fiscalYear === fy);
-  const mockCount = 6;
-  const seq = existing.length + mockCount + 1;
-  return `JE-${fy}-${String(seq).padStart(3, "0")}`;
+  const mockMax = 6;
+  const stored = getEntries().filter(e => e.fiscalYear === fy);
+  const maxSeq = stored.reduce((max, e) => {
+    const match = e.entryNumber.match(/(\d+)$/);
+    return match ? Math.max(max, parseInt(match[1], 10)) : max;
+  }, mockMax);
+  const nextSeq = maxSeq + 1;
+  return `JE-${fy}-${String(nextSeq).padStart(3, "0")}`;
 }
 
 export default function NewJournalEntryPage() {
@@ -100,6 +104,17 @@ export default function NewJournalEntryPage() {
       if (line.debit && line.credit) {
         warnings.push("Each line should have either debit or credit, not both.");
         break;
+      }
+      const acct = accountTypeMap[line.accountId];
+      if (!acct) continue;
+      const amt = parseFloat(line.debit || line.credit);
+      if (!amt || amt <= 0) continue;
+      const isDebit = !!line.debit;
+      const normallyDr = acct.type === "asset" || acct.type === "expense";
+      if (isDebit && !normallyDr) {
+        warnings.push(`"${acct.name}" (${acct.type}) normally carries a credit balance. A debit entry may be unusual.`);
+      } else if (!isDebit && normallyDr) {
+        warnings.push(`"${acct.name}" (${acct.type}) normally carries a debit balance. A credit entry may be unusual.`);
       }
     }
     return warnings;
