@@ -109,6 +109,8 @@ export default function AccountDetailPage() {
     [txSearch, transactions]
   );
 
+  const filteredClosingBalance = openingBalance + filteredTxs.reduce((s, t) => s + t.debit - t.credit, 0);
+
   let runningBalance = openingBalance;
 
   if (!account) {
@@ -198,8 +200,8 @@ export default function AccountDetailPage() {
         <div className="bg-surface border border-border p-5 shadow-sm rounded-md border-l-4 border-l-amber">
           <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-1">Closing Balance</p>
           <p className="font-mono text-xl text-dark tabular-nums font-semibold">
-            {formatIndianNumber(Math.abs(closingBalance), { currency: true })}{" "}
-            <span className="text-[12px] text-mid font-ui text-[13px]">{closingBalance >= 0 ? balanceLabel : negateLabel}</span>
+            {formatIndianNumber(Math.abs(filteredClosingBalance), { currency: true })}{" "}
+            <span className="text-[12px] text-mid font-ui text-[13px]">{filteredClosingBalance >= 0 ? balanceLabel : negateLabel}</span>
           </p>
         </div>
       </div>

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,6 +58,7 @@ const groupTypes = ["asset", "liability", "equity", "income", "expense"] as cons
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function CoAPage() {
+  const { activeFy } = useFiscalYear();
   const [accounts, setAccounts] = useState(MOCK_ACCOUNTS);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
@@ -120,6 +122,18 @@ export default function CoAPage() {
     return ["asset", "expense"].includes(type) ? "dr" : "cr";
   };
 
+  const handleExport = useCallback(() => {
+    if (accounts.length === 0) { showToast.error("No accounts to export."); return; }
+    const header = "Code,Name,Type,Level,Balance,Balance Type";
+    const rows = accounts.map(a => `${a.code},"${a.name}",${a.type},${a.level},${a.balance},${a.balanceType}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `chart-of-accounts-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${accounts.length} accounts.`);
+  }, [accounts, activeFy]);
+
   return (
     <div className="space-y-6">
       {/* Page header */}
@@ -131,8 +145,8 @@ export default function CoAPage() {
           <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
         </div>
         <div className="flex gap-3 no-print">
-          <button onClick={() => { showToast.success("Chart of Accounts exported."); }} className="btn-secondary flex items-center gap-1.5">
-            <Icon name="download" size={14} /> Export
+          <button onClick={handleExport} className="btn-secondary flex items-center gap-1.5">
+            <Icon name="download" size={14} /> Export CSV
           </button>
           <Link
             href="/accounts/new"

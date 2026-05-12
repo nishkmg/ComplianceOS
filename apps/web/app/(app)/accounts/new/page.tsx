@@ -7,11 +7,13 @@ import { showToast } from "@/lib/toast";
 
 // ─── Sub-type options per account kind ────────────────────────────────────────
 
+const kinds = ["Asset", "Liability", "Equity", "Income", "Expense"] as const;
+
 const subTypes: Record<string, string[]> = {
   Asset:     ["Current Asset", "Fixed Asset", "Bank Account", "Cash", "Inventory"],
   Liability: ["Current Liability", "Long Term Liability"],
   Equity:    ["Capital Account", "Drawings", "Reserves & Surplus"],
-  Revenue:   ["Operating Revenue", "Other Revenue"],
+  Income:    ["Operating Revenue", "Other Revenue"],
   Expense:   ["Direct Expense", "Indirect Expense", "Depreciation"],
 };
 
@@ -132,7 +134,7 @@ export default function NewAccountPage() {
                   value={form.kind}
                   onChange={e => setForm(f => ({ ...f, kind: e.target.value, subType: subTypes[e.target.value][0] }))}
                 >
-                  {Object.keys(subTypes).map(k => (
+                  {kinds.map(k => (
                     <option key={k} value={k}>{k}</option>
                   ))}
                 </select>
