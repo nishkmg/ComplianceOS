@@ -28,6 +28,10 @@ export default function StockPage() {
   const { activeFy } = useFiscalYear();
 
   const handleExportCSV = () => {
+    if (mockStock.length === 0) {
+      showToast.error("No stock data to export.");
+      return;
+    }
     const header = "SKU,Product Name,Available,Committed,Net Available,Unit,Warehouse,Status";
     const rows = mockStock.map((item) =>
       `${item.sku},"${item.name}",${item.available},${item.committed},${item.netAvailable},${item.unit},"${item.warehouse}",${item.status}`
