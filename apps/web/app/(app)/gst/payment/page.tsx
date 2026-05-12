@@ -68,7 +68,8 @@ export default function GSTPaymentPage() {
       showToast.error("Please generate challan first");
       return;
     }
-    showToast.success(`Payment of ₹${formatIndianNumber(netPayable.total)} initiated via ${paymentMode === "online" ? "Net Banking" : "NEFT/RTGS"}`);
+    const modeLabels: Record<string, string> = { online: "Net Banking", neft: "NEFT/RTGS", overthecounter: "Over the Counter" };
+    showToast.success(`Payment of ₹${formatIndianNumber(netPayable.total)} initiated via ${modeLabels[paymentMode] ?? paymentMode}`);
     setChallanData(null);
   };
 
