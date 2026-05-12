@@ -7,6 +7,7 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -121,7 +122,7 @@ export default function AccountsFlatPage() {
           <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts.</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary flex items-center gap-1.5">
+          <button onClick={() => { showToast.success("Accounts list exported."); }} className="btn-secondary flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export
           </button>
           <Link

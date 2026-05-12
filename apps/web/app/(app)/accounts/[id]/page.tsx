@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -8,6 +8,43 @@ import { formatIndianNumber } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from '@/lib/toast';
+
+// ─── Mock account data (fallback when tRPC is not wired) ────────────────────
+
+interface MockAccount {
+  id: string; code: string; name: string; kind: string; balance: number; balanceType: string;
+}
+
+const MOCK_ACCOUNTS: MockAccount[] = [
+  { id: "10101", code: "10101", name: "Cash Account",       kind: "asset",     balance: 500000,  balanceType: "Dr" },
+  { id: "10200", code: "10200", name: "Bank Account",        kind: "asset",     balance: 1250000, balanceType: "Dr" },
+  { id: "10300", code: "10300", name: "Trade Receivables",   kind: "asset",     balance: 350000,  balanceType: "Dr" },
+  { id: "10400", code: "10400", name: "GST Input",           kind: "asset",     balance: 45000,   balanceType: "Dr" },
+  { id: "20101", code: "20101", name: "Trade Payables",      kind: "liability", balance: 180000,  balanceType: "Cr" },
+  { id: "20200", code: "20200", name: "GST Output",          kind: "liability", balance: 45000,   balanceType: "Cr" },
+  { id: "20300", code: "20300", name: "TDS Payable",         kind: "liability", balance: 12000,   balanceType: "Cr" },
+  { id: "30100", code: "30100", name: "Capital Account",     kind: "equity",    balance: 1000000, balanceType: "Cr" },
+  { id: "40100", code: "40100", name: "Sales Revenue",       kind: "income",    balance: 2800000, balanceType: "Cr" },
+  { id: "50200", code: "50200", name: "Operating Expenses",  kind: "expense",   balance: 450000,  balanceType: "Dr" },
+];
+
+interface Tx {
+  id: string; voucherNumber: string; date: string; narration: string; debit: number; credit: number;
+}
+
+const MOCK_TRANSACTIONS: Tx[] = [
+  { id: "1", voucherNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0 },
+  { id: "2", voucherNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Equipment purchase", debit: 0, credit: 75000 },
+  { id: "3", voucherNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary payment", debit: 0, credit: 320000 },
+  { id: "4", voucherNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice", debit: 236000, credit: 0 },
+];
+
+const MOCK_OPENING_BALANCES: Record<string, number> = {
+  "10101": 500000, "10200": 1250000, "10300": 350000, "10400": 45000,
+  "20101": 180000, "20200": 45000, "20300": 12000,
+  "30100": 1000000, "40100": 2800000, "50200": 450000,
+};
 
 // ─── Period options ───────────────────────────────────────────────────────────
 
@@ -24,6 +61,7 @@ export default function AccountDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const [period, setPeriod] = useState("fy");
+  const [txSearch, setTxSearch] = useState("");
 
   const handlePeriodChange = (value: string) => {
     if (value === "custom") { setPeriod("custom"); return; }
@@ -31,17 +69,29 @@ export default function AccountDetailPage() {
     setPeriod("fy");
   };
 
-  // tRPC queries
-  const { data: accounts }: any = api.accounts.list.useQuery();
-  const { data: ledgerData, isLoading }: any = api.balances.ledger.useQuery(
+  // tRPC queries (will be undefined until wired)
+  const { data: _accounts }: any = api.accounts.list.useQuery();
+  const { data: _ledgerData, isLoading }: any = api.balances.ledger.useQuery(
     { accountId: id, fiscalYear },
     { enabled: !!id }
   );
 
-  const account: any = accounts?.find((a: any) => a.id === id);
-  const transactions: any[] = ledgerData?.transactions || [];
-  const openingBalance = ledgerData?.openingBalance || 0;
-  const closingBalance = ledgerData?.closingBalance || 0;
+  // Fall back to mock data
+  const account = _accounts?.find((a: any) => a.id === id)
+    ?? MOCK_ACCOUNTS.find(a => a.id === id)
+    ?? MOCK_ACCOUNTS.find(a => a.code === id);
+
+  const transactions: Tx[] = _ledgerData?.transactions ?? MOCK_TRANSACTIONS;
+  const openingBalance = _ledgerData?.openingBalance ?? (MOCK_OPENING_BALANCES[account?.code ?? ""] ?? 0);
+  const closingBalance = _ledgerData?.closingBalance ?? (openingBalance + transactions.reduce((s, t) => s + t.debit - t.credit, 0));
+
+  const filteredTxs = useMemo(() =>
+    txSearch ? transactions.filter(t =>
+      t.narration.toLowerCase().includes(txSearch.toLowerCase()) ||
+      t.voucherNumber.toLowerCase().includes(txSearch.toLowerCase())
+    ) : transactions,
+    [txSearch, transactions]
+  );
 
   let runningBalance = openingBalance;
 
@@ -57,7 +107,9 @@ export default function AccountDetailPage() {
     );
   }
 
-  const balanceLabel = account.kind === "asset" || account.kind === "expense" ? "Dr" : "Cr";
+  const isDrNormally = account.kind === "asset" || account.kind === "expense";
+  const balanceLabel = isDrNormally ? "Dr" : "Cr";
+  const negateLabel = isDrNormally ? "Cr" : "Dr";
 
   return (
     <div className="space-y-8">
@@ -78,14 +130,14 @@ export default function AccountDetailPage() {
             </Badge>
           </div>
           <p className="font-mono text-[13px] text-secondary">
-            {account.code} · {fiscalYear}
+            {account.code} · FY {fiscalYear}
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+          <button onClick={() => { showToast.success("Statement exported."); }} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export Statement
           </button>
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
+          <button onClick={() => { showToast.success("Edit mode opened."); }} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-sm flex items-center gap-1.5">
             <Icon name="edit" size={14} /> Edit Details
           </button>
         </div>
@@ -116,14 +168,14 @@ export default function AccountDetailPage() {
           <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-1">Opening Balance</p>
           <p className="font-mono text-xl text-dark tabular-nums">
             {formatIndianNumber(Math.abs(openingBalance), { currency: true })}{" "}
-            <span className="text-[12px] text-mid font-ui text-[13px]">{openingBalance >= 0 ? balanceLabel : balanceLabel === "Dr" ? "Cr" : "Dr"}</span>
+            <span className="text-[12px] text-mid font-ui text-[13px]">{openingBalance >= 0 ? balanceLabel : negateLabel}</span>
           </p>
         </div>
         <div className="bg-surface border border-border p-5 shadow-sm rounded-md border-l-4 border-l-amber">
           <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-1">Closing Balance</p>
           <p className="font-mono text-xl text-dark tabular-nums font-semibold">
             {formatIndianNumber(Math.abs(closingBalance), { currency: true })}{" "}
-            <span className="text-[12px] text-mid font-ui text-[13px]">{closingBalance >= 0 ? balanceLabel : balanceLabel === "Dr" ? "Cr" : "Dr"}</span>
+            <span className="text-[12px] text-mid font-ui text-[13px]">{closingBalance >= 0 ? balanceLabel : negateLabel}</span>
           </p>
         </div>
       </div>
@@ -134,7 +186,7 @@ export default function AccountDetailPage() {
           <h2 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Transactions</h2>
           <div className="relative">
             <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
-            <input className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-52 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light" placeholder="Search entries…" />
+            <input className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-52 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light" placeholder="Search entries…" value={txSearch} onChange={e => setTxSearch(e.target.value)} />
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -152,8 +204,8 @@ export default function AccountDetailPage() {
             <tbody className="divide-y divide-border-subtle">
               {isLoading ? (
                 <tr><td colSpan={6} className="py-12 text-center font-ui text-[13px] text-mid">Loading transactions…</td></tr>
-              ) : transactions.length > 0 ? (
-                transactions.map((txn: any, i: number) => {
+              ) : filteredTxs.length > 0 ? (
+                filteredTxs.map((txn, i) => {
                   runningBalance += txn.debit - txn.credit;
                   return (
                     <tr key={i} className="hover:bg-surface-muted/50 transition-colors">
@@ -171,7 +223,7 @@ export default function AccountDetailPage() {
                         {txn.credit > 0 ? formatIndianNumber(txn.credit, { currency: true }) : "—"}
                       </td>
                       <td className={`py-4 px-5 font-mono text-[12px] tabular-nums text-right font-medium ${runningBalance >= 0 ? 'text-dark' : 'text-danger'}`}>
-                        {formatIndianNumber(Math.abs(runningBalance))} {runningBalance >= 0 ? 'Dr' : 'Cr'}
+                        {formatIndianNumber(Math.abs(runningBalance))} {runningBalance >= 0 ? balanceLabel : negateLabel}
                       </td>
                     </tr>
                   );

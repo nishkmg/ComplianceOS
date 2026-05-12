@@ -17,6 +17,8 @@ const subTypes: Record<string, string[]> = {
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
+const EXISTING_CODES = ["10101", "10200", "10300", "10400", "10500", "20101", "20200", "20300", "30100", "40100", "50200"];
+
 export default function NewAccountPage() {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -26,10 +28,22 @@ export default function NewAccountPage() {
     subType: "Current Asset",
     description: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!form.code.trim()) errs.code = "Account code is required";
+    else if (!/^\d{4,5}$/.test(form.code.trim())) errs.code = "Code must be 4-5 digits";
+    else if (EXISTING_CODES.includes(form.code.trim())) errs.code = "Code already exists";
+    if (!form.name.trim()) errs.name = "Account name is required";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    showToast.success("Ledger account created successfully");
+    if (!validate()) return;
+    showToast.success(`Ledger account "${form.name}" created successfully`);
     router.push("/coa");
   };
 
@@ -72,14 +86,26 @@ export default function NewAccountPage() {
       <div className="bg-surface border border-border rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber" />
         <form onSubmit={handleSubmit} className="p-7 space-y-7">
+          {/* Validation summary */}
+          {Object.keys(errors).length > 0 && (
+            <div className="bg-danger-bg border border-red-200 px-4 py-3 rounded-md">
+              <p className="font-ui text-[11px] font-bold text-danger uppercase tracking-widest mb-1">Please fix the following:</p>
+              <ul className="list-disc list-inside space-y-0.5">
+                {Object.values(errors).map((msg, i) => (
+                  <li key={i} className="font-ui text-[12px] text-danger">{msg}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Account Name */}
           <div className="space-y-1.5">
             <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Name *</label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light"
+              className={`w-full bg-surface border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light ${errors.name ? 'border-red-400' : 'border-border'}`}
               placeholder="e.g. Accounts Receivable — Domestic"
               value={form.name}
-              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+              onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(prev => { const n = {...prev}; delete n.name; return n; }); }}
               required
             />
           </div>
@@ -89,12 +115,13 @@ export default function NewAccountPage() {
             <div className="space-y-1.5">
               <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Code *</label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light"
+                className={`w-full bg-surface border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light ${errors.code ? 'border-red-400' : 'border-border'}`}
                 placeholder="10100"
                 value={form.code}
-                onChange={e => setForm(f => ({ ...f, code: e.target.value }))}
+                onChange={e => { setForm(f => ({ ...f, code: e.target.value })); setErrors(prev => { const n = {...prev}; delete n.code; return n; }); }}
                 required
               />
+              <p className="font-ui text-[10px] text-light">4-5 digit numeric code. Must be unique.</p>
             </div>
             <div className="space-y-1.5">
               <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Kind</label>

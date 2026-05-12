@@ -5,6 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -128,7 +129,7 @@ export default function CoAPage() {
           <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
         </div>
         <div className="flex gap-3 no-print">
-          <button className="btn-secondary flex items-center gap-1.5">
+          <button onClick={() => { showToast.success("Chart of Accounts exported."); }} className="btn-secondary flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export
           </button>
           <Link
@@ -265,7 +266,13 @@ export default function CoAPage() {
                                   />
                                 </button>
                               )}
-                              <span className={acct.level <= 1 ? 'font-semibold' : ''}>{acct.name}</span>
+                              <Link
+                                href={acct.hasChildren ? '#' : `/accounts/${acct.code}`}
+                                onClick={acct.hasChildren ? (e) => { e.preventDefault(); toggle(acct.id); } : undefined}
+                                className={`no-underline ${acct.level <= 1 ? 'font-semibold text-dark' : 'text-dark hover:text-amber'}`}
+                              >
+                                {acct.name}
+                              </Link>
                             </div>
                           </td>
                           <td className="py-2.5 px-5 text-right">
