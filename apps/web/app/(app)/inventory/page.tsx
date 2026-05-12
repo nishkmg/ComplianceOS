@@ -34,7 +34,7 @@ export default function InventoryDashboardPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Operations Control</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Operations Control · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Inventory Overview</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Strategic assessment of working capital locked in commodities and finished goods across all entities.</p>
         </div>

@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
 
+const MOCK_PRODUCT_SKUS = ["RM-001", "RM-002", "RM-004", "FG-001"];
+
 export default function NewProductPage() {
   const router = useRouter();
+  const savingRef = useRef(false);
+  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     sku: "",
     name: "",
@@ -19,10 +24,31 @@ export default function NewProductPage() {
     gstRate: 18,
   });
 
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!formData.sku.trim()) errs.sku = "SKU code is required";
+    else if (MOCK_PRODUCT_SKUS.includes(formData.sku.trim())) errs.sku = "SKU code already exists";
+    if (!formData.name.trim()) errs.name = "Product name is required";
+    if (formData.name.length > 100) errs.name = "Product name must be 100 characters or fewer";
+    if (!formData.hsn.trim()) errs.hsn = "HSN/SAC code is required";
+    else if (!/^\d{4,8}$/.test(formData.hsn.trim())) errs.hsn = "HSN code must be 4-8 digits";
+    if (!formData.category) errs.category = "Category is required";
+    if (formData.openingStock < 0) errs.openingStock = "Opening stock cannot be negative";
+    if (formData.unitPrice < 0) errs.unitPrice = "Unit price cannot be negative";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    showToast.success("SKU created successfully");
-    router.push("/inventory/products");
+    if (savingRef.current) return;
+    if (!validate()) return;
+    savingRef.current = true;
+    setSaving(true);
+    setTimeout(() => {
+      showToast.success("SKU created successfully");
+      router.push("/inventory/products");
+    }, 400);
   };
 
   return (
@@ -42,11 +68,11 @@ export default function NewProductPage() {
             <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl">Enter product details for compliance tracking and inventory valuation.</p>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => router.back()} className="font-ui text-[13px] text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest">Cancel</button>
-            <button onClick={handleSubmit} className="bg-amber text-white px-8 py-3 font-ui text-[13px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm rounded-md">
-              Save Product
-              <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
-            </button>
+          <button onClick={() => router.back()} className="font-ui text-[13px] text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest">Cancel</button>
+                <button onClick={handleSubmit} disabled={saving} className="bg-amber text-white px-8 py-3 font-ui text-[13px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+                {saving ? "Saving..." : "Save Product"}
+                <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />
+                </button>
           </div>
         </div>
 
@@ -61,21 +87,24 @@ export default function NewProductPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="flex flex-col gap-2">
                       <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">SKU Code</label>
-                      <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" placeholder="RM-SKU-001" value={formData.sku} onChange={e => setFormData({...formData, sku: e.target.value})} />
+                      <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" placeholder="RM-SKU-001" value={formData.sku} onChange={e => { setFormData({...formData, sku: e.target.value}); setErrors({...errors, sku: ''}); }} />
+                      {errors.sku && <p className="font-ui text-[11px] text-danger mt-1">{errors.sku}</p>}
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">HSN / SAC Code</label>
-                      <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" placeholder="8471" value={formData.hsn} onChange={e => setFormData({...formData, hsn: e.target.value})} />
+                      <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" placeholder="8471" value={formData.hsn} onChange={e => { setFormData({...formData, hsn: e.target.value}); setErrors({...errors, hsn: ''}); }} />
+                      {errors.hsn && <p className="font-ui text-[11px] text-danger mt-1">{errors.hsn}</p>}
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Product Name</label>
-                    <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-ui text-sm font-medium text-sm outline-none focus:border-primary" placeholder="Enter product name for ledgers..." value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                      <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-ui text-sm font-medium text-sm outline-none focus:border-primary" placeholder="Enter product name for ledgers..." value={formData.name} onChange={e => { setFormData({...formData, name: e.target.value}); setErrors({...errors, name: ''}); }} maxLength={100} />
+                      {errors.name && <p className="font-ui text-[11px] text-danger mt-1">{errors.name}</p>}
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Category</label>
                     <div className="relative">
-                      <select className="w-full bg-transparent border-b border-border py-2 pl-0 font-ui text-[13px] outline-none focus:border-primary appearance-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                      <select className="w-full bg-transparent border-b border-border py-2 pl-0 font-ui text-[13px] outline-none focus:border-primary appearance-none" value={formData.category} onChange={e => { setFormData({...formData, category: e.target.value}); setErrors({...errors, category: ''}); }}>
                         <option value="">Select...</option>
                         <option>Raw Material</option>
                         <option>Finished Good</option>
@@ -83,6 +112,7 @@ export default function NewProductPage() {
                       </select>
                       <Icon name="expand_more" className="absolute right-0 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
                     </div>
+                    {errors.category && <p className="font-ui text-[11px] text-danger mt-1">{errors.category}</p>}
                   </div>
                 </div>
               </div>
@@ -104,11 +134,13 @@ export default function NewProductPage() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Opening Stock</label>
-                    <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" type="number" value={formData.openingStock || ''} onChange={e => setFormData({...formData, openingStock: parseFloat(e.target.value) || 0})} />
+                    <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" type="number" min="0" value={formData.openingStock || ''} onChange={e => { setFormData({...formData, openingStock: parseFloat(e.target.value) || 0}); setErrors({...errors, openingStock: ''}); }} />
+                    {errors.openingStock && <p className="font-ui text-[11px] text-danger mt-1">{errors.openingStock}</p>}
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Unit Price (₹)</label>
-                    <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" type="number" value={formData.unitPrice || ''} onChange={e => setFormData({...formData, unitPrice: parseFloat(e.target.value) || 0})} />
+                    <input className="w-full bg-transparent border-b border-border py-2 pl-0 font-mono text-sm outline-none focus:border-primary" type="number" min="0" step="0.01" value={formData.unitPrice || ''} onChange={e => { setFormData({...formData, unitPrice: parseFloat(e.target.value) || 0}); setErrors({...errors, unitPrice: ''}); }} />
+                    {errors.unitPrice && <p className="font-ui text-[11px] text-danger mt-1">{errors.unitPrice}</p>}
                   </div>
                 </div>
               </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 interface StockItem {
   id: string;
@@ -25,12 +25,13 @@ const mockStock: StockItem[] = [
 ];
 
 export default function StockPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-6 text-left">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Management</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Management · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Stock Levels</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Real-time assessment of warehouse commodities, commitments, and procurement statuses.</p>
         </div>

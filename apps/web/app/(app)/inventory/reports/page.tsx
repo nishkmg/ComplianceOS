@@ -4,12 +4,7 @@ import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-
-const reportData = [
-  { sku: "RM-001", name: "Cotton Yarn 40s", category: "Raw Material", qty: 3800, cost: 245, value: 931000 },
-  { sku: "RM-002", name: "Steel Rods 12mm", category: "Raw Material", qty: 200, cost: 68, value: 13600 },
-  { sku: "FG-001", name: "Finished Widget A", category: "Finished Good", qty: 1500, cost: 850, value: 1275000 },
-];
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const expiryMockData = [
   { sku: "RM-045", name: "Polyester Resin", category: "Raw Material", qty: 500, cost: 180, value: 90000 },
@@ -22,6 +17,7 @@ const movementMockData = [
 ];
 
 export default function InventoryReportsPage() {
+  const { activeFy } = useFiscalYear();
   const [reportType, setReportType] = useState("valuation");
 
   const reportData = useMemo(() => {
@@ -39,7 +35,7 @@ export default function InventoryReportsPage() {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8 mt-0 mb-8">
         <div className="text-left">
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Inventory Valuation</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Comprehensive breakdown of current stock levels, calculated asset values, and recent movement metrics across all registered warehouses.</p>
         </div>
@@ -101,8 +97,8 @@ export default function InventoryReportsPage() {
                   <td className="py-4 px-6 font-medium text-amber-text">{row.sku}</td>
                   <td className="py-4 px-6 font-ui text-[13px] font-bold text-dark">{row.name}</td>
                   <td className="py-4 px-6 font-ui text-[13px] text-mid">{row.category}</td>
-                  <td className="py-4 px-6 text-right text-dark">{row.qty.toLocaleString()}</td>
-                  <td className="py-4 px-6 text-right text-mid">{row.cost.toLocaleString()}</td>
+                  <td className="py-4 px-6 text-right text-dark">{row.qty.toLocaleString('en-IN')}</td>
+                  <td className="py-4 px-6 text-right text-mid">{row.cost.toLocaleString('en-IN')}</td>
                   <td className="py-4 px-6 text-right font-bold text-dark">{formatIndianNumber(row.value)}</td>
                 </tr>
               ))}
