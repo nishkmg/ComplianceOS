@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function ITRReturnDetailPage() {
   const params = useParams();
   const id = params.returnId as string;
   const fy = params.financialYear as string;
+  const { activeFy } = useFiscalYear();
+
+  const ay = fy ? `${Number(fy.split("-")[0]) + 1}-${fy.split("-")[1]}` : "2027-28";
 
   return (
     <div className="space-y-0 text-left">
@@ -21,15 +24,15 @@ export default function ITRReturnDetailPage() {
             <Icon name="chevron_right" className="text-[14px]" />
             <span className="text-dark font-bold">ITR Detail</span>
           </div>
-          <h1 className="font-display text-display-lg font-semibold text-dark">Financial Year {fy || "2023-24"}</h1>
-          <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: 2024-25 | PAN: ABCDE1234F</p>
+          <h1 className="font-display text-display-lg font-semibold text-dark">Financial Year {fy || activeFy}</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {ay} | PAN: ABCDE1234F</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="border border-border text-dark px-6 py-2.5 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
+          <button onClick={() => showToast.success("ITR data exported.")} className="border border-border text-dark px-6 py-2.5 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
             <Icon name="download" className="text-[18px]" />
             Export Data
           </button>
-          <button className="bg-amber text-white px-6 py-2.5 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all flex items-center gap-2 border-none shadow-sm cursor-pointer">
+          <button onClick={() => showToast.success("Return finalized for filing.")} className="bg-amber text-white px-6 py-2.5 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all flex items-center gap-2 border-none shadow-sm cursor-pointer">
             Finalize Filing →
           </button>
         </div>

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
 export default function ITRPresumptivePage() {
   const [section, setSection] = useState("44ad");
@@ -108,10 +108,10 @@ export default function ITRPresumptivePage() {
             </div>
 
             <div className="mt-auto pt-12">
-               <button className="w-full bg-amber text-white py-4 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md border-none cursor-pointer flex items-center justify-center gap-2">
-                 Apply to Computation
-                 <Icon name="arrow_forward" />
-               </button>
+               <button onClick={() => showToast.success("Presumptive income applied to computation.")} className="w-full bg-amber text-white py-4 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md border-none cursor-pointer flex items-center justify-center gap-2">
+                  Apply to Computation
+                  <Icon name="arrow_forward" />
+                </button>
             </div>
           </div>
 

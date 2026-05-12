@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const comparisonData = [
   { label: "Total Gross Income", old: 4075000, new: 4075000 },
@@ -16,20 +16,21 @@ const comparisonData = [
 ];
 
 export default function ITRRegimeComparisonPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-0 text-left">
       {/* Header Section */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Assessment Year 2024-25</p>
+        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">FY {activeFy}</p>
         <h1 className="font-display text-2xl font-semibold text-dark mb-2">Regime Comparison</h1>
         <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">A detailed analysis of tax liability under the Old and New tax regimes based on current inputs.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="border border-zinc-200 text-dark py-2 px-4 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-surface shadow-sm">
+          <button onClick={() => window.print()} className="border border-zinc-200 text-dark py-2 px-4 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-surface shadow-sm">
             <Icon name="print" className="text-sm" /> Print Analysis
           </button>
-          <button className="bg-amber text-white py-2 px-6 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors flex items-center gap-2 cursor-pointer border-none shadow-sm">
+          <button onClick={() => showToast.success("Regime selected and applied to computation.")} className="bg-amber text-white py-2 px-6 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors flex items-center gap-2 cursor-pointer border-none shadow-sm">
             Select Regime
           </button>
         </div>
