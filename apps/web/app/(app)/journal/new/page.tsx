@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-
-// ─── Mock data ────────────────────────────────────────────────────────────────
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { addEntry, getNextSeq, getEntries, StoredEntry } from "@/lib/journal-store";
 
 const MOCK_ACCOUNTS = [
   { id: "1", name: "Cash Account", code: "10101", type: "asset" },
@@ -22,7 +22,10 @@ const MOCK_ACCOUNTS = [
   { id: "10", name: "Equipment", code: "10500", type: "asset" },
 ];
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+const accountTypeMap: Record<string, { id: string; name: string; code: string; type: string }> = {};
+MOCK_ACCOUNTS.forEach(a => { accountTypeMap[a.id] = a; });
+
+const VOUCHER_TYPES = ["Journal Entry", "Receipt Voucher", "Payment Voucher", "Contra Voucher"] as const;
 
 interface Line {
   id: string;
@@ -36,37 +39,134 @@ function newLine(): Line {
   return { id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2), accountId: "", debit: "", credit: "", description: "" };
 }
 
-// ─── Page Component ───────────────────────────────────────────────────────────
+function getFyBounds(fy: string): { start: string; end: string } {
+  const [ys, ye] = fy.split("-").map(Number);
+  return { start: `${ys}-04-01`, end: `${ye}-03-31` };
+}
+
+function isDateInFy(dateStr: string, fy: string): boolean {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return false;
+  const { start, end } = getFyBounds(fy);
+  const s = new Date(start);
+  const e = new Date(end);
+  return d >= s && d <= e;
+}
+
+function isFutureDate(dateStr: string): boolean {
+  const d = new Date(dateStr);
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  return d > today;
+}
+
+function entryNumberForFy(fy: string): string {
+  const existing = getEntries().filter(e => e.fiscalYear === fy);
+  const mockCount = 6;
+  const seq = existing.length + mockCount + 1;
+  return `JE-${fy}-${String(seq).padStart(3, "0")}`;
+}
 
 export default function NewJournalEntryPage() {
+  const { activeFy } = useFiscalYear();
   const router = useRouter();
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [narration, setNarration] = useState("");
   const [reference, setReference] = useState("");
+  const [voucherType, setVoucherType] = useState<string>("Journal Entry");
   const [lines, setLines] = useState<Line[]>([newLine(), newLine()]);
   const [saving, setSaving] = useState(false);
+  const [discardConfirm, setDiscardConfirm] = useState(false);
+
+  const entryNumber = useMemo(() => entryNumberForFy(activeFy), [activeFy]);
 
   const totalDebit = lines.reduce((sum, l) => sum + (parseFloat(l.debit) || 0), 0);
   const totalCredit = lines.reduce((sum, l) => sum + (parseFloat(l.credit) || 0), 0);
   const diff = Math.abs(totalDebit - totalCredit);
   const isBalanced = diff < 0.01 && totalDebit > 0;
+  const hasZeroLines = totalDebit === 0 && totalCredit === 0;
+  const hasAccounts = lines.every(l => l.accountId !== "");
+  const dateError = useMemo(() => {
+    if (!date) return "Date is required";
+    if (isFutureDate(date)) return "Future dates are not allowed";
+    if (!isDateInFy(date, activeFy)) return `Date must be within FY ${activeFy} (${getFyBounds(activeFy).start} – ${getFyBounds(activeFy).end})`;
+    return null;
+  }, [date, activeFy]);
+
+  const accountWarnings = useMemo(() => {
+    const warnings: string[] = [];
+    for (const line of lines) {
+      if (!line.accountId) continue;
+      if (line.debit && line.credit) {
+        warnings.push("Each line should have either debit or credit, not both.");
+        break;
+      }
+    }
+    return warnings;
+  }, [lines]);
 
   const addLine = useCallback(() => setLines(prev => [...prev, newLine()]), []);
   const removeLine = useCallback((index: number) => {
     if (lines.length > 2) setLines(prev => prev.filter((_, i) => i !== index));
   }, [lines.length]);
   const updateLine = useCallback((index: number, field: keyof Line, value: string) => {
-    setLines(prev => { const next = [...prev]; next[index] = { ...next[index], [field]: value }; return next; });
+    setLines(prev => {
+      const next = [...prev];
+      if ((field === "debit" || field === "credit") && value) {
+        const other = field === "debit" ? "credit" : "debit";
+        next[index] = { ...next[index], [field]: value, [other]: "" };
+      } else {
+        next[index] = { ...next[index], [field]: value };
+      }
+      return next;
+    });
   }, []);
 
   const handleSubmit = useCallback(async (status: 'draft' | 'posted' = 'posted') => {
+    if (!narration.trim()) {
+      showToast.error('Narration is required.');
+      return;
+    }
+    if (dateError) {
+      showToast.error(dateError);
+      return;
+    }
     if (!isBalanced && status === 'posted') {
       showToast.error('Voucher must be balanced (Debits = Credits) to post.');
+      return;
+    }
+    if (lines.some(l => l.accountId === "")) {
+      showToast.error('All lines must have an account selected.');
+      return;
+    }
+    if (lines.some(l => l.debit && l.credit)) {
+      showToast.error('Each line can have either debit or credit, not both.');
       return;
     }
     setSaving(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
+      const entry: StoredEntry = {
+        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+        entryNumber,
+        date,
+        narration: narration.trim(),
+        fiscalYear: activeFy,
+        type: voucherType,
+        reference,
+        status,
+        lines: lines.filter(l => l.accountId).map(l => {
+          const acct = accountTypeMap[l.accountId];
+          return {
+            accountName: acct?.name ?? "Unknown",
+            accountCode: acct?.code ?? "",
+            debit: parseFloat(l.debit) || 0,
+            credit: parseFloat(l.credit) || 0,
+          };
+        }),
+        createdAt: new Date().toISOString(),
+      };
+      addEntry(entry);
       showToast.success(status === 'draft' ? 'Voucher draft saved' : 'Journal entry posted to ledger');
       router.push("/journal");
     } catch {
@@ -74,7 +174,17 @@ export default function NewJournalEntryPage() {
     } finally {
       setSaving(false);
     }
-  }, [isBalanced, router]);
+  }, [isBalanced, narration, dateError, lines, entryNumber, date, activeFy, voucherType, reference, router]);
+
+  const handleDiscard = useCallback(() => {
+    const hasContent = narration || reference || lines.some(l => l.accountId || l.debit || l.credit || l.description);
+    if (hasContent && !discardConfirm) {
+      setDiscardConfirm(true);
+      return;
+    }
+    setDiscardConfirm(false);
+    router.back();
+  }, [narration, reference, lines, discardConfirm, router]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -87,7 +197,10 @@ export default function NewJournalEntryPage() {
         e.preventDefault();
         if (isBalanced) handleSubmit('posted');
       }
-      if (e.key === "n" && !e.metaKey && !e.ctrlKey && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
+      if (e.key === "n" && !e.metaKey && !e.ctrlKey
+        && !(e.target instanceof HTMLInputElement)
+        && !(e.target instanceof HTMLTextAreaElement)
+        && !(e.target instanceof HTMLSelectElement)) {
         e.preventDefault();
         addLine();
       }
@@ -102,7 +215,7 @@ export default function NewJournalEntryPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => router.back()}
+            onClick={handleDiscard}
             className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer"
             aria-label="Go back"
           >
@@ -117,9 +230,26 @@ export default function NewJournalEntryPage() {
         </div>
         <div className="text-right">
           <p className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Entry #</p>
-          <p className="font-mono text-[13px] text-dark tabular-nums">JE-2026-0042</p>
+          <p className="font-mono text-[13px] text-dark tabular-nums">{entryNumber}</p>
         </div>
       </div>
+
+      {/* Validation errors */}
+      {dateError && (
+        <div className="bg-danger-bg border border-red-200 px-4 py-2.5 rounded-md flex items-center gap-2">
+          <Icon name="warning" size={16} className="text-danger shrink-0" />
+          <span className="font-ui text-[12px] text-danger font-medium">{dateError}</span>
+        </div>
+      )}
+      {discardConfirm && (
+        <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
+          <span className="font-ui text-[12px] text-amber font-medium">Unsaved changes will be lost. Discard?</span>
+          <div className="flex gap-2">
+            <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
+            <button onClick={() => { setDiscardConfirm(false); router.back(); }} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest bg-danger text-white rounded-sm cursor-pointer border-none">Discard</button>
+          </div>
+        </div>
+      )}
 
       {/* Form grid */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
@@ -131,16 +261,18 @@ export default function NewJournalEntryPage() {
               className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
           <div className="space-y-1.5">
             <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Voucher Type</label>
             <div className="relative">
-              <select className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors">
-                <option>Journal Entry</option>
-                <option>Receipt Voucher</option>
-                <option>Payment Voucher</option>
-                <option>Contra Voucher</option>
+              <select
+                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                value={voucherType}
+                onChange={(e) => setVoucherType(e.target.value)}
+              >
+                {VOUCHER_TYPES.map(vt => <option key={vt}>{vt}</option>)}
               </select>
               <Icon name="expand_more" size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-mid pointer-events-none" />
             </div>
@@ -153,6 +285,7 @@ export default function NewJournalEntryPage() {
               placeholder="Invoice #, Bill ref, etc."
               value={reference}
               onChange={(e) => setReference(e.target.value)}
+              maxLength={100}
             />
           </div>
         </div>
@@ -164,6 +297,7 @@ export default function NewJournalEntryPage() {
             rows={5}
             value={narration}
             onChange={(e) => setNarration(e.target.value)}
+            required
           />
         </div>
       </section>
@@ -271,6 +405,14 @@ export default function NewJournalEntryPage() {
           </div>
         </div>
 
+        {/* Validation warnings */}
+        {accountWarnings.map((w, i) => (
+          <div key={i} className="bg-amber-50 border border-amber-200 px-4 py-2 rounded-md flex items-center gap-2">
+            <Icon name="warning" size={14} className="text-amber shrink-0" />
+            <span className="font-ui text-[11px] text-amber font-medium">{w}</span>
+          </div>
+        ))}
+
         {/* BalanceBar */}
         <div
           className={`px-5 py-3.5 border rounded-md flex items-center justify-between transition-colors duration-300 ${
@@ -323,7 +465,7 @@ export default function NewJournalEntryPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.back()}
+            onClick={handleDiscard}
             className="text-[10px] font-bold uppercase tracking-widest"
           >
             Discard
@@ -340,7 +482,7 @@ export default function NewJournalEntryPage() {
           <Button
             size="sm"
             onClick={() => handleSubmit('posted')}
-            disabled={!isBalanced || saving}
+            disabled={!isBalanced || saving || !!dateError}
             className="text-[10px] font-bold uppercase tracking-widest"
           >
             {saving ? "Posting…" : "Post Entry →"}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +8,9 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getEntries } from "@/lib/journal-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -136,6 +138,19 @@ export default function JournalPage() {
   const [loading, setLoading] = useState(true);
 
   const mockEntries = mockEntriesByFy[activeFy] ?? mockEntriesByFy['2026-27'];
+  const storedEntries = useMemo(() =>
+    getEntries().filter(e => e.fiscalYear === activeFy).map(e => ({
+      id: e.id,
+      entryNumber: e.entryNumber,
+      date: e.date,
+      narration: e.narration,
+      debit: e.lines.reduce((s, l) => s + l.debit, 0),
+      credit: e.lines.reduce((s, l) => s + l.credit, 0),
+      status: e.status,
+    })),
+    [activeFy]
+  );
+  const allEntries = useMemo(() => [...storedEntries, ...mockEntries], [storedEntries, mockEntries]);
 
   useEffect(() => {
     setLoading(false);
@@ -143,7 +158,7 @@ export default function JournalPage() {
 
   const filteredEntries = useMemo(
     () =>
-      mockEntries.filter((e) => {
+      allEntries.filter((e) => {
         if (filter !== "all" && e.status !== filter) return false;
         if (
           search &&
@@ -153,7 +168,7 @@ export default function JournalPage() {
           return false;
         return true;
       }),
-    [filter, search, mockEntries]
+    [filter, search, allEntries]
   );
 
   const totalDebit = filteredEntries.reduce((s, e) => s + e.debit, 0);
@@ -162,10 +177,26 @@ export default function JournalPage() {
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
     for (const s of statusOptions) {
-      c[s.value] = s.value === "all" ? mockEntries.length : mockEntries.filter(e => e.status === s.value).length;
+      c[s.value] = s.value === "all" ? allEntries.length : allEntries.filter(e => e.status === s.value).length;
     }
     return c;
-  }, [mockEntries]);
+  }, [allEntries]);
+
+  const handleExportCSV = useCallback(() => {
+    const header = "Entry #,Date,Narration,Debit,Credit,Status";
+    const rows = filteredEntries.map(e =>
+      `${e.entryNumber},${e.date},"${e.narration.replace(/"/g, '""')}",${e.debit},${e.credit},${e.status}`
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `journal-entries-${activeFy}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filteredEntries.length} entries.`);
+  }, [filteredEntries, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -178,7 +209,7 @@ export default function JournalPage() {
           <h1 className="font-display text-2xl font-semibold text-dark">Journal Entries</h1>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary">
+          <button className="btn-secondary" onClick={handleExportCSV}>
             <Icon name="download" size={14} className="mr-1.5 inline" />Export CSV
           </button>
           <Link
