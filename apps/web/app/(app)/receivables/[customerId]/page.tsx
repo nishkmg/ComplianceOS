@@ -177,7 +177,9 @@ export default function CustomerDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border-subtle">
-              {invoices.map(inv => (
+              {invoices.length === 0 ? (
+                <tr><td colSpan={6} className="py-12 text-center font-ui text-[13px] text-mid">No invoices found for this customer.</td></tr>
+              ) : invoices.map(inv => (
                 <tr key={inv.id} className="hover:bg-surface-muted/50 transition-colors">
                   <td className="py-4 px-6">
                     <Link

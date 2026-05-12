@@ -55,6 +55,9 @@ export default function ReceivablesSummaryPage() {
   const agingBuckets = agingByFy[activeFy] ?? agingByFy['2026-27'];
   const topDebtors = debtorsByFy[activeFy] ?? debtorsByFy['2026-27'];
 
+  const avgCollectionPeriod: Record<string, number> = { '2026-27': 24, '2025-26': 28 };
+  const avgDays = avgCollectionPeriod[activeFy] ?? 24;
+
   const totalOutstanding = agingBuckets.reduce((s, b) => s + b.amount, 0);
   const totalOverdue = agingBuckets.filter(b => b.label.includes("Days") || b.label.includes(">"))
     .reduce((s, b) => s + b.amount, 0);
@@ -97,7 +100,7 @@ export default function ReceivablesSummaryPage() {
           </div>
           <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-dark">
             <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Avg. Collection Period</p>
-            <p className="font-mono text-2xl font-bold text-dark">24 Days</p>
+            <p className="font-mono text-2xl font-bold text-dark">{avgDays} Days</p>
           </div>
         </div>
       )}
