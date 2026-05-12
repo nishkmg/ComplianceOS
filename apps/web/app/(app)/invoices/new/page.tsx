@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { addInvoice, StoredInvoice } from "@/lib/invoice-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,7 +25,12 @@ const GST_RATES = [0, 5, 12, 18, 28];
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function NewInvoicePage() {
+  const { activeFy } = useFiscalYear();
   const router = useRouter();
+  const [saving, setSaving] = useState(false);
+  const [savedNumber, setSavedNumber] = useState<string | null>(null);
+
+  const invoiceNumber = savedNumber ?? `INV-${activeFy}-${String(Date.now()).slice(-4)}`;
 
   const [customer, setCustomer] = useState({
     name: "Mehta Textiles Pvt. Ltd.",
@@ -57,6 +65,47 @@ export default function NewInvoicePage() {
   const removeLine = (id: string) =>
     setLineItems(prev => prev.filter(item => item.id !== id));
 
+  const handleSave = useCallback(async (status: "draft" | "sent") => {
+    if (saving) return;
+    if (!customer.name.trim()) { showToast.error("Customer name is required."); return; }
+    if (!lineItems.length || lineItems.every(l => !l.description)) { showToast.error("At least one line item is required."); return; }
+    setSaving(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 600));
+      const num = invoiceNumber;
+      const inv: StoredInvoice = {
+        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+        invoiceNumber: num,
+        customerName: customer.name,
+        customerAddress: customer.address,
+        customerGstin: customer.gstin,
+        date,
+        dueDate,
+        fiscalYear: activeFy,
+        status,
+        lines: lineItems.map(l => ({ description: l.description, hsn: l.hsn, qty: l.qty, rate: l.rate, gstRate: l.gstRate })),
+        subtotal: totals.subtotal,
+        tax: totals.tax,
+        total: totals.total,
+        createdAt: new Date().toISOString(),
+      };
+      addInvoice(inv);
+      setSavedNumber(num);
+      showToast.success(status === "draft" ? "Invoice draft saved." : "Invoice finalized and sent to customer.");
+      router.push("/invoices");
+    } catch {
+      showToast.error("Failed to save invoice.");
+    } finally {
+      setSaving(false);
+    }
+  }, [saving, customer, date, dueDate, lineItems, totals, activeFy, invoiceNumber, router]);
+
+  const handleDiscard = useCallback(() => {
+    const hasContent = lineItems.some(l => l.description) || date || dueDate;
+    if (hasContent && !window.confirm("Discard unsaved invoice?")) return;
+    router.back();
+  }, [lineItems, date, dueDate, router]);
+
   return (
     <div className="space-y-6">
       {/* Page header */}
@@ -71,18 +120,18 @@ export default function NewInvoicePage() {
           </button>
           <div>
             <h1 className="font-display text-display-lg font-semibold text-dark">New Invoice</h1>
-            <p className="font-ui text-[11px] text-secondary mt-0.5">INV-2024-0043</p>
+            <p className="font-ui text-[11px] text-secondary mt-0.5">{invoiceNumber}</p>
           </div>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+          <button onClick={handleDiscard} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
             Discard
           </button>
-          <button className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
-            Save Draft
+          <button onClick={() => handleSave("draft")} disabled={saving} className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+            {saving ? "Saving…" : "Save Draft"}
           </button>
-          <button className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
-            Finalize & Send <Icon name="arrow_forward" size={14} />
+          <button onClick={() => handleSave("sent")} disabled={saving} className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+            {saving ? "Sending…" : "Finalize & Send"} <Icon name="arrow_forward" size={14} />
           </button>
         </div>
       </div>

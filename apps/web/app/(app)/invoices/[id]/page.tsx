@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
+import { showToast } from "@/lib/toast";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -38,7 +41,18 @@ const mockInvoice = {
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function InvoiceDetailPage() {
-  const inv = mockInvoice;
+  const params = useParams();
+  const invId = params.id as string;
+  const [inv, setInv] = useState(mockInvoice);
+
+  function handleMarkPaid() {
+    setInv(prev => ({ ...prev, status: "paid" }));
+    showToast.success("Invoice marked as paid.");
+  }
+
+  function handleSend() {
+    showToast.success("Invoice sent to customer.");
+  }
 
   return (
     <div className="max-w-[210mm] mx-auto space-y-6 no-print">
@@ -54,15 +68,15 @@ export default function InvoiceDetailPage() {
           <InvoiceStatusBadge status={inv.status as any} />
           <div className="h-4 w-[0.5px] bg-border-subtle mx-1" />
           <Link
-            href={`/invoices/${"1"}/edit`}
+            href={`/invoices/${invId}/edit`}
             className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md"
           >
             Edit
           </Link>
-          <button className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1">
-            <Icon name="check_circle" size={12} /> Mark Paid
+          <button onClick={handleMarkPaid} disabled={inv.status === "paid"} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1">
+            <Icon name="check_circle" size={12} /> {inv.status === "paid" ? "Paid" : "Mark Paid"}
           </button>
-          <button className="px-3 py-1.5 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md cursor-pointer flex items-center gap-1">
+          <button onClick={handleSend} className="px-3 py-1.5 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md cursor-pointer flex items-center gap-1">
             Send <Icon name="arrow_forward" size={12} />
           </button>
         </div>

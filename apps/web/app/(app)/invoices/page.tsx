@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
@@ -8,6 +8,11 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
+
+function parseINRAmount(s: string): number {
+  return parseFloat(s.replace(/,/g, "")) || 0;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -124,13 +129,25 @@ export default function InvoicesPage() {
     [statusFilter, search, mockInvoices]
   );
 
-  const totalAmount = filtered.reduce((s, inv) => s + parseFloat(inv.amount.replace(/,/g, "")), 0);
+  const totalAmount = filtered.reduce((s, inv) => s + parseINRAmount(inv.amount), 0);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: mockInvoices.length };
     for (const tab of tabs) if (tab !== "all") c[tab] = mockInvoices.filter(i => i.status === tab).length;
     return c;
   }, [mockInvoices]);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No invoices to export."); return; }
+    const header = "Invoice #,Customer,Date,Due Date,Amount,Status";
+    const rows = filtered.map(inv => `${inv.invoiceNumber},"${inv.customerName}",${inv.date},${inv.dueDate},${inv.amount},${inv.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `invoices-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} invoices.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -144,7 +161,7 @@ export default function InvoicesPage() {
           <p className="font-ui text-[13px] text-secondary mt-1">Manage and track your fiscal billing documents.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export List
           </button>
           <Link
