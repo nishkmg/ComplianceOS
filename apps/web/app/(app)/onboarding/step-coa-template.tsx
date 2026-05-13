@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
+import { mockMutation } from "@/lib/mock-mutation";
 
 const TEMPLATES = [
   { id: "trading", name: "Trading & Retail", desc: "For wholesale and retail firms managing physical stock. Includes Inventory, COGS, and standard GST tax ledgers.", icon: "shopping_cart", recommended: true },
@@ -23,7 +23,7 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
   const [selectedTemplate, setSelectedTemplate] = useState("trading");
 
   // @ts-ignore
-  const seedCoa: any = api.onboarding.seedChartOfAccounts.useMutation({
+  const seedCoa = mockMutation({
     onSuccess: () => {
       showToast.success('Chart of accounts initialized');
       onComplete();

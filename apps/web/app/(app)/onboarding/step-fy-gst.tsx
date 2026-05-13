@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import { api } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
+import { mockMutation } from "@/lib/mock-mutation";
 
 const GST_TYPES = [
   { id: "regular", name: "Regular", desc: "Standard GST registration with full ITC benefits." },
@@ -26,7 +26,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
     tdsApplicable: false,
   });
 
-  const saveProgress: any = api.onboarding.saveProgress.useMutation({
+  const saveProgress = mockMutation({
     onSuccess: () => {
       showToast.success('Fiscal settings established');
       onComplete();

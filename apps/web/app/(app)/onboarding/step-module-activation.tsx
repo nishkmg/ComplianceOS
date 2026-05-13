@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
+import { mockMutation } from "@/lib/mock-mutation";
 import { Icon } from '@/components/ui/icon';
 
 const MODULES = [
@@ -23,7 +23,7 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
   const [enabledModules, setEnabledModules] = useState<Set<string>>(new Set(["accounting", "gst", "invoicing"]));
 
   // @ts-ignore
-  const saveProgress: any = api.onboarding.saveProgress.useMutation({
+  const saveProgress = mockMutation({
     onSuccess: () => {
       showToast.success('Module preferences saved');
       onComplete();

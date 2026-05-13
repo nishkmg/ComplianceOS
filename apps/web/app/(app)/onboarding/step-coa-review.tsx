@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
+import { mockMutation } from "@/lib/mock-mutation";
 
 const MOCK_COA = [
   { id: "1", code: "10000", name: "Assets", type: "asset", level: 0, children: [
@@ -29,7 +29,7 @@ interface StepCoaReviewProps {
 export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9"]));
 
-  const saveProgress: any = api.onboarding.saveProgress.useMutation({
+  const saveProgress = mockMutation({
     onSuccess: onComplete,
     onError: (error) => showToast.error(error.message || 'Failed to save review'),
   });

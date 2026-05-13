@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@/lib/api";
 // @ts-ignore
 import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
+import { mockMutation } from "@/lib/mock-mutation";
 
 const BUSINESS_TYPES = [
   { value: "private_limited", label: "Private Limited Company" },
@@ -37,7 +37,7 @@ const STATES = [
 export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // @ts-ignore
-  const createTenant: any = api.tenants.create.useMutation({
+  const createTenant = mockMutation<any>({
     onSuccess: (data: any) => {
       onTenantCreated(data.id);
       showToast.success('Business profile established successfully');

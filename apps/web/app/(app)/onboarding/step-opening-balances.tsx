@@ -2,8 +2,8 @@
 
 import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
-import { api } from "@/lib/api";
 import { Label } from "@/components/ui/label";
+import { mockMutation } from "@/lib/mock-mutation";
 import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -25,11 +25,9 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
 
-  const { data: accounts }: any = api.accounts.list.useQuery(undefined, {
-    enabled: mode === "migration",
-  });
+  const accounts: any[] = [];
 
-  const setupOpeningBalances: any = api.onboarding.setupOpeningBalances.useMutation({
+  const setupOpeningBalances = mockMutation({
     onSuccess: () => {
       showToast.success('Opening balances initialized');
       onComplete();
