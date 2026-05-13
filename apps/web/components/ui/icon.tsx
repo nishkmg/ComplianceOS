@@ -68,6 +68,12 @@ import {
   Truck,
   Warehouse,
   LayoutList,
+  Mail,
+  Phone,
+  MessageCircle,
+  ExternalLink,
+  Bug,
+  Code2,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -158,6 +164,12 @@ const iconMap: Record<string, LucideIcon> = {
   local_shipping: Truck,
   warehouse: Warehouse,
   list_alt: LayoutList,
+  mail: Mail,
+  phone: Phone,
+  chat: MessageCircle,
+  open_in_new: ExternalLink,
+  bug_report: Bug,
+  code: Code2,
 };
 
 export { iconMap };
