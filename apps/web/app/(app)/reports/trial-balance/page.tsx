@@ -159,7 +159,7 @@ export default function TrialBalancePage() {
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
           <h2 className="font-display text-[24px] text-dark print:text-black">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-[12px] text-mid mt-1 uppercase tracking-widest">Trial Balance</p>
-          <p className="font-mono text-[11px] text-light mt-0.5">As at March 31, 2027 · FY {fiscalYear}</p>
+          <p className="font-mono text-[11px] text-light mt-0.5">As at 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
 
         {/* Balance check */}

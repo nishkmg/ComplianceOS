@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
@@ -74,6 +74,7 @@ export default function BalanceSheetPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const fyEndDate = `${parseInt(fiscalYear.split('-')[1]) + 2000}-03-31`;
   const [asOfDate, setAsOfDate] = useState(fyEndDate);
+  useEffect(() => { setAsOfDate(fyEndDate); }, [fiscalYear]);
   const fyData = bsDataByFy[fiscalYear] ?? bsDataByFy['2026-27'];
   const { equity: equityAccounts, liabilities: liabilityAccounts, assets: assetAccounts } = fyData;
 

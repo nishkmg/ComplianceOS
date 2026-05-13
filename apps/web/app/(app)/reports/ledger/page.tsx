@@ -40,6 +40,35 @@ const mockTxnsByAccount: Record<string, { openingBalance: number; closingBalance
       { id: "t3", date: "2026-05-15", narration: "Client payment received", voucherNumber: "JE-2026-003", debit: 0, credit: 195000 },
     ],
   },
+  a2: {
+    openingBalance: 1200000,
+    closingBalance: 1250000,
+    transactions: [
+      { id: "t4", date: "2026-04-20", narration: "Deposit received", voucherNumber: "JE-2026-004", debit: 100000, credit: 0 },
+      { id: "t5", date: "2026-05-10", narration: "Supplier payment", voucherNumber: "JE-2026-005", debit: 0, credit: 50000 },
+    ],
+  },
+  a3: {
+    openingBalance: 280000,
+    closingBalance: 350000,
+    transactions: [
+      { id: "t6", date: "2026-04-28", narration: "Invoice raised", voucherNumber: "INV-2026-001", debit: 70000, credit: 0 },
+    ],
+  },
+  a4: {
+    openingBalance: 2400000,
+    closingBalance: 2800000,
+    transactions: [
+      { id: "t7", date: "2026-04-30", narration: "Monthly sales", voucherNumber: "INV-2026-002", debit: 0, credit: 400000 },
+    ],
+  },
+  a5: {
+    openingBalance: 800000,
+    closingBalance: 1200000,
+    transactions: [
+      { id: "t8", date: "2026-04-10", narration: "Raw material purchase", voucherNumber: "PO-2026-001", debit: 400000, credit: 0 },
+    ],
+  },
 };
 
 export default function LedgerReportPage() {

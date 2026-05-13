@@ -3,6 +3,7 @@
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 interface ReportLine {
   note: string;
@@ -54,7 +55,7 @@ export default function PLScheduleIIIPage() {
           {/* Report Controls */}
         <div className="flex justify-between items-end mb-gutter-wide pb-4 border-b-[0.5px] border-border text-left">
           <div>
-            <p className="font-ui text-[10px] text-amber uppercase tracking-widest block mb-2 font-bold">Schedule III Document</p>
+            <p className="font-ui text-[10px] text-amber uppercase tracking-widest block mb-2 font-bold">Schedule III Document · FY {fiscalYear}</p>
             <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss</h1>
           </div>
             <div className="flex gap-3">
@@ -62,7 +63,7 @@ export default function PLScheduleIIIPage() {
                 <option>2026-27</option>
                 <option>2025-26</option>
               </select>
-              <button className="btn-secondary flex items-center gap-2">
+              <button onClick={() => showToast.success("P&L exported.")} className="btn-secondary flex items-center gap-2">
                 <Icon name="download" className="text-[18px]" />
                 Export
               </button>
@@ -75,7 +76,7 @@ export default function PLScheduleIIIPage() {
             <header className="text-center mb-10 pb-8 border-b-[0.5px] border-border">
               <p className="font-display text-[26px] font-normal text-dark mb-1">ComplianceOS</p>
               <h2 className="font-ui text-text-mid uppercase tracking-widest mb-4">Statement of Profit and Loss</h2>
-              <p className="font-ui text-[13px] text-text-light italic">For the year ended 31 March 2027</p>
+              <p className="font-ui text-[13px] text-text-light italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000}</p>
               <p className="font-ui text-[13px] text-text-light mt-1">(All amounts in ₹ Lakhs, unless otherwise stated)</p>
             </header>
 
@@ -83,8 +84,8 @@ export default function PLScheduleIIIPage() {
             <div className="grid grid-cols-12 gap-4 border-b-[1px] border-on-background pb-2 mb-4 font-ui text-[11px] text-text-mid uppercase tracking-widest">
               <div className="col-span-1 text-center">Note No.</div>
               <div className="col-span-7">Particulars</div>
-              <div className="col-span-2 text-right">31-Mar-2027</div>
-              <div className="col-span-2 text-right text-text-light">31-Mar-2026</div>
+              <div className="col-span-2 text-right">31-Mar-{parseInt(fiscalYear.split('-')[1]) + 2000}</div>
+              <div className="col-span-2 text-right text-text-light">31-Mar-{parseInt(fiscalYear.split('-')[1]) + 2000 - 1}</div>
             </div>
 
             {/* Sections */}

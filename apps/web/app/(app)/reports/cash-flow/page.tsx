@@ -101,7 +101,7 @@ export default function CashFlowPage() {
             Financial Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">For the year ended March 31, 2027 (Indirect Method)</p>
+          <p className="text-[13px] text-secondary font-ui mt-1">For the year ended March 31, {parseInt(fiscalYear.split('-')[1]) + 2000} (Indirect Method)</p>
         </div>
         <div className="flex gap-3 items-center">
           <select
@@ -130,7 +130,7 @@ export default function CashFlowPage() {
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
           <h2 className="font-display text-[24px] text-dark mb-1 print:text-black">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-[12px] text-mid uppercase tracking-widest mb-1">Cash Flow Statement</p>
-          <p className="font-mono text-[11px] text-light italic">For the year ended 31 March 2027 · FY {fiscalYear}</p>
+          <p className="font-mono text-[11px] text-light italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
 
         {/* Column headers */}
