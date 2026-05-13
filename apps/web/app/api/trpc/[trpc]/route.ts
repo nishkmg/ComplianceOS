@@ -1,8 +1,9 @@
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { appRouter } from "@complianceos/server";
+export const runtime = "nodejs";
 
-const handler = (req: Request) =>
-  fetchRequestHandler({
+const handler = async (req: Request) => {
+  const { fetchRequestHandler } = await import("@trpc/server/adapters/fetch");
+  const { appRouter } = await import("@complianceos/server");
+  return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
@@ -12,5 +13,6 @@ const handler = (req: Request) =>
       tenantId: "",
     }),
   });
+};
 
 export { handler as GET, handler as POST };
