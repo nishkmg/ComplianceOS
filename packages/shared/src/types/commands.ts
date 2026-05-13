@@ -1,15 +1,16 @@
 import { z } from "zod";
+import { narration, amountString, description } from "../validation/helpers";
 
 export const CreateJournalEntryInputSchema = z.object({
   date: z.string().date(),
-  narration: z.string().min(1),
+  narration: narration(),
   referenceType: z.enum(["invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "manual"]).default("manual"),
   referenceId: z.string().uuid().optional(),
   lines: z.array(z.object({
     accountId: z.string().uuid(),
-    debit: z.string().default("0"),
-    credit: z.string().default("0"),
-    description: z.string().optional(),
+    debit: amountString(),
+    credit: amountString(),
+    description: description(),
   })).min(2),
 }).refine(
   (data) => {
@@ -30,20 +31,20 @@ export type PostJournalEntryInput = z.infer<typeof PostJournalEntryInputSchema>;
 
 export const VoidJournalEntryInputSchema = z.object({
   entryId: z.string().uuid(),
-  reason: z.string().min(1),
+  reason: z.string().min(1, "Reason is required"),
 });
 
 export type VoidJournalEntryInput = z.infer<typeof VoidJournalEntryInputSchema>;
 
 export const ModifyJournalEntryInputSchema = z.object({
   entryId: z.string().uuid(),
-  narration: z.string().min(1).optional(),
+  narration: narration().optional(),
   date: z.string().date().optional(),
   lines: z.array(z.object({
     accountId: z.string().uuid(),
-    debit: z.string().default("0"),
-    credit: z.string().default("0"),
-    description: z.string().optional(),
+    debit: amountString(),
+    credit: amountString(),
+    description: description(),
   })).min(2).optional(),
 }).refine(
   (data) => {
@@ -58,8 +59,8 @@ export const ModifyJournalEntryInputSchema = z.object({
 export type ModifyJournalEntryInput = z.infer<typeof ModifyJournalEntryInputSchema>;
 
 export const CreateAccountInputSchema = z.object({
-  code: z.string().min(1),
-  name: z.string().min(1),
+  code: z.string().min(1).max(20, "Account code must be at most 20 characters"),
+  name: z.string().min(1).max(200, "Account name must be at most 200 characters"),
   kind: z.enum(["Asset", "Liability", "Equity", "Revenue", "Expense"]),
   subType: z.enum([
     "CurrentAsset", "FixedAsset", "Bank", "Cash", "Inventory",

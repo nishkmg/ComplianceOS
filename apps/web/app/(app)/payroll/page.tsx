@@ -1,37 +1,72 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ErrorState } from "@/components/ui/error-state";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const monthLabels = [
   "April", "May", "June", "July", "August", "September",
   "October", "November", "December", "January", "February", "March"
 ];
 
-export default function PayrollPage() {
-  const [month, setMonth] = useState(String(new Date().getMonth() + 1).padStart(2, "0"));
-  const [year, setYear] = useState(String(new Date().getFullYear()));
-  const [status, setStatus] = useState<string>("all");
+interface PayrollRun {
+  id: string;
+  payrollNumber: string;
+  employeeName: string;
+  month: string;
+  year: string;
+  grossEarnings: string;
+  netPay: string;
+  status: string;
+}
 
-  const { data: payrollRuns, isLoading } = api.payroll.list.useQuery({
-    month,
-    year,
-    status: status !== "all" ? (status as any) : undefined,
+const mockPayrollRuns: PayrollRun[] = [
+  { id: "pr1", payrollNumber: "PR-2026-04-001", employeeName: "Rahul Sharma", month: "04", year: "2026", grossEarnings: "80000", netPay: "73700", status: "finalized" },
+  { id: "pr2", payrollNumber: "PR-2026-04-002", employeeName: "Priya Singh", month: "04", year: "2026", grossEarnings: "65000", netPay: "60712", status: "calculated" },
+  { id: "pr3", payrollNumber: "PR-2026-04-003", employeeName: "Vikram Das", month: "04", year: "2026", grossEarnings: "45000", netPay: "42862", status: "voided" },
+];
+
+export default function PayrollPage() {
+  const router = useRouter();
+  const { activeFy } = useFiscalYear();
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [status, setStatus] = useState<string>("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    const fyMonth = ((now.getMonth() - 3 + 12) % 12) + 1;
+    setMonth(String(fyMonth).padStart(2, "0"));
+    setYear(String(now.getFullYear()));
+    const timer = setTimeout(() => { setLoading(false); }, 600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const filtered = mockPayrollRuns.filter((r) => {
+    if (status !== "all" && r.status !== status) return false;
+    if (month && r.month !== month) return false;
+    if (year && r.year !== year) return false;
+    return true;
   });
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Payroll</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Process and track employee payroll</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">HR & Compliance · FY {activeFy}</p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Payroll</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">Process and track employee payroll</p>
         </div>
-        <Link href="/payroll/process" className="filter-tab active">
+        <Link href="/payroll/process" className="btn btn-primary no-underline">
           Process Payroll
         </Link>
       </div>
@@ -70,8 +105,15 @@ export default function PayrollPage() {
 
       {/* Table */}
       <div className="card overflow-hidden">
-        {isLoading ? (
-          <div className="text-center py-12 font-ui text-light">Loading payroll runs...</div>
+        {loading ? (
+          <TableSkeleton rows={10} columns={7} />
+        ) : error ? (
+          <ErrorState
+            title="Failed to load payroll"
+            description={error}
+            onRetry={() => { setLoading(true); setError(null); setTimeout(() => setLoading(false), 600); }}
+            type="server"
+          />
         ) : (
           <table className="table table-dense">
             <thead>
@@ -86,8 +128,8 @@ export default function PayrollPage() {
               </tr>
             </thead>
             <tbody>
-              {payrollRuns?.map((run: any) => (
-                <tr key={run.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
+              {filtered.map((run: PayrollRun) => (
+                <tr key={run.id} className="border-b border-border hover:bg-surface-muted transition-colors">
                   <td className="font-mono text-[13px] text-amber px-4 py-3">{run.payrollNumber}</td>
                   <td className="font-ui text-[13px] text-dark px-4 py-3">{run.employeeName}</td>
                   <td className="font-mono text-[13px] text-mid px-4 py-3">{run.month}/{run.year}</td>
@@ -105,10 +147,15 @@ export default function PayrollPage() {
                   </td>
                 </tr>
               ))}
-              {payrollRuns?.length === 0 && (
+              {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                    No payroll runs found for this period
+                  <td colSpan={7}>
+                    <EmptyState
+                      title="No payroll runs found"
+                      description="No payroll data for the selected period. Process payroll to get started."
+                      action={{ label: "Process Payroll", onClick: () => router.push("/payroll/process") }}
+                      icon="payments"
+                    />
                   </td>
                 </tr>
               )}

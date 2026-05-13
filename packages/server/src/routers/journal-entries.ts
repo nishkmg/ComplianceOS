@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { createJournalEntry } from "../commands/create-journal-entry";
 import { postJournalEntry } from "../commands/post-journal-entry";
 import { voidJournalEntry } from "../commands/void-journal-entry";
@@ -37,7 +37,7 @@ export const journalEntriesRouter = router({
     return result[0] ?? null;
   }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(z.object({
       date: z.string(),
       narration: z.string(),
@@ -52,22 +52,22 @@ export const journalEntriesRouter = router({
       })),
     }))
     .mutation(async ({ ctx, input }) => {
-      return createJournalEntry(ctx.db, ctx.tenantId, ctx.session!.user.id, input.fiscalYear, input);
+      return createJournalEntry(ctx.db, ctx.tenantId, ctx.session.user.id, input.fiscalYear, input);
     }),
 
-  post: publicProcedure
+  post: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return postJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
+      return postJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
     }),
 
-  void: publicProcedure
+  void: protectedProcedure
     .input(z.object({ id: z.string().uuid(), reason: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return voidJournalEntry(ctx.db, ctx.tenantId, input.id, input.reason, ctx.session!.user.id);
+      return voidJournalEntry(ctx.db, ctx.tenantId, input.id, input.reason, ctx.session.user.id);
     }),
 
-  modify: publicProcedure
+  modify: protectedProcedure
     .input(z.object({
       id: z.string().uuid(),
       narration: z.string().optional(),
@@ -80,18 +80,18 @@ export const journalEntriesRouter = router({
       })).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return modifyJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id, input);
+      return modifyJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session.user.id, input);
     }),
 
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return deleteJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
+      return deleteJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
     }),
 
-  correctNarration: publicProcedure
+  correctNarration: protectedProcedure
     .input(z.object({ id: z.string().uuid(), newNarration: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return correctNarration(ctx.db, ctx.tenantId, input.id, input.newNarration, ctx.session!.user.id);
+      return correctNarration(ctx.db, ctx.tenantId, input.id, input.newNarration, ctx.session.user.id);
     }),
 });

@@ -1,2 +1,1 @@
-// Validation stubs — actual validation via Zod schemas in types/commands
-export {};
+export { narration, amountString, description } from "./helpers";

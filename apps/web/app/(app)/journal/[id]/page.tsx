@@ -1,315 +1,477 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { api } from "@/lib/api";
-import { Badge, BalanceBar } from "@/components/ui";
-import { formatIndianNumber, formatDateShort } from "@/lib/format";
+import { Icon } from '@/components/ui/icon';
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { getEntry, updateEntry, deleteEntry, StoredEntry } from "@/lib/journal-store";
 
-const statusColors: Record<string, string> = {
-  draft: "bg-amber text-white",
-  posted: "bg-success text-white",
-  voided: "bg-gray text-mid",
+interface MockLine {
+  accountName: string; accountCode: string; debit: number; credit: number;
+}
+
+interface MockEntry {
+  id: string; entryNumber: string; date: string; narration: string;
+  fiscalYear: string; type: string; status: "draft" | "posted" | "voided"; lines: MockLine[];
+}
+
+function makeLine(acctName: string, acctCode: string, debit: number, credit: number): MockLine {
+  return { accountName: acctName, accountCode: acctCode, debit, credit };
+}
+
+const mockEntriesByFy: Record<string, MockEntry[]> = {
+  '2026-27': [
+    { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance entry for the financial year 2026-27", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Cash Account", "10101", 500000, 0),
+      makeLine("Capital Account", "30100", 0, 500000),
+    ]},
+    { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Trade Receivables", "10300", 118000, 0),
+      makeLine("Sales Revenue", "40100", 0, 118000),
+    ]},
+    { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Equipment", "10500", 75000, 0),
+      makeLine("Bank Account", "10200", 0, 75000),
+    ]},
+    { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Operating Expenses", "50200", 320000, 0),
+      makeLine("Bank Account", "10200", 0, 320000),
+    ]},
+    { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 75000, 0),
+      makeLine("Bank Account", "10200", 0, 75000),
+    ]},
+    { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Trade Receivables", "10300", 236000, 0),
+      makeLine("Sales Revenue", "40100", 0, 236000),
+    ]},
+  ],
+  '2025-26': [
+    { id: "101", entryNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance entry for FY 2025-26", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Cash Account", "10101", 420000, 0),
+      makeLine("Capital Account", "30100", 0, 420000),
+    ]},
+    { id: "102", entryNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Furniture & Fixtures", "10700", 120000, 0),
+      makeLine("Bank Account", "10200", 0, 120000),
+    ]},
+    { id: "103", entryNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Trade Receivables", "10300", 680000, 0),
+      makeLine("Sales Revenue", "40100", 0, 680000),
+    ]},
+    { id: "104", entryNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Operating Expenses", "50200", 96000, 0),
+      makeLine("Bank Account", "10200", 0, 96000),
+    ]},
+    { id: "105", entryNumber: "JE-2025-26-005", date: "2026-01-15", narration: "Tax provision entry", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 185000, 0),
+      makeLine("Trade Payables", "20101", 0, 185000),
+    ]},
+    { id: "106", entryNumber: "JE-2025-26-006", date: "2026-03-25", narration: "Year-end adjustments", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 45000, 0),
+      makeLine("Trade Payables", "20101", 0, 45000),
+    ]},
+  ],
 };
 
+function getBaseEntry(id: string): MockEntry | undefined {
+  for (const entries of Object.values(mockEntriesByFy)) {
+    const found = entries.find(e => e.id === id);
+    if (found) return found;
+  }
+  const stored = getEntry(id);
+  if (stored) {
+    return {
+      id: stored.id,
+      entryNumber: stored.entryNumber,
+      date: stored.date,
+      narration: stored.narration,
+      fiscalYear: stored.fiscalYear,
+      type: stored.type,
+      status: stored.status,
+      lines: stored.lines,
+    };
+  }
+  return undefined;
+}
+
+const statusConfig = {
+  posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle" as const, bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success" as const, badgeLabel: "Cleared" },
+  draft: { bannerBg: "bg-amber-50", bannerText: "text-amber", icon: "clock" as const, bannerMsg: "This voucher is in draft state", badgeVariant: "amber" as const, badgeLabel: "Draft" },
+  voided: { bannerBg: "bg-surface-muted", bannerText: "text-mid", icon: "cancel" as const, bannerMsg: "This voucher has been voided", badgeVariant: "gray" as const, badgeLabel: "Voided" },
+};
+
+function mergeEntry(base: MockEntry): MockEntry {
+  const stored = getEntry(base.id);
+  if (!stored) return base;
+  return {
+    id: stored.id,
+    entryNumber: stored.entryNumber,
+    date: stored.date,
+    narration: stored.narration,
+    fiscalYear: stored.fiscalYear,
+    type: stored.type,
+    status: stored.status,
+    lines: stored.lines,
+  };
+}
+
 export default function JournalEntryDetailPage() {
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
   const entryId = params.id as string;
 
-  const [isCorrectingNarration, setIsCorrectingNarration] = useState(false);
-  const [newNarration, setNewNarration] = useState("");
+  const base = getBaseEntry(entryId);
+  const [entry, setEntry] = useState<MockEntry | undefined>(() => base ? mergeEntry(base) : undefined);
+
+  const [narration, setNarration] = useState(entry?.narration ?? "");
+  const [isEditingNarration, setIsEditingNarration] = useState(false);
+  const [isVoidModalOpen, setIsVoidModalOpen] = useState(false);
   const [voidReason, setVoidReason] = useState("");
-  const [showVoidModal, setShowVoidModal] = useState(false);
-
-  const { data: entry, isLoading, refetch } = api.journalEntries.get.useQuery({ id: entryId });
-  
-  const correctNarration = api.journalEntries.correctNarration.useMutation({
-    onSuccess: () => {
-      setIsCorrectingNarration(false);
-      refetch();
-    },
-  });
-
-  const voidEntry = api.journalEntries.void.useMutation({
-    onSuccess: () => {
-      setShowVoidModal(false);
-      refetch();
-    },
-  });
-
-  const postEntry = api.journalEntries.post.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
-
-  const handleCorrectNarration = async () => {
-    if (newNarration.trim()) {
-      await correctNarration.mutateAsync({ id: entryId, newNarration: newNarration.trim() });
-    }
-  };
-
-  const handleVoid = async () => {
-    if (voidReason.trim()) {
-      await voidEntry.mutateAsync({ id: entryId, reason: voidReason.trim() });
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
-          <p className="mt-4 font-ui text-mid">Loading entry...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!entry) {
     return (
-      <div className="card p-12 text-center">
-        <p className="font-ui text-light">Journal entry not found</p>
-        <button onClick={() => router.push("/journal")} className="filter-tab active mt-4">
+      <div className="flex flex-col items-center justify-center py-20">
+        <Icon name="search_off" size={48} className="text-lighter mb-4" />
+        <p className="font-ui text-[13px] text-mid">Entry not found.</p>
+        <Link href="/journal" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">
           Back to Journal
-        </button>
+        </Link>
       </div>
     );
   }
 
-  const totalDebit = entry.lines?.reduce((sum: number, line: any) => sum + parseFloat(line.debit || "0"), 0) || 0;
-  const totalCredit = entry.lines?.reduce((sum: number, line: any) => sum + parseFloat(line.credit || "0"), 0) || 0;
+  const totalDebit = entry.lines.reduce((sum, l) => sum + l.debit, 0);
+  const totalCredit = entry.lines.reduce((sum, l) => sum + l.credit, 0);
   const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
+  const cfg = statusConfig[entry.status];
+  const formattedEntryDate = new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  const nowFormatted = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+
+  function handlePost() {
+    updateEntry(entryId, { status: "posted" as const });
+    setEntry(prev => prev ? { ...prev, status: "posted" } : prev);
+    showToast.success("Voucher posted to General Ledger.");
+  }
+
+  function handleVoidConfirm() {
+    if (!voidReason.trim()) {
+      showToast.error("Please provide a reason for voiding.");
+      return;
+    }
+    if (entry!.narration.toLowerCase().includes("opening balance")) {
+      showToast.error("Opening balance entries cannot be voided.");
+      setIsVoidModalOpen(false);
+      setVoidReason("");
+      return;
+    }
+    updateEntry(entryId, { status: "voided" as const });
+    setEntry(prev => prev ? { ...prev, status: "voided" } : prev);
+    setIsVoidModalOpen(false);
+    setVoidReason("");
+    showToast.success("Voucher voided successfully.");
+  }
+
+  function handleDelete() {
+    if (!window.confirm("Delete this draft entry permanently? This action cannot be undone.")) return;
+    deleteEntry(entryId);
+    showToast.success("Draft entry deleted.");
+    router.push("/journal");
+  }
+
+  function handlePrint() {
+    window.print();
+  }
+
+  function handleNarrationSave() {
+    if (!narration.trim()) {
+      showToast.error("Narration cannot be empty.");
+      return;
+    }
+    updateEntry(entryId, { narration: narration.trim() });
+    setEntry(prev => prev ? { ...prev, narration: narration.trim() } : prev);
+    setIsEditingNarration(false);
+    showToast.success("Narration updated.");
+  }
+
+  function handleNarrationCancel() {
+    setNarration(entry!.narration);
+    setIsEditingNarration(false);
+  }
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="space-y-8 max-w-4xl">
+      {/* Status banner */}
+      <div className={`-mx-6 -mt-6 px-6 py-3 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 ${cfg.bannerBg} ${cfg.bannerText}`}>
+        <Icon name={cfg.icon} size={16} />
+        {cfg.bannerMsg}
+      </div>
+
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-[10px] text-light uppercase tracking-widest" aria-label="Breadcrumb">
+        <Link href="/journal" className="hover:text-dark transition-colors no-underline font-ui">Journal</Link>
+        <Icon name="chevron_right" size={14} className="text-lighter" />
+        <span className="text-mid font-medium font-ui">{entry.entryNumber}</span>
+      </nav>
+
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">{entry.entryNumber}</h1>
-          <p className="font-ui text-[12px] text-light mt-1">
-            {formatDateShort(entry.date)} · FY {entry.fiscalYear}
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="font-mono text-display-lg font-semibold text-amber tracking-tight">{entry.entryNumber}</h1>
+            <Badge variant={cfg.badgeVariant}>
+              {cfg.badgeLabel}
+            </Badge>
+          </div>
+          <p className="text-[13px] text-secondary font-ui">
+            {new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
+            <span className="mx-2 text-lighter">·</span>
+            FY {entry.fiscalYear}
+            <span className="mx-2 text-lighter">·</span>
+            {entry.type}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge variant={entry.status === "posted" ? "success" : entry.status === "voided" ? "gray" : "amber"}>
-            {entry.status}
-          </Badge>
+        <div className="flex gap-3">
+          <Button variant="outline" size="sm" onClick={handlePrint} className="text-[10px] font-bold uppercase tracking-widest">
+            <Icon name="print" size={14} className="mr-1.5" /> Print
+          </Button>
+          {entry.status === "draft" && (
+            <Button size="sm" onClick={handlePost} className="text-[10px] font-bold uppercase tracking-widest">
+              <Icon name="check" size={14} className="mr-1.5" /> Post to Ledger
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Narration */}
-      <div className="card">
-        <div className="p-6">
-          {isCorrectingNarration ? (
-            <div className="space-y-4">
-              <div>
-                <label className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-                  Old Narration
-                </label>
-                <p className="font-ui text-[13px] text-light line-through">{entry.narration}</p>
-              </div>
-              <div>
-                <label htmlFor="newNarration" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-                  New Narration
-                </label>
-                <input
-                  id="newNarration"
-                  type="text"
-                  value={newNarration}
-                  onChange={(e) => setNewNarration(e.target.value)}
-                  className="input-field w-full font-ui"
-                  autoFocus
-                  placeholder="Enter corrected narration"
-                />
-              </div>
-              <div className="flex gap-2">
+      {/* Metadata card */}
+      <div className="bg-surface border border-border p-7 shadow-sm rounded-md">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2 font-bold">Voucher Type</p>
+            <p className="font-ui text-[13px] text-dark font-medium">{entry.type}</p>
+          </div>
+          <div className="md:col-span-2">
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration</p>
+              {entry.status !== "voided" && (
                 <button
-                  onClick={handleCorrectNarration}
-                  disabled={correctNarration.isPending || !newNarration.trim()}
-                  className="filter-tab active disabled:opacity-50"
+                  onClick={() => setIsEditingNarration(!isEditingNarration)}
+                  className="text-amber hover:text-amber-hover text-[10px] font-bold uppercase tracking-widest transition-colors border-none bg-transparent cursor-pointer"
                 >
-                  Save
-                </button>
-                <button
-                  onClick={() => setIsCorrectingNarration(false)}
-                  className="filter-tab"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="font-ui text-[15px] font-medium text-dark">{entry.narration}</h2>
-                <p className="font-ui text-[12px] text-light mt-1">
-                  Reference: <span className="font-mono text-amber">{entry.referenceType || "Manual"}</span>
-                </p>
-              </div>
-              {entry.status === "draft" && (
-                <button
-                  onClick={() => {
-                    setNewNarration(entry.narration);
-                    setIsCorrectingNarration(true);
-                  }}
-                  className="filter-tab"
-                >
-                  Correct Narration
+                  {isEditingNarration ? "Cancel" : "Edit"}
                 </button>
               )}
+            </div>
+            {isEditingNarration ? (
+              <div className="space-y-2">
+                <textarea
+                  className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
+                  rows={3}
+                  value={narration}
+                  onChange={(e) => setNarration(e.target.value)}
+                />
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={handleNarrationSave}>Save</Button>
+                  <Button variant="ghost" size="sm" onClick={handleNarrationCancel}>Cancel</Button>
+                </div>
+              </div>
+            ) : (
+              <p className="font-ui text-[13px] text-dark leading-relaxed">{entry.narration}</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Lines table */}
+      <div className="bg-surface border border-border shadow-sm overflow-hidden rounded-md">
+        <div className="h-[2px] w-full bg-amber" />
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-surface-muted border-b border-border">
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Account / Ledger</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-48">Debit (₹)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-48">Credit (₹)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-subtle">
+              {entry.lines.map((line, i) => (
+                <tr key={i} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-5 px-6">
+                    <div className="font-ui text-[13px] font-semibold text-dark">{line.accountName}</div>
+                    <div className="font-mono text-[11px] text-mid mt-0.5">{line.accountCode}</div>
+                  </td>
+                  <td className="py-5 px-6 text-right font-mono text-[13px] text-dark tabular-nums">
+                    {line.debit > 0 ? formatIndianNumber(line.debit, { currency: true, decimals: 2 }) : "—"}
+                  </td>
+                  <td className="py-5 px-6 text-right font-mono text-[13px] text-dark tabular-nums">
+                    {line.credit > 0 ? formatIndianNumber(line.credit, { currency: true, decimals: 2 }) : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="bg-surface-muted border-t-2 border-border">
+                <td className="py-4 px-6 font-ui text-[10px] uppercase tracking-widest font-bold text-mid">Total</td>
+                <td className={`py-4 px-6 text-right font-mono text-[13px] tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
+                  {formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}
+                </td>
+                <td className={`py-4 px-6 text-right font-mono text-[13px] tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
+                  {formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      {/* Balance bar */}
+      <div className={`px-5 py-3.5 border rounded-md flex items-center justify-between transition-colors duration-300 ${isBalanced ? "bg-success-bg border-green-200" : "bg-danger-bg border-red-200"}`}>
+        <div className="flex items-center gap-2.5">
+          <Icon name={isBalanced ? "check_circle" : "warning"} size={18} className={isBalanced ? "text-success" : "text-danger"} />
+          <span className={`font-ui text-[12px] font-bold uppercase tracking-widest ${isBalanced ? "text-success" : "text-danger"}`}>
+            {isBalanced ? "Voucher is balanced" : `Out of Balance: ${formatIndianNumber(Math.abs(totalDebit - totalCredit), { currency: true, decimals: 2 })}`}
+          </span>
+        </div>
+        <div className="flex items-center gap-6">
+          <div className="text-right">
+            <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Total Debit</p>
+            <p className="font-mono text-[13px] text-dark tabular-nums font-semibold">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</p>
+          </div>
+          <div className="text-right">
+            <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Total Credit</p>
+            <p className="font-mono text-[13px] text-dark tabular-nums font-semibold">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Audit trail */}
+      <div className="bg-surface border border-border p-7 shadow-sm rounded-md">
+        <h3 className="font-ui text-[10px] text-light uppercase tracking-widest mb-6 font-bold">Audit Trail</h3>
+        <div className="space-y-5">
+          <div className="flex gap-4 items-start">
+            <div className="w-2 h-2 rounded-full bg-lighter mt-1.5 shrink-0" />
+            <div>
+              <p className="font-ui text-[13px] text-dark">
+                <span className="font-semibold">Entry created</span> by accountant@firm.in
+              </p>
+              <p className="font-mono text-[11px] text-mid mt-0.5">
+                {formattedEntryDate} · IP 192.168.1.10
+              </p>
+            </div>
+          </div>
+          {entry.status === "posted" && (
+            <div className="flex gap-4 items-start">
+              <div className="w-2 h-2 rounded-full bg-success mt-1.5 shrink-0" />
+              <div>
+                <p className="font-ui text-[13px] text-dark">
+                  <span className="font-semibold text-success">Voucher posted</span> to General Ledger
+                </p>
+                <p className="font-mono text-[11px] text-mid mt-0.5">
+                  {nowFormatted} · System Verified
+                </p>
+              </div>
+            </div>
+          )}
+          {entry.status === "voided" && (
+            <div className="flex gap-4 items-start">
+              <div className="w-2 h-2 rounded-full bg-danger mt-1.5 shrink-0" />
+              <div>
+                <p className="font-ui text-[13px] text-dark">
+                  <span className="font-semibold text-danger">Voucher voided</span>
+                </p>
+                <p className="font-mono text-[11px] text-mid mt-0.5">
+                  {nowFormatted} · {voidReason || "Administrative"}
+                </p>
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Lines */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Account</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Debit (₹)</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Credit (₹)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entry.lines?.map((line: any, i: number) => (
-              <tr key={i} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                <td className="font-ui text-[13px] text-dark px-4 py-3">
-                  {line.accountName || line.accountId}
-                </td>
-                <td className="font-mono text-[13px] text-right text-success px-4 py-3">
-                  {line.debit && line.debit !== "0" ? formatIndianNumber(line.debit) : "—"}
-                </td>
-                <td className="font-mono text-[13px] text-right text-danger px-4 py-3">
-                  {line.credit && line.credit !== "0" ? formatIndianNumber(line.credit) : "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="border-t-2 border-dark font-semibold">
-              <td className="font-ui text-[13px] text-dark px-6 py-4">Total</td>
-              <td className={`font-mono text-[14px] text-right px-6 py-4 ${isBalanced ? "text-success" : "text-danger"}`}>
-                {formatIndianNumber(totalDebit)}
-              </td>
-              <td className={`font-mono text-[14px] text-right px-6 py-4 ${isBalanced ? "text-success" : "text-danger"}`}>
-                {formatIndianNumber(totalCredit)}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      {!isBalanced && (
-        <div className="bg-danger-bg p-4 rounded-md">
-          <p className="font-ui text-[13px] text-danger font-medium">
-            Entry is not balanced. Difference: {formatIndianNumber(Math.abs(totalDebit - totalCredit))}
-          </p>
-        </div>
-      )}
-
-      {/* Balance Bar */}
-      <BalanceBar debit={totalDebit} credit={totalCredit} />
-
       {/* Actions */}
-      <div className="flex gap-3 pt-6 border-t border-hairline">
-        {entry.status === "draft" && (
-          <>
-            <button
-              onClick={() => postEntry.mutate({ id: entryId })}
-              disabled={postEntry.isPending || !isBalanced}
-              className="filter-tab active disabled:opacity-50"
-            >
-              Post Entry
-            </button>
-            <button
-              onClick={() => router.push(`/journal/${entryId}/edit`)}
-              className="filter-tab"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => {
-                if (confirm("Delete this draft entry?")) {
-                  router.push("/journal");
-                }
-              }}
-              className="filter-tab"
-            >
-              Delete
-            </button>
-          </>
-        )}
+      <div className="flex gap-3 pt-4 border-t border-border">
+        <Button variant="outline" size="sm" onClick={() => router.back()} className="text-[10px] font-bold uppercase tracking-widest">
+          ← Back
+        </Button>
         {entry.status === "posted" && (
-          <>
-            <button
-              onClick={() => setShowVoidModal(true)}
-              disabled={voidEntry.isPending}
-              className="filter-tab"
-            >
-              Void Entry
-            </button>
-            <button
-              onClick={() => {
-                setNewNarration(entry.narration);
-                setIsCorrectingNarration(true);
-              }}
-              className="filter-tab"
-            >
-              Correct Narration
-            </button>
-          </>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-[10px] font-bold uppercase tracking-widest border-danger text-danger hover:bg-danger-bg hover:text-danger"
+            onClick={() => setIsVoidModalOpen(true)}
+          >
+            Void Entry
+          </Button>
         )}
-        {entry.status === "voided" && (
-          <p className="font-ui text-light">Voided entries cannot be modified</p>
+        {entry.status === "draft" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-[10px] font-bold uppercase tracking-widest text-danger hover:text-danger hover:bg-danger-bg"
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
         )}
+        <Link href={`/audit-log?entryId=${entryId}`} className="inline-flex items-center justify-center rounded-sm text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 text-[10px] font-bold uppercase tracking-widest no-underline">
+          View Audit Log
+        </Link>
       </div>
 
       {/* Void Modal */}
-      {showVoidModal && (
-        <div className="command-palette-overlay" onClick={() => setShowVoidModal(false)}>
-          <div className="command-palette max-w-md" onClick={e => e.stopPropagation()}>
-            <div className="p-6">
-              <h3 className="font-display text-[20px] font-normal text-dark mb-2">
-                Void Journal Entry
-              </h3>
-              <div className="void-modal-warning mb-4">
-                <p className="font-ui text-[13px]">
-                  This will create a reversing entry. The original entry cannot be modified after voiding.
-                </p>
+      <Dialog open={isVoidModalOpen} onOpenChange={setIsVoidModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader className="bg-amber-50 -mx-6 -mt-6 px-6 py-4 border-b border-amber-100 rounded-t-lg">
+            <DialogTitle className="flex items-center gap-2 text-amber">
+              <Icon name="warning" size={18} />
+              Void Journal Entry
+            </DialogTitle>
+            <DialogDescription className="text-amber-700">
+              This action cannot be undone. The entry will be permanently voided.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="bg-surface-muted p-4 rounded-md space-y-2">
+              <div className="flex justify-between">
+                <span className="font-ui text-[11px] text-light uppercase tracking-widest font-bold">Entry</span>
+                <span className="font-mono text-[13px] text-dark">{entry.entryNumber}</span>
               </div>
-              <div>
-                <label htmlFor="voidReason" className="block font-ui text-[10px] uppercase tracking-wide text-light mb-2">
-                  Reason for voiding *
-                </label>
-                <input
-                  id="voidReason"
-                  type="text"
-                  value={voidReason}
-                  onChange={(e) => setVoidReason(e.target.value)}
-                  className="input-field w-full font-ui"
-                  placeholder="e.g., Duplicate entry, incorrect amount"
-                />
+              <div className="flex justify-between">
+                <span className="font-ui text-[11px] text-light uppercase tracking-widest font-bold">Total Debit</span>
+                <span className="font-mono text-[13px] text-dark">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</span>
               </div>
-              <div className="flex justify-end gap-2 mt-6">
-                <button onClick={() => setShowVoidModal(false)} className="filter-tab">
-                  Cancel
-                </button>
-                <button
-                  onClick={handleVoid}
-                  disabled={voidEntry.isPending || !voidReason.trim()}
-                  className="filter-tab bg-danger-bg text-danger border-danger hover:bg-danger-bg"
-                >
-                  Void Entry
-                </button>
+              <div className="flex justify-between">
+                <span className="font-ui text-[11px] text-light uppercase tracking-widest font-bold">Total Credit</span>
+                <span className="font-mono text-[13px] text-dark">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</span>
               </div>
             </div>
+            <div className="space-y-1.5">
+              <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Reason for Voiding</label>
+              <textarea
+                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
+                placeholder="Enter reason…"
+                rows={3}
+                value={voidReason}
+                onChange={(e) => setVoidReason(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
-      )}
+          <DialogFooter className="gap-2 pt-2">
+            <Button variant="outline" size="sm" onClick={() => { setIsVoidModalOpen(false); setVoidReason(""); }} className="text-[10px] font-bold uppercase tracking-widest">
+              Cancel
+            </Button>
+            <Button size="sm" onClick={handleVoidConfirm} className="text-[10px] font-bold uppercase tracking-widest bg-red-600 hover:bg-red-700">
+              Confirm Void
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

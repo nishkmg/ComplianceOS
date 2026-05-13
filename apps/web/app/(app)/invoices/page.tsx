@@ -1,10 +1,21 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
-import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
+import { getInvoices } from "@/lib/invoice-store";
+
+function parseINRAmount(s: string): number {
+  return parseFloat(s.replace(/,/g, "")) || 0;
+}
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Invoice {
   id: string;
@@ -13,149 +24,232 @@ interface Invoice {
   date: string;
   dueDate: string;
   amount: string;
-  status: "draft" | "sent" | "partially_paid" | "paid" | "voided";
+  status: "draft" | "sent" | "partially_paid" | "paid" | "voided" | "overdue";
 }
 
-const mockInvoices: Invoice[] = [
-  { id: "1", invoiceNumber: "INV-2026-27-001", customerName: "Acme Corp", date: "2026-04-15", dueDate: "2026-05-15", amount: "1,18,000", status: "sent" },
-  { id: "2", invoiceNumber: "INV-2026-27-002", customerName: "TechStart Ltd", date: "2026-04-18", dueDate: "2026-05-18", amount: "59,000", status: "draft" },
-  { id: "3", invoiceNumber: "INV-2026-27-003", customerName: "Global Traders", date: "2026-04-10", dueDate: "2026-05-10", amount: "2,36,000", status: "partially_paid" },
-  { id: "4", invoiceNumber: "INV-2026-27-004", customerName: "Alpha Industries", date: "2026-04-05", dueDate: "2026-05-05", amount: "3,54,000", status: "paid" },
+// ─── Mock data ────────────────────────────────────────────────────────────────
+
+const mockInvoicesByFy: Record<string, Invoice[]> = {
+  '2026-27': [
+    { id: "1", invoiceNumber: "INV-2026-27-001", customerName: "Acme Corp",           date: "2026-04-15", dueDate: "2026-05-15", amount: "1,18,000", status: "sent" },
+    { id: "2", invoiceNumber: "INV-2026-27-002", customerName: "TechStart Ltd",       date: "2026-04-18", dueDate: "2026-05-18", amount: "59,000",   status: "draft" },
+    { id: "3", invoiceNumber: "INV-2026-27-003", customerName: "Global Traders",      date: "2026-04-10", dueDate: "2026-05-10", amount: "2,36,000", status: "partially_paid" },
+    { id: "4", invoiceNumber: "INV-2026-27-004", customerName: "Alpha Industries",    date: "2026-04-05", dueDate: "2026-05-05", amount: "3,54,000", status: "paid" },
+    { id: "5", invoiceNumber: "INV-2026-27-005", customerName: "Delayed Payments Co", date: "2026-03-20", dueDate: "2026-04-19", amount: "5,90,000", status: "overdue" },
+  ],
+  '2025-26': [
+    { id: "101", invoiceNumber: "INV-2025-26-001", customerName: "Smith & Co",        date: "2025-07-12", dueDate: "2025-08-11", amount: "95,000",  status: "paid" },
+    { id: "102", invoiceNumber: "INV-2025-26-002", customerName: "Miller Enterprises", date: "2025-09-05", dueDate: "2025-10-05", amount: "1,45,000", status: "sent" },
+    { id: "103", invoiceNumber: "INV-2025-26-003", customerName: "Vertex Ltd",        date: "2025-11-20", dueDate: "2025-12-20", amount: "2,80,000", status: "partially_paid" },
+    { id: "104", invoiceNumber: "INV-2025-26-004", customerName: "Johnson Traders",   date: "2026-01-08", dueDate: "2026-02-07", amount: "67,000",  status: "draft" },
+    { id: "105", invoiceNumber: "INV-2025-26-005", customerName: "Nova Systems",      date: "2026-02-28", dueDate: "2026-03-30", amount: "4,20,000", status: "overdue" },
+  ],
+};
+
+const tabs = ["all", "draft", "sent", "partially_paid", "paid", "voided", "overdue"] as const;
+
+// ─── Column defs ──────────────────────────────────────────────────────────────
+
+const columns: ColumnDef<Invoice>[] = [
+  {
+    key: "invoiceNumber",
+    header: "Invoice #",
+    width: "160px",
+    render: (row) => (
+      <Link href={`/invoices/${row.id}`} className="font-mono text-[13px] text-amber-text hover:underline no-underline">
+        {row.invoiceNumber}
+      </Link>
+    ),
+  },
+  {
+    key: "customerName",
+    header: "Customer",
+    sortable: true,
+    render: (row) => <span className="font-ui text-[13px] text-dark font-medium">{row.customerName}</span>,
+  },
+  {
+    key: "date",
+    header: "Date",
+    sortable: true,
+    width: "120px",
+    render: (row) => (
+      <span className="font-mono text-[12px] text-mid">
+        {new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+      </span>
+    ),
+  },
+  {
+    key: "dueDate",
+    header: "Due Date",
+    sortable: true,
+    width: "120px",
+    render: (row) => (
+      <span className="font-mono text-[12px] text-mid">
+        {new Date(row.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+      </span>
+    ),
+  },
+  {
+    key: "amount",
+    header: "Amount (₹)",
+    align: "right",
+    sortable: true,
+    width: "140px",
+    render: (row) => <span className="font-mono text-[13px] tabular-nums font-semibold">₹{row.amount}</span>,
+  },
+  {
+    key: "status",
+    header: "Status",
+    align: "center",
+    width: "130px",
+    render: (row) => <InvoiceStatusBadge status={row.status} />,
+  },
 ];
 
-const statusOptions = ["all", "draft", "sent", "partially_paid", "paid", "voided"];
+// ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function InvoicesPage() {
+  const { activeFy } = useFiscalYear();
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [customerSearch, setCustomerSearch] = useState<string>("");
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const filteredInvoices = mockInvoices.filter((inv) => {
-    if (statusFilter !== "all" && inv.status !== statusFilter) return false;
-    if (customerSearch && !inv.customerName.toLowerCase().includes(customerSearch.toLowerCase())) return false;
-    return true;
-  });
+  const mockInvoices = mockInvoicesByFy[activeFy] ?? mockInvoicesByFy['2026-27'];
+  const storedInvoices: Invoice[] = useMemo(() =>
+    getInvoices().filter(inv => inv.fiscalYear === activeFy).map(inv => ({
+      id: inv.id,
+      invoiceNumber: inv.invoiceNumber,
+      customerName: inv.customerName,
+      date: inv.date,
+      dueDate: inv.dueDate,
+      amount: inv.total.toLocaleString("en-IN"),
+      status: inv.status === "sent" ? "sent" as const : inv.status as Invoice["status"],
+    })),
+    [activeFy]
+  );
+  const allInvoices = useMemo(() => [...storedInvoices, ...mockInvoices], [storedInvoices, mockInvoices]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  const filtered = useMemo(
+    () =>
+      allInvoices.filter(inv => {
+        if (statusFilter !== "all" && inv.status !== statusFilter) return false;
+        if (search && !inv.customerName.toLowerCase().includes(search.toLowerCase()) && !inv.invoiceNumber.toLowerCase().includes(search.toLowerCase())) return false;
+        return true;
+      }),
+    [statusFilter, search, allInvoices]
+  );
+
+  const totalAmount = filtered.reduce((s, inv) => s + parseINRAmount(inv.amount), 0);
+
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: allInvoices.length };
+    for (const tab of tabs) if (tab !== "all") c[tab] = allInvoices.filter(i => i.status === tab).length;
+    return c;
+  }, [allInvoices]);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No invoices to export."); return; }
+    const header = "Invoice #,Customer,Date,Due Date,Amount,Status";
+    const rows = filtered.map(inv => `${inv.invoiceNumber},"${inv.customerName}",${inv.date},${inv.dueDate},${inv.amount},${inv.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `invoices-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} invoices.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Invoices</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Manage sales invoices and billing</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
+            Billing
+          </p>
+          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Invoices</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">Manage and track your fiscal billing documents.</p>
         </div>
-        <Link href="/invoices/new" className="filter-tab active">
-          + New Invoice
-        </Link>
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-4 items-center">
-        <div className="filter-tabs">
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="filter-tab font-ui"
+        <div className="flex gap-3">
+          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+            <Icon name="download" size={14} /> Export List
+          </button>
+          <Link
+            href="/invoices/scan"
+            className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md"
           >
-            {statusOptions.map((s) => (
-              <option key={s} value={s}>
-                {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-              </option>
-            ))}
-          </select>
+            Scan
+          </Link>
+          <Link
+            href="/invoices/new"
+            className="px-4 py-2 bg-amber text-white text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-md flex items-center gap-1.5"
+          >
+            <Icon name="add" size={14} /> New Invoice
+          </Link>
         </div>
-        <input
-          type="text"
-          placeholder="Search customer... (/)"
-          value={customerSearch}
-          onChange={(e) => { setCustomerSearch(e.target.value); setPage(1); }}
-          className="input-field font-ui flex-1 max-w-xs ml-auto"
-        />
       </div>
 
-      {/* Table */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Invoice #</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Customer</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Due Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
+      {/* Filter + search */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border overflow-x-auto">
+          {tabs.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setStatusFilter(tab)}
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium whitespace-nowrap transition-colors cursor-pointer border-none rounded-md ${
+                statusFilter === tab
+                  ? "bg-surface text-dark shadow-sm"
+                  : "text-mid hover:text-dark bg-transparent"
+              }`}
+            >
+              {tab === "all" ? "All" : tab.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+              <span className="ml-1.5 text-[10px] text-light">({counts[tab]})</span>
+            </button>
+          ))}
+        </div>
+        <div className="relative">
+          <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
+          <input
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
+            placeholder="Search invoices…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* DataTable */}
+      {loading ? (
+        <TableSkeleton rows={10} columns={6} />
+      ) : (
+        <DataTable<Invoice>
+          data={filtered}
+          columns={columns}
+          keyExtractor={row => row.id}
+          pageSize={15}
+          emptyState={
+            <EmptyState
+              title="No invoices found"
+              description={search || statusFilter !== "all" ? "Try adjusting your search or filter." : "Create your first invoice to start billing customers."}
+              action={{ label: "New Invoice", onClick: () => window.location.href = "/invoices/new" }}
+              icon="receipt_long"
+            />
+          }
+          footer={
+            <tr className="bg-surface-muted border-t-2 border-border">
+              <td colSpan={5} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                Total ({filtered.length} invoices)
+              </td>
+              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                ₹{totalAmount.toLocaleString("en-IN")}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredInvoices.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                  No invoices found
-                </td>
-              </tr>
-            ) : (
-              filteredInvoices.map((invoice) => (
-                <tr key={invoice.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                  <td className="font-mono text-[13px] text-amber px-4 py-3">
-                    <Link href={`/invoices/${invoice.id}`} className="hover:underline">
-                      {invoice.invoiceNumber}
-                    </Link>
-                  </td>
-                  <td className="font-ui text-[13px] text-dark px-4 py-3">{invoice.customerName}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{invoice.date}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{invoice.dueDate}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">₹{invoice.amount}</td>
-                  <td className="px-4 py-3">
-                    <InvoiceStatusBadge status={invoice.status} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-3">
-                      {(invoice.status === "draft") && (
-                        <Link href={`/invoices/${invoice.id}/edit`} className="font-ui text-[12px] text-amber hover:underline">
-                          Edit
-                        </Link>
-                      )}
-                      {(invoice.status === "draft") && (
-                        <button className="font-ui text-[12px] text-success hover:underline">Post</button>
-                      )}
-                      {(invoice.status === "sent" || invoice.status === "partially_paid") && (
-                        <button className="font-ui text-[12px] text-danger hover:underline">Void</button>
-                      )}
-                      <button className="font-ui text-[12px] text-mid hover:underline">Send</button>
-                      <button className="font-ui text-[12px] text-mid hover:underline">PDF</button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Footer */}
-      {filteredInvoices.length > 0 && (
-        <div className="flex items-center justify-between font-ui text-[12px] text-light">
-          <span>Showing {filteredInvoices.length} invoice{filteredInvoices.length !== 1 ? "s" : ""}</span>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="filter-tab disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="px-3 py-2">Page {page}</span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              disabled={filteredInvoices.length < pageSize}
-              className="filter-tab disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+          }
+        />
       )}
     </div>
   );

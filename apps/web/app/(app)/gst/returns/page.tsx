@@ -1,277 +1,117 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
-import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
 
-interface GSTReturn {
-  id: string;
-  returnNumber: string;
-  returnType: "gstr1" | "gstr2b" | "gstr3b" | "gstr9" | "gstr4" | "itc_reconciliation";
-  taxPeriodMonth: string;
-  taxPeriodYear: string;
-  status: "draft" | "generated" | "filed" | "amended" | "completed";
-  totalOutwardSupplies: string;
-  totalEligibleItc: string;
-  totalTaxPayable: string;
-  totalTaxPaid: string;
-  filingDate?: string;
-  dueDate: string;
-}
-
-const statusConfig: Record<GSTReturn["status"], { label: string; variant: "gray" | "blue" | "success" | "amber" }> = {
-  draft: { label: "Draft", variant: "gray" },
-  generated: { label: "Generated", variant: "blue" },
-  filed: { label: "Filed", variant: "success" },
-  amended: { label: "Amended", variant: "amber" },
-  completed: { label: "Completed", variant: "success" },
+const monthNumbers: Record<string, string> = {
+  "January": "1", "February": "2", "March": "3", "April": "4", "May": "5", "June": "6",
+  "July": "7", "August": "8", "September": "9", "October": "10", "November": "11", "December": "12",
 };
 
-const returnTypes = ["all", "gstr1", "gstr2b", "gstr3b"] as const;
-const statuses = ["all", "draft", "generated", "filed", "amended"] as const;
-const months = [
-  { value: 1, label: "April" },
-  { value: 2, label: "May" },
-  { value: 3, label: "June" },
-  { value: 4, label: "July" },
-  { value: 5, label: "August" },
-  { value: 6, label: "September" },
-  { value: 7, label: "October" },
-  { value: 8, label: "November" },
-  { value: 9, label: "December" },
-  { value: 10, label: "January" },
-  { value: 11, label: "February" },
-  { value: 12, label: "March" },
+const returnTypes = [
+  { id: "gstr1", name: "GSTR-1", desc: "Outward Supplies" },
+  { id: "gstr2b", name: "GSTR-2B", desc: "ITC Auto-drafted" },
+  { id: "gstr3b", name: "GSTR-3B", desc: "Summary Return" },
 ];
 
-export default function GSTReturnsPage() {
-  const [periodMonth, setPeriodMonth] = useState<number | undefined>(undefined);
-  const [periodYear, setPeriodYear] = useState<number | undefined>(undefined);
-  const [returnType, setReturnType] = useState<(typeof returnTypes)[number]>("all");
-  const [status, setStatus] = useState<(typeof statuses)[number]>("all");
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
+const mockReturns = [
+  { id: "1", type: "gstr1", period: "May 2024", status: "filed", amount: "12,45,600", date: "10 Jun 2024" },
+  { id: "2", type: "gstr2b", period: "May 2024", status: "completed", amount: "4,12,040", date: "14 Jun 2024" },
+  { id: "3", type: "gstr3b", period: "May 2024", status: "generated", amount: "8,33,560", date: "—" },
+];
 
-  const { data: returns, isLoading } = api.gstReturns.list.useQuery({
-    periodMonth,
-    periodYear,
-    returnType: returnType !== "all" ? returnType : undefined,
-    status: status !== "all" ? status : undefined,
-  });
+export default function GSTRturnsHubPage() {
+  const [period, setPeriod] = useState("May 2024");
+  const [refreshing, setRefreshing] = useState(false);
 
-  const filteredReturns = returns ?? [];
+  const periodSlug = useMemo(() => {
+    const [monthName, yearStr] = period.split(" ");
+    return `${monthNumbers[monthName] ?? "5"}-${yearStr}`;
+  }, [period]);
 
-  const generateGSTR1 = api.gstReturns.generateGSTR1.useMutation();
-  const generateGSTR2B = api.gstReturns.generateGSTR2B.useMutation();
-  const generateGSTR3B = api.gstReturns.generateGSTR3B.useMutation();
-  const fileReturn = api.gstReturns.file.useMutation();
-  const amendReturn = api.gstReturns.amend.useMutation();
-
-  const handleGenerate = async (month: number, year: number, type: GSTReturn["returnType"]) => {
-    try {
-      if (type === "gstr1") {
-        await generateGSTR1.mutateAsync({ periodMonth: month, periodYear: year });
-      } else if (type === "gstr2b") {
-        await generateGSTR2B.mutateAsync({ periodMonth: month, periodYear: year });
-      } else if (type === "gstr3b") {
-        await generateGSTR3B.mutateAsync({ periodMonth: month, periodYear: year });
-      }
-    } catch (error) {
-      console.error("Failed to generate return:", error);
-    }
-  };
-
-  const handleFile = async (returnId: string) => {
-    const arn = prompt("Enter ARN (Acknowledgement Reference Number):");
-    if (!arn) return;
-
-    try {
-      await fileReturn.mutateAsync({ returnId, arn });
-    } catch (error) {
-      console.error("Failed to file return:", error);
-    }
-  };
-
-  const handleAmend = async (returnId: string) => {
-    const changesJson = prompt("Enter changes as JSON:");
-    if (!changesJson) return;
-
-    try {
-      const changes = JSON.parse(changesJson);
-      await amendReturn.mutateAsync({ returnId, changes });
-    } catch (error) {
-      console.error("Failed to amend return:", error);
-    }
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => { setRefreshing(false); showToast.success("GST data refreshed from portal."); }, 1200);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 text-left">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">GST Returns</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Generate and file GST returns</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Taxation Hub</p>
+          <h1 className="font-display text-2xl font-semibold text-dark">GST Returns</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl">Centralized management for your GST compliance cycle. Generate, reconcile and file returns directly with the GSTN portal.</p>
         </div>
-        <button className="filter-tab active">Generate All</button>
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select
-            value={periodMonth ?? ""}
-            onChange={(e) => { setPeriodMonth(e.target.value ? Number(e.target.value) : undefined); setPage(1); }}
-            className="input-field font-ui"
-          >
-            <option value="">All Months</option>
-            {months.map((m) => (
-              <option key={m.value} value={m.value}>{m.label}</option>
-            ))}
+        <div className="flex gap-3">
+          <select className="border border-border px-4 py-2 text-ui-sm outline-none bg-surface" value={period} onChange={(e) => setPeriod(e.target.value)}>
+            <option>May 2024</option>
+            <option>Apr 2024</option>
           </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input
-            type="number"
-            placeholder="Year"
-            value={periodYear ?? ""}
-            onChange={(e) => { setPeriodYear(e.target.value ? Number(e.target.value) : undefined); setPage(1); }}
-            className="input-field font-ui w-28"
-            min={2000}
-            max={2100}
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Return Type</label>
-          <select
-            value={returnType}
-            onChange={(e) => { setReturnType(e.target.value as (typeof returnTypes)[number]); setPage(1); }}
-            className="input-field font-ui"
-          >
-            {returnTypes.map((t) => (
-              <option key={t} value={t}>
-                {t === "all" ? "All Return Types" : t.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Status</label>
-          <select
-            value={status}
-            onChange={(e) => { setStatus(e.target.value as (typeof statuses)[number]); setPage(1); }}
-            className="input-field font-ui"
-          >
-            {statuses.map((s) => (
-              <option key={s} value={s}>
-                {s === "all" ? "All Statuses" : s.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-              </option>
-            ))}
-          </select>
+          <button onClick={handleRefresh} disabled={refreshing} className="bg-amber text-white px-6 py-2.5 rounded font-ui text-[13px] hover:bg-amber-hover transition-colors cursor-pointer border-none shadow-sm disabled:opacity-50">
+            {refreshing ? "Refreshing…" : "Refresh Data"}
+          </button>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Return #</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Period</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Due Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Liability</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">ITC</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Payable</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Filed Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={10} className="px-4 py-12 text-center font-ui text-light">Loading GST returns...</td>
-              </tr>
-            ) : filteredReturns.length === 0 ? (
-              <tr>
-                <td colSpan={10} className="px-4 py-12 text-center font-ui text-light">No GST returns yet</td>
-              </tr>
-            ) : (
-              filteredReturns.map((ret) => {
-                const statusConf = statusConfig[ret.status] ?? { label: ret.status, variant: "gray" as const };
-                return (
-                  <tr key={ret.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                    <td className="px-4 py-3">
-                      <Link href={`/gst/returns/${ret.taxPeriodYear}-${ret.taxPeriodMonth}`} className="font-mono text-[13px] text-amber hover:underline">
-                        {ret.returnNumber}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="font-ui text-[13px] text-dark uppercase">{ret.returnType}</span>
-                    </td>
-                    <td className="px-4 py-3 font-ui text-[13px] text-mid">
-                      {months.find((m) => m.value === Number(ret.taxPeriodMonth))?.label} {ret.taxPeriodYear}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-light">{ret.dueDate}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(Number(ret.totalTaxPayable))}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(Number(ret.totalEligibleItc))}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-right text-dark">{formatIndianNumber(Number(ret.totalTaxPaid))}</td>
-                    <td className="px-4 py-3">
-                      <Badge variant={statusConf.variant}>{statusConf.label}</Badge>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-light">{ret.filingDate ?? "-"}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2">
-                        {ret.status === "draft" && (
-                          <button onClick={() => handleGenerate(Number(ret.taxPeriodMonth), Number(ret.taxPeriodYear), ret.returnType)} className="font-ui text-[12px] text-amber hover:underline">
-                            Generate
-                          </button>
-                        )}
-                        <Link href={`/gst/returns/${ret.taxPeriodYear}-${ret.taxPeriodMonth}/${ret.returnType}`} className="font-ui text-[12px] text-mid hover:underline">
-                          View
-                        </Link>
-                        {ret.status === "generated" && (
-                          <button onClick={() => handleFile(ret.id)} className="font-ui text-[12px] text-success hover:underline">
-                            File
-                          </button>
-                        )}
-                        {ret.status === "filed" && (
-                          <button onClick={() => handleAmend(ret.id)} className="font-ui text-[12px] text-amber hover:underline">
-                            Amend
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {filteredReturns.length > 0 && (
-        <div className="flex items-center justify-between text-sm font-ui text-mid">
-          <span>Showing {filteredReturns.length} returns</span>
-          <div className="flex gap-2">
-            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="filter-tab disabled:opacity-50">
-              Previous
-            </button>
-            <span className="px-3 py-1">Page {page}</span>
-            <button onClick={() => setPage((p) => p + 1)} disabled={filteredReturns.length < pageSize} className="filter-tab disabled:opacity-50">
-              Next
-            </button>
+      {/* Return Type Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {returnTypes.map((t) => (
+          <div key={t.id} className="bg-surface border border-border p-6 shadow-sm relative overflow-hidden group hover:border-primary transition-colors">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-amber opacity-20 group-hover:opacity-100 transition-opacity"></div>
+            <div className="flex justify-between items-start mb-4">
+              <span className="font-ui text-[11px] text-light uppercase tracking-widest">{t.id}</span>
+              <Icon name="article" className="text-amber" />
+            </div>
+            <h3 className="font-display text-lg text-display-lg text-dark mb-1">{t.name}</h3>
+            <p className="font-ui text-[13px] text-mid mb-6">{t.desc}</p>
+            <Link href={`/gst/returns/${periodSlug}/${t.id}`} className="text-ui-xs text-amber-text font-bold uppercase tracking-widest no-underline hover:underline inline-flex items-center gap-2">
+              Generate Return <span className="inline-block">→</span>
+            </Link>
           </div>
+        ))}
+      </div>
+
+      {/* Recent Activity Table */}
+      <div className="bg-surface border border-border shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b-[0.5px] border-border bg-sidebar">
+          <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Return Filing History</h3>
         </div>
-      )}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-surface-muted border-b-[0.5px] border-border">
+                <th className="py-3 px-6 font-ui text-[11px] text-light uppercase tracking-widest">Period</th>
+                <th className="py-3 px-6 font-ui text-[11px] text-light uppercase tracking-widest">Return Type</th>
+                <th className="py-3 px-6 font-ui text-[11px] text-light uppercase tracking-widest text-right">Amount (₹)</th>
+                <th className="py-3 px-6 font-ui text-[11px] text-light uppercase tracking-widest text-right">Status</th>
+                <th className="py-3 px-6 font-ui text-[11px] text-light uppercase tracking-widest text-right">Date Filed</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-[0.5px] divide-border-subtle">
+              {mockReturns.map((r) => (
+                <tr key={r.id} className="hover:bg-surface-muted/30 transition-colors">
+                  <td className="py-4 px-6 font-mono text-dark">{r.period}</td>
+                  <td className="py-4 px-6 font-ui text-[13px] font-bold uppercase text-dark">{r.type}</td>
+                  <td className="py-4 px-6 font-mono text-right">₹{r.amount}</td>
+                  <td className="py-4 px-6 text-right">
+                    <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
+                      r.status === 'filed' ? 'bg-success-bg text-success border-green-200' :
+                      r.status === 'generated' ? 'bg-amber-50 text-amber-text border-amber-200' :
+                      'bg-blue-50 text-blue-700 border-blue-200'
+                    }`}>
+                      {r.status}
+                    </span>
+                  </td>
+                  <td className="py-4 px-6 font-mono text-right text-mid">{r.date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

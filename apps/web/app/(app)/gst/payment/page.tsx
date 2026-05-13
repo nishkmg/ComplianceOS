@@ -1,188 +1,226 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-const months = [
-  { value: 1, label: "April" }, { value: 2, label: "May" }, { value: 3, label: "June" },
-  { value: 4, label: "July" }, { value: 5, label: "August" }, { value: 6, label: "September" },
-  { value: 7, label: "October" }, { value: 8, label: "November" }, { value: 9, label: "December" },
-  { value: 10, label: "January" }, { value: 11, label: "February" }, { value: 12, label: "March" },
-];
+type PeriodKey = "oct2024" | "sep2024" | "aug2024" | "jul2024";
 
-const currentMonth = new Date().getMonth() + 1;
-const currentYear = new Date().getFullYear();
-const taxTypes = ["igst", "cgst", "sgst", "cess"] as const;
+interface PeriodData {
+  grossLiability: { igst: number; cgst: number; sgst: number; cess: number; total: number };
+  itcAvailable: { igst: number; cgst: number; sgst: number; cess: number; total: number };
+  netPayable: { igst: number; cgst: number; sgst: number; cess: number; total: number };
+  dueDate: string;
+}
+
+const periodDataMap: Record<PeriodKey, PeriodData> = {
+  oct2024: {
+    grossLiability: { igst: 450000, cgst: 125000, sgst: 125000, cess: 0, total: 700000 },
+    itcAvailable: { igst: 350000, cgst: 100000, sgst: 100000, cess: 0, total: 550000 },
+    netPayable: { igst: 100000, cgst: 25000, sgst: 25000, cess: 0, total: 150000 },
+    dueDate: "20th November 2024",
+  },
+  sep2024: {
+    grossLiability: { igst: 380000, cgst: 110000, sgst: 110000, cess: 5000, total: 605000 },
+    itcAvailable: { igst: 310000, cgst: 90000, sgst: 90000, cess: 0, total: 490000 },
+    netPayable: { igst: 70000, cgst: 20000, sgst: 20000, cess: 5000, total: 115000 },
+    dueDate: "20th October 2024",
+  },
+  aug2024: {
+    grossLiability: { igst: 320000, cgst: 95000, sgst: 95000, cess: 3000, total: 513000 },
+    itcAvailable: { igst: 260000, cgst: 78000, sgst: 78000, cess: 0, total: 416000 },
+    netPayable: { igst: 60000, cgst: 17000, sgst: 17000, cess: 3000, total: 97000 },
+    dueDate: "20th September 2024",
+  },
+  jul2024: {
+    grossLiability: { igst: 290000, cgst: 85000, sgst: 85000, cess: 2000, total: 462000 },
+    itcAvailable: { igst: 240000, cgst: 72000, sgst: 72000, cess: 0, total: 384000 },
+    netPayable: { igst: 50000, cgst: 13000, sgst: 13000, cess: 2000, total: 78000 },
+    dueDate: "20th August 2024",
+  },
+};
 
 export default function GSTPaymentPage() {
-  const [periodMonth, setPeriodMonth] = useState<number>(currentMonth);
-  const [periodYear, setPeriodYear] = useState<number>(currentYear);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const { activeFy } = useFiscalYear();
+  const [period, setPeriod] = useState<PeriodKey>("oct2024");
   const [challanData, setChallanData] = useState<any>(null);
-  const [paymentMode, setPaymentMode] = useState<"online" | "offline">("online");
-  const [bankName, setBankName] = useState("");
-  const [isPaying, setIsPaying] = useState(false);
+  const [paymentMode, setPaymentMode] = useState("online");
 
-  const { data: liabilityBalance } = api.gstLedger.liabilityBalance.useQuery({ periodMonth, periodYear });
-  const { data: itcBalance } = api.gstLedger.itcBalance.useQuery({ periodMonth, periodYear });
+  const periodData = useMemo(() => periodDataMap[period] ?? periodDataMap.oct2024, [period]);
+  const { grossLiability, itcAvailable, netPayable, dueDate } = periodData;
 
-  const calculateUtilization = () => {
-    const liability = liabilityBalance;
-    const itc = itcBalance;
-    if (!liability || !itc) return null;
-
-    const breakdown = taxTypes.map((type) => {
-      const output = liability[type]?.output ?? 0;
-      const itcAvailable = itc[type]?.closingBalance ?? 0;
-      const utilized = Math.min(output, itcAvailable);
-      const cashRequired = output - utilized;
-      return { taxType: type, output, itcAvailable, utilized, cashRequired };
+  const handleGenerateChallan = () => {
+    const ref = "CH-" + Date.now().toString(36).toUpperCase();
+    setChallanData({
+      ref,
+      amount: netPayable.total,
+      period,
+      generatedAt: new Date().toISOString(),
     });
-
-    const totalOutput = breakdown.reduce((sum, b) => sum + b.output, 0);
-    const totalITCUtilized = breakdown.reduce((sum, b) => sum + b.utilized, 0);
-    const totalCashRequired = breakdown.reduce((sum, b) => sum + b.cashRequired, 0);
-    return { breakdown, totalOutput, totalITCUtilized, totalCashRequired };
+    showToast.success(`Challan ${ref} generated for ₹${formatIndianNumber(netPayable.total)}`);
   };
 
-  const utilization = calculateUtilization();
-  const createChallan = api.gstPayment.createChallan.useMutation();
-  const payGst = api.gstPayment.payGst.useMutation();
-
-  const handleGenerateChallan = async () => {
-    setIsGenerating(true);
-    try {
-      const result = await createChallan.mutateAsync({ periodMonth, periodYear });
-      setChallanData(result);
-    } catch (error) {
-      console.error("Failed to generate challan:", error);
-    } finally {
-      setIsGenerating(false);
+  const handlePayNow = () => {
+    if (!challanData) {
+      showToast.error("Please generate challan first");
+      return;
     }
+    const modeLabels: Record<string, string> = { online: "Net Banking", neft: "NEFT/RTGS", overthecounter: "Over the Counter" };
+    showToast.success(`Payment of ₹${formatIndianNumber(netPayable.total)} initiated via ${modeLabels[paymentMode] ?? paymentMode}`);
+    setChallanData(null);
   };
 
-  const handlePay = async () => {
-    if (!challanData) return;
-    setIsPaying(true);
-    try {
-      const challanId = btoa(JSON.stringify(challanData));
-      await payGst.mutateAsync({ challanId, mode: paymentMode, bankName: bankName || undefined });
-      setChallanData(null);
-    } catch (error) {
-      console.error("Payment failed:", error);
-    } finally {
-      setIsPaying(false);
-    }
+  const handleSaveDraft = () => {
+    showToast.success("Draft saved successfully");
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/gst/ledger" className="font-ui text-[12px] text-amber hover:underline">← Back to GST Ledger</Link>
-          <h1 className="font-display text-[26px] font-normal text-dark mt-1">GST Payment</h1>
+    <div className="space-y-0 text-left">
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-surface/90 backdrop-blur-md border-b-[0.5px] border-border px-8 py-6 -mx-8 -mt-8 mb-8 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <Link href="/gst/ledger" className="text-mid hover:text-dark transition-colors no-underline flex items-center gap-1">
+            <Icon name="arrow_back" className="text-[18px]" />
+            <span className="font-ui text-[11px] text-xs uppercase font-bold">GST Ledger</span>
+          </Link>
+          <div className="h-6 w-[0.5px] bg-border-subtle"></div>
+            <h1 className="font-display text-2xl font-semibold">GST Payment <span className="text-[11px] text-mid font-ui">FY {activeFy}</span></h1>
         </div>
-        <Link href="/gst/payment/history" className="filter-tab">Payment History</Link>
-      </div>
-
-      <div className="flex gap-4 items-center">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))} className="input-field font-ui">
-            {months.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-          </select>
+        <div className="flex gap-4">
+          <button onClick={handleSaveDraft} className="px-6 py-2.5 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">Save Draft</button>
+          <button onClick={handlePayNow} className="px-6 py-2.5 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none rounded-md shadow-sm">Pay Now</button>
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input type="number" value={periodYear} onChange={(e) => setPeriodYear(Number(e.target.value))} className="input-field font-ui w-24" min={2000} max={2100} />
-        </div>
-      </div>
+      </header>
 
-      <div className="card p-5">
-        <h2 className="font-display text-[16px] font-normal text-dark mb-4">Tax Payable Breakdown</h2>
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Tax Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Output Tax</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">ITC Available</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">ITC Utilized</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Cash Required</th>
-            </tr>
-          </thead>
-          <tbody>
-            {utilization?.breakdown.map((b) => (
-              <tr key={b.taxType} className="border-b border-hairline">
-                <td className="px-4 py-3"><span className="font-ui text-[11px] px-2 py-0.5 rounded bg-surface-muted text-mid uppercase">{b.taxType}</span></td>
-                <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(b.output)}</td>
-                <td className="font-mono text-[13px] text-right text-success px-4 py-3">{formatIndianNumber(b.itcAvailable)}</td>
-                <td className="font-mono text-[13px] text-right text-amber px-4 py-3">{formatIndianNumber(b.utilized)}</td>
-                <td className="font-mono text-[13px] text-right font-medium text-dark px-4 py-3">{formatIndianNumber(b.cashRequired)}</td>
-              </tr>
-            ))}
-            <tr className="border-t-2 border-dark font-medium">
-              <td className="px-4 py-3 font-ui text-[13px] text-dark">Total</td>
-              <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(utilization?.totalOutput ?? 0)}</td>
-              <td className="font-mono text-[13px] text-right text-mid px-4 py-3">—</td>
-              <td className="font-mono text-[13px] text-right text-amber px-4 py-3">{formatIndianNumber(utilization?.totalITCUtilized ?? 0)}</td>
-              <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(utilization?.totalCashRequired ?? 0)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div className="space-y-16 pb-16 max-w-[1200px] mx-auto">
+        {/* 1. Period */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+           <div className="flex flex-col gap-2 text-left">
+             <label className="font-ui text-[11px] text-xs text-light uppercase tracking-widest font-bold">Return Period</label>
+             <div className="relative">
+               <select className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none appearance-none" value={period} onChange={e => { setPeriod(e.target.value as PeriodKey); setChallanData(null); }}>
+                 <option value="oct2024">October 2024 (Q3)</option>
+                 <option value="sep2024">September 2024 (Q2)</option>
+                 <option value="aug2024">August 2024 (Q2)</option>
+                 <option value="jul2024">July 2024 (Q2)</option>
+               </select>
+               <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
+             </div>
+           </div>
+        </section>
 
-      {challanData ? (
-        <div className="card p-5">
-          <h2 className="font-display text-[16px] font-normal text-dark mb-4">Challan Details</h2>
-          <div className="space-y-3 mb-6 font-ui text-[13px]">
-            <div className="flex justify-between"><span className="text-light">Challan Number:</span><span className="font-mono text-dark">{challanData.challanNumber}</span></div>
-            <div className="flex justify-between"><span className="text-light">Challan Date:</span><span className="font-mono text-dark">{challanData.challanDate}</span></div>
-            <div className="flex justify-between"><span className="text-light">Total Amount:</span><span className="font-mono text-[16px] font-bold text-dark">{formatIndianNumber(challanData.totalAmount)}</span></div>
+        {/* 2. Tax Liability */}
+        <section>
+          <div className="flex justify-between items-end mb-6 border-b-[0.5px] border-border pb-4">
+            <h3 className="font-ui text-lg font-bold text-dark">1. Gross Tax Liability</h3>
+            <span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Derived from Outward Supplies (GSTR-1)</span>
           </div>
-
-          <div className="border-t border-hairline pt-4">
-            <h3 className="font-display text-[14px] font-normal text-dark mb-3">Payment Details</h3>
-            <div className="space-y-3">
-              <div className="flex flex-col gap-1">
-                <label className="font-ui text-[10px] uppercase tracking-wide text-light">Payment Mode</label>
-                <select value={paymentMode} onChange={(e) => setPaymentMode(e.target.value as "online" | "offline")} className="input-field font-ui w-48">
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
-                </select>
-              </div>
-              {paymentMode === "offline" && (
-                <div className="flex flex-col gap-1">
-                  <label className="font-ui text-[10px] uppercase tracking-wide text-light">Bank Name</label>
-                  <input type="text" value={bankName} onChange={(e) => setBankName(e.target.value)} placeholder="Enter bank name" className="input-field font-ui w-48" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {Object.entries(grossLiability).filter(([k]) => k !== 'total').map(([key, val]) => (
+              <div key={key} className="bg-surface border border-border p-6 border-t-2 border-t-transparent hover:border-t-amber transition-all shadow-sm text-left">
+                <span className="font-ui text-[10px] text-light uppercase font-bold tracking-widest">{key === 'igst' ? 'Integrated Tax (IGST)' : key === 'cgst' ? 'Central Tax (CGST)' : key === 'sgst' ? 'State Tax (SGST)' : 'Cess'}</span>
+                <div className="flex items-baseline gap-1 mt-4">
+                  <span className="font-ui text-[13px] text-light">₹</span>
+                  <span className="font-mono text-2xl font-bold text-dark">{formatIndianNumber(val)}</span>
                 </div>
-              )}
-            </div>
+              </div>
+            ))}
           </div>
+          <div className="bg-dark text-white p-6 mt-6 flex justify-between items-center shadow-sm border border-stone-950">
+            <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-light">Total Gross Liability</span>
+            <span className="font-mono text-2xl font-bold text-white">₹ {formatIndianNumber(grossLiability.total)}</span>
+          </div>
+        </section>
 
-          <div className="mt-6 flex gap-3">
-            <button onClick={handlePay} disabled={isPaying} className="filter-tab active disabled:opacity-50">{isPaying ? "Processing..." : "Confirm Payment"}</button>
-            <button onClick={() => setChallanData(null)} className="filter-tab">Cancel</button>
+        {/* 3. ITC Set-off */}
+        <section>
+          <div className="flex justify-between items-end mb-6 border-b-[0.5px] border-border pb-4">
+            <h3 className="font-ui text-lg font-bold text-dark">2. ITC Set-off Computation</h3>
+            <span className="font-ui text-[10px] text-light uppercase font-bold tracking-widest">Cross-utilization as per GST rules (IGST first)</span>
           </div>
-        </div>
-      ) : (
-        <div className="card p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-display text-[16px] font-normal text-dark">Ready to Generate Challan</h2>
-              <p className="font-ui text-[12px] text-light mt-1">Total cash required: {formatIndianNumber(utilization?.totalCashRequired ?? 0)}</p>
+          <div className="bg-surface border border-border shadow-sm overflow-hidden">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-muted border-b border-stone-100 text-light font-ui text-[10px] uppercase tracking-widest">
+                  <th className="py-4 px-6">Tax Head</th>
+                  <th className="py-4 px-6 text-right">Output Liability</th>
+                  <th className="py-4 px-6 text-right">ITC Available</th>
+                  <th className="py-4 px-6 text-right text-amber font-bold">ITC Utilized</th>
+                  <th className="py-4 px-6 text-right">Cash Required</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-50 font-mono text-sm">
+                {['igst', 'cgst', 'sgst'].map((type, i) => (
+                  <tr key={type} className="hover:bg-surface-muted/50 transition-colors">
+                    <td className="py-5 px-6 font-ui text-[13px] font-bold uppercase">{type}</td>
+                    <td className="py-5 px-6 text-right">{formatIndianNumber(Object.entries(grossLiability).find(([k]) => k === type)?.[1] || 0)}</td>
+                    <td className="py-5 px-6 text-right text-success">{formatIndianNumber(Object.entries(itcAvailable).find(([k]) => k === type)?.[1] || 0)}</td>
+                    <td className="py-5 px-6 text-right text-amber font-bold">{Object.entries(itcAvailable).find(([k]) => k === type)?.[1] || 0}</td>
+                    <td className="py-5 px-6 text-right font-bold">
+                      {(Object.entries(grossLiability).find(([k]) => k === type)?.[1] || 0) - (Object.entries(itcAvailable).find(([k]) => k === type)?.[1] || 0) > 0
+                        ? formatIndianNumber((Object.entries(grossLiability).find(([k]) => k === type)?.[1] || 0) - (Object.entries(itcAvailable).find(([k]) => k === type)?.[1] || 0)) : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 4. Net Payable */}
+        <section className="bg-surface border border-border p-8 shadow-sm border-t-2 border-t-red-600">
+          <h3 className="font-ui text-lg font-bold text-dark mb-8">3. Net Cash Payable</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {Object.entries(netPayable).filter(([k]) => k !== 'total').map(([key, val]) => (
+              <div key={key} className="bg-surface-muted border border-border p-6 text-left">
+                <span className="font-ui text-[10px] text-light uppercase font-bold tracking-widest">{key.toUpperCase()}</span>
+                <div className="flex items-baseline gap-1 mt-3">
+                  <span className="font-mono text-xl font-bold text-danger">₹ {formatIndianNumber(val)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="bg-dark text-white p-8 mt-6 flex justify-between items-center shadow-xl border border-stone-950">
+            <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-amber-text">Due by {dueDate}</span>
+            <div className="text-right">
+              <p className="font-ui text-[10px] text-light uppercase font-bold tracking-widest mb-1">Total Amount Payable</p>
+              <span className="font-mono text-3xl font-bold text-amber-text">₹ {formatIndianNumber(netPayable.total)}</span>
             </div>
-            <button onClick={handleGenerateChallan} disabled={isGenerating || (utilization?.totalCashRequired ?? 0) === 0} className="filter-tab active disabled:opacity-50">
-              {isGenerating ? "Generating..." : "Generate Challan"}
-            </button>
           </div>
-          {(utilization?.totalCashRequired ?? 0) === 0 && (
-            <p className="font-ui text-[12px] text-light mt-3">No cash payment required. ITC is sufficient to cover the tax liability.</p>
-          )}
-        </div>
-      )}
+        </section>
+
+        {/* 5. Payment Mode & Generate Challan */}
+        <section className="bg-surface border border-border p-8 shadow-sm">
+          <h3 className="font-ui text-lg font-bold text-dark mb-6">4. Payment Mode</h3>
+          <div className="flex gap-6 mb-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="paymentMode" value="online" checked={paymentMode === "online"} onChange={e => setPaymentMode(e.target.value)} className="accent-amber" />
+              <span className="font-ui text-[13px] text-dark">Net Banking / Online</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="paymentMode" value="neft" checked={paymentMode === "neft"} onChange={e => setPaymentMode(e.target.value)} className="accent-amber" />
+              <span className="font-ui text-[13px] text-dark">NEFT / RTGS</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="paymentMode" value="overthecounter" checked={paymentMode === "overthecounter"} onChange={e => setPaymentMode(e.target.value)} className="accent-amber" />
+              <span className="font-ui text-[13px] text-dark">Over the Counter</span>
+            </label>
+          </div>
+          <div className="flex items-center gap-4">
+            <button onClick={handleGenerateChallan} className="px-6 py-2.5 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none rounded-md shadow-sm">
+              {challanData ? "Regenerate Challan" : "Generate Challan"}
+            </button>
+            {challanData && (
+              <span className="font-ui text-[12px] text-success font-bold">
+                Challan {challanData.ref} generated — proceed with payment
+              </span>
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

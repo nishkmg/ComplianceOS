@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { ReactNode } from 'react';
 
 export type BadgeVariant = 'amber' | 'success' | 'gray' | 'danger';
@@ -13,19 +12,23 @@ interface BadgeProps {
  * Status Badge Component
  * 
  * Small pill-shaped badge for status indicators.
- * Uses semantic colors: amber (draft), success (posted), gray (voided), danger (error)
+ * Uses semantic colors per §2.5:
+ * - amber: Draft entries
+ * - success: Posted entries, completed status
+ * - gray: Voided entries, inactive status
+ * - danger: Error states, overdue
+ * 
+ * Styling per §1.6:
+ * - radius-sm (4px)
+ * - ui-xs Syne font
+ * - 4px leading dot (when used)
  */
-export function Badge({ variant = 'gray', children, className = '' }: BadgeProps) {
-  const variantClasses = {
-    amber: 'bg-[#C8860A] text-white',
-    success: 'bg-[#16A34A] text-white',
-    gray: 'bg-[#E5E5E5] text-[#555555]',
-    danger: 'bg-[#DC2626] text-white',
-  };
+import { cn } from '@/lib/utils';
 
+export function Badge({ variant = 'gray', children, className = '' }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide rounded-[4px] ${variantClasses[variant]} ${className}`}
+      className={cn("badge", `badge-${variant}`, className)}
     >
       {children}
     </span>

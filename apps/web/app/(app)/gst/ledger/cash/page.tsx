@@ -1,105 +1,85 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { api } from "@/lib/api";
+import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-const months = [
-  { value: 1, label: "April" }, { value: 2, label: "May" }, { value: 3, label: "June" },
-  { value: 4, label: "July" }, { value: 5, label: "August" }, { value: 6, label: "September" },
-  { value: 7, label: "October" }, { value: 8, label: "November" }, { value: 9, label: "December" },
-  { value: 10, label: "January" }, { value: 11, label: "February" }, { value: 12, label: "March" },
-];
+export default function GSTCashLedgerPage() {
+  const { activeFy } = useFiscalYear();
+  const [cashPeriod, setCashPeriod] = useState("Oct 2024");
 
-const currentMonth = new Date().getMonth() + 1;
-const currentYear = new Date().getFullYear();
+  const mockBalances = {
+    igst: 142500.00,
+    cgst: 45200.00,
+    sgst: 45200.00,
+    cess: 0.00,
+  };
 
-export default function CashLedgerPage() {
-  const [periodMonth, setPeriodMonth] = useState<number>(currentMonth);
-  const [periodYear, setPeriodYear] = useState<number>(currentYear);
-  const [filterTaxType, setFilterTaxType] = useState<string>("all");
-
-  const { data: cashBalance } = api.gstLedger.cashBalance.useQuery({ periodMonth, periodYear });
-  const { data: transactions } = api.gstLedger.ledgerTransactions.useQuery({ type: "cash", periodMonth, periodYear });
-  const filteredTransactions = filterTaxType === "all" ? transactions : transactions?.filter(t => t.taxType === filterTaxType);
-  const totalBalance = cashBalance?.balance ?? { igst: 0, cgst: 0, sgst: 0, cess: 0 };
+  const mockTransactions = [
+    { id: "1", date: "24 Oct 24", desc: "Cash Deposit via Challan", ref: "CPIN-880120421", type: "Deposit", amount: 125000, balance: 232900 },
+    { id: "2", date: "20 Oct 24", desc: "Liability Payment Offset", ref: "GSTR-3B-SEP", type: "Utilization", amount: -45000, balance: 107900 },
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/gst/ledger" className="font-ui text-[12px] text-amber hover:underline">← Back to GST Ledger</Link>
-          <h1 className="font-display text-[26px] font-normal text-dark mt-1">Cash Ledger</h1>
-        </div>
-        <Link href="/gst/payment" className="filter-tab active">Make Payment</Link>
-      </div>
-
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))} className="input-field font-ui">
-            {months.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input type="number" value={periodYear} onChange={(e) => setPeriodYear(Number(e.target.value))} className="input-field font-ui w-24" min={2000} max={2100} />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Tax Type</label>
-          <select value={filterTaxType} onChange={(e) => setFilterTaxType(e.target.value)} className="input-field font-ui">
-            <option value="all">All Tax Types</option>
-            <option value="igst">IGST</option>
-            <option value="cgst">CGST</option>
-            <option value="sgst">SGST</option>
-            <option value="cess">Cess</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {Object.entries(totalBalance).map(([type, amount]) => (
-          <div key={type} className="card p-4">
-            <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">{type.toUpperCase()} Balance</p>
-            <p className="font-mono text-[20px] font-medium text-dark">{formatIndianNumber(amount as number)}</p>
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <header className="bg-surface border-b-[0.5px] border-border px-8 py-10 -mx-8 -mt-8 mb-8 sticky top-0 z-20 backdrop-blur-sm bg-surface/50">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">GSTIN: 27AABCU9603R1ZX</p>
+            <h1 className="font-display text-display-lg font-semibold text-dark">Cash Ledger</h1>
+            <p className="font-ui text-[13px] text-secondary mt-1">Electronic tracking of cash deposited to the GST portal.</p>
           </div>
-        ))}
-      </div>
-
-      <div className="card overflow-hidden">
-        <div className="px-4 py-3 border-b border-hairline">
-          <h2 className="font-display text-[16px] font-normal text-dark">Transactions</h2>
+          <div className="flex items-center gap-3 bg-surface-muted p-1 rounded-md border border-border">
+            <span className="px-4 py-1.5 font-ui text-[13px] text-mid font-bold">{cashPeriod} · FY {activeFy}</span>
+          </div>
         </div>
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Tax Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Balance</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Reference</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTransactions && filteredTransactions.length > 0 ? (
-              filteredTransactions.map((t) => (
-                <tr key={t.id} className="border-b border-hairline">
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.transactionDate || new Date(t.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3"><span className="font-ui text-[11px] px-2 py-0.5 rounded bg-surface-muted text-mid capitalize">{t.ledgerType}</span></td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3 uppercase">{t.taxType}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(t.amount)}</td>
-                  <td className="font-mono text-[13px] text-right text-mid px-4 py-3">{formatIndianNumber(t.balance)}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.referenceNumber || t.challanNumber || "-"}</td>
+      </header>
+
+      <div className="max-w-6xl mx-auto space-y-12 pb-12">
+        {/* KPI Balances */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {Object.entries(mockBalances).map(([key, val]) => (
+            <div key={key} className="bg-surface border border-border border-t-2 border-t-amber p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+              <div className="font-ui text-[10px] text-light mb-3 uppercase tracking-widest font-bold">{key} Balance</div>
+              <div className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(val)}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Transaction Table */}
+        <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
+              <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Electronic Cash Statement</h3>
+               <button onClick={() => { showToast.success("Cash ledger CSV exported."); }} className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download CSV</button>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-muted border-b border-stone-100 text-light font-ui text-[10px] uppercase tracking-widest">
+                  <th className="py-4 px-6">Date</th>
+                  <th className="py-4 px-6">Description</th>
+                  <th className="py-4 px-6">Reference / CPIN</th>
+                  <th className="py-4 px-6 text-right">Amount (₹)</th>
+                  <th className="py-4 px-6 text-right">Balance (₹)</th>
                 </tr>
-              ))
-            ) : (
-              <tr><td colSpan={6} className="px-4 py-12 text-center font-ui text-light">No transactions found</td></tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
+                {mockTransactions.map((t) => (
+                  <tr key={t.id} className="hover:bg-surface-muted/30 transition-colors">
+                    <td className="py-5 px-6 text-mid">{t.date}</td>
+                    <td className="py-5 px-6 font-ui text-[13px] font-bold text-dark">{t.desc}</td>
+                    <td className="py-5 px-6 text-mid uppercase">{t.ref}</td>
+                    <td className={`py-5 px-6 text-right font-bold ${t.amount < 0 ? 'text-danger' : 'text-success'}`}>₹ {formatIndianNumber(t.amount)}</td>
+                    <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(t.balance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

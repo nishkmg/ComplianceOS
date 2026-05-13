@@ -1,10 +1,17 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { Badge } from "@/components/ui";
-import { formatIndianNumber } from "@/lib/format";
+import { Badge } from "@/components/ui/badge";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
+import { getPayments } from "@/lib/payment-store";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Payment {
   id: string;
@@ -14,153 +21,238 @@ interface Payment {
   amount: number;
   paymentMethod: string;
   status: "recorded" | "voided";
+  type: "received" | "paid";
 }
 
-const mockPayments: Payment[] = [
-  { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp", date: "2026-04-10", amount: 50000, paymentMethod: "bank", status: "recorded" },
-  { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd", date: "2026-04-12", amount: 25000, paymentMethod: "cash", status: "recorded" },
-  { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Gamma Pvt", date: "2026-04-15", amount: 75000, paymentMethod: "cheque", status: "recorded" },
-  { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Acme Corp", date: "2026-04-08", amount: 30000, paymentMethod: "online", status: "voided" },
-];
+// ─── Mock data ────────────────────────────────────────────────────────────────
 
-const methodLabels: Record<string, string> = {
-  cash: "Cash",
-  bank: "Bank Transfer",
-  online: "Online",
-  cheque: "Cheque",
+const mockPaymentsByFy: Record<string, Payment[]> = {
+  '2026-27': [
+    { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp",   date: "2026-04-10", amount: 50000,  paymentMethod: "bank",   status: "recorded", type: "received" },
+    { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd",    date: "2026-04-12", amount: 25000,  paymentMethod: "cash",   status: "recorded", type: "received" },
+    { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X",    date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
+    { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt",   date: "2026-04-15", amount: 75000,  paymentMethod: "cheque", status: "recorded", type: "received" },
+    { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp",   date: "2026-04-08", amount: 30000,  paymentMethod: "online", status: "voided",   type: "paid" },
+  ],
+  '2025-26': [
+    { id: "101", paymentNumber: "PAY-2025-26-001", customerName: "Smith & Co",   date: "2025-08-15", amount: 75000,  paymentMethod: "bank",   status: "recorded", type: "received" },
+    { id: "102", paymentNumber: "PAY-2025-26-002", customerName: "Vendor Y",     date: "2025-10-20", amount: 95000,  paymentMethod: "online", status: "recorded", type: "paid" },
+    { id: "103", paymentNumber: "PAY-2025-26-003", customerName: "Miller Ent.",  date: "2025-12-05", amount: 45000,  paymentMethod: "cheque", status: "recorded", type: "received" },
+    { id: "104", paymentNumber: "PAY-2025-26-004", customerName: "Office Supplies Co", date: "2026-01-18", amount: 28000, paymentMethod: "cash",   status: "recorded", type: "paid" },
+    { id: "105", paymentNumber: "PAY-2025-26-005", customerName: "Beta Ltd",     date: "2026-03-10", amount: 15000,  paymentMethod: "online", status: "voided",   type: "received" },
+  ],
 };
 
-export default function PaymentsPage() {
-  const [customerSearch, setCustomerSearch] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
-  const [methodFilter, setMethodFilter] = useState("all");
+const typeOptions = ["all", "received", "paid"] as const;
 
-  const filtered = mockPayments.filter((p) => {
-    const matchCustomer = p.customerName.toLowerCase().includes(customerSearch.toLowerCase());
-    const matchMethod = methodFilter === "all" || p.paymentMethod === methodFilter;
-    const matchDateFrom = !dateFrom || p.date >= dateFrom;
-    const matchDateTo = !dateTo || p.date <= dateTo;
-    return matchCustomer && matchMethod && matchDateFrom && matchDateTo;
-  });
+// ─── Column defs ──────────────────────────────────────────────────────────────
+
+const columns: ColumnDef<Payment>[] = [
+  {
+    key: "date",
+    header: "Date",
+    sortable: true,
+    width: "120px",
+    render: (row) => (
+      <span className="font-mono text-[12px] text-mid">
+        {new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+      </span>
+    ),
+  },
+  {
+    key: "paymentNumber",
+    header: "Payment #",
+    width: "160px",
+    render: (row) => (
+      <span className="font-mono text-[13px] text-amber-text font-medium">{row.paymentNumber}</span>
+    ),
+  },
+  {
+    key: "customerName",
+    header: "From / To",
+    sortable: true,
+    render: (row) => <span className="font-ui text-[13px] text-dark">{row.customerName}</span>,
+  },
+  {
+    key: "paymentMethod",
+    header: "Method",
+    render: (row) => <span className="font-ui text-[13px] text-[12px] text-mid capitalize">{row.paymentMethod}</span>,
+  },
+  {
+    key: "type",
+    header: "Type",
+    sortable: true,
+    width: "100px",
+    render: (row) => (
+      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
+        row.type === "received"
+          ? "bg-success-bg text-success border-green-200"
+          : "bg-danger-bg text-danger border-red-200"
+      }`}>
+        {row.type}
+      </span>
+    ),
+  },
+  {
+    key: "amount",
+    header: "Amount (₹)",
+    align: "right",
+    sortable: true,
+    width: "150px",
+    render: (row) => (
+      <span className="font-mono text-[13px] font-semibold tabular-nums">
+        ₹{row.amount.toLocaleString("en-IN")}
+      </span>
+    ),
+  },
+  {
+    key: "status",
+    header: "Status",
+    align: "center",
+    width: "100px",
+    render: (row) => <Badge variant={row.status === "recorded" ? "success" : "gray"}>{row.status}</Badge>,
+  },
+];
+
+// ─── Page Component ───────────────────────────────────────────────────────────
+
+export default function PaymentsPage() {
+  const { activeFy } = useFiscalYear();
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const mockPayments = mockPaymentsByFy[activeFy] ?? mockPaymentsByFy['2026-27'];
+  const storedPayments: Payment[] = useMemo(() =>
+    getPayments().filter(p => p.fiscalYear === activeFy).map(p => ({
+      id: p.id,
+      paymentNumber: p.paymentNumber,
+      customerName: p.customerName,
+      date: p.date,
+      amount: p.amount,
+      paymentMethod: p.paymentMethod,
+      status: p.status as "recorded" | "voided",
+      type: p.type as "received" | "paid",
+    })),
+    [activeFy]
+  );
+  const allPayments = useMemo(() => [...storedPayments, ...mockPayments], [storedPayments, mockPayments]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  const filtered = useMemo(
+    () =>
+      allPayments.filter(p => {
+        if (typeFilter !== "all" && p.type !== typeFilter) return false;
+        if (search && !p.customerName.toLowerCase().includes(search.toLowerCase()) && !p.paymentNumber.toLowerCase().includes(search.toLowerCase())) return false;
+        return true;
+      }),
+    [typeFilter, search, allPayments]
+  );
+
+  const totalAmount = filtered.reduce((s, p) => s + p.amount, 0);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No payments to export."); return; }
+    const header = "Payment #,Date,From/To,Method,Type,Amount,Status";
+    const rows = filtered.map(p => `${p.paymentNumber},${p.date},"${p.customerName}",${p.paymentMethod},${p.type},${p.amount},${p.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `payments-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} payments.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Payments</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Record and track customer payments</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
+            Treasury
+          </p>
+          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Payment Ledger</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">
+            High-density overview of all incoming and outgoing fiscal transactions.
+          </p>
         </div>
-        <Link href="/payments/new" className="filter-tab active">
-          + Record Payment
-        </Link>
+        <div className="flex gap-3">
+          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+            <Icon name="download" size={14} /> Export CSV
+          </button>
+          <Link
+            href="/payments/new"
+            className="px-4 py-2 bg-amber text-white text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-md flex items-center gap-1.5"
+          >
+            <Icon name="add" size={14} /> New Entry
+          </Link>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="card p-4">
-        <div className="flex flex-wrap gap-4 items-end">
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Customer</label>
-            <input
-              type="text"
-              placeholder="Search customer..."
-              value={customerSearch}
-              onChange={(e) => setCustomerSearch(e.target.value)}
-              className="input-field font-ui w-48"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">From Date</label>
-            <input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              className="input-field font-ui"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">To Date</label>
-            <input
-              type="date"
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              className="input-field font-ui"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Method</label>
-            <select
-              value={methodFilter}
-              onChange={(e) => setMethodFilter(e.target.value)}
-              className="input-field font-ui"
+      {/* Filter + search */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
+          {typeOptions.map(t => (
+            <button
+              key={t}
+              onClick={() => setTypeFilter(t)}
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium capitalize transition-colors cursor-pointer border-none rounded-md ${
+                typeFilter === t
+                  ? "bg-surface text-dark shadow-sm"
+                  : "text-mid hover:text-dark bg-transparent"
+              }`}
             >
-              <option value="all">All Methods</option>
-              <option value="cash">Cash</option>
-              <option value="bank">Bank Transfer</option>
-              <option value="online">Online</option>
-              <option value="cheque">Cheque</option>
-            </select>
-          </div>
+              {t === "all" ? "All" : t}
+              <span className="ml-1.5 text-[10px] text-light">
+                ({t === "all" ? allPayments.length : allPayments.filter(p => p.type === t).length})
+              </span>
+            </button>
+          ))}
+        </div>
+        <div className="relative">
+          <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
+          <input
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
+            placeholder="Search entries…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
         </div>
       </div>
 
-      {/* Table */}
-      <div className="card overflow-hidden">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Payment #</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Customer</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Method</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Status</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-center">Actions</th>
+      {/* DataTable */}
+      {loading ? (
+        <TableSkeleton rows={10} columns={7} />
+      ) : (
+        <DataTable<Payment>
+          data={filtered}
+          columns={columns}
+          keyExtractor={row => row.id}
+          pageSize={15}
+          emptyState={
+            <EmptyState
+              title="No payments found"
+              description={search || typeFilter !== "all" ? "Try adjusting your search or filter." : "Record your first payment transaction."}
+              action={{ label: "New Entry", onClick: () => window.location.href = "/payments/new" }}
+              icon="account_balance_wallet"
+            />
+          }
+          footer={
+            <tr className="bg-surface-muted border-t-2 border-border">
+              <td colSpan={5} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                Total ({filtered.length} entries)
+              </td>
+              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                ₹{totalAmount.toLocaleString("en-IN")}
+              </td>
+              <td />
             </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-4 py-12 text-center font-ui text-light">
-                  No payments found
-                </td>
-              </tr>
-            ) : (
-              filtered.map((payment) => (
-                <tr key={payment.id} className="border-b border-hairline hover:bg-surface-muted transition-colors">
-                  <td className="font-mono text-[13px] text-amber px-4 py-3">
-                    <Link href={`/payments/${payment.id}`} className="hover:underline">
-                      {payment.paymentNumber}
-                    </Link>
-                  </td>
-                  <td className="font-ui text-[13px] text-dark px-4 py-3">{payment.customerName}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{payment.date}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">
-                    {formatIndianNumber(payment.amount)}
-                  </td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3">{methodLabels[payment.paymentMethod]}</td>
-                  <td className="px-4 py-3">
-                    <Badge variant={payment.status === "recorded" ? "success" : "gray"}>
-                      {payment.status}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <div className="flex gap-3 justify-center">
-                      <Link href={`/payments/${payment.id}`} className="font-ui text-[12px] text-amber hover:underline">
-                        View
-                      </Link>
-                      {payment.status === "recorded" && (
-                        <button className="font-ui text-[12px] text-danger hover:underline">Void</button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+          }
+        />
+      )}
     </div>
   );
 }

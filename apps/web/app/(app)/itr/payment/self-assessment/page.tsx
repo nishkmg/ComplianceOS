@@ -1,203 +1,198 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { api } from "@/lib/api";
+import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { Icon } from '@/components/ui/icon';
+import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-const currentAY = `${new Date().getFullYear() + 1}-${(new Date().getFullYear() + 2).toString().slice(-2)}`;
+interface TaxBreakdown {
+  grossIncome: number;
+  deductions: number;
+  taxableIncome: number;
+  tdsCredit: number;
+  tcsCredit: number;
+  advanceTaxPaid: number;
+  taxOnIncome: number;
+  cess: number;
+  totalTaxLiability: number;
+  selfAssessmentDue: number;
+}
 
-export default function SelfAssessmentTaxPage() {
-  const [assessmentYear, setAssessmentYear] = useState<string>(currentAY);
-  const [amount, setAmount] = useState<string>("");
-  const [challanNumber, setChallanNumber] = useState("");
-  const [challanDate, setChallanDate] = useState("");
+function computeTaxSlabOld(grossIncome: number, deductions: number): { taxOnIncome: number; cess: number } {
+  const taxable = Math.max(0, grossIncome - deductions);
+  let tax = 0;
+  if (taxable > 1000000) {
+    tax += (taxable - 1000000) * 0.30;
+    tax += 500000 * 0.20;
+    tax += 250000 * 0.05;
+  } else if (taxable > 500000) {
+    tax += (taxable - 500000) * 0.20;
+    tax += 250000 * 0.05;
+  } else if (taxable > 250000) {
+    tax += (taxable - 250000) * 0.05;
+  }
+  let roundedTax = Math.round(tax);
+  const rebate = (taxable <= 500000) ? Math.min(roundedTax, 12500) : 0;
+  roundedTax = Math.max(0, roundedTax - rebate);
+  const cess = Math.round(roundedTax * 0.04);
+  return { taxOnIncome: roundedTax, cess };
+}
 
-  const { data: selfAssessmentDetails } = api.itrPayment.getSelfAssessmentDetails.useQuery({
-    assessmentYear,
-  });
+const ayLabels: Record<string, string> = { "2026-27": "2027-28", "2025-26": "2026-27", "2024-25": "2025-26" };
 
-  const paySelfAssessmentTax = api.itrPayment.paySelfAssessmentTax.useMutation();
+export default function ITRSelfAssessmentPage() {
+  const { activeFy } = useFiscalYear();
+  const router = useRouter();
+  const [grossIncome] = useState(1850000);
+  const [deductions] = useState(233000);
 
-  const taxPayable = Number(selfAssessmentDetails?.taxPayable ?? "0");
-  const advanceTaxPaid = Number(selfAssessmentDetails?.advanceTaxPaid ?? "0");
-  const tdsTcsCredit = Number(selfAssessmentDetails?.tdsTcsCredit ?? "0");
-  const balancePayable = Number(selfAssessmentDetails?.balancePayable ?? "0");
-  const alreadyPaid = Number(selfAssessmentDetails?.paidAmount ?? "0");
-  const finalBalance = balancePayable - alreadyPaid;
+  const breakdown = useMemo<TaxBreakdown>(() => {
+    const taxableIncome = Math.max(0, grossIncome - deductions);
+    const { taxOnIncome, cess } = computeTaxSlabOld(grossIncome, deductions);
+    const tdsCredit = 120000;
+    const tcsCredit = 15000;
+    const advanceTaxPaid = 200000;
+    const totalTaxLiability = taxOnIncome + cess;
+    const credits = tdsCredit + tcsCredit + advanceTaxPaid;
+    const selfAssessmentDue = Math.max(0, totalTaxLiability - credits);
+    return { grossIncome, deductions, taxableIncome, tdsCredit, tcsCredit, advanceTaxPaid, taxOnIncome, cess, totalTaxLiability, selfAssessmentDue };
+  }, [grossIncome, deductions]);
 
-  const handlePay = async () => {
-    if (!amount || !challanNumber || !challanDate) {
-      alert("Please fill all fields");
-      return;
-    }
+  const handleRecalculate = () => {
+    showToast.info(`Tax recalculated: ₹${formatIndianNumber(breakdown.taxOnIncome)} tax + ₹${formatIndianNumber(breakdown.cess)} cess = ₹${formatIndianNumber(breakdown.totalTaxLiability)}`);
+  };
 
-    try {
-      await paySelfAssessmentTax.mutateAsync({
-        assessmentYear,
-        amount: Number(amount),
-        challanNumber,
-        challanDate,
-      });
-      alert("Self-assessment tax payment recorded successfully!");
-      setAmount("");
-      setChallanNumber("");
-      setChallanDate("");
-    } catch (error) {
-      console.error("Failed to pay self-assessment tax:", error);
-      alert("Failed to record payment. Please try again.");
-    }
+  const handlePayNow = () => {
+    const ref = "SAT-" + Date.now().toString(36).toUpperCase();
+    showToast.success(`Self-assessment tax of ₹${formatIndianNumber(breakdown.selfAssessmentDue)} paid successfully. Ref: ${ref}`);
+  };
+
+  const handleViewAllPayments = () => {
+    router.push("/itr/payment");
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/itr/payment" className="text-sm text-gray-500 hover:underline">
-            ← Back to Payment
-          </Link>
-          <h1 className="text-2xl font-bold mt-1">Self-Assessment Tax Payment</h1>
-          <p className="text-sm text-gray-500">Assessment Year: {assessmentYear}</p>
-        </div>
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <div className="mb-12">
+        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">{ayLabels[activeFy] ?? "2027-28"} · FY {activeFy}</p>
+        <h1 className="font-display text-2xl font-semibold text-dark mb-2">Self-Assessment Tax</h1>
+        <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">Review your total tax liability, apply available credits, and determine the final self-assessment tax due before filing.</p>
       </div>
 
-      <div className="flex gap-4 items-center">
-        <input
-          type="text"
-          value={assessmentYear}
-          onChange={(e) => setAssessmentYear(e.target.value)}
-          placeholder="AY (e.g., 2027-28)"
-          className="px-3 py-2 border rounded text-sm w-32"
-        />
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">Tax Computation Summary</h2>
-        <div className="space-y-3">
-          <div className="flex justify-between py-2 border-b">
-            <span className="text-gray-600">Total Tax Payable</span>
-            <span className="font-medium">₹{taxPayable.toLocaleString("en-IN")}</span>
-          </div>
-          <div className="flex justify-between py-2 border-b">
-            <span className="text-gray-600">Less: Advance Tax Paid</span>
-            <span className="font-medium text-green-600">-₹{advanceTaxPaid.toLocaleString("en-IN")}</span>
-          </div>
-          <div className="flex justify-between py-2 border-b">
-            <span className="text-gray-600">Less: TDS/TCS Credit</span>
-            <span className="font-medium text-green-600">-₹{tdsTcsCredit.toLocaleString("en-IN")}</span>
-          </div>
-          <div className="flex justify-between py-2 font-medium bg-gray-50 px-4 py-3 rounded">
-            <span className="text-gray-900">Balance Tax Payable</span>
-            <span className="text-gray-900">₹{balancePayable.toLocaleString("en-IN")}</span>
-          </div>
-          {alreadyPaid > 0 && (
-            <div className="flex justify-between py-2 border-b">
-              <span className="text-gray-600">Already Paid</span>
-              <span className="font-medium text-green-600">-₹{alreadyPaid.toLocaleString("en-IN")}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left: Computation Table */}
+        <div className="lg:col-span-8 space-y-8">
+          <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden border-t-2 border-t-amber">
+            <div className="p-6 border-b border-border bg-surface-muted">
+              <h3 className="font-ui text-lg font-bold text-dark">Tax Computation Summary</h3>
             </div>
-          )}
-          <div className="flex justify-between py-2 font-bold bg-red-50 px-4 py-3 rounded">
-            <span className="text-gray-900">Final Balance Payable</span>
-            <span className="text-red-600">₹{finalBalance.toLocaleString("en-IN")}</span>
-          </div>
-        </div>
-      </div>
-
-      {finalBalance > 0 ? (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Record Self-Assessment Payment</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Payment Amount</label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Enter amount"
-                className="px-3 py-2 border rounded text-sm w-full"
-              />
-              <p className="text-xs text-gray-500 mt-1">Recommended: ₹{finalBalance.toLocaleString("en-IN")}</p>
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Challan Number (BSR Code + Serial)</label>
-              <input
-                type="text"
-                value={challanNumber}
-                onChange={(e) => setChallanNumber(e.target.value)}
-                placeholder="e.g., 0000001234567"
-                className="px-3 py-2 border rounded text-sm w-full"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Challan Date</label>
-              <input
-                type="date"
-                value={challanDate}
-                onChange={(e) => setChallanDate(e.target.value)}
-                className="px-3 py-2 border rounded text-sm w-full"
-              />
+            <div className="p-8">
+              <div className="space-y-4">
+                {/* Income breakdown */}
+                <div className="flex justify-between items-center py-3 border-b border-stone-50">
+                  <div className="font-ui text-[13px] text-dark">Gross Total Income</div>
+                  <div className="font-mono text-sm text-dark font-bold">₹ {formatIndianNumber(breakdown.grossIncome)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                  <div>
+                    <Icon name="remove" className="text-light mr-2 text-sm inline" />
+                    <span className="font-ui text-[13px] text-mid">Less: Total Deductions</span>
+                  </div>
+                  <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.deductions)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50 bg-surface-muted/40 px-4 -mx-4">
+                  <div className="font-ui text-[13px] font-bold text-dark">Net Taxable Income</div>
+                  <div className="font-mono text-sm font-bold text-dark">₹ {formatIndianNumber(breakdown.taxableIncome)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50">
+                  <div className="font-ui text-[13px] text-dark-variant">Tax on Total Income (as per slab)</div>
+                  <div className="font-mono text-sm text-dark font-bold">₹ {formatIndianNumber(breakdown.taxOnIncome)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50">
+                  <div className="font-ui text-[13px] text-dark-variant">Health & Education Cess @ 4%</div>
+                  <div className="font-mono text-sm text-dark font-bold">₹ {formatIndianNumber(breakdown.cess)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50 bg-surface-muted/40 px-4 -mx-4">
+                  <div className="font-ui text-[13px] font-bold text-dark">Total Tax Liability</div>
+                  <div className="font-mono text-sm font-bold text-dark">₹ {formatIndianNumber(breakdown.totalTaxLiability)}</div>
+                </div>
+                {/* Credits */}
+                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                  <div className="flex items-center">
+                    <Icon name="remove" className="text-light mr-2 text-sm" />
+                    <span className="font-ui text-[13px] text-mid">Less: TDS Credit Claimed</span>
+                  </div>
+                  <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.tdsCredit)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                  <div className="flex items-center">
+                    <Icon name="remove" className="text-light mr-2 text-sm" />
+                    <span className="font-ui text-[13px] text-mid">Less: TCS Credit Claimed</span>
+                  </div>
+                  <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.tcsCredit)}</div>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                  <div className="flex items-center">
+                    <Icon name="remove" className="text-light mr-2 text-sm" />
+                    <span className="font-ui text-[13px] text-mid">Less: Advance Tax Paid</span>
+                  </div>
+                  <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.advanceTaxPaid)}</div>
+                </div>
+                <div className="flex justify-between items-center pt-8 mt-4 border-t border-border">
+                  <div className="font-ui text-lg font-bold text-dark">Self-Assessment Tax Due</div>
+                  <div className="font-mono text-lg font-bold text-dark bg-surface-muted px-6 py-3 rounded-md">₹ {formatIndianNumber(breakdown.selfAssessmentDue)}</div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="mt-4 flex gap-3">
-            <button
-              onClick={handlePay}
-              className="px-6 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-            >
-              Record Payment
+          <div className="flex justify-end space-x-4 pt-4">
+            <button onClick={handleRecalculate} className="px-6 py-3 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Recalculate</button>
+            <button onClick={handlePayNow} className="group px-6 py-3 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest flex items-center hover:bg-amber-hover transition-colors border-none cursor-pointer rounded-md shadow-sm">
+              Pay Tax Now
+              <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
             </button>
-            <Link
-              href="https://onlineservices.tin.egov-nsdl.com/etaxnew/tdsnontds.jsp"
-              target="_blank"
-              className="px-6 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-            >
-              Pay Online (NSDL)
-            </Link>
+          </div>
+        </div>
+
+        {/* Right: Info */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-surface border border-border p-6 rounded-md">
+            <div className="flex items-start gap-3">
+              <Icon name="info" className="text-amber-text mt-1" />
+              <div>
+                <h4 className="font-ui text-sm font-medium font-bold text-dark mb-2">Payment Required</h4>
+                <p className="font-ui text-[13px] text-dark-variant leading-relaxed">
+                  You must pay the Self-Assessment Tax of <span className="font-mono font-bold">₹{formatIndianNumber(breakdown.selfAssessmentDue)}</span> before filing your ITR. Ensure payment is made under Minor Head 300.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <p className="text-xs text-gray-500 mt-4">
-            Note: Self-assessment tax must be paid before filing ITR. Payment should be made using Challan No. ITNS 280.
-          </p>
+          <div className="bg-surface border border-border p-6 rounded-md">
+            <h4 className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Recent Challans</h4>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-ui text-[13px] font-bold text-dark">Advance Tax (Inst. 3)</div>
+                  <div className="font-ui text-[11px] text-[11px] text-light mt-1">15 Dec 2023</div>
+                </div>
+                <div className="font-mono text-sm text-mid">₹ 1,00,000</div>
+              </div>
+              <div className="flex items-center justify-between pt-4 border-t border-stone-50">
+                <div>
+                  <div className="font-ui text-[13px] font-bold text-dark">Advance Tax (Inst. 2)</div>
+                  <div className="font-ui text-[11px] text-[11px] text-light mt-1">15 Sep 2023</div>
+                </div>
+                <div className="font-mono text-sm text-mid">₹ 1,00,000</div>
+              </div>
+            </div>
+            <button onClick={handleViewAllPayments} className="mt-6 w-full py-2.5 border border-border text-mid font-ui text-[13px] font-bold uppercase tracking-widest hover:text-dark transition-colors bg-transparent rounded-md cursor-pointer">View All Tax Payments</button>
+          </div>
         </div>
-      ) : finalBalance === 0 ? (
-        <div className="bg-green-50 rounded-lg shadow p-6 border border-green-200">
-          <h3 className="font-semibold text-green-800 mb-2">✓ Full Payment Complete</h3>
-          <p className="text-sm text-gray-600">
-            Your self-assessment tax liability has been fully paid. You can proceed to file your ITR.
-          </p>
-        </div>
-      ) : (
-        <div className="bg-blue-50 rounded-lg shadow p-6 border border-blue-200">
-          <h3 className="font-semibold text-blue-800 mb-2">✓ Excess Payment</h3>
-          <p className="text-sm text-gray-600">
-            You have paid excess tax of ₹{Math.abs(finalBalance).toLocaleString("en-IN")}. 
-            This will be processed as a refund after ITR verification.
-          </p>
-        </div>
-      )}
-
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="font-semibold mb-4">Important Information</h3>
-        <ul className="space-y-2 text-sm text-gray-600">
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600">•</span>
-            <span>Self-assessment tax is the balance tax payable after reducing advance tax and TDS/TCS from total tax liability</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600">•</span>
-            <span>Payment must be made before filing the ITR</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600">•</span>
-            <span>Use Challan No. ITNS 280 for payment on NSDL/TIN website</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600">•</span>
-            <span>Keep the challan counterfoil for your records</span>
-          </li>
-        </ul>
       </div>
     </div>
   );

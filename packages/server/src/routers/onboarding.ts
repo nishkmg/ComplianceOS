@@ -32,14 +32,13 @@ export const onboardingRouter = router({
    */
   seedCoa: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid(),
       businessType: z.string(),
       industry: z.string(),
       refinements: z.any().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { accountCount } = await seedCoa(
-        input.tenantId,
+        ctx.tenantId,
         input.businessType,
         input.industry,
         input.refinements,
@@ -53,14 +52,13 @@ export const onboardingRouter = router({
    */
   setupOpeningBalances: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid(),
       fiscalYear: z.string(),
       input: z.any(),
     }))
     .mutation(async ({ ctx, input }) => {
       const result = await setupOpeningBalances(
-        input.tenantId,
-        ctx.session!.user.id,
+        ctx.tenantId,
+        ctx.session.user.id,
         input.fiscalYear,
         input.input,
       );
@@ -73,7 +71,6 @@ export const onboardingRouter = router({
    */
   saveProgress: protectedProcedure
     .input(z.object({
-      tenantId: z.string().uuid(),
       step: z.number().int().min(1).max(5),
       data: z.record(z.string(), z.any()),
     }))
@@ -81,86 +78,82 @@ export const onboardingRouter = router({
       const existing = await ctx.db
         .select({ onboardingData: tenants.onboardingData })
         .from(tenants)
-        .where(eq(tenants.id, input.tenantId));
+        .where(eq(tenants.id, ctx.tenantId));
 
       const current = existing[0]?.onboardingData ?? {};
 
       await ctx.db
         .update(tenants)
         .set({ onboardingData: { ...current, ...input.data } })
-        .where(eq(tenants.id, input.tenantId));
+        .where(eq(tenants.id, ctx.tenantId));
 
       return { success: true };
     }),
 
   /**
-   * Read back the full onboarding state for a tenant.
+   * Read back the full onboarding state for the current tenant.
    */
-  getProgress: protectedProcedure
-    .input(z.object({ tenantId: z.string().uuid() }))
-    .query(async ({ ctx, input }) => {
-      const row = await ctx.db
-        .select({
-          onboardingStatus: tenants.onboardingStatus,
-          onboardingData: tenants.onboardingData,
-          gstConfig: tenants.gstConfig,
-        })
-        .from(tenants)
-        .where(eq(tenants.id, input.tenantId));
+  getProgress: protectedProcedure.query(async ({ ctx }) => {
+    const row = await ctx.db
+      .select({
+        onboardingStatus: tenants.onboardingStatus,
+        onboardingData: tenants.onboardingData,
+        gstConfig: tenants.gstConfig,
+      })
+      .from(tenants)
+      .where(eq(tenants.id, ctx.tenantId));
 
-      if (!row[0]) {
-        return {
-          currentStep: 1,
-          completedSteps: [] as number[],
-          data: {} as Record<string, unknown>,
-          onboardingStatus: "in_progress",
-          gstConfig: {} as Record<string, unknown>,
-        };
-      }
-
-      const data = (row[0].onboardingData ?? {}) as Record<string, unknown>;
-      const completedSteps: number[] = [];
-      if (data.businessProfile) completedSteps.push(1);
-      if (data.coa) completedSteps.push(2);
-      if (data.openingBalances) completedSteps.push(3);
-      if (data.fyGst) completedSteps.push(4);
-      if (data.moduleActivation) completedSteps.push(5);
-
-      const currentStep = completedSteps.length === 5
-        ? 5
-        : ([1, 2, 3, 4, 5].find((s) => !completedSteps.includes(s)) ?? 1);
-
+    if (!row[0]) {
       return {
-        currentStep,
-        completedSteps,
-        data,
-        onboardingStatus: (row[0].onboardingStatus ?? "in_progress") as string,
-        gstConfig: (row[0].gstConfig ?? {}) as Record<string, unknown>,
+        currentStep: 1,
+        completedSteps: [] as number[],
+        data: {} as Record<string, unknown>,
+        onboardingStatus: "in_progress",
+        gstConfig: {} as Record<string, unknown>,
       };
-    }),
+    }
+
+    const data = (row[0].onboardingData ?? {}) as Record<string, unknown>;
+    const completedSteps: number[] = [];
+    if (data.businessProfile) completedSteps.push(1);
+    if (data.coa) completedSteps.push(2);
+    if (data.openingBalances) completedSteps.push(3);
+    if (data.fyGst) completedSteps.push(4);
+    if (data.moduleActivation) completedSteps.push(5);
+
+    const currentStep = completedSteps.length === 5
+      ? 5
+      : ([1, 2, 3, 4, 5].find((s) => !completedSteps.includes(s)) ?? 1);
+
+    return {
+      currentStep,
+      completedSteps,
+      data,
+      onboardingStatus: (row[0].onboardingStatus ?? "in_progress") as string,
+      gstConfig: (row[0].gstConfig ?? {}) as Record<string, unknown>,
+    };
+  }),
 
   /**
    * Mark onboarding as complete and persist GST config.
    */
-  completeOnboarding: protectedProcedure
-    .input(z.object({ tenantId: z.string().uuid() }))
-    .mutation(async ({ ctx, input }) => {
-      const row = await ctx.db
-        .select({ onboardingData: tenants.onboardingData })
-        .from(tenants)
-        .where(eq(tenants.id, input.tenantId));
+  completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+    const row = await ctx.db
+      .select({ onboardingData: tenants.onboardingData })
+      .from(tenants)
+      .where(eq(tenants.id, ctx.tenantId));
 
-      const onboardingData = (row[0]?.onboardingData ?? {}) as Record<string, unknown>;
-      const gstConfig = (onboardingData.fyGst ?? {}) as Record<string, unknown>;
+    const onboardingData = (row[0]?.onboardingData ?? {}) as Record<string, unknown>;
+    const gstConfig = (onboardingData.fyGst ?? {}) as Record<string, unknown>;
 
-      await ctx.db
-        .update(tenants)
-        .set({
-          onboardingStatus: "complete",
-          gstConfig,
-        })
-        .where(eq(tenants.id, input.tenantId));
+    await ctx.db
+      .update(tenants)
+      .set({
+        onboardingStatus: "complete",
+        gstConfig,
+      })
+      .where(eq(tenants.id, ctx.tenantId));
 
-      return { success: true };
-    }),
+    return { success: true };
+  }),
 });

@@ -1,292 +1,234 @@
-// @ts-nocheck
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { formatINR, daysOverdue } from "@/lib/format-inr";
+import { useParams, useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-interface OutstandingInvoice {
-  id: string;
-  invoiceNumber: string;
-  date: string;
-  dueDate: string;
-  grandTotal: number;
-  amountPaid: number;
-  outstandingAmount: number;
-  status: string;
+// ─── Mock data ────────────────────────────────────────────────────────────────
+
+interface CustomerData {
+  name: string; gstin: string; address: string; email: string;
+  totalInvoiced: number; outstanding: number; overdue: number; status: string; age: number;
 }
 
-interface PaymentRecord {
-  id: string;
-  paymentNumber: string;
-  date: string;
-  amount: number;
-  paymentMethod: string;
-  status: string;
+interface InvoiceRow {
+  id: string; number: string; date: string; dueDate: string;
+  amount: number; balance: number; status: string;
 }
 
-interface CustomerDetail {
-  customerName: string;
-  totalOutstanding: number;
-  outstandingInvoices: OutstandingInvoice[];
-  paymentHistory: PaymentRecord[];
-}
+const customers: Record<string, CustomerData> = {
+  reliance: {
+    name: "Reliance Industries Ltd.", gstin: "27AAACA6873Q1Z2",
+    address: "Maker Chambers IV, 222 Nariman Point, Mumbai, Maharashtra — 400021",
+    email: "billing@ril.com", totalInvoiced: 4250000, outstanding: 850000, overdue: 125000, status: "Active", age: 124,
+  },
+  acme: {
+    name: "Acme Corporation", gstin: "09AABCT1234E1ZP",
+    address: "12 Business Park, Andheri East, Mumbai — 400093",
+    email: "accounts@acmecorp.in", totalInvoiced: 1850000, outstanding: 412000, overdue: 180000, status: "Active", age: 89,
+  },
+  techsol: {
+    name: "TechSolutions India", gstin: "29AABCT5678K1ZR",
+    address: "Whitefield Main Road, Bengaluru — 560066",
+    email: "finance@techsol.in", totalInvoiced: 980000, outstanding: 245000, overdue: 0, status: "Active", age: 45,
+  },
+  delta: {
+    name: "Delta Systems", gstin: "33AABCT9012K1ZL",
+    address: "Cyber City, Hitech City, Hyderabad — 500081",
+    email: "payables@deltasys.in", totalInvoiced: 750000, outstanding: 195000, overdue: 45000, status: "Active", age: 62,
+  },
+};
 
-async function fetchCustomer(customerName: string): Promise<CustomerDetail> {
-  const encoded = encodeURIComponent(customerName);
-  const response = await fetch(`/api/trpc/receivables.customer?input=${encodeURIComponent(JSON.stringify({ customerName }))}`);
-  if (!response.ok) throw new Error("Failed to load customer data");
-  const json = await response.json();
-  return json.result?.data ?? { customerName, totalOutstanding: 0, outstandingInvoices: [], paymentHistory: [] };
-}
+const invoicesByCustomer: Record<string, InvoiceRow[]> = {
+  reliance: [
+    { id: "1", number: "INV-2026-27-001", date: "15 Apr 2026", dueDate: "15 May 2026", amount: 200600, balance: 0, status: "paid" },
+    { id: "2", number: "INV-2026-27-003", date: "10 May 2026", dueDate: "09 Jun 2026", amount: 150000, balance: 150000, status: "overdue" },
+    { id: "101", number: "INV-2025-26-001", date: "12 Jan 2026", dueDate: "11 Feb 2026", amount: 180000, balance: 0, status: "paid" },
+  ],
+  acme: [
+    { id: "3", number: "INV-2026-27-002", date: "18 Apr 2026", dueDate: "18 May 2026", amount: 412000, balance: 250000, status: "partial" },
+    { id: "102", number: "INV-2025-26-002", date: "10 Nov 2025", dueDate: "10 Dec 2025", amount: 310000, balance: 0, status: "paid" },
+  ],
+  techsol: [
+    { id: "4", number: "INV-2026-27-005", date: "25 Apr 2026", dueDate: "25 May 2026", amount: 245000, balance: 245000, status: "pending" },
+  ],
+  delta: [
+    { id: "5", number: "INV-2026-27-004", date: "10 Apr 2026", dueDate: "10 May 2026", amount: 195000, balance: 195000, status: "overdue" },
+    { id: "103", number: "INV-2025-26-003", date: "05 Aug 2025", dueDate: "04 Sep 2025", amount: 280000, balance: 0, status: "paid" },
+  ],
+};
 
-function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, { label: string; className: string }> = {
-    sent: { label: "Sent", className: "bg-blue-100 text-blue-800" },
-    partially_paid: { label: "Partial", className: "bg-yellow-100 text-yellow-800" },
-    paid: { label: "Paid", className: "bg-green-100 text-green-800" },
-    overdue: { label: "Overdue", className: "bg-red-100 text-red-800" },
-  };
-  const cfg = map[status] ?? { label: status, className: "bg-gray-100 text-gray-800" };
-  return (
-    <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${cfg.className}`}>
-      {cfg.label}
-    </span>
-  );
-}
-
-type Tab = "invoices" | "payments";
+// ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function CustomerDetailPage() {
+  const { activeFy } = useFiscalYear();
   const params = useParams();
   const router = useRouter();
-  const customerName = typeof params.customerId === "string" ? decodeURIComponent(params.customerId) : "";
-  const [data, setData] = useState<CustomerDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<Tab>("invoices");
+  const customerId = params.customerId as string;
 
-  useEffect(() => {
-    if (!customerName) return;
-    fetchCustomer(customerName)
-      .then((d) => {
-        setData(d);
-        setLoading(false);
-      })
-      .catch((err: Error) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [customerName]);
+  const [activeTab, setActiveTab] = useState("Invoices");
+  const customer = customers[customerId];
 
-  if (!customerName) {
+  // FY-aware invoices — filter by FY prefix in invoice number
+  const allInvoices = invoicesByCustomer[customerId] ?? [];
+  const invoices = useMemo(() =>
+    allInvoices.filter(inv => inv.number.includes(activeFy)),
+    [allInvoices, activeFy]
+  );
+
+  if (!customer) {
     return (
-      <div className="space-y-4">
-        <p className="text-gray-500">No customer specified</p>
-        <Link href="/receivables" className="text-blue-600 hover:underline">
-          ← Back to Receivables
-        </Link>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
-        <div className="h-64 bg-gray-200 rounded animate-pulse" />
-      </div>
-    );
-  }
-
-  if (error || !data) {
-    return (
-      <div className="space-y-4">
-        <p className="text-red-600">Error: {error ?? "No data"}</p>
-        <Link href="/receivables" className="text-blue-600 hover:underline">
-          ← Back to Receivables
-        </Link>
+      <div className="flex flex-col items-center justify-center py-20">
+        <Icon name="search_off" size={48} className="text-lighter mb-4" />
+        <p className="font-ui text-[13px] text-mid">Customer not found.</p>
+        <Link href="/receivables" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">Back to Receivables</Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-[10px] text-light uppercase tracking-widest" aria-label="Breadcrumb">
+        <Link href="/receivables" className="hover:text-dark transition-colors no-underline">Receivables</Link>
+        <Icon name="chevron_right" size={14} className="text-lighter" />
+        <span className="text-mid font-medium">{customer.name}</span>
+      </nav>
+
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push("/receivables")}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              ←
-            </button>
-            <h1 className="text-2xl font-bold text-gray-900">{data.customerName}</h1>
-          </div>
-          <div className="mt-1 flex items-center gap-4">
-            <p className="text-sm text-gray-500">
-              Total Outstanding:{" "}
-              <span className="font-semibold text-gray-900">
-                {formatINR(data.totalOutstanding)}
-              </span>
-            </p>
-          </div>
+          <div className="flex items-center gap-3 mb-1">
+      <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">{customer.name}</h1>
+      <Badge variant="success">Active</Badge>
+    </div>
+    <p className="font-ui text-[13px] text-secondary">
+            {customer.gstin} · {customer.email} · {customer.age} days on ledger
+          </p>
         </div>
-        <Link
-          href={`/payments/record?customer=${encodeURIComponent(data.customerName)}`}
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 font-medium"
-        >
-          Record Payment
-        </Link>
+        <div className="flex gap-3">
+          <button onClick={() => showToast.success("Edit mode opened.")} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+            <Icon name="edit" size={14} /> Edit Details
+          </button>
+          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+            <Icon name="add" size={14} /> Record Payment
+          </button>
+        </div>
+      </div>
+
+      {/* KPI strip */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-border-subtle">
+          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Total Invoiced (LTD)</p>
+          <p className="font-mono text-xl text-dark tabular-nums font-bold">
+            {formatIndianNumber(customer.totalInvoiced, { currency: true })}
+          </p>
+        </div>
+        <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-amber">
+          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Outstanding</p>
+          <p className="font-mono text-xl text-amber tabular-nums font-bold">
+            {formatIndianNumber(customer.outstanding, { currency: true })}
+          </p>
+        </div>
+        <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-danger">
+          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Overdue</p>
+          <p className="font-mono text-xl text-danger tabular-nums font-bold">
+            {formatIndianNumber(customer.overdue, { currency: true })}
+          </p>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="flex gap-6">
+      <div className="border-b border-border flex gap-6">
+        {["Invoices", "Payments", "Ledger History"].map(tab => (
           <button
-            onClick={() => setActiveTab("invoices")}
-            className={`pb-2 text-sm font-medium border-b-2 ${
-              activeTab === "invoices"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`pb-3 px-1 font-ui text-[13px] text-[12px] font-bold uppercase tracking-widest border-b-2 border-none bg-transparent cursor-pointer transition-colors ${
+              activeTab === tab
+                ? "border-amber text-amber"
+                : "border-transparent text-mid hover:text-dark"
             }`}
           >
-            Outstanding Invoices ({data.outstandingInvoices.length})
+            {tab}
           </button>
-          <button
-            onClick={() => setActiveTab("payments")}
-            className={`pb-2 text-sm font-medium border-b-2 ${
-              activeTab === "payments"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Payment History ({data.paymentHistory.length})
-          </button>
-        </nav>
+        ))}
       </div>
 
-      {/* Tab Content */}
-      {activeTab === "invoices" && (
-        <div className="bg-white rounded-lg shadow">
-          {data.outstandingInvoices.length === 0 ? (
-            <div className="px-6 py-8 text-center text-gray-500">
-              No outstanding invoices for this customer
-            </div>
-          ) : (
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
-                <tr>
-                  <th className="px-6 py-3 text-left text-gray-500 font-medium">Invoice #</th>
-                  <th className="px-6 py-3 text-left text-gray-500 font-medium">Date</th>
-                  <th className="px-6 py-3 text-left text-gray-500 font-medium">Due Date</th>
-                  <th className="px-6 py-3 text-right text-gray-500 font-medium">Amount</th>
-                  <th className="px-6 py-3 text-right text-gray-500 font-medium">Outstanding</th>
-                  <th className="px-6 py-3 text-center text-gray-500 font-medium">Days Overdue</th>
-                  <th className="px-6 py-3 text-center text-gray-500 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.outstandingInvoices.map((inv) => {
-                  const overdue = daysOverdue(inv.dueDate);
-                  const isOverdue = overdue > 0;
-                  return (
-                    <tr key={inv.id} className="border-b hover:bg-gray-50">
-                      <td className="px-6 py-3 font-medium text-gray-900">{inv.invoiceNumber}</td>
-                      <td className="px-6 py-3 text-gray-600">
-                        {new Date(inv.date).toLocaleDateString("en-IN", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </td>
-                      <td className="px-6 py-3 text-gray-600">
-                        {new Date(inv.dueDate).toLocaleDateString("en-IN", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </td>
-                      <td className="px-6 py-3 text-right font-mono text-gray-900">
-                        {formatINR(inv.grandTotal)}
-                      </td>
-                      <td className="px-6 py-3 text-right font-mono font-semibold text-gray-900">
-                        {formatINR(inv.outstandingAmount)}
-                      </td>
-                      <td className="px-6 py-3 text-center">
-                        {isOverdue ? (
-                          <span
-                            className={`inline-flex px-2 py-0.5 rounded text-xs font-mono ${
-                              overdue > 90
-                                ? "bg-red-100 text-red-800"
-                                : overdue > 60
-                                ? "bg-orange-100 text-orange-800"
-                                : overdue > 30
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-green-100 text-green-800"
-                            }`}
-                          >
-                            {overdue}d
-                          </span>
-                        ) : (
-                          <span className="text-gray-400 text-xs">Not due</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-3 text-center">
-                        <StatusBadge status={isOverdue ? "overdue" : inv.status} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+      {/* Tab content */}
+      {activeTab === "Payments" && (
+        <div className="bg-surface border border-border p-8 rounded-md text-center">
+          <p className="font-ui text-[13px] text-mid">Payment history for this customer will appear here.</p>
+        </div>
+      )}
+      {activeTab === "Ledger History" && (
+        <div className="bg-surface border border-border p-8 rounded-md text-center">
+          <p className="font-ui text-[13px] text-mid">Ledger entries for this customer will appear here.</p>
         </div>
       )}
 
-      {activeTab === "payments" && (
-        <div className="bg-white rounded-lg shadow">
-          {data.paymentHistory.length === 0 ? (
-            <div className="px-6 py-8 text-center text-gray-500">
-              No payment history for this customer
-            </div>
-          ) : (
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
-                <tr>
-                  <th className="px-6 py-3 text-left text-gray-500 font-medium">Payment #</th>
-                  <th className="px-6 py-3 text-left text-gray-500 font-medium">Date</th>
-                  <th className="px-6 py-3 text-right text-gray-500 font-medium">Amount</th>
-                  <th className="px-6 py-3 text-left text-gray-500 font-medium">Method</th>
-                  <th className="px-6 py-3 text-center text-gray-500 font-medium">Status</th>
+      {/* Invoices */}
+      {activeTab === "Invoices" && (
+      <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-surface-muted border-b border-border">
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Invoice #</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Date</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Due Date</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Amount (₹)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance (₹)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-subtle">
+              {invoices.length === 0 ? (
+                <tr><td colSpan={6} className="py-12 text-center font-ui text-[13px] text-mid">No invoices found for this customer.</td></tr>
+              ) : invoices.map(inv => (
+                <tr key={inv.id} className="hover:bg-surface-muted/50 transition-colors">
+                  <td className="py-4 px-6">
+                    <Link
+                      href={`/invoices/${inv.id}`}
+                      className="font-mono text-[13px] text-amber font-medium hover:underline no-underline"
+                    >
+                      {inv.number}
+                    </Link>
+                  </td>
+                  <td className="py-4 px-6 font-mono text-[12px] text-mid">{inv.date}</td>
+                  <td className="py-4 px-6 font-mono text-[12px] text-mid">{inv.dueDate}</td>
+                  <td className="py-4 px-6 font-mono text-[13px] text-dark tabular-nums text-right">
+                    {formatIndianNumber(inv.amount)}
+                  </td>
+                  <td className="py-4 px-6 font-mono text-[13px] tabular-nums text-right font-semibold">
+                    {inv.balance > 0 ? (
+                      <span className="text-danger">{formatIndianNumber(inv.balance)}</span>
+                    ) : (
+                      <span className="text-success">—</span>
+                    )}
+                  </td>
+                  <td className="py-4 px-6">
+                    <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
+                      inv.status === "paid"
+                        ? "bg-success-bg text-success border-green-200"
+                        : inv.status === "overdue"
+                          ? "bg-danger-bg text-danger border-red-200"
+                          : "bg-surface-muted text-mid border-border"
+                    }`}>
+                      {inv.status}
+                    </span>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {data.paymentHistory.map((p) => (
-                  <tr key={p.id} className="border-b hover:bg-gray-50">
-                    <td className="px-6 py-3 font-medium text-gray-900">{p.paymentNumber}</td>
-                    <td className="px-6 py-3 text-gray-600">
-                      {new Date(p.date).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-6 py-3 text-right font-mono font-semibold text-gray-900">
-                      {formatINR(p.amount)}
-                    </td>
-                    <td className="px-6 py-3 text-gray-600 capitalize">{p.paymentMethod}</td>
-                    <td className="px-6 py-3 text-center">
-                      <StatusBadge status={p.status} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
         </div>
+      </div>
       )}
     </div>
   );

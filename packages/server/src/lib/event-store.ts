@@ -8,6 +8,12 @@ const { eventStore } = schema;
 type Tx = Parameters<Parameters<Database["transaction"]>[0]>[0];
 export type DbOrTx = Database | Tx;
 
+/**
+ * Append an event to the event store, computing the next sequence number
+ * for the given aggregate. Idempotent: if called via retry and the event
+ * was already appended (detected by unique constraint on aggregateId + sequence),
+ * the existing event is returned instead of creating a duplicate.
+ */
 export async function appendEvent(
   db: DbOrTx,
   tenantId: string,
@@ -24,17 +30,39 @@ export async function appendEvent(
     .where(eq(eventStore.aggregateId, aggregateId));
   const nextSequence = (maxResult[0]?.maxSeq ?? 0n) + 1n;
 
-  const result = await db.insert(eventStore).values({
-    tenantId,
-    aggregateType,
-    aggregateId,
-    eventType: eventType as any,
-    payload,
-    sequence: nextSequence,
-    actorId,
-  }).returning({ id: eventStore.id, sequence: eventStore.sequence });
+  try {
+    const result = await db.insert(eventStore).values({
+      tenantId,
+      aggregateType,
+      aggregateId,
+      eventType: eventType as any,
+      payload,
+      sequence: nextSequence,
+      actorId,
+    }).returning({ id: eventStore.id, sequence: eventStore.sequence });
 
-  return result[0];
+    return result[0];
+  } catch (err: unknown) {
+    // If unique constraint on (aggregate_id, sequence) was violated,
+    // a retry tried to re-append the same sequence. Return existing event.
+    const pgErr = err as { code?: string };
+    if (pgErr?.code === '23505') {
+      const existing = await db
+        .select({ id: eventStore.id, sequence: eventStore.sequence })
+        .from(eventStore)
+        .where(
+          and(
+            eq(eventStore.aggregateId, aggregateId),
+            eq(eventStore.sequence, nextSequence),
+          ),
+        )
+        .limit(1);
+      if (existing.length > 0) {
+        return existing[0];
+      }
+    }
+    throw err;
+  }
 }
 
 export async function getAggregateEvents(

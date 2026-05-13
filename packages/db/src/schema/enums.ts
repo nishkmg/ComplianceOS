@@ -85,7 +85,7 @@ export const cashFlowCategoryEnum = pgEnum("cash_flow_category", [
   "operating", "investing", "financing",
 ]);
 
-export const fyStatusEnum = pgEnum("fy_status", ["open", "closed"]);
+export const fyStatusEnum = pgEnum("fy_status", ["open", "pending_close", "closed"]);
 
 export const ocrScanTypeEnum = pgEnum("ocr_scan_type", ["invoice", "receipt"]);
 

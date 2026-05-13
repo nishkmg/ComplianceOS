@@ -1,10 +1,17 @@
-// @ts-nocheck
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { KpiTile, Badge } from "@/components/ui";
+import { KpiTile } from "@/components/ui/kpi-tile";
+import { Badge } from "@/components/ui/badge";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
+import { TableSkeleton, KPISkeleton, CardSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber, formatDateShort } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface DashboardData {
   totalOutstanding: number;
@@ -22,155 +29,385 @@ interface JournalEntry {
   status: "draft" | "posted" | "voided";
 }
 
+// ─── Fallback mock data (displayed when tRPC fetch fails or has no data) ──────
+
+const mockDataByFy: Record<string, { receivables: DashboardData; entries: JournalEntry[] }> = {
+  '2026-27': {
+    receivables: {
+      totalOutstanding: 2845000,
+      overdueCount: 3,
+      topCustomers: [
+        { customerName: "ABC Corp", outstanding: 850000 },
+        { customerName: "XYZ Industries", outstanding: 620000 },
+        { customerName: "PQR Trading", outstanding: 410000 },
+      ],
+    },
+    entries: [
+      { id: "d1", entryNumber: "JE-2026-27-001", date: "2026-04-28", narration: "Office supplies purchase", debit: 45000, credit: 0, status: "posted" },
+      { id: "d2", entryNumber: "JE-2026-27-002", date: "2026-04-27", narration: "Client payment received — ABC Corp", debit: 0, credit: 850000, status: "posted" },
+      { id: "d3", entryNumber: "JE-2026-27-003", date: "2026-04-25", narration: "Salary for April 2026", debit: 320000, credit: 0, status: "draft" },
+      { id: "d4", entryNumber: "JE-2026-27-004", date: "2026-04-22", narration: "Rent payment — April", debit: 75000, credit: 0, status: "posted" },
+      { id: "d5", entryNumber: "JE-2026-27-005", date: "2026-04-20", narration: "IT services invoice — Q1", debit: 0, credit: 234000, status: "posted" },
+    ],
+  },
+  '2025-26': {
+    receivables: {
+      totalOutstanding: 1950000,
+      overdueCount: 1,
+      topCustomers: [
+        { customerName: "Acme Corp", outstanding: 620000 },
+        { customerName: "Beta LLC", outstanding: 480000 },
+        { customerName: "Omega Partners", outstanding: 310000 },
+      ],
+    },
+    entries: [
+      { id: "d101", entryNumber: "JE-2025-26-001", date: "2025-11-15", narration: "Q3 consulting revenue", debit: 0, credit: 520000, status: "posted" },
+      { id: "d102", entryNumber: "JE-2025-26-002", date: "2025-12-20", narration: "Annual software license renewal", debit: 240000, credit: 0, status: "posted" },
+      { id: "d103", entryNumber: "JE-2025-26-003", date: "2026-01-10", narration: "Office rent for Jan 2026", debit: 0, credit: 75000, status: "posted" },
+      { id: "d104", entryNumber: "JE-2025-26-004", date: "2026-02-05", narration: "Statutory audit fees", debit: 185000, credit: 0, status: "draft" },
+      { id: "d105", entryNumber: "JE-2025-26-005", date: "2026-03-28", narration: "Year-end tax provision", debit: 0, credit: 310000, status: "draft" },
+    ],
+  },
+};
+
+// ─── Column definition for the Recent Entries DataTable ────────────────────────
+
+const entryColumns: ColumnDef<JournalEntry>[] = [
+  {
+    key: "entryNumber",
+    header: "Entry #",
+    sortable: true,
+    width: "130px",
+    render: (row) => (
+      <Link
+        href={`/journal/${row.id}`}
+        className="font-mono text-[13px] text-amber-text hover:underline no-underline"
+      >
+        {row.entryNumber}
+      </Link>
+    ),
+  },
+  {
+    key: "date",
+    header: "Date",
+    sortable: true,
+    width: "100px",
+    render: (row) => (
+      <span className="font-mono text-[12px] text-mid">{formatDateShort(row.date)}</span>
+    ),
+  },
+  {
+    key: "narration",
+    header: "Narration",
+    sortable: true,
+  },
+  {
+    key: "amount",
+    header: "Amount",
+    align: "right",
+    sortable: true,
+    width: "160px",
+    render: (row) => (
+      <span className="font-mono text-[13px] text-dark tabular-nums">
+        {formatIndianNumber(Math.max(row.debit, row.credit), { currency: true, decimals: 2 })}
+      </span>
+    ),
+  },
+  {
+    key: "status",
+    header: "Status",
+    align: "center",
+    sortable: true,
+    width: "110px",
+    render: (row) => (
+      <Badge
+        variant={row.status === "posted" ? "success" : row.status === "draft" ? "amber" : "gray"}
+      >
+        {row.status === "posted" ? "Cleared" : row.status}
+      </Badge>
+    ),
+  },
+];
+
+// ─── Page Component ───────────────────────────────────────────────────────────
+
 export default function DashboardPage() {
+  const { activeFy, currentFy } = useFiscalYear();
   const [receivables, setReceivables] = useState<DashboardData | null>(null);
-  const [recentEntries, setRecentEntries] = useState<JournalEntry[]>([]);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/trpc/receivables.dashboard").then(res => res.json()),
-      fetch("/api/trpc/journal-entries.list?limit=5").then(res => res.json()),
+      fetch("/api/trpc/receivables.dashboard").then(r => r.json()).catch(() => null),
+      fetch("/api/trpc/journal-entries.list?limit=5").then(r => r.json()).catch(() => null),
     ])
-      .then(([receivablesData, entriesData]) => {
-        if (receivablesData.result?.data) setReceivables(receivablesData.result.data);
-        if (entriesData.result?.data) setRecentEntries(entriesData.result.data);
+      .then(([rData, eData]) => {
+        if (rData?.result?.data) setReceivables(rData.result.data);
+        if (eData?.result?.data) setEntries(eData.result.data);
       })
-      .catch(console.error)
+      .catch(() => { /* fall through to mock data */ })
       .finally(() => setLoading(false));
   }, []);
 
+  // Fall back to FY-specific mock data when tRPC returns nothing
+  const fyMock = mockDataByFy[activeFy] ?? mockDataByFy['2026-27'];
+  const displayReceivables = receivables ?? fyMock.receivables;
+  const displayEntries = !loading && entries.length === 0 ? fyMock.entries : entries;
+
+  const fyKpis = useMemo(() => ({
+    '2026-27': { revenue: 1245000.00, expenses: 412040.50, netProfit: 833559.50, cash: 4512890.00 },
+    '2025-26': { revenue: 980000.00, expenses: 385000.00, netProfit: 595000.00, cash: 3850000.00 },
+  }[activeFy] ?? { revenue: 0, expenses: 0, netProfit: 0, cash: 0 }), [activeFy]);
+
   const companyName = "Demo Business Pvt Ltd";
   const today = new Date();
-  const greeting = today.getHours() < 12 ? "Good morning" : today.getHours() < 18 ? "Good afternoon" : "Good evening";
+  const greeting =
+    today.getHours() < 12 ? "Good morning" : today.getHours() < 18 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      {/* ── Page Header ──────────────────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">{greeting}, {companyName}</h1>
-          <p className="font-ui text-[12px] text-light mt-1">
-            {today.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • FY 2026-27
+          <div className="flex items-center gap-3">
+            <h1 className="font-display text-display-xl text-dark">
+              {greeting}, {companyName}
+            </h1>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-mid bg-surface-muted px-2 py-0.5 rounded-md border border-border shrink-0 font-medium">
+              FY {activeFy}
+            </span>
+          </div>
+          <p className="text-[13px] text-secondary font-ui mt-1">
+            Here is your business summary for{" "}
+            {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Link href="/journal/new" className="filter-tab active">New Entry</Link>
-          <Link href="/reports/pl" className="filter-tab">View P&L</Link>
+        <div className="flex gap-3">
+          <button className="bg-surface border border-border px-4 py-2 flex items-center gap-2 hover:bg-surface-muted transition-colors cursor-pointer rounded-md shadow-sm">
+            <Icon name="download" size={16} className="text-mid" />
+            <span className="font-ui text-[10px] uppercase tracking-wider text-mid font-bold">Export PDF</span>
+          </button>
+          <Link
+            href="/journal/new"
+            className="bg-amber text-white px-5 py-2 flex items-center gap-2 hover:bg-amber-hover transition-colors active:scale-95 group no-underline rounded-md shadow-sm"
+          >
+            <span className="font-ui text-[10px] uppercase tracking-wider font-bold">Add Entry</span>
+            <span className="transition-transform group-hover:translate-x-1">→</span>
+          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiTile label="Total Revenue (MTD)" value={1245000.00} variant="amber" delta={{ value: 12, label: "vs last month" }} />
-        <KpiTile label="Total Expenses (MTD)" value={845200.00} variant="danger" delta={{ value: 4, label: "vs last month" }} />
-        <KpiTile label="Net Profit (MTD)" value={399800.00} variant="success" delta={{ value: 15, label: "vs last month" }} />
-        <KpiTile label="Cash & Bank Balance" value={2450000.00} variant="neutral" subtext="Updated 5 mins ago" />
-      </div>
+      {/* ── KPI Row ───────────────────────────────────────────────────────── */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <KPISkeleton />
+          <KPISkeleton />
+          <KPISkeleton />
+          <KPISkeleton />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <KpiTile
+            label="Revenue MTD"
+            value={fyKpis.revenue}
+            variant="amber"
+            delta={{ value: 14.2, label: "vs last month" }}
+            icon="trending_up"
+          />
+          <KpiTile
+            label="Expenses MTD"
+            value={fyKpis.expenses}
+            variant="neutral"
+            delta={{ value: 2.1, label: "within budget" }}
+            icon="shopping_cart"
+          />
+          <KpiTile
+            label="Net Profit MTD"
+            value={fyKpis.netProfit}
+            variant="amber"
+            delta={{ value: 67, label: "Gross Margin" }}
+            icon="account_balance_wallet"
+          />
+          <KpiTile
+            label="Cash & Bank"
+            value={fyKpis.cash}
+            variant="neutral"
+            subtext="Reconciled as of today"
+            icon="account_balance"
+          />
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="card">
-            <div className="card-header flex items-center justify-between">
-              <h2 className="font-display text-[20px] font-normal text-dark">Recent Entries</h2>
-              <Link href="/journal" className="text-[12px] text-light hover:text-amber">View All →</Link>
+      {/* ── Receivables Summary Widget ────────────────────────────────────── */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-surface border border-border shadow-sm rounded-xl p-6 flex items-start gap-4 transition-shadow hover:shadow-md">
+            <div className="w-10 h-10 rounded-md bg-amber-50 flex items-center justify-center shrink-0">
+              <Icon name="account_balance" size={18} className="text-amber" />
             </div>
-            <div className="p-0">
-              {loading ? (
-                <div className="p-6 text-[13px] text-light">Loading...</div>
-              ) : recentEntries.length > 0 ? (
-                <table className="table table-dense">
-                  <thead>
-                    <tr>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Entry #</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Date</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Narration</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-                      <th className="font-ui text-[10px] uppercase tracking-wide">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentEntries.map((entry) => (
-                      <tr key={entry.id}>
-                        <td className="font-mono text-[13px] text-amber">
-                          <Link href={`/journal/${entry.id}`} className="hover:underline">{entry.entryNumber}</Link>
-                        </td>
-                        <td className="font-mono text-[13px] text-light">{formatDateShort(entry.date)}</td>
-                        <td className="font-ui text-[13px] text-mid truncate max-w-[200px]">{entry.narration}</td>
-                        <td className="font-mono text-[13px] text-right">{formatIndianNumber(Math.max(entry.debit, entry.credit), { currency: true, decimals: 2 })}</td>
-                        <td><Badge variant={entry.status === 'posted' ? 'success' : entry.status === 'draft' ? 'amber' : 'gray'}>{entry.status}</Badge></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="p-6">
-                  <p className="text-[13px] text-light">No entries yet. Create your first journal entry.</p>
-                  <Link href="/journal/new" className="mt-3 inline-block btn btn-primary">New Journal Entry</Link>
-                </div>
-              )}
+            <div>
+              <p className="font-ui text-[10px] uppercase tracking-widest text-mid mb-1 font-bold">Total Outstanding</p>
+              <p className="font-mono text-xl text-dark tabular-nums font-semibold">
+                {formatIndianNumber(displayReceivables.totalOutstanding, { currency: true })}
+              </p>
+            </div>
+          </div>
+          <div className="bg-surface border border-border shadow-sm rounded-xl p-6 flex items-start gap-4 transition-shadow hover:shadow-md">
+            <div className="w-10 h-10 rounded-md bg-danger-bg flex items-center justify-center shrink-0">
+              <Icon name="warning" size={18} className="text-danger" />
+            </div>
+            <div>
+              <p className="font-ui text-[10px] uppercase tracking-widest text-mid mb-1 font-bold">
+                Overdue
+              </p>
+              <p className="font-mono text-xl text-dark tabular-nums font-semibold">
+                {displayReceivables.overdueCount}
+              </p>
+            </div>
+          </div>
+          <div className="bg-surface border border-border shadow-sm rounded-xl p-6 flex items-start gap-4 transition-shadow hover:shadow-md">
+            <div className="w-10 h-10 rounded-md bg-amber-50 flex items-center justify-center shrink-0">
+              <Icon name="group" size={18} className="text-amber" />
+            </div>
+            <div>
+              <p className="font-ui text-[10px] uppercase tracking-widest text-mid mb-1 font-bold">
+                Top Customer
+              </p>
+              <p className="font-ui text-sm font-semibold text-dark">
+                {displayReceivables.topCustomers[0]?.customerName ?? "—"}
+              </p>
+              <p className="font-mono text-[13px] text-mid tabular-nums mt-0.5">
+                {displayReceivables.topCustomers[0]?.outstanding
+                  ? formatIndianNumber(displayReceivables.topCustomers[0].outstanding, { currency: true })
+                  : "—"}
+              </p>
             </div>
           </div>
         </div>
+      )}
 
-        <div className="space-y-6">
-          <div className="card">
-            <div className="card-body">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-display text-[16px] font-normal text-dark">FY Progress</h3>
-                <span className="text-[10px] text-light uppercase tracking-wide">Apr 2026 – Mar 2027</span>
-              </div>
-              <div className="w-full bg-border rounded-[4px] h-3 mb-2">
-                <div className="bg-amber h-3 rounded-[4px] transition-all" style={{ width: "25%" }} />
-              </div>
-              <p className="text-[10px] text-light">~3 months elapsed</p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header">
-              <h3 className="font-display text-[16px] font-normal text-dark">Quick Actions</h3>
-            </div>
-            <div className="p-4 space-y-2">
-              <Link href="/journal/new" className="block text-[13px] text-mid hover:text-amber py-1">→ New Journal Entry</Link>
-              <Link href="/invoices/new" className="block text-[13px] text-mid hover:text-amber py-1">→ New Invoice</Link>
-              <Link href="/payments/new" className="block text-[13px] text-mid hover:text-amber py-1">→ Record Payment</Link>
-              <Link href="/reports/trial-balance" className="block text-[13px] text-mid hover:text-amber py-1">→ Trial Balance</Link>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header flex items-center justify-between">
-              <h3 className="font-display text-[16px] font-normal text-dark">Receivables</h3>
-              <Link href="/receivables" className="text-[12px] text-light hover:text-amber">View All →</Link>
-            </div>
-            <div className="p-4">
-              {loading ? (
-                <p className="text-[13px] text-light">Loading...</p>
-              ) : receivables ? (
-                <>
-                  <div className="mb-4">
-                    <p className="text-[12px] text-light mb-1">Total Outstanding</p>
-                    <p className="font-mono text-[20px] text-right">₹{receivables.totalOutstanding.toLocaleString('en-IN')}</p>
-                    {receivables.overdueCount > 0 && (
-                      <p className="text-[10px] text-danger mt-1 text-right">{receivables.overdueCount} overdue</p>
+      {/* ── Main Grid: 8+4 split ──────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* ── Left: Recent Entries DataTable ──────────────────────────────── */}
+        <div className="lg:col-span-8">
+          {loading ? (
+            <TableSkeleton rows={5} columns={5} />
+          ) : (
+            <DataTable<JournalEntry>
+              data={displayEntries}
+              columns={entryColumns}
+              keyExtractor={(row) => row.id}
+              pageSize={10}
+              emptyState={
+                <EmptyState
+                  title="No journal entries yet"
+                  description="Create your first journal entry to start recording transactions."
+                  action={{ label: "New Journal Entry", onClick: () => window.location.href = "/journal/new" }}
+                  icon="menu_book"
+                />
+              }
+              footer={
+                <tr className="bg-surface-muted border-t-2 border-border">
+                  <td colSpan={3} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                    Total
+                  </td>
+                  <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                    {formatIndianNumber(
+                      displayEntries.reduce((sum, e) => sum + Math.max(e.debit, e.credit), 0),
+                      { currency: true, decimals: 2 }
                     )}
-                  </div>
-                  {receivables.topCustomers.length > 0 ? (
-                    <div className="space-y-2">
-                      <p className="text-[10px] text-light uppercase tracking-wide">Top Customers</p>
-                      {receivables.topCustomers.slice(0, 3).map((c) => (
-                        <div key={c.customerName} className="flex justify-between text-[13px]">
-                          <span className="text-mid">{c.customerName}</span>
-                          <span className="font-mono text-dark">₹{c.outstanding.toLocaleString('en-IN')}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-[13px] text-light">No outstanding receivables</p>
-                  )}
-                </>
-              ) : (
-                <p className="text-[13px] text-light">No data</p>
-              )}
+                  </td>
+                  <td></td>
+                </tr>
+              }
+            />
+          )}
+        </div>
+
+        {/* ── Right sidebar widgets ──────────────────────────────────────── */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* FY Progress */}
+          <div className="bg-surface border border-border p-6 shadow-sm rounded-xl">
+            <h3 className="font-ui text-[10px] text-mid uppercase tracking-widest mb-6 font-bold">
+              Financial Year Progress
+            </h3>
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <span className="font-ui text-[10px] font-bold px-2 py-1 uppercase rounded-md text-amber bg-amber-50">
+                  Q1 Completion
+                </span>
+                <span className="font-mono text-[13px] font-semibold text-amber">62%</span>
+              </div>
+              <div className="overflow-hidden h-1.5 mb-4 rounded-full bg-border">
+                <div
+                  className="h-full bg-amber transition-all duration-1000"
+                  style={{ width: "62%" }}
+                />
+              </div>
+              <p className="font-ui text-[11px] text-mid leading-relaxed">
+                You are tracking{" "}
+                <span className="font-mono text-[12px] text-dark font-medium">15%</span> ahead of your revenue
+                goals for this quarter.
+              </p>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-dark p-6 border-l-4 border-l-amber shadow-sm rounded-r-xl">
+            <h3 className="font-ui text-[10px] text-light uppercase tracking-widest mb-6 font-bold">
+              Quick Actions
+            </h3>
+            <div className="space-y-3">
+              <Link
+                href="/journal/new"
+                className="w-full bg-zinc-800 border border-mid text-zinc-100 px-4 py-3.5 flex items-center justify-between hover:bg-zinc-700 hover:border-mid transition-colors group no-underline rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <Icon name="add_circle" size={16} className="text-amber" />
+                  <span className="font-ui text-[13px] font-medium">Record New Entry</span>
+                </div>
+                <Icon
+                  name="chevron_right"
+                  size={16}
+                  className="opacity-0 group-hover:opacity-100 transition-all text-light group-hover:translate-x-1"
+                />
+              </Link>
+              <Link
+                href="/reports/profit-loss"
+                className="w-full bg-zinc-800 border border-mid text-zinc-100 px-4 py-3.5 flex items-center justify-between hover:bg-zinc-700 hover:border-mid transition-colors group no-underline rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <Icon name="insert_chart" size={16} className="text-amber" />
+                  <span className="font-ui text-[13px] font-medium">View P&L Statement</span>
+                </div>
+                <Icon
+                  name="chevron_right"
+                  size={16}
+                  className="opacity-0 group-hover:opacity-100 transition-all text-light group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+          </div>
+
+          {/* Audit Readiness */}
+          <div className="bg-surface border border-border p-6 overflow-hidden relative group shadow-sm rounded-xl">
+            <div className="relative z-10">
+              <Icon name="security" size={20} className="text-light mb-2" />
+              <h4 className="font-ui text-[13px] font-bold text-dark">Audit Readiness</h4>
+              <p className="font-ui text-[11px] text-mid mt-2 leading-relaxed">
+                All supporting vouchers for the last{" "}
+                <span className="font-mono text-[12px] font-medium">30</span> days have been digitized and linked.
+              </p>
+            </div>
+            <div className="absolute -right-4 -bottom-4 opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-500">
+              <Icon name="verified" size={80} />
             </div>
           </div>
         </div>

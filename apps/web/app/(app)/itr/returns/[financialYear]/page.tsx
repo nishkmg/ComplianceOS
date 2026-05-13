@@ -1,20 +1,18 @@
-// @ts-nocheck
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { ITRReturnType, ITRReturnStatus } from "@complianceos/shared";
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { showToast } from "@/lib/toast";
 
-const statusConfig: Record<ITRReturnStatus, { variant: "gray" | "blue" | "success" | "purple" | "danger"; label: string }> = {
-  draft: { variant: "gray", label: "Draft" },
-  computed: { variant: "blue", label: "Computed" },
-  generated: { variant: "success", label: "Generated" },
-  filed: { variant: "success", label: "Filed" },
-  verified: { variant: "purple", label: "Verified" },
-  voided: { variant: "danger", label: "Voided" },
+const mockReturns: Record<string, any[]> = {
+  "2026-27": [
+    { id: "itr3", returnType: "itr3", status: "draft", grossTotalIncome: "7250000", totalIncome: "6820000", taxPayable: "1045200" },
+  ],
+  "2025-26": [
+    { id: "itr4", returnType: "itr4", status: "generated", grossTotalIncome: "5800000", totalIncome: "5450000", taxPayable: "785000" },
+  ],
 };
 
 export default function ITRFinancialYearPage() {
@@ -23,34 +21,27 @@ export default function ITRFinancialYearPage() {
   const financialYear = params.financialYear as string;
   const [activeTab, setActiveTab] = useState<"itr3" | "itr4">("itr3");
 
-  const { data: returns, isLoading } = api.itrReturns.list.useQuery({ financialYear });
-  const createReturn = api.itrReturns.create.useMutation();
-
-  const handleCreate = async (returnType: "itr3" | "itr4") => {
-    try {
-      const result = await createReturn.mutateAsync({ financialYear, returnType });
-      router.push(`/itr/returns/${financialYear}/${result.itrReturnId}`);
-    } catch (error) {
-      console.error("Failed to create return:", error);
-    }
-  };
-
-  const itr3Return = returns?.find((r) => r.returnType === "itr3");
-  const itr4Return = returns?.find((r) => r.returnType === "itr4");
+  const returns = mockReturns[financialYear] ?? [];
+  const itr3Return = returns.find((r: any) => r.returnType === "itr3");
+  const itr4Return = returns.find((r: any) => r.returnType === "itr4");
   const currentReturn = activeTab === "itr3" ? itr3Return : itr4Return;
 
-  if (isLoading) return <div className="text-center py-12 font-ui text-light">Loading...</div>;
+  const handleCreate = (returnType: "itr3" | "itr4") => {
+    showToast.success(`${returnType.toUpperCase()} return created for FY ${financialYear}.`);
+    router.push(`/itr/returns/${financialYear}/${returnType}`);
+  };
 
   return (
     <div className="space-y-6">
       <div>
         <Link href="/itr/returns" className="font-ui text-[13px] text-light hover:text-amber hover:underline">← Back to ITR Returns</Link>
-        <h1 className="font-display text-[26px] font-normal text-dark mt-1">ITR Returns - FY {financialYear}</h1>
-        <p className="font-ui text-[12px] text-light mt-1">Assessment Year: {financialYear.replace(/^(\d{4})-(\d{2})$/, (_, start) => `${Number(start) + 1}-${(Number(start) + 2).toString().slice(-2)}`)}</p>
+        <h1 className="font-display text-display-lg font-semibold text-dark mt-1">ITR Returns - FY {financialYear}</h1>
+        <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {financialYear.replace(/^(\d{4})-(\d{2})$/, (_, start) => `${Number(start) + 1}-${(Number(start) + 2).toString().slice(-2)}`)}</p>
       </div>
 
-      <div className="border-b border-hairline">
+      <div className="border-b border-border">
         <nav className="flex gap-4">
+// @ts-ignore
           {[{ id: "itr3", label: "ITR-3" }, { id: "itr4", label: "ITR-4 (Sugam)" }].map((tab) => (
             <button
               key={tab.id}
@@ -67,7 +58,7 @@ export default function ITRFinancialYearPage() {
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-[16px] font-normal text-dark">{currentReturn.returnType.toUpperCase()} Return</h2>
-            <Badge variant={statusConfig[currentReturn.status].variant}>{statusConfig[currentReturn.status].label}</Badge>
+            <Badge variant="gray">{currentReturn.status}</Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

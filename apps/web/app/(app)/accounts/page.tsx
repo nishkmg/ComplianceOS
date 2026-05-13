@@ -1,109 +1,224 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getAccounts } from "@/lib/account-store";
 
-interface AccountNode {
-  id: string;
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface AccountRow {
   code: string;
   name: string;
-  kind: string;
-  isLeaf: boolean;
-  children?: AccountNode[];
-  balance?: string;
+  type: string;
+  balance: number;
+  balanceType: string;
 }
 
-const mockAccounts: AccountNode[] = [
-  { id: "1", code: "1000", name: "ASSETS", kind: "Asset", isLeaf: false, children: [
-    { id: "2", code: "1100", name: "Current Assets", kind: "Asset", isLeaf: false, children: [
-      { id: "3", code: "1101", name: "Cash in Hand", kind: "Asset", isLeaf: true, balance: "₹50,000.00 Dr" },
-      { id: "4", code: "1102", name: "HDFC Bank A/c", kind: "Asset", isLeaf: true, balance: "₹3,50,000.00 Dr" },
-    ]},
-    { id: "5", code: "1200", name: "Sundry Debtors", kind: "Asset", isLeaf: false, children: [
-      { id: "6", code: "1201", name: "Mehta Textiles", kind: "Asset", isLeaf: true, balance: "₹1,00,000.00 Dr" },
-    ]},
-  ]},
-  { id: "7", code: "2000", name: "LIABILITIES", kind: "Liability", isLeaf: false, children: [
-    { id: "8", code: "2100", name: "Current Liabilities", kind: "Liability", isLeaf: false, children: [
-      { id: "9", code: "2101", name: "Sundry Creditors", kind: "Liability", isLeaf: true, balance: "₹75,000.00 Cr" },
-    ]},
-  ]},
-  { id: "10", code: "3000", name: "EQUITY", kind: "Equity", isLeaf: false, children: [
-    { id: "11", code: "3100", name: "Owner Capital", kind: "Equity", isLeaf: true, balance: "₹5,00,000.00 Cr" },
-  ]},
+// ─── Mock data ────────────────────────────────────────────────────────────────
+
+const ACCOUNTS: AccountRow[] = [
+  { code: "10101", name: "Cash Account",       type: "Asset",     balance: 500000,  balanceType: "Dr" },
+  { code: "10200", name: "Bank Account",        type: "Asset",     balance: 1250000, balanceType: "Dr" },
+  { code: "10300", name: "Trade Receivables",   type: "Asset",     balance: 350000,  balanceType: "Dr" },
+  { code: "10400", name: "GST Input",           type: "Asset",     balance: 45000,   balanceType: "Dr" },
+  { code: "20101", name: "Trade Payables",      type: "Liability", balance: 180000,  balanceType: "Cr" },
+  { code: "20200", name: "GST Output",          type: "Liability", balance: 45000,   balanceType: "Cr" },
+  { code: "20300", name: "TDS Payable",         type: "Liability", balance: 12000,   balanceType: "Cr" },
+  { code: "30100", name: "Capital Account",     type: "Equity",    balance: 1000000, balanceType: "Cr" },
+  { code: "40100", name: "Sales Revenue",       type: "Income",    balance: 2800000, balanceType: "Cr" },
+  { code: "50200", name: "Operating Expenses",  type: "Expense",   balance: 450000,  balanceType: "Dr" },
 ];
 
-export default function AccountsPage() {
-  const [expanded, setExpanded] = useState<Set<string>>(new Set(["1", "2", "7", "10"]));
+const typeBadge: Record<string, string> = {
+  Asset:     "bg-blue-50 text-blue-700 border-blue-200",
+  Liability: "bg-amber-50 text-amber-700 border-amber-200",
+  Equity:    "bg-green-50 text-green-700 border-green-200",
+  Income:    "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Expense:   "bg-red-50 text-red-700 border-red-200",
+};
 
-  function toggle(id: string) {
-    const next = new Set(expanded);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    setExpanded(next);
-  }
+const typeOptions = ["All", "Asset", "Liability", "Equity", "Income", "Expense"];
 
-  function renderAccount(acc: AccountNode, depth = 0): React.ReactNode {
-    const hasChildren = acc.children && acc.children.length > 0;
-    const isExpanded = expanded.has(acc.id);
-    const isRoot = depth === 0;
+// ─── Column definitions ───────────────────────────────────────────────────────
 
-    return (
-      <tbody key={acc.id}>
-        <tr className={`border-b border-hairline ${isRoot ? "bg-surface-muted" : "hover:bg-surface-muted transition-colors"}`}>
-          <td className="px-4 py-3">
-            <div className="flex items-center gap-2" style={{ paddingLeft: `${depth * 20}px` }}>
-              {hasChildren ? (
-                <button 
-                  onClick={() => toggle(acc.id)} 
-                  className="text-light hover:text-amber transition-colors"
-                >
-                  {isExpanded ? "▼" : "▶"}
-                </button>
-              ) : (
-                <span className="w-3" />
-              )}
-              <span className="font-mono text-[11px] text-light">{acc.code}</span>
-            </div>
-          </td>
-          <td className={`px-4 py-3 font-ui text-[13px] ${isRoot ? "font-semibold tracking-wide" : "text-dark"}`}>
-            {acc.name}
-          </td>
-          <td className="px-4 py-3 font-ui text-[10px] uppercase tracking-wide text-light">
-            {acc.kind}
-          </td>
-          <td className={`px-4 py-3 text-right font-mono text-[13px] ${acc.balance?.includes('Dr') ? 'text-success' : acc.balance?.includes('Cr') ? 'text-danger' : 'text-mid'}`}>
-            {acc.balance || ""}
-          </td>
-        </tr>
-        {isExpanded && hasChildren && acc.children!.map((child) => renderAccount(child, depth + 1))}
-      </tbody>
-    );
-  }
+const columns: ColumnDef<AccountRow>[] = [
+  {
+    key: "code",
+    header: "Code",
+    width: "120px",
+    render: (row) => <span className="font-mono text-[12px] text-mid">{row.code}</span>,
+  },
+  {
+    key: "name",
+    header: "Account Name",
+    sortable: true,
+    render: (row) => (
+      <Link href={`/accounts/${row.code}`} className="font-ui text-[13px] text-dark font-medium hover:text-amber no-underline transition-colors">
+        {row.name}
+      </Link>
+    ),
+  },
+  {
+    key: "type",
+    header: "Type",
+    width: "110px",
+    render: (row) => (
+      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-sm ${typeBadge[row.type] || ''}`}>
+        {row.type}
+      </span>
+    ),
+  },
+  {
+    key: "balance",
+    header: "Balance (₹)",
+    align: "right",
+    sortable: true,
+    width: "180px",
+    render: (row) => (
+      <span className="font-mono text-[13px] tabular-nums">
+        {formatIndianNumber(row.balance, { currency: true })} <span className="text-[10px] text-mid">{row.balanceType}</span>
+      </span>
+    ),
+  },
+];
+
+// ─── Page Component ───────────────────────────────────────────────────────────
+
+function allAccounts() {
+  const stored = getAccounts();
+  const storedRows: AccountRow[] = stored.map(a => ({
+    code: a.code,
+    name: a.name,
+    type: a.kind,
+    balance: 0,
+    balanceType: (a.kind.toLowerCase() === "asset" || a.kind.toLowerCase() === "expense") ? "Dr" : "Cr",
+  }));
+  return [...ACCOUNTS, ...storedRows];
+}
+
+export default function AccountsFlatPage() {
+  const { activeFy } = useFiscalYear();
+  const [allAccts] = useState(allAccounts);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  const filtered = useMemo(
+    () =>
+      allAccts.filter(a => {
+        if (typeFilter !== "All" && a.type !== typeFilter) return false;
+        if (search && !a.name.toLowerCase().includes(search.toLowerCase()) && !a.code.includes(search)) return false;
+        return true;
+      }),
+    [typeFilter, search, allAccts]
+  );
+
+  const totalBalance = filtered.reduce((s, a) => s + a.balance, 0);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No accounts to export."); return; }
+    const header = "Code,Name,Type,Balance,Balance Type";
+    const rows = filtered.map(a => `${a.code},"${a.name}",${a.type},${a.balance},${a.balanceType}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `accounts-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} accounts.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Chart of Accounts</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Hierarchical double-entry ledger structure</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+            Ledger
+          </p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts. FY {activeFy}</p>
         </div>
-        <Link href="/accounts/new" className="filter-tab active">+ New Account</Link>
+        <div className="flex gap-3">
+          <button onClick={handleExport} className="btn-secondary flex items-center gap-1.5">
+            <Icon name="download" size={14} /> Export CSV
+          </button>
+          <Link
+            href="/accounts/new"
+            className="btn-primary no-underline flex items-center gap-1.5"
+          >
+            <Icon name="add" size={14} /> New Account
+          </Link>
+        </div>
       </div>
-      <div className="card">
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left w-32">Account Code</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Account Name</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left w-24">Kind</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right w-40">Running Balance</th>
+
+      {/* Filter + search */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
+          {typeOptions.map(t => (
+            <button
+              key={t}
+              onClick={() => setTypeFilter(t)}
+              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm capitalize ${
+                typeFilter === t
+                  ? "bg-surface text-dark shadow-sm"
+                  : "text-mid hover:text-dark bg-transparent"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+        <div className="relative">
+          <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
+          <input
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
+            placeholder="Search accounts…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* DataTable */}
+      {loading ? (
+        <TableSkeleton rows={10} columns={4} />
+      ) : (
+        <DataTable<AccountRow>
+          data={filtered}
+          columns={columns}
+          keyExtractor={(row) => row.code}
+          pageSize={20}
+          emptyState={
+            <EmptyState
+              title="No accounts found"
+              description="Create your first account to start tracking your ledger."
+              action={{ label: "Create Account", onClick: () => window.location.href = "/accounts/new" }}
+              icon="account_tree"
+            />
+          }
+          footer={
+            <tr className="bg-surface-muted border-t-2 border-border">
+              <td colSpan={3} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                Total ({filtered.length} accounts)
+              </td>
+              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                {formatIndianNumber(totalBalance, { currency: true })}
+              </td>
             </tr>
-          </thead>
-          {mockAccounts.map((acc) => renderAccount(acc))}
-        </table>
-      </div>
+          }
+        />
+      )}
     </div>
   );
 }

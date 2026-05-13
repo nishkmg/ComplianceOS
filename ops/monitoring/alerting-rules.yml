@@ -1,0 +1,165 @@
+# ComplianceOS Prometheus Alerting Rules
+# Version: 1.0
+# Last Updated: 2026-04-24
+
+groups:
+  - name: complianceos_alerts
+    interval: 30s
+    rules:
+      # Application Health
+      - alert: ComplianceOS_Down
+        expr: up{job="complianceos"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ComplianceOS application is down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/application-down.md"
+
+      - alert: ComplianceOS_High_Error_Rate
+        expr: rate(http_requests_total{job="complianceos",status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} over the last 5 minutes"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/high-error-rate.md"
+
+      # API Performance
+      - alert: ComplianceOS_High_API_Latency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="complianceos",path=~"/api/.*"}[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency detected"
+          description: "95th percentile latency is {{ $value | humanizeDuration }} for API endpoints"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/high-latency.md"
+
+      - alert: ComplianceOS_Critical_API_Latency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="complianceos",path=~"/api/.*"}[5m])) > 2
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical API latency detected"
+          description: "95th percentile latency is {{ $value | humanizeDuration }} - immediate action required"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/critical-latency.md"
+
+      # Database Health
+      - alert: ComplianceOS_Database_Down
+        expr: pg_up{job="complianceos-db"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "Database instance {{ $labels.instance }} is not responding"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/database-down.md"
+
+      - alert: ComplianceOS_Database_High_Connections
+        expr: pg_stat_activity_count{job="complianceos-db"} > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database connection count"
+          description: "Database has {{ $value }} active connections"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/db-high-connections.md"
+
+      - alert: ComplianceOS_Database_Slow_Queries
+        expr: rate(pg_stat_statements_seconds_total{job="complianceos-db"}[5m]) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Database slow queries detected"
+          description: "Average query time is {{ $value | humanizeDuration }}"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/db-slow-queries.md"
+
+      # Projector Worker
+      - alert: ComplianceOS_Projector_Down
+        expr: up{job="complianceos-projector"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Projector worker is down"
+          description: "Projector instance {{ $labels.instance }} is not responding"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/projector-down.md"
+
+      - alert: ComplianceOS_Projector_High_Lag
+        expr: complianceos_projector_lag_seconds{job="complianceos-projector"} > 300
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Projector processing lag detected"
+          description: "Projector lag is {{ $value | humanizeDuration }} behind event store"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/projector-lag.md"
+
+      - alert: ComplianceOS_Projector_Critical_Lag
+        expr: complianceos_projector_lag_seconds{job="complianceos-projector"} > 1800
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical projector lag detected"
+          description: "Projector is {{ $value | humanizeDuration }} behind - projections are stale"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/projector-critical-lag.md"
+
+      # Redis Health
+      - alert: ComplianceOS_Redis_Down
+        expr: up{job="complianceos-redis"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis instance {{ $labels.instance }} is not responding"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/redis-down.md"
+
+      - alert: ComplianceOS_Redis_High_Memory
+        expr: redis_memory_used_bytes{job="complianceos-redis"} / redis_memory_max_bytes{job="complianceos-redis"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage high"
+          description: "Redis is using {{ $value | humanizePercentage }} of max memory"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/redis-high-memory.md"
+
+      # Fiscal Year Deadlines
+      - alert: ComplianceOS_FY_Close_Deadline_Approaching
+        expr: (complianceos_fy_close_deadline_seconds - time()) < 86400 * 7
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Fiscal year close deadline approaching"
+          description: "FY {{ $labels.fiscal_year }} close deadline is in {{ $value | humanizeDuration }}"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/fy-close-deadline.md"
+
+      # Disk Space
+      - alert: ComplianceOS_Low_Disk_Space
+        expr: (node_filesystem_avail_bytes{job="complianceos"} / node_filesystem_size_bytes{job="complianceos"}) < 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space is {{ $value | humanizePercentage }} on {{ $labels.mountpoint }}"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/low-disk-space.md"
+
+      # Backup Status
+      - alert: ComplianceOS_Backup_Old
+        expr: (time() - complianceos_backup_timestamp_seconds) > 86400
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database backup is old"
+          description: "Last backup was {{ $value | humanizeDuration }} ago"
+          runbook_url: "https://github.com/complianceos/complianceos/blob/main/docs/RUNBOOKS/backup-old.md"

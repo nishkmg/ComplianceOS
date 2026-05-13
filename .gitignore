@@ -6,3 +6,11 @@ dist/
 .env.local
 *.tsbuildinfo
 ._*
+.DS_Store
+stitch-output/
+stitch-output/*
+.playwright-mcp/
+login-snapshot.yml
+homepage-after-fix.png
+.vercel
+.env.vercel

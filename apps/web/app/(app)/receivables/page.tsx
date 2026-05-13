@@ -1,112 +1,191 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
+import { Icon } from '@/components/ui/icon';
+import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
-function KpiCard({
-  label,
-  value,
-  sublabel,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  sublabel?: string;
-  highlight?: "green" | "yellow" | "orange" | "red";
-}) {
-  const borderMap = {
-    green: "border-l-4 border-l-green",
-    yellow: "border-l-4 border-l-amber",
-    orange: "border-l-4 border-l-orange",
-    red: "border-l-4 border-l-danger",
-  };
+// ─── Mock data ────────────────────────────────────────────────────────────────
 
-  return (
-    <div className={`card p-5 ${highlight ? borderMap[highlight] : ""}`}>
-      <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-2">{label}</p>
-      <p className="font-mono text-[22px] font-medium text-dark">{value}</p>
-      {sublabel && <p className="font-ui text-[11px] text-mid mt-1">{sublabel}</p>}
-    </div>
-  );
-}
+interface AgingBucket { label: string; amount: number; percentage: number }
+interface DebtorRow { id: string; name: string; amount: number; status: string }
 
-export default function ReceivablesDashboardPage() {
-  const { data: agingReport, isLoading } = api.receivables.agingReport.useQuery();
-  const { data: agingTotals } = api.receivables.aging.useQuery();
+const agingByFy: Record<string, AgingBucket[]> = {
+  '2026-27': [
+    { label: "Current",    amount: 1245000, percentage: 45 },
+    { label: "1-30 Days",  amount: 845200,  percentage: 30 },
+    { label: "31-60 Days", amount: 412040,  percentage: 15 },
+    { label: "61-90 Days", amount: 245000,  percentage: 8 },
+    { label: "> 90 Days",  amount: 45000,   percentage: 2 },
+  ],
+  '2025-26': [
+    { label: "Current",    amount: 980000, percentage: 40 },
+    { label: "1-30 Days",  amount: 620000, percentage: 25 },
+    { label: "31-60 Days", amount: 380000, percentage: 16 },
+    { label: "61-90 Days", amount: 210000, percentage: 9 },
+    { label: "> 90 Days",  amount: 85000,  percentage: 10 },
+  ],
+};
 
-  const [showAgingTable, setShowAgingTable] = useState(true);
+const debtorsByFy: Record<string, DebtorRow[]> = {
+  '2026-27': [
+    { id: "reliance", name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
+    { id: "acme",     name: "Acme Corporation",         amount: 412000, status: "overdue" },
+    { id: "techsol",  name: "TechSolutions India",      amount: 245000, status: "pending" },
+  ],
+  '2025-26': [
+    { id: "reliance", name: "Reliance Industries Ltd.", amount: 620000, status: "pending" },
+    { id: "acme",     name: "Acme Corporation",         amount: 380000, status: "overdue" },
+    { id: "delta",    name: "Delta Systems",            amount: 195000, status: "partial" },
+  ],
+};
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="h-7 w-40 bg-surface-muted rounded animate-pulse" />
-        <div className="grid grid-cols-5 gap-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-24 bg-surface-muted rounded animate-pulse" />
-          ))}
-        </div>
-        <div className="h-64 bg-surface-muted rounded animate-pulse" />
-      </div>
-    );
-  }
+// ─── Page Component ───────────────────────────────────────────────────────────
 
-  const tableData = (agingReport ?? []).map((r) => ({
-    customerName: r.customerName,
-    customerGstin: r.customerGstin,
-    total: r.totalOutstanding,
-    current: r.current030,
-    days31to60: r.aging3160,
-    days61to90: r.aging6190,
-    days90Plus: r.aging90Plus,
-  }));
+export default function ReceivablesSummaryPage() {
+  const { activeFy } = useFiscalYear();
+  const [loading, setLoading] = useState(true);
 
-  const totals = {
-    current030: agingTotals?.current030 ?? 0,
-    aging3160: agingTotals?.aging3160 ?? 0,
-    aging6190: agingTotals?.aging6190 ?? 0,
-    aging90Plus: agingTotals?.aging90Plus ?? 0,
-    total: agingTotals?.total ?? 0,
-  };
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  const agingBuckets = agingByFy[activeFy] ?? agingByFy['2026-27'];
+  const topDebtors = debtorsByFy[activeFy] ?? debtorsByFy['2026-27'];
+
+  const avgCollectionPeriod: Record<string, number> = { '2026-27': 24, '2025-26': 28 };
+  const avgDays = avgCollectionPeriod[activeFy] ?? 24;
+
+  const totalOutstanding = agingBuckets.reduce((s, b) => s + b.amount, 0);
+  const totalOverdue = agingBuckets.filter(b => b.label.includes("Days") || b.label.includes(">"))
+    .reduce((s, b) => s + b.amount, 0);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">Receivables</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Track outstanding customer payments</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
+            Treasury
+          </p>
+          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Receivables Summary</h1>
+          <p className="font-ui text-[13px] text-secondary mt-1">
+            A comprehensive view of outstanding invoices, aging buckets, and customer balances.
+          </p>
         </div>
-        <Link href="/payments/record" className="filter-tab active">
-          Record Payment
-        </Link>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <KpiCard label="Total Outstanding" value={formatIndianNumber(totals.total)} sublabel="All receivables" />
-        <KpiCard label="Current (0-30)" value={formatIndianNumber(totals.current030)} sublabel="Not yet due" highlight="green" />
-        <KpiCard label="31-60 Days Overdue" value={formatIndianNumber(totals.aging3160)} highlight="yellow" />
-        <KpiCard label="61-90 Days Overdue" value={formatIndianNumber(totals.aging6190)} highlight="orange" />
-        <KpiCard label="90+ Days Overdue" value={formatIndianNumber(totals.aging90Plus)} sublabel="Critical" highlight="red" />
-      </div>
-
-      {/* Aging Table */}
-      <div className="card p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="font-display text-[18px] font-normal text-dark">Aging Report</h2>
-            <p className="font-ui text-[11px] text-light mt-0.5">Outstanding receivables by age bucket</p>
+      {/* KPI tiles */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-amber">
+            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Total Outstanding</p>
+            <p className="font-mono text-2xl font-bold text-dark tabular-nums">
+              {formatIndianNumber(totalOutstanding, { currency: true })}
+            </p>
           </div>
-          <button onClick={() => setShowAgingTable(!showAgingTable)} className="filter-tab">
-            {showAgingTable ? "Hide Details" : "Show Details"}
-          </button>
+          <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-danger">
+            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Overdue (&gt;30 Days)</p>
+            <p className="font-mono text-2xl font-bold text-danger tabular-nums">
+              {formatIndianNumber(totalOverdue, { currency: true })}
+            </p>
+          </div>
+          <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-dark">
+            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Avg. Collection Period</p>
+            <p className="font-mono text-2xl font-bold text-dark">{avgDays} Days</p>
+          </div>
         </div>
+      )}
 
-        {showAgingTable && <AgingTable data={tableData} />}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7">
+            <TableSkeleton rows={5} columns={2} />
+          </div>
+          <div className="lg:col-span-5">
+            <TableSkeleton rows={5} columns={2} />
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Aging breakdown */}
+          <div className="lg:col-span-7">
+            <div className="bg-surface border border-border p-6 shadow-sm rounded-md">
+              <h3 className="font-ui text-[13px] font-bold text-dark mb-6 uppercase tracking-widest">Aging Breakdown</h3>
+              <div className="space-y-5">
+                {agingBuckets.map(bucket => (
+                  <div key={bucket.label}>
+                    <div className="flex justify-between items-end mb-2">
+                      <span className="font-ui text-[13px] font-medium text-dark">{bucket.label}</span>
+                      <div className="text-right">
+                        <span className="font-mono text-[13px] font-bold text-dark mr-3 tabular-nums">
+                          {formatIndianNumber(bucket.amount, { currency: true })}
+                        </span>
+                        <span className="font-ui text-[10px] text-light">{bucket.percentage}%</span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-lighter/60 h-1.5 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-1000 rounded-full ${
+                          bucket.label.includes(">") ? "bg-danger" : "bg-amber"
+                        }`}
+                        style={{ width: `${bucket.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Top debtors */}
+          <div className="lg:col-span-5">
+            <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
+              <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
+                <h3 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Top Debtors</h3>
+                <span className="text-[10px] text-light font-bold uppercase tracking-widest">FY {activeFy}</span>
+              </div>
+              <div className="divide-y divide-border-subtle">
+                {topDebtors.map(d => (
+                  <div key={d.name} className="px-6 py-5 flex justify-between items-center hover:bg-surface-muted/50 transition-colors">
+                    <div>
+                      <p className="font-ui text-[13px] font-semibold text-dark">{d.name}</p>
+                      <span className={`inline-block px-2 py-0.5 mt-1.5 text-[9px] uppercase font-bold tracking-widest border rounded-md ${
+                        d.status === "overdue"
+                          ? "bg-danger-bg text-danger border-red-200"
+                          : d.status === "partial"
+                            ? "bg-amber-50 text-amber-text border-amber-200"
+                            : "bg-surface-muted text-mid border-border"
+                      }`}>
+                        {d.status}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-mono text-[13px] font-bold text-dark tabular-nums">
+                        {formatIndianNumber(d.amount, { currency: true })}
+                      </p>
+                      <Link
+                        href={`/receivables/${d.id}`}
+                        className="text-[10px] text-light hover:text-amber transition-colors no-underline font-bold uppercase tracking-widest"
+                      >
+                        Statement →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

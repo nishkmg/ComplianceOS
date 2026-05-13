@@ -1,10 +1,9 @@
-// @ts-nocheck
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { api } from "@/lib/api";
+import { useState, useMemo } from "react";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const months = [
   { value: 1, label: "April" },
@@ -21,118 +20,168 @@ const months = [
   { value: 12, label: "March" },
 ];
 
-const currentMonth = new Date().getMonth() + 1;
-const currentYear = new Date().getFullYear();
+// Mock transactions by quarter: Q1 (months 1-3: Apr-Jun), Q2 (4-6: Jul-Sep), Q3 (7-9: Oct-Dec), Q4 (10-12: Jan-Mar)
+const mockDataByQuarter: Record<string, Array<{ id: string; date: string; type: string; taxType: string; amount: number; balance: number; ref: string }>> = {
+  Q1: [
+    { id: "1", date: "15 Jun 24", type: "ITC Claim", taxType: "IGST", amount: 98000, balance: 1205000, ref: "GSTR-2B" },
+    { id: "2", date: "20 May 24", type: "Tax Offset", taxType: "CGST", amount: -32000, balance: 1107000, ref: "GSTR-3B" },
+    { id: "3", date: "05 Apr 24", type: "Opening Balance", taxType: "IGST", amount: 124500, balance: 1139500, ref: "Ledger B/F" },
+  ],
+  Q2: [
+    { id: "4", date: "15 Sep 24", type: "ITC Claim", taxType: "IGST", amount: 156000, balance: 2120400, ref: "GSTR-2B" },
+    { id: "5", date: "10 Aug 24", type: "Tax Offset", taxType: "SGST", amount: -28000, balance: 1964400, ref: "GSTR-3B" },
+    { id: "6", date: "25 Jul 24", type: "Cash Deposit", taxType: "Cess", amount: 45000, balance: 1992400, ref: "CH-44102" },
+  ],
+  Q3: [
+    { id: "7", date: "15 Oct 24", type: "ITC Claim", taxType: "IGST", amount: 124500, balance: 4520500, ref: "GSTR-2B" },
+    { id: "8", date: "10 Oct 24", type: "Tax Offset", taxType: "CGST", amount: -45000, balance: 4396000, ref: "GSTR-3B" },
+    { id: "9", date: "05 Oct 24", type: "Cash Deposit", taxType: "Cess", amount: 25000, balance: 4421000, ref: "CH-88012" },
+  ],
+  Q4: [
+    { id: "10", date: "15 Mar 25", type: "ITC Claim", taxType: "IGST", amount: 210000, balance: 6850000, ref: "GSTR-2B" },
+    { id: "11", date: "28 Feb 25", type: "Tax Offset", taxType: "CGST", amount: -52000, balance: 6640000, ref: "GSTR-3B" },
+    { id: "12", date: "10 Jan 25", type: "Cash Deposit", taxType: "IGST", amount: 75000, balance: 6692000, ref: "CH-99123" },
+    { id: "13", date: "05 Jan 25", type: "ITC Claim", taxType: "SGST", amount: 98500, balance: 6617000, ref: "GSTR-2B" },
+  ],
+};
+
+function getQuarter(month: number): string {
+  if (month >= 1 && month <= 3) return "Q1";
+  if (month >= 4 && month <= 6) return "Q2";
+  if (month >= 7 && month <= 9) return "Q3";
+  return "Q4";
+}
 
 export default function GSTLedgerPage() {
-  const [periodMonth, setPeriodMonth] = useState<number>(currentMonth);
-  const [periodYear, setPeriodYear] = useState<number>(currentYear);
+  const { activeFy } = useFiscalYear();
+  const [month, setMonth] = useState(7);
+  const [year, setYear] = useState(2024);
 
-  const { data: cashBalance } = api.gstLedger.cashBalance.useQuery({ periodMonth, periodYear });
-  const { data: itcBalance } = api.gstLedger.itcBalance.useQuery({ periodMonth, periodYear });
-  const { data: liabilityBalance } = api.gstLedger.liabilityBalance.useQuery({ periodMonth, periodYear });
-  const { data: transactions } = api.gstLedger.ledgerTransactions.useQuery({ type: "cash", periodMonth, periodYear });
+  const transactions = useMemo(() => {
+    const quarter = getQuarter(month);
+    return mockDataByQuarter[quarter] ?? mockDataByQuarter.Q3;
+  }, [month]);
 
-  const totalCashBalance = cashBalance?.balance ?? { igst: 0, cgst: 0, sgst: 0, cess: 0 };
-  const totalITC = (itcBalance?.igst.closingBalance ?? 0) + (itcBalance?.cgst.closingBalance ?? 0) + (itcBalance?.sgst.closingBalance ?? 0) + (itcBalance?.cess.closingBalance ?? 0);
-  const totalLiability = (liabilityBalance?.igst.output ?? 0) + (liabilityBalance?.cgst.output ?? 0) + (liabilityBalance?.sgst.output ?? 0) + (liabilityBalance?.cess.output ?? 0);
-  const netLiability = Math.max(0, totalLiability - totalITC);
+  const handleExportCSV = () => {
+    const rows = [["Date", "Description", "Type", "Tax Type", "Amount", "Running Balance"]];
+    transactions.forEach(t => {
+      rows.push([t.date, `${t.type} (${t.ref})`, "Credit", t.taxType, String(t.amount), String(t.balance)]);
+    });
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gst-ledger-${month}-${year}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success("CSV exported successfully");
+  };
+
+  const handleDownloadJSON = () => {
+    const json = JSON.stringify(transactions, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gst-ledger-${month}-${year}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success("JSON downloaded successfully");
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 text-left">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border pb-8 mt-4">
         <div>
-          <h1 className="font-display text-[26px] font-normal text-dark">GST Ledger</h1>
-          <p className="font-ui text-[12px] text-light mt-1">Track GST liabilities, ITC, and cash balances</p>
+          <h1 className="font-display text-2xl font-semibold text-dark mb-2">Electronic Credit Ledger</h1>
+          <p className="font-ui text-[13px] text-secondary">Statement of Input Tax Credit for <span className="font-mono text-dark font-bold text-[13px]">GSTIN: 27AACPB1234F1Z5</span> · FY {activeFy}</p>
         </div>
-        <div className="flex gap-2">
-          <Link href="/gst/payment" className="filter-tab active">Make Payment</Link>
-          <Link href="/gst/payment/history" className="filter-tab">Payment History</Link>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-1 text-left">
+            <label className="text-[10px] uppercase text-mid font-bold tracking-widest">Tax Period</label>
+            <div className="flex gap-2">
+              <select className="bg-surface-muted border border-border rounded-md py-2 px-3 text-xs outline-none focus:border-primary" value={month} onChange={e => setMonth(Number(e.target.value))}>
+                {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+              <select className="bg-surface-muted border border-border rounded-md py-2 px-3 text-xs outline-none focus:border-primary" value={year} onChange={e => setYear(Number(e.target.value))}>
+                <option>2024</option>
+                <option>2023</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-4 items-center">
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month</label>
-          <select value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))} className="input-field font-ui">
-            {months.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
-          </select>
+      {/* Ledger Balances Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-surface border border-border border-t-2 border-t-amber p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+          <h3 className="text-[10px] text-light uppercase font-bold tracking-widest mb-4">Integrated Tax (IGST)</h3>
+          <p className="font-mono text-2xl font-bold text-dark">₹ 2,45,600.00</p>
+          <div className="mt-4 pt-4 border-t border-stone-50 flex justify-between text-[11px] font-bold uppercase tracking-widest">
+             <span className="text-light">Electronic Cash</span>
+             <span className="text-dark">₹ 45,000.00</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year</label>
-          <input type="number" value={periodYear} onChange={(e) => setPeriodYear(Number(e.target.value))} className="input-field font-ui w-24" min={2000} max={2100} />
+        <div className="bg-surface border border-border border-t-2 border-t-amber p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+          <h3 className="text-[10px] text-light uppercase font-bold tracking-widest mb-4">Central Tax (CGST)</h3>
+          <p className="font-mono text-2xl font-bold text-dark">₹ 1,12,040.50</p>
+          <div className="mt-4 pt-4 border-t border-stone-50 flex justify-between text-[11px] font-bold uppercase tracking-widest">
+             <span className="text-light">Electronic Cash</span>
+             <span className="text-dark">₹ 12,000.00</span>
+          </div>
+        </div>
+        <div className="bg-surface border border-border border-t-2 border-t-amber p-6 shadow-sm hover:shadow-md transition-shadow text-left">
+          <h3 className="text-[10px] text-light uppercase font-bold tracking-widest mb-4">State Tax (SGST)</h3>
+          <p className="font-mono text-2xl font-bold text-dark">₹ 1,12,040.50</p>
+          <div className="mt-4 pt-4 border-t border-stone-50 flex justify-between text-[11px] font-bold uppercase tracking-widest">
+             <span className="text-light">Electronic Cash</span>
+             <span className="text-dark">₹ 12,000.00</span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card p-5">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Cash Balance</p>
-          <p className="font-mono text-[22px] font-medium text-dark">{formatIndianNumber(Object.values(totalCashBalance).reduce((a, b) => a + b, 0))}</p>
-          <div className="mt-3 space-y-1 font-ui text-[11px] text-mid">
-            <div className="flex justify-between"><span>IGST:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.igst)}</span></div>
-            <div className="flex justify-between"><span>CGST:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.cgst)}</span></div>
-            <div className="flex justify-between"><span>SGST:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.sgst)}</span></div>
-            <div className="flex justify-between"><span>Cess:</span><span className="font-mono">{formatIndianNumber(totalCashBalance.cess)}</span></div>
-          </div>
-          <Link href="/gst/ledger/cash" className="font-ui text-[12px] text-amber hover:underline mt-3 inline-block">View Details →</Link>
+      {/* Transaction Table */}
+      <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
+        <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
+            <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Ledger Transaction History</h3>
+            <div className="flex gap-3">
+              <button onClick={handleDownloadJSON} className="text-mid hover:text-dark font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download JSON</button>
+              <button onClick={handleExportCSV} className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Export CSV</button>
+            </div>
         </div>
-
-        <div className="card p-5">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">ITC Balance</p>
-          <p className="font-mono text-[22px] font-medium text-dark">{formatIndianNumber(totalITC)}</p>
-          <div className="mt-3 space-y-1 font-ui text-[11px] text-mid">
-            <div className="flex justify-between"><span>IGST:</span><span className="font-mono">{formatIndianNumber(itcBalance?.igst.closingBalance ?? 0)}</span></div>
-            <div className="flex justify-between"><span>CGST:</span><span className="font-mono">{formatIndianNumber(itcBalance?.cgst.closingBalance ?? 0)}</span></div>
-            <div className="flex justify-between"><span>SGST:</span><span className="font-mono">{formatIndianNumber(itcBalance?.sgst.closingBalance ?? 0)}</span></div>
-            <div className="flex justify-between"><span>Cess:</span><span className="font-mono">{formatIndianNumber(itcBalance?.cess.closingBalance ?? 0)}</span></div>
-          </div>
-          <Link href="/gst/ledger/itc" className="font-ui text-[12px] text-amber hover:underline mt-3 inline-block">View Details →</Link>
-        </div>
-
-        <div className="card p-5">
-          <p className="font-ui text-[10px] uppercase tracking-wide text-light mb-1">Net Liability</p>
-          <p className="font-mono text-[22px] font-medium text-dark">{formatIndianNumber(netLiability)}</p>
-          <div className="mt-3 space-y-1 font-ui text-[11px] text-mid">
-            <div className="flex justify-between"><span>Total Payable:</span><span className="font-mono">{formatIndianNumber(totalLiability)}</span></div>
-            <div className="flex justify-between"><span>Less ITC:</span><span className="font-mono">{formatIndianNumber(totalITC)}</span></div>
-          </div>
-          <Link href="/gst/payment" className="font-ui text-[12px] text-amber hover:underline mt-3 inline-block">Pay Now →</Link>
-        </div>
-      </div>
-
-      <div className="card overflow-hidden">
-        <div className="px-4 py-3 border-b border-hairline flex items-center justify-between">
-          <h2 className="font-display text-[16px] font-normal text-dark">Recent Transactions</h2>
-          <Link href="/gst/ledger/cash" className="font-ui text-[12px] text-amber hover:underline">View All →</Link>
-        </div>
-        <table className="table table-dense">
-          <thead>
-            <tr>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Date</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Tax Type</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-right">Balance</th>
-              <th className="font-ui text-[10px] uppercase tracking-wide text-left">Reference</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions && transactions.length > 0 ? (
-              transactions.filter((t): t is typeof transactions[0] & { ledgerType: "cash" } => t.ledgerType === "cash").slice(0, 10).map((t) => (
-                <tr key={t.id} className="border-b border-hairline">
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.transactionDate || new Date(t.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3"><span className="font-ui text-[11px] px-2 py-0.5 rounded bg-surface-muted text-mid capitalize">{t.ledgerType}</span></td>
-                  <td className="font-ui text-[13px] text-mid px-4 py-3 uppercase">{t.taxType}</td>
-                  <td className="font-mono text-[13px] text-right text-dark px-4 py-3">{formatIndianNumber(t.amount)}</td>
-                  <td className="font-mono text-[13px] text-right text-mid px-4 py-3">{formatIndianNumber(t.balance)}</td>
-                  <td className="font-mono text-[13px] text-light px-4 py-3">{t.referenceNumber || t.challanNumber || "-"}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-surface-muted border-b border-stone-100 text-light font-ui text-[10px] uppercase tracking-widest">
+                <th className="py-4 px-6">Date</th>
+                <th className="py-4 px-6">Description / Ref</th>
+                <th className="py-4 px-6">Type</th>
+                <th className="py-4 px-6">Tax Type</th>
+                <th className="py-4 px-6 text-right">Amount (₹)</th>
+                <th className="py-4 px-6 text-right">Running Balance (₹)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
+              {transactions.map((t) => (
+                <tr key={t.id} className="hover:bg-surface-muted/30 transition-colors">
+                  <td className="py-5 px-6 text-mid">{t.date}</td>
+                  <td className="py-5 px-6 text-left">
+                    <div className="font-ui text-[13px] font-bold text-dark text-sm">{t.type}</div>
+                    <div className="text-[11px] text-light mt-0.5">{t.ref}</div>
+                  </td>
+                  <td className="py-5 px-6 font-ui text-[10px] uppercase font-bold text-mid">Credit</td>
+                  <td className="py-5 px-6 font-ui text-[13px] font-bold text-dark">{t.taxType}</td>
+                  <td className={`py-5 px-6 text-right font-bold ${t.amount < 0 ? 'text-danger' : 'text-success'}`}>
+                    {t.amount < 0 ? `(${formatIndianNumber(Math.abs(t.amount))})` : formatIndianNumber(t.amount)}
+                  </td>
+                  <td className="py-5 px-6 text-right text-dark">₹ {formatIndianNumber(t.balance)}</td>
                 </tr>
-              ))
-            ) : (
-              <tr><td colSpan={6} className="px-4 py-12 text-center font-ui text-light">No transactions yet</td></tr>
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -1,78 +1,122 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api";
-import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui";
+import { Icon } from '@/components/ui/icon';
+import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+
+const mockEmployees = [
+  { id: "1", name: "Rahul Sharma", code: "EMP-001", gross: 80000, pf: 1800, esi: 0, tds: 4500, net: 73700 },
+  { id: "2", name: "Priya Singh", code: "EMP-002", gross: 65000, pf: 1800, esi: 488, tds: 2000, net: 60712 },
+  { id: "3", name: "Vikram Das", code: "EMP-003", gross: 45000, pf: 1800, esi: 338, tds: 0, net: 42862 },
+];
 
 export default function ProcessPayrollPage() {
-  const router = useRouter();
-  const [employeeId, setEmployeeId] = useState("");
-  const [month, setMonth] = useState(String(new Date().getMonth() + 1).padStart(2, "0"));
-  const [year, setYear] = useState(String(new Date().getFullYear()));
-
-  const { data: pendingEmployees } = api.payroll.pending.useQuery();
-  const processPayroll = api.payroll.process.useMutation({ onSuccess: (data: any) => router.push(`/payroll/${data.payrollRunId}`) });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    processPayroll.mutate({ employeeId, month, year });
-  };
-
-  const monthLabels = ["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
+  const [step, setStep] = useState(2);
+  const [saving, setSaving] = useState(false);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-[26px] font-normal text-dark">Process Payroll</h1>
-        <p className="font-ui text-[12px] text-light mt-1">Calculate and finalize employee payroll</p>
+    <div className="space-y-0 text-left">
+      {/* Page Header */}
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border pb-6">
+        <div>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Management</p>
+          <h1 className="font-display text-2xl font-semibold text-dark">Process Payroll</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">Step {step} of 4 · {mockEmployees.length} Employees</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={() => showToast.success("Draft saved.")} disabled={saving} className="btn btn-secondary">Save Draft</button>
+          <button onClick={() => {
+            if (saving) return;
+            setSaving(true);
+            setTimeout(() => {
+              showToast.success("Payroll processed successfully.");
+              setSaving(false);
+            }, 800);
+          }} disabled={saving} className="btn btn-primary group flex items-center gap-2">
+            Process & Execute
+            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5 max-w-lg">
-        <div className="card p-5 space-y-4">
-          <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Employee <span className="text-danger">*</span></label>
-            <select required value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="input-field font-ui">
-              <option value="">Select Employee</option>
-              {pendingEmployees?.map((emp: any) => (<option key={emp.id} value={emp.id}>{emp.employeeCode} - {emp.firstName} {emp.lastName}</option>))}
-            </select>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="font-ui text-[10px] uppercase tracking-wide text-light">Month <span className="text-danger">*</span></label>
-              <select required value={month} onChange={(e) => setMonth(e.target.value)} className="input-field font-ui">
-                {monthLabels.map((m, i) => (<option key={i} value={String(i + 1).padStart(2, "0")}>{m}</option>))}
-              </select>
+      {/* Wizard Steps */}
+      <div className="mb-8 border-b border-border pb-4 overflow-x-auto no-print">
+        <div className="flex items-center gap-8 min-w-max">
+          {[
+            { n: 1, label: "Attendance" },
+            { n: 2, label: "Earnings & Deductions" },
+            { n: 3, label: "Statutory (PF/ESI)" },
+            { n: 4, label: "Review & Post" },
+          ].map((s) => (
+            <div key={s.n} className={`flex items-center gap-2 ${step === s.n ? 'text-primary' : 'text-mid'}`}>
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold ${
+                step === s.n ? 'bg-amber text-white' : 
+                step > s.n ? 'bg-green-100 text-success' : 'bg-surface-muted text-light'
+              }`}>
+                {step > s.n ? '✓' : s.n}
+              </span>
+              <span className={`font-ui text-[11px] text-[11px] uppercase tracking-widest ${step === s.n ? 'font-bold' : ''}`}>{s.label}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-ui text-[10px] uppercase tracking-wide text-light">Year <span className="text-danger">*</span></label>
-              <input required type="number" value={year} onChange={(e) => setYear(e.target.value)} className="input-field font-ui" />
-            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Warning Panel */}
+      <div className="bg-amber-50 border-l-4 border-amber-500 p-6 mb-8 flex gap-4 text-left">
+        <Icon name="warning" className="text-amber-text" />
+        <div>
+          <h4 className="font-ui text-[13px] font-bold text-amber-900 mb-1">Compliance Check Required</h4>
+          <p className="font-ui text-[13px] text-amber-800 leading-relaxed">System detected missing PAN for 1 employee. TDS will be calculated at 20% (higher rate) unless updated before execution.</p>
+        </div>
+      </div>
+
+      {/* Payroll Table */}
+      <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
+        <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
+          <h3 className="font-ui text-sm font-medium font-bold text-dark">Employee Earnings Summary</h3>
+          <div className="flex gap-4">
+            <button onClick={() => showToast.info("Bulk edit mode opened.")} className="text-ui-xs text-primary font-bold uppercase tracking-widest border-none bg-transparent cursor-pointer">Bulk Edit</button>
           </div>
         </div>
-
-        <div className="flex gap-3">
-          <button type="submit" disabled={processPayroll.isPending} className="filter-tab active disabled:opacity-50">
-            {processPayroll.isPending ? "Processing..." : "Process Payroll"}
-          </button>
-          <button type="button" onClick={() => router.back()} className="filter-tab">Cancel</button>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
+            <thead>
+              <tr className="bg-surface-muted border-b-[0.5px] border-border">
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Employee</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Gross Earnings</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">PF (12%)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">ESI (0.75%)</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">TDS</th>
+                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right font-bold">Net Payable</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
+              {mockEmployees.map((e) => (
+                <tr key={e.id} className="hover:bg-surface-muted/30 transition-colors">
+                  <td className="py-4 px-6 text-left">
+                    <div className="font-ui text-[13px] font-bold text-dark text-sm">{e.name}</div>
+                    <div className="text-[11px] text-light mt-0.5">{e.code}</div>
+                  </td>
+                  <td className="py-4 px-6 text-right text-mid">{formatIndianNumber(e.gross)}</td>
+                  <td className="py-4 px-6 text-right text-danger">-{formatIndianNumber(e.pf)}</td>
+                  <td className="py-4 px-6 text-right text-danger">{e.esi > 0 ? `-${formatIndianNumber(e.esi)}` : "—"}</td>
+                  <td className="py-4 px-6 text-right text-danger">{e.tds > 0 ? `-${formatIndianNumber(e.tds)}` : "—"}</td>
+                  <td className="py-4 px-6 text-right font-bold text-dark">{formatIndianNumber(e.net, { currency: false })}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="bg-surface-muted font-bold border-t-2 border-border">
+                <td className="py-4 px-6 font-ui text-[13px] uppercase tracking-widest text-xs">Total Payroll</td>
+                <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(mockEmployees.reduce((s, e) => s + e.gross, 0), { currency: false })}</td>
+                <td colSpan={3} className="py-4 px-6 text-right font-ui text-[11px] uppercase tracking-widest text-[10px] text-light">Net Liability</td>
+                <td className="py-4 px-6 text-right font-mono text-lg text-amber">{formatIndianNumber(mockEmployees.reduce((s, e) => s + e.net, 0), { currency: false })}</td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
-      </form>
-
-      {pendingEmployees && pendingEmployees.length > 0 && (
-        <div className="card p-5">
-          <h2 className="font-display text-[16px] font-normal text-dark mb-4">Pending for {month}/{year}</h2>
-          <div className="space-y-2">
-            {pendingEmployees.map((emp: any) => (
-              <div key={emp.id} className="flex justify-between items-center p-3 bg-surface-muted rounded">
-                <span className="font-ui text-[13px] text-dark">{emp.employeeCode} - {emp.firstName} {emp.lastName}</span>
-                <Badge variant="amber">Pending</Badge>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

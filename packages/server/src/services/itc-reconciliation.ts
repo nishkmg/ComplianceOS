@@ -8,6 +8,7 @@
 
 import { z } from 'zod';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { logger } from '../lib/logger';
 
 // Constants
 const VALUE_TOLERANCE_ABSOLUTE = 1; // ₹1
@@ -87,9 +88,7 @@ async function loadPurchaseRegister(
 
   // Stub implementation - actual schema integration in V2
   // This will be replaced with actual DB queries once schema is finalized
-  console.log(
-    `Loading purchase register for tenant ${tenantId}, period ${periodMonth}/${periodYear}`
-  );
+  logger.info('Loading purchase register', { tenantId, periodMonth, periodYear });
   
   // Return empty array for now - actual implementation will query DB
   return [];
@@ -110,9 +109,7 @@ async function loadGstr2bData(
 
   // Generate simulated 2B data based on books with some variations
   // This is for testing/demo purposes only
-  console.log(
-    `GSTR-2B stub: Loading data for ${periodMonth}/${periodYear}. In production, fetch from GSTN API.`
-  );
+  logger.info('GSTR-2B stub: Loading data', { periodMonth, periodYear });
 
   // Return empty array for now - actual implementation will fetch from GSTN
   return [];

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { createAccount } from "../commands/create-account";
 import { modifyAccount } from "../commands/modify-account";
 import { deactivateAccount } from "../commands/deactivate-account";
@@ -20,7 +20,7 @@ export const accountsRouter = router({
     return result[0] ?? null;
   }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(z.object({
       code: z.string(),
       name: z.string(),
@@ -31,18 +31,18 @@ export const accountsRouter = router({
       tags: z.array(z.string()).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return createAccount(ctx.db, ctx.tenantId, ctx.session!.user.id, input);
+      return createAccount(ctx.db, ctx.tenantId, ctx.session.user.id, input);
     }),
 
-  modify: publicProcedure
+  modify: protectedProcedure
     .input(z.object({ id: z.string().uuid(), name: z.string().optional(), parentId: z.string().uuid().optional() }))
     .mutation(async ({ ctx, input }) => {
-      return modifyAccount(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id, input);
+      return modifyAccount(ctx.db, ctx.tenantId, input.id, ctx.session.user.id, input);
     }),
 
-  deactivate: publicProcedure
+  deactivate: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return deactivateAccount(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
+      return deactivateAccount(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
     }),
 });
