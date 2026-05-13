@@ -80,15 +80,18 @@ export default function AuditLogPage() {
           <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none" value={filterModule} onChange={(e) => setFilterModule(e.target.value)}>
             <option value="all">All Modules</option>
             <option>General Ledger</option>
+            <option>TDS Compliance</option>
             <option>Vouchers</option>
             <option>User Access</option>
+            <option>GST Liability</option>
           </select>
           <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none" value={filterAction} onChange={(e) => setFilterAction(e.target.value)}>
             <option value="all">All Actions</option>
-            <option>CREATE</option>
-            <option>UPDATE</option>
-            <option>DELETE</option>
-            <option>LOGIN</option>
+            <option>Update</option>
+            <option>Generate</option>
+            <option>Delete</option>
+            <option>Login</option>
+            <option>Post</option>
           </select>
           <button onClick={() => showToast.info("Advanced filters opened.")} className="px-4 py-2 bg-surface-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-zinc-200 transition-colors flex items-center gap-2 border border-border cursor-pointer">
             <Icon name="filter_list" className="text-sm" /> More Filters

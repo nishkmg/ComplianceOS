@@ -1,15 +1,12 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function AuditLogDetailPage() {
-  const params = useParams();
   const { activeFy } = useFiscalYear();
-  const id = params.id as string;
 
   const mockEntry = {
     id: "0x9f8b2a1c",
