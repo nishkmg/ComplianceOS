@@ -26,7 +26,7 @@ export default function FiscalYearDetailPage() {
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Fiscal Year Detail · FY {activeFy}</p>
           <div className="flex items-center gap-4 mb-3">
             <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">FY 2024-25</h1>
-            <span className="font-ui text-[10px] uppercase tracking-widest text-amber border border-amber px-3 py-1 bg-amber-50 rounded-md font-bold">Open</span>
+            <span className="font-ui text-[10px] uppercase tracking-widest text-mid border border-zinc-200 px-3 py-1 bg-surface-muted rounded-md font-bold">Closed</span>
           </div>
           <p className="text-[13px] text-secondary font-ui mt-1">Reporting period: April 1, 2024 — March 31, 2025</p>
         </div>

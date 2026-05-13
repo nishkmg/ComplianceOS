@@ -6,7 +6,7 @@ import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const fiscalYears = [
-  { id: "1", name: "FY 2024-25", period: "01 Apr 2024 - 31 Mar 2025", status: "open", entries: 12483, lastActivity: "24 Oct 2024" },
+  { id: "1", name: "FY 2024-25", period: "01 Apr 2024 - 31 Mar 2025", status: "closed", entries: 12483, lastActivity: "24 Oct 2024" },
   { id: "2", name: "FY 2023-24", period: "01 Apr 2023 - 31 Mar 2024", status: "closed", entries: 45120, lastActivity: "15 Apr 2024" },
   { id: "3", name: "FY 2022-23", period: "01 Apr 2022 - 31 Mar 2023", status: "archived", entries: 38902, lastActivity: "10 Apr 2023" },
 ];
