@@ -173,12 +173,12 @@ export default function BalanceSheetPage() {
                 {equityAccounts.map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Equity</span>
-                  <span className="font-mono text-[13px] tabular-nums font-bold">{formatIndianNumber(totalEquity)}</span>
+                  <span className="font-mono text-[13px] tabular-nums font-bold">₹ {formatIndianNumber(totalEquity, { currency: false })}</span>
                 </div>
               </div>
 
@@ -187,12 +187,12 @@ export default function BalanceSheetPage() {
                 {liabilityAccounts.map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Liabilities</span>
-                  <span className="font-mono text-[13px] tabular-nums font-bold">{formatIndianNumber(totalLiabilities)}</span>
+                  <span className="font-mono text-[13px] tabular-nums font-bold">₹ {formatIndianNumber(totalLiabilities, { currency: false })}</span>
                 </div>
               </div>
             </div>
@@ -215,13 +215,13 @@ export default function BalanceSheetPage() {
                 {assetAccounts.slice(5).map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Non-Current Assets</span>
                   <span className="font-mono text-[13px] tabular-nums font-bold">
-                    {formatIndianNumber(assetAccounts.slice(5).reduce((s, a) => s + a.balance, 0))}
+                    ₹ {formatIndianNumber(assetAccounts.slice(5).reduce((s, a) => s + a.balance, 0), { currency: false })}
                   </span>
                 </div>
               </div>
@@ -231,13 +231,13 @@ export default function BalanceSheetPage() {
                 {assetAccounts.slice(0, 5).map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Current Assets</span>
                   <span className="font-mono text-[13px] tabular-nums font-bold">
-                    {formatIndianNumber(assetAccounts.slice(0, 5).reduce((s, a) => s + a.balance, 0))}
+                    ₹ {formatIndianNumber(assetAccounts.slice(0, 5).reduce((s, a) => s + a.balance, 0), { currency: false })}
                   </span>
                 </div>
               </div>
