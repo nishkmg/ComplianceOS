@@ -112,6 +112,7 @@ export default function LedgerReportPage() {
           </button>
           <button onClick={() => {
             if (!selectedAccount) { showToast.error("Select an account first."); return; }
+            if (transactions.length === 0) { showToast.error("No transactions to export."); return; }
             const header = "Date,Narration,Voucher,Debit,Credit,Balance";
             const rows = transactions.map((t, i) => `${t.date},"${t.narration}",${t.voucherNumber},${t.debit},${t.credit},${openingBalance + transactions.slice(0, i + 1).reduce((s, x) => s + x.debit - x.credit, 0)}`);
             const csv = [header, ...rows].join("\n");
