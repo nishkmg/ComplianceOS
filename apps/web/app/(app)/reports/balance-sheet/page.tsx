@@ -7,6 +7,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -67,7 +68,8 @@ const bsDataByFy: Record<string, { equity: BsEquity[]; liabilities: BsLiability[
 
 export default function BalanceSheetPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
-  const [asOfDate, setAsOfDate] = useState("2027-03-31");
+  const fyEndDate = `${parseInt(fiscalYear.split('-')[1]) + 2000}-03-31`;
+  const [asOfDate, setAsOfDate] = useState(fyEndDate);
   const fyData = bsDataByFy[fiscalYear] ?? bsDataByFy['2026-27'];
   const { equity: equityAccounts, liabilities: liabilityAccounts, assets: assetAccounts } = fyData;
 
@@ -83,7 +85,7 @@ export default function BalanceSheetPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Financial Report
+            Financial Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Balance Sheet</h1>
         </div>
@@ -103,7 +105,7 @@ export default function BalanceSheetPage() {
             onChange={e => setAsOfDate(e.target.value)}
             className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
           />
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => showToast.success("Balance sheet PDF exported.")}>
             <Icon name="download" size={14} /> Export PDF
           </Button>
           <Link

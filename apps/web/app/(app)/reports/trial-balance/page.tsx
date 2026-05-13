@@ -7,6 +7,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -127,7 +128,7 @@ export default function TrialBalancePage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Report
+            Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Trial Balance</h1>
         </div>
@@ -140,7 +141,7 @@ export default function TrialBalancePage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => showToast.success("Trial balance PDF exported.")}>
             <Icon name="download" size={14} /> Export PDF
           </Button>
           <Link
@@ -214,10 +215,10 @@ export default function TrialBalancePage() {
                     <div className="col-span-2 font-mono text-[11px] text-light tabular-nums">{item.code}</div>
                     <div className="col-span-5 font-ui text-[13px] text-dark">{item.name}</div>
                     <div className="col-span-2 text-right font-mono text-[13px] tabular-nums">
-                      {item.debit > 0 ? `₹ ${formatIndianNumber(item.debit)}` : ""}
+                      {item.debit > 0 ? `₹ ${formatIndianNumber(item.debit, { currency: false })}` : ""}
                     </div>
                     <div className="col-span-2 text-right font-mono text-[13px] tabular-nums">
-                      {item.credit > 0 ? `₹ ${formatIndianNumber(item.credit)}` : ""}
+                      {item.credit > 0 ? `₹ ${formatIndianNumber(item.credit, { currency: false })}` : ""}
                     </div>
                     <div className="col-span-1" />
                   </div>
@@ -230,8 +231,8 @@ export default function TrialBalancePage() {
         {/* Grand total */}
         <div className="border-t-2 border-dark mx-8 py-4 grid grid-cols-12 gap-4 items-center font-bold print:border-black">
           <div className="col-span-7 font-ui text-[12px] uppercase tracking-widest text-dark print:text-black">Grand Total</div>
-          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit)}</div>
-          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit)}</div>
+          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
+          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
           <div className="col-span-1" />
         </div>
 

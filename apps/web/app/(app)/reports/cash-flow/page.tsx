@@ -6,6 +6,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -97,7 +98,7 @@ export default function CashFlowPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Financial Report
+            Financial Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">For the year ended March 31, 2027 (Indirect Method)</p>
@@ -111,7 +112,7 @@ export default function CashFlowPage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.print()}>
             <Icon name="print" size={14} /> Print
           </Button>
           <Link
@@ -167,7 +168,7 @@ export default function CashFlowPage() {
                 ))}
                 <div className="grid grid-cols-12 gap-4 items-center py-3 bg-surface-muted font-semibold border-t border-border">
                   <div className="col-span-8 font-ui text-[11px] uppercase tracking-wider text-dark print:text-black">
-                    Net Cash from {section.title.split(" ").slice(2, 4).join(" ")}
+                    Net Cash from {section.title.split(" from ").pop()}
                   </div>
                   <div className={`col-span-2 text-right font-mono text-[13px] tabular-nums ${
                     section.total < 0 ? 'text-danger' : 'text-dark'

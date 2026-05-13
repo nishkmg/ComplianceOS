@@ -6,6 +6,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 // ─── Mock data — Schedule III format ──────────────────────────────────────────
 
@@ -58,7 +59,7 @@ export default function ProfitLossPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Financial Performance
+            Financial Performance · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss Account</h1>
           <p className="font-ui text-[13px] text-secondary mt-1">Schedule III — Section 129 of Companies Act, 2013</p>
@@ -72,7 +73,7 @@ export default function ProfitLossPage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.print()}>
             <Icon name="print" size={14} /> Print
           </Button>
           <Link

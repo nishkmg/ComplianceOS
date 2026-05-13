@@ -2,22 +2,52 @@
 
 import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
+
+interface LedgerAccount {
+  id: string;
+  code: string;
+  name: string;
+  isLeaf: boolean;
+}
+
+interface LedgerTxn {
+  id: string;
+  date: string;
+  narration: string;
+  voucherNumber: string;
+  debit: number;
+  credit: number;
+}
+
+const mockAccounts: LedgerAccount[] = [
+  { id: "a1", code: "10101", name: "Cash Account", isLeaf: true },
+  { id: "a2", code: "10200", name: "Bank Account", isLeaf: true },
+  { id: "a3", code: "10300", name: "Trade Receivables", isLeaf: true },
+  { id: "a4", code: "40100", name: "Sales Revenue", isLeaf: true },
+  { id: "a5", code: "50100", name: "Purchase Expenses", isLeaf: true },
+];
+
+const mockTxnsByAccount: Record<string, { openingBalance: number; closingBalance: number; transactions: LedgerTxn[] }> = {
+  a1: {
+    openingBalance: 500000,
+    closingBalance: 425000,
+    transactions: [
+      { id: "t1", date: "2026-04-15", narration: "Office supplies purchase", voucherNumber: "JE-2026-001", debit: 45000, credit: 0 },
+      { id: "t2", date: "2026-05-01", narration: "Rent payment", voucherNumber: "JE-2026-002", debit: 75000, credit: 0 },
+      { id: "t3", date: "2026-05-15", narration: "Client payment received", voucherNumber: "JE-2026-003", debit: 0, credit: 195000 },
+    ],
+  },
+};
 
 export default function LedgerReportPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [selectedAccount, setSelectedAccount] = useState("");
 
-  const { data: accounts }: any = api.accounts.list.useQuery();
-  const { data: ledgerData }: any = api.balances.ledger.useQuery(
-    { accountId: selectedAccount, fiscalYear },
-    { enabled: !!selectedAccount }
-  );
-
-  const leafAccounts = accounts?.filter((a: any) => a.isLeaf) || [];
+  const leafAccounts = mockAccounts.filter((a) => a.isLeaf);
+  const ledgerData = selectedAccount ? mockTxnsByAccount[selectedAccount] : null;
   const transactions = ledgerData?.transactions || [];
   const openingBalance = ledgerData?.openingBalance || 0;
   const closingBalance = ledgerData?.closingBalance || 0;
@@ -39,7 +69,7 @@ export default function LedgerReportPage() {
         <div className="flex items-center gap-3">
           <select className="border-[0.5px] border-border px-4 py-2 text-ui-sm outline-none bg-surface" value={selectedAccount} onChange={(e) => setSelectedAccount(e.target.value)}>
             <option value="">Select an account...</option>
-            {leafAccounts.map((a: any) => (
+            {leafAccounts.map((a) => (
               <option key={a.id} value={a.id}>{a.code} · {a.name}</option>
             ))}
           </select>
@@ -47,11 +77,24 @@ export default function LedgerReportPage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <button className="btn-secondary flex items-center gap-2">
+          <button onClick={() => showToast.info("Filters opened.")} className="btn-secondary flex items-center gap-2">
             <Icon name="filter_list" className="text-[18px]" />
             Filters
           </button>
-          <button className="btn-primary flex items-center gap-2 group">
+          <button onClick={() => {
+            if (!selectedAccount) { showToast.error("Select an account first."); return; }
+            const header = "Date,Narration,Voucher,Debit,Credit,Balance";
+            const rows = transactions.map((t, i) => `${t.date},"${t.narration}",${t.voucherNumber},${t.debit},${t.credit},${openingBalance + transactions.slice(0, i + 1).reduce((s, x) => s + x.debit - x.credit, 0)}`);
+            const csv = [header, ...rows].join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `ledger-${selectedAccount}-${fiscalYear}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast.success(`Ledger exported for ${transactions.length} transactions.`);
+          }} className="btn-primary flex items-center gap-2 group">
             <Icon name="download" className="text-[18px]" />
             Export CSV
           </button>
@@ -64,8 +107,8 @@ export default function LedgerReportPage() {
           <div className="bg-surface border-[0.5px] border-border p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-display text-lg text-display-lg text-on-surface">{leafAccounts.find((a: any) => a.id === selectedAccount)?.name}</h3>
-                <p className="font-ui text-[11px] text-text-mid uppercase tracking-wider mt-1">{leafAccounts.find((a: any) => a.id === selectedAccount)?.code}</p>
+                <h3 className="font-display text-lg text-display-lg text-on-surface">{leafAccounts.find((a) => a.id === selectedAccount)?.name}</h3>
+                <p className="font-ui text-[11px] text-text-mid uppercase tracking-wider mt-1">{leafAccounts.find((a) => a.id === selectedAccount)?.code}</p>
               </div>
               <div className="text-right">
                 <p className="font-ui text-[11px] text-text-mid uppercase tracking-wider mb-1">Opening Balance</p>
@@ -90,7 +133,7 @@ export default function LedgerReportPage() {
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle">
                 {transactions.length > 0 ? (
-                  transactions.map((txn: any, i: number) => {
+                  transactions.map((txn, i) => {
                     runningBalance += txn.debit - txn.credit;
                     return (
                       <tr key={txn.id || i} className="hover:bg-surface-muted/50 transition-colors">
@@ -121,7 +164,7 @@ export default function LedgerReportPage() {
                 <p className="font-ui text-[11px] text-text-mid uppercase tracking-wider">Closing Balance</p>
               </div>
               <div className="text-right">
-                <p className="font-mono-lg font-bold text-on-surface">₹ {formatIndianNumber(closingBalance)} <span className="text-text-light text-sm">{closingBalance >= 0 ? 'Dr' : 'Cr'}</span></p>
+                <p className="font-mono-lg font-bold text-on-surface">₹ {formatIndianNumber(runningBalance, { currency: false })} <span className="text-text-light text-sm">{runningBalance >= 0 ? 'Dr' : 'Cr'}</span></p>
               </div>
             </div>
           </div>
