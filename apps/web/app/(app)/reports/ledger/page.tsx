@@ -79,7 +79,6 @@ export default function LedgerReportPage() {
   const ledgerData = selectedAccount ? mockTxnsByAccount[selectedAccount] : null;
   const transactions = ledgerData?.transactions || [];
   const openingBalance = ledgerData?.openingBalance || 0;
-  const closingBalance = ledgerData?.closingBalance || 0;
 
   let runningBalance = openingBalance;
 
