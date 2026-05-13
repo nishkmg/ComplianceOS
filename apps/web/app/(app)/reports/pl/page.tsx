@@ -14,38 +14,70 @@ interface ReportLine {
   indent?: number;
 }
 
-const sections: { title: string; lines: ReportLine[] }[] = [
-  {
-    title: "I. Revenue From Operations",
-    lines: [
-      { note: "1", label: "Revenue from operations", currentYear: 856.4, previousYear: 724.8 },
-      { note: "2", label: "Other income", currentYear: 24.6, previousYear: 18.2 },
-      { note: "", label: "Total Revenue (I+II)", currentYear: 881.0, previousYear: 743.0, isTotal: true },
-    ],
-  },
-  {
-    title: "II. Expenses",
-    lines: [
-      { note: "3", label: "Cost of materials consumed", currentYear: 412.3, previousYear: 356.8 },
-      { note: "4", label: "Employee benefits expense", currentYear: 124.5, previousYear: 108.2 },
-      { note: "5", label: "Finance costs", currentYear: 18.5, previousYear: 15.2 },
-      { note: "6", label: "Depreciation", currentYear: 24.8, previousYear: 22.1 },
-      { note: "7", label: "Other expenses", currentYear: 86.3, previousYear: 72.4 },
-      { note: "", label: "Total Expenses", currentYear: 666.4, previousYear: 574.7, isTotal: true },
-    ],
-  },
-  {
-    title: "III. Profit Before Tax",
-    lines: [
-      { note: "", label: "Profit Before Tax (I - II)", currentYear: 214.6, previousYear: 168.3, isTotal: true },
-      { note: "8", label: "Tax expense", currentYear: 54.2, previousYear: 42.5 },
-      { note: "", label: "Profit for the year", currentYear: 160.4, previousYear: 125.8, isSection: true },
-    ],
-  },
-];
+const sectionsByFy: Record<string, { title: string; lines: ReportLine[] }[]> = {
+  '2026-27': [
+    {
+      title: "I. Revenue From Operations",
+      lines: [
+        { note: "1", label: "Revenue from operations", currentYear: 856.4, previousYear: 724.8 },
+        { note: "2", label: "Other income", currentYear: 24.6, previousYear: 18.2 },
+        { note: "", label: "Total Revenue (I+II)", currentYear: 881.0, previousYear: 743.0, isTotal: true },
+      ],
+    },
+    {
+      title: "II. Expenses",
+      lines: [
+        { note: "3", label: "Cost of materials consumed", currentYear: 412.3, previousYear: 356.8 },
+        { note: "4", label: "Employee benefits expense", currentYear: 124.5, previousYear: 108.2 },
+        { note: "5", label: "Finance costs", currentYear: 18.5, previousYear: 15.2 },
+        { note: "6", label: "Depreciation", currentYear: 24.8, previousYear: 22.1 },
+        { note: "7", label: "Other expenses", currentYear: 86.3, previousYear: 72.4 },
+        { note: "", label: "Total Expenses", currentYear: 666.4, previousYear: 574.7, isTotal: true },
+      ],
+    },
+    {
+      title: "III. Profit Before Tax",
+      lines: [
+        { note: "", label: "Profit Before Tax (I - II)", currentYear: 214.6, previousYear: 168.3, isTotal: true },
+        { note: "8", label: "Tax expense", currentYear: 54.2, previousYear: 42.5 },
+        { note: "", label: "Profit for the year", currentYear: 160.4, previousYear: 125.8, isSection: true },
+      ],
+    },
+  ],
+  '2025-26': [
+    {
+      title: "I. Revenue From Operations",
+      lines: [
+        { note: "1", label: "Revenue from operations", currentYear: 724.8, previousYear: 624.5 },
+        { note: "2", label: "Other income", currentYear: 18.2, previousYear: 14.6 },
+        { note: "", label: "Total Revenue (I+II)", currentYear: 743.0, previousYear: 639.1, isTotal: true },
+      ],
+    },
+    {
+      title: "II. Expenses",
+      lines: [
+        { note: "3", label: "Cost of materials consumed", currentYear: 356.8, previousYear: 302.4 },
+        { note: "4", label: "Employee benefits expense", currentYear: 108.2, previousYear: 92.6 },
+        { note: "5", label: "Finance costs", currentYear: 15.2, previousYear: 12.8 },
+        { note: "6", label: "Depreciation", currentYear: 22.1, previousYear: 19.8 },
+        { note: "7", label: "Other expenses", currentYear: 72.4, previousYear: 62.1 },
+        { note: "", label: "Total Expenses", currentYear: 574.7, previousYear: 489.7, isTotal: true },
+      ],
+    },
+    {
+      title: "III. Profit Before Tax",
+      lines: [
+        { note: "", label: "Profit Before Tax (I - II)", currentYear: 168.3, previousYear: 149.4, isTotal: true },
+        { note: "8", label: "Tax expense", currentYear: 42.5, previousYear: 38.2 },
+        { note: "", label: "Profit for the year", currentYear: 125.8, previousYear: 111.2, isSection: true },
+      ],
+    },
+  ],
+};
 
 export default function PLScheduleIIIPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
+  const sections = sectionsByFy[fiscalYear] ?? sectionsByFy['2026-27'];
 
   return (
     <div className="bg-page-bg text-on-surface font-ui text-sm font-medium min-h-screen">
