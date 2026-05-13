@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Modal } from '@/components/ui/modal';
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
@@ -16,10 +17,28 @@ interface QuickAction {
   label: string;
   description: string;
   icon: string;
-  toast: string;
 }
 
 // ─── Mock Data ─────────────────────────────────────────────────────────────────
+
+const mockUser = {
+  name: "Rahul Sharma",
+  email: "rahul@complianceos.test",
+  accountId: "COMP-2024-001",
+};
+
+const modules = [
+  "Journal",
+  "Chart of Accounts",
+  "Invoices",
+  "Payments",
+  "GST",
+  "ITR",
+  "Payroll",
+  "Inventory",
+  "Reports",
+  "Other",
+];
 
 const faqData: FaqItem[] = [
   { q: "How do I close a fiscal year?", a: "Navigate to Settings > Fiscal Years, select the open FY, and click 'Close FY'. Ensure all journal entries are posted and GST reconciliation is complete before closure. Closed years are locked and cannot be modified." },
@@ -31,10 +50,10 @@ const faqData: FaqItem[] = [
 ];
 
 const quickActions: QuickAction[] = [
-  { label: "Contact Support", description: "Email or call our help desk", icon: "contact_support", toast: "Opening support ticket form." },
-  { label: "Documentation", description: "User guides & API reference", icon: "menu_book", toast: "Opening knowledge base." },
-  { label: "System Status", description: "All services operational", icon: "check_circle", toast: "All systems healthy." },
-  { label: "Report a Bug", description: "Submit an issue to engineering", icon: "bug_report", toast: "Bug report form opened." },
+  { label: "Contact Support", description: "Submit a query to our team", icon: "contact_support" },
+  { label: "Documentation", description: "User guides & API reference", icon: "menu_book" },
+  { label: "System Status", description: "All services operational", icon: "check_circle" },
+  { label: "Report a Bug", description: "Submit an issue to engineering", icon: "bug_report" },
 ];
 
 // ─── Page Component ───────────────────────────────────────────────────────────
@@ -44,6 +63,16 @@ export default function SupportPage() {
   const [search, setSearch] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Modal states
+  const [contactOpen, setContactOpen] = useState(false);
+  const [bugOpen, setBugOpen] = useState(false);
+
+  // Form states
+  const [contactMsg, setContactMsg] = useState("");
+  const [bugModule, setBugModule] = useState("");
+  const [bugDesc, setBugDesc] = useState("");
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 400);
@@ -56,6 +85,30 @@ export default function SupportPage() {
       item.q.toLowerCase().includes(search.toLowerCase()) ||
       item.a.toLowerCase().includes(search.toLowerCase())
   );
+
+  const resetContactForm = () => { setContactMsg(""); setSending(false); };
+  const resetBugForm = () => { setBugModule(""); setBugDesc(""); setSending(false); };
+
+  const handleSendMessage = () => {
+    if (!contactMsg.trim()) { showToast.error("Please enter a message."); return; }
+    setSending(true);
+    setTimeout(() => {
+      showToast.success("Message sent. We'll respond within 4 hours.");
+      setContactOpen(false);
+      resetContactForm();
+    }, 600);
+  };
+
+  const handleSubmitBug = () => {
+    if (!bugModule) { showToast.error("Please select a module."); return; }
+    if (!bugDesc.trim()) { showToast.error("Please describe the bug."); return; }
+    setSending(true);
+    setTimeout(() => {
+      showToast.success("Bug report submitted. Thank you.");
+      setBugOpen(false);
+      resetBugForm();
+    }, 600);
+  };
 
   return (
     <div className="space-y-8 text-left">
@@ -81,17 +134,35 @@ export default function SupportPage() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {quickActions.map((action) => (
-          <button
-            key={action.label}
-            onClick={() => showToast.success(action.toast)}
-            className="bg-surface border border-border p-6 hover:shadow-md transition-shadow text-left cursor-pointer group"
-          >
-            <Icon name={action.icon} className="text-amber text-2xl mb-3" />
-            <h3 className="font-ui text-[13px] font-bold text-dark mb-1">{action.label}</h3>
-            <p className="font-ui text-[11px] text-mid">{action.description}</p>
-          </button>
-        ))}
+        {quickActions.map((action) => {
+          const handleClick = () => {
+            switch (action.label) {
+              case "Contact Support":
+                setContactOpen(true);
+                break;
+              case "Documentation":
+                window.open("https://docs.complianceos.test", "_blank");
+                break;
+              case "System Status":
+                showToast.success("All systems operational · 99.9% uptime · Last incident: 12 days ago");
+                break;
+              case "Report a Bug":
+                setBugOpen(true);
+                break;
+            }
+          };
+          return (
+            <button
+              key={action.label}
+              onClick={handleClick}
+              className="bg-surface border border-border p-6 hover:shadow-md transition-shadow text-left cursor-pointer group"
+            >
+              <Icon name={action.icon} className="text-amber text-2xl mb-3" />
+              <h3 className="font-ui text-[13px] font-bold text-dark mb-1">{action.label}</h3>
+              <p className="font-ui text-[11px] text-mid">{action.description}</p>
+            </button>
+          );
+        })}
       </div>
 
       {/* FAQ */}
@@ -139,61 +210,84 @@ export default function SupportPage() {
         )}
       </section>
 
-      {/* Contact */}
-      <section className="bg-surface border border-border p-8 rounded-md">
-        <h2 className="font-display text-xl font-semibold text-dark mb-6">Get in Touch</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex items-start gap-4">
-            <Icon name="mail" className="text-amber text-2xl mt-0.5" />
-            <div>
-              <p className="font-ui text-[13px] font-bold text-dark">Email</p>
-              <a href="mailto:support@complianceos.test" className="font-ui text-[13px] text-primary hover:underline no-underline">support@complianceos.test</a>
-              <p className="font-ui text-[11px] text-light mt-1">Response within 4 hours</p>
-            </div>
+      {/* ── Contact Support Modal ───────────────────────────────────────── */}
+      <Modal open={contactOpen} onClose={() => { setContactOpen(false); resetContactForm(); }} title="Contact Support">
+        <div className="space-y-5">
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Name</label>
+            <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none" value={mockUser.name} readOnly />
           </div>
-          <div className="flex items-start gap-4">
-            <Icon name="phone" className="text-amber text-2xl mt-0.5" />
-            <div>
-              <p className="font-ui text-[13px] font-bold text-dark">Phone</p>
-              <p className="font-ui text-[13px] text-dark">+91 22 6128 4000</p>
-              <p className="font-ui text-[11px] text-light mt-1">Mon–Sat, 9 AM – 6 PM IST</p>
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Email</label>
+            <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none" value={mockUser.email} readOnly />
           </div>
-          <div className="flex items-start gap-4">
-            <Icon name="chat" className="text-amber text-2xl mt-0.5" />
-            <div>
-              <p className="font-ui text-[13px] font-bold text-dark">Live Chat</p>
-              <p className="font-ui text-[13px] text-success font-bold uppercase">Available</p>
-              <p className="font-ui text-[11px] text-light mt-1">Average wait: 2 minutes</p>
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account ID</label>
+            <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark outline-none" value={mockUser.accountId} readOnly />
           </div>
-        </div>
-      </section>
-
-      {/* Knowledge Base */}
-      <section className="bg-surface border border-border p-8 rounded-md">
-        <h2 className="font-display text-xl font-semibold text-dark mb-6">Knowledge Base</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { label: "User Guide", icon: "menu_book", desc: "Getting started & workflows" },
-            { label: "API Documentation", icon: "code", desc: "REST & webhook reference" },
-            { label: "Release Notes", icon: "history", desc: "Changelog & migrations" },
-          ].map((item) => (
-            <button
-              key={item.label}
-              onClick={() => showToast.success(`Opening ${item.label}...`)}
-              className="flex items-center gap-4 p-4 border border-border rounded-md hover:bg-surface-muted/50 transition-colors text-left cursor-pointer bg-transparent"
-            >
-              <Icon name={item.icon} className="text-amber text-xl shrink-0" />
-              <div className="flex-1">
-                <p className="font-ui text-[13px] font-bold text-dark">{item.label}</p>
-                <p className="font-ui text-[11px] text-mid">{item.desc}</p>
-              </div>
-              <Icon name="open_in_new" className="text-light text-sm shrink-0" />
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Message <span className="text-danger">*</span></label>
+            <textarea
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none resize-none"
+              rows={4}
+              placeholder="Describe your query..."
+              value={contactMsg}
+              onChange={(e) => setContactMsg(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <button onClick={() => { setContactOpen(false); resetContactForm(); }} className="btn-secondary">Cancel</button>
+            <button onClick={handleSendMessage} disabled={sending} className="btn-primary disabled:opacity-50">
+              {sending ? "Sending..." : "Send Message"}
             </button>
-          ))}
+          </div>
         </div>
-      </section>
+      </Modal>
+
+      {/* ── Report a Bug Modal ──────────────────────────────────────────── */}
+      <Modal open={bugOpen} onClose={() => { setBugOpen(false); resetBugForm(); }} title="Report a Bug">
+        <div className="space-y-5">
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Name</label>
+            <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none" value={mockUser.name} readOnly />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Email</label>
+            <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none" value={mockUser.email} readOnly />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account ID</label>
+            <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark outline-none" value={mockUser.accountId} readOnly />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Module <span className="text-danger">*</span></label>
+            <select
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none"
+              value={bugModule}
+              onChange={(e) => setBugModule(e.target.value)}
+            >
+              <option value="">Select module...</option>
+              {modules.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Describe the Bug <span className="text-danger">*</span></label>
+            <textarea
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark outline-none resize-none"
+              rows={4}
+              placeholder="What went wrong? Steps to reproduce..."
+              value={bugDesc}
+              onChange={(e) => setBugDesc(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <button onClick={() => { setBugOpen(false); resetBugForm(); }} className="btn-secondary">Cancel</button>
+            <button onClick={handleSubmitBug} disabled={sending} className="btn-primary disabled:opacity-50">
+              {sending ? "Submitting..." : "Submit Bug"}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
