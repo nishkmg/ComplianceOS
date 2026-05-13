@@ -26,7 +26,6 @@ import { itrReturnsRouter } from "./itr-returns";
 import { itrComputationRouter } from "./itr-computation";
 import { itrPaymentRouter } from "./itr-payment";
 
-// @ts-ignore TS2742 — portable declaration; type resolves correctly at consumer
 export const appRouter = router({
   accounts: accountsRouter,
   journalEntries: journalEntriesRouter,

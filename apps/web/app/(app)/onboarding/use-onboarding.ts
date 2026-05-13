@@ -1,7 +1,7 @@
 "use client";
 
-import { api } from "@/lib/api";
 import { useState, useEffect, useCallback } from "react";
+import { mockMutation } from "@/lib/mock-mutation";
 
 interface OnboardingData {
   businessProfile?: {
@@ -43,39 +43,11 @@ export function useOnboarding(tenantId?: string) {
     data: {},
     onboardingStatus: "in_progress",
     tenantId: tenantId || null,
-    isLoading: !tenantId,
+    isLoading: false,
   });
 
-  const { data: progressData, refetch }: any = api.onboarding.getProgress.useQuery(
-    // @ts-ignore - overload
-    { tenantId: tenantId! },
-    { enabled: !!tenantId, retry: false }
-  );
-
-  useEffect(() => {
-    if (progressData) {
-      setState((prev) => ({
-        ...prev,
-        currentStep: progressData.currentStep,
-        completedSteps: progressData.completedSteps,
-        data: progressData.data as OnboardingData,
-        onboardingStatus: progressData.onboardingStatus,
-        isLoading: false,
-      }));
-    }
-  }, [progressData]);
-
-  const saveProgress: any = api.onboarding.saveProgress.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
-
-  const completeOnboarding: any = api.onboarding.completeOnboarding.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
+  const saveProgress = mockMutation({ onSuccess: () => {} });
+  const completeOnboarding = mockMutation({ onSuccess: () => {} });
 
   const updateStep = useCallback(
     async (step: number, data: Record<string, unknown>) => {
@@ -99,7 +71,7 @@ export function useOnboarding(tenantId?: string) {
     updateStep,
     goToStep,
     completeOnboarding,
-    refetch,
+    refetch: () => {},
   };
 }
 
