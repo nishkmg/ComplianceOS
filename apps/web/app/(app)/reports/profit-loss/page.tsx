@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
 

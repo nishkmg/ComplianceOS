@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
 
@@ -37,6 +37,8 @@ const bsDataByFy: Record<string, { equity: BsEquity[]; liabilities: BsLiability[
       { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
       { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
       { id: "a8", name: "Intangible Assets",      balance: 120000 },
+      { id: "a9", name: "Investments",            balance: 1500000 },
+      { id: "a10", name: "Other Financial Assets", balance: 669500 },
     ],
   },
   '2025-26': {
@@ -60,6 +62,8 @@ const bsDataByFy: Record<string, { equity: BsEquity[]; liabilities: BsLiability[
       { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
       { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
       { id: "a8", name: "Intangible Assets",      balance: 120000 },
+      { id: "a9", name: "Investments",            balance: 1200000 },
+      { id: "a10", name: "Other Financial Assets", balance: 587500 },
     ],
   },
 };
