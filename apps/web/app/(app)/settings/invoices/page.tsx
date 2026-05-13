@@ -50,21 +50,21 @@ export default function InvoiceConfigPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Logo (B&W Recommended)</label>
-                  <div className="border-2 border-dashed border-border p-8 flex flex-col items-center justify-center bg-surface-muted hover:bg-surface-muted transition-colors cursor-pointer">
-                    <Icon name="upload_file" className="text-light text-3xl mb-2" />
-                    <span className="font-ui text-[10px] uppercase font-bold text-mid">Upload PNG/JPG</span>
-                  </div>
+                   <div onClick={() => showToast.info("Logo uploader opened.")} className="border-2 border-dashed border-border p-8 flex flex-col items-center justify-center bg-surface-muted hover:bg-surface-muted transition-colors cursor-pointer">
+                     <Icon name="upload_file" className="text-light text-3xl mb-2" />
+                     <span className="font-ui text-[10px] uppercase font-bold text-mid">Upload PNG/JPG</span>
+                   </div>
                </div>
                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between py-2 border-b border-stone-50">
                     <span className="font-ui text-[13px] text-dark">Show Authorized Signatory</span>
-                    <button className="w-10 h-6 rounded-full bg-amber relative border-none">
+                    <button onClick={() => showToast.success("Setting toggled.")} className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
                       <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
                     </button>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-stone-50">
                     <span className="font-ui text-[13px] text-dark">Include QR Code (e-Invoice)</span>
-                    <button className="w-10 h-6 rounded-full bg-amber relative border-none">
+                    <button onClick={() => showToast.success("QR code setting toggled.")} className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
                       <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
                     </button>
                   </div>

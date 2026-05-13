@@ -101,7 +101,7 @@ export default function FiscalYearDetailPage() {
             </div>
           </div>
           <div className="md:col-span-7 flex flex-col justify-center items-end">
-            <button className="bg-surface-muted border border-border text-mid px-12 py-4 font-ui text-[13px] font-bold uppercase tracking-widest cursor-not-allowed opacity-50">
+            <button onClick={() => showToast.info("FY closure not yet available — 158 days remaining.")} className="bg-surface-muted border border-border text-mid px-12 py-4 font-ui text-[13px] font-bold uppercase tracking-widest cursor-pointer opacity-50">
               Close Fiscal Year
             </button>
             <p className="mt-4 text-[11px] text-light text-right uppercase tracking-widest">
