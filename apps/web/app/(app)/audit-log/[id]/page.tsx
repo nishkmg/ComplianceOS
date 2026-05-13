@@ -2,7 +2,6 @@
 
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function AuditLogDetailPage() {

@@ -133,7 +133,9 @@ export default function AuditLogPage() {
                   </span>
                 </td>
                 <td className="py-4 px-6 font-ui text-[13px] text-on-surface max-w-[300px] truncate" title={entry.details}>
-                  {entry.details}
+                  <Link href={`/audit-log/${entry.id}`} className="hover:text-amber transition-colors no-underline">
+                    {entry.details}
+                  </Link>
                 </td>
                 <td className="py-4 px-6 font-mono text-[12px] text-text-mid text-right">{entry.ip}</td>
               </tr>
