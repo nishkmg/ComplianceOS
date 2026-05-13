@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/api";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from '@/lib/toast';
 import { getAccounts } from '@/lib/account-store';
@@ -125,17 +124,9 @@ export default function AccountDetailPage() {
     showToast.success(`Filtered from ${customStart} to ${customEnd}`);
   };
 
-  // tRPC queries (will be undefined until wired)
-  const { data: _accounts }: any = api.accounts.list.useQuery();
-  const { data: _ledgerData, isLoading }: any = api.balances.ledger.useQuery(
-    { accountId: id, fiscalYear },
-    { enabled: !!id }
-  );
-
   // Fall back to mock + stored data
   const storedAccount = getAccounts().find(a => a.code === id || a.id === id);
-  const account = _accounts?.find((a: any) => a.id === id)
-    ?? MOCK_ACCOUNTS.find(a => a.id === id)
+  const account = MOCK_ACCOUNTS.find(a => a.id === id)
     ?? MOCK_ACCOUNTS.find(a => a.code === id)
     ?? (storedAccount ? {
       id: storedAccount.id,
@@ -148,9 +139,9 @@ export default function AccountDetailPage() {
 
   const accountCode = account?.code ?? "";
   const mockTx = getTxForAccount(accountCode, fiscalYear);
-  const transactions: Tx[] = _ledgerData?.transactions ?? mockTx;
-  const openingBalance = _ledgerData?.openingBalance ?? (MOCK_OPENING_BALANCES[accountCode] ?? 0);
-  const closingBalance = _ledgerData?.closingBalance ?? (openingBalance + transactions.reduce((s, t) => s + t.debit - t.credit, 0));
+  const transactions: Tx[] = mockTx;
+  const openingBalance = MOCK_OPENING_BALANCES[accountCode] ?? 0;
+  const closingBalance = openingBalance + transactions.reduce((s, t) => s + t.debit - t.credit, 0);
 
   const filteredTxs = useMemo(() =>
     txSearch ? transactions.filter(t =>
@@ -294,9 +285,7 @@ export default function AccountDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border-subtle">
-              {isLoading ? (
-                <tr><td colSpan={6} className="py-12 text-center font-ui text-[13px] text-mid">Loading transactions…</td></tr>
-              ) : filteredTxs.length > 0 ? (
+              {filteredTxs.length > 0 ? (
                 filteredTxs.map((txn, i) => {
                   runningBalance += txn.debit - txn.credit;
                   return (
