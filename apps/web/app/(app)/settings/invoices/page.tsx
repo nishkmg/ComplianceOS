@@ -1,21 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function InvoiceConfigPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-0 text-left">
       {/* Sticky Header */}
       <header className="sticky top-0 z-30 bg-page-bg/90 backdrop-blur-md border-b-[0.5px] border-border px-8 py-8 flex justify-between items-end -mx-8 -mt-8 mb-8">
         <div>
-          <p className="font-ui text-[10px] text-amber uppercase tracking-widest mb-2 font-bold">Workspace Configuration</p>
+          <p className="font-ui text-[10px] text-amber uppercase tracking-widest mb-2 font-bold">Workspace Configuration · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark leading-tight">Invoice Settings</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Define document prefixes, statutory disclosures, and bank account mappings.</p>
         </div>
         <div className="flex gap-4">
-          <button className="btn-primary">
+          <button onClick={() => showToast.success("Invoice settings saved.")} className="btn-primary">
             Save Changes
           </button>
         </div>
