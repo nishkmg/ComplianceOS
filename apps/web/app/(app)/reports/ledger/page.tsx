@@ -92,7 +92,7 @@ export default function LedgerReportPage() {
           <h1 className="font-display text-2xl font-semibold text-dark mb-2">General Ledger</h1>
           <p className="font-mono text-secondary flex items-center gap-2">
             <Icon name="calendar_month" className="text-[16px]" />
-            01 Apr {fiscalYear.split("-")[0]} — 31 Mar {fiscalYear.split("-")[1]}
+            01 Apr {fiscalYear.split("-")[0]} — 31 Mar {parseInt(fiscalYear.split('-')[1]) + 2000}
           </p>
         </div>
         <div className="flex items-center gap-3">
