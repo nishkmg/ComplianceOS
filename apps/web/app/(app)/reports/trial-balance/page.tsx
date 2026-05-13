@@ -101,7 +101,7 @@ const tbDataByFy: Record<string, TbGroup[]> = {
       name: "Expenses",
       items: [
         { code: "50100", name: "Purchase Expenses",    debit: 960000,  credit: 0 },
-        { code: "50200", name: "Operating Expenses",   debit: 380000,  credit: 0 },
+        { code: "50200", name: "Operating Expenses",   debit: 466000,  credit: 0 },
         { code: "50210", name: "Salaries & Wages",     debit: 280000,  credit: 0 },
         { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
         { code: "50230", name: "Utilities",            debit: 38000,   credit: 0 },
