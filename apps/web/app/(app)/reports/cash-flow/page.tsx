@@ -57,7 +57,7 @@ const cfDataByFy: Record<string, { sections: CfSection[]; openingCash: number }>
           { label: "Interest Income",                       amount: -18200 },
           { label: "Working Capital Changes",               amount: -380000 },
         ],
-        total: 1483800,
+        total: 1504800,
       },
       {
         title: "B. Cash Flow from Investing Activities",
@@ -213,7 +213,7 @@ export default function CashFlowPage() {
               </span>
             </div>
             <span className="font-mono text-2xl font-bold text-dark tabular-nums print:text-black">
-              ₹ {formatIndianNumber(closingCash, { currency: false })}
+              {formatIndianNumber(closingCash)}
             </span>
           </div>
         </div>
