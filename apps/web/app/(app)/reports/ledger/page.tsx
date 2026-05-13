@@ -59,7 +59,7 @@ export default function LedgerReportPage() {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Report</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Report · FY {fiscalYear}</p>
           <h1 className="font-display text-2xl font-semibold text-dark mb-2">General Ledger</h1>
           <p className="font-mono text-secondary flex items-center gap-2">
             <Icon name="calendar_month" className="text-[16px]" />
@@ -112,7 +112,7 @@ export default function LedgerReportPage() {
               </div>
               <div className="text-right">
                 <p className="font-ui text-[11px] text-text-mid uppercase tracking-wider mb-1">Opening Balance</p>
-                <p className="font-mono-lg text-on-surface">₹ {formatIndianNumber(openingBalance)} <span className="text-text-light text-sm">{openingBalance >= 0 ? 'Dr' : 'Cr'}</span></p>
+                <p className="font-mono-lg text-on-surface">₹ {formatIndianNumber(openingBalance, { currency: false })} <span className="text-text-light text-sm">{openingBalance >= 0 ? 'Dr' : 'Cr'}</span></p>
               </div>
             </div>
           </div>
@@ -140,10 +140,10 @@ export default function LedgerReportPage() {
                         <td className="py-3 px-4 font-mono text-sm text-text-mid">{new Date(txn.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</td>
                         <td className="py-3 px-4 font-ui text-[13px] text-on-surface">{txn.narration}</td>
                         <td className="py-3 px-4 font-mono text-sm text-amber-text">{txn.voucherNumber}</td>
-                        <td className="py-3 px-4 font-mono text-sm text-right">{txn.debit > 0 ? `₹ ${formatIndianNumber(txn.debit)}` : ''}</td>
-                        <td className="py-3 px-4 font-mono text-sm text-right">{txn.credit > 0 ? `₹ ${formatIndianNumber(txn.credit)}` : ''}</td>
+                        <td className="py-3 px-4 font-mono text-sm text-right">{txn.debit > 0 ? `₹ ${formatIndianNumber(txn.debit, { currency: false })}` : ''}</td>
+                        <td className="py-3 px-4 font-mono text-sm text-right">{txn.credit > 0 ? `₹ ${formatIndianNumber(txn.credit, { currency: false })}` : ''}</td>
                         <td className={`py-3 px-4 font-mono text-sm text-right ${runningBalance >= 0 ? '' : 'text-red-600'}`}>
-                          ₹ {formatIndianNumber(Math.abs(runningBalance))} {runningBalance >= 0 ? 'Dr' : 'Cr'}
+                          ₹ {formatIndianNumber(Math.abs(runningBalance), { currency: false })} {runningBalance >= 0 ? 'Dr' : 'Cr'}
                         </td>
                       </tr>
                     );
