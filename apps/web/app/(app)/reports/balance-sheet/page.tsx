@@ -169,7 +169,7 @@ export default function BalanceSheetPage() {
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
               <span className="uppercase tracking-widest text-xs print:text-black">Total Equity & Liabilities</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalEqLiab)}</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalEqLiab, { currency: false })}</span>
             </div>
           </div>
 
@@ -215,7 +215,7 @@ export default function BalanceSheetPage() {
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
               <span className="uppercase tracking-widest text-xs print:text-black">Total Assets</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalAssets)}</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalAssets, { currency: false })}</span>
             </div>
 
             {balanced ? (
@@ -224,7 +224,7 @@ export default function BalanceSheetPage() {
               </div>
             ) : (
               <div className="px-4 py-2 bg-danger-bg text-danger text-[10px] uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
-                <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssets))}
+                <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssets), { currency: false })}
               </div>
             )}
           </div>

@@ -213,7 +213,7 @@ export default function CashFlowPage() {
               </span>
             </div>
             <span className="font-mono text-2xl font-bold text-dark tabular-nums print:text-black">
-              ₹ {formatIndianNumber(closingCash)}
+              ₹ {formatIndianNumber(closingCash, { currency: false })}
             </span>
           </div>
         </div>

@@ -109,7 +109,7 @@ export default function ProfitLossPage() {
                     {/* Previous period placeholder */}
                   </div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(item.amount)}
+                    ₹ {formatIndianNumber(item.amount, { currency: false })}
                   </div>
                 </div>
               ))}
@@ -117,7 +117,7 @@ export default function ProfitLossPage() {
                 <div className="col-span-8 font-ui text-[11px] uppercase tracking-widest text-dark print:text-black">Total Revenue</div>
                 <div className="col-span-2" />
                 <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">
-                  ₹ {formatIndianNumber(totalRevenue)}
+                  ₹ {formatIndianNumber(totalRevenue, { currency: false })}
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function ProfitLossPage() {
                     {/* Previous period placeholder */}
                   </div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(Math.abs(item.amount))}
+                    ₹ {formatIndianNumber(Math.abs(item.amount), { currency: false })}
                   </div>
                 </div>
               ))}
@@ -145,7 +145,7 @@ export default function ProfitLossPage() {
                 <div className="col-span-8 font-ui text-[11px] uppercase tracking-widest text-dark print:text-black">Total Expenses</div>
                 <div className="col-span-2" />
                 <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">
-                  ₹ {formatIndianNumber(totalExpenses)}
+                  ₹ {formatIndianNumber(totalExpenses, { currency: false })}
                 </div>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function ProfitLossPage() {
               </p>
             </div>
             <p className={`font-mono text-2xl font-bold tabular-nums ${isProfit ? "text-success" : "text-danger"} print:text-black`}>
-              ₹ {formatIndianNumber(Math.abs(netProfit))}
+              ₹ {formatIndianNumber(Math.abs(netProfit), { currency: false })}
             </p>
           </div>
         </CardContent>
