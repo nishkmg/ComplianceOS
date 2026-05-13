@@ -31,9 +31,13 @@ export function FiscalYearProvider({ children }: { children: ReactNode }) {
   const [activeFy, setActiveFy] = useState('2026-27');
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && stored !== '2026-27') {
-      setActiveFy(stored);
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored && stored !== '2026-27') {
+        setActiveFy(stored);
+      }
+    } catch {
+      // localStorage unavailable (private browsing, SSR mock, etc.)
     }
   }, []);
 
