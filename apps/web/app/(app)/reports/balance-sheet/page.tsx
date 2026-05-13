@@ -66,6 +66,31 @@ const bsDataByFy: Record<string, { equity: BsEquity[]; liabilities: BsLiability[
       { id: "a10", name: "Other Financial Assets", balance: 587500 },
     ],
   },
+  '2024-25': {
+    equity: [
+      { id: "e1", name: "Share Capital",        balance: 1000000 },
+      { id: "e2", name: "Reserves & Surplus",   balance: 800000 },
+      { id: "e3", name: "Net Profit (Current)", balance: 1000000 },
+    ],
+    liabilities: [
+      { id: "l1", name: "Trade Payables",     balance: 120000 },
+      { id: "l2", name: "GST Output",         balance: 80000 },
+      { id: "l3", name: "TDS Payable",        balance: 6000 },
+      { id: "l4", name: "Short-term Borrowings", balance: 150000 },
+    ],
+    assets: [
+      { id: "a1", name: "Cash & Cash Equivalents", balance: 350000 },
+      { id: "a2", name: "Bank Balances",          balance: 350000 },
+      { id: "a3", name: "Trade Receivables",      balance: 200000 },
+      { id: "a4", name: "Inventory",              balance: 250000 },
+      { id: "a5", name: "GST Input (Tax Asset)",  balance: 50000 },
+      { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
+      { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
+      { id: "a8", name: "Intangible Assets",      balance: 120000 },
+      { id: "a9", name: "Investments",            balance: 1000000 },
+      { id: "a10", name: "Other Financial Assets", balance: 151000 },
+    ],
+  },
 };
 
 // ─── Page Component ───────────────────────────────────────────────────────────
