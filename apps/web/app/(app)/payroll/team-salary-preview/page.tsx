@@ -1,18 +1,20 @@
 "use client";
 
-import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function TeamSalaryPreviewPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-6 text-left">
       <div className="flex justify-between items-end gap-4 border-b border-border pb-6 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Management</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Management · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Salary Preview</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Review individual employee compensation details for October 2023 before final authorization.</p>
         </div>
-        <button className="btn btn-primary flex items-center gap-2">
+        <button onClick={() => showToast.success("Payroll authorized successfully.")} className="btn btn-primary flex items-center gap-2">
           Authorize Payroll <Icon name="arrow_forward" className="text-sm" />
         </button>
       </div>

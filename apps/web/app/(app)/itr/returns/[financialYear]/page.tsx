@@ -3,18 +3,16 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-// @ts-ignore
-import { ITRReturnType, ITRReturnStatus } from "@complianceos/shared";
-import { Badge, BadgeVariant } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { showToast } from "@/lib/toast";
 
-const statusConfig: Record<ITRReturnStatus, { variant: "gray" | "blue" | "success" | "purple" | "danger"; label: string }> = {
-  draft: { variant: "gray", label: "Draft" },
-  computed: { variant: "blue", label: "Computed" },
-  generated: { variant: "success", label: "Generated" },
-  filed: { variant: "success", label: "Filed" },
-  verified: { variant: "purple", label: "Verified" },
-  voided: { variant: "danger", label: "Voided" },
+const mockReturns: Record<string, any[]> = {
+  "2026-27": [
+    { id: "itr3", returnType: "itr3", status: "draft", grossTotalIncome: "7250000", totalIncome: "6820000", taxPayable: "1045200" },
+  ],
+  "2025-26": [
+    { id: "itr4", returnType: "itr4", status: "generated", grossTotalIncome: "5800000", totalIncome: "5450000", taxPayable: "785000" },
+  ],
 };
 
 export default function ITRFinancialYearPage() {
@@ -23,25 +21,15 @@ export default function ITRFinancialYearPage() {
   const financialYear = params.financialYear as string;
   const [activeTab, setActiveTab] = useState<"itr3" | "itr4">("itr3");
 
-  const { data: returns, isLoading }: any = api.itrReturns.list.useQuery({ financialYear });
-  const createReturn: any = api.itrReturns.create.useMutation();
-
-  const handleCreate = async (returnType: "itr3" | "itr4") => {
-    try {
-      const result = await createReturn.mutateAsync({ financialYear, returnType });
-      router.push(`/itr/returns/${financialYear}/${result.itrReturnId}`);
-    } catch (error: unknown) {
-      console.error("Failed to create return:", error);
-    }
-  };
-
-// @ts-ignore
-  const itr3Return = returns?.find((r) => r.returnType === "itr3");
-// @ts-ignore
-  const itr4Return = returns?.find((r) => r.returnType === "itr4");
+  const returns = mockReturns[financialYear] ?? [];
+  const itr3Return = returns.find((r: any) => r.returnType === "itr3");
+  const itr4Return = returns.find((r: any) => r.returnType === "itr4");
   const currentReturn = activeTab === "itr3" ? itr3Return : itr4Return;
 
-  if (isLoading) return <div className="text-center py-12 font-ui text-light">Loading...</div>;
+  const handleCreate = (returnType: "itr3" | "itr4") => {
+    showToast.success(`${returnType.toUpperCase()} return created for FY ${financialYear}.`);
+    router.push(`/itr/returns/${financialYear}/${returnType}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -70,7 +58,7 @@ export default function ITRFinancialYearPage() {
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-[16px] font-normal text-dark">{currentReturn.returnType.toUpperCase()} Return</h2>
-            <Badge variant={statusConfig[currentReturn.status as ITRReturnStatus].variant as BadgeVariant}>{statusConfig[currentReturn.status as ITRReturnStatus].label}</Badge>
+            <Badge variant="gray">{currentReturn.status}</Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

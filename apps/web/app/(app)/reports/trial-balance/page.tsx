@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,54 +25,98 @@ interface TbGroup {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const groups: TbGroup[] = [
-  {
-    name: "Assets",
-    items: [
-      { code: "10101", name: "Cash Account",        debit: 500000,  credit: 0 },
-      { code: "10200", name: "Bank Account",         debit: 1250000, credit: 0 },
-      { code: "10300", name: "Trade Receivables",    debit: 350000,  credit: 0 },
-      { code: "10400", name: "GST Input",            debit: 85000,   credit: 0 },
-      { code: "10500", name: "Equipment",            debit: 450000,  credit: 0 },
-    ],
-  },
-  {
-    name: "Liabilities",
-    items: [
-      { code: "20101", name: "Trade Payables",       debit: 0,       credit: 180000 },
-      { code: "20200", name: "GST Output",           debit: 0,       credit: 125000 },
-    ],
-  },
-  {
-    name: "Equity",
-    items: [
-      { code: "30100", name: "Capital Account",      debit: 0,       credit: 1665000 },
-    ],
-  },
-  {
-    name: "Income",
-    items: [
-      { code: "40100", name: "Sales Revenue",        debit: 0,       credit: 2800000 },
-    ],
-  },
-  {
-    name: "Expenses",
-    items: [
-      { code: "50100", name: "Purchase Expenses",    debit: 1200000, credit: 0 },
-      { code: "50200", name: "Operating Expenses",   debit: 450000,  credit: 0 },
-      { code: "50210", name: "Salaries & Wages",     debit: 320000,  credit: 0 },
-      { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
-      { code: "50230", name: "Utilities",            debit: 45000,   credit: 0 },
-    ],
-  },
-];
+const tbDataByFy: Record<string, TbGroup[]> = {
+  '2026-27': [
+    {
+      name: "Assets",
+      items: [
+        { code: "10101", name: "Cash Account",        debit: 500000,  credit: 0 },
+        { code: "10200", name: "Bank Account",         debit: 1250000, credit: 0 },
+        { code: "10300", name: "Trade Receivables",    debit: 350000,  credit: 0 },
+        { code: "10400", name: "GST Input",            debit: 85000,   credit: 0 },
+        { code: "10500", name: "Equipment",            debit: 450000,  credit: 0 },
+      ],
+    },
+    {
+      name: "Liabilities",
+      items: [
+        { code: "20101", name: "Trade Payables",       debit: 0,       credit: 180000 },
+        { code: "20200", name: "GST Output",           debit: 0,       credit: 125000 },
+      ],
+    },
+    {
+      name: "Equity",
+      items: [
+        { code: "30100", name: "Capital Account",      debit: 0,       credit: 1665000 },
+      ],
+    },
+    {
+      name: "Income",
+      items: [
+        { code: "40100", name: "Sales Revenue",        debit: 0,       credit: 2800000 },
+      ],
+    },
+    {
+      name: "Expenses",
+      items: [
+        { code: "50100", name: "Purchase Expenses",    debit: 1200000, credit: 0 },
+        { code: "50200", name: "Operating Expenses",   debit: 450000,  credit: 0 },
+        { code: "50210", name: "Salaries & Wages",     debit: 320000,  credit: 0 },
+        { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
+        { code: "50230", name: "Utilities",            debit: 45000,   credit: 0 },
+      ],
+    },
+  ],
+  '2025-26': [
+    {
+      name: "Assets",
+      items: [
+        { code: "10101", name: "Cash Account",        debit: 420000,  credit: 0 },
+        { code: "10200", name: "Bank Account",         debit: 980000,  credit: 0 },
+        { code: "10300", name: "Trade Receivables",    debit: 280000,  credit: 0 },
+        { code: "10400", name: "GST Input",            debit: 62000,   credit: 0 },
+        { code: "10500", name: "Equipment",            debit: 450000,  credit: 0 },
+      ],
+    },
+    {
+      name: "Liabilities",
+      items: [
+        { code: "20101", name: "Trade Payables",       debit: 0,       credit: 145000 },
+        { code: "20200", name: "GST Output",           debit: 0,       credit: 96000 },
+      ],
+    },
+    {
+      name: "Equity",
+      items: [
+        { code: "30100", name: "Capital Account",      debit: 0,       credit: 1665000 },
+      ],
+    },
+    {
+      name: "Income",
+      items: [
+        { code: "40100", name: "Sales Revenue",        debit: 0,       credit: 2150000 },
+      ],
+    },
+    {
+      name: "Expenses",
+      items: [
+        { code: "50100", name: "Purchase Expenses",    debit: 960000,  credit: 0 },
+        { code: "50200", name: "Operating Expenses",   debit: 466000,  credit: 0 },
+        { code: "50210", name: "Salaries & Wages",     debit: 280000,  credit: 0 },
+        { code: "50220", name: "Rent",                 debit: 120000,  credit: 0 },
+        { code: "50230", name: "Utilities",            debit: 38000,   credit: 0 },
+      ],
+    },
+  ],
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function TrialBalancePage() {
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [showZero, setShowZero] = useState(false);
 
+  const groups = tbDataByFy[fiscalYear] ?? tbDataByFy['2026-27'];
   const allItems = groups.flatMap(g => g.items);
   const totalDebit = allItems.reduce((s, i) => s + i.debit, 0);
   const totalCredit = allItems.reduce((s, i) => s + i.credit, 0);
@@ -82,7 +128,7 @@ export default function TrialBalancePage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Report
+            Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Trial Balance</h1>
         </div>
@@ -95,7 +141,7 @@ export default function TrialBalancePage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => showToast.success("Trial balance PDF exported.")}>
             <Icon name="download" size={14} /> Export PDF
           </Button>
           <Link
@@ -113,7 +159,7 @@ export default function TrialBalancePage() {
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
           <h2 className="font-display text-[24px] text-dark print:text-black">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-[12px] text-mid mt-1 uppercase tracking-widest">Trial Balance</p>
-          <p className="font-mono text-[11px] text-light mt-0.5">As at March 31, 2027 · FY {fiscalYear}</p>
+          <p className="font-mono text-[11px] text-light mt-0.5">As at 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
 
         {/* Balance check */}
@@ -169,10 +215,10 @@ export default function TrialBalancePage() {
                     <div className="col-span-2 font-mono text-[11px] text-light tabular-nums">{item.code}</div>
                     <div className="col-span-5 font-ui text-[13px] text-dark">{item.name}</div>
                     <div className="col-span-2 text-right font-mono text-[13px] tabular-nums">
-                      {item.debit > 0 ? `₹ ${formatIndianNumber(item.debit)}` : ""}
+                      {item.debit > 0 ? `₹ ${formatIndianNumber(item.debit, { currency: false })}` : ""}
                     </div>
                     <div className="col-span-2 text-right font-mono text-[13px] tabular-nums">
-                      {item.credit > 0 ? `₹ ${formatIndianNumber(item.credit)}` : ""}
+                      {item.credit > 0 ? `₹ ${formatIndianNumber(item.credit, { currency: false })}` : ""}
                     </div>
                     <div className="col-span-1" />
                   </div>
@@ -185,8 +231,8 @@ export default function TrialBalancePage() {
         {/* Grand total */}
         <div className="border-t-2 border-dark mx-8 py-4 grid grid-cols-12 gap-4 items-center font-bold print:border-black">
           <div className="col-span-7 font-ui text-[12px] uppercase tracking-widest text-dark print:text-black">Grand Total</div>
-          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit)}</div>
-          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit)}</div>
+          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
+          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
           <div className="col-span-1" />
         </div>
 

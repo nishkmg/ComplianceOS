@@ -1,30 +1,32 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const fiscalYears = [
-  { id: "1", name: "FY 2024-25", period: "01 Apr 2024 - 31 Mar 2025", status: "open", entries: 12483, lastActivity: "24 Oct 2024" },
+  { id: "1", name: "FY 2024-25", period: "01 Apr 2024 - 31 Mar 2025", status: "closed", entries: 12483, lastActivity: "24 Oct 2024" },
   { id: "2", name: "FY 2023-24", period: "01 Apr 2023 - 31 Mar 2024", status: "closed", entries: 45120, lastActivity: "15 Apr 2024" },
   { id: "3", name: "FY 2022-23", period: "01 Apr 2022 - 31 Mar 2023", status: "archived", entries: 38902, lastActivity: "10 Apr 2023" },
 ];
 
 export default function FiscalYearsPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-10 text-left">
       {/* Page Header */}
       <header className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div className="text-left">
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Settings / Fiscal Years</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Settings · FY {activeFy} / Fiscal Years</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Fiscal Years</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Manage accounting periods, statutory boundaries, and ledger lifecycle constraints for your organization.</p>
         </div>
         <div className="flex gap-3 shrink-0">
-          <button className="btn-secondary">
+          <button onClick={() => showToast.success("Year-end closure initiated.")} className="btn-secondary">
             Close FY
           </button>
-          <button className="btn-primary flex items-center gap-2 group">
+          <button onClick={() => showToast.success("New fiscal year created.")} className="btn-primary flex items-center gap-2 group">
             Create FY <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
           </button>
         </div>
@@ -40,7 +42,7 @@ export default function FiscalYearsPage() {
                 <h3 className="font-ui text-lg font-bold text-dark">Ledger Periods</h3>
                 <p className="font-ui text-[10px] text-light uppercase tracking-widest mt-1">Indian Financial Calendar</p>
               </div>
-              <button className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
+              <button onClick={() => showToast.info("Year filter opened.")} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
                 <Icon name="filter_list" />
               </button>
             </div>

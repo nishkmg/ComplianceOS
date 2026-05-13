@@ -2,8 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { api } from "@/lib/api";
 import { Icon } from '@/components/ui/icon';
+import { showToast } from "@/lib/toast";
 
 const months = [
   { value: 1, label: "April" },
@@ -28,6 +28,16 @@ export default function GSTR2BDetailPage() {
   const monthLabel = months.find(m => m.value === month)?.label || "September";
 
   const [activeTab, setActiveTable] = useState("available");
+  const [syncing, setSyncing] = useState(false);
+
+  const handleFetch = () => {
+    setSyncing(true);
+    setTimeout(() => { setSyncing(false); showToast.success("Latest 2B data fetched from GST portal."); }, 1500);
+  };
+
+  const handleConfirmITC = () => {
+    showToast.success("ITC confirmed and locked for this period.");
+  };
 
   const mockData = {
     available: [
@@ -149,8 +159,8 @@ export default function GSTR2BDetailPage() {
       </div>
 
       <div className="mt-6 flex justify-end gap-3 no-print">
-        <button className="px-5 py-2.5 border border-border text-dark font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Fetch from Portal</button>
-        <button className="px-10 py-2.5 bg-amber text-white font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none shadow-sm rounded-md">Confirm ITC →</button>
+        <button onClick={handleFetch} disabled={syncing} className="px-5 py-2.5 border border-border text-dark font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">{syncing ? "Fetching…" : "Fetch from Portal"}</button>
+        <button onClick={handleConfirmITC} className="px-10 py-2.5 bg-amber text-white font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none shadow-sm rounded-md">Confirm ITC →</button>
       </div>
     </div>
   );

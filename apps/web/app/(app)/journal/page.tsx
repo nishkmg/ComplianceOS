@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
-import { Badge, DataTable, type ColumnDef } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getEntries } from "@/lib/journal-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,14 +26,24 @@ interface JournalEntry {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const mockEntries: JournalEntry[] = [
-  { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0, status: "posted" },
-  { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", debit: 118000, credit: 0, status: "draft" },
-  { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", debit: 0, credit: 75000, status: "posted" },
-  { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 320000, credit: 0, status: "posted" },
-  { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", debit: 0, credit: 75000, status: "draft" },
-  { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0, status: "posted" },
-];
+const mockEntriesByFy: Record<string, JournalEntry[]> = {
+  '2026-27': [
+    { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance", debit: 500000, credit: 0, status: "posted" },
+    { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", debit: 118000, credit: 0, status: "draft" },
+    { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", debit: 0, credit: 75000, status: "posted" },
+    { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", debit: 320000, credit: 0, status: "posted" },
+    { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", debit: 0, credit: 75000, status: "draft" },
+    { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", debit: 236000, credit: 0, status: "posted" },
+  ],
+  '2025-26': [
+    { id: "101", entryNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance", debit: 420000, credit: 0, status: "posted" },
+    { id: "102", entryNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", debit: 0, credit: 120000, status: "posted" },
+    { id: "103", entryNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", debit: 680000, credit: 0, status: "posted" },
+    { id: "104", entryNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", debit: 0, credit: 96000, status: "posted" },
+    { id: "105", entryNumber: "JE-2025-26-005", date: "2026-01-15", narration: "Tax provision entry", debit: 185000, credit: 0, status: "draft" },
+    { id: "106", entryNumber: "JE-2025-26-006", date: "2026-03-25", narration: "Year-end adjustments", debit: 0, credit: 45000, status: "draft" },
+  ],
+};
 
 const statusOptions = [
   { value: "all", label: "All" },
@@ -118,9 +132,25 @@ const columns: ColumnDef<JournalEntry>[] = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function JournalPage() {
+  const { activeFy } = useFiscalYear();
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const mockEntries = mockEntriesByFy[activeFy] ?? mockEntriesByFy['2026-27'];
+  const storedEntries = useMemo(() =>
+    getEntries().filter(e => e.fiscalYear === activeFy).map(e => ({
+      id: e.id,
+      entryNumber: e.entryNumber,
+      date: e.date,
+      narration: e.narration,
+      debit: e.lines.reduce((s, l) => s + l.debit, 0),
+      credit: e.lines.reduce((s, l) => s + l.credit, 0),
+      status: e.status,
+    })),
+    [activeFy]
+  );
+  const allEntries = useMemo(() => [...storedEntries, ...mockEntries], [storedEntries, mockEntries]);
 
   useEffect(() => {
     setLoading(false);
@@ -128,7 +158,7 @@ export default function JournalPage() {
 
   const filteredEntries = useMemo(
     () =>
-      mockEntries.filter((e) => {
+      allEntries.filter((e) => {
         if (filter !== "all" && e.status !== filter) return false;
         if (
           search &&
@@ -138,7 +168,7 @@ export default function JournalPage() {
           return false;
         return true;
       }),
-    [filter, search]
+    [filter, search, allEntries]
   );
 
   const totalDebit = filteredEntries.reduce((s, e) => s + e.debit, 0);
@@ -147,10 +177,30 @@ export default function JournalPage() {
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
     for (const s of statusOptions) {
-      c[s.value] = s.value === "all" ? mockEntries.length : mockEntries.filter(e => e.status === s.value).length;
+      c[s.value] = s.value === "all" ? allEntries.length : allEntries.filter(e => e.status === s.value).length;
     }
     return c;
-  }, []);
+  }, [allEntries]);
+
+  const handleExportCSV = useCallback(() => {
+    if (filteredEntries.length === 0) {
+      showToast.error("No entries to export. Adjust your filters and try again.");
+      return;
+    }
+    const header = "Entry #,Date,Narration,Debit,Credit,Status";
+    const rows = filteredEntries.map(e =>
+      `${e.entryNumber},${e.date},"${e.narration.replace(/"/g, '""')}",${e.debit},${e.credit},${e.status}`
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `journal-entries-${activeFy}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filteredEntries.length} entries.`);
+  }, [filteredEntries, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -163,7 +213,7 @@ export default function JournalPage() {
           <h1 className="font-display text-2xl font-semibold text-dark">Journal Entries</h1>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary">
+          <button className="btn-secondary" onClick={handleExportCSV}>
             <Icon name="download" size={14} className="mr-1.5 inline" />Export CSV
           </button>
           <Link

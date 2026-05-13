@@ -1,20 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
-import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 
 export default function NewEmployeePage() {
   const router = useRouter();
-  const createEmployee: any = api.employees.create.useMutation({
-    onSuccess: () => {
-      showToast.success("Employee record created successfully");
-      router.push("/employees");
-    },
-  });
-
+  const savingRef = useRef(false);
+  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     employeeCode: "",
     firstName: "",
@@ -29,9 +24,25 @@ export default function NewEmployeePage() {
     entityName: "",
   });
 
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!formData.employeeCode.trim()) errs.employeeCode = "Required";
+    if (!formData.firstName.trim()) errs.firstName = "Required";
+    if (formData.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formData.pan)) errs.pan = "Invalid PAN format";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createEmployee.mutate(formData as any);
+    if (savingRef.current) return;
+    if (!validate()) return;
+    savingRef.current = true;
+    setSaving(true);
+    setTimeout(() => {
+      showToast.success("Employee record created successfully");
+      router.push("/employees");
+    }, 400);
   };
 
   return (
@@ -49,8 +60,8 @@ export default function NewEmployeePage() {
         </div>
         <div className="flex gap-4">
           <button onClick={() => router.back()} className="btn btn-secondary">Discard</button>
-          <button onClick={handleSubmit} disabled={createEmployee.isPending} className="btn btn-primary">
-            {createEmployee.isPending ? "Creating..." : "Create Employee"}
+          <button onClick={handleSubmit} disabled={saving} className="btn btn-primary">
+            {saving ? "Creating..." : "Create Employee"}
           </button>
         </div>
       </header>

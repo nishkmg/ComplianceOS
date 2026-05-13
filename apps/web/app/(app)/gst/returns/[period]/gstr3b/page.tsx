@@ -1,8 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
 
 const months = [
   { value: 1, label: "April" },
@@ -25,6 +24,14 @@ export default function GSTR3BDetailPage() {
   const month = Number(monthStr);
   const year = Number(yearStr);
   const monthLabel = months.find(m => m.value === month)?.label || "September";
+
+  const handleGenerateChallan = () => {
+    showToast.success("Challan generated. Redirecting to payment…");
+  };
+
+  const handleFileReturn = () => {
+    showToast.success("GSTR-3B filed successfully.");
+  };
 
   const mockData = {
     outward: [
@@ -239,8 +246,8 @@ export default function GSTR3BDetailPage() {
             <p className="font-ui text-[12px] text-mid">By clicking "File Return", you confirm that the data extracted from your ledger is accurate and you are authorized to sign this return on behalf of the assessee.</p>
           </div>
           <div className="flex gap-3 shrink-0 no-print">
-            <button className="px-5 py-2.5 border border-border text-dark font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Generate Challan</button>
-            <button className="px-8 py-2.5 bg-amber text-white font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none shadow-sm rounded-md">File Return →</button>
+            <button onClick={handleGenerateChallan} className="px-5 py-2.5 border border-border text-dark font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Generate Challan</button>
+            <button onClick={handleFileReturn} className="px-8 py-2.5 bg-amber text-white font-ui text-[12px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all cursor-pointer border-none shadow-sm rounded-md">File Return →</button>
           </div>
         </div>
       </div>

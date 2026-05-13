@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
+import { showToast } from "@/lib/toast";
+
+const monthNumbers: Record<string, string> = {
+  "January": "1", "February": "2", "March": "3", "April": "4", "May": "5", "June": "6",
+  "July": "7", "August": "8", "September": "9", "October": "10", "November": "11", "December": "12",
+};
 
 const returnTypes = [
   { id: "gstr1", name: "GSTR-1", desc: "Outward Supplies" },
@@ -20,6 +24,17 @@ const mockReturns = [
 
 export default function GSTRturnsHubPage() {
   const [period, setPeriod] = useState("May 2024");
+  const [refreshing, setRefreshing] = useState(false);
+
+  const periodSlug = useMemo(() => {
+    const [monthName, yearStr] = period.split(" ");
+    return `${monthNumbers[monthName] ?? "5"}-${yearStr}`;
+  }, [period]);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => { setRefreshing(false); showToast.success("GST data refreshed from portal."); }, 1200);
+  };
 
   return (
     <div className="space-y-8 text-left">
@@ -35,8 +50,8 @@ export default function GSTRturnsHubPage() {
             <option>May 2024</option>
             <option>Apr 2024</option>
           </select>
-          <button className="bg-amber text-white px-6 py-2.5 rounded font-ui text-[13px] hover:bg-amber-hover transition-colors cursor-pointer border-none shadow-sm">
-            Refresh Data
+          <button onClick={handleRefresh} disabled={refreshing} className="bg-amber text-white px-6 py-2.5 rounded font-ui text-[13px] hover:bg-amber-hover transition-colors cursor-pointer border-none shadow-sm disabled:opacity-50">
+            {refreshing ? "Refreshing…" : "Refresh Data"}
           </button>
         </div>
       </div>
@@ -52,7 +67,7 @@ export default function GSTRturnsHubPage() {
             </div>
             <h3 className="font-display text-lg text-display-lg text-dark mb-1">{t.name}</h3>
             <p className="font-ui text-[13px] text-mid mb-6">{t.desc}</p>
-            <Link href={`/gst/returns/${t.id}`} className="text-ui-xs text-amber-text font-bold uppercase tracking-widest no-underline hover:underline inline-flex items-center gap-2">
+            <Link href={`/gst/returns/${periodSlug}/${t.id}`} className="text-ui-xs text-amber-text font-bold uppercase tracking-widest no-underline hover:underline inline-flex items-center gap-2">
               Generate Return <span className="inline-block">→</span>
             </Link>
           </div>

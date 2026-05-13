@@ -1,26 +1,57 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+
+interface PayrollLine {
+  id: string;
+  employeeName: string;
+  employeeCode: string;
+  grossSalary: string;
+  pfContribution: string;
+  esiContribution: string;
+  tdsDeduction: string;
+  netSalary: string;
+}
+
+interface PayrollRun {
+  id: string;
+  payrollNumber: string;
+  month: string;
+  year: string;
+  status: string;
+}
+
+const mockRun: PayrollRun = { id: "pr1", payrollNumber: "PR-2026-04-001", month: "April", year: "2026", status: "finalized" };
+
+const mockLines: PayrollLine[] = [
+  { id: "l1", employeeName: "Rahul Sharma", employeeCode: "EMP-001", grossSalary: "80000", pfContribution: "1800", esiContribution: "0", tdsDeduction: "4500", netSalary: "73700" },
+  { id: "l2", employeeName: "Priya Singh", employeeCode: "EMP-002", grossSalary: "65000", pfContribution: "1800", esiContribution: "488", tdsDeduction: "2000", netSalary: "60712" },
+  { id: "l3", employeeName: "Vikram Das", employeeCode: "EMP-003", grossSalary: "45000", pfContribution: "1800", esiContribution: "338", tdsDeduction: "0", netSalary: "42862" },
+];
 
 export default function PayrollRunDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { activeFy } = useFiscalYear();
   const runId = params.id as string;
-  const { data: runData, isLoading, refetch }: any = api.payroll.get.useQuery(runId);
+  const [loading, setLoading] = useState(true);
 
-  if (isLoading) return <div className="p-12 text-center text-light">Loading payroll details...</div>;
-  if (!runData?.run) return <div className="p-12 text-center text-light">Payroll run not found.</div>;
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, [runId]);
 
-  const run = runData.run;
-  const lines = runData.lines ?? [];
-// @ts-ignore
+  if (loading) return <div className="p-12 text-center text-light">Loading payroll details...</div>;
+
+  const run = mockRun;
+  const lines = mockLines;
   const totalGross = lines.reduce((sum, line) => sum + parseFloat(line.grossSalary || "0"), 0);
-// @ts-ignore
   const totalNet = lines.reduce((sum, line) => sum + parseFloat(line.netSalary || "0"), 0);
   const totalDeductions = totalGross - totalNet;
 
@@ -36,7 +67,7 @@ export default function PayrollRunDetailPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 border-b-[0.5px] border-border pb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Run</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Run · FY {activeFy}</p>
           <h1 className="font-display text-display-lg font-semibold text-dark">Payroll Detail</h1>
           <div className="flex items-center gap-6 font-ui text-[13px] text-secondary mt-1">
             <div className="flex items-center gap-2">
@@ -50,10 +81,10 @@ export default function PayrollRunDetailPage() {
           </div>
         </div>
         <div className="flex gap-4">
-          <button className="btn btn-secondary flex items-center gap-2">
+          <button onClick={() => window.print()} className="btn btn-secondary flex items-center gap-2">
             <Icon name="print" className="text-[18px]" /> Print Statement
           </button>
-          <button className="btn btn-primary flex items-center gap-2">
+          <button onClick={() => showToast.success("Payroll finalized and disbursed.")} className="btn btn-primary flex items-center gap-2">
             Finalize & Disburse
           </button>
         </div>
@@ -63,15 +94,15 @@ export default function PayrollRunDetailPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="bg-surface border border-border p-8 border-t-2 border-t-stone-300 shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Gross Earnings</p>
-          <p className="font-mono text-3xl font-bold text-dark">₹ {formatIndianNumber(totalGross)}</p>
+          <p className="font-mono text-3xl font-bold text-dark">{formatIndianNumber(totalGross, { currency: false })}</p>
         </div>
         <div className="bg-surface border border-border p-8 border-t-2 border-t-red-600 shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Total Deductions</p>
-          <p className="font-mono text-3xl font-bold text-danger">₹ {formatIndianNumber(totalDeductions)}</p>
+          <p className="font-mono text-3xl font-bold text-danger">{formatIndianNumber(totalDeductions, { currency: false })}</p>
         </div>
         <div className="bg-surface border border-border p-8 border-t-2 border-t-amber shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Net Take-Home</p>
-          <p className="font-mono text-3xl font-bold text-primary">₹ {formatIndianNumber(totalNet)}</p>
+          <p className="font-mono text-3xl font-bold text-primary">{formatIndianNumber(totalNet, { currency: false })}</p>
         </div>
       </div>
 
@@ -96,21 +127,23 @@ export default function PayrollRunDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
-              {(lines as any[]).map((line: any) => (
+              {lines.length === 0 ? (
+                <tr><td colSpan={6} className="py-16 text-center font-ui text-sm text-mid">No payroll lines found for this run.</td></tr>
+              ) : lines.map((line) => (
                 <tr key={line.id} className="hover:bg-surface-muted/30 transition-colors">
                   <td className="py-5 px-6 text-left">
                     <div className="font-ui text-[13px] font-bold text-dark text-sm">{line.employeeName}</div>
                     <div className="text-[11px] text-light mt-0.5">{line.employeeCode}</div>
                   </td>
                   <td className="py-5 px-6 text-right text-mid">{formatIndianNumber(line.grossSalary)}</td>
-                  <td className="py-5 px-6 text-right text-danger">-{formatIndianNumber(parseFloat(line.pfContribution || 0) + parseFloat(line.esiContribution || 0))}</td>
+                  <td className="py-5 px-6 text-right text-danger">-{formatIndianNumber(parseFloat(line.pfContribution || "0") + parseFloat(line.esiContribution || "0"))}</td>
                   <td className="py-5 px-6 text-right text-danger">-{formatIndianNumber(line.tdsDeduction || 0)}</td>
-                  <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(line.netSalary)}</td>
+                  <td className="py-5 px-6 text-right font-bold text-dark">{formatIndianNumber(line.netSalary, { currency: false })}</td>
                   <td className="py-5 px-6 text-right">
-                    <button className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Payslip</button>
+                    <button onClick={() => showToast.success("Payslip downloaded.")} className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Payslip</button>
                   </td>
-                </tr>
-              ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

@@ -2,6 +2,8 @@ import { auth } from "./lib/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+type AuthRequest = NextRequest & { auth: { user?: { id: string; onboardingComplete?: boolean } } | null };
+
 const PROTECTED_PATHS = [
   "/dashboard",
   "/employees",
@@ -21,17 +23,21 @@ const PROTECTED_PATHS = [
   "/onboarding",
 ];
 
-export default auth(async (req: typeof NextRequest.prototype) => {
-  const session = await auth();
+export default auth(async (req: AuthRequest) => {
+  const session = req.auth;
   const pathname = req.nextUrl.pathname;
 
-  if (
-    pathname.startsWith("/api/auth") ||
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/signup") ||
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api/trpc")
-  ) {
+  if (pathname.startsWith("/api/auth") || pathname.startsWith("/_next") || pathname.startsWith("/api/trpc")) {
+    return undefined;
+  }
+
+  // Already-authenticated users hitting auth screens → redirect to dashboard
+  if ((pathname.startsWith("/login") || pathname.startsWith("/signup")) && session?.user) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  // Allow unauthenticated access to auth screens
+  if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
     return undefined;
   }
 

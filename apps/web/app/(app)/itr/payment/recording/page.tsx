@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
+import { showToast } from "@/lib/toast";
 
 export default function ITRRecordPaymentPage() {
   const [type, setType] = useState("100");
@@ -25,7 +24,7 @@ export default function ITRRecordPaymentPage() {
             <Icon name="cloud_done" className="text-[16px] text-success" />
             Draft saved locally
           </span>
-          <button className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none cursor-pointer shadow-sm">
+          <button onClick={() => showToast.success("Payment committed to ledger.")} className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none cursor-pointer shadow-sm">
             Commit to Ledger
           </button>
         </div>

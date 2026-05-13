@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getAccounts, addAccount as storeAccount } from "@/lib/account-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -55,12 +58,30 @@ const groupTypes = ["asset", "liability", "equity", "income", "expense"] as cons
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+function initAccounts() {
+  const stored = getAccounts();
+  const storedAccounts: Account[] = stored.map(a => ({
+    id: a.id,
+    code: a.code,
+    name: a.name,
+    type: a.kind.toLowerCase() as Account["type"],
+    level: 2,
+    balance: 0,
+    balanceType: (["asset", "expense"].includes(a.kind.toLowerCase()) ? "dr" : "cr") as "dr" | "cr",
+    hasChildren: false,
+  }));
+  return [...MOCK_ACCOUNTS, ...storedAccounts];
+}
+
 export default function CoAPage() {
+  const { activeFy } = useFiscalYear();
+  const [accounts, setAccounts] = useState(initAccounts);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [addFormOpen, setAddFormOpen] = useState<Set<string>>(new Set());
-  const [newAccountName, setNewAccountName] = useState("");
+  const [newAccountNames, setNewAccountNames] = useState<Record<string, string>>({});
+  const [addErrors, setAddErrors] = useState<Record<string, string>>({});
 
   const toggle = (id: string) => {
     setCollapsed(prev => {
@@ -80,7 +101,7 @@ export default function CoAPage() {
 
   const summary = useMemo(() => {
     const byType: Record<string, number> = {};
-    for (const a of MOCK_ACCOUNTS) {
+    for (const a of accounts) {
       if (a.level <= 1) continue;
       byType[a.type] = (byType[a.type] || 0) + a.balance;
     }
@@ -91,10 +112,10 @@ export default function CoAPage() {
     const totalExpense = byType.expense  || 0;
     const netIncome    = totalIncome - totalExpense;
     return { totalAssets, totalLiab, totalEquity, netIncome };
-  }, []);
+  }, [accounts]);
 
   const groupedAccounts = useMemo(() => {
-    const filtered = MOCK_ACCOUNTS.filter(a => {
+    const filtered = accounts.filter(a => {
       if (typeFilter !== "all" && a.type !== typeFilter) return false;
       if (search && !a.name.toLowerCase().includes(search.toLowerCase()) && !a.code.includes(search)) return false;
       return true;
@@ -105,7 +126,7 @@ export default function CoAPage() {
       groups[type] = filtered.filter(a => a.type === type);
     }
     return groups;
-  }, [typeFilter, search]);
+  }, [typeFilter, search, accounts]);
 
   const groupTotal = (accounts: Account[]) => {
     return accounts
@@ -116,6 +137,18 @@ export default function CoAPage() {
   const groupBalanceType = (type: string): "dr" | "cr" => {
     return ["asset", "expense"].includes(type) ? "dr" : "cr";
   };
+
+  const handleExport = useCallback(() => {
+    if (accounts.length === 0) { showToast.error("No accounts to export."); return; }
+    const header = "Code,Name,Type,Level,Balance,Balance Type";
+    const rows = accounts.map(a => `${a.code},"${a.name}",${a.type},${a.level},${a.balance},${a.balanceType}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `chart-of-accounts-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${accounts.length} accounts.`);
+  }, [accounts, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -128,8 +161,8 @@ export default function CoAPage() {
           <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
         </div>
         <div className="flex gap-3 no-print">
-          <button className="btn-secondary flex items-center gap-1.5">
-            <Icon name="download" size={14} /> Export
+          <button onClick={handleExport} className="btn-secondary flex items-center gap-1.5">
+            <Icon name="download" size={14} /> Export CSV
           </button>
           <Link
             href="/accounts/new"
@@ -265,7 +298,13 @@ export default function CoAPage() {
                                   />
                                 </button>
                               )}
-                              <span className={acct.level <= 1 ? 'font-semibold' : ''}>{acct.name}</span>
+                              <Link
+                                href={acct.hasChildren ? '#' : `/accounts/${acct.code}`}
+                                onClick={acct.hasChildren ? (e) => { e.preventDefault(); toggle(acct.id); } : undefined}
+                                className={`no-underline ${acct.level <= 1 ? 'font-semibold text-dark' : 'text-dark hover:text-amber'}`}
+                              >
+                                {acct.name}
+                              </Link>
                             </div>
                           </td>
                           <td className="py-2.5 px-5 text-right">
@@ -286,27 +325,66 @@ export default function CoAPage() {
                   {/* Inline Add Form */}
                   <div className="px-5 py-3 bg-surface-muted/30 border-t border-border-subtle no-print">
                     {addFormOpen.has(type) ? (
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="text"
-                          value={newAccountName}
-                          onChange={e => setNewAccountName(e.target.value)}
-                          placeholder={`New ${typeLabels[type]} account name…`}
-                          className="flex-1 bg-surface border border-border text-[12px] font-ui px-3 py-1.5 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light max-w-xs"
-                          autoFocus
-                        />
-                        <button
-                          onClick={() => { setNewAccountName(""); toggleAddForm(type); }}
-                          className="text-mid hover:text-dark cursor-pointer border-none bg-transparent p-1"
-                        >
-                          <Icon name="close" size={14} />
-                        </button>
-                        <button
-                          onClick={() => { setNewAccountName(""); toggleAddForm(type); }}
-                          className="bg-amber text-white text-[11px] font-ui font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm hover:bg-amber-hover cursor-pointer border-none"
-                        >
-                          Add
-                        </button>
+                      <div className="space-y-2">
+                        {addErrors[type] && (
+                          <p className="font-ui text-[11px] text-danger">{addErrors[type]}</p>
+                        )}
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="text"
+                            value={newAccountNames[type] ?? ""}
+                            onChange={e => {
+                              setNewAccountNames(prev => ({ ...prev, [type]: e.target.value }));
+                              setAddErrors(prev => { const n = {...prev}; delete n[type]; return n; });
+                            }}
+                            placeholder={`New ${typeLabels[type]} account name…`}
+                            className="flex-1 bg-surface border border-border text-[12px] font-ui px-3 py-1.5 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light max-w-xs"
+                            autoFocus
+                            maxLength={100}
+                          />
+                          <button
+                            onClick={() => { toggleAddForm(type); }}
+                            className="text-mid hover:text-dark cursor-pointer border-none bg-transparent p-1"
+                          >
+                            <Icon name="close" size={14} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              const name = (newAccountNames[type] ?? "").trim();
+                              if (!name) {
+                                setAddErrors(prev => ({ ...prev, [type]: "Account name is required" }));
+                                return;
+                              }
+                              const maxCode = Math.max(...accounts.filter(a => a.type === type).map(a => parseInt(a.code, 10)).filter(Boolean), 0);
+                              const nextCode = String(maxCode + 100).padStart(5, "0");
+                              const newAccount = {
+                                id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+                                code: nextCode,
+                                name,
+                                type: type as Account["type"],
+                                level: 2,
+                                balance: 0,
+                                balanceType: (["asset", "expense"].includes(type) ? "dr" : "cr") as "dr" | "cr",
+                                hasChildren: false,
+                              };
+                              setAccounts(prev => [...prev, newAccount]);
+                              storeAccount({
+                                id: newAccount.id,
+                                code: newAccount.code,
+                                name: newAccount.name,
+                                kind: type === "income" ? "Income" : type.charAt(0).toUpperCase() + type.slice(1),
+                                subtype: typeLabels[type],
+                                description: "",
+                                createdAt: new Date().toISOString(),
+                              });
+                              setNewAccountNames(prev => { const n = {...prev}; delete n[type]; return n; });
+                              toggleAddForm(type);
+                            }}
+                            className="bg-amber text-white text-[11px] font-ui font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm hover:bg-amber-hover cursor-pointer border-none"
+                          >
+                            Add
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       <button

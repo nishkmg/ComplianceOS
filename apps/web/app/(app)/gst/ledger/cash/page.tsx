@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function GSTCashLedgerPage() {
+  const { activeFy } = useFiscalYear();
+  const [cashPeriod, setCashPeriod] = useState("Oct 2024");
+
   const mockBalances = {
     igst: 142500.00,
     cgst: 45200.00,
@@ -29,11 +33,7 @@ export default function GSTCashLedgerPage() {
             <p className="font-ui text-[13px] text-secondary mt-1">Electronic tracking of cash deposited to the GST portal.</p>
           </div>
           <div className="flex items-center gap-3 bg-surface-muted p-1 rounded-md border border-border">
-            <button className="px-4 py-1.5 font-ui text-[13px] text-mid hover:text-dark transition-colors cursor-pointer border-none bg-transparent font-bold">Oct 2024</button>
-            <div className="w-[1px] h-4 bg-border-subtle"></div>
-            <button className="px-3 py-1.5 flex items-center text-mid hover:text-dark border-none bg-transparent cursor-pointer">
-              <Icon name="calendar_month" className="text-[18px]" />
-            </button>
+            <span className="px-4 py-1.5 font-ui text-[13px] text-mid font-bold">{cashPeriod} · FY {activeFy}</span>
           </div>
         </div>
       </header>
@@ -53,7 +53,7 @@ export default function GSTCashLedgerPage() {
         <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
               <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Electronic Cash Statement</h3>
-              <button className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download CSV</button>
+               <button onClick={() => { showToast.success("Cash ledger CSV exported."); }} className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download CSV</button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">

@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { DataTable, type ColumnDef } from "@/components/ui";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getAccounts } from "@/lib/account-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -88,7 +91,21 @@ const columns: ColumnDef<AccountRow>[] = [
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
+function allAccounts() {
+  const stored = getAccounts();
+  const storedRows: AccountRow[] = stored.map(a => ({
+    code: a.code,
+    name: a.name,
+    type: a.kind,
+    balance: 0,
+    balanceType: (a.kind.toLowerCase() === "asset" || a.kind.toLowerCase() === "expense") ? "Dr" : "Cr",
+  }));
+  return [...ACCOUNTS, ...storedRows];
+}
+
 export default function AccountsFlatPage() {
+  const { activeFy } = useFiscalYear();
+  const [allAccts] = useState(allAccounts);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
   const [loading, setLoading] = useState(true);
@@ -99,15 +116,27 @@ export default function AccountsFlatPage() {
 
   const filtered = useMemo(
     () =>
-      ACCOUNTS.filter(a => {
+      allAccts.filter(a => {
         if (typeFilter !== "All" && a.type !== typeFilter) return false;
         if (search && !a.name.toLowerCase().includes(search.toLowerCase()) && !a.code.includes(search)) return false;
         return true;
       }),
-    [typeFilter, search]
+    [typeFilter, search, allAccts]
   );
 
   const totalBalance = filtered.reduce((s, a) => s + a.balance, 0);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No accounts to export."); return; }
+    const header = "Code,Name,Type,Balance,Balance Type";
+    const rows = filtered.map(a => `${a.code},"${a.name}",${a.type},${a.balance},${a.balanceType}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `accounts-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} accounts.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -118,11 +147,11 @@ export default function AccountsFlatPage() {
             Ledger
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts.</p>
+          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts. FY {activeFy}</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary flex items-center gap-1.5">
-            <Icon name="download" size={14} /> Export
+          <button onClick={handleExport} className="btn-secondary flex items-center gap-1.5">
+            <Icon name="download" size={14} /> Export CSV
           </button>
           <Link
             href="/accounts/new"

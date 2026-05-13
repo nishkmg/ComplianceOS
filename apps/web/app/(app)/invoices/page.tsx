@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { DataTable, type ColumnDef } from "@/components/ui";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
+import { getInvoices } from "@/lib/invoice-store";
+
+function parseINRAmount(s: string): number {
+  return parseFloat(s.replace(/,/g, "")) || 0;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,13 +29,22 @@ interface Invoice {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const mockInvoices: Invoice[] = [
-  { id: "1", invoiceNumber: "INV-2026-27-001", customerName: "Acme Corp",           date: "2026-04-15", dueDate: "2026-05-15", amount: "1,18,000", status: "sent" },
-  { id: "2", invoiceNumber: "INV-2026-27-002", customerName: "TechStart Ltd",       date: "2026-04-18", dueDate: "2026-05-18", amount: "59,000",   status: "draft" },
-  { id: "3", invoiceNumber: "INV-2026-27-003", customerName: "Global Traders",      date: "2026-04-10", dueDate: "2026-05-10", amount: "2,36,000", status: "partially_paid" },
-  { id: "4", invoiceNumber: "INV-2026-27-004", customerName: "Alpha Industries",    date: "2026-04-05", dueDate: "2026-05-05", amount: "3,54,000", status: "paid" },
-  { id: "5", invoiceNumber: "INV-2026-27-005", customerName: "Delayed Payments Co", date: "2026-03-20", dueDate: "2026-04-19", amount: "5,90,000", status: "overdue" },
-];
+const mockInvoicesByFy: Record<string, Invoice[]> = {
+  '2026-27': [
+    { id: "1", invoiceNumber: "INV-2026-27-001", customerName: "Acme Corp",           date: "2026-04-15", dueDate: "2026-05-15", amount: "1,18,000", status: "sent" },
+    { id: "2", invoiceNumber: "INV-2026-27-002", customerName: "TechStart Ltd",       date: "2026-04-18", dueDate: "2026-05-18", amount: "59,000",   status: "draft" },
+    { id: "3", invoiceNumber: "INV-2026-27-003", customerName: "Global Traders",      date: "2026-04-10", dueDate: "2026-05-10", amount: "2,36,000", status: "partially_paid" },
+    { id: "4", invoiceNumber: "INV-2026-27-004", customerName: "Alpha Industries",    date: "2026-04-05", dueDate: "2026-05-05", amount: "3,54,000", status: "paid" },
+    { id: "5", invoiceNumber: "INV-2026-27-005", customerName: "Delayed Payments Co", date: "2026-03-20", dueDate: "2026-04-19", amount: "5,90,000", status: "overdue" },
+  ],
+  '2025-26': [
+    { id: "101", invoiceNumber: "INV-2025-26-001", customerName: "Smith & Co",        date: "2025-07-12", dueDate: "2025-08-11", amount: "95,000",  status: "paid" },
+    { id: "102", invoiceNumber: "INV-2025-26-002", customerName: "Miller Enterprises", date: "2025-09-05", dueDate: "2025-10-05", amount: "1,45,000", status: "sent" },
+    { id: "103", invoiceNumber: "INV-2025-26-003", customerName: "Vertex Ltd",        date: "2025-11-20", dueDate: "2025-12-20", amount: "2,80,000", status: "partially_paid" },
+    { id: "104", invoiceNumber: "INV-2025-26-004", customerName: "Johnson Traders",   date: "2026-01-08", dueDate: "2026-02-07", amount: "67,000",  status: "draft" },
+    { id: "105", invoiceNumber: "INV-2025-26-005", customerName: "Nova Systems",      date: "2026-02-28", dueDate: "2026-03-30", amount: "4,20,000", status: "overdue" },
+  ],
+};
 
 const tabs = ["all", "draft", "sent", "partially_paid", "paid", "voided", "overdue"] as const;
 
@@ -93,9 +109,25 @@ const columns: ColumnDef<Invoice>[] = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function InvoicesPage() {
+  const { activeFy } = useFiscalYear();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const mockInvoices = mockInvoicesByFy[activeFy] ?? mockInvoicesByFy['2026-27'];
+  const storedInvoices: Invoice[] = useMemo(() =>
+    getInvoices().filter(inv => inv.fiscalYear === activeFy).map(inv => ({
+      id: inv.id,
+      invoiceNumber: inv.invoiceNumber,
+      customerName: inv.customerName,
+      date: inv.date,
+      dueDate: inv.dueDate,
+      amount: inv.total.toLocaleString("en-IN"),
+      status: inv.status === "sent" ? "sent" as const : inv.status as Invoice["status"],
+    })),
+    [activeFy]
+  );
+  const allInvoices = useMemo(() => [...storedInvoices, ...mockInvoices], [storedInvoices, mockInvoices]);
 
   useEffect(() => {
     setLoading(false);
@@ -103,21 +135,33 @@ export default function InvoicesPage() {
 
   const filtered = useMemo(
     () =>
-      mockInvoices.filter(inv => {
+      allInvoices.filter(inv => {
         if (statusFilter !== "all" && inv.status !== statusFilter) return false;
         if (search && !inv.customerName.toLowerCase().includes(search.toLowerCase()) && !inv.invoiceNumber.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       }),
-    [statusFilter, search]
+    [statusFilter, search, allInvoices]
   );
 
-  const totalAmount = filtered.reduce((s, inv) => s + parseFloat(inv.amount.replace(/,/g, "")), 0);
+  const totalAmount = filtered.reduce((s, inv) => s + parseINRAmount(inv.amount), 0);
 
   const counts = useMemo(() => {
-    const c: Record<string, number> = { all: mockInvoices.length };
-    for (const tab of tabs) if (tab !== "all") c[tab] = mockInvoices.filter(i => i.status === tab).length;
+    const c: Record<string, number> = { all: allInvoices.length };
+    for (const tab of tabs) if (tab !== "all") c[tab] = allInvoices.filter(i => i.status === tab).length;
     return c;
-  }, []);
+  }, [allInvoices]);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No invoices to export."); return; }
+    const header = "Invoice #,Customer,Date,Due Date,Amount,Status";
+    const rows = filtered.map(inv => `${inv.invoiceNumber},"${inv.customerName}",${inv.date},${inv.dueDate},${inv.amount},${inv.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `invoices-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} invoices.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -131,7 +175,7 @@ export default function InvoicesPage() {
           <p className="font-ui text-[13px] text-secondary mt-1">Manage and track your fiscal billing documents.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export List
           </button>
           <Link

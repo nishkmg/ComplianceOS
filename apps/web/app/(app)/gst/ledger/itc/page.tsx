@@ -1,18 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
-import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function ITCSubLedgerPage() {
+  const { activeFy } = useFiscalYear();
   const [selectedTax, setSelectedTax] = useState("all");
 
-  const mockTransactions = [
+  const allTransactions = [
     { id: "1", date: "15 Oct 24", desc: "ITC on Capital Goods - B2B", ref: "SUP-8821", type: "IGST", amount: 45000, balance: 245600 },
     { id: "2", date: "12 Oct 24", desc: "ITC on Inward Supplies", ref: "SRV-9012", type: "CGST", amount: 12000, balance: 200600 },
   ];
+
+  const mockTransactions = useMemo(() =>
+    selectedTax === "all" ? allTransactions : allTransactions.filter(t => t.type === selectedTax),
+    [selectedTax]
+  );
 
   return (
     <div className="space-y-0 text-left">
@@ -24,8 +30,8 @@ export default function ITCSubLedgerPage() {
           <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">A rigorous, chronological record of eligible credit availability, utilization against outward tax liability, and mandated reversals as per Rule 42/43.</p>
         </div>
         <div className="flex gap-4 no-print">
-          <button className="px-5 py-2 border border-border text-dark rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent shadow-sm">
-            <Icon name="filter_list" className="text-[18px]" /> Filter Period
+          <button onClick={() => showToast.info("Period filter: FY " + activeFy)} className="px-5 py-2 border border-border text-dark rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent shadow-sm">
+            <Icon name="filter_list" className="text-[18px]" /> FY {activeFy}
           </button>
         </div>
       </header>

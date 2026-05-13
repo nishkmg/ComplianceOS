@@ -1,8 +1,7 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { useState } from 'react';
+import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { Icon } from '@/components/ui/icon';
 
@@ -21,7 +20,6 @@ function getInitials(name: string): string {
 }
 
 export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
-  const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const { data: session } = useSession();
@@ -29,37 +27,14 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
   const userEmail    = session?.user?.email ?? '';
   const userInitials = getInitials(userName);
 
-  const navLink = (href: string, label: string, matchFn?: (p: string) => boolean) => {
-    const active = matchFn ? matchFn(pathname) : pathname === href;
-    return (
-      <Link
-        href={href}
-        className={[
-          'text-sm h-14 flex items-center no-underline transition-colors',
-          active
-            ? 'text-amber border-b-2 border-amber font-semibold'
-            : 'text-mid hover:text-dark',
-        ].join(' ')}
-      >
-        {label}
-      </Link>
-    );
-  };
-
   return (
     <header className="bg-sidebar dark:bg-slate-950/80 backdrop-blur-md border-b-[0.5px] border-border-subtle dark:border-slate-800 flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-ui antialiased no-print">
 
-      {/* Left: brand + top-level quick-links (offset by sidebar width on desktop) */}
-      <div className="flex items-center gap-4 lg:ml-64">
+      {/* Left: brand */}
+      <div className="flex items-center gap-4">
         <span className="font-bold text-lg tracking-tight text-dark dark:text-zinc-100 hidden md:inline">
           ComplianceOS
         </span>
-        <div className="h-4 w-[0.5px] bg-border-subtle mx-2 hidden md:block" />
-        <nav className="hidden md:flex items-center gap-6" aria-label="Quick navigation">
-          {navLink('/dashboard', 'Dashboard')}
-          {navLink('/journal',   'Journal')}
-          {navLink('/reports/ledger', 'Reports', p => p.startsWith('/reports'))}
-        </nav>
       </div>
 
       {/* Right: search + notifications + user avatar */}

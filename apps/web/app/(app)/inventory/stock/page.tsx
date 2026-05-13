@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 interface StockItem {
   id: string;
@@ -25,16 +25,37 @@ const mockStock: StockItem[] = [
 ];
 
 export default function StockPage() {
+  const { activeFy } = useFiscalYear();
+
+  const handleExportCSV = () => {
+    if (mockStock.length === 0) {
+      showToast.error("No stock data to export.");
+      return;
+    }
+    const header = "SKU,Product Name,Available,Committed,Net Available,Unit,Warehouse,Status";
+    const rows = mockStock.map((item) =>
+      `${item.sku},"${item.name}",${item.available},${item.committed},${item.netAvailable},${item.unit},"${item.warehouse}",${item.status}`
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `stock-levels-${activeFy}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${mockStock.length} items.`);
+  };
   return (
     <div className="space-y-6 text-left">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Management</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Management · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Stock Levels</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Real-time assessment of warehouse commodities, commitments, and procurement statuses.</p>
         </div>
-        <button className="btn btn-primary group flex items-center gap-2">
+        <button onClick={() => showToast.success("Stock adjustment form opened.")} className="btn btn-primary group flex items-center gap-2">
           Adjust Stock <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
         </button>
       </div>
@@ -48,8 +69,8 @@ export default function StockPage() {
             <span className="font-ui text-[11px] text-ui-xs text-dark-variant uppercase tracking-widest">Active Warehouse: Main Depot (BOM)</span>
           </div>
           <div className="flex gap-4">
-            <button className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
-            <button className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
+            <button onClick={handleExportCSV} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Export CSV</button>
+            <button onClick={() => window.print()} className="font-ui text-[11px] text-ui-xs text-mid hover:text-dark transition-colors tracking-widest uppercase cursor-pointer border-none bg-transparent">Print</button>
           </div>
         </div>
         <div className="overflow-x-auto">

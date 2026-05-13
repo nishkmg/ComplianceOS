@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const payments = [
   { id: "1", date: "12 Jun 2024", type: "Advance Tax", challanNo: "CH-88012", bsr: "0210452", amount: 185175, status: "completed", mode: "Net Banking" },
@@ -12,20 +13,25 @@ const payments = [
 ];
 
 export default function ITRPaymentHistoryPage() {
+  const { activeFy } = useFiscalYear();
+  const totalPaid = useMemo(() => payments.filter(p => p.status === "completed").reduce((s, p) => s + p.amount, 0), []);
+  const totalPending = useMemo(() => payments.filter(p => p.status === "pending").reduce((s, p) => s + p.amount, 0), []);
+  const completedCount = useMemo(() => payments.filter(p => p.status === "completed").length, []);
+
   return (
     <div className="space-y-0 text-left">
       {/* Page Header */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6 mt-4">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Statutory Records</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Statutory Records · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Income Tax Payments</h1>
           <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">Historical record of all tax payments, challans, and BSR-coded acknowledgements for current and previous assessment years.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-5 py-2.5 border border-border text-dark font-ui text-[13px] rounded-md hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase font-bold tracking-widest shadow-sm">
+          <button onClick={() => window.print()} className="px-5 py-2.5 border border-border text-dark font-ui text-[13px] rounded-md hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase font-bold tracking-widest shadow-sm">
             <Icon name="print" className="text-[18px]" /> Print History
           </button>
-          <button className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] hover:bg-amber-hover transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
+          <button onClick={() => showToast.success("New challan form opened.")} className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] hover:bg-amber-hover transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
             <Icon name="add" className="text-[18px]" /> New Challan
           </button>
         </div>
@@ -34,16 +40,16 @@ export default function ITRPaymentHistoryPage() {
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="bg-surface border border-border p-8 border-t-2 border-t-amber shadow-sm">
-          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Total Paid (AY 24-25)</p>
-          <p className="font-mono text-3xl font-bold text-dark">₹ 5,55,525.00</p>
+          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Total Paid (FY {activeFy})</p>
+          <p className="font-mono text-3xl font-bold text-dark">₹ {formatIndianNumber(totalPaid)}</p>
         </div>
         <div className="bg-surface border border-border p-8 border-t-2 border-t-amber-500 shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Pending Liability</p>
-          <p className="font-mono text-3xl font-bold text-amber-text">₹ 6,78,975.00</p>
+          <p className="font-mono text-3xl font-bold text-amber-text">₹ {formatIndianNumber(totalPending)}</p>
         </div>
         <div className="bg-surface border border-border p-8 border-t-2 border-t-stone-800 shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Challan Records</p>
-          <p className="font-mono text-3xl font-bold text-dark">02</p>
+          <p className="font-mono text-3xl font-bold text-dark">{String(completedCount).padStart(2, "0")}</p>
         </div>
       </div>
 
@@ -86,9 +92,9 @@ export default function ITRPaymentHistoryPage() {
                   </td>
                   <td className="py-5 px-6 text-right">
                     {p.status === 'completed' ? (
-                      <button className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Download</button>
+                      <button onClick={() => showToast.success("Receipt downloaded.")} className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Download</button>
                     ) : (
-                      <button className="text-amber hover:text-amber-text font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Record Info</button>
+                      <button onClick={() => showToast.info("Record challan info to complete.")} className="text-amber hover:text-amber-text font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Record Info</button>
                     )}
                   </td>
                 </tr>
