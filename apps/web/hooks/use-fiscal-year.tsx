@@ -28,17 +28,20 @@ const FiscalYearContext = createContext<FiscalYearContextValue | null>(null);
 const STORAGE_KEY = 'complianceos-active-fy';
 
 export function FiscalYearProvider({ children }: { children: ReactNode }) {
-  const [activeFy, setActiveFy] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(STORAGE_KEY) ?? '2026-27';
+  const [activeFy, setActiveFy] = useState('2026-27');
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && stored !== '2026-27') {
+      setActiveFy(stored);
     }
-    return '2026-27';
-  });
-  const currentFy: FiscalYear = FISCAL_YEARS.find(fy => fy.year === activeFy) ?? FISCAL_YEARS[0];
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, activeFy);
   }, [activeFy]);
+
+  const currentFy: FiscalYear = FISCAL_YEARS.find(fy => fy.year === activeFy) ?? FISCAL_YEARS[0];
 
   const handleSetFy = useCallback((fy: string) => setActiveFy(fy), []);
 
