@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { getProducts } from "@/lib/inventory-store";
 
 interface Product {
   id: string;
@@ -23,10 +26,25 @@ const mockProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
+  const { activeFy } = useFiscalYear();
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState("");
 
-  const filtered = mockProducts.filter((p) => {
+  const allProducts = useMemo(() => {
+    const stored = getProducts().map((p) => ({
+      id: p.id,
+      sku: p.sku,
+      name: p.name,
+      category: p.category,
+      hsn: p.hsn,
+      stock: p.stock,
+      unitPrice: p.unitPrice,
+      status: p.status,
+    }));
+    return [...stored, ...mockProducts];
+  }, []);
+
+  const filtered = allProducts.filter((p) => {
     if (stockFilter === "in_stock" && p.stock <= 0) return false;
     if (stockFilter === "out_of_stock" && p.stock > 0) return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase()) && !p.sku.toLowerCase().includes(search.toLowerCase())) return false;
@@ -38,7 +56,7 @@ export default function ProductsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Management</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Management · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">Product Ledger</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl">Comprehensive view of all active SKUs, current stock levels, and associated HSN/SAC codes for immediate GST compliance verification.</p>
         </div>
@@ -64,7 +82,7 @@ export default function ProductsPage() {
               </select>
             </div>
           </div>
-          <button className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid hover:text-dark transition-colors flex items-center gap-1 cursor-pointer border-none bg-transparent">
+          <button onClick={() => showToast.info("Advanced filters panel opened.")} className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid hover:text-dark transition-colors flex items-center gap-1 cursor-pointer border-none bg-transparent">
             <Icon name="filter_list" className="text-[16px]" />
             More Filters
           </button>
@@ -80,7 +98,8 @@ export default function ProductsPage() {
                 <th className="py-3 px-4 border-b-[0.5px] border-border font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid font-semibold">Category</th>
                 <th className="py-3 px-4 border-b-[0.5px] border-border font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid font-semibold w-24">HSN/SAC</th>
                 <th className="py-3 px-4 border-b-[0.5px] border-border font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid font-semibold text-right w-24">Stock</th>
-                <th className="py-3 px-4 border-b-[0.5px] border-border font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid font-semibold text-right w-40">Unit Price (₹)</th>
+                <th className="py-3 px-4 border-b-[0.5px] border-border font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid font-semibold text-right w-32">Unit Price (₹)</th>
+                <th className="py-3 px-4 border-b-[0.5px] border-border font-ui text-[11px] text-ui-xs uppercase tracking-widest text-mid font-semibold w-28">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y-[0.5px] divide-border-subtle">
@@ -95,10 +114,26 @@ export default function ProductsPage() {
                       {p.stock > 0 ? p.stock.toLocaleString('en-IN') : '0'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-mono text-sm text-right">₹{p.unitPrice.toLocaleString('en-IN')}</td>
-                </tr>
-              ))}
-            </tbody>
+                    <td className="py-3 px-4 font-mono text-sm text-right">₹{p.unitPrice.toLocaleString('en-IN')}</td>
+                    <td className="py-3 px-4">
+                      <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md border ${
+                        p.status === 'active' ? 'bg-success-bg text-success border-green-200' : 'bg-danger-bg text-danger border-red-200'
+                      }`}>{p.status}</span>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="py-16 text-center">
+                      <div className="flex flex-col items-center gap-3">
+                        <Icon name="inventory_2" className="text-[48px] text-light" />
+                        <p className="font-ui text-sm text-mid">No products match the current filter.</p>
+                        <button onClick={() => { setSearch(""); setStockFilter(""); }} className="font-ui text-[11px] text-primary uppercase tracking-widest font-bold hover:underline border-none bg-transparent cursor-pointer">Clear Filters</button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
           </table>
         </div>
       </div>

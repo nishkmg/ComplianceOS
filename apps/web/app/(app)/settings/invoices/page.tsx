@@ -1,21 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function InvoiceConfigPage() {
+  const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-0 text-left">
       {/* Sticky Header */}
       <header className="sticky top-0 z-30 bg-page-bg/90 backdrop-blur-md border-b-[0.5px] border-border px-8 py-8 flex justify-between items-end -mx-8 -mt-8 mb-8">
         <div>
-          <p className="font-ui text-[10px] text-amber uppercase tracking-widest mb-2 font-bold">Workspace Configuration</p>
+          <p className="font-ui text-[10px] text-amber uppercase tracking-widest mb-2 font-bold">Workspace Configuration · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark leading-tight">Invoice Settings</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Define document prefixes, statutory disclosures, and bank account mappings.</p>
         </div>
         <div className="flex gap-4">
-          <button className="btn-primary">
+          <button onClick={() => showToast.success("Invoice settings saved.")} className="btn-primary">
             Save Changes
           </button>
         </div>
@@ -49,21 +50,21 @@ export default function InvoiceConfigPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Logo (B&W Recommended)</label>
-                  <div className="border-2 border-dashed border-border p-8 flex flex-col items-center justify-center bg-surface-muted hover:bg-surface-muted transition-colors cursor-pointer">
-                    <Icon name="upload_file" className="text-light text-3xl mb-2" />
-                    <span className="font-ui text-[10px] uppercase font-bold text-mid">Upload PNG/JPG</span>
-                  </div>
+                   <div onClick={() => showToast.info("Logo uploader opened.")} className="border-2 border-dashed border-border p-8 flex flex-col items-center justify-center bg-surface-muted hover:bg-surface-muted transition-colors cursor-pointer">
+                     <Icon name="upload_file" className="text-light text-3xl mb-2" />
+                     <span className="font-ui text-[10px] uppercase font-bold text-mid">Upload PNG/JPG</span>
+                   </div>
                </div>
                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between py-2 border-b border-stone-50">
                     <span className="font-ui text-[13px] text-dark">Show Authorized Signatory</span>
-                    <button className="w-10 h-6 rounded-full bg-amber relative border-none">
+                    <button onClick={() => showToast.success("Setting toggled.")} className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
                       <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
                     </button>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-stone-50">
                     <span className="font-ui text-[13px] text-dark">Include QR Code (e-Invoice)</span>
-                    <button className="w-10 h-6 rounded-full bg-amber relative border-none">
+                    <button onClick={() => showToast.success("QR code setting toggled.")} className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
                       <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
                     </button>
                   </div>

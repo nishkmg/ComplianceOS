@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 const mockPayments = [
   { id: "1", date: "24 Oct 2024", cpin: "CPIN-880120421", head: "IGST", amount: 425000, status: "paid" },
@@ -13,6 +14,21 @@ const mockPayments = [
 ];
 
 export default function GSTPaymentHistoryPage() {
+  const { activeFy } = useFiscalYear();
+  const totalPaid = useMemo(() => mockPayments.reduce((s, p) => s + p.amount, 0), []);
+
+  const handleExportCSV = () => {
+    if (mockPayments.length === 0) { showToast.error("No payments to export."); return; }
+    const header = "Date,CPIN,Tax Head,Amount,Status";
+    const rows = mockPayments.map(p => `${p.date},${p.cpin},${p.head},${p.amount},${p.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `gst-payments-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${mockPayments.length} payments.`);
+  };
+
   return (
     <div className="space-y-0 text-left">
       {/* Header */}
@@ -22,10 +38,10 @@ export default function GSTPaymentHistoryPage() {
           <h1 className="font-display text-display-lg text-dark">GST Payment History</h1>
         </div>
         <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-5 py-2 border border-border bg-surface font-ui text-[13px] font-bold uppercase tracking-widest text-mid rounded-md hover:shadow-sm transition-shadow cursor-pointer">
-            <Icon name="filter_list" className="text-[18px]" /> Filter
+          <button onClick={() => showToast.info("Filter by period: FY " + activeFy)} className="flex items-center gap-2 px-5 py-2 border border-border bg-surface font-ui text-[13px] font-bold uppercase tracking-widest text-mid rounded-md hover:shadow-sm transition-shadow cursor-pointer">
+            <Icon name="filter_list" className="text-[18px]" /> FY {activeFy}
           </button>
-          <button className="flex items-center gap-2 px-5 py-2 border border-border bg-surface font-ui text-[13px] font-bold uppercase tracking-widest text-mid rounded-md hover:shadow-sm transition-shadow cursor-pointer">
+          <button onClick={handleExportCSV} className="flex items-center gap-2 px-5 py-2 border border-border bg-surface font-ui text-[13px] font-bold uppercase tracking-widest text-mid rounded-md hover:shadow-sm transition-shadow cursor-pointer">
             <Icon name="download" className="text-[18px]" /> Export CSV
           </button>
         </div>
@@ -35,8 +51,8 @@ export default function GSTPaymentHistoryPage() {
         {/* Summary Bar */}
         <div className="bg-surface border border-border p-8 mb-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2 font-bold">Total Paid (FY 2024-25)</p>
-            <p className="font-mono text-3xl font-bold text-dark">₹ 42,85,900.00</p>
+            <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2 font-bold">Total Paid (FY {activeFy})</p>
+            <p className="font-mono text-3xl font-bold text-dark">₹ {formatIndianNumber(totalPaid)}</p>
           </div>
           <div className="w-[1px] h-12 bg-border-subtle hidden md:block"></div>
           <div className="text-left md:text-right">

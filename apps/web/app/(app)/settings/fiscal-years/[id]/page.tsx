@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { formatIndianNumber } from "@/lib/format";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function FiscalYearDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
+  const { activeFy } = useFiscalYear();
 
   return (
     <div className="space-y-6 text-left">
@@ -25,15 +23,15 @@ export default function FiscalYearDetailPage() {
       {/* Header Section */}
       <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border pb-8">
         <div className="text-left">
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Fiscal Year Detail</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Fiscal Year Detail · FY {activeFy}</p>
           <div className="flex items-center gap-4 mb-3">
             <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">FY 2024-25</h1>
-            <span className="font-ui text-[10px] uppercase tracking-widest text-amber border border-amber px-3 py-1 bg-amber-50 rounded-md font-bold">Open</span>
+            <span className="font-ui text-[10px] uppercase tracking-widest text-mid border border-zinc-200 px-3 py-1 bg-surface-muted rounded-md font-bold">Closed</span>
           </div>
           <p className="text-[13px] text-secondary font-ui mt-1">Reporting period: April 1, 2024 — March 31, 2025</p>
         </div>
         <div className="flex gap-4">
-          <button className="btn-secondary flex items-center gap-2">
+          <button onClick={() => showToast.success("Ledger exported for FY 2024-25.")} className="btn-secondary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" />
             Export Ledger
           </button>
@@ -103,7 +101,7 @@ export default function FiscalYearDetailPage() {
             </div>
           </div>
           <div className="md:col-span-7 flex flex-col justify-center items-end">
-            <button className="bg-surface-muted border border-border text-mid px-12 py-4 font-ui text-[13px] font-bold uppercase tracking-widest cursor-not-allowed opacity-50">
+            <button onClick={() => showToast.info("FY closure not yet available — 158 days remaining.")} className="bg-surface-muted border border-border text-mid px-12 py-4 font-ui text-[13px] font-bold uppercase tracking-widest cursor-pointer opacity-50">
               Close Fiscal Year
             </button>
             <p className="mt-4 text-[11px] text-light text-right uppercase tracking-widest">

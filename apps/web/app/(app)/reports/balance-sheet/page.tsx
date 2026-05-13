@@ -1,43 +1,107 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const equityAccounts = [
-  { id: "e1", name: "Share Capital",        balance: 1000000 },
-  { id: "e2", name: "Reserves & Surplus",   balance: 1358000 },
-  { id: "e3", name: "Net Profit (Current)", balance: 2684500 },
-];
+type BsEquity = { id: string; name: string; balance: number };
+type BsLiability = { id: string; name: string; balance: number };
+type BsAsset = { id: string; name: string; balance: number };
 
-const liabilityAccounts = [
-  { id: "l1", name: "Trade Payables",     balance: 180000 },
-  { id: "l2", name: "GST Output",         balance: 125000 },
-  { id: "l3", name: "TDS Payable",        balance: 12000 },
-  { id: "l4", name: "Short-term Borrowings", balance: 250000 },
-];
-
-const assetAccounts = [
-  { id: "a1", name: "Cash & Cash Equivalents", balance: 500000 },
-  { id: "a2", name: "Bank Balances",          balance: 1250000 },
-  { id: "a3", name: "Trade Receivables",      balance: 350000 },
-  { id: "a4", name: "Inventory",              balance: 450000 },
-  { id: "a5", name: "GST Input (Tax Asset)",  balance: 85000 },
-  { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
-  { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
-  { id: "a8", name: "Intangible Assets",      balance: 120000 },
-];
+const bsDataByFy: Record<string, { equity: BsEquity[]; liabilities: BsLiability[]; assets: BsAsset[] }> = {
+  '2026-27': {
+    equity: [
+      { id: "e1", name: "Share Capital",        balance: 1000000 },
+      { id: "e2", name: "Reserves & Surplus",   balance: 1358000 },
+      { id: "e3", name: "Net Profit (Current)", balance: 2684500 },
+    ],
+    liabilities: [
+      { id: "l1", name: "Trade Payables",     balance: 180000 },
+      { id: "l2", name: "GST Output",         balance: 125000 },
+      { id: "l3", name: "TDS Payable",        balance: 12000 },
+      { id: "l4", name: "Short-term Borrowings", balance: 250000 },
+    ],
+    assets: [
+      { id: "a1", name: "Cash & Cash Equivalents", balance: 500000 },
+      { id: "a2", name: "Bank Balances",          balance: 1250000 },
+      { id: "a3", name: "Trade Receivables",      balance: 350000 },
+      { id: "a4", name: "Inventory",              balance: 450000 },
+      { id: "a5", name: "GST Input (Tax Asset)",  balance: 85000 },
+      { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
+      { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
+      { id: "a8", name: "Intangible Assets",      balance: 120000 },
+      { id: "a9", name: "Investments",            balance: 1500000 },
+      { id: "a10", name: "Other Financial Assets", balance: 669500 },
+    ],
+  },
+  '2025-26': {
+    equity: [
+      { id: "e1", name: "Share Capital",        balance: 1000000 },
+      { id: "e2", name: "Reserves & Surplus",   balance: 1120000 },
+      { id: "e3", name: "Net Profit (Current)", balance: 2145000 },
+    ],
+    liabilities: [
+      { id: "l1", name: "Trade Payables",     balance: 145000 },
+      { id: "l2", name: "GST Output",         balance: 96000 },
+      { id: "l3", name: "TDS Payable",        balance: 8500 },
+      { id: "l4", name: "Short-term Borrowings", balance: 200000 },
+    ],
+    assets: [
+      { id: "a1", name: "Cash & Cash Equivalents", balance: 420000 },
+      { id: "a2", name: "Bank Balances",          balance: 980000 },
+      { id: "a3", name: "Trade Receivables",      balance: 280000 },
+      { id: "a4", name: "Inventory",              balance: 380000 },
+      { id: "a5", name: "GST Input (Tax Asset)",  balance: 62000 },
+      { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
+      { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
+      { id: "a8", name: "Intangible Assets",      balance: 120000 },
+      { id: "a9", name: "Investments",            balance: 1200000 },
+      { id: "a10", name: "Other Financial Assets", balance: 587500 },
+    ],
+  },
+  '2024-25': {
+    equity: [
+      { id: "e1", name: "Share Capital",        balance: 1000000 },
+      { id: "e2", name: "Reserves & Surplus",   balance: 800000 },
+      { id: "e3", name: "Net Profit (Current)", balance: 1000000 },
+    ],
+    liabilities: [
+      { id: "l1", name: "Trade Payables",     balance: 120000 },
+      { id: "l2", name: "GST Output",         balance: 80000 },
+      { id: "l3", name: "TDS Payable",        balance: 6000 },
+      { id: "l4", name: "Short-term Borrowings", balance: 150000 },
+    ],
+    assets: [
+      { id: "a1", name: "Cash & Cash Equivalents", balance: 350000 },
+      { id: "a2", name: "Bank Balances",          balance: 350000 },
+      { id: "a3", name: "Trade Receivables",      balance: 200000 },
+      { id: "a4", name: "Inventory",              balance: 250000 },
+      { id: "a5", name: "GST Input (Tax Asset)",  balance: 50000 },
+      { id: "a6", name: "Property, Plant & Equipment", balance: 450000 },
+      { id: "a7", name: "Furniture & Fixtures",   balance: 235000 },
+      { id: "a8", name: "Intangible Assets",      balance: 120000 },
+      { id: "a9", name: "Investments",            balance: 1000000 },
+      { id: "a10", name: "Other Financial Assets", balance: 151000 },
+    ],
+  },
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function BalanceSheetPage() {
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
-  const [asOfDate, setAsOfDate] = useState("2027-03-31");
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
+  const fyEndDate = `${parseInt(fiscalYear.split('-')[1]) + 2000}-03-31`;
+  const [asOfDate, setAsOfDate] = useState(fyEndDate);
+  useEffect(() => { setAsOfDate(fyEndDate); }, [fiscalYear]);
+  const fyData = bsDataByFy[fiscalYear] ?? bsDataByFy['2026-27'];
+  const { equity: equityAccounts, liabilities: liabilityAccounts, assets: assetAccounts } = fyData;
 
   const totalEquity = equityAccounts.reduce((s, a) => s + a.balance, 0);
   const totalLiabilities = liabilityAccounts.reduce((s, a) => s + a.balance, 0);
@@ -51,7 +115,7 @@ export default function BalanceSheetPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Financial Report
+            Financial Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Balance Sheet</h1>
         </div>
@@ -63,6 +127,7 @@ export default function BalanceSheetPage() {
           >
             <option value="2026-27">FY 2026-27</option>
             <option value="2025-26">FY 2025-26</option>
+            <option value="2024-25">FY 2024-25</option>
           </select>
           <input
             type="date"
@@ -70,7 +135,7 @@ export default function BalanceSheetPage() {
             onChange={e => setAsOfDate(e.target.value)}
             className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
           />
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => showToast.success("Balance sheet PDF exported.")}>
             <Icon name="download" size={14} /> Export PDF
           </Button>
           <Link
@@ -108,12 +173,12 @@ export default function BalanceSheetPage() {
                 {equityAccounts.map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Equity</span>
-                  <span className="font-mono text-[13px] tabular-nums font-bold">{formatIndianNumber(totalEquity)}</span>
+                  <span className="font-mono text-[13px] tabular-nums font-bold">₹ {formatIndianNumber(totalEquity, { currency: false })}</span>
                 </div>
               </div>
 
@@ -122,19 +187,19 @@ export default function BalanceSheetPage() {
                 {liabilityAccounts.map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Liabilities</span>
-                  <span className="font-mono text-[13px] tabular-nums font-bold">{formatIndianNumber(totalLiabilities)}</span>
+                  <span className="font-mono text-[13px] tabular-nums font-bold">₹ {formatIndianNumber(totalLiabilities, { currency: false })}</span>
                 </div>
               </div>
             </div>
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
               <span className="uppercase tracking-widest text-xs print:text-black">Total Equity & Liabilities</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalEqLiab)}</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalEqLiab, { currency: false })}</span>
             </div>
           </div>
 
@@ -150,13 +215,13 @@ export default function BalanceSheetPage() {
                 {assetAccounts.slice(5).map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Non-Current Assets</span>
                   <span className="font-mono text-[13px] tabular-nums font-bold">
-                    {formatIndianNumber(assetAccounts.slice(5).reduce((s, a) => s + a.balance, 0))}
+                    ₹ {formatIndianNumber(assetAccounts.slice(5).reduce((s, a) => s + a.balance, 0), { currency: false })}
                   </span>
                 </div>
               </div>
@@ -166,13 +231,13 @@ export default function BalanceSheetPage() {
                 {assetAccounts.slice(0, 5).map(a => (
                   <div key={a.id} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark pl-4">{a.name}</span>
-                    <span className="font-mono text-[13px] tabular-nums">{formatIndianNumber(a.balance)}</span>
+                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(a.balance, { currency: false })}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-4 py-2 font-medium border-t border-border mt-1 pt-2 text-ui-sm">
                   <span className="text-dark">Sub-total Current Assets</span>
                   <span className="font-mono text-[13px] tabular-nums font-bold">
-                    {formatIndianNumber(assetAccounts.slice(0, 5).reduce((s, a) => s + a.balance, 0))}
+                    ₹ {formatIndianNumber(assetAccounts.slice(0, 5).reduce((s, a) => s + a.balance, 0), { currency: false })}
                   </span>
                 </div>
               </div>
@@ -180,7 +245,7 @@ export default function BalanceSheetPage() {
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
               <span className="uppercase tracking-widest text-xs print:text-black">Total Assets</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalAssets)}</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalAssets, { currency: false })}</span>
             </div>
 
             {balanced ? (
@@ -189,7 +254,7 @@ export default function BalanceSheetPage() {
               </div>
             ) : (
               <div className="px-4 py-2 bg-danger-bg text-danger text-[10px] uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
-                <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssets))}
+                <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssets), { currency: false })}
               </div>
             )}
           </div>

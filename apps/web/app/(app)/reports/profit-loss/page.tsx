@@ -1,37 +1,56 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data — Schedule III format ──────────────────────────────────────────
 
-const revenueItems = [
-  { label: "Revenue from Operations", amount: 12450000, note: "1" },
-  { label: "Other Income", amount: 24600, note: "2" },
-];
-
-const expenseItems = [
-  { label: "Cost of Materials Consumed", amount: 8240000, note: "3" },
-  { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -400000, note: "4" },
-  { label: "Employee Benefits Expense", amount: 1245000, note: "5" },
-  { label: "Finance Costs", amount: 18500, note: "6" },
-  { label: "Depreciation and Amortisation Expense", amount: 248000, note: "7" },
-  { label: "Other Expenses", amount: 570000, note: "8" },
-];
-
-const totalRevenue = revenueItems.reduce((s, i) => s + i.amount, 0);
-const totalExpenses = expenseItems.reduce((s, i) => s + i.amount, 0);
-const netProfit = totalRevenue - totalExpenses;
-const isProfit = netProfit >= 0;
+interface PlItem { label: string; amount: number; note: string }
+const plDataByFy: Record<string, { revenue: PlItem[]; expenses: PlItem[] }> = {
+  '2026-27': {
+    revenue: [
+      { label: "Revenue from Operations", amount: 12450000, note: "1" },
+      { label: "Other Income", amount: 24600, note: "2" },
+    ],
+    expenses: [
+      { label: "Cost of Materials Consumed", amount: 8240000, note: "3" },
+      { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -400000, note: "4" },
+      { label: "Employee Benefits Expense", amount: 1245000, note: "5" },
+      { label: "Finance Costs", amount: 18500, note: "6" },
+      { label: "Depreciation and Amortisation Expense", amount: 248000, note: "7" },
+      { label: "Other Expenses", amount: 570000, note: "8" },
+    ],
+  },
+  '2025-26': {
+    revenue: [
+      { label: "Revenue from Operations", amount: 9850000, note: "1" },
+      { label: "Other Income", amount: 18200, note: "2" },
+    ],
+    expenses: [
+      { label: "Cost of Materials Consumed", amount: 6500000, note: "3" },
+      { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -300000, note: "4" },
+      { label: "Employee Benefits Expense", amount: 1080000, note: "5" },
+      { label: "Finance Costs", amount: 15000, note: "6" },
+      { label: "Depreciation and Amortisation Expense", amount: 220000, note: "7" },
+      { label: "Other Expenses", amount: 460000, note: "8" },
+    ],
+  },
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ProfitLossPage() {
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
+  const fyPl = plDataByFy[fiscalYear] ?? plDataByFy['2026-27'];
+  const { revenue: revenueItems, expenses: expenseItems } = fyPl;
+  const totalRevenue = revenueItems.reduce((s, i) => s + i.amount, 0);
+  const totalExpenses = expenseItems.reduce((s, i) => s + i.amount, 0);
+  const netProfit = totalRevenue - totalExpenses;
+  const isProfit = netProfit >= 0;
 
   return (
     <div className="space-y-6">
@@ -39,7 +58,7 @@ export default function ProfitLossPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Financial Performance
+            Financial Performance · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss Account</h1>
           <p className="font-ui text-[13px] text-secondary mt-1">Schedule III — Section 129 of Companies Act, 2013</p>
@@ -53,7 +72,7 @@ export default function ProfitLossPage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.print()}>
             <Icon name="print" size={14} /> Print
           </Button>
           <Link
@@ -71,7 +90,7 @@ export default function ProfitLossPage() {
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
           <h2 className="font-display text-[24px] text-dark print:text-black">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-[12px] text-mid mt-1 uppercase tracking-widest">Statement of Profit and Loss</p>
-          <p className="font-mono text-[11px] text-light mt-0.5 italic">For the year ended 31 March 2027 · FY {fiscalYear}</p>
+          <p className="font-mono text-[11px] text-light mt-0.5 italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
 
         <CardContent className="p-8 space-y-8">
@@ -89,7 +108,7 @@ export default function ProfitLossPage() {
                     {/* Previous period placeholder */}
                   </div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(item.amount)}
+                    ₹ {formatIndianNumber(item.amount, { currency: false })}
                   </div>
                 </div>
               ))}
@@ -97,7 +116,7 @@ export default function ProfitLossPage() {
                 <div className="col-span-8 font-ui text-[11px] uppercase tracking-widest text-dark print:text-black">Total Revenue</div>
                 <div className="col-span-2" />
                 <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">
-                  ₹ {formatIndianNumber(totalRevenue)}
+                  ₹ {formatIndianNumber(totalRevenue, { currency: false })}
                 </div>
               </div>
             </div>
@@ -117,7 +136,7 @@ export default function ProfitLossPage() {
                     {/* Previous period placeholder */}
                   </div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(Math.abs(item.amount))}
+                    ₹ {formatIndianNumber(Math.abs(item.amount), { currency: false })}
                   </div>
                 </div>
               ))}
@@ -125,7 +144,7 @@ export default function ProfitLossPage() {
                 <div className="col-span-8 font-ui text-[11px] uppercase tracking-widest text-dark print:text-black">Total Expenses</div>
                 <div className="col-span-2" />
                 <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">
-                  ₹ {formatIndianNumber(totalExpenses)}
+                  ₹ {formatIndianNumber(totalExpenses, { currency: false })}
                 </div>
               </div>
             </div>
@@ -146,7 +165,7 @@ export default function ProfitLossPage() {
               </p>
             </div>
             <p className={`font-mono text-2xl font-bold tabular-nums ${isProfit ? "text-success" : "text-danger"} print:text-black`}>
-              ₹ {formatIndianNumber(Math.abs(netProfit))}
+              ₹ {formatIndianNumber(Math.abs(netProfit), { currency: false })}
             </p>
           </div>
         </CardContent>

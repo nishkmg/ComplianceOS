@@ -8,6 +8,7 @@ const statusConfig: Record<InvoiceStatus, { bg: string; label: string }> = {
   partially_paid: { bg: "bg-yellow-100 text-yellow-800", label: "Partially Paid" },
   paid: { bg: "bg-green-100 text-green-800", label: "Paid" },
   voided: { bg: "bg-red-100 text-red-800", label: "Voided" },
+  overdue: { bg: "bg-red-200 text-red-900", label: "Overdue" },
 };
 
 interface InvoiceStatusBadgeProps {

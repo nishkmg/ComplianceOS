@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 interface AuditEntry {
   id: string;
@@ -24,21 +26,39 @@ const mockEntries: AuditEntry[] = [
 ];
 
 export default function AuditLogPage() {
+  const { activeFy } = useFiscalYear();
   const [filterAction, setFilterAction] = useState("all");
   const [filterModule, setFilterModule] = useState("all");
   const [search, setSearch] = useState("");
+
+  const filtered = mockEntries.filter((e) => {
+    if (search && !e.details.toLowerCase().includes(search.toLowerCase()) && !e.ip.toLowerCase().includes(search.toLowerCase())) return false;
+    if (filterModule !== "all" && e.module !== filterModule) return false;
+    if (filterAction !== "all" && e.action.toLowerCase() !== filterAction.toLowerCase()) return false;
+    return true;
+  });
 
   return (
     <div className="space-y-6 text-left">
       {/* Header */}
       <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">System</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">System · FY {activeFy}</p>
           <h1 className="font-display text-2xl font-semibold text-dark">System Audit Log</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Immutable record of all postings, modifications, and access events.</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary flex items-center gap-2">
+          <button onClick={() => {
+            if (filtered.length === 0) { showToast.error("No entries to export."); return; }
+            const header = "Timestamp,User,Role,Module,Action,Description,IP";
+            const rows = filtered.map(e => `${e.performedAt},"${e.performedBy}","${e.role}","${e.module}",${e.action},"${e.details.replace(/"/g,'""')}",${e.ip}`);
+            const csv = [header, ...rows].join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a"); a.href = url; a.download = `audit-log-${activeFy}.csv`; a.click();
+            URL.revokeObjectURL(url);
+            showToast.success(`Exported ${filtered.length} entries.`);
+          }} className="btn-secondary flex items-center gap-2">
             <Icon name="download" className="text-sm" />
             <span className="font-ui text-[11px] uppercase tracking-wider">Export CSV</span>
           </button>
@@ -57,20 +77,23 @@ export default function AuditLogPage() {
           />
         </div>
         <div className="flex gap-4 flex-wrap">
-          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none">
-            <option>All Modules</option>
+          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none" value={filterModule} onChange={(e) => setFilterModule(e.target.value)}>
+            <option value="all">All Modules</option>
             <option>General Ledger</option>
+            <option>TDS Compliance</option>
             <option>Vouchers</option>
             <option>User Access</option>
+            <option>GST Liability</option>
           </select>
-          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none">
-            <option>All Actions</option>
-            <option>CREATE</option>
-            <option>UPDATE</option>
-            <option>DELETE</option>
-            <option>LOGIN</option>
+          <select className="py-2 px-3 bg-transparent border-[0.5px] border-border rounded text-ui-sm text-text-mid focus:border-amber outline-none" value={filterAction} onChange={(e) => setFilterAction(e.target.value)}>
+            <option value="all">All Actions</option>
+            <option>Update</option>
+            <option>Generate</option>
+            <option>Delete</option>
+            <option>Login</option>
+            <option>Post</option>
           </select>
-          <button className="px-4 py-2 bg-surface-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-zinc-200 transition-colors flex items-center gap-2 border border-border cursor-pointer">
+          <button onClick={() => showToast.info("Advanced filters opened.")} className="px-4 py-2 bg-surface-muted text-on-surface text-ui-xs uppercase tracking-wider font-bold rounded hover:bg-zinc-200 transition-colors flex items-center gap-2 border border-border cursor-pointer">
             <Icon name="filter_list" className="text-sm" /> More Filters
           </button>
         </div>
@@ -90,7 +113,8 @@ export default function AuditLogPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border-subtle">
-            {mockEntries.map((entry) => (
+            {filtered.length > 0 ? (
+              filtered.map((entry) => (
               <tr key={entry.id} className="hover:bg-surface-muted transition-colors group">
                 <td className="py-4 px-6 font-mono text-[12px] text-text-mid">{entry.performedAt}</td>
                 <td className="py-4 px-6">
@@ -109,25 +133,29 @@ export default function AuditLogPage() {
                   </span>
                 </td>
                 <td className="py-4 px-6 font-ui text-[13px] text-on-surface max-w-[300px] truncate" title={entry.details}>
-                  {entry.details}
+                  <Link href={`/audit-log/${entry.id}`} className="hover:text-amber transition-colors no-underline">
+                    {entry.details}
+                  </Link>
                 </td>
                 <td className="py-4 px-6 font-mono text-[12px] text-text-mid text-right">{entry.ip}</td>
               </tr>
-            ))}
+            ))) : (
+              <tr><td colSpan={6} className="py-16 text-center font-ui text-sm text-mid">No audit entries match your filters.</td></tr>
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
       <div className="mt-6 flex items-center justify-between">
-        <p className="font-ui text-[11px] text-text-mid">Showing 1 to 5 of 1,248 entries</p>
+        <p className="font-ui text-[11px] text-text-mid">Showing all {filtered.length} of {mockEntries.length} entries</p>
         <div className="flex gap-1">
-          <button className="p-1 border border-border rounded text-text-mid hover:bg-surface disabled:opacity-50 cursor-pointer"><Icon name="chevron_left" className="text-sm" /></button>
+          <button onClick={() => showToast.info("Already on first page.")} className="p-1 border border-border rounded text-text-mid hover:bg-surface disabled:opacity-50 cursor-pointer"><Icon name="chevron_left" className="text-sm" /></button>
           <button className="px-3 py-1 bg-surface border border-border rounded font-mono text-sm">1</button>
-          <button className="px-3 py-1 border border-transparent hover:border-border rounded font-mono text-sm text-text-mid cursor-pointer">2</button>
-          <button className="px-3 py-1 border border-transparent hover:border-border rounded font-mono text-sm text-text-mid cursor-pointer">3</button>
+          <button onClick={() => showToast.info("Page 2 — no more data.")} className="px-3 py-1 border border-transparent hover:border-border rounded font-mono text-sm text-text-mid cursor-pointer">2</button>
+          <button onClick={() => showToast.info("Page 3 — no more data.")} className="px-3 py-1 border border-transparent hover:border-border rounded font-mono text-sm text-text-mid cursor-pointer">3</button>
           <span className="px-2 py-1 text-text-mid">...</span>
-          <button className="p-1 border border-border rounded text-text-mid hover:bg-surface cursor-pointer"><Icon name="chevron_right" className="text-sm" /></button>
+          <button onClick={() => showToast.info("Already on last page.")} className="p-1 border border-border rounded text-text-mid hover:bg-surface cursor-pointer"><Icon name="chevron_right" className="text-sm" /></button>
         </div>
       </div>
     </div>

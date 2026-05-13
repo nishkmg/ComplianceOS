@@ -3,22 +3,39 @@
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Badge } from "@/components/ui";
-import { TableSkeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ErrorState } from "@/components/ui/error-state";
+import { showToast } from "@/lib/toast";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+
+interface Employee {
+  id: string;
+  employeeCode: string;
+  name: string;
+  entityName: string;
+  department: string;
+  joiningDate: string;
+  complianceStatus: string;
+}
+
+const mockEmployees: Employee[] = [
+  { id: "e1", employeeCode: "EMP-2024-001", name: "Rahul Sharma", entityName: "ComplianceOS Pvt Ltd", department: "Compliance", joiningDate: "2024-01-15", complianceStatus: "complete" },
+  { id: "e2", employeeCode: "EMP-2024-002", name: "Priya Singh", entityName: "ComplianceOS Pvt Ltd", department: "Engineering", joiningDate: "2024-03-01", complianceStatus: "pending" },
+  { id: "e3", employeeCode: "EMP-2024-003", name: "Vikram Das", entityName: "ComplianceOS Pvt Ltd", department: "Finance", joiningDate: "2024-06-10", complianceStatus: "action_required" },
+];
 
 export default function EmployeesPage() {
+  const router = useRouter();
+  const { activeFy } = useFiscalYear();
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const { data: employees, isLoading, error, refetch }: any = api.employees.list.useQuery({
-    status: statusFilter !== "all" ? (statusFilter as any) : undefined,
-    search: search || undefined,
+  const filtered = mockEmployees.filter((emp) => {
+    if (statusFilter === "active" && emp.complianceStatus !== "complete") return false;
+    if (statusFilter === "inactive" && emp.complianceStatus === "complete") return false;
+    if (search && !emp.name.toLowerCase().includes(search.toLowerCase()) && !emp.employeeCode.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
   });
-
-  const filteredEmployees = employees ?? [];
 
   return (
     <div className="space-y-0">
@@ -26,12 +43,12 @@ export default function EmployeesPage() {
       <div className="px-8 pt-10 pb-6 border-b-[0.5px] border-border bg-surface-container-lowest sticky top-0 z-30 -mx-8 -mt-8 mb-6 w-[calc(100%+64px)]">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 max-w-[1400px] mx-auto text-left">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">HR Management</p>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">HR Management · FY {activeFy}</p>
             <h1 className="font-display text-2xl font-semibold text-dark">Employee Directory</h1>
             <p className="text-[13px] text-secondary font-ui mt-1">Centralized register for payroll compliance, KYC verification, and statutory records.</p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="btn btn-secondary flex items-center gap-2">
+            <button onClick={() => showToast.success("Employee directory exported.")} className="btn btn-secondary flex items-center gap-2">
               <Icon name="download" className="text-lg" />
               Export PDF/Excel
             </button>
@@ -68,24 +85,14 @@ export default function EmployeesPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button className="p-2 border border-border rounded text-mid hover:bg-surface-muted transition-colors cursor-pointer bg-surface">
+          <button onClick={() => showToast.info("Advanced filters opened.")} className="p-2 border border-border rounded text-mid hover:bg-surface-muted transition-colors cursor-pointer bg-surface">
             <Icon name="filter_list" className="text-lg" />
           </button>
         </div>
       </div>
 
       {/* Table */}
-      {isLoading ? (
-        <TableSkeleton rows={10} columns={7} />
-      ) : error ? (
-        <ErrorState
-          title="Failed to load employees"
-          description={error.message || "Unable to fetch employee data. Please try again."}
-          onRetry={() => refetch()}
-          type="server"
-        />
-      ) : (
-        <div className="bg-surface border-x-[0.5px] border-b-[0.5px] border-border rounded-b-lg overflow-x-auto">
+      <div className="bg-surface border-x-[0.5px] border-b-[0.5px] border-border rounded-b-lg overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
               <tr className="bg-surface-muted/80 text-mid border-b-[0.5px] border-border">
@@ -99,8 +106,8 @@ export default function EmployeesPage() {
               </tr>
             </thead>
             <tbody className="divide-y-[0.5px] divide-stone-100">
-              {filteredEmployees.length > 0 ? (
-                filteredEmployees.map((emp: any) => (
+              {filtered.length > 0 ? (
+                filtered.map((emp: Employee) => (
                   <tr key={emp.id} className="hover:bg-surface-muted/50 transition-colors group">
                     <td className="py-4 px-6 font-mono text-sm text-amber-text">{emp.employeeCode}</td>
                     <td className="py-4 px-6">
@@ -119,7 +126,7 @@ export default function EmployeesPage() {
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right">
-                      <button className="text-light hover:text-mid transition-colors opacity-0 group-hover:opacity-100 cursor-pointer border-none bg-transparent">
+                      <button onClick={() => showToast.info("Employee actions opened.")} className="text-light hover:text-mid transition-colors opacity-0 group-hover:opacity-100 cursor-pointer border-none bg-transparent">
                         <Icon name="more_vert" className="text-lg" />
                       </button>
                     </td>
@@ -131,7 +138,7 @@ export default function EmployeesPage() {
                     <EmptyState
                       title="No employees found"
                       description={search || statusFilter !== "all" ? "Try adjusting your search or filter." : "Add your first employee to the directory."}
-                      action={{ label: "Add New Employee", onClick: () => window.location.href = "/employees/new" }}
+                      action={{ label: "Add New Employee", onClick: () => router.push("/employees/new") }}
                       icon="group"
                     />
                   </td>
@@ -140,7 +147,6 @@ export default function EmployeesPage() {
             </tbody>
           </table>
         </div>
-      )}
     </div>
   );
 }

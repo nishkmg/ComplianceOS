@@ -4,18 +4,27 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
+import { addAccount, getAccounts } from "@/lib/account-store";
 
 // ─── Sub-type options per account kind ────────────────────────────────────────
+
+const kinds = ["Asset", "Liability", "Equity", "Income", "Expense"] as const;
 
 const subTypes: Record<string, string[]> = {
   Asset:     ["Current Asset", "Fixed Asset", "Bank Account", "Cash", "Inventory"],
   Liability: ["Current Liability", "Long Term Liability"],
   Equity:    ["Capital Account", "Drawings", "Reserves & Surplus"],
-  Revenue:   ["Operating Revenue", "Other Revenue"],
+  Income:    ["Operating Revenue", "Other Revenue"],
   Expense:   ["Direct Expense", "Indirect Expense", "Depreciation"],
 };
 
 // ─── Page Component ───────────────────────────────────────────────────────────
+
+function getExistingCodes(): string[] {
+  const builtin = ["10101", "10200", "10300", "10400", "10500", "20101", "20200", "20300", "30100", "40100", "50200"];
+  const stored = getAccounts().map(a => a.code);
+  return [...new Set([...builtin, ...stored])];
+}
 
 export default function NewAccountPage() {
   const router = useRouter();
@@ -26,10 +35,32 @@ export default function NewAccountPage() {
     subType: "Current Asset",
     description: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    const existingCodes = getExistingCodes();
+    if (!form.code.trim()) errs.code = "Account code is required";
+    else if (!/^\d{4,5}$/.test(form.code.trim())) errs.code = "Code must be 4-5 digits";
+    else if (existingCodes.includes(form.code.trim())) errs.code = "Code already exists";
+    if (!form.name.trim()) errs.name = "Account name is required";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    showToast.success("Ledger account created successfully");
+    if (!validate()) return;
+    addAccount({
+      id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+      code: form.code.trim(),
+      name: form.name.trim(),
+      kind: form.kind,
+      subtype: form.subType,
+      description: form.description.trim(),
+      createdAt: new Date().toISOString(),
+    });
+    showToast.success(`Ledger account "${form.name}" created successfully`);
     router.push("/coa");
   };
 
@@ -72,15 +103,28 @@ export default function NewAccountPage() {
       <div className="bg-surface border border-border rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber" />
         <form onSubmit={handleSubmit} className="p-7 space-y-7">
+          {/* Validation summary */}
+          {Object.keys(errors).length > 0 && (
+            <div className="bg-danger-bg border border-red-200 px-4 py-3 rounded-md">
+              <p className="font-ui text-[11px] font-bold text-danger uppercase tracking-widest mb-1">Please fix the following:</p>
+              <ul className="list-disc list-inside space-y-0.5">
+                {Object.values(errors).map((msg, i) => (
+                  <li key={i} className="font-ui text-[12px] text-danger">{msg}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Account Name */}
           <div className="space-y-1.5">
             <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Name *</label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light"
+              className={`w-full bg-surface border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light ${errors.name ? 'border-red-400' : 'border-border'}`}
               placeholder="e.g. Accounts Receivable — Domestic"
               value={form.name}
-              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+              onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(prev => { const n = {...prev}; delete n.name; return n; }); }}
               required
+              maxLength={100}
             />
           </div>
 
@@ -89,12 +133,13 @@ export default function NewAccountPage() {
             <div className="space-y-1.5">
               <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Code *</label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light"
+                className={`w-full bg-surface border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light ${errors.code ? 'border-red-400' : 'border-border'}`}
                 placeholder="10100"
                 value={form.code}
-                onChange={e => setForm(f => ({ ...f, code: e.target.value }))}
+                onChange={e => { setForm(f => ({ ...f, code: e.target.value })); setErrors(prev => { const n = {...prev}; delete n.code; return n; }); }}
                 required
               />
+              <p className="font-ui text-[10px] text-light">4-5 digit numeric code. Must be unique.</p>
             </div>
             <div className="space-y-1.5">
               <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Kind</label>
@@ -104,7 +149,7 @@ export default function NewAccountPage() {
                   value={form.kind}
                   onChange={e => setForm(f => ({ ...f, kind: e.target.value, subType: subTypes[e.target.value][0] }))}
                 >
-                  {Object.keys(subTypes).map(k => (
+                  {kinds.map(k => (
                     <option key={k} value={k}>{k}</option>
                   ))}
                 </select>
@@ -142,7 +187,9 @@ export default function NewAccountPage() {
               placeholder="Enter context or specific use-case for this ledger…"
               value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+              maxLength={500}
             />
+            <p className="font-ui text-[10px] text-light text-right">{form.description.length}/500</p>
           </div>
         </form>
       </div>

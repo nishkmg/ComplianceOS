@@ -1,7 +1,7 @@
 "use client";
 
 import "@/app/globals.css";
-import { NavigationLoader } from "@/components/ui";
+import { NavigationLoader } from "@/components/ui/navigation-loader";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (

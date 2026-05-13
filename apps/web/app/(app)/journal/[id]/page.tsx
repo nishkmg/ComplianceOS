@@ -4,39 +4,132 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Badge, Button } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { getEntry, updateEntry, deleteEntry, StoredEntry } from "@/lib/journal-store";
 
-// ─── Mock detail (until tRPC is wired with real data) ─────────────────────────
+interface MockLine {
+  accountName: string; accountCode: string; debit: number; credit: number;
+}
 
-const mockEntry = {
-  id: "1",
-  entryNumber: "JE-2026-27-001",
-  date: "2026-04-01",
-  narration: "Opening balance entry for the financial year 2026-27",
-  fiscalYear: "2026-27",
-  type: "Journal Entry",
-  status: "draft" as "posted" | "draft" | "voided",
-  lines: [
-    { accountName: "Cash Account", accountCode: "10101", debit: 500000, credit: 0 },
-    { accountName: "Capital Account", accountCode: "30100", debit: 0, credit: 500000 },
+interface MockEntry {
+  id: string; entryNumber: string; date: string; narration: string;
+  fiscalYear: string; type: string; status: "draft" | "posted" | "voided"; lines: MockLine[];
+}
+
+function makeLine(acctName: string, acctCode: string, debit: number, credit: number): MockLine {
+  return { accountName: acctName, accountCode: acctCode, debit, credit };
+}
+
+const mockEntriesByFy: Record<string, MockEntry[]> = {
+  '2026-27': [
+    { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance entry for the financial year 2026-27", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Cash Account", "10101", 500000, 0),
+      makeLine("Capital Account", "30100", 0, 500000),
+    ]},
+    { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Trade Receivables", "10300", 118000, 0),
+      makeLine("Sales Revenue", "40100", 0, 118000),
+    ]},
+    { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Equipment", "10500", 75000, 0),
+      makeLine("Bank Account", "10200", 0, 75000),
+    ]},
+    { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Operating Expenses", "50200", 320000, 0),
+      makeLine("Bank Account", "10200", 0, 320000),
+    ]},
+    { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 75000, 0),
+      makeLine("Bank Account", "10200", 0, 75000),
+    ]},
+    { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Trade Receivables", "10300", 236000, 0),
+      makeLine("Sales Revenue", "40100", 0, 236000),
+    ]},
+  ],
+  '2025-26': [
+    { id: "101", entryNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance entry for FY 2025-26", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Cash Account", "10101", 420000, 0),
+      makeLine("Capital Account", "30100", 0, 420000),
+    ]},
+    { id: "102", entryNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Furniture & Fixtures", "10700", 120000, 0),
+      makeLine("Bank Account", "10200", 0, 120000),
+    ]},
+    { id: "103", entryNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Trade Receivables", "10300", 680000, 0),
+      makeLine("Sales Revenue", "40100", 0, 680000),
+    ]},
+    { id: "104", entryNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
+      makeLine("Operating Expenses", "50200", 96000, 0),
+      makeLine("Bank Account", "10200", 0, 96000),
+    ]},
+    { id: "105", entryNumber: "JE-2025-26-005", date: "2026-01-15", narration: "Tax provision entry", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 185000, 0),
+      makeLine("Trade Payables", "20101", 0, 185000),
+    ]},
+    { id: "106", entryNumber: "JE-2025-26-006", date: "2026-03-25", narration: "Year-end adjustments", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
+      makeLine("Operating Expenses", "50200", 45000, 0),
+      makeLine("Trade Payables", "20101", 0, 45000),
+    ]},
   ],
 };
 
-// ─── Page Component ───────────────────────────────────────────────────────────
+function getBaseEntry(id: string): MockEntry | undefined {
+  for (const entries of Object.values(mockEntriesByFy)) {
+    const found = entries.find(e => e.id === id);
+    if (found) return found;
+  }
+  const stored = getEntry(id);
+  if (stored) {
+    return {
+      id: stored.id,
+      entryNumber: stored.entryNumber,
+      date: stored.date,
+      narration: stored.narration,
+      fiscalYear: stored.fiscalYear,
+      type: stored.type,
+      status: stored.status,
+      lines: stored.lines,
+    };
+  }
+  return undefined;
+}
+
+const statusConfig = {
+  posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle" as const, bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success" as const, badgeLabel: "Cleared" },
+  draft: { bannerBg: "bg-amber-50", bannerText: "text-amber", icon: "clock" as const, bannerMsg: "This voucher is in draft state", badgeVariant: "amber" as const, badgeLabel: "Draft" },
+  voided: { bannerBg: "bg-surface-muted", bannerText: "text-mid", icon: "cancel" as const, bannerMsg: "This voucher has been voided", badgeVariant: "gray" as const, badgeLabel: "Voided" },
+};
+
+function mergeEntry(base: MockEntry): MockEntry {
+  const stored = getEntry(base.id);
+  if (!stored) return base;
+  return {
+    id: stored.id,
+    entryNumber: stored.entryNumber,
+    date: stored.date,
+    narration: stored.narration,
+    fiscalYear: stored.fiscalYear,
+    type: stored.type,
+    status: stored.status,
+    lines: stored.lines,
+  };
+}
 
 export default function JournalEntryDetailPage() {
   const params = useParams();
   const router = useRouter();
   const entryId = params.id as string;
 
-  // TODO: replace with tRPC query once wired
-  // const { data: entry, isLoading } = api.journalEntries.get.useQuery({ id: entryId });
-  const entry = mockEntry;
+  const base = getBaseEntry(entryId);
+  const [entry, setEntry] = useState<MockEntry | undefined>(() => base ? mergeEntry(base) : undefined);
 
-  const [narration, setNarration] = useState(entry.narration);
+  const [narration, setNarration] = useState(entry?.narration ?? "");
   const [isEditingNarration, setIsEditingNarration] = useState(false);
   const [isVoidModalOpen, setIsVoidModalOpen] = useState(false);
   const [voidReason, setVoidReason] = useState("");
@@ -56,22 +149,59 @@ export default function JournalEntryDetailPage() {
   const totalDebit = entry.lines.reduce((sum, l) => sum + l.debit, 0);
   const totalCredit = entry.lines.reduce((sum, l) => sum + l.credit, 0);
   const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
-
-  const statusConfig = {
-    posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle" as const, bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success" as const, badgeLabel: "Cleared" },
-    draft: { bannerBg: "bg-amber-50", bannerText: "text-amber", icon: "clock" as const, bannerMsg: "This voucher is in draft state", badgeVariant: "amber" as const, badgeLabel: "Draft" },
-    voided: { bannerBg: "bg-surface-muted", bannerText: "text-mid", icon: "cancel" as const, bannerMsg: "This voucher has been voided", badgeVariant: "gray" as const, badgeLabel: "Voided" },
-  };
   const cfg = statusConfig[entry.status];
+  const formattedEntryDate = new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  const nowFormatted = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+
+  function handlePost() {
+    updateEntry(entryId, { status: "posted" as const });
+    setEntry(prev => prev ? { ...prev, status: "posted" } : prev);
+    showToast.success("Voucher posted to General Ledger.");
+  }
 
   function handleVoidConfirm() {
     if (!voidReason.trim()) {
       showToast.error("Please provide a reason for voiding.");
       return;
     }
+    if (entry!.narration.toLowerCase().includes("opening balance")) {
+      showToast.error("Opening balance entries cannot be voided.");
+      setIsVoidModalOpen(false);
+      setVoidReason("");
+      return;
+    }
+    updateEntry(entryId, { status: "voided" as const });
+    setEntry(prev => prev ? { ...prev, status: "voided" } : prev);
     setIsVoidModalOpen(false);
     setVoidReason("");
     showToast.success("Voucher voided successfully.");
+  }
+
+  function handleDelete() {
+    if (!window.confirm("Delete this draft entry permanently? This action cannot be undone.")) return;
+    deleteEntry(entryId);
+    showToast.success("Draft entry deleted.");
+    router.push("/journal");
+  }
+
+  function handlePrint() {
+    window.print();
+  }
+
+  function handleNarrationSave() {
+    if (!narration.trim()) {
+      showToast.error("Narration cannot be empty.");
+      return;
+    }
+    updateEntry(entryId, { narration: narration.trim() });
+    setEntry(prev => prev ? { ...prev, narration: narration.trim() } : prev);
+    setIsEditingNarration(false);
+    showToast.success("Narration updated.");
+  }
+
+  function handleNarrationCancel() {
+    setNarration(entry!.narration);
+    setIsEditingNarration(false);
   }
 
   return (
@@ -99,21 +229,19 @@ export default function JournalEntryDetailPage() {
             </Badge>
           </div>
           <p className="text-[13px] text-secondary font-ui">
-            {new Date(entry.date).toLocaleDateString("en-IN", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
+            {new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
             <span className="mx-2 text-lighter">·</span>
             FY {entry.fiscalYear}
+            <span className="mx-2 text-lighter">·</span>
+            {entry.type}
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" size="sm" className="text-[10px] font-bold uppercase tracking-widest">
+          <Button variant="outline" size="sm" onClick={handlePrint} className="text-[10px] font-bold uppercase tracking-widest">
             <Icon name="print" size={14} className="mr-1.5" /> Print
           </Button>
           {entry.status === "draft" && (
-            <Button size="sm" className="text-[10px] font-bold uppercase tracking-widest">
+            <Button size="sm" onClick={handlePost} className="text-[10px] font-bold uppercase tracking-widest">
               <Icon name="check" size={14} className="mr-1.5" /> Post to Ledger
             </Button>
           )}
@@ -130,12 +258,14 @@ export default function JournalEntryDetailPage() {
           <div className="md:col-span-2">
             <div className="flex items-center justify-between mb-2">
               <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration</p>
-              <button
-                onClick={() => setIsEditingNarration(!isEditingNarration)}
-                className="text-amber hover:text-amber-hover text-[10px] font-bold uppercase tracking-widest transition-colors border-none bg-transparent cursor-pointer"
-              >
-                {isEditingNarration ? "Cancel" : "Edit"}
-              </button>
+              {entry.status !== "voided" && (
+                <button
+                  onClick={() => setIsEditingNarration(!isEditingNarration)}
+                  className="text-amber hover:text-amber-hover text-[10px] font-bold uppercase tracking-widest transition-colors border-none bg-transparent cursor-pointer"
+                >
+                  {isEditingNarration ? "Cancel" : "Edit"}
+                </button>
+              )}
             </div>
             {isEditingNarration ? (
               <div className="space-y-2">
@@ -146,12 +276,12 @@ export default function JournalEntryDetailPage() {
                   onChange={(e) => setNarration(e.target.value)}
                 />
                 <div className="flex gap-2">
-                  <Button size="sm" onClick={() => { setIsEditingNarration(false); showToast.success("Narration updated."); }}>Save</Button>
-                  <Button variant="ghost" size="sm" onClick={() => { setNarration(entry.narration); setIsEditingNarration(false); }}>Cancel</Button>
+                  <Button size="sm" onClick={handleNarrationSave}>Save</Button>
+                  <Button variant="ghost" size="sm" onClick={handleNarrationCancel}>Cancel</Button>
                 </div>
               </div>
             ) : (
-              <p className="font-ui text-[13px] text-dark leading-relaxed">{narration}</p>
+              <p className="font-ui text-[13px] text-dark leading-relaxed">{entry.narration}</p>
             )}
           </div>
         </div>
@@ -231,7 +361,7 @@ export default function JournalEntryDetailPage() {
                 <span className="font-semibold">Entry created</span> by accountant@firm.in
               </p>
               <p className="font-mono text-[11px] text-mid mt-0.5">
-                01 Apr 2026 · 09:00:00 · IP 192.168.1.10
+                {formattedEntryDate} · IP 192.168.1.10
               </p>
             </div>
           </div>
@@ -243,7 +373,7 @@ export default function JournalEntryDetailPage() {
                   <span className="font-semibold text-success">Voucher posted</span> to General Ledger
                 </p>
                 <p className="font-mono text-[11px] text-mid mt-0.5">
-                  01 Apr 2026 · 09:00:05 · System Verified
+                  {nowFormatted} · System Verified
                 </p>
               </div>
             </div>
@@ -253,10 +383,10 @@ export default function JournalEntryDetailPage() {
               <div className="w-2 h-2 rounded-full bg-danger mt-1.5 shrink-0" />
               <div>
                 <p className="font-ui text-[13px] text-dark">
-                  <span className="font-semibold text-danger">Voucher voided</span> by accountant@firm.in
+                  <span className="font-semibold text-danger">Voucher voided</span>
                 </p>
                 <p className="font-mono text-[11px] text-mid mt-0.5">
-                  01 Apr 2026 · 09:00:05 · Reason: Duplicate entry
+                  {nowFormatted} · {voidReason || "Administrative"}
                 </p>
               </div>
             </div>
@@ -269,7 +399,7 @@ export default function JournalEntryDetailPage() {
         <Button variant="outline" size="sm" onClick={() => router.back()} className="text-[10px] font-bold uppercase tracking-widest">
           ← Back
         </Button>
-        {entry.status === "draft" && (
+        {entry.status === "posted" && (
           <Button
             variant="outline"
             size="sm"
@@ -277,6 +407,16 @@ export default function JournalEntryDetailPage() {
             onClick={() => setIsVoidModalOpen(true)}
           >
             Void Entry
+          </Button>
+        )}
+        {entry.status === "draft" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-[10px] font-bold uppercase tracking-widest text-danger hover:text-danger hover:bg-danger-bg"
+            onClick={handleDelete}
+          >
+            Delete
           </Button>
         )}
         <Link href={`/audit-log?entryId=${entryId}`} className="inline-flex items-center justify-center rounded-sm text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 text-[10px] font-bold uppercase tracking-widest no-underline">

@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { Badge, DataTable, type ColumnDef } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { showToast } from "@/lib/toast";
+import { getPayments } from "@/lib/payment-store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,13 +26,22 @@ interface Payment {
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const mockPayments: Payment[] = [
-  { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp",   date: "2026-04-10", amount: 50000,  paymentMethod: "bank",   status: "recorded", type: "received" },
-  { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd",    date: "2026-04-12", amount: 25000,  paymentMethod: "cash",   status: "recorded", type: "received" },
-  { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X",    date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
-  { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt",   date: "2026-04-15", amount: 75000,  paymentMethod: "cheque", status: "recorded", type: "received" },
-  { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp",   date: "2026-04-08", amount: 30000,  paymentMethod: "online", status: "voided",   type: "paid" },
-];
+const mockPaymentsByFy: Record<string, Payment[]> = {
+  '2026-27': [
+    { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp",   date: "2026-04-10", amount: 50000,  paymentMethod: "bank",   status: "recorded", type: "received" },
+    { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd",    date: "2026-04-12", amount: 25000,  paymentMethod: "cash",   status: "recorded", type: "received" },
+    { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X",    date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
+    { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt",   date: "2026-04-15", amount: 75000,  paymentMethod: "cheque", status: "recorded", type: "received" },
+    { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp",   date: "2026-04-08", amount: 30000,  paymentMethod: "online", status: "voided",   type: "paid" },
+  ],
+  '2025-26': [
+    { id: "101", paymentNumber: "PAY-2025-26-001", customerName: "Smith & Co",   date: "2025-08-15", amount: 75000,  paymentMethod: "bank",   status: "recorded", type: "received" },
+    { id: "102", paymentNumber: "PAY-2025-26-002", customerName: "Vendor Y",     date: "2025-10-20", amount: 95000,  paymentMethod: "online", status: "recorded", type: "paid" },
+    { id: "103", paymentNumber: "PAY-2025-26-003", customerName: "Miller Ent.",  date: "2025-12-05", amount: 45000,  paymentMethod: "cheque", status: "recorded", type: "received" },
+    { id: "104", paymentNumber: "PAY-2025-26-004", customerName: "Office Supplies Co", date: "2026-01-18", amount: 28000, paymentMethod: "cash",   status: "recorded", type: "paid" },
+    { id: "105", paymentNumber: "PAY-2025-26-005", customerName: "Beta Ltd",     date: "2026-03-10", amount: 15000,  paymentMethod: "online", status: "voided",   type: "received" },
+  ],
+};
 
 const typeOptions = ["all", "received", "paid"] as const;
 
@@ -105,9 +117,26 @@ const columns: ColumnDef<Payment>[] = [
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function PaymentsPage() {
+  const { activeFy } = useFiscalYear();
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const mockPayments = mockPaymentsByFy[activeFy] ?? mockPaymentsByFy['2026-27'];
+  const storedPayments: Payment[] = useMemo(() =>
+    getPayments().filter(p => p.fiscalYear === activeFy).map(p => ({
+      id: p.id,
+      paymentNumber: p.paymentNumber,
+      customerName: p.customerName,
+      date: p.date,
+      amount: p.amount,
+      paymentMethod: p.paymentMethod,
+      status: p.status as "recorded" | "voided",
+      type: p.type as "received" | "paid",
+    })),
+    [activeFy]
+  );
+  const allPayments = useMemo(() => [...storedPayments, ...mockPayments], [storedPayments, mockPayments]);
 
   useEffect(() => {
     setLoading(false);
@@ -115,15 +144,27 @@ export default function PaymentsPage() {
 
   const filtered = useMemo(
     () =>
-      mockPayments.filter(p => {
+      allPayments.filter(p => {
         if (typeFilter !== "all" && p.type !== typeFilter) return false;
         if (search && !p.customerName.toLowerCase().includes(search.toLowerCase()) && !p.paymentNumber.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       }),
-    [typeFilter, search]
+    [typeFilter, search, allPayments]
   );
 
   const totalAmount = filtered.reduce((s, p) => s + p.amount, 0);
+
+  const handleExport = useCallback(() => {
+    if (filtered.length === 0) { showToast.error("No payments to export."); return; }
+    const header = "Payment #,Date,From/To,Method,Type,Amount,Status";
+    const rows = filtered.map(p => `${p.paymentNumber},${p.date},"${p.customerName}",${p.paymentMethod},${p.type},${p.amount},${p.status}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `payments-${activeFy}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    showToast.success(`Exported ${filtered.length} payments.`);
+  }, [filtered, activeFy]);
 
   return (
     <div className="space-y-6">
@@ -139,7 +180,7 @@ export default function PaymentsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
+          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
             <Icon name="download" size={14} /> Export CSV
           </button>
           <Link
@@ -166,7 +207,7 @@ export default function PaymentsPage() {
             >
               {t === "all" ? "All" : t}
               <span className="ml-1.5 text-[10px] text-light">
-                ({t === "all" ? mockPayments.length : mockPayments.filter(p => p.type === t).length})
+                ({t === "all" ? allPayments.length : allPayments.filter(p => p.type === t).length})
               </span>
             </button>
           ))}

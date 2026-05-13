@@ -1,4 +1,3 @@
-'use client';
 
 import Link from 'next/link';
 import { MarketingFooter } from '@/components/marketing/footer';

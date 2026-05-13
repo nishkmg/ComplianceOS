@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
-import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
+import { getInvoice } from "@/lib/invoice-store";
 
-const mockInvoice = {
+const MOCK_PDF = {
   invoiceNumber: "INV-2024-0042",
   date: "24 Oct 2024",
   dueDate: "23 Nov 2024",
@@ -24,9 +24,35 @@ const mockInvoice = {
   totalWords: "Rupees Two Lakh Six Hundred Only."
 };
 
+function getPdfData(id: string) {
+  const stored = getInvoice(id);
+  if (stored) {
+    const total = stored.total;
+    const tax = stored.tax;
+    const subtotal = stored.subtotal;
+    const subtotalWords = `Rupees ${Math.floor(total).toLocaleString("en-IN")} Only.`;
+    return {
+      invoiceNumber: stored.invoiceNumber,
+      date: new Date(stored.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+      dueDate: new Date(stored.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+      client: stored.customerName,
+      clientAddress: stored.customerAddress,
+      clientGstin: stored.customerGstin,
+      items: stored.lines.map(l => ({ name: l.description, hsn: l.hsn, qty: l.qty, rate: l.rate, amount: l.qty * l.rate })),
+      subtotal,
+      tax,
+      total,
+      totalWords: subtotalWords,
+    };
+  }
+  return MOCK_PDF;
+}
+
 export default function InvoicePdfPage() {
   const router = useRouter();
   const params = useParams();
+  const invId = params.id as string;
+  const inv = getPdfData(invId);
 
   return (
     <div className="bg-page-bg min-h-screen flex flex-col antialiased text-left">
@@ -39,9 +65,9 @@ export default function InvoicePdfPage() {
           <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-on-surface">Invoice PDF Preview</span>
         </div>
         <div className="flex gap-4">
-           <button className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">
-             Share Link
-           </button>
+           <button onClick={() => { navigator.clipboard.writeText(window.location.href); showToast.success("Link copied to clipboard."); }} className="px-5 py-2 border-[0.5px] border-on-surface text-on-surface font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md shadow-sm">
+              Share Link
+            </button>
            <button onClick={() => window.print()} className="bg-amber text-white px-8 py-2 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none cursor-pointer shadow-sm">
              Download PDF
            </button>
@@ -66,9 +92,9 @@ export default function InvoicePdfPage() {
                  <h1 className="font-display text-[32px] uppercase tracking-[0.2em] text-text-light mb-6">Tax Invoice</h1>
                  <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-left">
                     <span className="font-ui text-[10px] text-text-light uppercase tracking-widest font-bold">Invoice No:</span>
-                    <span className="font-mono text-sm font-bold text-right">{mockInvoice.invoiceNumber}</span>
-                    <span className="font-ui text-[10px] text-text-light uppercase tracking-widest font-bold">Date:</span>
-                    <span className="font-mono text-sm text-right">{mockInvoice.date}</span>
+                     <span className="font-mono text-sm font-bold text-right">{inv.invoiceNumber}</span>
+                     <span className="font-ui text-[10px] text-text-light uppercase tracking-widest font-bold">Date:</span>
+                     <span className="font-mono text-sm text-right">{inv.date}</span>
                  </div>
               </div>
            </div>
@@ -76,10 +102,10 @@ export default function InvoicePdfPage() {
            <div className="flex justify-between mb-12">
               <div className="flex flex-col gap-2">
                  <span className="font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold">Billed To</span>
-                 <h4 className="font-ui text-lg font-bold">{mockInvoice.client}</h4>
+                 <h4 className="font-ui text-lg font-bold">{inv.client}</h4>
                  <div className="text-text-mid font-ui text-[13px] leading-relaxed max-w-[340px] mt-1">
-                    {mockInvoice.clientAddress}<br/>
-                    <span className="font-bold text-on-surface block mt-2">GSTIN: {mockInvoice.clientGstin}</span>
+                    {inv.clientAddress}<br/>
+                    <span className="font-bold text-on-surface block mt-2">GSTIN: {inv.clientGstin}</span>
                  </div>
               </div>
            </div>
@@ -94,7 +120,7 @@ export default function InvoicePdfPage() {
                  </tr>
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle divide-dashed">
-                 {mockInvoice.items.map((item, i) => (
+                 {inv.items.map((item, i) => (
                    <tr key={i}>
                       <td className="py-5 pr-8">
                          <p className="font-bold font-ui text-[13px]">{item.name}</p>
@@ -111,17 +137,17 @@ export default function InvoicePdfPage() {
               <div className="w-1/2 space-y-3">
                  <div className="flex justify-between text-text-mid text-sm">
                     <span>Subtotal</span>
-                    <span className="font-mono">₹ {formatIndianNumber(mockInvoice.subtotal)}</span>
+                    <span className="font-mono">₹ {formatIndianNumber(inv.subtotal)}</span>
                  </div>
                  <div className="flex justify-between text-text-mid text-sm">
                     <span>GST (18%)</span>
-                    <span className="font-mono">₹ {formatIndianNumber(mockInvoice.tax)}</span>
+                    <span className="font-mono">₹ {formatIndianNumber(inv.tax)}</span>
                  </div>
                  <div className="flex justify-between border-t-2 border-amber pt-4 mt-2">
                     <span className="font-ui text-lg font-bold uppercase tracking-widest">Grand Total</span>
-                    <span className="font-mono text-2xl font-bold text-amber">₹ {formatIndianNumber(mockInvoice.total)}</span>
+                    <span className="font-mono text-2xl font-bold text-amber">₹ {formatIndianNumber(inv.total)}</span>
                  </div>
-                 <p className="text-right font-ui text-[10px] text-text-light italic mt-2">{mockInvoice.totalWords}</p>
+                 <p className="text-right font-ui text-[10px] text-text-light italic mt-2">{inv.totalWords}</p>
               </div>
            </div>
 

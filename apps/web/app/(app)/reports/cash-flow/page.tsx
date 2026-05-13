@@ -1,53 +1,95 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const sections = [
-  {
-    title: "A. Cash Flow from Operating Activities",
-    items: [
-      { label: "Profit Before Tax",                    amount: 2146000 },
-      { label: "Adjustments for Depreciation",          amount: 248000 },
-      { label: "Interest Income",                       amount: -24600 },
-      { label: "Working Capital Changes",               amount: -452000 },
-    ],
-    total: 1917400,
-  },
-  {
-    title: "B. Cash Flow from Investing Activities",
-    items: [
-      { label: "Purchase of Property, Plant & Equipment", amount: -450000 },
-      { label: "Proceeds from Sale of Investments",     amount: 125000 },
-      { label: "Interest Received",                     amount: 24600 },
-    ],
-    total: -300400,
-  },
-  {
-    title: "C. Cash Flow from Financing Activities",
-    items: [
-      { label: "Repayment of Long-term Borrowings",     amount: -250000 },
-      { label: "Interest Paid",                         amount: -18500 },
-      { label: "Dividends Paid",                        amount: -100000 },
-    ],
-    total: -368500,
-  },
-];
+interface CfItem { label: string; amount: number }
+interface CfSection { title: string; items: CfItem[]; total: number }
 
-const netChange = sections.reduce((s, sec) => s + sec.total, 0);
-const openingCash = 4876390;
-const closingCash = openingCash + netChange;
+const cfDataByFy: Record<string, { sections: CfSection[]; openingCash: number }> = {
+  '2026-27': {
+    sections: [
+      {
+        title: "A. Cash Flow from Operating Activities",
+        items: [
+          { label: "Profit Before Tax",                    amount: 2146000 },
+          { label: "Adjustments for Depreciation",          amount: 248000 },
+          { label: "Interest Income",                       amount: -24600 },
+          { label: "Working Capital Changes",               amount: -452000 },
+        ],
+        total: 1917400,
+      },
+      {
+        title: "B. Cash Flow from Investing Activities",
+        items: [
+          { label: "Purchase of Property, Plant & Equipment", amount: -450000 },
+          { label: "Proceeds from Sale of Investments",     amount: 125000 },
+          { label: "Interest Received",                     amount: 24600 },
+        ],
+        total: -300400,
+      },
+      {
+        title: "C. Cash Flow from Financing Activities",
+        items: [
+          { label: "Repayment of Long-term Borrowings",     amount: -250000 },
+          { label: "Interest Paid",                         amount: -18500 },
+          { label: "Dividends Paid",                        amount: -100000 },
+        ],
+        total: -368500,
+      },
+    ],
+    openingCash: 4876390,
+  },
+  '2025-26': {
+    sections: [
+      {
+        title: "A. Cash Flow from Operating Activities",
+        items: [
+          { label: "Profit Before Tax",                    amount: 1683000 },
+          { label: "Adjustments for Depreciation",          amount: 220000 },
+          { label: "Interest Income",                       amount: -18200 },
+          { label: "Working Capital Changes",               amount: -380000 },
+        ],
+        total: 1504800,
+      },
+      {
+        title: "B. Cash Flow from Investing Activities",
+        items: [
+          { label: "Purchase of Property, Plant & Equipment", amount: -350000 },
+          { label: "Proceeds from Sale of Investments",     amount: 98000 },
+          { label: "Interest Received",                     amount: 18200 },
+        ],
+        total: -233800,
+      },
+      {
+        title: "C. Cash Flow from Financing Activities",
+        items: [
+          { label: "Repayment of Long-term Borrowings",     amount: -200000 },
+          { label: "Interest Paid",                         amount: -15000 },
+          { label: "Dividends Paid",                        amount: -80000 },
+        ],
+        total: -295000,
+      },
+    ],
+    openingCash: 4120000,
+  },
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function CashFlowPage() {
-  const [fiscalYear, setFiscalYear] = useState("2026-27");
+  const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
+  const fyCf = cfDataByFy[fiscalYear] ?? cfDataByFy['2026-27'];
+  const sections = fyCf.sections;
+  const netChange = sections.reduce((s, sec) => s + sec.total, 0);
+  const openingCash = fyCf.openingCash;
+  const closingCash = openingCash + netChange;
 
   return (
     <div className="space-y-6">
@@ -55,10 +97,10 @@ export default function CashFlowPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Financial Report
+            Financial Report · FY {fiscalYear}
           </p>
           <h1 className="font-display text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">For the year ended March 31, 2027 (Indirect Method)</p>
+          <p className="text-[13px] text-secondary font-ui mt-1">For the year ended March 31, {parseInt(fiscalYear.split('-')[1]) + 2000} (Indirect Method)</p>
         </div>
         <div className="flex gap-3 items-center">
           <select
@@ -69,7 +111,7 @@ export default function CashFlowPage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.print()}>
             <Icon name="print" size={14} /> Print
           </Button>
           <Link
@@ -87,7 +129,7 @@ export default function CashFlowPage() {
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
           <h2 className="font-display text-[24px] text-dark mb-1 print:text-black">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-[12px] text-mid uppercase tracking-widest mb-1">Cash Flow Statement</p>
-          <p className="font-mono text-[11px] text-light italic">For the year ended 31 March 2027 · FY {fiscalYear}</p>
+          <p className="font-mono text-[11px] text-light italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
 
         {/* Column headers */}
@@ -125,7 +167,7 @@ export default function CashFlowPage() {
                 ))}
                 <div className="grid grid-cols-12 gap-4 items-center py-3 bg-surface-muted font-semibold border-t border-border">
                   <div className="col-span-8 font-ui text-[11px] uppercase tracking-wider text-dark print:text-black">
-                    Net Cash from {section.title.split(" ").slice(2, 4).join(" ")}
+                    Net Cash from {section.title.split(" from ").pop()}
                   </div>
                   <div className={`col-span-2 text-right font-mono text-[13px] tabular-nums ${
                     section.total < 0 ? 'text-danger' : 'text-dark'
@@ -170,7 +212,7 @@ export default function CashFlowPage() {
               </span>
             </div>
             <span className="font-mono text-2xl font-bold text-dark tabular-nums print:text-black">
-              ₹ {formatIndianNumber(closingCash)}
+              {formatIndianNumber(closingCash)}
             </span>
           </div>
         </div>

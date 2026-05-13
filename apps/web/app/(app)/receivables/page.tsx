@@ -5,31 +5,58 @@ import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const agingBuckets = [
-  { label: "Current",    amount: 1245000, percentage: 45 },
-  { label: "1-30 Days",  amount: 845200,  percentage: 30 },
-  { label: "31-60 Days", amount: 412040,  percentage: 15 },
-  { label: "61-90 Days", amount: 245000,  percentage: 8 },
-  { label: "> 90 Days",  amount: 45000,   percentage: 2 },
-];
+interface AgingBucket { label: string; amount: number; percentage: number }
+interface DebtorRow { id: string; name: string; amount: number; status: string }
 
-const topDebtors = [
-  { name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
-  { name: "Acme Corporation",         amount: 412000, status: "overdue" },
-  { name: "TechSolutions India",      amount: 245000, status: "pending" },
-];
+const agingByFy: Record<string, AgingBucket[]> = {
+  '2026-27': [
+    { label: "Current",    amount: 1245000, percentage: 45 },
+    { label: "1-30 Days",  amount: 845200,  percentage: 30 },
+    { label: "31-60 Days", amount: 412040,  percentage: 15 },
+    { label: "61-90 Days", amount: 245000,  percentage: 8 },
+    { label: "> 90 Days",  amount: 45000,   percentage: 2 },
+  ],
+  '2025-26': [
+    { label: "Current",    amount: 980000, percentage: 40 },
+    { label: "1-30 Days",  amount: 620000, percentage: 25 },
+    { label: "31-60 Days", amount: 380000, percentage: 16 },
+    { label: "61-90 Days", amount: 210000, percentage: 9 },
+    { label: "> 90 Days",  amount: 85000,  percentage: 10 },
+  ],
+};
+
+const debtorsByFy: Record<string, DebtorRow[]> = {
+  '2026-27': [
+    { id: "reliance", name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
+    { id: "acme",     name: "Acme Corporation",         amount: 412000, status: "overdue" },
+    { id: "techsol",  name: "TechSolutions India",      amount: 245000, status: "pending" },
+  ],
+  '2025-26': [
+    { id: "reliance", name: "Reliance Industries Ltd.", amount: 620000, status: "pending" },
+    { id: "acme",     name: "Acme Corporation",         amount: 380000, status: "overdue" },
+    { id: "delta",    name: "Delta Systems",            amount: 195000, status: "partial" },
+  ],
+};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ReceivablesSummaryPage() {
+  const { activeFy } = useFiscalYear();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  const agingBuckets = agingByFy[activeFy] ?? agingByFy['2026-27'];
+  const topDebtors = debtorsByFy[activeFy] ?? debtorsByFy['2026-27'];
+
+  const avgCollectionPeriod: Record<string, number> = { '2026-27': 24, '2025-26': 28 };
+  const avgDays = avgCollectionPeriod[activeFy] ?? 24;
 
   const totalOutstanding = agingBuckets.reduce((s, b) => s + b.amount, 0);
   const totalOverdue = agingBuckets.filter(b => b.label.includes("Days") || b.label.includes(">"))
@@ -73,7 +100,7 @@ export default function ReceivablesSummaryPage() {
           </div>
           <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-dark">
             <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Avg. Collection Period</p>
-            <p className="font-mono text-2xl font-bold text-dark">24 Days</p>
+            <p className="font-mono text-2xl font-bold text-dark">{avgDays} Days</p>
           </div>
         </div>
       )}
@@ -124,9 +151,7 @@ export default function ReceivablesSummaryPage() {
             <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
               <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
                 <h3 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Top Debtors</h3>
-                <Link href="/receivables/list" className="text-[10px] text-amber font-bold uppercase tracking-widest hover:underline no-underline">
-                  View All
-                </Link>
+                <span className="text-[10px] text-light font-bold uppercase tracking-widest">FY {activeFy}</span>
               </div>
               <div className="divide-y divide-border-subtle">
                 {topDebtors.map(d => (
@@ -148,7 +173,7 @@ export default function ReceivablesSummaryPage() {
                         {formatIndianNumber(d.amount, { currency: true })}
                       </p>
                       <Link
-                        href={`/receivables/1`}
+                        href={`/receivables/${d.id}`}
                         className="text-[10px] text-light hover:text-amber transition-colors no-underline font-bold uppercase tracking-widest"
                       >
                         Statement →

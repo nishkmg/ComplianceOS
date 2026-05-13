@@ -1,13 +1,11 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
-import { formatIndianNumber } from "@/lib/format";
+import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function AuditLogDetailPage() {
-  const params = useParams();
-  const router = useRouter();
+  const { activeFy } = useFiscalYear();
 
   const mockEntry = {
     id: "0x9f8b2a1c",
@@ -37,7 +35,7 @@ export default function AuditLogDetailPage() {
       {/* Header */}
       <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border pb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Audit Event</p>
+          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Audit Event · FY {activeFy}</p>
           <div className="flex items-center gap-3 mb-2">
             <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">Event {mockEntry.id}</h1>
             <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold uppercase rounded-md">{mockEntry.action}</span>
@@ -45,7 +43,7 @@ export default function AuditLogDetailPage() {
           <p className="text-[13px] text-secondary font-ui">{mockEntry.timestamp}</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary flex items-center gap-2">
+          <button onClick={() => window.print()} className="btn-secondary flex items-center gap-2">
             <Icon name="print" className="text-[18px]" /> Print Event
           </button>
         </div>
