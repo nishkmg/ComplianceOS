@@ -24,7 +24,7 @@ export default function Form16Page() {
 
       {/* Employer Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-border p-6 bg-surface shadow-sm">
-        <div><span className="block text-[10px] uppercase text-light font-bold mb-1">Name of the Employer</span><p className="font-bold text-dark text-lg">ComplianceOS Solutions Pvt Ltd</p></div>
+        <div><span className="block text-[10px] uppercase text-light font-bold mb-1">Name of the Employer</span><p className="font-bold text-dark text-lg">Arthvahi Solutions Pvt Ltd</p></div>
         <div className="text-right"><span className="block text-[10px] uppercase text-light font-bold mb-1">PAN of Employer</span><span className="font-mono text-sm font-bold">AAACC1234E</span></div>
       </div>
 

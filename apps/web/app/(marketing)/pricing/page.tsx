@@ -38,7 +38,7 @@ const plans = [
 ];
 
 const faqs = [
-  { q: 'Is my data hosted in India?', a: 'Yes, all ComplianceOS data is hosted on local Indian servers to ensure compliance with data localization laws and to provide the lowest latency possible for our users.' },
+  { q: 'Is my data hosted in India?', a: 'Yes, all Arthvahi data is hosted on local Indian servers to ensure compliance with data localization laws and to provide the lowest latency possible for our users.' },
   { q: 'Can I import data from Tally or Zoho?', a: 'Absolutely. We offer one-click migration tools for Tally, Zoho Books, and Quickbooks, ensuring you can transition your entire financial history without losing a single entry.' },
   { q: 'Is the Pro plan MCA compliant?', a: 'Yes, our Pro and Business plans include the mandatory Audit Trail (edit log) feature as per the latest Ministry of Corporate Affairs (MCA) guidelines.' },
   { q: 'Do you offer support for GST filing?', a: 'We provide automated generation of GSTR-1, 2, and 3B reports. For the Pro plan and above, we also offer direct filing via our secure API gateway.' },
@@ -125,7 +125,7 @@ export default function PricingPage() {
           <div className="bg-section-amber p-16 border border-border-subtle grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="text-left">
               <h2 className="font-display text-marketing-xl mb-6">Built for Indian CA Standards.</h2>
-              <p className="text-ui-md font-ui text-secondary mb-8 leading-relaxed">Every pixel and ledger entry in ComplianceOS is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
+              <p className="text-ui-md font-ui text-secondary mb-8 leading-relaxed">Every pixel and ledger entry in Arthvahi is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
               <div className="flex space-x-12">
                 <div>
                   <div className="font-mono-lg text-mono-lg text-primary font-bold">99.9%</div>

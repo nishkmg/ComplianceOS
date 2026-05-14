@@ -49,7 +49,7 @@ export default function BlogPostPage() {
             <p>If your organization sources goods or services from MSME-registered vendors, you must now track these payments separately. Your accounting software should flag any MSME invoices approaching the 45-day threshold and prioritize them for processing.</p>
             <p>Non-compliance is expensive — the disallowed expense is permanently lost, increasing your tax liability for the year. This is not a deferral; it is a forfeiture.</p>
 
-            <h2 className="font-display text-display-xl mt-16 mb-6 text-dark">How ComplianceOS Handles This</h2>
+            <h2 className="font-display text-display-xl mt-16 mb-6 text-dark">How Arthvahi Handles This</h2>
             <p>Our platform automatically flags MSME invoices and tracks payment timelines against the statutory deadline. You receive proactive notifications at 30 days, 40 days, and finally at 44 days, ensuring you never miss a deadline inadvertently.</p>
           </div>
 
@@ -73,7 +73,7 @@ export default function BlogPostPage() {
               </div>
               <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber font-bold">Payroll</span>
               <h4 className="font-display text-lg text-dark mt-2 mb-2 group-hover:text-primary transition-colors">Auto-Calculating PF, ESI, PT and TDS</h4>
-              <p className="font-ui text-sm text-secondary">How ComplianceOS automates statutory payroll calculations.</p>
+              <p className="font-ui text-sm text-secondary">How Arthvahi automates statutory payroll calculations.</p>
             </div>
           </div>
         </article>

@@ -100,7 +100,7 @@ export default function FiscalYearsPage() {
 
           <div className="bg-amber-50 border border-amber/30 p-8 shadow-sm text-left">
             <h4 className="font-ui text-sm font-medium font-bold text-dark mb-4 uppercase tracking-widest text-[10px]">Data Retention</h4>
-            <p className="text-ui-sm text-sm text-mid leading-relaxed">ComplianceOS retains ledger data for up to 8 years as per IT Act requirements. Archived years can be exported as read-only CSV at any time.</p>
+            <p className="text-ui-sm text-sm text-mid leading-relaxed">Arthvahi retains ledger data for up to 8 years as per IT Act requirements. Archived years can be exported as read-only CSV at any time.</p>
           </div>
         </div>
       </div>

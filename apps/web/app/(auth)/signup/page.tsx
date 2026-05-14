@@ -30,7 +30,7 @@ export default function SignupPage() {
       <main className="w-full max-w-md">
         {/* Brand Header */}
         <header className="mb-8">
-          <h1 className="font-display text-2xl font-semibold text-dark">ComplianceOS</h1>
+          <h1 className="font-display text-2xl font-semibold text-dark">Arthvahi</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Establish your firm's foundational ledger.</p>
         </header>
 

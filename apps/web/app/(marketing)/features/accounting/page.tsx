@@ -33,7 +33,7 @@ export default function AccountingPage() {
             <div className="text-left order-2 lg:order-1">
               <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber block font-bold">The Balance Constraint</span>
               <h2 className="font-display text-marketing-xl text-dark mt-4 mb-6">Entries must balance before they post.</h2>
-              <p className="font-ui text-ui-md text-secondary leading-relaxed">Unlike spreadsheets, ComplianceOS prevents unbalanced journal entries at the UI level. You cannot post until debits equal credits — no exceptions, no manual checks.</p>
+              <p className="font-ui text-ui-md text-secondary leading-relaxed">Unlike spreadsheets, Arthvahi prevents unbalanced journal entries at the UI level. You cannot post until debits equal credits — no exceptions, no manual checks.</p>
             </div>
             <div className="order-1 lg:order-2 bg-white border border-border-subtle p-8 shadow-sm">
               <div className="flex items-center justify-center gap-8 mb-4">

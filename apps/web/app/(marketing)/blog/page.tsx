@@ -4,12 +4,12 @@ import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
 const posts = [
-  { slug: 'gst-filing-deadlines', category: 'GST', title: 'GST Filing Deadlines for FY 2026-27', excerpt: 'Every due date for GSTR-1, 2B, and 3B this financial year. Bookmark this.', author: 'ComplianceOS Team', date: '25 Apr 2026', image: '/images/homepage/hero-dashboard.jpg' },
+  { slug: 'gst-filing-deadlines', category: 'GST', title: 'GST Filing Deadlines for FY 2026-27', excerpt: 'Every due date for GSTR-1, 2B, and 3B this financial year. Bookmark this.', author: 'Arthvahi Team', date: '25 Apr 2026', image: '/images/homepage/hero-dashboard.jpg' },
   { slug: 'old-vs-new-regime', category: 'ITR', title: 'Old vs New Tax Regime: Compare Using Your Books', excerpt: 'Use your actual P&L to decide, not a generic calculator. Here is how the numbers differ.', author: 'Neha Sharma', date: '18 Apr 2026', image: '/images/homepage/hero-dashboard.jpg' },
   { slug: 'indian-numbering', category: 'Accounting', title: 'Why Indian Numbering is Not a Formatting Preference', excerpt: 'Lakhs and crores are how Indian business owners think about money. Your software should too.', author: 'Vikram Patel', date: '10 Apr 2026', image: '/images/homepage/hero-dashboard.jpg' },
   { slug: 'moving-from-tally', category: 'Guides', title: 'Moving from Tally: A Practical Migration Guide', excerpt: 'What to expect, what to prepare, and how long it really takes. Based on real migrations.', author: 'Aarav Mehta', date: '5 Apr 2026', image: '/images/homepage/hero-dashboard.jpg' },
   { slug: 'payroll-auto-calc', category: 'Payroll', title: 'Automating PF, ESI, PT and TDS Calculations', excerpt: 'How we calculate statutory components automatically so you never miss a compliance deadline.', author: 'Priya Sharma', date: '28 Mar 2026', image: '/images/homepage/hero-dashboard.jpg' },
-  { slug: 'audit-trail-mca', category: 'Audit', title: 'MCA-Compliant Audit Trails: What Changed in 2025', excerpt: 'The MCA mandate for audit trails is here. Here is how ComplianceOS handles it.', author: 'Rajiv Desai', date: '15 Mar 2026', image: '/images/homepage/hero-dashboard.jpg' },
+  { slug: 'audit-trail-mca', category: 'Audit', title: 'MCA-Compliant Audit Trails: What Changed in 2025', excerpt: 'The MCA mandate for audit trails is here. Here is how Arthvahi handles it.', author: 'Rajiv Desai', date: '15 Mar 2026', image: '/images/homepage/hero-dashboard.jpg' },
 ];
 
 export default function BlogIndexPage() {

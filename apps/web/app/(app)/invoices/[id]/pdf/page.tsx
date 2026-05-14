@@ -81,7 +81,7 @@ export default function InvoicePdfPage() {
            
            <div className="flex justify-between items-start border-b-[0.5px] border-border pb-10 mb-10">
               <div className="flex flex-col gap-2">
-                 <h2 className="font-display text-lg text-2xl font-bold tracking-tight">ComplianceOS</h2>
+                 <h2 className="font-display text-lg text-2xl font-bold tracking-tight">Arthvahi</h2>
                  <div className="text-text-mid font-ui text-[13px] text-[12px] leading-relaxed max-w-[280px]">
                     1204, Lodha Excelus<br/>
                     Apollo Bunder, Mumbai 400001<br/>
@@ -163,7 +163,7 @@ export default function InvoicePdfPage() {
               <div className="text-right flex flex-col items-center">
                  <div className="w-32 h-16 border-b border-border mb-2"></div>
                  <p className="font-ui text-[10px] text-text-light uppercase tracking-widest font-bold">Authorized Signatory</p>
-                 <p className="font-ui text-[10px] text-text-mid mt-0.5">ComplianceOS Solutions</p>
+                 <p className="font-ui text-[10px] text-text-mid mt-0.5">Arthvahi Solutions</p>
               </div>
            </footer>
         </article>

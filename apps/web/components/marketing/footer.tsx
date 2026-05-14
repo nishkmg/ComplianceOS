@@ -6,9 +6,9 @@ export function MarketingFooter() {
       <div className="max-w-[1200px] mx-auto px-8 grid grid-cols-2 md:grid-cols-4 gap-12">
         <div className="col-span-2 md:col-span-1">
           <Link href="/" className="text-lg font-bold text-dark dark:text-stone-50 mb-4 block opacity-100 hover:opacity-80 transition-opacity no-underline">
-            ComplianceOS
+            Arthvahi
           </Link>
-          <p className="text-mid dark:text-mid">© 2024 ComplianceOS. Precision in Indian Accounting.</p>
+          <p className="text-mid dark:text-mid">© 2024 Arthvahi. Precision in Indian Accounting.</p>
         </div>
         
         <div>

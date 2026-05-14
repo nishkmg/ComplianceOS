@@ -37,7 +37,7 @@ export default function LoginPage() {
           
           {/* Header */}
           <header className="mb-8">
-            <h1 className="font-display text-2xl font-semibold text-dark">ComplianceOS</h1>
+            <h1 className="font-display text-2xl font-semibold text-dark">Arthvahi</h1>
             <p className="text-[13px] text-secondary font-ui mt-1">Secure access to your fiscal ledger.</p>
           </header>
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
           {/* Footer Links */}
           <div className="mt-8 pt-6 border-t-[0.5px] border-border-subtle text-center">
             <p className="font-ui text-ui-sm text-secondary">
-              New to ComplianceOS? 
+              New to Arthvahi? 
               <Link className="text-amber font-medium hover:text-amber-hover hover:underline underline-offset-4 transition-all ml-1 no-underline" href="/signup">Create Account</Link>
             </p>
           </div>
@@ -108,7 +108,7 @@ export default function LoginPage() {
 
         {/* Minimal meta footer */}
         <div className="text-center mt-8">
-          <p className="font-ui text-ui-xs text-light uppercase tracking-widest font-medium">© 2024 ComplianceOS. Built for Indian Fiscal Realities.</p>
+          <p className="font-ui text-ui-xs text-light uppercase tracking-widest font-medium">© 2024 Arthvahi. Built for Indian Fiscal Realities.</p>
         </div>
       </main>
     </div>

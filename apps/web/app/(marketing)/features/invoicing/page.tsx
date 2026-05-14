@@ -49,7 +49,7 @@ export default function InvoicingPage() {
             <div className="text-left">
               <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4 block font-bold">Precision Compliance</span>
               <h2 className="font-display text-marketing-xl text-dark mb-6">Built for the Indian Fiscal Code</h2>
-              <p className="font-ui text-ui-md text-secondary mb-8 leading-relaxed">ComplianceOS understands local complexities. From Rule 46 requirements to automatic CGST/SGST/IGST splitting based on place of supply.</p>
+              <p className="font-ui text-ui-md text-secondary mb-8 leading-relaxed">Arthvahi understands local complexities. From Rule 46 requirements to automatic CGST/SGST/IGST splitting based on place of supply.</p>
               <ul className="space-y-4">
                 {[
                   { title: "E-Invoicing Ready", desc: "One-click IRN and QR code generation for GST compliance." },

@@ -194,7 +194,7 @@ export default function EditInvoicePage() {
           <div className="sticky top-24 bg-surface p-10 shadow-screenshot border border-border min-h-[800px] flex flex-col text-[13px] font-ui text-[13px] text-dark">
             <div className="flex justify-between items-start border-b border-border pb-8 mb-8">
               <div>
-                <p className="font-display text-2xl font-bold tracking-tight">ComplianceOS</p>
+                <p className="font-display text-2xl font-bold tracking-tight">Arthvahi</p>
                 <p className="text-mid text-[11px] mt-2 leading-relaxed">1204, Lodha Excelus<br />Apollo Bunder, Mumbai 400001<br />GSTIN: 27AADCC1234E1Z5</p>
               </div>
               <div className="text-right">

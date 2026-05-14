@@ -248,7 +248,7 @@ export default function ITRReturnsPage() {
         </Card>
 
         <div className="mt-12 text-center">
-          <p className="font-mono text-light text-[10px] uppercase tracking-widest">ComplianceOS ensures alignment with Income Tax Dept schema updates (v1.2.4).</p>
+          <p className="font-mono text-light text-[10px] uppercase tracking-widest">Arthvahi ensures alignment with Income Tax Dept schema updates (v1.2.4).</p>
         </div>
       </div>
     </div>

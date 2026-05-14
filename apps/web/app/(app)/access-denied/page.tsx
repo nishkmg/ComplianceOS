@@ -9,7 +9,7 @@ export default function AccessDeniedPage() {
       {/* Minimal Header */}
       <header className="w-full border-b-[0.5px] border-border bg-surface/80 backdrop-blur-md px-8 py-6 sticky top-0 z-50">
         <div className="max-w-[1320px] mx-auto flex items-center justify-start text-left">
-          <span className="font-display text-lg font-bold tracking-tighter text-dark uppercase">ComplianceOS</span>
+          <span className="font-display text-lg font-bold tracking-tighter text-dark uppercase">Arthvahi</span>
         </div>
       </header>
 

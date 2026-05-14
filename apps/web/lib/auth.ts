@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
-const DEMO_EMAIL = "demo@complianceos.test";
+const DEMO_EMAIL = "demo@arthvahi.in";
 const DEMO_TENANT_ID = process.env.DEMO_TENANT_ID || "demo-tenant-uuid";
 
 const nextAuth = NextAuth({

@@ -24,7 +24,7 @@ const mockInvoice = {
     state: "Maharashtra (27)",
   },
   company: {
-    name: "ComplianceOS",
+    name: "Arthvahi",
     address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai — 400021",
     gstin: "27AAACC1234E1Z5",
   },
@@ -48,7 +48,7 @@ function storeInvoiceToMock(s: any): typeof mockInvoice {
     dueDate: new Date(s.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
     status: s.status,
     customer: { name: s.customerName, email: "", gstin: s.customerGstin, address: s.customerAddress, state: "" },
-    company: { name: "ComplianceOS", address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai — 400021", gstin: "27AAACC1234E1Z5" },
+    company: { name: "Arthvahi", address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai — 400021", gstin: "27AAACC1234E1Z5" },
     lineItems: s.lines.map((l: any) => ({ hsn: l.hsn, name: l.description, desc: "", qty: l.qty, rate: l.rate, amount: l.qty * l.rate })),
     subtotal: s.subtotal,
     cgst: s.tax / 2,
@@ -206,7 +206,7 @@ export default function InvoiceDetailPage() {
             <h5 className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Bank Details</h5>
             <div className="grid grid-cols-[100px_1fr] gap-1 font-ui text-[13px] text-dark">
               <span className="text-mid">Bank:</span> <span>HDFC Bank, Fort Branch</span>
-              <span className="text-mid">Account Name:</span> <span>ComplianceOS Solutions</span>
+              <span className="text-mid">Account Name:</span> <span>Arthvahi Solutions</span>
               <span className="text-mid">Account No:</span> <span className="font-mono">50200012345678</span>
               <span className="text-mid">IFSC Code:</span> <span className="font-mono">HDFC0000060</span>
             </div>

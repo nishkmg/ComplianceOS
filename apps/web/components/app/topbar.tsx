@@ -33,7 +33,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
       {/* Left: brand */}
       <div className="flex items-center gap-4">
         <span className="font-bold text-lg tracking-tight text-dark dark:text-zinc-100 hidden md:inline">
-          ComplianceOS
+          Arthvahi
         </span>
       </div>
 

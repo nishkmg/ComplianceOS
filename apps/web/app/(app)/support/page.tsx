@@ -23,7 +23,7 @@ interface QuickAction {
 
 const mockUser = {
   name: "Rahul Sharma",
-  email: "rahul@complianceos.test",
+  email: "rahul@arthvahi.in",
   accountId: "COMP-2024-001",
 };
 
@@ -46,7 +46,7 @@ const faqData: FaqItem[] = [
   { q: "Setting up TDS for employees?", a: "Under Payroll > Process Payroll, configure statutory deductions. Ensure each employee has a valid PAN. TDS is calculated automatically based on applicable income tax slabs and Section 87A rebate if eligible." },
   { q: "Invoice numbering not sequential?", a: "Check Settings > Invoices for your prefix and starting number. The system auto-increments per FY. If numbers are skipped (voided invoices), they remain as gaps — this is compliant with Indian accounting standards." },
   { q: "How to add a new employee?", a: "Navigate to Employees > Add New Employee. Fill in the statutory register form including PAN, UAN, and bank details. Once created, you can assign a salary structure under the employee's profile." },
-  { q: "Data retention policy?", a: "ComplianceOS retains all ledger data for 8 years as per IT Act, 2000. Archived fiscal years are read-only. You can export any period as CSV or PDF from the reports section at any time." },
+  { q: "Data retention policy?", a: "Arthvahi retains all ledger data for 8 years as per IT Act, 2000. Archived fiscal years are read-only. You can export any period as CSV or PDF from the reports section at any time." },
 ];
 
 const quickActions: QuickAction[] = [
@@ -141,7 +141,7 @@ export default function SupportPage() {
                 setContactOpen(true);
                 break;
               case "Documentation":
-                window.open("https://docs.complianceos.test", "_blank");
+                window.open("https://docs.arthvahi.in", "_blank");
                 break;
               case "System Status":
                 showToast.success("All systems operational · 99.9% uptime · Last incident: 12 days ago");

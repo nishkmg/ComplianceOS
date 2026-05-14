@@ -12,7 +12,7 @@ export default function TermsPage() {
         <header className="mb-space-64 text-left">
           <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4">Last Updated: October 24, 2024</p>
           <h1 className="font-marketing-hero text-marketing-hero text-dark mb-6">Terms of Service</h1>
-          <p className="font-ui text-ui-lg text-secondary max-w-2xl leading-relaxed">Please read these Terms of Service carefully before using the ComplianceOS platform. These terms define your rights and obligations as an Indian accounting professional utilizing our infrastructure.</p>
+          <p className="font-ui text-ui-lg text-secondary max-w-2xl leading-relaxed">Please read these Terms of Service carefully before using the Arthvahi platform. These terms define your rights and obligations as an Indian accounting professional utilizing our infrastructure.</p>
         </header>
 
         {/* TOC */}
@@ -39,7 +39,7 @@ export default function TermsPage() {
         <article className="space-y-space-64 font-ui text-ui-md text-secondary leading-relaxed text-left">
           <section className="scroll-mt-32" id="service-description">
             <h2 className="font-display text-marketing-xl text-dark mb-6">1. Service Description &amp; Scope</h2>
-            <p className="mb-4">ComplianceOS provides cloud-based accounting and regulatory compliance software specifically tailored for the Indian fiscal ecosystem. The platform facilitates GST filing, ITR preparation, inventory management, and general ledger maintenance.</p>
+            <p className="mb-4">Arthvahi provides cloud-based accounting and regulatory compliance software specifically tailored for the Indian fiscal ecosystem. The platform facilitates GST filing, ITR preparation, inventory management, and general ledger maintenance.</p>
             <p className="mb-4">We do not provide direct accounting, financial, legal, or tax advice. The platform is a technological tool designed to assist qualified Chartered Accountants, financial professionals, and business owners in executing their duties.</p>
             <div className="bg-section-muted p-6 border-l-2 border-amber mt-6">
               <p className="font-mono text-mono-md text-dark"><strong>Note:</strong> Service availability may be subject to maintenance windows, which are typically scheduled during non-peak hours (IST) to minimize disruption to filing deadlines.</p>
@@ -48,7 +48,7 @@ export default function TermsPage() {
 
           <section className="scroll-mt-32" id="responsibilities">
             <h2 className="font-display text-marketing-xl text-dark mb-6">2. User Responsibilities &amp; Data</h2>
-            <p className="mb-4">You are entirely responsible for the accuracy, legality, and integrity of the financial data inputted into the ComplianceOS platform. We process this data strictly as a service provider acting on your instructions.</p>
+            <p className="mb-4">You are entirely responsible for the accuracy, legality, and integrity of the financial data inputted into the Arthvahi platform. We process this data strictly as a service provider acting on your instructions.</p>
             <ul className="list-none space-y-4 my-6 pl-4 border-l-[0.5px] border-border-subtle">
               {[
                 'You must maintain the confidentiality of your account credentials and access tokens.',
@@ -65,7 +65,7 @@ export default function TermsPage() {
 
           <section className="scroll-mt-32" id="liability">
             <h2 className="font-display text-marketing-xl text-dark mb-6">3. Limitation of Liability</h2>
-            <p className="mb-4">To the maximum extent permitted by applicable Indian law, ComplianceOS and its affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.</p>
+            <p className="mb-4">To the maximum extent permitted by applicable Indian law, Arthvahi and its affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.</p>
             <p className="mb-4">Our total aggregate liability arising out of or relating to these terms is limited to the amount paid by you for the specific service module during the twelve (12) months immediately preceding the event giving rise to the claim.</p>
           </section>
 

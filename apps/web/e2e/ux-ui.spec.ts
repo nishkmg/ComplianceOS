@@ -184,7 +184,7 @@ test.describe('Authentication Screens — §3', () => {
 test.describe('Onboarding — §4', () => {
   test('login page loads (pre-onboarding check)', async ({ page }) => {
     await page.goto('/login');
-    await expect(page).toHaveTitle(/ComplianceOS/);
+    await expect(page).toHaveTitle(/Arthvahi/);
   });
 });
 

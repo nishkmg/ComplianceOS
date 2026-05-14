@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ComplianceOS | Precision in Indian Accounting",
+  title: "Arthvahi | Precision in Indian Accounting",
   description: "Double-entry accounting, GST, payroll and ITR — built from scratch for how Indian businesses actually work.",
 };
 

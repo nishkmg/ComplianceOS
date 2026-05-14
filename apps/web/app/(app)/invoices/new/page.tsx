@@ -258,7 +258,7 @@ export default function NewInvoicePage() {
             {/* Preview header */}
             <header className="flex justify-between items-start border-b border-border pb-8 mb-8">
               <div>
-                <p className="font-display text-2xl font-bold tracking-tight">ComplianceOS</p>
+                <p className="font-display text-2xl font-bold tracking-tight">Arthvahi</p>
                 <p className="text-mid text-[11px] mt-2 leading-relaxed">
                   1204, Lodha Excelus<br />
                   Apollo Bunder, Mumbai 400001

@@ -18,7 +18,7 @@ export function MarketingNav() {
     <nav className="sticky top-0 w-full z-50 bg-section-muted/90 border-b-[0.5px] border-border-subtle dark:bg-stone-950/90 dark:border-stone-800 transition-colors" style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
       <div className="flex justify-between items-center h-16 px-8 max-w-[1320px] mx-auto">
         <Link href="/" className="text-xl font-bold tracking-tighter text-dark dark:text-stone-50 no-underline">
-          ComplianceOS
+          Arthvahi
         </Link>
         
         <div className="hidden md:flex items-center space-x-10">

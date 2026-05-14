@@ -17,9 +17,9 @@ export default function ContactPage() {
     try {
       const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
       if (res.ok) setSubmitted(true);
-      else setError('Something went wrong. Email us directly at hello@complianceos.in.');
+      else setError('Something went wrong. Email us directly at hello@arthvahi.in.');
     } catch {
-      setError('Something went wrong. Email us directly at hello@complianceos.in.');
+      setError('Something went wrong. Email us directly at hello@arthvahi.in.');
     }
   }
 
@@ -86,7 +86,7 @@ export default function ContactPage() {
               <div className="bg-section-muted border border-border-subtle p-8 text-left">
                 <Icon name="mail" className="text-primary text-2xl mb-4" />
                 <h3 className="font-ui font-bold text-dark mb-2">Email</h3>
-                <p className="font-ui text-secondary">hello@complianceos.in</p>
+                <p className="font-ui text-secondary">hello@arthvahi.in</p>
               </div>
               <div className="bg-section-muted border border-border-subtle p-8 text-left">
                 <Icon name="phone" className="text-primary text-2xl mb-4" />

@@ -88,7 +88,7 @@ export default function PayrollPage() {
             <div className="bg-white border border-border-subtle p-12 max-w-4xl mx-auto shadow-sm">
               <div className="flex justify-between items-start pb-8 mb-8 border-b border-border-subtle">
                 <div>
-                  <span className="font-display text-lg font-bold block">ComplianceOS</span>
+                  <span className="font-display text-lg font-bold block">Arthvahi</span>
                   <p className="text-xs text-light mt-1">Salary Slip — September 2024</p>
                 </div>
                 <div className="text-right">

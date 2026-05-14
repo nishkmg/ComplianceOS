@@ -20,7 +20,7 @@ export default function HomePage() {
   const modules: Array<{ title: string; desc: string; points: string[]; image: string; alt: string; cta?: { label: string; href: string }; reverse?: boolean }> = [
     {
       title: 'Accounting & Ledger Management',
-      desc: 'Maintain a crystal clear audit trail. From journal entries to ledger balancing, ComplianceOS ensures every rupee is accounted for with physical-ledger accuracy.',
+      desc: 'Maintain a crystal clear audit trail. From journal entries to ledger balancing, Arthvahi ensures every rupee is accounted for with physical-ledger accuracy.',
       points: ['Real-time double entry validation', 'Multi-entity consolidation'],
       image: '/images/homepage/module-accounting.png',
       alt: 'Detailed view of a financial ledger spreadsheet'
@@ -37,13 +37,13 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      quote: "ComplianceOS is the first tool that understands how Indian businesses actually operate. The GST reconciliation alone saves our team 20 hours a week.",
+      quote: "Arthvahi is the first tool that understands how Indian businesses actually operate. The GST reconciliation alone saves our team 20 hours a week.",
       author: "Arjun Mehta",
       role: "CEO, Bharat Logistics",
       image: "/images/homepage/person-arjun.jpg"
     },
     {
-      quote: "As a CA, I recommend ComplianceOS to all my clients. The audit trails are bulletproof and the reporting format is exactly what banks need.",
+      quote: "As a CA, I recommend Arthvahi to all my clients. The audit trails are bulletproof and the reporting format is exactly what banks need.",
       author: "Priya Sharma",
       role: "Senior Partner, Sharma & Co.",
       image: "/images/homepage/person-priya.jpg"
@@ -91,7 +91,7 @@ export default function HomePage() {
                 <img 
                   className="w-full h-auto" 
                   src="/images/homepage/hero-dashboard.png" 
-                  alt="ComplianceOS Main Dashboard" 
+                  alt="Arthvahi Main Dashboard" 
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white border border-border-subtle p-6 hidden lg:block shadow-lg">
@@ -160,7 +160,7 @@ export default function HomePage() {
                 <img 
                   className="w-full h-auto contrast-[1.1]" 
                   src="/images/homepage/demo-frame.png" 
-                  alt="ComplianceOS Live Demo" 
+                  alt="Arthvahi Live Demo" 
                 />
               </div>
               <div className="absolute -right-12 top-1/4 bg-amber p-6 hidden xl:block shadow-2xl">

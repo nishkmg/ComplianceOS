@@ -6,7 +6,7 @@ test.describe('Authentication', () => {
   });
 
   test('should show login page', async ({ page }) => {
-    await expect(page).toHaveTitle(/ComplianceOS/);
+    await expect(page).toHaveTitle(/Arthvahi/);
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByLabel('Password')).toBeVisible();
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();

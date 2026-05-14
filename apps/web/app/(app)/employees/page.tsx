@@ -19,9 +19,9 @@ interface Employee {
 }
 
 const mockEmployees: Employee[] = [
-  { id: "e1", employeeCode: "EMP-2024-001", name: "Rahul Sharma", entityName: "ComplianceOS Pvt Ltd", department: "Compliance", joiningDate: "2024-01-15", complianceStatus: "complete" },
-  { id: "e2", employeeCode: "EMP-2024-002", name: "Priya Singh", entityName: "ComplianceOS Pvt Ltd", department: "Engineering", joiningDate: "2024-03-01", complianceStatus: "pending" },
-  { id: "e3", employeeCode: "EMP-2024-003", name: "Vikram Das", entityName: "ComplianceOS Pvt Ltd", department: "Finance", joiningDate: "2024-06-10", complianceStatus: "action_required" },
+  { id: "e1", employeeCode: "EMP-2024-001", name: "Rahul Sharma", entityName: "Arthvahi Pvt Ltd", department: "Compliance", joiningDate: "2024-01-15", complianceStatus: "complete" },
+  { id: "e2", employeeCode: "EMP-2024-002", name: "Priya Singh", entityName: "Arthvahi Pvt Ltd", department: "Engineering", joiningDate: "2024-03-01", complianceStatus: "pending" },
+  { id: "e3", employeeCode: "EMP-2024-003", name: "Vikram Das", entityName: "Arthvahi Pvt Ltd", department: "Finance", joiningDate: "2024-06-10", complianceStatus: "action_required" },
 ];
 
 export default function EmployeesPage() {
