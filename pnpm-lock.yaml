@@ -84,6 +84,9 @@ importers:
       nodemailer:
         specifier: ^7.0.0
         version: 7.0.13
+      postgres:
+        specifier: ^3.4.9
+        version: 3.4.9
       puppeteer:
         specifier: ^24.0.0
         version: 24.43.1(typescript@5.9.3)
