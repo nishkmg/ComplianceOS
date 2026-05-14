@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { randomUUID } from "crypto";
 
 let _sql: any = null;
 
@@ -36,8 +37,8 @@ export async function POST(req: Request) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const userId = crypto.randomUUID();
-    const tenantId = crypto.randomUUID();
+    const userId = randomUUID();
+    const tenantId = randomUUID();
 
     await sql.begin(async (tx: any) => {
       await tx`INSERT INTO users (id, email, name, password_hash) VALUES (${userId}, ${emailNorm}, ${name || emailNorm.split("@")[0]}, ${passwordHash})`;
