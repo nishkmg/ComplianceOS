@@ -1,11 +1,16 @@
-import { db, users, tenants, userTenants } from "@complianceos/db";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 
+async function getDb() {
+  const { db, users, tenants, userTenants } = await import("@complianceos/db");
+  return { db, users, tenants, userTenants };
+}
+
 export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json();
+    const { db, users, tenants, userTenants } = await getDb();
 
     if (!email || !password) {
       return Response.json({ error: "Email and password are required" }, { status: 400 });
