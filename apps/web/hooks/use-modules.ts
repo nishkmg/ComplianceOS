@@ -74,5 +74,11 @@ export function useModules() {
     return found.enabled === "true";
   }
 
-  return { isEnabled, loading };
+  const gstConfig = {
+    gstRegistration: (entry.onboardingData.gst_registration as string) || "none",
+    itcEligible: (entry.onboardingData.itc_eligible as boolean) ?? true,
+    tdsApplicable: (entry.onboardingData.tds_applicable as boolean) ?? false,
+  };
+
+  return { isEnabled, loading, gstConfig };
 }

@@ -7,6 +7,7 @@ import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useModules } from "@/hooks/use-modules";
 import { addEntry, getEntries, StoredEntry } from "@/lib/journal-store";
 
 const MOCK_ACCOUNTS = [
@@ -73,7 +74,19 @@ function entryNumberForFy(fy: string): string {
 
 export default function NewJournalEntryPage() {
   const { activeFy } = useFiscalYear();
+  const { isEnabled, gstConfig } = useModules();
   const router = useRouter();
+
+  // Filter accounts based on module config
+  const availableAccounts = useMemo(() => {
+    const gstOn = isEnabled("gst");
+    const itcOn = gstConfig.itcEligible;
+    return MOCK_ACCOUNTS.filter(a => {
+      if (a.id === "8" && !gstOn) return false;  // GST Output
+      if (a.id === "9" && !itcOn) return false;   // GST Input
+      return true;
+    });
+  }, [isEnabled, gstConfig]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [narration, setNarration] = useState("");
   const [reference, setReference] = useState("");
@@ -265,7 +278,7 @@ export default function NewJournalEntryPage() {
           <div>
             <h1 className="font-display text-display-lg font-semibold text-dark">New Journal Entry</h1>
             <p className="text-[13px] text-secondary font-ui mt-1">
-              Record a new transaction in the general ledger
+              Record a new transaction in the general ledger{gstConfig.tdsApplicable ? " · TDS applicable" : ""}{gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
             </p>
           </div>
         </div>
@@ -383,7 +396,7 @@ export default function NewJournalEntryPage() {
                         onChange={(e) => updateLine(index, "accountId", e.target.value)}
                       >
                         <option value="">Select account…</option>
-                        {MOCK_ACCOUNTS.map(a => (
+                        {availableAccounts.map(a => (
                           <option key={a.id} value={a.id}>{a.code} · {a.name}</option>
                         ))}
                       </select>

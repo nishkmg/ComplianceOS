@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useModules } from "@/hooks/use-modules";
 import { addPayment } from "@/lib/payment-store";
 
 export default function NewPaymentPage() {
   const { activeFy } = useFiscalYear();
+  const { gstConfig } = useModules();
   const router = useRouter();
   const [type, setType] = useState<"receipt" | "payment">("receipt");
   const [customerName, setCustomerName] = useState("");
@@ -16,6 +18,7 @@ export default function NewPaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState("online");
   const [referenceNumber, setReferenceNumber] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
+  const [tdsAmount, setTdsAmount] = useState("");
   const [saving, setSaving] = useState(false);
   const savingRef = useRef(false);
   const [discardConfirm, setDiscardConfirm] = useState(false);
@@ -84,7 +87,11 @@ export default function NewPaymentPage() {
           </button>
           <div>
             <h1 className="font-display text-display-lg font-semibold text-dark">Record Transaction</h1>
-            <p className="font-ui text-[11px] text-secondary mt-0.5">Record incoming or outgoing payments. FY {activeFy}</p>
+            <p className="font-ui text-[11px] text-secondary mt-0.5">
+              Record incoming or outgoing payments. FY {activeFy}
+              {gstConfig.tdsApplicable ? " · TDS applicable" : ""}
+              {gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
+            </p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -204,9 +211,38 @@ export default function NewPaymentPage() {
             />
           </div>
         </div>
-      </div>
+        </div>
 
-      {/* Allocation hint */}
+        {/* TDS Section — shown when enabled in fiscal config */}
+        {gstConfig.tdsApplicable && (
+          <div className="bg-surface border border-border rounded-md p-6 space-y-4">
+            <h3 className="font-ui text-[10px] font-bold text-dark uppercase tracking-widest">TDS Deduction</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">TDS Amount (₹)</label>
+                <input
+                  type="number"
+                  min="0"
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm focus:ring-1 focus:ring-amber outline-none"
+                  placeholder="0.00"
+                  value={tdsAmount}
+                  onChange={e => setTdsAmount(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">TDS Rate (%)</label>
+                <div className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-mid">
+                  {type === "payment" ? "2.00" : "N/A"}
+                </div>
+              </div>
+            </div>
+            {type === "receipt" && (
+              <p className="font-ui text-[11px] text-text-mid italic">TDS deduction typically applies on payments made, not receipts.</p>
+            )}
+          </div>
+        )}
+
+        {/* Allocation hint */}
       {parseFloat(paymentAmount || "0") > 0 && (
         <div className="bg-amber-50 border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
           <div>
