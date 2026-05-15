@@ -9,89 +9,41 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
-import { getPayments } from "@/lib/payment-store";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface Payment {
   id: string;
-  paymentNumber: string;
-  customerName: string;
+  payment_number: string;
+  customer_name: string;
   date: string;
   amount: number;
-  paymentMethod: string;
+  payment_method: string;
   status: "recorded" | "voided";
-  type: "received" | "paid";
 }
-
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const mockPaymentsByFy: Record<string, Payment[]> = {
-  '2026-27': [
-    { id: "1", paymentNumber: "PAY-2026-27-001", customerName: "Acme Corp",   date: "2026-04-10", amount: 50000,  paymentMethod: "bank",   status: "recorded", type: "received" },
-    { id: "2", paymentNumber: "PAY-2026-27-002", customerName: "Beta Ltd",    date: "2026-04-12", amount: 25000,  paymentMethod: "cash",   status: "recorded", type: "received" },
-    { id: "3", paymentNumber: "PAY-2026-27-003", customerName: "Vendor X",    date: "2026-04-14", amount: 120000, paymentMethod: "online", status: "recorded", type: "paid" },
-    { id: "4", paymentNumber: "PAY-2026-27-004", customerName: "Gamma Pvt",   date: "2026-04-15", amount: 75000,  paymentMethod: "cheque", status: "recorded", type: "received" },
-    { id: "5", paymentNumber: "PAY-2026-27-005", customerName: "Acme Corp",   date: "2026-04-08", amount: 30000,  paymentMethod: "online", status: "voided",   type: "paid" },
-  ],
-  '2025-26': [
-    { id: "101", paymentNumber: "PAY-2025-26-001", customerName: "Smith & Co",   date: "2025-08-15", amount: 75000,  paymentMethod: "bank",   status: "recorded", type: "received" },
-    { id: "102", paymentNumber: "PAY-2025-26-002", customerName: "Vendor Y",     date: "2025-10-20", amount: 95000,  paymentMethod: "online", status: "recorded", type: "paid" },
-    { id: "103", paymentNumber: "PAY-2025-26-003", customerName: "Miller Ent.",  date: "2025-12-05", amount: 45000,  paymentMethod: "cheque", status: "recorded", type: "received" },
-    { id: "104", paymentNumber: "PAY-2025-26-004", customerName: "Office Supplies Co", date: "2026-01-18", amount: 28000, paymentMethod: "cash",   status: "recorded", type: "paid" },
-    { id: "105", paymentNumber: "PAY-2025-26-005", customerName: "Beta Ltd",     date: "2026-03-10", amount: 15000,  paymentMethod: "online", status: "voided",   type: "received" },
-  ],
-};
-
-const typeOptions = ["all", "received", "paid"] as const;
-
-// ─── Column defs ──────────────────────────────────────────────────────────────
 
 const columns: ColumnDef<Payment>[] = [
   {
-    key: "date",
-    header: "Date",
-    sortable: true,
-    width: "120px",
-    render: (row) => (
-      <span className="font-mono text-[12px] text-mid">
-        {new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
-      </span>
-    ),
-  },
-  {
-    key: "paymentNumber",
+    key: "payment_number",
     header: "Payment #",
-    width: "160px",
+    sortable: true,
+    width: "180px",
     render: (row) => (
-      <span className="font-mono text-[13px] text-amber-text font-medium">{row.paymentNumber}</span>
+      <Link href={`/payments/${row.id}`} className="font-mono text-[13px] text-amber-text hover:underline no-underline">
+        {row.payment_number}
+      </Link>
     ),
   },
   {
-    key: "customerName",
+    key: "customer_name",
     header: "From / To",
     sortable: true,
-    render: (row) => <span className="font-ui text-[13px] text-dark">{row.customerName}</span>,
+    render: (row) => <span className="font-ui text-[13px] text-dark">{row.customer_name}</span>,
   },
   {
-    key: "paymentMethod",
+    key: "payment_method",
     header: "Method",
-    render: (row) => <span className="font-ui text-[13px] text-[12px] text-mid capitalize">{row.paymentMethod}</span>,
-  },
-  {
-    key: "type",
-    header: "Type",
-    sortable: true,
-    width: "100px",
-    render: (row) => (
-      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
-        row.type === "received"
-          ? "bg-success-bg text-success border-green-200"
-          : "bg-danger-bg text-danger border-red-200"
-      }`}>
-        {row.type}
-      </span>
-    ),
+    render: (row) => <span className="font-ui text-[13px] text-[12px] text-mid capitalize">{row.payment_method}</span>,
   },
   {
     key: "amount",
@@ -99,11 +51,7 @@ const columns: ColumnDef<Payment>[] = [
     align: "right",
     sortable: true,
     width: "150px",
-    render: (row) => (
-      <span className="font-mono text-[13px] font-semibold tabular-nums">
-        ₹{row.amount.toLocaleString("en-IN")}
-      </span>
-    ),
+    render: (row) => <span className="font-mono text-[13px] font-semibold tabular-nums">₹{Number(row.amount).toLocaleString("en-IN")}</span>,
   },
   {
     key: "status",
@@ -114,145 +62,83 @@ const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-// ─── Page Component ───────────────────────────────────────────────────────────
-
 export default function PaymentsPage() {
   const { activeFy } = useFiscalYear();
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const router = useRouter();
   const [search, setSearch] = useState("");
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const mockPayments = mockPaymentsByFy[activeFy] ?? mockPaymentsByFy['2026-27'];
-  const storedPayments: Payment[] = useMemo(() =>
-    getPayments().filter(p => p.fiscalYear === activeFy).map(p => ({
-      id: p.id,
-      paymentNumber: p.paymentNumber,
-      customerName: p.customerName,
-      date: p.date,
-      amount: p.amount,
-      paymentMethod: p.paymentMethod,
-      status: p.status as "recorded" | "voided",
-      type: p.type as "received" | "paid",
-    })),
-    [activeFy]
-  );
-  const allPayments = useMemo(() => [...storedPayments, ...mockPayments], [storedPayments, mockPayments]);
-
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/payments?tenantId=${encodeURIComponent(tenantId)}`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        setPayments(data.payments || []);
+      } catch {
+        showToast.error("Failed to load payments");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [tenantId]);
 
   const filtered = useMemo(
-    () =>
-      allPayments.filter(p => {
-        if (typeFilter !== "all" && p.type !== typeFilter) return false;
-        if (search && !p.customerName.toLowerCase().includes(search.toLowerCase()) && !p.paymentNumber.toLowerCase().includes(search.toLowerCase())) return false;
-        return true;
-      }),
-    [typeFilter, search, allPayments]
+    () => payments.filter(p => !search || p.customer_name.toLowerCase().includes(search.toLowerCase()) || p.payment_number.toLowerCase().includes(search.toLowerCase())),
+    [search, payments]
   );
 
-  const totalAmount = filtered.reduce((s, p) => s + p.amount, 0);
+  const totalAmount = filtered.reduce((s, p) => s + Number(p.amount), 0);
 
   const handleExport = useCallback(() => {
     if (filtered.length === 0) { showToast.error("No payments to export."); return; }
-    const header = "Payment #,Date,From/To,Method,Type,Amount,Status";
-    const rows = filtered.map(p => `${p.paymentNumber},${p.date},"${p.customerName}",${p.paymentMethod},${p.type},${p.amount},${p.status}`);
+    const header = "Payment #,Date,Customer,Amount,Method,Status";
+    const rows = filtered.map(p => `${p.payment_number},${p.date},"${p.customer_name}",${p.amount},${p.payment_method},${p.status}`);
     const csv = [header, ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `payments-${activeFy}.csv`; a.click();
     URL.revokeObjectURL(url);
-    showToast.success(`Exported ${filtered.length} payments.`);
   }, [filtered, activeFy]);
 
+  if (loading) return <TableSkeleton rows={5} columns={5} />;
+
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+      <div className="flex items-center justify-between">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
-            Treasury
-          </p>
-          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Payment Ledger</h1>
-          <p className="font-ui text-[13px] text-secondary mt-1">
-            High-density overview of all incoming and outgoing fiscal transactions.
-          </p>
+          <h1 className="font-display text-display-lg font-semibold text-dark">Payments</h1>
+          <p className="text-[13px] text-secondary font-ui mt-1">FY {activeFy}</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={handleExport} className="px-4 py-2 border border-border text-mid text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
-            <Icon name="download" size={14} /> Export CSV
+          <div className="relative">
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-mid text-[16px]" />
+            <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-[12px] font-ui outline-none focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
+          </div>
+          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+            <Icon name="download" size={14} /> Export
           </button>
-          <Link
-            href="/payments/new"
-            className="px-4 py-2 bg-amber text-white text-[10px] font-ui text-[11px] uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-md flex items-center gap-1.5"
-          >
-            <Icon name="add" size={14} /> New Entry
+          <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md shadow-sm no-underline">
+            <Icon name="add" size={14} /> Record Payment
           </Link>
         </div>
       </div>
 
-      {/* Filter + search */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
-          {typeOptions.map(t => (
-            <button
-              key={t}
-              onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium capitalize transition-colors cursor-pointer border-none rounded-md ${
-                typeFilter === t
-                  ? "bg-surface text-dark shadow-sm"
-                  : "text-mid hover:text-dark bg-transparent"
-              }`}
-            >
-              {t === "all" ? "All" : t}
-              <span className="ml-1.5 text-[10px] text-light">
-                ({t === "all" ? allPayments.length : allPayments.filter(p => p.type === t).length})
-              </span>
-            </button>
-          ))}
+      <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm">
+        <div className="p-4 bg-surface-muted border-b border-border flex items-center justify-between">
+          <span className="font-ui text-[11px] text-text-mid">{filtered.length} payment{filtered.length !== 1 ? "s" : ""}</span>
+          <span className="font-mono text-[13px] font-bold tabular-nums">₹{totalAmount.toLocaleString("en-IN")}</span>
         </div>
-        <div className="relative">
-          <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
-          <input
-            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
-            placeholder="Search entries…"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
+        {filtered.length > 0 ? (
+          <DataTable columns={columns} data={filtered} keyExtractor={(r) => r.id} />
+        ) : (
+          <EmptyState icon="payments" title="No payments yet" description="Record your first payment or receipt to get started." />
+        )}
       </div>
-
-      {/* DataTable */}
-      {loading ? (
-        <TableSkeleton rows={10} columns={7} />
-      ) : (
-        <DataTable<Payment>
-          data={filtered}
-          columns={columns}
-          keyExtractor={row => row.id}
-          pageSize={15}
-          emptyState={
-            <EmptyState
-              title="No payments found"
-              description={search || typeFilter !== "all" ? "Try adjusting your search or filter." : "Record your first payment transaction."}
-              action={{ label: "New Entry", onClick: () => window.location.href = "/payments/new" }}
-              icon="account_balance_wallet"
-            />
-          }
-          footer={
-            <tr className="bg-surface-muted border-t-2 border-border">
-              <td colSpan={5} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
-                Total ({filtered.length} entries)
-              </td>
-              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
-                ₹{totalAmount.toLocaleString("en-IN")}
-              </td>
-              <td />
-            </tr>
-          }
-        />
-      )}
     </div>
   );
 }
