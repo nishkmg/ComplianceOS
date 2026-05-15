@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { mockMutation } from "@/lib/mock-mutation";
 
 interface OnboardingData {
@@ -36,6 +36,14 @@ interface OnboardingState {
   isLoading: boolean;
 }
 
+const STEP_KEYS: Record<number, string> = {
+  1: "businessProfile",
+  2: "moduleActivation",
+  3: "coa",
+  4: "fyGst",
+  5: "openingBalances",
+};
+
 export function useOnboarding(tenantId?: string) {
   const [state, setState] = useState<OnboardingState>({
     currentStep: 1,
@@ -56,14 +64,28 @@ export function useOnboarding(tenantId?: string) {
       setState((prev) => ({
         ...prev,
         currentStep: step + 1,
-        data: { ...prev.data, [getStepKey(step)]: data },
+        completedSteps: prev.completedSteps.includes(step)
+          ? prev.completedSteps
+          : [...prev.completedSteps, step],
+        data: { ...prev.data, [STEP_KEYS[step] || ""]: data },
       }));
     },
     [tenantId, saveProgress]
   );
 
   const goToStep = useCallback((step: number) => {
-    setState((prev) => ({ ...prev, currentStep: step }));
+    setState((prev) => {
+      // Moving forward: mark the departing step as completed
+      const isForward = step > prev.currentStep;
+      if (isForward) {
+        const completed = prev.completedSteps.includes(prev.currentStep)
+          ? prev.completedSteps
+          : [...prev.completedSteps, prev.currentStep];
+        return { ...prev, currentStep: step, completedSteps: completed };
+      }
+      // Moving backward or same step
+      return { ...prev, currentStep: step };
+    });
   }, []);
 
   return {
@@ -75,15 +97,11 @@ export function useOnboarding(tenantId?: string) {
   };
 }
 
-function getStepKey(step: number): string {
-  const keys = ["businessProfile", "moduleActivation", "coa", "fyGst", "openingBalances"];
-  return keys[step - 1] || "";
-}
-
 export function useOnboardingRedirect(isComplete?: boolean) {
-  useEffect(() => {
-    if (isComplete === false && typeof window !== "undefined") {
-      window.location.href = "/onboarding";
-    }
-  }, [isComplete]);
+  const [redirected, setRedirected] = useState(false);
+  if (!redirected && isComplete === false && typeof window !== "undefined") {
+    setRedirected(true);
+    window.location.href = "/onboarding";
+  }
+  return redirected;
 }
