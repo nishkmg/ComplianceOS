@@ -27,11 +27,43 @@ const INDUSTRIES = [
 ];
 
 const STATES = [
-  { value: "maharashtra", label: "Maharashtra" },
-  { value: "karnataka", label: "Karnataka" },
+  { value: "andaman_and_nicobar_islands", label: "Andaman & Nicobar Islands" },
+  { value: "andhra_pradesh", label: "Andhra Pradesh" },
+  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
+  { value: "assam", label: "Assam" },
+  { value: "bihar", label: "Bihar" },
+  { value: "chandigarh", label: "Chandigarh" },
+  { value: "chhattisgarh", label: "Chhattisgarh" },
+  { value: "dadra_and_nagar_haveli", label: "Dadra & Nagar Haveli" },
+  { value: "daman_and_diu", label: "Daman & Diu" },
   { value: "delhi", label: "Delhi" },
-  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "goa", label: "Goa" },
   { value: "gujarat", label: "Gujarat" },
+  { value: "haryana", label: "Haryana" },
+  { value: "himachal_pradesh", label: "Himachal Pradesh" },
+  { value: "jammu_and_kashmir", label: "Jammu & Kashmir" },
+  { value: "jharkhand", label: "Jharkhand" },
+  { value: "karnataka", label: "Karnataka" },
+  { value: "kerala", label: "Kerala" },
+  { value: "ladakh", label: "Ladakh" },
+  { value: "lakshadweep", label: "Lakshadweep" },
+  { value: "madhya_pradesh", label: "Madhya Pradesh" },
+  { value: "maharashtra", label: "Maharashtra" },
+  { value: "manipur", label: "Manipur" },
+  { value: "meghalaya", label: "Meghalaya" },
+  { value: "mizoram", label: "Mizoram" },
+  { value: "nagaland", label: "Nagaland" },
+  { value: "odisha", label: "Odisha" },
+  { value: "puducherry", label: "Puducherry" },
+  { value: "punjab", label: "Punjab" },
+  { value: "rajasthan", label: "Rajasthan" },
+  { value: "sikkim", label: "Sikkim" },
+  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "telangana", label: "Telangana" },
+  { value: "tripura", label: "Tripura" },
+  { value: "uttar_pradesh", label: "Uttar Pradesh" },
+  { value: "uttarakhand", label: "Uttarakhand" },
+  { value: "west_bengal", label: "West Bengal" },
 ];
 
 export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
@@ -148,7 +180,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
 
         {/* PAN Number */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pan">Permanent Account Number</label>
+          <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pan">Permanent Account Number (PAN)</label>
           <input 
             className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
             id="pan" 
