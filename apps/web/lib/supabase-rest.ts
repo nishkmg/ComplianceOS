@@ -12,7 +12,18 @@ const ipv4Agent = new https.Agent({
 
 function baseUrl() {
   const raw = process.env.NEXT_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
-  return raw.trim().replace(/\/$/, "");
+  const trimmed = raw.trim();
+  const httpsIndex = trimmed.indexOf("https://");
+  const httpIndex = trimmed.indexOf("http://");
+  const start =
+    httpsIndex >= 0
+      ? httpsIndex
+      : httpIndex >= 0
+        ? httpIndex
+        : -1;
+
+  const normalized = start >= 0 ? trimmed.slice(start) : trimmed;
+  return normalized.replace(/\/$/, "");
 }
 
 function authHeaders() {
@@ -29,6 +40,9 @@ export function hasServiceRoleKey() {
 
 export async function supabaseRest(path: string, init: { method?: "GET" | "POST" | "PATCH" | "DELETE"; body?: unknown; headers?: Record<string, string> } = {}) {
   const url = new URL(`${baseUrl()}/rest/v1/${path}`);
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new Error(`Invalid Supabase URL protocol: ${url.protocol}`);
+  }
   const method = init.method || "GET";
   const body = init.body === undefined ? undefined : JSON.stringify(init.body);
 
