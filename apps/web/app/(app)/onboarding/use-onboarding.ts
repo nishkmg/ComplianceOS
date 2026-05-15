@@ -44,9 +44,9 @@ const STEP_KEYS: Record<number, string> = {
   5: "openingBalances",
 };
 
-export function useOnboarding(tenantId?: string) {
+export function useOnboarding(tenantId?: string, initialStep?: number) {
   const [state, setState] = useState<OnboardingState>({
-    currentStep: 1,
+    currentStep: initialStep && initialStep >= 1 && initialStep <= 6 ? initialStep : 1,
     completedSteps: [],
     data: {},
     onboardingStatus: "in_progress",

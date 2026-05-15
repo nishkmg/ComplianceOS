@@ -28,13 +28,22 @@ export default function OnboardingPage() {
   const [createdTenantId, setCreatedTenantId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Restore tenantId from URL on mount (survives page refresh)
+  const [initialStep] = useState(() => {
+    if (typeof window !== "undefined") {
+      const s = parseInt(new URLSearchParams(window.location.search).get("step") || "", 10);
+      if (s >= 1 && s <= 6) return s;
+    }
+    return undefined;
+  });
+
+  const { currentStep, completedSteps, isLoading, goToStep } =
+    useOnboarding(createdTenantId ?? undefined, initialStep);
+
+  // Restore tenantId from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const tid = params.get("tenantId");
-    if (tid) {
-      setCreatedTenantId(tid);
-    }
+    if (tid) setCreatedTenantId(tid);
     setMounted(true);
   }, []);
 
@@ -45,19 +54,34 @@ export default function OnboardingPage() {
     }
   }, [mounted, status, session, router]);
 
-  const { currentStep, completedSteps, isLoading, goToStep } =
-    useOnboarding(createdTenantId ?? undefined);
+  // Persist current step and tenantId in URL (survives page refresh)
+  const persistState = useCallback(
+    (step: number, tenantId?: string) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("step", String(step));
+      if (tenantId) url.searchParams.set("tenantId", tenantId);
+      window.history.replaceState({}, "", url.toString());
+    },
+    []
+  );
 
-  // Step 1 completion: advance + persist tenantId in URL
+  // Wrap goToStep to also persist step in URL
+  const handleGoToStep = useCallback(
+    (step: number) => {
+      goToStep(step);
+      persistState(step, createdTenantId || undefined);
+    },
+    [goToStep, persistState, createdTenantId]
+  );
+
+  // Step 1 completion: advance + persist in URL
   const handleTenantCreated = useCallback(
     (id: string) => {
       setCreatedTenantId(id);
-      const url = new URL(window.location.href);
-      url.searchParams.set("tenantId", id);
-      window.history.replaceState({}, "", url.toString());
+      persistState(2, id);
       goToStep(2);
     },
-    [goToStep]
+    [goToStep, persistState]
   );
 
   if (!mounted || status === "loading" || !session) return null;
@@ -85,7 +109,7 @@ export default function OnboardingPage() {
                 <div
                   key={s.number}
                   title={`${s.title}${isCompleted ? " (click to revisit)" : ""}`}
-                  onClick={() => isCompleted && goToStep(s.number)}
+                  onClick={() => isCompleted && handleGoToStep(s.number)}
                   className={`flex-1 rounded-sm transition-all duration-500 ${
                     isActive ? "bg-amber" : "bg-border-subtle"
                   } ${isCompleted ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
@@ -116,25 +140,25 @@ export default function OnboardingPage() {
             {currentStep === 2 && createdTenantId && (
               <StepModuleActivation
                 tenantId={createdTenantId}
-                onComplete={() => goToStep(3)}
+                onComplete={() => handleGoToStep(3)}
               />
             )}
             {currentStep === 3 && createdTenantId && (
               <StepCoaTemplate
                 tenantId={createdTenantId}
-                onComplete={() => goToStep(4)}
+                onComplete={() => handleGoToStep(4)}
               />
             )}
             {currentStep === 4 && createdTenantId && (
               <StepCoaReview
                 tenantId={createdTenantId}
-                onComplete={() => goToStep(5)}
+                onComplete={() => handleGoToStep(5)}
               />
             )}
             {currentStep === 5 && createdTenantId && (
               <StepFyGst
                 tenantId={createdTenantId}
-                onComplete={() => goToStep(6)}
+                onComplete={() => handleGoToStep(6)}
               />
             )}
             {currentStep === 6 && createdTenantId && (
