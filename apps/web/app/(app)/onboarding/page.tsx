@@ -54,6 +54,24 @@ export default function OnboardingPage() {
     }
   }, [mounted, status, session, router]);
 
+  // Restore saved step from API when no URL param is present
+  useEffect(() => {
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/onboarding?tenantId=${encodeURIComponent(tenantId)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const savedStep = data.currentStep;
+        if (savedStep && savedStep >= 1 && savedStep <= 6 && !initialStep) {
+          goToStep(savedStep);
+        }
+      } catch {
+        // Non-critical — user starts from step 1
+      }
+    })();
+  }, [tenantId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Persist current step to API (auto-save progress)
   const persistStep = useCallback(
     (step: number) => {
