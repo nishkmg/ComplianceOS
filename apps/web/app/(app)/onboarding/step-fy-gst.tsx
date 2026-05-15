@@ -43,7 +43,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
 
   const fyEnd = formData.fiscalYearStart
     ? (() => {
-        const [y, m, d] = formData.fiscalYearStart.split("-").map(Number);
+        const y = parseInt(formData.fiscalYearStart.split("-")[0], 10);
         const end = new Date(y + 1, 2, 31);
         return end.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
       })()
