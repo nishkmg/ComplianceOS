@@ -17,9 +17,10 @@ const MODULES = [
 interface StepModuleActivationProps {
   tenantId: string;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivationProps) {
+export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModuleActivationProps) {
   const [enabledModules, setEnabledModules] = useState<Set<string>>(new Set(["accounting", "gst", "invoicing"]));
 
   const [saving, setSaving] = useState(false);
@@ -80,9 +81,22 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
       </div>
 
       <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
-        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
-          Accounting module is always active as the system core.
-        </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving}
+              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-[18px]" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+            Accounting module is always active as the system core.
+          </p>
+        </div>
         <button
           onClick={handleContinue}
           disabled={saving}

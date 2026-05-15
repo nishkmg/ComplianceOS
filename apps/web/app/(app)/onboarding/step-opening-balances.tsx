@@ -19,9 +19,10 @@ interface OpeningBalance {
 interface StepOpeningBalancesProps {
   tenantId: string;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalancesProps) {
+export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpeningBalancesProps) {
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
 
@@ -188,9 +189,22 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
       )}
 
       <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
-        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
-          Opening balances set here will form the Q1 starting position for FY 2024-25.
-        </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving || (mode === "migration" && totals.diff > 0.01)}
+              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-[18px]" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+            Opening balances set here will form the Q1 starting position for FY 2024-25.
+          </p>
+        </div>
         <button
           onClick={handleContinue}
           disabled={saving || (mode === "migration" && totals.diff > 0.01)}

@@ -35,9 +35,10 @@ const ALL_COA_IDS = collectAllIds(MOCK_COA);
 interface StepCoaReviewProps {
   tenantId: string;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
+export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9"]));
 
   const [saving, setSaving] = useState(false);
@@ -106,9 +107,22 @@ export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
       </div>
 
       <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
-        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
-          Physical physical-ledger accuracy guaranteed through hierarchical enforcement.
-        </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving}
+              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-[18px]" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+            Physical physical-ledger accuracy guaranteed through hierarchical enforcement.
+          </p>
+        </div>
         <button
           onClick={handleContinue}
           disabled={saving}

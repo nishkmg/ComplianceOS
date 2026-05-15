@@ -11,7 +11,6 @@ import { StepOpeningBalances } from "./step-opening-balances";
 import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
-import { Icon } from '@/components/ui/icon';
 import { submitStep } from "@/lib/mock-mutation";
 
 export const dynamic = "force-dynamic";
@@ -164,24 +163,28 @@ export default function OnboardingPage() {
                 <StepModuleActivation
                   tenantId={tenantId}
                   onComplete={() => handleGoToStep(3)}
+                  onBack={() => handleGoToStep(1)}
                 />
               )}
               {currentStep === 3 && (
                 <StepCoaTemplate
                   tenantId={tenantId}
                   onComplete={() => handleGoToStep(4)}
+                  onBack={() => handleGoToStep(2)}
                 />
               )}
               {currentStep === 4 && (
                 <StepCoaReview
                   tenantId={tenantId}
                   onComplete={() => handleGoToStep(5)}
+                  onBack={() => handleGoToStep(3)}
                 />
               )}
               {currentStep === 5 && (
                 <StepFyGst
                   tenantId={tenantId}
                   onComplete={() => handleGoToStep(6)}
+                  onBack={() => handleGoToStep(4)}
                 />
               )}
               {currentStep === 6 && (
@@ -191,22 +194,11 @@ export default function OnboardingPage() {
                     try { await refreshSession(); } catch {}
                     router.push("/dashboard");
                   }}
+                  onBack={() => handleGoToStep(5)}
                 />
               )}
             </ErrorBoundary>
           </div>
-
-          {currentStep > 1 && (
-            <div className="pt-4">
-              <button
-                onClick={() => handleGoToStep(currentStep - 1)}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer py-2"
-              >
-                <Icon name="arrow_back" className="text-[18px]" />
-                Back to {STEPS[currentStep - 2]?.title || "previous step"}
-              </button>
-            </div>
-          )}
         </main>
       </div>
     </div>
