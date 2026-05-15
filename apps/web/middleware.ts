@@ -1,8 +1,6 @@
-import { auth } from "./lib/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-type AuthRequest = NextRequest & { auth: { user?: { id: string; onboardingComplete?: boolean } } | null };
+import { getToken } from "next-auth/jwt";
 
 const PROTECTED_PATHS = [
   "/dashboard",
@@ -23,8 +21,8 @@ const PROTECTED_PATHS = [
   "/onboarding",
 ];
 
-export default auth(async (req: AuthRequest) => {
-  const session = req.auth;
+export default async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const pathname = req.nextUrl.pathname;
 
   if (pathname.startsWith("/api/auth") || pathname.startsWith("/_next") || pathname.startsWith("/api/trpc")) {
@@ -32,7 +30,7 @@ export default auth(async (req: AuthRequest) => {
   }
 
   // Already-authenticated users hitting auth screens → redirect to dashboard
-  if ((pathname.startsWith("/login") || pathname.startsWith("/signup")) && session?.user) {
+  if ((pathname.startsWith("/login") || pathname.startsWith("/signup")) && token) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
@@ -46,16 +44,17 @@ export default auth(async (req: AuthRequest) => {
   );
 
   if (isProtectedPath) {
-    if (!session?.user) {
+    if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
-    if (!session.user.onboardingComplete && !pathname.startsWith("/onboarding")) {
+    const onboardingComplete = (token as { onboardingComplete?: boolean }).onboardingComplete;
+    if (!onboardingComplete && !pathname.startsWith("/onboarding")) {
       return NextResponse.redirect(new URL("/onboarding", req.url));
     }
   }
 
   return undefined;
-});
+}
 
 export const config = {
   matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
