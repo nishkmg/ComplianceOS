@@ -31,7 +31,12 @@ export default async function middleware(req: NextRequest) {
     return undefined;
   }
 
-  // Already-authenticated users hitting auth screens → redirect to dashboard
+  // Already-authenticated users hitting auth screens or root → redirect to dashboard
+  if (pathname === "/" && token) {
+    const onboardingComplete = (token as { onboardingComplete?: boolean }).onboardingComplete;
+    return NextResponse.redirect(new URL(onboardingComplete ? "/dashboard" : "/onboarding", req.url));
+  }
+
   if ((pathname.startsWith("/login") || pathname.startsWith("/signup")) && token) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }

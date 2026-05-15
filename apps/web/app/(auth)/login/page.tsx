@@ -23,7 +23,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const callbackUrl = window.location.origin;
+      const callbackUrl = "/dashboard";
       const result = await signIn("credentials", {
         email,
         password,
