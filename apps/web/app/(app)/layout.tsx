@@ -12,6 +12,7 @@ import { AppSidebar } from "@/components/app/sidebar";
 import { AppTopBar } from "@/components/app/topbar";
 import { MobileNav } from "@/components/app/mobile-nav";
 import { FiscalYearProvider } from "@/hooks/use-fiscal-year";
+import { useModuleRedirect } from "@/hooks/use-module-redirect";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -28,6 +29,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 function AppShell({ children }: { children: ReactNode }) {
   const { commandPaletteOpen, closeCommandPalette, openCommandPalette } =
     useKeyboardShortcuts();
+  useModuleRedirect();
 
   return (
     <div className="min-h-screen bg-lightest">
