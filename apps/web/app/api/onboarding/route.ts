@@ -14,8 +14,6 @@ function mapState(s: string): string {
   return STATE_MAP[s] || s;
 }
 
-// Read current onboarding_data, merge updates, PATCH back
-// Prevents step N from overwriting step N-1 data stored in the JSONB column
 async function mergeOnboardingData(
   tenantId: string,
   updates: Record<string, unknown>
@@ -44,6 +42,64 @@ async function mergeOnboardingData(
     );
 }
 
+// ─── GET: fetch onboarding state ──────────────────────────────────────
+export async function GET(req: Request) {
+  try {
+    const url = new URL(req.url);
+    const tenantId = url.searchParams.get("tenantId");
+    if (!tenantId) {
+      return Response.json({ error: "tenantId query param required" }, { status: 400 });
+    }
+
+    const res = await supabaseRest(
+      `tenants?id=eq.${encodeURIComponent(tenantId)}`,
+      { method: "GET" }
+    );
+    if (!res.ok) {
+      return Response.json({ error: "Tenant not found" }, { status: 404 });
+    }
+
+    const rows = Array.isArray(res.json) ? (res.json as any[]) : [];
+    const t = rows[0];
+    if (!t) {
+      return Response.json({ error: "Tenant not found" }, { status: 404 });
+    }
+
+    const onboardingData: Record<string, unknown> =
+      (t.onboarding_data as Record<string, unknown>) || {};
+
+    // Fetch active modules
+    const modRes = await supabaseRest(
+      `tenant_module_config?tenant_id=eq.${encodeURIComponent(tenantId)}&select=module,enabled`,
+      { method: "GET" }
+    );
+    const modules = modRes.ok && Array.isArray(modRes.json) ? modRes.json : [];
+
+    return Response.json({
+      tenantId: t.id,
+      onboardingStatus: t.onboarding_status || "in_progress",
+      currentStep: (onboardingData.current_step as number) || 1,
+      businessProfile: {
+        name: t.name || "",
+        legalName: t.legal_name || "",
+        businessType: t.business_type || "",
+        pan: t.pan || "",
+        gstin: t.gstin || "",
+        address: t.address || "",
+        state: t.state || "",
+        industry: t.industry || "",
+        dateOfIncorporation: t.date_of_incorporation || "",
+      },
+      moduleActivation: modules,
+      onboardingData,
+    });
+  } catch (err: any) {
+    console.error("[onboarding] GET error:", err.message);
+    return Response.json({ error: err.message || "Failed to fetch state" }, { status: 500 });
+  }
+}
+
+// ─── POST: submit step data or save progress ──────────────────────────
 export async function POST(req: Request) {
   try {
     let body: Record<string, unknown>;
@@ -58,10 +114,25 @@ export async function POST(req: Request) {
     if (typeof tenantId !== "string" || tenantId.length < 1) {
       return Response.json({ error: "tenantId is required" }, { status: 400 });
     }
-    if (typeof step !== "number" || step < 1 || step > 6) {
-      return Response.json({ error: "step must be 1-6" }, { status: 400 });
+    if (typeof step !== "number") {
+      return Response.json({ error: "step is required" }, { status: 400 });
     }
+
     const d = data as Record<string, unknown>;
+
+    // Step 0: lightweight progress save (no validation, just store current_step)
+    if (step === 0) {
+      await mergeOnboardingData(tenantId, { current_step: d.currentStep as number || 1 });
+      return Response.json({ success: true });
+    }
+
+    if (step < 1 || step > 6) {
+      return Response.json({ error: "step must be 0-6" }, { status: 400 });
+    }
+
+    if (!data || typeof data !== "object") {
+      return Response.json({ error: "data payload is required" }, { status: 400 });
+    }
 
     switch (step) {
       case 1: {
@@ -106,25 +177,15 @@ export async function POST(req: Request) {
         const modules: Array<{ module: string; enabled: boolean }> =
           (d.modules as any) || (d.moduleActivation as any);
         if (!Array.isArray(modules)) {
-          return Response.json(
-            { error: "Module data must be an array" },
-            { status: 400 }
-          );
+          return Response.json({ error: "Module data must be an array" }, { status: 400 });
         }
-
         if (modules.length === 0) {
-          return Response.json(
-            { error: "At least one module must be selected" },
-            { status: 400 }
-          );
+          return Response.json({ error: "At least one module must be selected" }, { status: 400 });
         }
 
         await supabaseRest(
           `tenant_module_config?tenant_id=eq.${encodeURIComponent(tenantId)}`,
-          {
-            method: "DELETE",
-            headers: { Prefer: "return=minimal" },
-          }
+          { method: "DELETE", headers: { Prefer: "return=minimal" } }
         );
 
         for (const m of modules) {
@@ -140,9 +201,7 @@ export async function POST(req: Request) {
             },
           });
           if (!ins.ok) {
-            throw new Error(
-              `Failed to save module ${m.module}: ${ins.status}`
-            );
+            throw new Error(`Failed to save module ${m.module}: ${ins.status}`);
           }
         }
 
@@ -152,32 +211,20 @@ export async function POST(req: Request) {
       case 3: {
         const templateId: string = (d.templateId as string) || (d.template as string);
         if (!templateId) {
-          return Response.json(
-            { error: "templateId is required" },
-            { status: 400 }
-          );
+          return Response.json({ error: "templateId is required" }, { status: 400 });
         }
-
-        await mergeOnboardingData(tenantId, {
-          coa_template: templateId,
-        });
-
+        await mergeOnboardingData(tenantId, { coa_template: templateId });
         return Response.json({ success: true });
       }
 
       case 4: {
         const selectedIds: string[] = d.selectedIds as string[];
         if (!Array.isArray(selectedIds)) {
-          return Response.json(
-            { error: "selectedIds must be an array" },
-            { status: 400 }
-          );
+          return Response.json({ error: "selectedIds must be an array" }, { status: 400 });
         }
-
         await mergeOnboardingData(tenantId, {
           coa_review: { reviewed: true, selectedIds },
         });
-
         return Response.json({ success: true });
       }
 
@@ -213,9 +260,7 @@ export async function POST(req: Request) {
         );
 
         if (!gstRes.ok) {
-          throw new Error(
-            `Failed to save GST settings: ${gstRes.text.slice(0, 200)}`
-          );
+          throw new Error(`Failed to save GST settings: ${gstRes.text.slice(0, 200)}`);
         }
 
         return Response.json({ success: true });
@@ -229,9 +274,7 @@ export async function POST(req: Request) {
 
         await mergeOnboardingData(tenantId, {
           opening_balances_mode: mode,
-          ...(mode === "migration" && d.balances
-            ? { opening_balances: d.balances }
-            : {}),
+          ...(mode === "migration" && d.balances ? { opening_balances: d.balances } : {}),
         });
 
         const obRes = await supabaseRest(
@@ -244,9 +287,7 @@ export async function POST(req: Request) {
         );
 
         if (!obRes.ok) {
-          throw new Error(
-            `Failed to finalize onboarding: ${obRes.text.slice(0, 200)}`
-          );
+          throw new Error(`Failed to finalize onboarding: ${obRes.text.slice(0, 200)}`);
         }
 
         return Response.json({ success: true, redirect: "/dashboard" });

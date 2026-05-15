@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // @ts-ignore
@@ -66,7 +66,7 @@ const STATES = [
   { value: "west_bengal", label: "West Bengal" },
 ];
 
-export function StepBusinessProfile({ tenantId, onComplete }: { tenantId: string; onComplete: () => void }) {
+export function StepBusinessProfile({ tenantId, initialData, onComplete }: { tenantId: string; initialData?: Record<string, string>; onComplete: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -82,6 +82,20 @@ export function StepBusinessProfile({ tenantId, onComplete }: { tenantId: string
       state: "maharashtra",
     }
   });
+
+  // Pre-fill form from saved onboarding state
+  useEffect(() => {
+    if (!initialData) return;
+    if (initialData.name) setValue("name", initialData.name as any);
+    if (initialData.legalName) setValue("legalName", initialData.legalName as any);
+    if (initialData.businessType) setValue("businessType", initialData.businessType as any);
+    if (initialData.pan) setValue("pan", initialData.pan as any);
+    if (initialData.gstin) setValue("gstin", initialData.gstin as any);
+    if (initialData.address) setValue("address", initialData.address as any);
+    if (initialData.state) setValue("state", initialData.state as any);
+    if (initialData.industry) setValue("industry", initialData.industry as any);
+    if (initialData.dateOfIncorporation) setValue("dateOfIncorporation", initialData.dateOfIncorporation as any);
+  }, [initialData, setValue]);
 
   const onSubmit = async (data: BusinessProfileInput) => {
     setIsSubmitting(true);

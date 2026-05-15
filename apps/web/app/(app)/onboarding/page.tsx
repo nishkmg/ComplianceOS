@@ -11,6 +11,7 @@ import { StepOpeningBalances } from "./step-opening-balances";
 import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { submitStep } from "@/lib/mock-mutation";
 
 export const dynamic = "force-dynamic";
 
@@ -23,24 +24,60 @@ const STEPS = [
   { number: 6, title: "Opening Balances" },
 ];
 
+interface OnboardingState {
+  currentStep: number;
+  businessProfile?: Record<string, string>;
+  moduleActivation?: { module: string; enabled: string }[];
+  onboardingData?: Record<string, unknown>;
+}
+
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: session, status, update: refreshSession } = useSession();
   const [mounted, setMounted] = useState(false);
+  const [savedState, setSavedState] = useState<OnboardingState | null>(null);
+  const [fetchingState, setFetchingState] = useState(true);
 
   const tenantId: string | null =
     (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null ?? null;
 
   const [initialStep] = useState(() => {
+    let step: number | undefined;
+    // Check URL first
     if (typeof window !== "undefined") {
       const s = parseInt(new URLSearchParams(window.location.search).get("step") || "", 10);
-      if (s >= 1 && s <= 6) return s;
+      if (s >= 1 && s <= 6) step = s;
     }
-    return undefined;
+    return step;
   });
 
+  const [initialCompleted] = useState<number[] | undefined>(undefined);
+
   const { currentStep, completedSteps, goToStep } =
-    useOnboarding(tenantId || undefined, initialStep);
+    useOnboarding(tenantId || undefined, initialStep, initialCompleted);
+
+  // Fetch saved onboarding state from API on mount
+  useEffect(() => {
+    if (!mounted || !tenantId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/onboarding?tenantId=${encodeURIComponent(tenantId)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setSavedState(data);
+
+        // Restore step from saved API state (lower priority than URL)
+        if (!initialStep) {
+          const step = data.currentStep;
+          if (step >= 1 && step <= 6) goToStep(step);
+        }
+      } catch {
+        // Silently fall through — user starts from step 1
+      } finally {
+        setFetchingState(false);
+      }
+    })();
+  }, [mounted, tenantId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setMounted(true);
@@ -52,6 +89,19 @@ export default function OnboardingPage() {
       router.push("/login");
     }
   }, [mounted, status, session, router]);
+
+  // Persist current step to API (auto-save progress)
+  const persistStep = useCallback(
+    async (step: number) => {
+      if (!tenantId) return;
+      try {
+        await submitStep(0, { tenantId, data: { currentStep: step } });
+      } catch {
+        // Silent — non-critical background save
+      }
+    },
+    [tenantId]
+  );
 
   const persistState = useCallback(
     (step: number) => {
@@ -67,11 +117,18 @@ export default function OnboardingPage() {
     (step: number) => {
       goToStep(step);
       persistState(step);
+      persistStep(step);
     },
-    [goToStep, persistState]
+    [goToStep, persistState, persistStep]
   );
 
-  if (!mounted || status === "loading" || !session) return null;
+  if (!mounted || status === "loading" || !session || fetchingState) {
+    return (
+      <div className="bg-page-bg text-on-surface antialiased min-h-screen flex items-center justify-center">
+        <div className="font-ui text-text-mid text-sm">Loading...</div>
+      </div>
+    );
+  }
 
   if (!tenantId) {
     return (
@@ -120,6 +177,7 @@ export default function OnboardingPage() {
               {currentStep === 1 && (
                 <StepBusinessProfile
                   tenantId={tenantId}
+                  initialData={savedState?.businessProfile}
                   onComplete={() => handleGoToStep(2)}
                 />
               )}

@@ -19,6 +19,11 @@ const PROTECTED_PATHS = [
   "/reports",
   "/settings",
   "/onboarding",
+  "/access-denied",
+  "/audit-log",
+  "/coa",
+  "/receipts",
+  "/support",
 ];
 
 export default async function middleware(req: NextRequest) {

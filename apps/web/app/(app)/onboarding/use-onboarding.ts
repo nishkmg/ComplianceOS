@@ -2,20 +2,23 @@
 
 import { useState, useCallback } from "react";
 
-export function useOnboarding(_tenantId?: string, initialStep?: number) {
+export function useOnboarding(
+  _tenantId?: string,
+  initialStep?: number,
+  initialCompletedSteps?: number[]
+) {
   const [state, setState] = useState<{
     currentStep: number;
     completedSteps: number[];
     isLoading: boolean;
   }>({
     currentStep: initialStep && initialStep >= 1 && initialStep <= 6 ? initialStep : 1,
-    completedSteps: [],
+    completedSteps: initialCompletedSteps || [],
     isLoading: false,
   });
 
   const goToStep = useCallback((step: number) => {
     setState((prev) => {
-      // Moving forward: mark the departing step as completed
       const isForward = step > prev.currentStep;
       if (isForward) {
         const completed = prev.completedSteps.includes(prev.currentStep)
@@ -23,7 +26,6 @@ export function useOnboarding(_tenantId?: string, initialStep?: number) {
           : [...prev.completedSteps, prev.currentStep];
         return { ...prev, currentStep: step, completedSteps: completed };
       }
-      // Moving backward or same step
       return { ...prev, currentStep: step };
     });
   }, []);
