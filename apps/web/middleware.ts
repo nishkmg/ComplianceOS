@@ -25,6 +25,8 @@ export default async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const pathname = req.nextUrl.pathname;
 
+  console.log("[middleware]", pathname, "token:", token ? "present" : "null", "secret:", process.env.NEXTAUTH_SECRET ? "set" : "missing");
+
   if (pathname.startsWith("/api/auth") || pathname.startsWith("/_next") || pathname.startsWith("/api/trpc")) {
     return undefined;
   }
