@@ -6,12 +6,15 @@ import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
-import { addPayment } from "@/lib/payment-store";
+import { useSession } from "next-auth/react";
 
 export default function NewPaymentPage() {
   const { activeFy } = useFiscalYear();
   const { gstConfig } = useModules();
+  const { data: session } = useSession();
   const router = useRouter();
+  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const [type, setType] = useState<"receipt" | "payment">("receipt");
   const [customerName, setCustomerName] = useState("");
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split("T")[0]);
@@ -36,31 +39,28 @@ export default function NewPaymentPage() {
   }, [hasContent, saving]);
 
   const handleRecord = async () => {
-    if (savingRef.current) return;
+    if (savingRef.current || !userId || !tenantId) return;
     if (!customerName.trim()) { showToast.error("Party name is required."); return; }
     const amt = parseFloat(paymentAmount);
     if (isNaN(amt) || amt <= 0) { showToast.error("Amount must be greater than zero."); return; }
     setSaving(true);
     savingRef.current = true;
     try {
-      await new Promise(r => setTimeout(r, 800));
-      addPayment({
-        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
-        paymentNumber: `PAY-${activeFy}-${String(Date.now()).slice(-4)}`,
-        customerName: customerName.trim(),
-        date: paymentDate,
-        amount: amt,
-        paymentMethod,
-        referenceNumber: referenceNumber.trim(),
-        fiscalYear: activeFy,
-        status: "recorded",
-        type: type === "receipt" ? "received" : "paid",
-        createdAt: new Date().toISOString(),
+      const res = await fetch("/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tenantId, type, customerName: customerName.trim(), date: paymentDate,
+          paymentMethod, referenceNumber: referenceNumber.trim(), amount: paymentAmount,
+          tdsAmount: tdsAmount || undefined, createdBy: userId,
+        }),
       });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || `Failed (${res.status})`);
       showToast.success("Payment recorded successfully");
       router.push("/payments");
-    } catch {
-      showToast.error("Failed to record payment");
+    } catch (err: any) {
+      showToast.error(err.message || "Failed to record payment");
     } finally {
       setSaving(false);
       savingRef.current = false;
