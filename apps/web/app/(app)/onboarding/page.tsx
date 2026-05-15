@@ -25,7 +25,7 @@ const STEPS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status, update: refreshSession } = useSession();
   const [mounted, setMounted] = useState(false);
 
   const tenantId: string | null =
@@ -157,7 +157,10 @@ export default function OnboardingPage() {
               {currentStep === 6 && (
                 <StepOpeningBalances
                   tenantId={tenantId}
-                  onComplete={() => router.push("/dashboard")}
+                  onComplete={async () => {
+                    try { await refreshSession(); } catch {}
+                    router.push("/dashboard");
+                  }}
                 />
               )}
             </ErrorBoundary>

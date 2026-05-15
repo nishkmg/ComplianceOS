@@ -57,7 +57,12 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
           setSaving(false);
           return;
         }
-        await submitStep(6, { tenantId, data: { mode: "migration", balances } });
+        const balanceData = Object.entries(balances).map(([accountId, b]) => ({
+          accountId,
+          debit: (b as { debit: number; credit: number }).debit,
+          credit: (b as { debit: number; credit: number }).credit,
+        }));
+        await submitStep(6, { tenantId, data: { mode: "migration", balances: balanceData } });
       }
       showToast.success('Opening balances initialized');
       onComplete();
