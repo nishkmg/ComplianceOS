@@ -10,6 +10,7 @@ import { StepFyGst } from "./step-fy-gst";
 import { StepOpeningBalances } from "./step-opening-balances";
 import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 export const dynamic = "force-dynamic";
 
@@ -125,48 +126,49 @@ export default function OnboardingPage() {
           <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
 
           <div className="min-h-[400px]">
-            {currentStep === 1 && (
-              <StepBusinessProfile
-                onTenantCreated={handleTenantCreated}
-              />
-            )}
-
             {currentStep >= 2 && !createdTenantId && (
               <div className="flex items-center justify-center h-full text-text-mid font-ui text-sm">
                 Loading your onboarding session...
               </div>
             )}
 
-            {currentStep === 2 && createdTenantId && (
-              <StepModuleActivation
-                tenantId={createdTenantId}
-                onComplete={() => handleGoToStep(3)}
-              />
-            )}
-            {currentStep === 3 && createdTenantId && (
-              <StepCoaTemplate
-                tenantId={createdTenantId}
-                onComplete={() => handleGoToStep(4)}
-              />
-            )}
-            {currentStep === 4 && createdTenantId && (
-              <StepCoaReview
-                tenantId={createdTenantId}
-                onComplete={() => handleGoToStep(5)}
-              />
-            )}
-            {currentStep === 5 && createdTenantId && (
-              <StepFyGst
-                tenantId={createdTenantId}
-                onComplete={() => handleGoToStep(6)}
-              />
-            )}
-            {currentStep === 6 && createdTenantId && (
-              <StepOpeningBalances
-                tenantId={createdTenantId}
-                onComplete={() => router.push("/dashboard")}
-              />
-            )}
+            <ErrorBoundary key={`step-${currentStep}`}>
+              {currentStep === 1 && (
+                <StepBusinessProfile
+                  onTenantCreated={handleTenantCreated}
+                />
+              )}
+              {currentStep === 2 && createdTenantId && (
+                <StepModuleActivation
+                  tenantId={createdTenantId}
+                  onComplete={() => handleGoToStep(3)}
+                />
+              )}
+              {currentStep === 3 && createdTenantId && (
+                <StepCoaTemplate
+                  tenantId={createdTenantId}
+                  onComplete={() => handleGoToStep(4)}
+                />
+              )}
+              {currentStep === 4 && createdTenantId && (
+                <StepCoaReview
+                  tenantId={createdTenantId}
+                  onComplete={() => handleGoToStep(5)}
+                />
+              )}
+              {currentStep === 5 && createdTenantId && (
+                <StepFyGst
+                  tenantId={createdTenantId}
+                  onComplete={() => handleGoToStep(6)}
+                />
+              )}
+              {currentStep === 6 && createdTenantId && (
+                <StepOpeningBalances
+                  tenantId={createdTenantId}
+                  onComplete={() => router.push("/dashboard")}
+                />
+              )}
+            </ErrorBoundary>
           </div>
         </main>
       </div>

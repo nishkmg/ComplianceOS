@@ -25,7 +25,13 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
 
-  const accounts: any[] = [];
+  const accounts: any[] = [
+    { id: "cash_bank", code: "11100", name: "Cash & Bank", kind: "asset", isLeaf: true },
+    { id: "receivables", code: "11200", name: "Trade Receivables", kind: "asset", isLeaf: true },
+    { id: "inventory", code: "11300", name: "Inventory", kind: "asset", isLeaf: true },
+    { id: "payables", code: "21100", name: "Trade Payables", kind: "liability", isLeaf: true },
+    { id: "gst_output", code: "21200", name: "GST Output", kind: "liability", isLeaf: true },
+  ];
 
   const setupOpeningBalances = mockMutation({
     onSuccess: () => {

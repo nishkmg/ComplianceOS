@@ -21,6 +21,17 @@ const MOCK_COA = [
   ]},
 ];
 
+function collectAllIds(nodes: any[]): string[] {
+  const ids: string[] = [];
+  for (const node of nodes) {
+    ids.push(node.id);
+    if (node.children) ids.push(...collectAllIds(node.children));
+  }
+  return ids;
+}
+
+const ALL_COA_IDS = collectAllIds(MOCK_COA);
+
 interface StepCoaReviewProps {
   tenantId: string;
   onComplete: () => void;
@@ -82,7 +93,14 @@ export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
         </div>
         <div className="p-4 bg-surface-muted flex justify-between items-center text-ui-xs text-text-light uppercase tracking-widest">
           <span>{selectedIds.size} Ledgers Selected</span>
-          <button className="text-primary hover:text-amber-stitch font-bold border-none bg-transparent cursor-pointer">Select All</button>
+          <button
+            onClick={() => {
+              setSelectedIds(selectedIds.size === ALL_COA_IDS.length ? new Set() : new Set(ALL_COA_IDS));
+            }}
+            className="text-primary hover:text-amber-stitch font-bold border-none bg-transparent cursor-pointer"
+          >
+            {selectedIds.size === ALL_COA_IDS.length ? "Deselect All" : "Select All"}
+          </button>
         </div>
       </div>
 
