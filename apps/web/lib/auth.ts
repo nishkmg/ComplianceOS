@@ -1,35 +1,21 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import dns from "dns";
-import https from "https";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://jjffitzswjizxcsdhtjn.supabase.co";
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+import { hasServiceRoleKey, supabaseRest } from "@/lib/supabase-rest";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const DEMO_EMAIL = "demo@arthvahi.in";
 
-const ipv4Agent = new https.Agent({
-  keepAlive: true,
-  lookup(hostname, options, callback) {
-    dns.lookup(hostname, { ...options, family: 4 }, callback);
-  },
-});
-
-function normalizeBaseUrl(input: string) {
-  return input.trim().replace(/\/$/, "");
+async function sbGet(path: string) {
+  const res = await supabaseRest(path);
+  if (!res.ok) {
+    return null;
+  }
+  return res.json;
 }
 
-async function sbGet(path: string) {
-  const baseUrl = normalizeBaseUrl(SUPABASE_URL);
-  const res = await fetch(`${baseUrl}/rest/v1/${path}`, {
-    // @ts-expect-error Next.js runtime supports Node agent passthrough
-    agent: ipv4Agent,
-    headers: { "apikey": SERVICE_ROLE_KEY, "Authorization": `Bearer ${SERVICE_ROLE_KEY}` },
-  });
-  if (!res.ok) return null;
-  return res.json();
+function asRows<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
 }
 
 const nextAuth = NextAuth({
@@ -41,17 +27,21 @@ const nextAuth = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any) {
-        if (!credentials?.email || !SERVICE_ROLE_KEY) return null;
+        if (!credentials?.email || !hasServiceRoleKey()) return null;
 
         if (DEMO_MODE && credentials.email === DEMO_EMAIL) {
-          const data = await sbGet(`users?email=eq.${encodeURIComponent(DEMO_EMAIL)}&select=id,email,name`);
-          if (data?.[0]) return { id: data[0].id, email: data[0].email, name: data[0].name };
+          const data = asRows<{ id: string; email: string; name: string }>(
+            await sbGet(`users?email=eq.${encodeURIComponent(DEMO_EMAIL)}&select=id,email,name`)
+          );
+          if (data[0]) return { id: data[0].id, email: data[0].email, name: data[0].name };
           return null;
         }
 
         if (!credentials.password) return null;
-        const data = await sbGet(`users?email=eq.${encodeURIComponent(credentials.email)}&select=id,email,name,password_hash`);
-        if (!data?.[0]) return null;
+        const data = asRows<{ id: string; email: string; name: string; password_hash?: string | null }>(
+          await sbGet(`users?email=eq.${encodeURIComponent(credentials.email)}&select=id,email,name,password_hash`)
+        );
+        if (!data[0]) return null;
 
         if (data[0].password_hash) {
           const valid = await bcrypt.compare(credentials.password, data[0].password_hash);
@@ -63,13 +53,15 @@ const nextAuth = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }: any) {
-      if (user && SERVICE_ROLE_KEY) {
+      if (user && hasServiceRoleKey()) {
         token.id = user.id;
-        const ut = await sbGet(`user_tenants?user_id=eq.${user.id}&select=tenant_id`);
-        if (ut?.[0]) {
+        const ut = asRows<{ tenant_id: string }>(await sbGet(`user_tenants?user_id=eq.${user.id}&select=tenant_id`));
+        if (ut[0]) {
           token.tenantId = ut[0].tenant_id;
-          const t = await sbGet(`tenants?id=eq.${ut[0].tenant_id}&select=onboarding_status`);
-          token.onboardingComplete = t?.[0]?.onboarding_status === "complete";
+          const t = asRows<{ onboarding_status?: string | null }>(
+            await sbGet(`tenants?id=eq.${ut[0].tenant_id}&select=onboarding_status`)
+          );
+          token.onboardingComplete = t[0]?.onboarding_status === "complete";
         } else {
           token.tenantId = undefined;
           token.onboardingComplete = false;
