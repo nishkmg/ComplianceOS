@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
@@ -12,14 +12,32 @@ const GST_TYPES = [
   { id: "none", name: "Not Registered", desc: "Select if your business is below the GST threshold." },
 ];
 
+function getIndianFY(): { start: string; end: string; label: string } {
+  const now = new Date();
+  const year = now.getFullYear();
+  // Indian FY: Apr 1 to Mar 31. If month < Apr (index 3), FY started last year.
+  const fyStartYear = now.getMonth() >= 3 ? year : year - 1;
+  const fyEndYear = fyStartYear + 1;
+  const start = `${fyStartYear}-04-01`;
+  const end = `${fyEndYear}-03-31`;
+  const label = `FY ${fyStartYear}-${String(fyEndYear).slice(2)}`;
+  return { start, end, label };
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+}
+
 interface StepFyGstProps {
   tenantId: string;
   onComplete: () => void;
 }
 
 export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
+  const fy = useMemo(() => getIndianFY(), []);
+
   const [formData, setFormData] = useState({
-    fiscalYearStart: "2024-04-01",
     gstRegistration: "regular",
     gstin: "",
     itcEligible: true,
@@ -31,7 +49,7 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
   const handleContinue = async () => {
     setSaving(true);
     try {
-      await submitStep(5, { tenantId, data: formData });
+      await submitStep(5, { tenantId, data: { ...formData, fiscalYearStart: fy.start } });
       showToast.success('Fiscal settings established');
       onComplete();
     } catch (error: any) {
@@ -40,14 +58,6 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
       setSaving(false);
     }
   };
-
-  const fyEnd = formData.fiscalYearStart
-    ? (() => {
-        const y = parseInt(formData.fiscalYearStart.split("-")[0], 10);
-        const end = new Date(y + 1, 2, 31);
-        return end.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-      })()
-    : "—";
 
   return (
     <div className="flex flex-col gap-12 text-left">
@@ -61,29 +71,24 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
       </div>
 
       <div className="space-y-12">
-        {/* Section 1: Fiscal Year */}
+        {/* Section 1: Fiscal Year (fixed for Indian compliance) */}
         <section className="space-y-6">
           <div className="border-b-[0.5px] border-border pb-2">
             <h2 className="font-ui text-lg font-bold text-on-surface">Fiscal Year Period</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="fy-start" className="font-ui text-[13px] text-on-surface">Start Date</Label>
-                <input
-                  id="fy-start"
-                  type="date"
-                  value={formData.fiscalYearStart}
-                  onChange={(e) => setFormData({ ...formData, fiscalYearStart: e.target.value })}
-                  className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors disabled:opacity-50"
-                  disabled={saving}
-                />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label className="font-ui text-[13px] text-text-mid">End Date (Auto-calculated)</Label>
-              <div className="w-full bg-surface-muted border border-border rounded-md py-3 px-4 font-mono text-sm text-text-mid cursor-not-allowed">
-                {fyEnd}
+          <div className="bg-amber-50 border border-amber/30 rounded-md p-6 flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <Icon name="calendar_month" className="text-amber text-2xl" />
+              <div>
+                <p className="font-ui text-lg font-bold text-on-surface">{fy.label}</p>
+                <p className="font-ui text-sm text-text-mid">
+                  {formatDate(fy.start)} → {formatDate(fy.end)}
+                </p>
               </div>
             </div>
+            <p className="font-ui text-[11px] text-text-mid/70 mt-1">
+              Fixed Indian fiscal year (April–March) per Income Tax Act. Not configurable.
+            </p>
           </div>
         </section>
 
