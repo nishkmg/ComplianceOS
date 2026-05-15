@@ -78,6 +78,7 @@ export default function OnboardingPage() {
       goToStep(step);
       persistState(step);
       persistStep(step);
+      console.log("[onboarding] goToStep", step);
     },
     [goToStep, persistState, persistStep]
   );
