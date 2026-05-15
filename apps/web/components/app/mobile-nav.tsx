@@ -5,15 +5,23 @@ import { Icon } from '@/components/ui/icon';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { ModuleGate } from '@/components/ui/module-gate';
 
-const primaryTabs = [
+interface MobileNavItem {
+  href: string;
+  label: string;
+  icon: string;
+  moduleKey?: string;
+}
+
+const primaryTabs: MobileNavItem[] = [
   { href: '/dashboard', label: 'Home', icon: 'dashboard' },
   { href: '/journal', label: 'Journal', icon: 'menu_book' },
-  { href: '/invoices', label: 'Invoices', icon: 'receipt_long' },
+  { href: '/invoices', label: 'Invoices', icon: 'receipt_long', moduleKey: 'invoicing' },
   { href: '/reports/pl', label: 'Reports', icon: 'insert_chart' },
 ];
 
-const drawerSections = [
+const drawerSections: { label: string; items: MobileNavItem[] }[] = [
   {
     label: 'Accounting',
     items: [
@@ -27,30 +35,30 @@ const drawerSections = [
   {
     label: 'Transactions',
     items: [
-      { href: '/invoices', label: 'Invoices', icon: 'receipt_long' },
-      { href: '/receivables', label: 'Receivables', icon: 'account_balance' },
+      { href: '/invoices', label: 'Invoices', icon: 'receipt_long', moduleKey: 'invoicing' },
+      { href: '/receivables', label: 'Receivables', icon: 'account_balance', moduleKey: 'invoicing' },
       { href: '/payments', label: 'Payments', icon: 'account_balance_wallet' },
     ],
   },
   {
     label: 'Compliance',
     items: [
-      { href: '/gst/returns', label: 'GST', icon: 'gavel' },
-      { href: '/itr/returns', label: 'ITR', icon: 'description' },
+      { href: '/gst/returns', label: 'GST', icon: 'gavel', moduleKey: 'gst' },
+      { href: '/itr/returns', label: 'ITR', icon: 'description', moduleKey: 'itr' },
       { href: '/audit-log', label: 'Audit Trail', icon: 'history' },
     ],
   },
   {
     label: 'People',
     items: [
-      { href: '/employees', label: 'Employees', icon: 'group' },
-      { href: '/payroll', label: 'Payroll', icon: 'payments' },
+      { href: '/employees', label: 'Employees', icon: 'group', moduleKey: 'payroll' },
+      { href: '/payroll', label: 'Payroll', icon: 'payments', moduleKey: 'payroll' },
     ],
   },
   {
     label: 'Settings',
     items: [
-      { href: '/inventory', label: 'Inventory', icon: 'inventory_2' },
+      { href: '/inventory', label: 'Inventory', icon: 'inventory_2', moduleKey: 'inventory' },
       { href: '/settings', label: 'Settings', icon: 'settings' },
     ],
   },
@@ -67,7 +75,7 @@ export function MobileNav() {
         <div className="flex items-center justify-around h-16">
           {primaryTabs.map(tab => {
             const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/');
-            return (
+            const link = (
               <Link
                 key={tab.href}
                 href={tab.href}
@@ -80,6 +88,10 @@ export function MobileNav() {
                 <span className="text-[9px] font-bold uppercase tracking-wider">{tab.label}</span>
               </Link>
             );
+            if (tab.moduleKey) {
+              return <ModuleGate key={tab.href} module={tab.moduleKey} redirect={false}>{link}</ModuleGate>;
+            }
+            return link;
           })}
           <button
             onClick={() => setDrawerOpen(true)}
@@ -115,7 +127,7 @@ export function MobileNav() {
                   <div className="space-y-0.5">
                     {section.items.map(item => {
                       const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                      return (
+                      const link = (
                         <Link
                           key={item.href}
                           href={item.href}
@@ -131,6 +143,10 @@ export function MobileNav() {
                           <span>{item.label}</span>
                         </Link>
                       );
+                      if (item.moduleKey) {
+                        return <ModuleGate key={item.href} module={item.moduleKey} redirect={false}>{link}</ModuleGate>;
+                      }
+                      return link;
                     })}
                   </div>
                 </div>
