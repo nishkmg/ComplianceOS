@@ -61,6 +61,9 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
   const onSubmit = async (data: BusinessProfileInput) => {
     setIsSubmitting(true);
     try {
+      if (!data.legalName || data.legalName.trim() === "") {
+        data.legalName = data.name;
+      }
       await createTenant.mutateAsync(data as any);
     } catch (error) {
       showToast.error('Failed to establish business profile');
@@ -95,13 +98,13 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
         {/* Legal Name */}
         <div className="flex flex-col gap-2">
           <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="legalName">
-            Registered Legal Name
+            Individual / Legal Name
             <Icon name="info" className="text-[14px] text-text-light cursor-help" />
           </label>
           <input 
             className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light" 
             id="legalName" 
-            placeholder="e.g. Acme Technologies Private Limited" 
+            placeholder="Leave blank to use operating name" 
             {...register("legalName")}
           />
         </div>
@@ -121,6 +124,9 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
             </select>
             <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
           </div>
+          <p className="font-ui text-[11px] text-ui-xs text-text-mid/70 leading-relaxed">
+            Select <strong>Sole Proprietorship</strong> if you are an individual freelancer, consultant, or professional without a registered business entity.
+          </p>
         </div>
 
         {/* Industry */}
