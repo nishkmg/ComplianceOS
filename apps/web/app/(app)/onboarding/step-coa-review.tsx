@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 
 const MOCK_COA = [
   { id: "1", code: "10000", name: "Assets", type: "asset", level: 0, children: [
@@ -40,17 +40,18 @@ interface StepCoaReviewProps {
 export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9"]));
 
-  const saveProgress = mockMutation({
-    onSuccess: onComplete,
-    onError: (error) => showToast.error(error.message || 'Failed to save review'),
-  });
+  const [saving, setSaving] = useState(false);
 
   const handleContinue = async () => {
-    await saveProgress.mutateAsync({
-      tenantId,
-      step: 3,
-      data: { coa: { reviewed: true, selectedIds: Array.from(selectedIds) } },
-    });
+    setSaving(true);
+    try {
+      await submitStep(4, { tenantId, data: { selectedIds: Array.from(selectedIds), reviewed: true } });
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to save review');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const renderNode = (node: any) => (
@@ -110,10 +111,10 @@ export function StepCoaReview({ tenantId, onComplete }: StepCoaReviewProps) {
         </p>
         <button
           onClick={handleContinue}
-          disabled={saveProgress.isPending}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+          disabled={saving}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {saveProgress.isPending ? "Finalizing..." : "Confirm Structure"}
+          {saving ? "Finalizing..." : "Confirm Structure"}
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>

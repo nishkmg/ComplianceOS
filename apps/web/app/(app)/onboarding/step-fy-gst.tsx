@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 
 const GST_TYPES = [
   { id: "regular", name: "Regular", desc: "Standard GST registration with full ITC benefits." },
@@ -26,22 +26,19 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
     tdsApplicable: false,
   });
 
-  const saveProgress = mockMutation({
-    onSuccess: () => {
-      showToast.success('Fiscal settings established');
-      onComplete();
-    },
-    onError: (error) => {
-      showToast.error(error.message || 'Failed to save settings');
-    },
-  });
+  const [saving, setSaving] = useState(false);
 
   const handleContinue = async () => {
-    await saveProgress.mutateAsync({
-      tenantId,
-      step: 4,
-      data: { fyGst: formData },
-    });
+    setSaving(true);
+    try {
+      await submitStep(5, { tenantId, data: formData });
+      showToast.success('Fiscal settings established');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const fyEnd = formData.fiscalYearStart ? new Date(new Date(formData.fiscalYearStart).setFullYear(new Date(formData.fiscalYearStart).getFullYear() + 1, 2, 31)).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : "—";
@@ -165,10 +162,10 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
         </p>
         <button
           onClick={handleContinue}
-          disabled={saveProgress.isPending}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+          disabled={saving}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {saveProgress.isPending ? "Validating..." : "Finalize Config"}
+          {saving ? "Validating..." : "Finalize Config"}
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>

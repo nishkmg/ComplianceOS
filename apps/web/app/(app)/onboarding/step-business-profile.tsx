@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 
 const BUSINESS_TYPES = [
   { value: "private_limited", label: "Private Limited Company" },
@@ -66,15 +66,8 @@ const STATES = [
   { value: "west_bengal", label: "West Bengal" },
 ];
 
-export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
+export function StepBusinessProfile({ tenantId, onComplete }: { tenantId: string; onComplete: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // @ts-ignore
-  const createTenant = mockMutation<any>({
-    onSuccess: (data: any) => {
-      onTenantCreated(data.id);
-      showToast.success('Business profile established successfully');
-    }
-  });
 
   const {
     register,
@@ -96,9 +89,11 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
       if (!data.legalName || data.legalName.trim() === "") {
         data.legalName = data.name;
       }
-      await createTenant.mutateAsync(data as any);
-    } catch (error) {
-      showToast.error('Failed to establish business profile');
+      await submitStep(1, { tenantId, data: { ...(data as any) } });
+      showToast.success('Business profile established successfully');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to establish business profile');
     } finally {
       setIsSubmitting(false);
     }
@@ -241,8 +236,8 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
           <button className="font-ui text-[13px] text-ui-sm text-text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
             Save as Draft
           </button>
-          <button className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer" type="submit" disabled={isSubmitting || createTenant.isPending}>
-            {isSubmitting || createTenant.isPending ? "Establishing Profile..." : "Continue to Setup"}
+          <button className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Establishing Profile..." : "Continue to Setup"}
             <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>

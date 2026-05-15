@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { showToast } from "@/lib/toast";
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 import { Icon } from '@/components/ui/icon';
 
 const MODULES = [
@@ -22,16 +22,7 @@ interface StepModuleActivationProps {
 export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivationProps) {
   const [enabledModules, setEnabledModules] = useState<Set<string>>(new Set(["accounting", "gst", "invoicing"]));
 
-  // @ts-ignore
-  const saveProgress = mockMutation({
-    onSuccess: () => {
-      showToast.success('Module preferences saved');
-      onComplete();
-    },
-    onError: (error: any) => {
-      showToast.error(error.message || 'Failed to save module preferences');
-    },
-  });
+  const [saving, setSaving] = useState(false);
 
   const toggleModule = (id: string) => {
     if (id === "accounting") return;
@@ -41,13 +32,17 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
   };
 
   const handleContinue = async () => {
-    const data = Array.from(enabledModules).map(id => ({ module: id, enabled: true }));
-    await saveProgress.mutateAsync({
-      // @ts-ignore
-      tenantId,
-      step: 2,
-      data: { moduleActivation: data },
-    });
+    setSaving(true);
+    try {
+      const modules = Array.from(enabledModules).map(id => ({ module: id, enabled: true }));
+      await submitStep(2, { tenantId, data: { moduleActivation: modules } });
+      showToast.success('Module preferences saved');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to save module preferences');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -90,10 +85,10 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
         </p>
         <button
           onClick={handleContinue}
-          disabled={saveProgress.isPending}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+          disabled={saving}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {saveProgress.isPending ? "Saving..." : "Establish Framework"}
+          {saving ? "Saving..." : "Establish Framework"}
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>

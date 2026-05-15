@@ -26,8 +26,10 @@ const STEPS = [
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [createdTenantId, setCreatedTenantId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  const tenantId: string | null =
+    (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null ?? null;
 
   const [initialStep] = useState(() => {
     if (typeof window !== "undefined") {
@@ -37,14 +39,10 @@ export default function OnboardingPage() {
     return undefined;
   });
 
-  const { currentStep, completedSteps, isLoading, goToStep } =
-    useOnboarding(createdTenantId ?? undefined, initialStep);
+  const { currentStep, completedSteps, goToStep } =
+    useOnboarding(tenantId || undefined, initialStep);
 
-  // Restore tenantId from URL on mount
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tid = params.get("tenantId");
-    if (tid) setCreatedTenantId(tid);
     setMounted(true);
   }, []);
 
@@ -55,42 +53,44 @@ export default function OnboardingPage() {
     }
   }, [mounted, status, session, router]);
 
-  // Persist current step and tenantId in URL (survives page refresh)
   const persistState = useCallback(
-    (step: number, tenantId?: string) => {
+    (step: number) => {
       const url = new URL(window.location.href);
       url.searchParams.set("step", String(step));
       if (tenantId) url.searchParams.set("tenantId", tenantId);
       window.history.replaceState({}, "", url.toString());
     },
-    []
+    [tenantId]
   );
 
-  // Wrap goToStep to also persist step in URL
   const handleGoToStep = useCallback(
     (step: number) => {
       goToStep(step);
-      persistState(step, createdTenantId || undefined);
-    },
-    [goToStep, persistState, createdTenantId]
-  );
-
-  // Step 1 completion: advance + persist in URL
-  const handleTenantCreated = useCallback(
-    (id: string) => {
-      setCreatedTenantId(id);
-      persistState(2, id);
-      goToStep(2);
+      persistState(step);
     },
     [goToStep, persistState]
   );
 
+  const handleStepComplete = useCallback(
+    (nextStep: number) => {
+      handleGoToStep(nextStep);
+    },
+    [handleGoToStep]
+  );
+
   if (!mounted || status === "loading" || !session) return null;
+
+  if (!tenantId) {
+    return (
+      <div className="bg-page-bg text-on-surface antialiased min-h-screen pt-12 flex items-center justify-center">
+        <div className="font-ui text-text-mid text-sm">No tenant found. Please contact support.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-page-bg text-on-surface antialiased min-h-screen pt-12 pb-space-96 flex flex-col items-center">
       <div className="max-w-4xl w-full mx-auto px-gutter-desktop flex flex-col gap-space-48 text-left">
-        {/* Header */}
         <header className="flex flex-col gap-6">
           <div className="flex justify-between items-end border-b border-border pb-6">
             <h1 className="font-display text-display-lg font-bold tracking-tight text-dark">
@@ -101,7 +101,6 @@ export default function OnboardingPage() {
             </div>
           </div>
 
-          {/* Segmented Progress Bar - clickable on completed steps */}
           <div className="flex gap-2 w-full h-2">
             {STEPS.map((s) => {
               const isActive = currentStep >= s.number;
@@ -120,51 +119,44 @@ export default function OnboardingPage() {
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="flex flex-col gap-12 bg-surface border border-border p-8 md:p-12 shadow-sm relative overflow-hidden">
-          {/* Status line */}
           <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
 
           <div className="min-h-[400px]">
-            {currentStep >= 2 && !createdTenantId && (
-              <div className="flex items-center justify-center h-full text-text-mid font-ui text-sm">
-                Loading your onboarding session...
-              </div>
-            )}
-
             <ErrorBoundary key={`step-${currentStep}`}>
               {currentStep === 1 && (
                 <StepBusinessProfile
-                  onTenantCreated={handleTenantCreated}
+                  tenantId={tenantId}
+                  onComplete={() => handleStepComplete(2)}
                 />
               )}
-              {currentStep === 2 && createdTenantId && (
+              {currentStep === 2 && (
                 <StepModuleActivation
-                  tenantId={createdTenantId}
-                  onComplete={() => handleGoToStep(3)}
+                  tenantId={tenantId}
+                  onComplete={() => handleStepComplete(3)}
                 />
               )}
-              {currentStep === 3 && createdTenantId && (
+              {currentStep === 3 && (
                 <StepCoaTemplate
-                  tenantId={createdTenantId}
-                  onComplete={() => handleGoToStep(4)}
+                  tenantId={tenantId}
+                  onComplete={() => handleStepComplete(4)}
                 />
               )}
-              {currentStep === 4 && createdTenantId && (
+              {currentStep === 4 && (
                 <StepCoaReview
-                  tenantId={createdTenantId}
-                  onComplete={() => handleGoToStep(5)}
+                  tenantId={tenantId}
+                  onComplete={() => handleStepComplete(5)}
                 />
               )}
-              {currentStep === 5 && createdTenantId && (
+              {currentStep === 5 && (
                 <StepFyGst
-                  tenantId={createdTenantId}
-                  onComplete={() => handleGoToStep(6)}
+                  tenantId={tenantId}
+                  onComplete={() => handleStepComplete(6)}
                 />
               )}
-              {currentStep === 6 && createdTenantId && (
+              {currentStep === 6 && (
                 <StepOpeningBalances
-                  tenantId={createdTenantId}
+                  tenantId={tenantId}
                   onComplete={() => router.push("/dashboard")}
                 />
               )}

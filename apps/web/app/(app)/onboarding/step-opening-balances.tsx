@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import { Label } from "@/components/ui/label";
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -33,15 +33,7 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
     { id: "gst_output", code: "21200", name: "GST Output", kind: "liability", isLeaf: true },
   ];
 
-  const setupOpeningBalances = mockMutation({
-    onSuccess: () => {
-      showToast.success('Opening balances initialized');
-      onComplete();
-    },
-    onError: (error) => {
-      showToast.error(error.message || 'Failed to initialize balances');
-    },
-  });
+  const [saving, setSaving] = useState(false);
 
   const totals = useMemo(() => {
     let dr = 0;
@@ -55,27 +47,24 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   }, [balances]);
 
   const handleContinue = async () => {
-    if (mode === "fresh_start") {
-      await setupOpeningBalances.mutateAsync({
-        tenantId,
-        fiscalYear: "2024-25",
-        input: { mode: "fresh_start", balances: [] },
-      });
-    } else {
-      if (totals.diff > 0.01) {
-        showToast.error('Trial balance must be equal. Please ensure debits match credits.');
-        return;
+    setSaving(true);
+    try {
+      if (mode === "fresh_start") {
+        await submitStep(6, { tenantId, data: { mode: "fresh_start" } });
+      } else {
+        if (totals.diff > 0.01) {
+          showToast.error('Trial balance must be equal. Ensure debits match credits.');
+          setSaving(false);
+          return;
+        }
+        await submitStep(6, { tenantId, data: { mode: "migration", balances } });
       }
-// @ts-ignore
-      const data = Object.entries(balances).map(([id, b]) => ({
-        accountId: id,
-        openingBalance: b.debit > 0 ? b.debit : -b.credit
-      }));
-      await setupOpeningBalances.mutateAsync({
-        tenantId,
-        fiscalYear: "2024-25",
-        input: { mode: "migration", balances: data },
-      });
+      showToast.success('Opening balances initialized');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to initialize balances');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -199,10 +188,10 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
         </p>
         <button
           onClick={handleContinue}
-          disabled={setupOpeningBalances.isPending || (mode === "migration" && totals.diff > 0.01)}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-30"
+          disabled={saving || (mode === "migration" && totals.diff > 0.01)}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {setupOpeningBalances.isPending ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
+          {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
           <Icon name="rocket_launch" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
