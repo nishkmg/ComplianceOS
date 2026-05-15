@@ -11,6 +11,7 @@ import { StepOpeningBalances } from "./step-opening-balances";
 import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { Icon } from '@/components/ui/icon';
 import { submitStep } from "@/lib/mock-mutation";
 
 export const dynamic = "force-dynamic";
@@ -194,6 +195,18 @@ export default function OnboardingPage() {
               )}
             </ErrorBoundary>
           </div>
+
+          {currentStep > 1 && (
+            <div className="pt-4">
+              <button
+                onClick={() => handleGoToStep(currentStep - 1)}
+                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer py-2"
+              >
+                <Icon name="arrow_back" className="text-[18px]" />
+                Back to {STEPS[currentStep - 2]?.title || "previous step"}
+              </button>
+            </div>
+          )}
         </main>
       </div>
     </div>
