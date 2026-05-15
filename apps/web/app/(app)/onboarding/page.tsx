@@ -71,13 +71,6 @@ export default function OnboardingPage() {
     [goToStep, persistState]
   );
 
-  const handleStepComplete = useCallback(
-    (nextStep: number) => {
-      handleGoToStep(nextStep);
-    },
-    [handleGoToStep]
-  );
-
   if (!mounted || status === "loading" || !session) return null;
 
   if (!tenantId) {
@@ -127,31 +120,31 @@ export default function OnboardingPage() {
               {currentStep === 1 && (
                 <StepBusinessProfile
                   tenantId={tenantId}
-                  onComplete={() => handleStepComplete(2)}
+                  onComplete={() => handleGoToStep(2)}
                 />
               )}
               {currentStep === 2 && (
                 <StepModuleActivation
                   tenantId={tenantId}
-                  onComplete={() => handleStepComplete(3)}
+                  onComplete={() => handleGoToStep(3)}
                 />
               )}
               {currentStep === 3 && (
                 <StepCoaTemplate
                   tenantId={tenantId}
-                  onComplete={() => handleStepComplete(4)}
+                  onComplete={() => handleGoToStep(4)}
                 />
               )}
               {currentStep === 4 && (
                 <StepCoaReview
                   tenantId={tenantId}
-                  onComplete={() => handleStepComplete(5)}
+                  onComplete={() => handleGoToStep(5)}
                 />
               )}
               {currentStep === 5 && (
                 <StepFyGst
                   tenantId={tenantId}
-                  onComplete={() => handleStepComplete(6)}
+                  onComplete={() => handleGoToStep(6)}
                 />
               )}
               {currentStep === 6 && (

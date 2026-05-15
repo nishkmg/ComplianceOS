@@ -41,7 +41,13 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
     }
   };
 
-  const fyEnd = formData.fiscalYearStart ? new Date(new Date(formData.fiscalYearStart).setFullYear(new Date(formData.fiscalYearStart).getFullYear() + 1, 2, 31)).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : "—";
+  const fyEnd = formData.fiscalYearStart
+    ? (() => {
+        const [y, m, d] = formData.fiscalYearStart.split("-").map(Number);
+        const end = new Date(y + 1, 2, 31);
+        return end.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+      })()
+    : "—";
 
   return (
     <div className="flex flex-col gap-12 text-left">
@@ -63,13 +69,14 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
               <Label htmlFor="fy-start" className="font-ui text-[13px] text-on-surface">Start Date</Label>
-              <input
-                id="fy-start"
-                type="date"
-                value={formData.fiscalYearStart}
-                onChange={(e) => setFormData({ ...formData, fiscalYearStart: e.target.value })}
-                className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
-              />
+                <input
+                  id="fy-start"
+                  type="date"
+                  value={formData.fiscalYearStart}
+                  onChange={(e) => setFormData({ ...formData, fiscalYearStart: e.target.value })}
+                  className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors disabled:opacity-50"
+                  disabled={saving}
+                />
             </div>
             <div className="flex flex-col gap-2">
               <Label className="font-ui text-[13px] text-text-mid">End Date (Auto-calculated)</Label>
@@ -89,8 +96,8 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
             {GST_TYPES.map((t) => (
               <div
                 key={t.id}
-                onClick={() => setFormData({ ...formData, gstRegistration: t.id })}
-                className={`p-6 border-[0.5px] rounded-md transition-all cursor-pointer ${
+                onClick={() => !saving && setFormData({ ...formData, gstRegistration: t.id })}
+                className={`p-6 border-[0.5px] rounded-md transition-all ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${
                   formData.gstRegistration === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-surface border-border hover:bg-surface-muted"
                 }`}
               >
@@ -116,10 +123,11 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
                   id="gstin"
                   type="text"
                   placeholder="22AAAAA0000A1Z5"
-                  className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm uppercase focus:outline-none focus:border-amber"
+                  className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm uppercase focus:outline-none focus:border-amber disabled:opacity-50"
                   value={formData.gstin}
                   onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
                   maxLength={15}
+                  disabled={saving}
                 />
               </div>
               <div className="flex flex-col justify-center gap-4">
@@ -130,8 +138,8 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, itcEligible: !formData.itcEligible })}
-                    className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${formData.itcEligible ? "bg-amber" : "bg-stone-200"}`}
+                    onClick={() => !saving && setFormData({ ...formData, itcEligible: !formData.itcEligible })}
+                    className={`w-10 h-6 rounded-full transition-colors relative border-none ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${formData.itcEligible ? "bg-amber" : "bg-stone-200"}`}
                   >
                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-surface transition-transform ${formData.itcEligible ? "left-5" : "left-1"}`} />
                   </button>
@@ -148,8 +156,8 @@ export function StepFyGst({ tenantId, onComplete }: StepFyGstProps) {
           </div>
           <button
             type="button"
-            onClick={() => setFormData({ ...formData, tdsApplicable: !formData.tdsApplicable })}
-            className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${formData.tdsApplicable ? "bg-amber" : "bg-stone-200"}`}
+            onClick={() => !saving && setFormData({ ...formData, tdsApplicable: !formData.tdsApplicable })}
+            className={`w-10 h-6 rounded-full transition-colors relative border-none ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${formData.tdsApplicable ? "bg-amber" : "bg-stone-200"}`}
           >
             <div className={`absolute top-1 w-4 h-4 rounded-full bg-surface transition-transform ${formData.tdsApplicable ? "left-5" : "left-1"}`} />
           </button>
