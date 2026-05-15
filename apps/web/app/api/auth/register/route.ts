@@ -1,12 +1,37 @@
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
+import dns from "dns";
+import https from "https";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://jjffitzswjizxcsdhtjn.supabase.co";
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-async function sbFetch(path: string, options: RequestInit = {}) {
-  const url = `${SUPABASE_URL}/rest/v1/${path}`;
+export const runtime = "nodejs";
+
+const ipv4Agent = new https.Agent({
+  keepAlive: true,
+  lookup(hostname, options, callback) {
+    dns.lookup(hostname, { ...options, family: 4 }, callback);
+  },
+});
+
+function normalizeBaseUrl(input: string) {
+  return input.trim().replace(/\/$/, "");
+}
+
+async function httpJson(url: string, init: RequestInit = {}) {
   const res = await fetch(url, {
+    ...init,
+    // @ts-expect-error Next.js runtime supports Node agent passthrough
+    agent: ipv4Agent,
+  });
+  return res;
+}
+
+async function sbFetch(path: string, options: RequestInit = {}) {
+  const baseUrl = normalizeBaseUrl(SUPABASE_URL);
+  const url = `${baseUrl}/rest/v1/${path}`;
+  const res = await httpJson(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -44,8 +69,9 @@ export async function POST(req: Request) {
 
     // Check existing user
     try {
-      const checkRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(emailNorm)}&select=id`,
+      const baseUrl = normalizeBaseUrl(SUPABASE_URL);
+      const checkRes = await httpJson(
+        `${baseUrl}/rest/v1/users?email=eq.${encodeURIComponent(emailNorm)}&select=id`,
         { headers: { "apikey": SERVICE_ROLE_KEY, "Authorization": `Bearer ${SERVICE_ROLE_KEY}` } }
       );
       if (checkRes.ok) {
@@ -55,7 +81,8 @@ export async function POST(req: Request) {
         }
       }
     } catch (e: any) {
-      return Response.json({ error: `Cannot connect to database: ${e.message}` }, { status: 503 });
+      const code = e?.cause?.code || e?.code || "UNKNOWN";
+      return Response.json({ error: `Cannot connect to database: ${e.message} (${code})` }, { status: 503 });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

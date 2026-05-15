@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import dns from "dns";
+import https from "https";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://jjffitzswjizxcsdhtjn.supabase.co";
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
@@ -8,8 +10,22 @@ const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const DEMO_EMAIL = "demo@arthvahi.in";
 
+const ipv4Agent = new https.Agent({
+  keepAlive: true,
+  lookup(hostname, options, callback) {
+    dns.lookup(hostname, { ...options, family: 4 }, callback);
+  },
+});
+
+function normalizeBaseUrl(input: string) {
+  return input.trim().replace(/\/$/, "");
+}
+
 async function sbGet(path: string) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+  const baseUrl = normalizeBaseUrl(SUPABASE_URL);
+  const res = await fetch(`${baseUrl}/rest/v1/${path}`, {
+    // @ts-expect-error Next.js runtime supports Node agent passthrough
+    agent: ipv4Agent,
     headers: { "apikey": SERVICE_ROLE_KEY, "Authorization": `Bearer ${SERVICE_ROLE_KEY}` },
   });
   if (!res.ok) return null;
