@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -12,8 +11,14 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
   const submitLock = useRef(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error")) {
+      setError("Invalid email or password");
+    }
+  }, []);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,30 +28,15 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const callbackUrl = "/dashboard";
-      const result = await signIn("credentials", {
+      await signIn("credentials", {
         email,
         password,
-        redirect: false,
-        callbackUrl,
+        callbackUrl: "/dashboard",
       });
-
-      const authFailed = !result
-        || result.error
-        || !result.ok
-        || (result.url && result.url.includes("error=Credentials"));
-
-      if (authFailed) {
-        setError("Invalid email or password");
-        return;
-      }
-
-      window.location.href = callbackUrl;
     } catch {
-      setError("Connection error. Please try again.");
-    } finally {
       setSubmitting(false);
-      setTimeout(() => { submitLock.current = false; }, 1000);
+      submitLock.current = false;
+      setError("Connection error. Please try again.");
     }
   }, [email, password]);
 
