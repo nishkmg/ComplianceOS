@@ -52,7 +52,6 @@ export default function OnboardingPage() {
           </div>
           {/* Segmented Progress Bar */}
           <div className="flex gap-2 w-full h-1">
-// @ts-ignore
             {STEPS.map((s) => (
               <div key={s.number} className={`flex-1 rounded-md transition-colors duration-500 ${currentStep >= s.number ? 'bg-amber' : 'bg-border-subtle'}`}></div>
             ))}

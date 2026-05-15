@@ -1,16 +1,25 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db, users, userTenants, tenants } from "@complianceos/db";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://jjffitzswjizxcsdhtjn.supabase.co";
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const DEMO_EMAIL = "demo@arthvahi.in";
-const DEMO_TENANT_ID = process.env.DEMO_TENANT_ID || "demo-tenant-uuid";
+
+async function supabaseGet(path: string, query: string) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}?${query}`, {
+    headers: {
+      "apikey": SERVICE_ROLE_KEY,
+      "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
+    },
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
 
 const nextAuth = NextAuth({
-  adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" },
   providers: [
     Credentials({
@@ -20,25 +29,26 @@ const nextAuth = NextAuth({
       },
       async authorize(credentials: any) {
         if (!credentials?.email) return null;
-        
+
         if (DEMO_MODE && credentials.email === DEMO_EMAIL) {
-          const demoUser = await db.select().from(users).where(eq(users.email, DEMO_EMAIL)).limit(1);
-          if (demoUser[0]) {
-            return { id: demoUser[0].id, email: demoUser[0].email, name: demoUser[0].name };
+          if (!SERVICE_ROLE_KEY) return null;
+          const users = await supabaseGet("users", `email=eq.${encodeURIComponent(DEMO_EMAIL)}&select=id,email,name`);
+          if (users?.[0]) {
+            return { id: users[0].id, email: users[0].email, name: users[0].name };
           }
           return null;
         }
-        
-        const user = await db.select().from(users).where(eq(users.email, credentials.email)).limit(1);
-        if (!user[0]) return null;
-        
-        if (!credentials.password) return null;
-        if (user[0].passwordHash) {
-          const valid = await bcrypt.compare(credentials.password, user[0].passwordHash);
+
+        if (!SERVICE_ROLE_KEY || !credentials.password) return null;
+        const users = await supabaseGet("users", `email=eq.${encodeURIComponent(credentials.email)}&select=id,email,name,password_hash`);
+        if (!users?.[0]) return null;
+
+        if (users[0].password_hash) {
+          const valid = await bcrypt.compare(credentials.password, users[0].password_hash);
           if (!valid) return null;
         }
-        
-        return { id: user[0].id, email: user[0].email, name: user[0].name };
+
+        return { id: users[0].id, email: users[0].email, name: users[0].name };
       },
     }),
   ],
@@ -46,30 +56,20 @@ const nextAuth = NextAuth({
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
-
-        // Look up tenant + onboarding_status (runs on server, not middleware)
-        const ut = await db
-          .select({ tenantId: userTenants.tenantId })
-          .from(userTenants)
-          .where(eq(userTenants.userId, user.id))
-          .limit(1);
-
-        if (ut[0]) {
-          token.tenantId = ut[0].tenantId;
-          const t = await db
-            .select({ onboardingStatus: tenants.onboardingStatus })
-            .from(tenants)
-            .where(eq(tenants.id, ut[0].tenantId))
-            .limit(1);
-          token.onboardingComplete = t[0]?.onboardingStatus === "complete";
-        } else {
-          token.tenantId = undefined;
-          token.onboardingComplete = false;
+        if (SERVICE_ROLE_KEY) {
+          const ut = await supabaseGet("user_tenants", `user_id=eq.${user.id}&select=tenant_id`);
+          if (ut?.[0]) {
+            token.tenantId = ut[0].tenant_id;
+            const t = await supabaseGet("tenants", `id=eq.${ut[0].tenant_id}&select=onboarding_status`);
+            token.onboardingComplete = t?.[0]?.onboarding_status === "complete";
+          } else {
+            token.tenantId = undefined;
+            token.onboardingComplete = false;
+          }
         }
       }
       return token;
     },
-
     async session({ session, token }: any) {
       session.user.id = token.id;
       session.user.tenantId = token.tenantId;
