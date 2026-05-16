@@ -57,6 +57,7 @@ export async function GET() {
     ]);
 
     const overall = db.status === "connected" && redis.status !== "error" && projector.status !== "error" ? "healthy" : "degraded";
+    const httpStatus = overall === "healthy" ? 200 : 503;
 
     return Response.json({
       status: overall,
@@ -64,7 +65,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       checks: { database: db, redis, projector },
     }, {
-      status: overall === "healthy" ? 200 : overall === "degraded" ? 200 : 503,
+      status: httpStatus,
     });
   } catch (err: any) {
     return Response.json({
