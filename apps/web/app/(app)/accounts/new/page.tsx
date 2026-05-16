@@ -18,16 +18,15 @@ const SUB_TYPES: Record<string, string[]> = {
 export default function NewAccountPage() {
   const { data: session } = useSession();
   const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
   const router = useRouter();
   const [code, setCode] = useState(""); const [name, setName] = useState(""); const [kind, setKind] = useState("Asset"); const [subType, setSubType] = useState("CurrentAsset"); const [saving, setSaving] = useState(false);
 
   const handleSubmit = async () => {
-    if (!tenantId || !userId) return;
+    if (!tenantId) return;
     if (!code || !name) { showToast.error("Code and name are required."); return; }
     setSaving(true);
     try {
-      const res = await fetch("/api/coa", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tenantId, code, name, kind, subType, createdBy: userId }) });
+      const res = await fetch("/api/coa", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tenantId, code, name, kind, subType }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
       showToast.success("Account created");

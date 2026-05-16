@@ -16,7 +16,12 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return Response.json({ error: "Invalid JSON body" }, { status: 400 });
+    }
     const { tenantId, invoiceNumber, date, dueDate, customerName, customerEmail, customerGstin, customerState, lines, fiscalYear, createdBy } = body;
     if (!tenantId || !customerName || !date || !lines?.length || !createdBy) {
       return Response.json({ error: "Missing required fields" }, { status: 400 });
