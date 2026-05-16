@@ -1,86 +1,44 @@
 "use client";
 
-import { useState } from "react";
-import { Icon } from '@/components/ui/icon';
-import { formatIndianNumber } from "@/lib/format";
-import { showToast } from "@/lib/toast";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useState, useEffect } from "react";
+import { Icon } from "@/components/ui/icon";
+import { useSession } from "next-auth/react";
+import { EmptyState } from "@/components/ui/empty-state";
 
-export default function GSTCashLedgerPage() {
-  const { activeFy } = useFiscalYear();
-  const [cashPeriod, setCashPeriod] = useState("Oct 2024");
+interface LedgerEntry { id: string; transaction_type: string; tax_type: string; amount: string; balance: string; transaction_date: string; challan_number: string; narration: string; }
 
-  const mockBalances = {
-    igst: 142500.00,
-    cgst: 45200.00,
-    sgst: 45200.00,
-    cess: 0.00,
-  };
-
-  const mockTransactions = [
-    { id: "1", date: "24 Oct 24", desc: "Cash Deposit via Challan", ref: "CPIN-880120421", type: "Deposit", amount: 125000, balance: 232900 },
-    { id: "2", date: "20 Oct 24", desc: "Liability Payment Offset", ref: "GSTR-3B-SEP", type: "Utilization", amount: -45000, balance: 107900 },
-  ];
-
+export default function CashLedgerPage() {
+  const { data: session } = useSession(); const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const [entries, setEntries] = useState<LedgerEntry[]>([]); const [loading, setLoading] = useState(true);
+  useEffect(() => { if (!tenantId) return; (async () => { try { const r = await fetch(`/api/gst/ledger?tenantId=${encodeURIComponent(tenantId)}&type=cash`); if (r.ok) setEntries((await r.json()).entries || []); } catch {} finally { setLoading(false); } })(); }, [tenantId]);
+  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
   return (
-    <div className="space-y-0 text-left">
-      {/* Page Header */}
-      <header className="bg-surface border-b-[0.5px] border-border px-8 py-10 -mx-8 -mt-8 mb-8 sticky top-0 z-20 backdrop-blur-sm bg-surface/50">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">GSTIN: 27AABCU9603R1ZX</p>
-            <h1 className="font-display text-display-lg font-semibold text-dark">Cash Ledger</h1>
-            <p className="font-ui text-[13px] text-secondary mt-1">Electronic tracking of cash deposited to the GST portal.</p>
-          </div>
-          <div className="flex items-center gap-3 bg-surface-muted p-1 rounded-md border border-border">
-            <span className="px-4 py-1.5 font-ui text-[13px] text-mid font-bold">{cashPeriod} · FY {activeFy}</span>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-6xl mx-auto space-y-12 pb-12">
-        {/* KPI Balances */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {Object.entries(mockBalances).map(([key, val]) => (
-            <div key={key} className="bg-surface border border-border border-t-2 border-t-amber p-6 shadow-sm hover:shadow-md transition-shadow text-left">
-              <div className="font-ui text-[10px] text-light mb-3 uppercase tracking-widest font-bold">{key} Balance</div>
-              <div className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(val)}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Transaction Table */}
-        <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
-          <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
-              <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Electronic Cash Statement</h3>
-               <button onClick={() => { showToast.success("Cash ledger CSV exported."); }} className="text-primary hover:text-amber-stitch font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Download CSV</button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-surface-muted border-b border-stone-100 text-light font-ui text-[10px] uppercase tracking-widest">
-                  <th className="py-4 px-6">Date</th>
-                  <th className="py-4 px-6">Description</th>
-                  <th className="py-4 px-6">Reference / CPIN</th>
-                  <th className="py-4 px-6 text-right">Amount (₹)</th>
-                  <th className="py-4 px-6 text-right">Balance (₹)</th>
+    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+      <h1 className="font-display text-display-lg font-semibold text-dark">Cash Ledger</h1>
+      {entries.length === 0 ? <EmptyState icon="account_balance" title="No entries" description="Cash ledger entries appear here once GST payments are made." /> : (
+        <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead><tr className="bg-surface-muted border-b border-border">
+              <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Date</th>
+              <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Type</th>
+              <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Tax Type</th>
+              <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Amount</th>
+              <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance</th>
+            </tr></thead>
+            <tbody className="divide-y divide-border-subtle">
+              {entries.map(e => (
+                <tr key={e.id} className="hover:bg-surface-muted transition-colors">
+                  <td className="py-3 px-6 font-mono text-[12px] text-mid">{e.transaction_date ? new Date(e.transaction_date).toLocaleDateString("en-IN") : "—"}</td>
+                  <td className="py-3 px-6 font-ui text-[13px] text-dark capitalize">{e.transaction_type?.replace(/_/g, ' ')}</td>
+                  <td className="py-3 px-6 font-mono text-[12px] text-mid uppercase">{e.tax_type}</td>
+                  <td className="py-3 px-6 text-right font-mono text-[13px] tabular-nums">₹{Number(e.amount || 0).toLocaleString("en-IN")}</td>
+                  <td className="py-3 px-6 text-right font-mono text-[13px] tabular-nums">₹{Number(e.balance || 0).toLocaleString("en-IN")}</td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
-                {mockTransactions.map((t) => (
-                  <tr key={t.id} className="hover:bg-surface-muted/30 transition-colors">
-                    <td className="py-5 px-6 text-mid">{t.date}</td>
-                    <td className="py-5 px-6 font-ui text-[13px] font-bold text-dark">{t.desc}</td>
-                    <td className="py-5 px-6 text-mid uppercase">{t.ref}</td>
-                    <td className={`py-5 px-6 text-right font-bold ${t.amount < 0 ? 'text-danger' : 'text-success'}`}>₹ {formatIndianNumber(t.amount)}</td>
-                    <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(t.balance)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }

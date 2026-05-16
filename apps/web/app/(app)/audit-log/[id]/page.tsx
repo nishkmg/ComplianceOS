@@ -1,115 +1,37 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function AuditLogDetailPage() {
-  const { activeFy } = useFiscalYear();
+  const params = useParams();
+  const router = useRouter();
+  const [entry, setEntry] = useState<any>(null); const [loading, setLoading] = useState(true);
 
-  const mockEntry = {
-    id: "0x9f8b2a1c",
-    timestamp: "2023-10-27 14:32:01 IST",
-    user: "A. Sharma",
-    role: "Senior Partner",
-    module: "General Ledger",
-    action: "UPDATE",
-    description: "Modified journal entry #JV-2023-1045 - Changed credit account from 4010 to 4015",
-    ip: "192.168.1.45",
-    userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-    changes: [
-      { field: "Credit Account", before: "4010 - Sales", after: "4015 - Service Revenue" },
-      { field: "Amount", before: "₹ 1,50,000.00", after: "₹ 1,50,000.00" },
-    ]
-  };
+  useEffect(() => {
+    if (!params.id) return;
+    (async () => {
+      try {
+        // No dedicated audit entry API yet — show summary view
+        setEntry({ id: params.id });
+      } catch {} finally { setLoading(false); }
+    })();
+  }, [params.id]);
+
+  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
 
   return (
-    <div className="space-y-6 text-left">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 font-ui text-[10px] text-text-light uppercase tracking-widest mb-6">
-        <Link className="hover:text-primary transition-colors no-underline" href="/audit-log">System Audit Log</Link>
-        <Icon name="chevron_right" className="text-[14px]" />
-        <span className="text-on-surface">Event Detail</span>
+    <div className="max-w-[800px] mx-auto space-y-8 pb-40">
+      <div className="flex items-center gap-4">
+        <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
+        <div><h1 className="font-display text-display-lg font-semibold text-dark">Audit Entry</h1><p className="font-mono text-[12px] text-mid mt-0.5">{params.id}</p></div>
       </div>
-
-      {/* Header */}
-      <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-[0.5px] border-border pb-8">
-        <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Audit Event · FY {activeFy}</p>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">Event {mockEntry.id}</h1>
-            <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold uppercase rounded-md">{mockEntry.action}</span>
-          </div>
-          <p className="text-[13px] text-secondary font-ui">{mockEntry.timestamp}</p>
-        </div>
-        <div className="flex gap-3">
-          <button onClick={() => window.print()} className="btn-secondary flex items-center gap-2">
-            <Icon name="print" className="text-[18px]" /> Print Event
-          </button>
-        </div>
-      </header>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          <div className="bg-surface border-[0.5px] border-border p-8 shadow-sm">
-            <h3 className="font-ui text-[10px] text-text-light uppercase tracking-widest mb-6 font-bold">Event Description</h3>
-            <p className="font-ui text-[13px] text-lg text-on-surface leading-relaxed">{mockEntry.description}</p>
-          </div>
-
-          <div className="bg-surface border-[0.5px] border-border shadow-sm overflow-hidden flex flex-col">
-            <div className="px-6 py-4 bg-surface-muted border-b border-border">
-                <h3 className="font-ui text-sm font-medium font-bold text-on-surface uppercase tracking-wider text-[11px] text-text-light">Field Level Changes</h3>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-surface-muted border-b border-stone-100 text-text-light font-ui text-[10px] uppercase tracking-widest">
-                    <th className="py-4 px-6">Field</th>
-                    <th className="py-4 px-6">Value Before</th>
-                    <th className="py-4 px-6">Value After</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
-                  {mockEntry.changes.map((c, i) => (
-                    <tr key={i} className="hover:bg-surface-muted/30 transition-colors">
-                      <td className="py-5 px-6 font-ui text-[13px] font-bold text-on-surface uppercase tracking-wider text-[10px]">{c.field}</td>
-                      <td className="py-5 px-6 text-red-600 line-through opacity-60">{c.before}</td>
-                      <td className="py-5 px-6 text-green-700 font-bold">{c.after}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar Metadata */}
-        <div className="space-y-6">
-           <div className="bg-surface border-[0.5px] border-border p-6 border-t-2 border-t-amber shadow-sm">
-              <h3 className="font-ui text-[10px] text-text-light uppercase tracking-widest mb-6 font-bold">Origin Metadata</h3>
-              <div className="space-y-6 text-left">
-                 <div>
-                    <p className="text-[10px] text-text-light uppercase mb-1">Performed By</p>
-                    <p className="font-ui text-[13px] font-bold text-on-surface">{mockEntry.user}</p>
-                    <p className="font-ui text-[10px] text-text-mid uppercase">{mockEntry.role}</p>
-                 </div>
-                 <div>
-                    <p className="text-[10px] text-text-light uppercase mb-1">Module / Resource</p>
-                    <p className="font-ui text-[13px] font-bold text-on-surface">{mockEntry.module}</p>
-                 </div>
-                 <div>
-                    <p className="text-[10px] text-text-light uppercase mb-1">IP Address</p>
-                    <p className="font-mono text-sm text-on-surface">{mockEntry.ip}</p>
-                 </div>
-                 <div className="pt-4 border-t border-border">
-                    <p className="text-[10px] text-text-light uppercase mb-2">User Agent</p>
-                    <p className="font-mono text-[10px] text-text-mid leading-relaxed break-all">{mockEntry.userAgent}</p>
-                 </div>
-              </div>
-           </div>
-        </div>
+      <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
+        <p className="font-ui text-sm text-text-mid">Audit entry details are not available in this view. See the full audit log for all entries.</p>
       </div>
+      <Link href="/audit-log" className="text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">← Back to Audit Log</Link>
     </div>
   );
 }
