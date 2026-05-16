@@ -53,6 +53,7 @@ export function useModules() {
         return entry;
       })
       .catch(() => {
+        cachePromise = null; // Allow retry on next mount
         const fallback: CacheEntry = { modules: [], onboardingData: {} };
         cache = fallback;
         return fallback;
