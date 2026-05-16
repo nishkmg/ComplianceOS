@@ -66,7 +66,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
         await submitStep(6, { tenantId, data: { mode: "migration", balances: balanceData } });
       }
       showToast.success('Opening balances initialized');
-      onComplete();
+      await onComplete();
     } catch (error: any) {
       showToast.error(error?.message || 'Failed to initialize balances');
     } finally {
