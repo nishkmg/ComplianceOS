@@ -5,15 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { useSession } from "next-auth/react";
-
-const KINDS = ["Asset", "Liability", "Equity", "Revenue", "Expense"];
-const SUB_TYPES: Record<string, string[]> = {
-  Asset: ["CurrentAsset", "FixedAsset", "Bank", "Cash", "Inventory"],
-  Liability: ["CurrentLiability", "LongTermLiability"],
-  Equity: ["Capital", "Drawing", "Reserves"],
-  Revenue: ["OperatingRevenue", "OtherRevenue"],
-  Expense: ["DirectExpense", "IndirectExpense"],
-};
+import { ACCOUNT_KINDS, ACCOUNT_SUB_TYPES } from "@/lib/constants";
 
 export default function NewAccountPage() {
   const { data: session } = useSession();
@@ -49,14 +41,14 @@ export default function NewAccountPage() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1.5">
             <label className="font-ui text-[10px] text-light uppercase font-bold">Kind</label>
-            <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={kind} onChange={e => { setKind(e.target.value); setSubType(SUB_TYPES[e.target.value]?.[0] || ""); }}>
-              {KINDS.map(k => <option key={k} value={k}>{k}</option>)}
+            <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={kind} onChange={e => { setKind(e.target.value); setSubType(ACCOUNT_SUB_TYPES[e.target.value]?.[0] || ""); }}>
+              {ACCOUNT_KINDS.map(k => <option key={k} value={k}>{k}</option>)}
             </select>
           </div>
           <div className="space-y-1.5">
             <label className="font-ui text-[10px] text-light uppercase font-bold">Sub Type</label>
             <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={subType} onChange={e => setSubType(e.target.value)}>
-              {(SUB_TYPES[kind] || []).map(s => <option key={s} value={s}>{s}</option>)}
+              {(ACCOUNT_SUB_TYPES[kind] || []).map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
         </div>

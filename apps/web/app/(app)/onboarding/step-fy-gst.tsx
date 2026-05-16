@@ -5,17 +5,11 @@ import { Icon } from '@/components/ui/icon';
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
 import { submitStep } from "@/lib/mock-mutation";
-
-const GST_TYPES = [
-  { id: "regular", name: "Regular", desc: "Standard GST registration with full ITC benefits." },
-  { id: "composition", name: "Composition", desc: "Simplified scheme for small businesses with fixed tax rates." },
-  { id: "none", name: "Not Registered", desc: "Select if your business is below the GST threshold." },
-];
+import { GST_TYPES } from "@/lib/constants";
 
 function getIndianFY(): { start: string; end: string; label: string } {
   const now = new Date();
   const year = now.getFullYear();
-  // Indian FY: Apr 1 to Mar 31. If month < Apr (index 3), FY started last year.
   const fyStartYear = now.getMonth() >= 3 ? year : year - 1;
   const fyEndYear = fyStartYear + 1;
   const start = `${fyStartYear}-04-01`;
