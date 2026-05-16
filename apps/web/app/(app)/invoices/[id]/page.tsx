@@ -1,232 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
-import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { showToast } from "@/lib/toast";
-import { getInvoice, updateInvoice } from "@/lib/invoice-store";
+import { useSession } from "next-auth/react";
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const mockInvoice = {
-  invoiceNumber: "INV-24-089",
-  date: "24 Oct 2023",
-  dueDate: "23 Nov 2023",
-  status: "sent",
-  customer: {
-    name: "Reliance Industries Ltd.",
-    email: "billing@ril.com",
-    gstin: "27AAACA6873Q1Z2",
-    address: "Maker Chambers IV, 222 Nariman Point, Mumbai, Maharashtra — 400021",
-    state: "Maharashtra (27)",
-  },
-  company: {
-    name: "Arthvahi",
-    address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai — 400021",
-    gstin: "27AAACC1234E1Z5",
-  },
-  lineItems: [
-    { hsn: "998311", name: "Enterprise Retainer — Q3", desc: "Comprehensive financial advisory and compliance management for Q3 2023.", qty: 1, rate: 125000, amount: 125000 },
-    { hsn: "998312", name: "Tax Audit Assistance", desc: "Preparation of preliminary schedules and representation.", qty: 1, rate: 45000, amount: 45000 },
-  ],
-  subtotal: 170000,
-  cgst: 15300,
-  sgst: 15300,
-  grandTotal: 200600,
-  totalWords: "Rupees Two Lakh Six Hundred Only.",
-};
-
-// ─── Page Component ───────────────────────────────────────────────────────────
-
-function storeInvoiceToMock(s: any): typeof mockInvoice {
-  return {
-    invoiceNumber: s.invoiceNumber,
-    date: new Date(s.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
-    dueDate: new Date(s.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
-    status: s.status,
-    customer: { name: s.customerName, email: "", gstin: s.customerGstin, address: s.customerAddress, state: "" },
-    company: { name: "Arthvahi", address: "14th Floor, Maker Chambers VI, Nariman Point, Mumbai — 400021", gstin: "27AAACC1234E1Z5" },
-    lineItems: s.lines.map((l: any) => ({ hsn: l.hsn, name: l.description, desc: "", qty: l.qty, rate: l.rate, amount: l.qty * l.rate })),
-    subtotal: s.subtotal,
-    cgst: s.tax / 2,
-    sgst: s.tax / 2,
-    grandTotal: s.total,
-    totalWords: "As per invoice.",
-  };
-}
+interface Invoice { id: string; invoice_number: string; customer_name: string; date: string; due_date: string; grand_total: number; status: string; subtotal: number; }
 
 export default function InvoiceDetailPage() {
-  const params = useParams();
-  const invId = params.id as string;
-  const stored = getInvoice(invId);
-  const initialInv = stored ? storeInvoiceToMock(stored) : invId === "1" ? mockInvoice : null;
-  const [inv, setInv] = useState(initialInv || mockInvoice);
+  const params = useParams(); const router = useRouter();
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const [invoice, setInvoice] = useState<Invoice | null>(null); const [loading, setLoading] = useState(true);
 
-  if (!stored && invId !== "1") {
-    return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Icon name="search_off" size={48} className="text-lighter mb-4" />
-        <p className="font-ui text-[13px] text-mid">Invoice not found.</p>
-        <Link href="/invoices" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">Back to Invoices</Link>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!params.id) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/invoices/${params.id}?tenantId=${tenantId || ""}`);
+        if (!res.ok) throw new Error("Not found");
+        const data = await res.json();
+        setInvoice(data.invoice || data || null);
+      } catch { setInvoice(null); } finally { setLoading(false); }
+    })();
+  }, [params.id, tenantId]);
 
-  function handleMarkPaid() {
-    setInv(prev => ({ ...prev, status: "paid" }));
-    updateInvoice(invId, { status: "paid" });
-    showToast.success("Invoice marked as paid.");
-  }
-
-  function handleSend() {
-    setInv(prev => ({ ...prev, status: "sent" }));
-    updateInvoice(invId, { status: "sent" });
-    showToast.success("Invoice sent to customer.");
-  }
+  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+  if (!invoice) return <div className="text-center py-20 text-mid font-ui">Invoice not found.</div>;
 
   return (
-    <div className="max-w-[210mm] mx-auto space-y-6 no-print">
-      {/* Back + actions */}
+    <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <Link
-          href="/invoices"
-          className="flex items-center gap-2 text-[12px] text-mid hover:text-dark transition-colors no-underline"
-        >
-          <Icon name="arrow_back" size={16} /> Back to Invoices
-        </Link>
-        <div className="flex items-center gap-2">
-          <InvoiceStatusBadge status={inv.status as any} />
-          <div className="h-4 w-[0.5px] bg-border-subtle mx-1" />
-          <Link href={`/invoices/${invId}/pdf`} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md">
-            <Icon name="picture_as_pdf" size={12} className="mr-1" /> PDF
-          </Link>
-          <Link href={`/invoices/${invId}/edit`} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors no-underline rounded-md">
-            Edit
-          </Link>
-          <button onClick={handleMarkPaid} disabled={inv.status === "paid"} className="px-3 py-1.5 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1">
-            <Icon name="check_circle" size={12} /> {inv.status === "paid" ? "Paid" : "Mark Paid"}
-          </button>
-          <button onClick={handleSend} className="px-3 py-1.5 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md cursor-pointer flex items-center gap-1">
-            Send <Icon name="arrow_forward" size={12} />
-          </button>
+        <div className="flex items-center gap-4">
+          <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
+          <div><h1 className="font-display text-display-lg font-semibold text-dark">{invoice.invoice_number}</h1></div>
         </div>
+        <Badge variant={invoice.status === "posted" ? "success" : "amber"}>{invoice.status}</Badge>
       </div>
-
-      {/* A4 document */}
-      <article className="bg-surface border border-border shadow-screenshot p-10 lg:p-14 text-left print:shadow-none print:border-none">
-        {/* Document header */}
-        <header className="flex justify-between items-start border-b border-border pb-8 mb-8">
-          <div>
-            <h2 className="font-display text-2xl font-semibold text-dark mb-2">{inv.company.name}</h2>
-            <p className="font-ui text-[13px] text-mid max-w-[240px] leading-relaxed">{inv.company.address}</p>
-            <p className="font-ui text-[13px] text-mid mt-2">
-              <span className="font-medium text-dark">GSTIN:</span> {inv.company.gstin}
-            </p>
-          </div>
-          <div className="text-right">
-            <h1 className="font-display text-[28px] uppercase tracking-widest text-mid/30 mb-4">Tax Invoice</h1>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-left text-[13px]">
-              <span className="font-ui text-[10px] text-light uppercase tracking-wider">Invoice No:</span>
-              <span className="font-mono text-dark font-medium text-right">{inv.invoiceNumber}</span>
-              <span className="font-ui text-[10px] text-light uppercase tracking-wider">Date:</span>
-              <span className="font-mono text-dark text-right">{inv.date}</span>
-              <span className="font-ui text-[10px] text-light uppercase tracking-wider">Due Date:</span>
-              <span className="font-mono text-dark text-right">{inv.dueDate}</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Bill To */}
-        <section className="mb-10">
-          <h3 className="font-ui text-[10px] text-light uppercase tracking-widest mb-3 border-b border-border inline-block pb-1">Billed To</h3>
-          <h4 className="font-ui text-[13px] text-[15px] font-medium text-dark">{inv.customer.name}</h4>
-          <p className="font-ui text-[13px] text-mid mt-1 max-w-[320px] leading-relaxed">{inv.customer.address}</p>
-          <p className="font-ui text-[13px] text-mid mt-2"><span className="font-medium text-dark">GSTIN:</span> {inv.customer.gstin}</p>
-          <p className="font-ui text-[13px] text-mid"><span className="font-medium text-dark">Place of Supply:</span> {inv.customer.state}</p>
-        </section>
-
-        {/* Line items table */}
-        <section className="mb-10">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-surface-muted/50">
-                <th className="border-b border-border py-3 font-ui text-[10px] text-light uppercase tracking-widest w-5/12">Description</th>
-                <th className="border-b border-border py-3 font-ui text-[10px] text-light uppercase tracking-widest w-2/12">HSN/SAC</th>
-                <th className="border-b border-border py-3 font-ui text-[10px] text-light uppercase tracking-widest text-right w-1/12">Qty</th>
-                <th className="border-b border-border py-3 font-ui text-[10px] text-light uppercase tracking-widest text-right w-2/12">Rate (₹)</th>
-                <th className="border-b border-border py-3 font-ui text-[10px] text-light uppercase tracking-widest text-right w-2/12">Amount (₹)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inv.lineItems.map((item, i) => (
-                <tr key={i}>
-                  <td className="border-b border-border py-4 align-top pr-4">
-                    <span className="font-medium text-dark block">{item.name}</span>
-                    <span className="text-mid text-[12px] mt-1 block leading-relaxed">{item.desc}</span>
-                  </td>
-                  <td className="border-b border-border py-4 align-top font-mono text-mid text-sm">{item.hsn}</td>
-                  <td className="border-b border-border py-4 align-top font-mono text-dark text-right text-sm">{item.qty.toFixed(2)}</td>
-                  <td className="border-b border-border py-4 align-top font-mono text-dark text-right text-sm">{formatIndianNumber(item.rate)}</td>
-                  <td className="border-b border-border py-4 align-top font-mono text-dark text-right text-sm">{formatIndianNumber(item.amount)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        {/* Tax & totals */}
-        <section className="flex justify-end mb-12">
-          <div className="w-1/2">
-            <div className="flex justify-between py-2 border-b border-border">
-              <span className="font-ui text-[13px] text-mid">Subtotal</span>
-              <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(inv.subtotal)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-border">
-              <span className="font-ui text-[13px] text-mid">CGST (9%)</span>
-              <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(inv.cgst)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-border">
-              <span className="font-ui text-[13px] text-mid">SGST (9%)</span>
-              <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(inv.sgst)}</span>
-            </div>
-            <div className="flex justify-between py-4 border-b-2 border-amber mt-2">
-              <span className="font-ui text-[13px] text-[15px] font-medium text-dark uppercase tracking-wide">Grand Total</span>
-              <span className="font-mono text-lg font-medium text-amber tabular-nums">₹ {formatIndianNumber(inv.grandTotal)}</span>
-            </div>
-            <p className="text-right mt-2 font-ui text-[10px] text-mid italic">{inv.totalWords}</p>
-          </div>
-        </section>
-
-        {/* Bank details & T&C */}
-        <footer className="flex justify-between items-end border-t border-border pt-8">
-          <div className="w-2/3 pr-8">
-            <h5 className="font-ui text-[10px] text-light uppercase tracking-widest mb-2">Bank Details</h5>
-            <div className="grid grid-cols-[100px_1fr] gap-1 font-ui text-[13px] text-dark">
-              <span className="text-mid">Bank:</span> <span>HDFC Bank, Fort Branch</span>
-              <span className="text-mid">Account Name:</span> <span>Arthvahi Solutions</span>
-              <span className="text-mid">Account No:</span> <span className="font-mono">50200012345678</span>
-              <span className="text-mid">IFSC Code:</span> <span className="font-mono">HDFC0000060</span>
-            </div>
-            <div className="mt-6">
-              <h5 className="font-ui text-[10px] text-light uppercase tracking-widest mb-1">Terms & Conditions</h5>
-              <ol className="list-decimal list-inside font-ui text-[11px] text-[11px] text-mid leading-relaxed">
-                <li>Payment is due within 30 days of the invoice date.</li>
-                <li>Late payments will incur an interest of 1.5% per month.</li>
-                <li>Subject to Mumbai jurisdiction.</li>
-              </ol>
-            </div>
-          </div>
-          <div className="w-1/3 flex flex-col items-center">
-            <div className="h-16 w-32 border-b border-border mb-2" />
-            <span className="font-ui text-[10px] text-mid text-center block w-full uppercase tracking-widest">
-              Authorized Signatory<br />{inv.company.name}
-            </span>
-          </div>
-        </footer>
-      </article>
+      <div className="bg-surface border border-border rounded-md p-6 shadow-sm grid grid-cols-2 gap-6">
+        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Customer</span><p className="font-ui text-[13px] text-dark mt-1">{invoice.customer_name}</p></div>
+        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</span><p className="font-mono text-[13px] text-dark mt-1">{new Date(invoice.date).toLocaleDateString("en-IN")}</p></div>
+        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Due Date</span><p className="font-mono text-[13px] text-dark mt-1">{new Date(invoice.due_date).toLocaleDateString("en-IN")}</p></div>
+        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Total</span><p className="font-mono text-lg font-bold text-dark mt-1">{formatIndianNumber(Number(invoice.grand_total), { currency: true })}</p></div>
+      </div>
+      <div className="flex gap-3">
+        <Link href={`/invoices/${invoice.id}/edit`} className="px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">Edit</Link>
+        <Link href={`/invoices/${invoice.id}/pdf`} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted rounded-md no-underline">View PDF</Link>
+      </div>
     </div>
   );
 }

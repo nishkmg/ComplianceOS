@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -9,469 +9,107 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { getEntry, updateEntry, deleteEntry, StoredEntry } from "@/lib/journal-store";
+import { useSession } from "next-auth/react";
 
-interface MockLine {
-  accountName: string; accountCode: string; debit: number; credit: number;
-}
+interface Line { id: string; account_id: string; debit: string; credit: string; description: string | null; }
+interface Entry { id: string; entry_number: string; date: string; narration: string; fiscal_year: string; status: "draft" | "posted" | "voided"; lines: Line[]; }
 
-interface MockEntry {
-  id: string; entryNumber: string; date: string; narration: string;
-  fiscalYear: string; type: string; status: "draft" | "posted" | "voided"; lines: MockLine[];
-}
-
-function makeLine(acctName: string, acctCode: string, debit: number, credit: number): MockLine {
-  return { accountName: acctName, accountCode: acctCode, debit, credit };
-}
-
-const mockEntriesByFy: Record<string, MockEntry[]> = {
-  '2026-27': [
-    { id: "1", entryNumber: "JE-2026-27-001", date: "2026-04-01", narration: "Opening balance entry for the financial year 2026-27", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
-      makeLine("Cash Account", "10101", 500000, 0),
-      makeLine("Capital Account", "30100", 0, 500000),
-    ]},
-    { id: "2", entryNumber: "JE-2026-27-002", date: "2026-04-05", narration: "Sales Invoice #1", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
-      makeLine("Trade Receivables", "10300", 118000, 0),
-      makeLine("Sales Revenue", "40100", 0, 118000),
-    ]},
-    { id: "3", entryNumber: "JE-2026-27-003", date: "2026-04-10", narration: "Purchase equipment", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
-      makeLine("Equipment", "10500", 75000, 0),
-      makeLine("Bank Account", "10200", 0, 75000),
-    ]},
-    { id: "4", entryNumber: "JE-2026-27-004", date: "2026-04-12", narration: "Salary for April", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
-      makeLine("Operating Expenses", "50200", 320000, 0),
-      makeLine("Bank Account", "10200", 0, 320000),
-    ]},
-    { id: "5", entryNumber: "JE-2026-27-005", date: "2026-04-15", narration: "Rent payment", fiscalYear: "2026-27", type: "Journal Entry", status: "draft", lines: [
-      makeLine("Operating Expenses", "50200", 75000, 0),
-      makeLine("Bank Account", "10200", 0, 75000),
-    ]},
-    { id: "6", entryNumber: "JE-2026-27-006", date: "2026-04-20", narration: "Client invoice — ABC Corp", fiscalYear: "2026-27", type: "Journal Entry", status: "posted", lines: [
-      makeLine("Trade Receivables", "10300", 236000, 0),
-      makeLine("Sales Revenue", "40100", 0, 236000),
-    ]},
-  ],
-  '2025-26': [
-    { id: "101", entryNumber: "JE-2025-26-001", date: "2025-04-01", narration: "Opening balance entry for FY 2025-26", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
-      makeLine("Cash Account", "10101", 420000, 0),
-      makeLine("Capital Account", "30100", 0, 420000),
-    ]},
-    { id: "102", entryNumber: "JE-2025-26-002", date: "2025-06-15", narration: "Office furniture purchase", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
-      makeLine("Furniture & Fixtures", "10700", 120000, 0),
-      makeLine("Bank Account", "10200", 0, 120000),
-    ]},
-    { id: "103", entryNumber: "JE-2025-26-003", date: "2025-09-20", narration: "Q2 consultancy revenue", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
-      makeLine("Trade Receivables", "10300", 680000, 0),
-      makeLine("Sales Revenue", "40100", 0, 680000),
-    ]},
-    { id: "104", entryNumber: "JE-2025-26-004", date: "2025-12-01", narration: "Annual maintenance contract", fiscalYear: "2025-26", type: "Journal Entry", status: "posted", lines: [
-      makeLine("Operating Expenses", "50200", 96000, 0),
-      makeLine("Bank Account", "10200", 0, 96000),
-    ]},
-    { id: "105", entryNumber: "JE-2025-26-005", date: "2026-01-15", narration: "Tax provision entry", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
-      makeLine("Operating Expenses", "50200", 185000, 0),
-      makeLine("Trade Payables", "20101", 0, 185000),
-    ]},
-    { id: "106", entryNumber: "JE-2025-26-006", date: "2026-03-25", narration: "Year-end adjustments", fiscalYear: "2025-26", type: "Journal Entry", status: "draft", lines: [
-      makeLine("Operating Expenses", "50200", 45000, 0),
-      makeLine("Trade Payables", "20101", 0, 45000),
-    ]},
-  ],
+const statusConfig: Record<string, { bannerBg: string; bannerText: string; icon: "check_circle" | "clock" | "cancel"; bannerMsg: string; badgeVariant: "success" | "amber" | "gray"; badgeLabel: string }> = {
+  posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle", bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success", badgeLabel: "Cleared" },
+  draft: { bannerBg: "bg-amber-50", bannerText: "text-amber", icon: "clock", bannerMsg: "This voucher is in draft state", badgeVariant: "amber", badgeLabel: "Draft" },
+  voided: { bannerBg: "bg-surface-muted", bannerText: "text-mid", icon: "cancel", bannerMsg: "This voucher has been voided", badgeVariant: "gray", badgeLabel: "Voided" },
 };
-
-function getBaseEntry(id: string): MockEntry | undefined {
-  for (const entries of Object.values(mockEntriesByFy)) {
-    const found = entries.find(e => e.id === id);
-    if (found) return found;
-  }
-  const stored = getEntry(id);
-  if (stored) {
-    return {
-      id: stored.id,
-      entryNumber: stored.entryNumber,
-      date: stored.date,
-      narration: stored.narration,
-      fiscalYear: stored.fiscalYear,
-      type: stored.type,
-      status: stored.status,
-      lines: stored.lines,
-    };
-  }
-  return undefined;
-}
-
-const statusConfig = {
-  posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle" as const, bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success" as const, badgeLabel: "Cleared" },
-  draft: { bannerBg: "bg-amber-50", bannerText: "text-amber", icon: "clock" as const, bannerMsg: "This voucher is in draft state", badgeVariant: "amber" as const, badgeLabel: "Draft" },
-  voided: { bannerBg: "bg-surface-muted", bannerText: "text-mid", icon: "cancel" as const, bannerMsg: "This voucher has been voided", badgeVariant: "gray" as const, badgeLabel: "Voided" },
-};
-
-function mergeEntry(base: MockEntry): MockEntry {
-  const stored = getEntry(base.id);
-  if (!stored) return base;
-  return {
-    id: stored.id,
-    entryNumber: stored.entryNumber,
-    date: stored.date,
-    narration: stored.narration,
-    fiscalYear: stored.fiscalYear,
-    type: stored.type,
-    status: stored.status,
-    lines: stored.lines,
-  };
-}
 
 export default function JournalEntryDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const entryId = params.id as string;
+  const [entry, setEntry] = useState<Entry | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const base = getBaseEntry(entryId);
-  const [entry, setEntry] = useState<MockEntry | undefined>(() => base ? mergeEntry(base) : undefined);
+  useEffect(() => {
+    if (!entryId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/journal/entries/${entryId}?tenantId=${tenantId || ""}`);
+        if (!res.ok) throw new Error("Not found");
+        const data = await res.json();
+        setEntry(data.entry || null);
+      } catch { setEntry(null); }
+      finally { setLoading(false); }
+    })();
+  }, [entryId, tenantId]);
 
-  const [narration, setNarration] = useState(entry?.narration ?? "");
-  const [isEditingNarration, setIsEditingNarration] = useState(false);
-  const [isVoidModalOpen, setIsVoidModalOpen] = useState(false);
-  const [voidReason, setVoidReason] = useState("");
-
+  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" size={32} className="text-lighter animate-spin" /></div>;
   if (!entry) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Icon name="search_off" size={48} className="text-lighter mb-4" />
         <p className="font-ui text-[13px] text-mid">Entry not found.</p>
-        <Link href="/journal" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">
-          Back to Journal
-        </Link>
+        <Link href="/journal" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">Back to Journal</Link>
       </div>
     );
   }
 
-  const totalDebit = entry.lines.reduce((sum, l) => sum + l.debit, 0);
-  const totalCredit = entry.lines.reduce((sum, l) => sum + l.credit, 0);
-  const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
-  const cfg = statusConfig[entry.status];
-  const formattedEntryDate = new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-  const nowFormatted = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-
-  function handlePost() {
-    updateEntry(entryId, { status: "posted" as const });
-    setEntry(prev => prev ? { ...prev, status: "posted" } : prev);
-    showToast.success("Voucher posted to General Ledger.");
-  }
-
-  function handleVoidConfirm() {
-    if (!voidReason.trim()) {
-      showToast.error("Please provide a reason for voiding.");
-      return;
-    }
-    if (entry!.narration.toLowerCase().includes("opening balance")) {
-      showToast.error("Opening balance entries cannot be voided.");
-      setIsVoidModalOpen(false);
-      setVoidReason("");
-      return;
-    }
-    updateEntry(entryId, { status: "voided" as const });
-    setEntry(prev => prev ? { ...prev, status: "voided" } : prev);
-    setIsVoidModalOpen(false);
-    setVoidReason("");
-    showToast.success("Voucher voided successfully.");
-  }
-
-  function handleDelete() {
-    if (!window.confirm("Delete this draft entry permanently? This action cannot be undone.")) return;
-    deleteEntry(entryId);
-    showToast.success("Draft entry deleted.");
-    router.push("/journal");
-  }
-
-  function handlePrint() {
-    window.print();
-  }
-
-  function handleNarrationSave() {
-    if (!narration.trim()) {
-      showToast.error("Narration cannot be empty.");
-      return;
-    }
-    updateEntry(entryId, { narration: narration.trim() });
-    setEntry(prev => prev ? { ...prev, narration: narration.trim() } : prev);
-    setIsEditingNarration(false);
-    showToast.success("Narration updated.");
-  }
-
-  function handleNarrationCancel() {
-    setNarration(entry!.narration);
-    setIsEditingNarration(false);
-  }
+  const totalDebit = entry.lines.reduce((s, l) => s + parseFloat(l.debit || "0"), 0);
+  const totalCredit = entry.lines.reduce((s, l) => s + parseFloat(l.credit || "0"), 0);
+  const cfg = statusConfig[entry.status] || statusConfig.draft;
 
   return (
-    <div className="space-y-8 max-w-4xl">
-      {/* Status banner */}
-      <div className={`-mx-6 -mt-6 px-6 py-3 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 ${cfg.bannerBg} ${cfg.bannerText}`}>
-        <Icon name={cfg.icon} size={16} />
-        {cfg.bannerMsg}
-      </div>
-
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-[10px] text-light uppercase tracking-widest" aria-label="Breadcrumb">
-        <Link href="/journal" className="hover:text-dark transition-colors no-underline font-ui">Journal</Link>
-        <Icon name="chevron_right" size={14} className="text-lighter" />
-        <span className="text-mid font-medium font-ui">{entry.entryNumber}</span>
-      </nav>
-
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="font-mono text-display-lg font-semibold text-amber tracking-tight">{entry.entryNumber}</h1>
-            <Badge variant={cfg.badgeVariant}>
-              {cfg.badgeLabel}
-            </Badge>
-          </div>
-          <p className="text-[13px] text-secondary font-ui">
-            {new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
-            <span className="mx-2 text-lighter">·</span>
-            FY {entry.fiscalYear}
-            <span className="mx-2 text-lighter">·</span>
-            {entry.type}
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Button variant="outline" size="sm" onClick={handlePrint} className="text-[10px] font-bold uppercase tracking-widest">
-            <Icon name="print" size={14} className="mr-1.5" /> Print
-          </Button>
-          {entry.status === "draft" && (
-            <Button size="sm" onClick={handlePost} className="text-[10px] font-bold uppercase tracking-widest">
-              <Icon name="check" size={14} className="mr-1.5" /> Post to Ledger
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Metadata card */}
-      <div className="bg-surface border border-border p-7 shadow-sm rounded-md">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="max-w-[1000px] mx-auto space-y-6 pb-40">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button onClick={() => router.back()} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
           <div>
-            <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2 font-bold">Voucher Type</p>
-            <p className="font-ui text-[13px] text-dark font-medium">{entry.type}</p>
-          </div>
-          <div className="md:col-span-2">
-            <div className="flex items-center justify-between mb-2">
-              <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration</p>
-              {entry.status !== "voided" && (
-                <button
-                  onClick={() => setIsEditingNarration(!isEditingNarration)}
-                  className="text-amber hover:text-amber-hover text-[10px] font-bold uppercase tracking-widest transition-colors border-none bg-transparent cursor-pointer"
-                >
-                  {isEditingNarration ? "Cancel" : "Edit"}
-                </button>
-              )}
-            </div>
-            {isEditingNarration ? (
-              <div className="space-y-2">
-                <textarea
-                  className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
-                  rows={3}
-                  value={narration}
-                  onChange={(e) => setNarration(e.target.value)}
-                />
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={handleNarrationSave}>Save</Button>
-                  <Button variant="ghost" size="sm" onClick={handleNarrationCancel}>Cancel</Button>
-                </div>
-              </div>
-            ) : (
-              <p className="font-ui text-[13px] text-dark leading-relaxed">{entry.narration}</p>
-            )}
+            <h1 className="font-display text-display-lg font-semibold text-dark">{entry.entry_number}</h1>
+            <p className="text-[13px] text-secondary font-ui mt-1">{entry.fiscal_year}</p>
           </div>
         </div>
+        <Badge variant={cfg.badgeVariant}>{cfg.badgeLabel}</Badge>
       </div>
 
-      {/* Lines table */}
-      <div className="bg-surface border border-border shadow-sm overflow-hidden rounded-md">
+      <div className={`${cfg.bannerBg} border border-border rounded-md px-5 py-3 flex items-center gap-3`}>
+        <Icon name={cfg.icon} size={18} className={cfg.bannerText} />
+        <span className={`font-ui text-[12px] font-medium ${cfg.bannerText}`}>{cfg.bannerMsg}</span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 bg-surface border border-border rounded-md p-6 shadow-sm">
+        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</span><p className="font-mono text-[13px] text-dark mt-1">{new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}</p></div>
+        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration</span><p className="font-ui text-[13px] text-dark mt-1">{entry.narration}</p></div>
+      </div>
+
+      <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
         <div className="h-[2px] w-full bg-amber" />
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-surface-muted border-b border-border">
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Account / Ledger</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-48">Debit (₹)</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-48">Credit (₹)</th>
+        <table className="w-full text-left border-collapse">
+          <thead><tr className="bg-surface-muted border-b border-border">
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Account</th>
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Description</th>
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-40">Debit (₹)</th>
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-40">Credit (₹)</th>
+          </tr></thead>
+          <tbody className="divide-y divide-border-subtle">
+            {entry.lines.map((l, i) => (
+              <tr key={l.id || i} className="hover:bg-surface-muted transition-colors">
+                <td className="py-4 px-6 font-ui text-[13px] font-medium text-dark">{l.account_id}</td>
+                <td className="py-4 px-6 font-ui text-[13px] text-text-mid">{l.description || "—"}</td>
+                <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.debit || "0") > 0 ? formatIndianNumber(parseFloat(l.debit), { currency: true, decimals: 2 }) : "—"}</td>
+                <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.credit || "0") > 0 ? formatIndianNumber(parseFloat(l.credit), { currency: true, decimals: 2 }) : "—"}</td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-border-subtle">
-              {entry.lines.map((line, i) => (
-                <tr key={i} className="hover:bg-surface-muted/50 transition-colors">
-                  <td className="py-5 px-6">
-                    <div className="font-ui text-[13px] font-semibold text-dark">{line.accountName}</div>
-                    <div className="font-mono text-[11px] text-mid mt-0.5">{line.accountCode}</div>
-                  </td>
-                  <td className="py-5 px-6 text-right font-mono text-[13px] text-dark tabular-nums">
-                    {line.debit > 0 ? formatIndianNumber(line.debit, { currency: true, decimals: 2 }) : "—"}
-                  </td>
-                  <td className="py-5 px-6 text-right font-mono text-[13px] text-dark tabular-nums">
-                    {line.credit > 0 ? formatIndianNumber(line.credit, { currency: true, decimals: 2 }) : "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr className="bg-surface-muted border-t-2 border-border">
-                <td className="py-4 px-6 font-ui text-[10px] uppercase tracking-widest font-bold text-mid">Total</td>
-                <td className={`py-4 px-6 text-right font-mono text-[13px] tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
-                  {formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}
-                </td>
-                <td className={`py-4 px-6 text-right font-mono text-[13px] tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
-                  {formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+            ))}
+          </tbody>
+          <tfoot><tr className="bg-surface-muted font-bold border-t-2 border-dark">
+            <td colSpan={2} className="py-4 px-6 font-ui text-[13px] uppercase tracking-widest">Totals</td>
+            <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</td>
+            <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</td>
+          </tr></tfoot>
+        </table>
       </div>
 
-      {/* Balance bar */}
-      <div className={`px-5 py-3.5 border rounded-md flex items-center justify-between transition-colors duration-300 ${isBalanced ? "bg-success-bg border-green-200" : "bg-danger-bg border-red-200"}`}>
-        <div className="flex items-center gap-2.5">
-          <Icon name={isBalanced ? "check_circle" : "warning"} size={18} className={isBalanced ? "text-success" : "text-danger"} />
-          <span className={`font-ui text-[12px] font-bold uppercase tracking-widest ${isBalanced ? "text-success" : "text-danger"}`}>
-            {isBalanced ? "Voucher is balanced" : `Out of Balance: ${formatIndianNumber(Math.abs(totalDebit - totalCredit), { currency: true, decimals: 2 })}`}
-          </span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="text-right">
-            <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Total Debit</p>
-            <p className="font-mono text-[13px] text-dark tabular-nums font-semibold">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</p>
-          </div>
-          <div className="text-right">
-            <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Total Credit</p>
-            <p className="font-mono text-[13px] text-dark tabular-nums font-semibold">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</p>
-          </div>
-        </div>
+      <div className="flex justify-end gap-3">
+        <Button variant="outline" onClick={() => router.push("/journal")}>Back to Journal</Button>
       </div>
-
-      {/* Audit trail */}
-      <div className="bg-surface border border-border p-7 shadow-sm rounded-md">
-        <h3 className="font-ui text-[10px] text-light uppercase tracking-widest mb-6 font-bold">Audit Trail</h3>
-        <div className="space-y-5">
-          <div className="flex gap-4 items-start">
-            <div className="w-2 h-2 rounded-full bg-lighter mt-1.5 shrink-0" />
-            <div>
-              <p className="font-ui text-[13px] text-dark">
-                <span className="font-semibold">Entry created</span> by accountant@firm.in
-              </p>
-              <p className="font-mono text-[11px] text-mid mt-0.5">
-                {formattedEntryDate} · IP 192.168.1.10
-              </p>
-            </div>
-          </div>
-          {entry.status === "posted" && (
-            <div className="flex gap-4 items-start">
-              <div className="w-2 h-2 rounded-full bg-success mt-1.5 shrink-0" />
-              <div>
-                <p className="font-ui text-[13px] text-dark">
-                  <span className="font-semibold text-success">Voucher posted</span> to General Ledger
-                </p>
-                <p className="font-mono text-[11px] text-mid mt-0.5">
-                  {nowFormatted} · System Verified
-                </p>
-              </div>
-            </div>
-          )}
-          {entry.status === "voided" && (
-            <div className="flex gap-4 items-start">
-              <div className="w-2 h-2 rounded-full bg-danger mt-1.5 shrink-0" />
-              <div>
-                <p className="font-ui text-[13px] text-dark">
-                  <span className="font-semibold text-danger">Voucher voided</span>
-                </p>
-                <p className="font-mono text-[11px] text-mid mt-0.5">
-                  {nowFormatted} · {voidReason || "Administrative"}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-3 pt-4 border-t border-border">
-        <Button variant="outline" size="sm" onClick={() => router.back()} className="text-[10px] font-bold uppercase tracking-widest">
-          ← Back
-        </Button>
-        {entry.status === "posted" && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-[10px] font-bold uppercase tracking-widest border-danger text-danger hover:bg-danger-bg hover:text-danger"
-            onClick={() => setIsVoidModalOpen(true)}
-          >
-            Void Entry
-          </Button>
-        )}
-        {entry.status === "draft" && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-[10px] font-bold uppercase tracking-widest text-danger hover:text-danger hover:bg-danger-bg"
-            onClick={handleDelete}
-          >
-            Delete
-          </Button>
-        )}
-        <Link href={`/audit-log?entryId=${entryId}`} className="inline-flex items-center justify-center rounded-sm text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 text-[10px] font-bold uppercase tracking-widest no-underline">
-          View Audit Log
-        </Link>
-      </div>
-
-      {/* Void Modal */}
-      <Dialog open={isVoidModalOpen} onOpenChange={setIsVoidModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader className="bg-amber-50 -mx-6 -mt-6 px-6 py-4 border-b border-amber-100 rounded-t-lg">
-            <DialogTitle className="flex items-center gap-2 text-amber">
-              <Icon name="warning" size={18} />
-              Void Journal Entry
-            </DialogTitle>
-            <DialogDescription className="text-amber-700">
-              This action cannot be undone. The entry will be permanently voided.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div className="bg-surface-muted p-4 rounded-md space-y-2">
-              <div className="flex justify-between">
-                <span className="font-ui text-[11px] text-light uppercase tracking-widest font-bold">Entry</span>
-                <span className="font-mono text-[13px] text-dark">{entry.entryNumber}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-ui text-[11px] text-light uppercase tracking-widest font-bold">Total Debit</span>
-                <span className="font-mono text-[13px] text-dark">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-ui text-[11px] text-light uppercase tracking-widest font-bold">Total Credit</span>
-                <span className="font-mono text-[13px] text-dark">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</span>
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Reason for Voiding</label>
-              <textarea
-                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
-                placeholder="Enter reason…"
-                rows={3}
-                value={voidReason}
-                onChange={(e) => setVoidReason(e.target.value)}
-              />
-            </div>
-          </div>
-          <DialogFooter className="gap-2 pt-2">
-            <Button variant="outline" size="sm" onClick={() => { setIsVoidModalOpen(false); setVoidReason(""); }} className="text-[10px] font-bold uppercase tracking-widest">
-              Cancel
-            </Button>
-            <Button size="sm" onClick={handleVoidConfirm} className="text-[10px] font-bold uppercase tracking-widest bg-red-600 hover:bg-red-700">
-              Confirm Void
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
