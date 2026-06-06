@@ -11,6 +11,10 @@ export async function GET(req: Request) {
   } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
 
+// TODO: No `createPayrollRun` command exists. Payroll runs are created via
+// processPayrollRun (see packages/server/src/commands/process-payroll.ts).
+// Once that command is exported, refactor this route to call it. The current
+// direct-insert behavior is preserved so existing UI keeps working.
 export async function POST(req: Request) {
   try {
     const { tenantId, ...data } = await req.json();

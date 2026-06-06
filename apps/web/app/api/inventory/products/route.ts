@@ -1,4 +1,5 @@
 import { supabaseRest } from "@/lib/supabase-rest";
+import { getDb } from "@/lib/db";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -15,14 +16,23 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { tenantId, sku, name, description, hsnCode, unitOfMeasure, purchaseRate, salesRate, gstRate, createdBy } = await req.json();
+    const { tenantId, sku, name, description, hsnCode, unitOfMeasure, purchaseRate, salesRate, gstRate } = await req.json();
     if (!tenantId || !sku || !name || !hsnCode) return Response.json({ error: "Missing required fields" }, { status: 400 });
-    const res = await supabaseRest("products", {
-      method: "POST", headers: { Prefer: "return=representation" },
-      body: { tenant_id: tenantId, sku, name, description: description || null, hsn_code: hsnCode, unit_of_measure: unitOfMeasure || "nos", purchase_rate: purchaseRate || null, sales_rate: salesRate || null, gst_rate: gstRate || null, created_by: createdBy || null },
-    });
-    if (!res.ok) throw new Error(`Failed to create product: ${res.text.slice(0, 200)}`);
-    return Response.json({ success: true }, { status: 201 });
+
+    const db = getDb();
+    const { createProduct } = await import("@complianceos/server");
+    const result = await createProduct(db, tenantId, {
+      sku,
+      name,
+      description: description || undefined,
+      hsnCode,
+      unitOfMeasure: unitOfMeasure || undefined,
+      purchaseRate: purchaseRate ? Number(purchaseRate) : undefined,
+      salesRate: salesRate ? Number(salesRate) : undefined,
+      gstRate: gstRate ? Number(gstRate) : undefined,
+    } as any);
+
+    return Response.json({ success: true, productId: result.productId }, { status: 201 });
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }

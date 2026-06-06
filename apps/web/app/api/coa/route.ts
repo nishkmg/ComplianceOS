@@ -1,4 +1,5 @@
 import { supabaseRest } from "@/lib/supabase-rest";
+import { getDb } from "@/lib/db";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -15,16 +16,22 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { tenantId, code, name, kind, subType, parentId } = await req.json();
-    if (!tenantId || !code || !name || !kind || !subType) {
-      return Response.json({ error: "Missing required fields: tenantId, code, name, kind, subType" }, { status: 400 });
+    const { tenantId, code, name, kind, subType, parentId, createdBy } = await req.json();
+    if (!tenantId || !code || !name || !kind || !subType || !createdBy) {
+      return Response.json({ error: "Missing required fields" }, { status: 400 });
     }
-    const res = await supabaseRest("accounts", {
-      method: "POST", headers: { Prefer: "return=representation" },
-      body: { tenant_id: tenantId, code, name, kind, sub_type: subType, parent_id: parentId || null },
-    });
-    if (!res.ok) throw new Error(`Failed to create account: ${res.text.slice(0, 200)}`);
-    return Response.json({ success: true }, { status: 201 });
+
+    const db = getDb();
+    const { createAccount } = await import("@complianceos/server");
+    const result = await createAccount(db, tenantId, createdBy, {
+      code,
+      name,
+      kind,
+      subType,
+      parentId: parentId || undefined,
+    } as any);
+
+    return Response.json({ success: true, accountId: result.accountId }, { status: 201 });
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });
   }

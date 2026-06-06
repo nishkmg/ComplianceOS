@@ -1,4 +1,5 @@
 import { supabaseRest } from "@/lib/supabase-rest";
+import { getDb } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -23,35 +24,27 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { tenantId, type, customerName, date, paymentMethod, referenceNumber, amount, tdsAmount, createdBy } = body;
+    const { tenantId, customerName, date, paymentMethod, referenceNumber, amount, allocations, createdBy } = body;
 
     if (!tenantId || !customerName || !date || !amount || !createdBy) {
       return Response.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const paymentNumber = `PAY-${String(Date.now()).slice(-8)}`;
+    const db = getDb();
+    const { recordPayment } = await import("@complianceos/server");
 
-    const res = await supabaseRest("payments", {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: {
-        tenant_id: tenantId,
-        payment_number: paymentNumber,
-        date,
-        amount: parseFloat(amount).toFixed(2),
-        payment_method: paymentMethod || "online",
-        reference_number: referenceNumber || null,
-        customer_name: customerName.trim(),
-        status: "recorded",
-        created_by: createdBy,
-      },
-    });
+    // Route does not pass allocations; command supports unallocated payment (insert only, no JE).
+    // Allocations (if any) must be an array of { invoiceId, allocatedAmount }.
+    const result = await recordPayment(db, tenantId, createdBy, "2026-27", {
+      date,
+      customerName: customerName.trim(),
+      amount: parseFloat(amount).toFixed(2),
+      paymentMethod: paymentMethod || "online",
+      referenceNumber: referenceNumber || undefined,
+      allocations: Array.isArray(allocations) ? allocations : [],
+    } as any);
 
-    if (!res.ok) {
-      throw new Error(`Failed to record payment: ${res.text.slice(0, 200)}`);
-    }
-
-    return Response.json({ success: true, paymentNumber }, { status: 201 });
+    return Response.json({ success: true, paymentId: result.paymentId, paymentNumber: result.paymentNumber }, { status: 201 });
   } catch (err: any) {
     console.error("[payments] POST error:", err.message);
     return Response.json({ error: err.message }, { status: 500 });
