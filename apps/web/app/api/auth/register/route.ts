@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
-import { hasServiceRoleKey, supabaseRest } from "@/lib/supabase-rest";
+import { supabaseRest } from "@/lib/supabase-rest";
 
 export const runtime = "nodejs";
 
@@ -14,10 +14,6 @@ async function sbPost(path: string, body: unknown) {
 
 export async function POST(req: Request) {
   try {
-    if (!hasServiceRoleKey()) {
-      return Response.json({ error: "Server not configured: missing service key" }, { status: 500 });
-    }
-
     const { name, email, password } = await req.json();
 
     if (!email || !password) {

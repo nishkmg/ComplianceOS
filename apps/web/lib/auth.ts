@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { hasServiceRoleKey, supabaseRest } from "@/lib/supabase-rest";
+import { supabaseRest } from "@/lib/supabase-rest";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const DEMO_EMAIL = "demo@arthvahi.in";
@@ -27,7 +27,7 @@ const nextAuth = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any) {
-        if (!credentials?.email || !hasServiceRoleKey()) return null;
+        if (!credentials?.email) return null;
 
         if (DEMO_MODE && credentials.email === DEMO_EMAIL) {
           const data = asRows<{ id: string; email: string; name: string }>(
@@ -53,7 +53,7 @@ const nextAuth = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }: any) {
-      if (user && hasServiceRoleKey()) {
+      if (user) {
         token.id = user.id;
         const ut = asRows<{ tenant_id: string }>(await sbGet(`user_tenants?user_id=eq.${user.id}&select=tenant_id`));
         if (ut[0]) {

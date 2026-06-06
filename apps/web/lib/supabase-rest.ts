@@ -26,28 +26,30 @@ function baseUrl() {
   return normalized.replace(/\/$/, "");
 }
 
-function authHeaders() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-  return {
-    apikey: key,
-    Authorization: `Bearer ${key}`,
-  };
+function anonKey() {
+  return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 }
 
-export function hasServiceRoleKey() {
-  return Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
-}
-
-export async function supabaseRest(path: string, init: { method?: "GET" | "POST" | "PATCH" | "DELETE"; body?: unknown; headers?: Record<string, string> } = {}) {
+export async function supabaseRest(
+  path: string,
+  init: {
+    method?: "GET" | "POST" | "PATCH" | "DELETE";
+    body?: unknown;
+    headers?: Record<string, string>;
+    accessToken?: string;
+  } = {}
+) {
   const url = new URL(`${baseUrl()}/rest/v1/${path}`);
   if (url.protocol !== "https:" && url.protocol !== "http:") {
     throw new Error(`Invalid Supabase URL protocol: ${url.protocol}`);
   }
   const method = init.method || "GET";
   const body = init.body === undefined ? undefined : JSON.stringify(init.body);
+  const key = anonKey();
 
   const headers: Record<string, string> = {
-    ...authHeaders(),
+    apikey: key,
+    Authorization: `Bearer ${init.accessToken || key}`,
     ...init.headers,
   };
 
