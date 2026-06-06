@@ -30,6 +30,19 @@ function anonKey() {
   return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 }
 
+const WRITE_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
+
+const ALLOWED_CALLER_PATTERNS: RegExp[] = [
+  /\/packages\/server\/src\/commands\//,
+  /\/packages\/server\/src\/projectors\//,
+  /\/packages\/db\//,
+];
+
+function isAllowedWriteCaller(): boolean {
+  const stack = new Error().stack || "";
+  return ALLOWED_CALLER_PATTERNS.some((re) => re.test(stack));
+}
+
 export async function supabaseRest(
   path: string,
   init: {
@@ -44,6 +57,12 @@ export async function supabaseRest(
     throw new Error(`Invalid Supabase URL protocol: ${url.protocol}`);
   }
   const method = init.method || "GET";
+  if (WRITE_METHODS.has(method) && !isAllowedWriteCaller()) {
+    throw new Error(
+      `Direct ${method} to Supabase from non-whitelisted caller is forbidden. ` +
+      `All writes must go through a command in packages/server/src/commands or a projector in packages/server/src/projectors.`
+    );
+  }
   const body = init.body === undefined ? undefined : JSON.stringify(init.body);
   const key = anonKey();
 
