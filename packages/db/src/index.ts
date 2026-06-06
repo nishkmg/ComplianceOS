@@ -37,6 +37,7 @@ export const ocrScanResults = schema.ocrScanResults;
 export const inventoryLayers = schema.inventoryLayers;
 export const stockMovements = schema.stockMovements;
 export const warehouseStock = schema.warehouseStock;
+export const inventoryValuation = schema.inventoryValuation;
 export const inventoryConfig = schema.inventoryConfig;
 export const products = schema.products;
 export const productTaxCategories = schema.productTaxCategories;

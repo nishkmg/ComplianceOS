@@ -5,6 +5,7 @@ const { db, projectorState, eventStore, tenants } = _db;
 import { eq, and, gt, asc, desc, sql } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { accountBalanceProjector } from "./account-balance.js";
+import { inventoryValuationProjector } from "./inventory-valuation.js";
 import { journalEntryViewProjector } from "./journal-entry-view.js";
 import { snapshotProjector } from "./snapshot.js";
 import { fySummaryProjector } from "./fy-summary.js";
@@ -22,6 +23,7 @@ import type { Projector } from "./types.js";
 
 const projectors: Projector[] = [
   accountBalanceProjector,
+  inventoryValuationProjector,
   journalEntryViewProjector,
   snapshotProjector,
   fySummaryProjector,

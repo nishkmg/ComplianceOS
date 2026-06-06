@@ -71,6 +71,27 @@
       "when": 1776848699722,
       "tag": "0009_whole_mongoose",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1777000000000,
+      "tag": "0013_inventory_valuation",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777000001000,
+      "tag": "0014_extend_fy_summaries",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1777000002000,
+      "tag": "0015_extend_itr_tax_summary",
+      "breakpoints": true
     }
   ]
 }
