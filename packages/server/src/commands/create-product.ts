@@ -68,3 +68,7 @@ export async function createProduct(
   
   return { productId: product.id };
 }
+
+// TODO: emit `product_created` event once `product_created` enum value + `product`
+// aggregate type are added to `event_type` / `aggregate_type` enums via migration.
+// Projector support required (e.g. for inventory_layer snapshotting).
