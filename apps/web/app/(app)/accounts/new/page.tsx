@@ -9,6 +9,7 @@ import { api } from "@/lib/api";
 
 export default function NewAccountPage() {
   const router = useRouter();
+  const utils = api.useUtils();
   const [code, setCode] = useState(""); const [name, setName] = useState(""); const [kind, setKind] = useState("Asset"); const [subType, setSubType] = useState("CurrentAsset"); const [saving, setSaving] = useState(false);
 
   const createAccount = api.accounts.create.useMutation();
@@ -16,11 +17,26 @@ export default function NewAccountPage() {
   const handleSubmit = async () => {
     if (!code || !name) { showToast.error("Code and name are required."); return; }
     setSaving(true);
+    const accListInput = undefined;
+    const previousAccList = utils.accounts.list.getData(accListInput);
+    const tempAccId = `temp-${Date.now()}`;
+    await utils.accounts.list.cancel(accListInput);
+    const accApply = (old: unknown) => {
+      const arr = (old as Array<Record<string, unknown>> | undefined) ?? [];
+      const tempRow: Record<string, unknown> = {
+        id: tempAccId, code, name, kind, subType, isLeaf: true, isActive: true,
+      };
+      return [tempRow, ...arr];
+    };
+    utils.accounts.list.setData(accListInput, accApply as never);
     try {
       await createAccount.mutateAsync({ code, name, kind, subType } as Parameters<typeof createAccount.mutateAsync>[0]);
       showToast.success("Account created");
+      await utils.accounts.list.invalidate(accListInput);
+      router.refresh();
       router.push("/accounts");
     } catch (err: unknown) {
+      utils.accounts.list.setData(accListInput, (() => previousAccList) as never);
       showToast.error(err instanceof Error ? err.message : "Failed to create account");
     } finally {
       setSaving(false);
