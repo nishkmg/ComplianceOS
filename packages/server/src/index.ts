@@ -11,6 +11,7 @@ export type { Context } from "./trpc";
 
 // Commands
 export { createInvoice } from "./commands/create-invoice";
+export { createPayrollRun } from "./commands/create-payroll-run";
 export { createJournalEntry } from "./commands/create-journal-entry";
 export { postJournalEntry } from "./commands/post-journal-entry";
 export { recordPayment } from "./commands/record-payment";

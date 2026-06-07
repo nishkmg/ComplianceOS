@@ -73,7 +73,7 @@ export const eventTypeEnum = pgEnum("event_type", [
   "payment_recorded", "payment_voided",
   "employee_created", "employee_updated", "employee_deactivated",
   "salary_structure_created", "salary_structure_updated",
-  "payroll_processed", "payroll_finalized", "payroll_voided",
+  "payroll_processed", "payroll_finalized", "payroll_voided", "payroll_run_initiated",
   "payslip_generated",
   "advance_given", "advance_recovered",
   "gst_challan_created", "gst_payment_made", "itc_reconciled", "itc_utilized",
