@@ -8,12 +8,30 @@ import { api } from "@/lib/api";
 
 export default function NewProductPage() {
   const router = useRouter();
+  const utils = api.useUtils();
   const [sku, setSku] = useState(""); const [name, setName] = useState(""); const [hsnCode, setHsnCode] = useState(""); const [purchaseRate, setPurchaseRate] = useState(""); const [salesRate, setSalesRate] = useState(""); const [saving, setSaving] = useState(false);
   const createProduct = api.products.create.useMutation();
 
   const handleSubmit = async () => {
     if (!sku || !name || !hsnCode) { showToast.error("SKU, name, and HSN code are required."); return; }
     setSaving(true);
+    const prodListInput = { page: 1, pageSize: 100 };
+    const previousProdList = utils.products.list.getData(prodListInput);
+    const tempProdId = `temp-${Date.now()}`;
+    await utils.products.list.cancel(prodListInput);
+    const prodApply = (old: unknown) => {
+      const cur = (old as { products?: Array<Record<string, unknown>> } | undefined);
+      const products = cur?.products ?? [];
+      const tempRow: Record<string, unknown> = {
+        id: tempProdId,
+        sku, name, hsnCode,
+        purchaseRate: purchaseRate ? Number(purchaseRate) : null,
+        salesRate: salesRate ? Number(salesRate) : null,
+        isActive: true,
+      };
+      return { ...(cur ?? {}), products: [tempRow, ...products] };
+    };
+    utils.products.list.setData(prodListInput, prodApply as never);
     try {
       await createProduct.mutateAsync({
         sku, name, hsnCode,
@@ -21,8 +39,13 @@ export default function NewProductPage() {
         salesRate: salesRate ? Number(salesRate) : undefined,
       });
       showToast.success("Product created");
+      await utils.products.list.invalidate(prodListInput);
+      router.refresh();
       router.push("/inventory/products");
-    } catch (err: any) { showToast.error(err.message); } finally { setSaving(false); }
+    } catch (err: any) {
+      utils.products.list.setData(prodListInput, (() => previousProdList) as never);
+      showToast.error(err.message);
+    } finally { setSaving(false); }
   };
 
   return (
