@@ -12,6 +12,7 @@ export default function NewPaymentPage() {
   const { activeFy } = useFiscalYear();
   const { gstConfig } = useModules();
   const router = useRouter();
+  const utils = api.useUtils();
   const [type, setType] = useState<"receipt" | "payment">("receipt");
   const [customerName, setCustomerName] = useState("");
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split("T")[0]);
@@ -44,6 +45,25 @@ export default function NewPaymentPage() {
     if (isNaN(amt) || amt <= 0) { showToast.error("Amount must be greater than zero."); return; }
     setSaving(true);
     savingRef.current = true;
+    const payListInput = { page: 1, pageSize: 100 };
+    const previousPayList = utils.payments.list.getData(payListInput);
+    const tempPayId = `temp-${Date.now()}`;
+    await utils.payments.list.cancel(payListInput);
+    const payApply = (old: unknown) => {
+      const cur = (old as { items?: Array<Record<string, unknown>> } | undefined);
+      const items = cur?.items ?? [];
+      const tempRow: Record<string, unknown> = {
+        id: tempPayId,
+        customerName: customerName.trim(),
+        date: paymentDate,
+        amount: String(amt),
+        paymentMethod,
+        referenceNumber: referenceNumber.trim() || null,
+        type,
+      };
+      return { ...(cur ?? {}), items: [tempRow, ...items] };
+    };
+    utils.payments.list.setData(payListInput, payApply as never);
     try {
       await recordPayment.mutateAsync({
         date: paymentDate,
@@ -54,8 +74,14 @@ export default function NewPaymentPage() {
         allocations: [],
       });
       showToast.success("Payment recorded successfully");
+      await Promise.all([
+        utils.payments.list.invalidate(payListInput),
+        utils.balances.trialBalance.invalidate(),
+      ]);
+      router.refresh();
       router.push("/payments");
     } catch (err: any) {
+      utils.payments.list.setData(payListInput, (() => previousPayList) as never);
       showToast.error(err.message || "Failed to record payment");
     } finally {
       setSaving(false);
