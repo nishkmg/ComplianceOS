@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { formatIndianNumber } from "@/lib/format";
-import { showToast } from "@/lib/toast";
-import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
-interface Line { id: string; account_id: string; debit: string; credit: string; description: string | null; }
-interface Entry { id: string; entry_number: string; date: string; narration: string; fiscal_year: string; status: "draft" | "posted" | "voided"; lines: Line[]; }
+interface Line { id: string; accountId: string; debit: string; credit: string; description: string | null; }
+interface Entry { id: string; entryNumber: string; date: string; narration: string; fiscalYear: string; status: "draft" | "posted" | "voided"; lines: Line[]; }
+
+interface Account { id: string; code: string; name: string; }
 
 const statusConfig: Record<string, { bannerBg: string; bannerText: string; icon: "check_circle" | "clock" | "cancel"; bannerMsg: string; badgeVariant: "success" | "amber" | "gray"; badgeLabel: string }> = {
   posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle", bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success", badgeLabel: "Cleared" },
@@ -23,27 +23,18 @@ const statusConfig: Record<string, { bannerBg: string; bannerText: string; icon:
 export default function JournalEntryDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const entryId = params.id as string;
-  const [entry, setEntry] = useState<Entry | null>(null);
-  const [loading, setLoading] = useState(true);
+  const id = typeof params.id === "string" ? params.id : "";
 
-  useEffect(() => {
-    if (!entryId) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/journal/entries/${entryId}?tenantId=${tenantId || ""}`);
-        if (!res.ok) throw new Error("Not found");
-        const data = await res.json();
-        setEntry(data.entry || null);
-      } catch { setEntry(null); }
-      finally { setLoading(false); }
-    })();
-  }, [entryId, tenantId]);
+  const { data: entryData, isLoading } = api.journalEntries.get.useQuery({ id }, { enabled: !!id });
+  const { data: accountsData } = api.accounts.list.useQuery();
+  const accountMap = useMemo(() => {
+    const m: Record<string, Account> = {};
+    for (const a of ((accountsData as Account[] | undefined) ?? [])) m[a.id] = a;
+    return m;
+  }, [accountsData]);
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" size={32} className="text-lighter animate-spin" /></div>;
-  if (!entry) {
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" size={32} className="text-lighter animate-spin" /></div>;
+  if (!entryData) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Icon name="search_off" size={48} className="text-lighter mb-4" />
@@ -53,6 +44,7 @@ export default function JournalEntryDetailPage() {
     );
   }
 
+  const entry = entryData as Entry;
   const totalDebit = entry.lines.reduce((s, l) => s + parseFloat(l.debit || "0"), 0);
   const totalCredit = entry.lines.reduce((s, l) => s + parseFloat(l.credit || "0"), 0);
   const cfg = statusConfig[entry.status] || statusConfig.draft;
@@ -63,8 +55,8 @@ export default function JournalEntryDetailPage() {
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
           <div>
-            <h1 className="font-display text-display-lg font-semibold text-dark">{entry.entry_number}</h1>
-            <p className="text-[13px] text-secondary font-ui mt-1">{entry.fiscal_year}</p>
+            <h1 className="font-display text-display-lg font-semibold text-dark">{entry.entryNumber}</h1>
+            <p className="text-[13px] text-secondary font-ui mt-1">{entry.fiscalYear}</p>
           </div>
         </div>
         <Badge variant={cfg.badgeVariant}>{cfg.badgeLabel}</Badge>
@@ -90,14 +82,17 @@ export default function JournalEntryDetailPage() {
             <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-40">Credit (₹)</th>
           </tr></thead>
           <tbody className="divide-y divide-border-subtle">
-            {entry.lines.map((l, i) => (
-              <tr key={l.id || i} className="hover:bg-surface-muted transition-colors">
-                <td className="py-4 px-6 font-ui text-[13px] font-medium text-dark">{l.account_id}</td>
-                <td className="py-4 px-6 font-ui text-[13px] text-text-mid">{l.description || "—"}</td>
-                <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.debit || "0") > 0 ? formatIndianNumber(parseFloat(l.debit), { currency: true, decimals: 2 }) : "—"}</td>
-                <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.credit || "0") > 0 ? formatIndianNumber(parseFloat(l.credit), { currency: true, decimals: 2 }) : "—"}</td>
-              </tr>
-            ))}
+            {entry.lines.map((l, i) => {
+              const acct = accountMap[l.accountId];
+              return (
+                <tr key={l.id || i} className="hover:bg-surface-muted transition-colors">
+                  <td className="py-4 px-6 font-ui text-[13px] font-medium text-dark">{acct ? `${acct.code} · ${acct.name}` : l.accountId}</td>
+                  <td className="py-4 px-6 font-ui text-[13px] text-text-mid">{l.description || "—"}</td>
+                  <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.debit || "0") > 0 ? formatIndianNumber(parseFloat(l.debit), { currency: true, decimals: 2 }) : "—"}</td>
+                  <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.credit || "0") > 0 ? formatIndianNumber(parseFloat(l.credit), { currency: true, decimals: 2 }) : "—"}</td>
+                </tr>
+              );
+            })}
           </tbody>
           <tfoot><tr className="bg-surface-muted font-bold border-t-2 border-dark">
             <td colSpan={2} className="py-4 px-6 font-ui text-[13px] uppercase tracking-widest">Totals</td>

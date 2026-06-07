@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
@@ -8,9 +8,16 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
-import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
 const VOUCHER_TYPES = ["Journal Entry", "Receipt Voucher", "Payment Voucher", "Contra Voucher"] as const;
+
+const VOUCHER_TYPE_MAP: Record<(typeof VOUCHER_TYPES)[number], string> = {
+  "Journal Entry": "journal",
+  "Receipt Voucher": "receipt",
+  "Payment Voucher": "payment",
+  "Contra Voucher": "manual",
+};
 
 interface Line {
   id: string;
@@ -25,6 +32,8 @@ interface Account {
   code: string;
   name: string;
   kind: string;
+  isLeaf?: boolean;
+  isActive?: boolean;
 }
 
 function newLine(): Line {
@@ -55,13 +64,11 @@ function isFutureDate(dateStr: string): boolean {
 export default function NewJournalEntryPage() {
   const { activeFy } = useFiscalYear();
   const { isEnabled, gstConfig } = useModules();
-  const { data: session } = useSession();
   const router = useRouter();
-  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [accountsLoading, setAccountsLoading] = useState(true);
+  const { data: accountsData } = api.accounts.list.useQuery();
+  const accounts: Account[] = useMemo(() => (accountsData as Account[] | undefined) ?? [], [accountsData]);
+
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [narration, setNarration] = useState("");
   const [reference, setReference] = useState("");
@@ -71,22 +78,7 @@ export default function NewJournalEntryPage() {
   const savingRef = useRef(false);
   const [discardConfirm, setDiscardConfirm] = useState(false);
 
-  // Fetch real accounts from API
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/accounts?tenantId=${encodeURIComponent(tenantId)}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        setAccounts(data.accounts || []);
-      } catch {
-        // fallback to empty
-      } finally {
-        setAccountsLoading(false);
-      }
-    })();
-  }, [tenantId]);
+  const createEntry = api.journalEntries.create.useMutation();
 
   const accountMap = useMemo(() => {
     const map: Record<string, Account> = {};
@@ -94,7 +86,6 @@ export default function NewJournalEntryPage() {
     return map;
   }, [accounts]);
 
-  // Filter accounts based on module config and GST settings
   const availableAccounts = useMemo(() => {
     const gstOn = isEnabled("gst");
     const itcOn = gstConfig.itcEligible;
@@ -145,7 +136,7 @@ export default function NewJournalEntryPage() {
       }
     }
     return warnings;
-  }, [lines]);
+  }, [lines, accountMap]);
 
   const addLine = useCallback(() => setLines(prev => [...prev, newLine()]), []);
   const removeLine = useCallback((index: number) => {
@@ -165,7 +156,7 @@ export default function NewJournalEntryPage() {
   }, []);
 
   const handleSubmit = useCallback(async (status: 'draft' | 'posted' = 'posted') => {
-    if (savingRef.current || !userId || !tenantId) return;
+    if (savingRef.current) return;
     if (!narration.trim()) {
       showToast.error('Narration is required.');
       return;
@@ -193,39 +184,27 @@ export default function NewJournalEntryPage() {
     setSaving(true);
     savingRef.current = true;
     try {
-      const body = {
-        tenantId,
-        fiscalYear: activeFy,
+      await createEntry.mutateAsync({
         date,
         narration: narration.trim(),
-        voucherType,
-        reference: reference.trim() || undefined,
-        createdBy: userId,
+        fiscalYear: activeFy,
+        referenceType: VOUCHER_TYPE_MAP[voucherType as (typeof VOUCHER_TYPES)[number]] ?? "manual",
         lines: lines.filter(l => l.accountId && ((parseFloat(l.debit) || 0) > 0 || (parseFloat(l.credit) || 0) > 0)).map(l => ({
           accountId: l.accountId,
-          debit: parseFloat(l.debit) || 0,
-          credit: parseFloat(l.credit) || 0,
-          description: l.description || undefined,
+          debit: String(parseFloat(l.debit) || 0),
+          credit: String(parseFloat(l.credit) || 0),
+          ...(l.description ? { description: l.description } : {}),
         })),
-      };
-      const res = await fetch("/api/journal/entries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
       });
-      const result = await res.json();
-      if (!res.ok) {
-        throw new Error(result.error || `Failed (${res.status})`);
-      }
       showToast.success(status === 'draft' ? 'Voucher draft saved' : 'Journal entry posted to ledger');
       router.push("/journal");
-    } catch (err: any) {
-      showToast.error(err.message || 'An error occurred while saving.');
+    } catch (err: unknown) {
+      showToast.error(err instanceof Error ? err.message : 'An error occurred while saving.');
     } finally {
       setSaving(false);
       savingRef.current = false;
     }
-  }, [isBalanced, narration, dateError, lines, date, activeFy, voucherType, reference, router, userId, tenantId]);
+  }, [isBalanced, narration, dateError, lines, date, activeFy, voucherType, router, createEntry]);
 
   const handleDiscard = useCallback(() => {
     const hasContent = narration || reference || lines.some(l => l.accountId || l.debit || l.credit || l.description);
@@ -237,7 +216,6 @@ export default function NewJournalEntryPage() {
     router.back();
   }, [narration, reference, lines, discardConfirm, router]);
 
-  // Warn on navigate away when form has content
   const hasFormContent = useMemo(
     () => narration || reference || lines.some(l => l.accountId || l.debit || l.credit || l.description),
     [narration, reference, lines]
@@ -249,7 +227,6 @@ export default function NewJournalEntryPage() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [hasFormContent, saving]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.metaKey && e.key === "s") {
@@ -274,7 +251,6 @@ export default function NewJournalEntryPage() {
 
   return (
     <div className="max-w-[1200px] mx-auto space-y-10 pb-40">
-      {/* Page header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
@@ -297,7 +273,6 @@ export default function NewJournalEntryPage() {
         </div>
       </div>
 
-      {/* Validation errors */}
       {dateError && (
         <div className="bg-danger-bg border border-red-200 px-4 py-2.5 rounded-md flex items-center gap-2">
           <Icon name="warning" size={16} className="text-danger shrink-0" />
@@ -314,7 +289,6 @@ export default function NewJournalEntryPage() {
         </div>
       )}
 
-      {/* Form grid */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         <div className="md:col-span-4 space-y-6">
           <div className="space-y-1.5">
@@ -365,7 +339,6 @@ export default function NewJournalEntryPage() {
         </div>
       </section>
 
-      {/* Line items table */}
       <section className="space-y-4">
         <div className="flex justify-between items-center">
           <div>
@@ -468,7 +441,6 @@ export default function NewJournalEntryPage() {
           </div>
         </div>
 
-        {/* Validation warnings */}
         {accountWarnings.map((w, i) => (
           <div key={i} className="bg-amber-50 border border-amber-200 px-4 py-2 rounded-md flex items-center gap-2">
             <Icon name="warning" size={14} className="text-amber shrink-0" />
@@ -476,7 +448,6 @@ export default function NewJournalEntryPage() {
           </div>
         ))}
 
-        {/* BalanceBar */}
         <div
           className={`px-5 py-3.5 border rounded-md flex items-center justify-between transition-colors duration-300 ${
             isBalanced
@@ -513,7 +484,6 @@ export default function NewJournalEntryPage() {
         </div>
       </section>
 
-      {/* Fixed action bar */}
       <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-40 bg-surface border-t border-border px-6 py-4 flex justify-between items-center shadow-lg no-print">
         <div className="flex items-center gap-2">
           <span className="text-[10px] uppercase font-bold text-light tracking-widest mr-1">Shortcuts</span>

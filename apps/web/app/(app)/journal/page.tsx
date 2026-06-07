@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
@@ -10,20 +10,18 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { useSession } from "next-auth/react";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { api } from "@/lib/api";
 
 interface JournalEntry {
   id: string;
-  entry_number: string;
+  entryNumber: string;
   date: string;
   narration: string;
-  debit: number;
-  credit: number;
+  debit: string;
+  credit: string;
   status: "draft" | "posted" | "voided";
-  fiscal_year: string;
-  created_at: string;
+  fiscalYear: string;
+  createdAt: string;
 }
 
 const statusOptions = [
@@ -33,11 +31,9 @@ const statusOptions = [
   { value: "voided", label: "Voided" },
 ] as const;
 
-// ─── Column definitions ───────────────────────────────────────────────────────
-
 const columns: ColumnDef<JournalEntry>[] = [
   {
-    key: "entry_number",
+    key: "entryNumber",
     header: "Entry #",
     sortable: true,
     width: "180px",
@@ -46,7 +42,7 @@ const columns: ColumnDef<JournalEntry>[] = [
         href={`/journal/${row.id}`}
         className="font-mono text-[13px] text-amber-text hover:underline no-underline"
       >
-        {row.entry_number}
+        {row.entryNumber}
       </Link>
     ),
   },
@@ -78,7 +74,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     width: "150px",
     render: (row) => (
       <span className="font-mono text-[13px] tabular-nums">
-        {row.debit > 0 ? formatIndianNumber(row.debit, { currency: true, decimals: 2 }) : "—"}
+        {Number(row.debit) > 0 ? formatIndianNumber(Number(row.debit), { currency: true, decimals: 2 }) : "—"}
       </span>
     ),
   },
@@ -90,7 +86,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     width: "150px",
     render: (row) => (
       <span className="font-mono text-[13px] tabular-nums">
-        {row.credit > 0 ? formatIndianNumber(row.credit, { currency: true, decimals: 2 }) : "—"}
+        {Number(row.credit) > 0 ? formatIndianNumber(Number(row.credit), { currency: true, decimals: 2 }) : "—"}
       </span>
     ),
   },
@@ -110,33 +106,13 @@ const columns: ColumnDef<JournalEntry>[] = [
   },
 ];
 
-// ─── Page Component ───────────────────────────────────────────────────────────
-
 export default function JournalPage() {
   const { activeFy } = useFiscalYear();
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch real entries from API
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/journal/entries?tenantId=${encodeURIComponent(tenantId)}&fiscalYear=${encodeURIComponent(activeFy)}`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        setEntries(data.entries || []);
-      } catch {
-        showToast.error("Failed to load journal entries");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [tenantId, activeFy]);
+  const { data, isLoading } = api.journalEntries.list.useQuery({ fiscalYear: activeFy, limit: 500 });
+  const entries = (data ?? []) as JournalEntry[];
 
   const filteredEntries = useMemo(
     () =>
@@ -145,7 +121,7 @@ export default function JournalPage() {
         if (
           search &&
           !e.narration.toLowerCase().includes(search.toLowerCase()) &&
-          !e.entry_number.toLowerCase().includes(search.toLowerCase())
+          !e.entryNumber.toLowerCase().includes(search.toLowerCase())
         )
           return false;
         return true;
@@ -153,8 +129,8 @@ export default function JournalPage() {
     [filter, search, entries]
   );
 
-  const totalDebit = filteredEntries.reduce((s, e) => s + e.debit, 0);
-  const totalCredit = filteredEntries.reduce((s, e) => s + e.credit, 0);
+  const totalDebit = filteredEntries.reduce((s, e) => s + Number(e.debit || 0), 0);
+  const totalCredit = filteredEntries.reduce((s, e) => s + Number(e.credit || 0), 0);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -171,7 +147,7 @@ export default function JournalPage() {
     }
     const header = "Entry #,Date,Narration,Debit,Credit,Status";
     const rows = filteredEntries.map(e =>
-      `${e.entry_number},${e.date},"${e.narration.replace(/"/g, '""')}",${e.debit},${e.credit},${e.status}`
+      `${e.entryNumber},${e.date},"${e.narration.replace(/"/g, '""')}",${e.debit},${e.credit},${e.status}`
     );
     const csv = [header, ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -186,7 +162,6 @@ export default function JournalPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
@@ -207,7 +182,6 @@ export default function JournalPage() {
         </div>
       </div>
 
-      {/* Filter tabs + search */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
           {statusOptions.map((s) => (
@@ -243,8 +217,7 @@ export default function JournalPage() {
         </div>
       </div>
 
-      {/* DataTable */}
-      {loading ? (
+      {isLoading ? (
         <TableSkeleton rows={10} columns={6} />
       ) : (
         <DataTable<JournalEntry>
