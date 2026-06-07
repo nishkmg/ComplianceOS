@@ -4,23 +4,22 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
-import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
 export default function NewProductPage() {
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
   const router = useRouter();
   const [sku, setSku] = useState(""); const [name, setName] = useState(""); const [hsnCode, setHsnCode] = useState(""); const [purchaseRate, setPurchaseRate] = useState(""); const [salesRate, setSalesRate] = useState(""); const [saving, setSaving] = useState(false);
+  const createProduct = api.products.create.useMutation();
 
   const handleSubmit = async () => {
-    if (!tenantId) return;
     if (!sku || !name || !hsnCode) { showToast.error("SKU, name, and HSN code are required."); return; }
     setSaving(true);
     try {
-      const res = await fetch("/api/inventory/products", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tenantId, sku, name, hsnCode, purchaseRate: purchaseRate || undefined, salesRate: salesRate || undefined, createdBy: userId }) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed");
+      await createProduct.mutateAsync({
+        sku, name, hsnCode,
+        purchaseRate: purchaseRate ? Number(purchaseRate) : undefined,
+        salesRate: salesRate ? Number(salesRate) : undefined,
+      });
       showToast.success("Product created");
       router.push("/inventory/products");
     } catch (err: any) { showToast.error(err.message); } finally { setSaving(false); }
