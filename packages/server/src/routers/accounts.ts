@@ -3,9 +3,9 @@ import { router, protectedProcedure } from "../trpc";
 import { createAccount } from "../commands/create-account";
 import { modifyAccount } from "../commands/modify-account";
 import { deactivateAccount } from "../commands/deactivate-account";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { accounts } = _db;
+const { accounts, journalEntries, journalEntryLines } = _db;
 import * as shared from "../../../shared/src/index";
 const { CreateAccountInputSchema } = shared;
 
@@ -37,5 +37,28 @@ export const accountsRouter = router({
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       return deactivateAccount(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
+    }),
+
+  transactions: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db
+        .select({
+          id: journalEntryLines.id,
+          date: journalEntries.date,
+          entryNumber: journalEntries.entryNumber,
+          description: journalEntryLines.description,
+          debit: journalEntryLines.debit,
+          credit: journalEntryLines.credit,
+        })
+        .from(journalEntryLines)
+        .innerJoin(journalEntries, eq(journalEntries.id, journalEntryLines.journalEntryId))
+        .where(
+          and(
+            eq(journalEntryLines.accountId, input.id),
+            eq(journalEntries.tenantId, ctx.tenantId),
+          ),
+        )
+        .orderBy(desc(journalEntries.date));
     }),
 });

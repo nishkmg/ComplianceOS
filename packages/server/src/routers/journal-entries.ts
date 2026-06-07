@@ -6,9 +6,9 @@ import { voidJournalEntry } from "../commands/void-journal-entry";
 import { modifyJournalEntry } from "../commands/modify-journal-entry";
 import { deleteJournalEntry } from "../commands/delete-journal-entry";
 import { correctNarration } from "../commands/correct-narration";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { journalEntries } = _db;
+const { journalEntries, journalEntryLines } = _db;
 
 export const journalEntriesRouter = router({
   list: protectedProcedure
@@ -23,17 +23,41 @@ export const journalEntriesRouter = router({
       if (input?.status) conditions.push(eq(journalEntries.status, input.status));
       if (input?.fiscalYear) conditions.push(eq(journalEntries.fiscalYear, input.fiscalYear));
 
-      return ctx.db.select().from(journalEntries)
+      const rows = await ctx.db.select().from(journalEntries)
         .where(and(...conditions))
         .limit(input?.limit ?? 50)
         .offset(input?.offset ?? 0);
+
+      if (rows.length === 0) return [];
+      const entryIds = rows.map(r => r.id);
+      const totals = await ctx.db
+        .select({
+          journalEntryId: journalEntryLines.journalEntryId,
+          debit: sql<string>`coalesce(sum(${journalEntryLines.debit}::numeric), 0)::text`,
+          credit: sql<string>`coalesce(sum(${journalEntryLines.credit}::numeric), 0)::text`,
+        })
+        .from(journalEntryLines)
+        .where(inArray(journalEntryLines.journalEntryId, entryIds))
+        .groupBy(journalEntryLines.journalEntryId);
+      const totalsMap = new Map(totals.map(t => [t.journalEntryId, t]));
+      return rows.map(r => ({
+        ...r,
+        debit: totalsMap.get(r.id)?.debit ?? "0",
+        credit: totalsMap.get(r.id)?.credit ?? "0",
+      }));
     }),
 
   get: protectedProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
     const result = await ctx.db.select().from(journalEntries).where(
       and(eq(journalEntries.id, input.id), eq(journalEntries.tenantId, ctx.tenantId)),
     );
-    return result[0] ?? null;
+    const entry = result[0];
+    if (!entry) return null;
+    const lines = await ctx.db
+      .select()
+      .from(journalEntryLines)
+      .where(eq(journalEntryLines.journalEntryId, input.id));
+    return { ...entry, lines };
   }),
 
   create: protectedProcedure

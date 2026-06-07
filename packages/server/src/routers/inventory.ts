@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq, and, desc } from "drizzle-orm";
 import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
-const { stockMovements, inventoryConfig } = _db;
+const { stockMovements, inventoryConfig, inventoryLayers } = _db;
 import { createPurchaseReceipt } from "../commands/create-purchase-receipt";
 import { createSalesDelivery } from "../commands/create-sales-delivery";
 import { adjustInventory } from "../commands/adjust-inventory";
@@ -104,5 +104,15 @@ export const inventoryRouter = router({
         .offset(offset);
       
       return { movements: rows, page, pageSize };
+    }),
+
+  layers: protectedProcedure
+    .query(async ({ ctx }) => {
+      const { tenantId } = ctx.session!.user;
+      return ctx.db
+        .select()
+        .from(inventoryLayers)
+        .where(eq(inventoryLayers.tenantId, tenantId))
+        .orderBy(desc(inventoryLayers.receiptDate));
     }),
 });
