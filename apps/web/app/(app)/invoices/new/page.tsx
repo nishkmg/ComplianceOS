@@ -3,8 +3,9 @@
 import { useState, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
-import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
+import { useOptimisticCreate } from "@/lib/hooks/useOptimisticMutation";
 
 interface ItemDraft {
   description: string;
@@ -20,6 +21,16 @@ function addDays(dateStr: string, days: number): string {
   return d.toISOString().split("T")[0];
 }
 
+const LIST_INPUT = { page: 1, pageSize: 50 } as const;
+
+type InvoiceListData = {
+  invoices: Array<{ id: string } & Record<string, unknown>>;
+  page?: number;
+  pageSize?: number;
+  total?: number;
+  totalPages?: number;
+};
+
 export default function NewInvoicePage() {
   const router = useRouter();
   const [customerName, setCustomerName] = useState("");
@@ -27,19 +38,67 @@ export default function NewInvoicePage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [dueDate, setDueDate] = useState(addDays(new Date().toISOString().split("T")[0], 30));
   const [items, setItems] = useState<ItemDraft[]>([{ description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }]);
-  const [saving, setSaving] = useState(false);
-  const savingRef = useRef(false);
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   const createInvoice = api.invoices.create.useMutation();
 
+  const { run: createWithOptimistic, saving: hookSaving } = useOptimisticCreate<
+    Parameters<typeof createInvoice.mutateAsync>[0],
+    InvoiceListData,
+    { id: string; customerName: string; date: string; dueDate: string; grandTotal?: string | number; status?: string }
+  >(
+    createInvoice as unknown as { mutateAsync: (vars: Parameters<typeof createInvoice.mutateAsync>[0]) => Promise<{ id: string; customerName: string; date: string; dueDate: string; grandTotal?: string | number; status?: string }> },
+    {
+      list: (utils) => {
+        const proc = utils.invoices.list;
+        return {
+          cancel: () => proc.cancel(LIST_INPUT),
+          getData: () => proc.getData(LIST_INPUT) as InvoiceListData | undefined,
+          setData: (updater) => proc.setData(LIST_INPUT, updater as never),
+          invalidate: () => proc.invalidate(LIST_INPUT),
+        };
+      },
+      buildOptimistic: (vars) => {
+        const tempId = `temp-${Date.now()}`;
+        return {
+          tempId,
+          row: {
+            id: tempId,
+            invoiceNumber: "—",
+            customerName: vars.customerName,
+            date: vars.date,
+            dueDate: vars.dueDate,
+            grandTotal: "0",
+            status: "draft" as const,
+          },
+        };
+      },
+      applyOptimistic: (current, row) => ({
+        ...current,
+        invoices: [row as InvoiceListData["invoices"][number], ...current.invoices],
+      }),
+      replaceOptimistic: (current, tempId, real) => ({
+        ...current,
+        invoices: current.invoices.map((r) => (r.id === tempId ? { ...r, ...real } as InvoiceListData["invoices"][number] : r)),
+      }),
+      extraInvalidations: (utils) => [
+        () => utils.balances.trialBalance.invalidate() as Promise<unknown>,
+      ],
+      successMessage: "Invoice created",
+      redirectTo: (real) => `/invoices/${real.id}`,
+    },
+  );
+
   const handleSubmit = async () => {
-    if (savingRef.current) return;
+    if (submittingRef.current) return;
     if (!customerName.trim()) { showToast.error("Customer name is required."); return; }
     const validItems = items.filter(i => i.description.trim() && i.rate);
     if (validItems.length === 0) { showToast.error("At least one line with description and rate is required."); return; }
-    setSaving(true); savingRef.current = true;
+    submittingRef.current = true;
+    setSubmitting(true);
     try {
-      await createInvoice.mutateAsync({
+      await createWithOptimistic({
         date,
         dueDate,
         customerName: customerName.trim(),
@@ -51,15 +110,16 @@ export default function NewInvoicePage() {
           ...(i.hsnCode.trim() ? { hsnCode: i.hsnCode.trim() } : {}),
           ...(i.gstRate ? { gstRate: Number(i.gstRate) } : {}),
         })),
-      });
-      showToast.success("Invoice created");
-      router.push("/invoices");
-    } catch (err: unknown) {
-      showToast.error(err instanceof Error ? err.message : "Failed to create invoice");
+      } as Parameters<typeof createInvoice.mutateAsync>[0]);
+    } catch {
+      // toast already shown by hook
     } finally {
-      setSaving(false); savingRef.current = false;
+      submittingRef.current = false;
+      setSubmitting(false);
     }
   };
+
+  const saving = submitting || hookSaving;
 
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
