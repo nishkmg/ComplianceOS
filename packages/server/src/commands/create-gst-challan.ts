@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { eq } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { gstCashLedger, fiscalYears } = _db;
+const { gstCashLedger, fiscalYears, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
-const { CreateGSTChallanInputSchema } = _shared;
+const { CreateGSTChallanInputSchema, getCurrentFiscalYear } = _shared;
 
 export interface CreateGSTChallanOutput {
   challanId: string;
@@ -29,14 +28,13 @@ function generateChallanNumber(): string {
 /**
  * Generate CIN (Challan Identification Number) - 14-digit unique number.
  * Format: BSR code (7) + date (6) + sequence (1) = 14 digits
- * For simplicity, using timestamp-based generation.
+ * If tenant has no BSR configured, falls back to a date-based placeholder.
  */
-function generateCIN(challanNumber: string): string {
-  // BSR code placeholder (actual BSR comes from bank)
-  const bsrCode = "0000000";
+function generateCIN(challanNumber: string, bsrCode: string | null): string {
+  const bsr = bsrCode && /^\d{7}$/.test(bsrCode) ? bsrCode : "0000000";
   const dateStr = new Date().toISOString().split("T")[0].replace(/-/g, "");
   const sequence = challanNumber.split("-")[2] || "000000";
-  return `${bsrCode}${dateStr}${sequence.charAt(0)}`;
+  return `${bsr}${dateStr}${sequence.charAt(0)}`;
 }
 
 /**
@@ -93,7 +91,8 @@ export async function createGSTChallan(
 
   // Generate challan number and CIN
   const challanNumber = generateChallanNumber();
-  const cin = generateCIN(challanNumber);
+  const [tenant] = await db.select({ bsrCode: tenants.bsrCode }).from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+  const cin = generateCIN(challanNumber, tenant?.bsrCode ?? null);
 
   // Challan valid for 15 days
   const validUpto = new Date();
@@ -217,7 +216,6 @@ export async function createGSTChallan(
 }
 
 function getFYForPeriod(periodMonth: number, periodYear: number): string {
-  const startYear = periodMonth >= 4 ? periodYear : periodYear - 1;
-  const endYear = startYear + 1;
-  return `${startYear}-${endYear}`;
+  const sample = new Date(periodYear, periodMonth - 1, 15);
+  return getCurrentFiscalYear(sample);
 }

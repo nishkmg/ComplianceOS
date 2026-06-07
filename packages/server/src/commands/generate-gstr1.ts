@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { eq, and, gte, lte, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { invoices, invoiceLines, gstReturns, gstReturnLines } = _db;
+const { invoices, invoiceLines, gstReturns, gstReturnLines, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
-const { GenerateGSTR1InputSchema, GSTReturnStatus, GSTReturnType } = _shared;
+const { GenerateGSTR1InputSchema, GSTReturnStatus, GSTReturnType, stateCodeToGstPrefix } = _shared;
 
 export async function generateGSTR1(
   db: Database,
@@ -102,7 +101,11 @@ export async function generateGSTR1(
   let totalCess = 0;
 
   // Tenant state for determining inter/intra state
-  const tenantState = "IN-TN"; // TODO: fetch from tenant config
+  const [tenant] = await db.select({ stateCode: tenants.stateCode }).from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+  if (!tenant?.stateCode) {
+    throw new Error("Tenant state code not configured. Update tenant config before generating GSTR-1.");
+  }
+  const tenantState = stateCodeToGstPrefix(tenant.stateCode);
 
   for (const invoice of salesInvoices) {
     const lines = await db.select().from(invoiceLines).where(
@@ -113,7 +116,7 @@ export async function generateGSTR1(
     const igst = Number(invoice.igstTotal);
     const cgst = Number(invoice.cgstTotal);
     const sgst = Number(invoice.sgstTotal);
-    const cess = 0; // TODO: add cess support
+    const cess = Number(invoice.cessAmount ?? 0);
 
     totalTaxableValue += taxableValue;
     totalIGST += igst;

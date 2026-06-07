@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createServer } from "http";
 import * as _db from "../../../db/src/index";
 const { db, projectorState, eventStore, tenants } = _db;
@@ -59,7 +58,6 @@ async function ensureProjectorState(projector: Projector, tenantId: string): Pro
       tenantId,
       projectorName: projector.name,
       lastProcessedSequence: "0",
-      status: "active",
     });
   }
 }
@@ -91,15 +89,26 @@ async function processProjector(projector: Projector, tenantId: string): Promise
     `
   );
 
-  if (!events.rows || events.rows.length === 0) return;
+  const eventRows = ((events as { rows?: Record<string, unknown>[] }).rows ?? (events as unknown as Record<string, unknown>[])) as Array<{
+    id: string;
+    tenant_id: string;
+    aggregate_type: string;
+    aggregate_id: string;
+    event_type: string;
+    payload: unknown;
+    sequence: string | number | bigint;
+    actor_id: string;
+    created_at: string | Date;
+  }>;
+  if (!eventRows || eventRows.length === 0) return;
 
   let processingError = null;
-  let lastProcessedEventId = null;
+  let lastProcessedEventId: string | null = null;
 
   await db.transaction(async (tx) => {
     const txDb = tx as any;
 
-    for (const eventRow of events.rows) {
+    for (const eventRow of eventRows) {
       const event = {
         id: eventRow.id,
         tenantId: eventRow.tenant_id,
@@ -133,7 +142,7 @@ async function processProjector(projector: Projector, tenantId: string): Promise
     }
 
     if (lastProcessedEventId && !processingError) {
-      const lastEvent = events.rows.find(r => r.id === lastProcessedEventId);
+      const lastEvent = eventRows.find(r => r.id === lastProcessedEventId);
       await tx
         .update(projectorState)
         .set({

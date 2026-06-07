@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq, and, inArray } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
@@ -26,7 +25,7 @@ export async function recordPayment(
 ): Promise<{
   paymentId: string;
   paymentNumber: string;
-  journalEntryId: string;
+  journalEntryId: string | null;
   allocations: Array<{ invoiceId: string; allocatedAmount: string }>;
 }> {
   const validated = RecordPaymentInputSchema.parse(input);
@@ -276,10 +275,10 @@ async function recordUnallocatedPayment(
   tenantId: string,
   actorId: string,
   validated: {
-    date: string;
-    customerName: string;
-    amount: string | number;
-    paymentMethod: "cash" | "bank" | "online" | "cheque";
+    date?: string;
+    customerName?: string;
+    amount?: number;
+    paymentMethod?: "cash" | "bank" | "online" | "cheque";
     referenceNumber?: string;
     notes?: string;
   },
@@ -296,11 +295,11 @@ async function recordUnallocatedPayment(
     const payment = await tx.insert(payments).values({
       tenantId,
       paymentNumber,
-      date: validated.date,
+      date: validated.date!,
       amount: amountStr,
-      paymentMethod: validated.paymentMethod,
+      paymentMethod: validated.paymentMethod!,
       referenceNumber: validated.referenceNumber,
-      customerName: validated.customerName,
+      customerName: validated.customerName!,
       notes: validated.notes,
       status: "recorded",
       createdBy: actorId,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as _db from "../../../db/src/index";
 const { db, accounts } = _db;
 import type { CoARefinementsInput } from "../../../shared/src/index";

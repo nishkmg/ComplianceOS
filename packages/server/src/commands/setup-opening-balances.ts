@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as _db from "../../../db/src/index";
 const { db } = _db;
 import type { OpeningBalancesInput } from "../../../shared/src/index";
@@ -6,18 +5,19 @@ import { createJournalEntry } from "./create-journal-entry";
 import type { AccountKind } from "../../../shared/src/index";
 
 function balancesMatch(
-  balances: Array<{ openingBalance: number }>,
+  balances: Array<{ openingBalance?: number }>,
 ): { valid: boolean; totalDebit: string; totalCredit: string } {
   let totalDebit = 0;
   let totalCredit = 0;
 
   for (const balance of balances) {
-    if (balance.openingBalance === 0) continue;
+    const ob = balance.openingBalance ?? 0;
+    if (ob === 0) continue;
 
     // Assets/Expenses: positive = debit, negative = credit
     // Liabilities/Equity/Revenue: positive = credit, negative = debit
-    const abs = Math.abs(balance.openingBalance);
-    if (balance.openingBalance > 0) {
+    const abs = Math.abs(ob);
+    if (ob > 0) {
       totalDebit += abs;
     } else {
       totalCredit += abs;

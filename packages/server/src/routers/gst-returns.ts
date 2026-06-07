@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { generateGSTR1 } from "../commands/generate-gstr1";
@@ -110,8 +109,8 @@ export const gstReturnsRouter = router({
       const result = await generateGSTR1(
         ctx.db,
         ctx.tenantId,
-        ctx.session.user.id,
-        input,
+        ctx.session!.user.id,
+        input as Parameters<typeof generateGSTR1>[3],
       );
 
       return {
@@ -129,8 +128,8 @@ export const gstReturnsRouter = router({
       const result = await generateGSTR2B(
         ctx.db,
         ctx.tenantId,
-        ctx.session.user.id,
-        input,
+        ctx.session!.user.id,
+        input as Parameters<typeof generateGSTR2B>[3],
       );
 
       return {
@@ -148,8 +147,8 @@ export const gstReturnsRouter = router({
       const result = await generateGSTR3B(
         ctx.db,
         ctx.tenantId,
-        ctx.session.user.id,
-        input,
+        ctx.session!.user.id,
+        input as Parameters<typeof generateGSTR3B>[3],
       );
 
       return {
@@ -171,7 +170,7 @@ export const gstReturnsRouter = router({
           status: GSTReturnStatus.FILED,
           filingDate: new Date().toISOString().split("T")[0],
           arn: input.arn,
-          filedBy: ctx.session.user.id,
+          filedBy: ctx.session!.user.id,
           updatedAt: new Date(),
         })
         .where(
@@ -198,7 +197,7 @@ export const gstReturnsRouter = router({
           status: GSTReturnStatus.FILED,
           filedAt: new Date().toISOString(),
         },
-        ctx.session.user.id,
+        ctx.session!.user.id,
       );
 
       return {
@@ -241,7 +240,7 @@ export const gstReturnsRouter = router({
         totalEligibleItc: original.totalEligibleItc,
         totalTaxPayable: original.totalTaxPayable,
         totalTaxPaid: original.totalTaxPaid,
-        createdBy: ctx.session.user.id,
+        createdBy: ctx.session!.user.id,
       }).returning();
 
       // Copy lines from original return
@@ -287,7 +286,7 @@ export const gstReturnsRouter = router({
           status: GSTReturnStatus.AMENDED,
           amendedAt: new Date().toISOString(),
         },
-        ctx.session.user.id,
+        ctx.session!.user.id,
       );
 
       return {

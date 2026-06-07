@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Database } from "../../../db/src/index";
 
 export interface Projector {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Projector } from "./types";
 import { eq, and, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";

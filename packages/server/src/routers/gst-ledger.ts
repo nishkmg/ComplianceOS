@@ -1,11 +1,11 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { eq, and, sql, sum, desc, gte, lte } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { gstCashLedger, gstItcLedger, gstLiabilityLedger } = _db;
+import { getCurrentFiscalYear } from "@complianceos/shared";
 
-const currentFiscalYear = "2026-27";
+const currentFiscalYear = getCurrentFiscalYear();
 const currentMonth = new Date().getMonth() + 1;
 const currentYear = new Date().getFullYear();
 

@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 
 export const payrollReportsRouter = router({
   payrollRegister: protectedProcedure

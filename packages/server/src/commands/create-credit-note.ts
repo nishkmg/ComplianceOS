@@ -1,10 +1,9 @@
-// @ts-nocheck
 import { eq, and } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { creditNotes, invoiceLines, invoices, accounts, receivablesSummary } = _db;
+const { creditNotes, invoiceLines, invoices, accounts, receivablesSummary, tenants } = _db;
 import * as _shared from "../../../shared/src/index";
-const { CreateCreditNoteInputSchema } = _shared;
+const { CreateCreditNoteInputSchema, getCurrentFiscalYear, stateCodeToGstPrefix } = _shared;
 import { createJournalEntry } from "./create-journal-entry";
 import { appendEvent } from "../lib/event-store";
 import { getNextCreditNoteNumber } from "../services/invoice-number";
@@ -37,6 +36,13 @@ export async function createCreditNote(
   let customerAddress = validated.customerAddress;
   let customerState: string;
 
+  // Fetch tenant state for GST calc
+  const [tenant] = await db.select({ stateCode: tenants.stateCode }).from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+  if (!tenant?.stateCode) {
+    throw new Error("Tenant state code not configured. Update tenant config before creating credit notes.");
+  }
+  const tenantState = stateCodeToGstPrefix(tenant.stateCode);
+
   // If original invoice provided, fetch and validate
   if (validated.originalInvoiceId) {
     const originalInvoice = await db.select().from(invoices).where(
@@ -52,24 +58,18 @@ export async function createCreditNote(
       throw new Error("Credit note customer must match original invoice customer");
     }
 
-    customerState = originalInvoice[0].customerState || "IN-TN";
+    customerState = originalInvoice[0].customerState || tenantState;
     customerGstin = originalInvoice[0].customerGstin || undefined;
     customerAddress = originalInvoice[0].customerAddress || undefined;
   } else {
     // Standalone credit note - require customer details
-    customerState = "IN-TN"; // Default for standalone, could be made configurable
+    customerState = tenantState;
   }
 
   // Determine fiscal year from date
-  const dateStr = validated.date;
-  const year = new Date(dateStr).getFullYear();
-  const month = new Date(dateStr).getMonth() + 1;
-  const fy = month >= 4 ? `${year}-${String(year + 1).slice(-2)}` : `${year - 1}-${String(year).slice(-2)}`;
+  const fy = getCurrentFiscalYear(new Date(validated.date));
 
   const creditNoteNumber = await getNextCreditNoteNumber(db, tenantId, fy);
-
-  // For GST calculation
-  const tenantState = "IN-TN"; // TODO: fetch from tenant config
 
   // Calculate line amounts
   const lineCalculations = validated.lines.map((line) => {

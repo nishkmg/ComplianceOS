@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { createAccount } from "../commands/create-account";
@@ -7,6 +6,8 @@ import { deactivateAccount } from "../commands/deactivate-account";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { accounts } = _db;
+import * as shared from "../../../shared/src/index";
+const { CreateAccountInputSchema } = shared;
 
 export const accountsRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -21,28 +22,20 @@ export const accountsRouter = router({
   }),
 
   create: protectedProcedure
-    .input(z.object({
-      code: z.string(),
-      name: z.string(),
-      kind: z.enum(["Asset", "Liability", "Equity", "Revenue", "Expense"]),
-      subType: z.string(),
-      parentId: z.string().uuid().optional(),
-      reconciliationAccount: z.enum(["bank", "none"]).default("none"),
-      tags: z.array(z.string()).optional(),
-    }))
+    .input(CreateAccountInputSchema)
     .mutation(async ({ ctx, input }) => {
-      return createAccount(ctx.db, ctx.tenantId, ctx.session.user.id, input);
+      return createAccount(ctx.db, ctx.tenantId, ctx.session!.user.id, input as Parameters<typeof createAccount>[3]);
     }),
 
   modify: protectedProcedure
     .input(z.object({ id: z.string().uuid(), name: z.string().optional(), parentId: z.string().uuid().optional() }))
     .mutation(async ({ ctx, input }) => {
-      return modifyAccount(ctx.db, ctx.tenantId, input.id, ctx.session.user.id, input);
+      return modifyAccount(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id, input);
     }),
 
   deactivate: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return deactivateAccount(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
+      return deactivateAccount(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
     }),
 });

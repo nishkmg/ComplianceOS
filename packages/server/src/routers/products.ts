@@ -1,8 +1,7 @@
-// @ts-nocheck
 // packages/server/src/routers/products.ts
 import { z } from "zod";
 import { eq, and, like, or } from "drizzle-orm";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { products } = _db;
 import { createProduct } from "../commands/create-product";
@@ -71,7 +70,7 @@ export const productsRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const { tenantId } = ctx.session!.user;
-      return createProduct(ctx.db, tenantId, input);
+      return createProduct(ctx.db, tenantId, input as Parameters<typeof createProduct>[2]);
     }),
   
   suggestHsn: protectedProcedure

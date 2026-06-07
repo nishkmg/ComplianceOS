@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { snapshots, eventStore } = _db;

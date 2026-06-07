@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { eq, and } from "drizzle-orm";
@@ -21,7 +20,7 @@ export const balancesRouter = router({
       let runningBalance = 0;
       const ledgerEntries = entries
         .flatMap((entry) => {
-          const lines = entry.lines || [];
+          const lines = (entry as { lines?: { accountId: string; debit: string; credit: string }[] }).lines || [];
           const relevantLines = lines.filter((l) => l.accountId === input.accountId);
           return relevantLines.map((line) => {
             const isDebit = parseFloat(line.debit || "0") > 0;

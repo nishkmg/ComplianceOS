@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { createSalaryStructure } from "../commands/create-salary-structure";
 import { updateSalaryStructure } from "../commands/update-salary-structure";
 
@@ -41,7 +40,7 @@ export const salaryStructureRouter = router({
       })),
     }))
     .mutation(async ({ ctx, input }) => {
-      return await createSalaryStructure(ctx.db, ctx.tenantId, ctx.session!.user.id, input);
+      return await createSalaryStructure(ctx.db, ctx.tenantId, ctx.session!.user.id, input as Parameters<typeof createSalaryStructure>[3]);
     }),
 
   update: protectedProcedure
@@ -58,7 +57,7 @@ export const salaryStructureRouter = router({
       return await updateSalaryStructure(ctx.db, ctx.tenantId, ctx.session!.user.id, input.employeeId, {
         effectiveFrom: input.effectiveFrom,
         components: input.components,
-      });
+      } as Parameters<typeof updateSalaryStructure>[4]);
     }),
 
   history: protectedProcedure

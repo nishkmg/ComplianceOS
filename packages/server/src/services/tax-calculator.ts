@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Tax Calculator Service
  * 

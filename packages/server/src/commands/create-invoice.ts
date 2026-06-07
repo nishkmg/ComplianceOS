@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { eq } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { invoices, invoiceLines } = _db;
+const { invoices, invoiceLines, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
-const { CreateInvoiceInputSchema } = _shared;
+const { CreateInvoiceInputSchema, getCurrentFiscalYear, stateCodeToGstPrefix } = _shared;
 import { getNextInvoiceNumber } from "../services/invoice-number";
 
 type CreateInvoiceInput = {
@@ -48,8 +47,7 @@ export async function createInvoice(
     : CreateInvoiceInputSchema.parse(input);
 
   const dateStr = validated.date;
-  const year = new Date(dateStr).getFullYear();
-  const fy = year >= 4 ? `${year}-${String(year + 1).slice(-2)}` : `${year - 1}-${String(year).slice(-2)}`;
+  const fy = getCurrentFiscalYear(new Date(dateStr));
 
   const invoiceNumber = await getNextInvoiceNumber(db, tenantId, fy);
 
@@ -85,8 +83,12 @@ export async function createInvoice(
     discountTotal = Number(input.discountTotal ?? 0);
     grandTotal = Number(input.grandTotal ?? subtotal + cgstTotal + sgstTotal + igstTotal - discountTotal);
   } else {
-    const tenantState = "IN-TN"; // TODO: from tenant config
-    lineCalculations = lines.map((line) => {
+    const [tenant] = await db.select({ stateCode: tenants.stateCode }).from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+    if (!tenant?.stateCode) {
+      throw new Error("Tenant state code not configured. Update tenant config before creating invoices.");
+    }
+    const tenantState = stateCodeToGstPrefix(tenant.stateCode);
+    lineCalculations = lines.map((line: { quantity: string | number; unitPrice: string | number; gstRate: string | number; discountPercent?: string | number; accountId: string; description: string }) => {
       const qty = Number(line.quantity);
       const unitPrice = Number(line.unitPrice);
       const gstRate = Number(line.gstRate);

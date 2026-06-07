@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
@@ -6,6 +5,7 @@ const { itrReturns, itrReturnLines, itrSchedules } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
 const { ITRReturnType, ITRReturnStatus, TaxRegime } = _shared;
+type ITRComputation = _shared.ITRComputation;
 import { 
   mapToITR3, 
   mapToITR4, 
@@ -189,7 +189,7 @@ export async function generateITR(
   // ============================================================================
   // 4. BUILD COMPUTATION OBJECT FOR MAPPER
   // ============================================================================
-  const taxRegime = (itrReturn.taxRegime ?? "old") as string;
+  const taxRegime = (itrReturn.taxRegime ?? TaxRegime.OLD) as "old" | "new";
   const presumptiveScheme = itrReturn.presumptiveScheme ?? "none";
 
   // Income by head (simplified - would need event fetch for full breakdown)
@@ -246,7 +246,7 @@ export async function generateITR(
 
   if (input.returnType === "itr3") {
     const itr3Result = mapToITR3(
-      computation,
+      computation as ITRComputation,
       input.taxpayerInfo,
       itrReturn.financialYear,
       input.housePropertyData,

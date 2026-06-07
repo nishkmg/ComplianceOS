@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq, and, lte, sql } from "drizzle-orm";
 import { createTransport, type Transporter, type SendMailOptions } from "nodemailer";
 import * as _db from "../../../db/src/index";

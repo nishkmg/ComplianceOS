@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as _db from "../../../db/src/index";
 const { db, gstCashLedger, gstItcLedger, gstLiabilityLedger, fiscalYears } = _db;
 import { eq, and, gte, lte } from 'drizzle-orm';
@@ -492,7 +491,11 @@ export function utilizeITC(
       cgst: itcBalances.cgst - remaining.cgst,
       sgst: itcBalances.sgst - remaining.sgst,
     },
-    remaining,
+    remaining: {
+      igst: remaining.igst,
+      cgst: remaining.cgst,
+      sgst: remaining.sgst,
+    },
     liabilityPaid,
     shortfall,
   };

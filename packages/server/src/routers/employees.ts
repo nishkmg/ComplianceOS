@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { createEmployee } from "../commands/create-employee";
 import { updateEmployee } from "../commands/update-employee";
 import { deactivateEmployee } from "../commands/deactivate-employee";
@@ -97,7 +96,7 @@ export const employeesRouter = router({
       userId: z.string().uuid().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return await createEmployee(ctx.db, ctx.tenantId, ctx.session!.user.id, input);
+      return await createEmployee(ctx.db, ctx.tenantId, ctx.session!.user.id, input as Parameters<typeof createEmployee>[3]);
     }),
 
   update: protectedProcedure
@@ -133,6 +132,6 @@ export const employeesRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const { employeeId, ...rest } = input;
-      return await deactivateEmployee(ctx.db, ctx.tenantId, ctx.session!.user.id, employeeId, rest);
+      return await deactivateEmployee(ctx.db, ctx.tenantId, ctx.session!.user.id, employeeId, rest as Parameters<typeof deactivateEmployee>[4]);
     }),
 });

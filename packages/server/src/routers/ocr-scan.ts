@@ -1,8 +1,7 @@
-// @ts-nocheck
 // packages/server/src/routers/ocr-scan.ts
 import { z } from "zod";
 import { eq, and, desc } from "drizzle-orm";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { ocrScanResults } = _db;
 import { processImageOcr } from "../services/ocr-processor";
@@ -159,7 +158,7 @@ export const ocrScanRouter = router({
         customerGstin: input.customerGstin,
         customerAddress: input.customerAddress,
         customerState: input.customerState,
-        lines: input.lines,
+        lines: input.lines as { accountId: string; description: string; quantity: number; unitPrice: number; gstRate: number; discountPercent?: number }[],
         notes: input.notes,
       });
 

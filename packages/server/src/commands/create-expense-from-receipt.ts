@@ -1,4 +1,3 @@
-// @ts-nocheck
 // packages/server/src/commands/create-expense-from-receipt.ts
 import { eq, and } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 // packages/server/src/services/fifo-valuation.ts
 import { eq, and, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";

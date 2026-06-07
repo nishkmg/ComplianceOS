@@ -1,4 +1,3 @@
-// @ts-nocheck
 import puppeteer from "puppeteer";
 
 interface PayslipData {

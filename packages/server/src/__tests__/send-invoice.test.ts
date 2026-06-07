@@ -25,6 +25,7 @@ vi.mock("@complianceos/db", async (importOriginal) => {
     ...(actual as any),
     invoices: { id: "id", tenantId: "tenant_id", status: "status", sentAt: "sent_at", pdfUrl: "pdf_url", invoiceNumber: "invoice_number", date: "date", customerName: "customer_name", customerEmail: "customer_email", customerState: "customer_state", customerAddress: "customer_address", subtotal: "subtotal", cgstTotal: "cgst_total", sgstTotal: "sgst_total", igstTotal: "igst_total", discountTotal: "discount_total", grandTotal: "grandTotal", fiscalYear: "fiscal_year", createdBy: "created_by", updatedAt: "updated_at" },
     invoiceLines: { id: "id", invoiceId: "invoice_id" },
+    tenants: { id: "id", name: "name", legalName: "legal_name", stateCode: "state_code", gstin: "gstin", pan: "pan", address: "address", city: "city", pincode: "pincode", email: "email", phone: "phone", bankAccount: "bank_account", bankIfsc: "bank_ifsc" },
   };
 });
 
@@ -53,18 +54,44 @@ describe("sendInvoice command", () => {
 
   function setupSelectMock(mockInvoice: any, mockLines: any[]) {
     let queryCount = 0;
+    const mockTenant = {
+      id: tenantId,
+      name: "Test Tenant",
+      legalName: "Test Tenant Pvt Ltd",
+      stateCode: "33",
+      gstin: "33AAAAA0000A1ZA",
+      pan: "AAAAA0000A",
+      address: "123 Business Park",
+      city: "Chennai",
+      pincode: "600001",
+      email: "billing@example.com",
+      phone: "+91 98765 43210",
+      bankAccount: "1234567890",
+      bankIfsc: "HDFC0001234",
+    };
     mockDb.select.mockImplementation(() => ({
       from: vi.fn((table) => {
         const whereClause = vi.fn().mockImplementation(() => {
           const queryResult: any = {
             limit: vi.fn().mockImplementation(async () => {
               queryCount++;
-              // Return empty array if mockInvoice is null (not found case)
-              return queryCount === 1 ? (mockInvoice ? [mockInvoice] : []) : mockLines;
+              if (queryCount === 1) {
+                return mockInvoice ? [mockInvoice] : [];
+              }
+              if (queryCount === 2) {
+                return mockLines;
+              }
+              return [mockTenant];
             }),
             then: vi.fn((resolve) => {
               queryCount++;
-              resolve(queryCount === 1 ? (mockInvoice ? [mockInvoice] : []) : mockLines);
+              if (queryCount === 1) {
+                resolve(mockInvoice ? [mockInvoice] : []);
+              } else if (queryCount === 2) {
+                resolve(mockLines);
+              } else {
+                resolve([mockTenant]);
+              }
             }),
           };
           return queryResult;

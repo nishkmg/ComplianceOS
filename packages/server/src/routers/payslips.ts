@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { generatePayslip } from "../commands/generate-payslip";
 
 export const payslipsRouter = router({

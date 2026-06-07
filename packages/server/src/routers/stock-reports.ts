@@ -1,7 +1,6 @@
-// @ts-nocheck
 // packages/server/src/routers/stock-reports.ts
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { getStockSummary } from "../services/fifo-valuation";
 
 export const stockReportsRouter = router({

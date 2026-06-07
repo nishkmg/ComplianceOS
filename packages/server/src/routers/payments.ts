@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { eq, and, inArray, sql, lt, lte, gte } from "drizzle-orm";
@@ -109,7 +108,7 @@ export const paymentsRouter = router({
         amount: input.amount,
         paymentMethod: input.paymentMethod,
         referenceNumber: input.referenceNumber,
-        allocations: input.allocations,
+        allocations: input.allocations as { invoiceId: string; allocatedAmount: string | number }[],
         notes: input.notes,
       });
     }),
