@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -9,41 +9,41 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 
 interface Payment {
   id: string;
-  payment_number: string;
-  customer_name: string;
+  paymentNumber: string;
+  customerName: string;
   date: string;
-  amount: number;
-  payment_method: string;
+  amount: string | number;
+  paymentMethod: string;
   status: "recorded" | "voided";
 }
 
 const columns: ColumnDef<Payment>[] = [
   {
-    key: "payment_number",
+    key: "paymentNumber",
     header: "Payment #",
     sortable: true,
     width: "180px",
     render: (row) => (
       <Link href={`/payments/${row.id}`} className="font-mono text-[13px] text-amber-text hover:underline no-underline">
-        {row.payment_number}
+        {row.paymentNumber}
       </Link>
     ),
   },
   {
-    key: "customer_name",
+    key: "customerName",
     header: "From / To",
     sortable: true,
-    render: (row) => <span className="font-ui text-[13px] text-dark">{row.customer_name}</span>,
+    render: (row) => <span className="font-ui text-[13px] text-dark">{row.customerName}</span>,
   },
   {
-    key: "payment_method",
+    key: "paymentMethod",
     header: "Method",
-    render: (row) => <span className="font-ui text-[13px] text-[12px] text-mid capitalize">{row.payment_method}</span>,
+    render: (row) => <span className="font-ui text-[13px] text-[12px] text-mid capitalize">{row.paymentMethod}</span>,
   },
   {
     key: "amount",
@@ -64,31 +64,18 @@ const columns: ColumnDef<Payment>[] = [
 
 export default function PaymentsPage() {
   const { activeFy } = useFiscalYear();
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, error } = api.payments.list.useQuery({ page: 1, pageSize: 100 });
 
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/payments?tenantId=${encodeURIComponent(tenantId)}`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        setPayments(data.payments || []);
-      } catch {
-        showToast.error("Failed to load payments");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [tenantId]);
+  if (error) {
+    showToast.error("Failed to load payments");
+  }
+
+  const payments = (data?.items ?? []) as Payment[];
 
   const filtered = useMemo(
-    () => payments.filter(p => !search || p.customer_name.toLowerCase().includes(search.toLowerCase()) || p.payment_number.toLowerCase().includes(search.toLowerCase())),
+    () => payments.filter(p => !search || p.customerName.toLowerCase().includes(search.toLowerCase()) || p.paymentNumber.toLowerCase().includes(search.toLowerCase())),
     [search, payments]
   );
 
@@ -97,7 +84,7 @@ export default function PaymentsPage() {
   const handleExport = useCallback(() => {
     if (filtered.length === 0) { showToast.error("No payments to export."); return; }
     const header = "Payment #,Date,Customer,Amount,Method,Status";
-    const rows = filtered.map(p => `${p.payment_number},${p.date},"${p.customer_name}",${p.amount},${p.payment_method},${p.status}`);
+    const rows = filtered.map(p => `${p.paymentNumber},${p.date},"${p.customerName}",${p.amount},${p.paymentMethod},${p.status}`);
     const csv = [header, ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -105,7 +92,7 @@ export default function PaymentsPage() {
     URL.revokeObjectURL(url);
   }, [filtered, activeFy]);
 
-  if (loading) return <TableSkeleton rows={5} columns={5} />;
+  if (isLoading) return <TableSkeleton rows={5} columns={5} />;
 
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">

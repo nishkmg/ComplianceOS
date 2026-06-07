@@ -6,15 +6,12 @@ import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
-import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
 export default function NewPaymentPage() {
   const { activeFy } = useFiscalYear();
   const { gstConfig } = useModules();
-  const { data: session } = useSession();
   const router = useRouter();
-  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const [type, setType] = useState<"receipt" | "payment">("receipt");
   const [customerName, setCustomerName] = useState("");
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split("T")[0]);
@@ -25,6 +22,8 @@ export default function NewPaymentPage() {
   const [saving, setSaving] = useState(false);
   const savingRef = useRef(false);
   const [discardConfirm, setDiscardConfirm] = useState(false);
+
+  const recordPayment = api.payments.record.useMutation();
 
   const hasContent = useMemo(
     () => customerName || referenceNumber || paymentAmount,
@@ -39,24 +38,21 @@ export default function NewPaymentPage() {
   }, [hasContent, saving]);
 
   const handleRecord = async () => {
-    if (savingRef.current || !userId || !tenantId) return;
+    if (savingRef.current) return;
     if (!customerName.trim()) { showToast.error("Party name is required."); return; }
     const amt = parseFloat(paymentAmount);
     if (isNaN(amt) || amt <= 0) { showToast.error("Amount must be greater than zero."); return; }
     setSaving(true);
     savingRef.current = true;
     try {
-      const res = await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tenantId, type, customerName: customerName.trim(), date: paymentDate,
-          paymentMethod, referenceNumber: referenceNumber.trim(), amount: paymentAmount,
-          tdsAmount: tdsAmount || undefined, createdBy: userId,
-        }),
+      await recordPayment.mutateAsync({
+        date: paymentDate,
+        customerName: customerName.trim(),
+        amount: amt,
+        paymentMethod: paymentMethod as "cash" | "bank" | "online" | "cheque",
+        referenceNumber: referenceNumber.trim() || undefined,
+        allocations: [],
       });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || `Failed (${res.status})`);
       showToast.success("Payment recorded successfully");
       router.push("/payments");
     } catch (err: any) {
@@ -75,7 +71,6 @@ export default function NewPaymentPage() {
 
   return (
     <div className="max-w-[800px] mx-auto space-y-6">
-      {/* Page header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
@@ -111,7 +106,6 @@ export default function NewPaymentPage() {
         </div>
       </div>
 
-      {/* Discard confirmation */}
       {discardConfirm && (
         <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
           <span className="font-ui text-[12px] text-amber font-medium">Unsaved changes will be lost. Discard?</span>
@@ -122,7 +116,6 @@ export default function NewPaymentPage() {
         </div>
       )}
 
-      {/* Classification */}
       <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber -mt-6 mb-6" />
         <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Classification</h3>
@@ -154,7 +147,6 @@ export default function NewPaymentPage() {
         </div>
       </div>
 
-      {/* Voucher details */}
       <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
         <h3 className="font-ui text-[10px] text-mid uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Voucher Details</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -213,7 +205,6 @@ export default function NewPaymentPage() {
         </div>
         </div>
 
-        {/* TDS Section — shown when enabled in fiscal config */}
         {gstConfig.tdsApplicable && (
           <div className="bg-surface border border-border rounded-md p-6 space-y-4">
             <h3 className="font-ui text-[10px] font-bold text-dark uppercase tracking-widest">TDS Deduction</h3>
@@ -242,7 +233,6 @@ export default function NewPaymentPage() {
           </div>
         )}
 
-        {/* Allocation hint */}
       {parseFloat(paymentAmount || "0") > 0 && (
         <div className="bg-amber-50 border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
           <div>
