@@ -1,4 +1,3 @@
-// @ts-nocheck
 // packages/server/src/commands/create-sales-delivery.ts
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";

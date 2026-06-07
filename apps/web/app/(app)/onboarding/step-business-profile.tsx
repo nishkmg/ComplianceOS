@@ -1,48 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // @ts-ignore
 import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
+import { BUSINESS_TYPES, INDUSTRIES, STATES } from "@/lib/constants";
 
-const BUSINESS_TYPES = [
-  { value: "private_limited", label: "Private Limited Company" },
-  { value: "llp", label: "Limited Liability Partnership (LLP)" },
-  { value: "sole_proprietorship", label: "Sole Proprietorship" },
-  { value: "partnership", label: "Partnership Firm" },
-  { value: "public_limited", label: "Public Limited Company" },
-  { value: "huf", label: "Hindu Undivided Family" },
-];
-
-const INDUSTRIES = [
-  { value: "services_professional", label: "Professional Services" },
-  { value: "manufacturing", label: "Manufacturing" },
-  { value: "retail_trading", label: "Retail & Trading" },
-  { value: "freelancer_consultant", label: "Freelancer / Consultant" },
-  { value: "regulated_professional", label: "Regulated Professional" },
-];
-
-const STATES = [
-  { value: "maharashtra", label: "Maharashtra" },
-  { value: "karnataka", label: "Karnataka" },
-  { value: "delhi", label: "Delhi" },
-  { value: "tamil_nadu", label: "Tamil Nadu" },
-  { value: "gujarat", label: "Gujarat" },
-];
-
-export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id: string) => void }) {
+export function StepBusinessProfile({ tenantId, initialData, onComplete }: { tenantId: string; initialData?: Record<string, string>; onComplete: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // @ts-ignore
-  const createTenant = mockMutation<any>({
-    onSuccess: (data: any) => {
-      onTenantCreated(data.id);
-      showToast.success('Business profile established successfully');
-    }
-  });
 
   const {
     register,
@@ -58,12 +27,31 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
     }
   });
 
+  // Pre-fill form from saved onboarding state
+  useEffect(() => {
+    if (!initialData) return;
+    if (initialData.name) setValue("name", initialData.name as any);
+    if (initialData.legalName) setValue("legalName", initialData.legalName as any);
+    if (initialData.businessType) setValue("businessType", initialData.businessType as any);
+    if (initialData.pan) setValue("pan", initialData.pan as any);
+    if (initialData.gstin) setValue("gstin", initialData.gstin as any);
+    if (initialData.address) setValue("address", initialData.address as any);
+    if (initialData.state) setValue("state", initialData.state as any);
+    if (initialData.industry) setValue("industry", initialData.industry as any);
+    if (initialData.dateOfIncorporation) setValue("dateOfIncorporation", initialData.dateOfIncorporation as any);
+  }, [initialData, setValue]);
+
   const onSubmit = async (data: BusinessProfileInput) => {
     setIsSubmitting(true);
     try {
-      await createTenant.mutateAsync(data as any);
-    } catch (error) {
-      showToast.error('Failed to establish business profile');
+      if (!data.legalName || data.legalName.trim() === "") {
+        data.legalName = data.name;
+      }
+      await submitStep(1, { tenantId, data: { ...(data as any) } });
+      showToast.success('Business profile established successfully');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to establish business profile');
     } finally {
       setIsSubmitting(false);
     }
@@ -95,13 +83,13 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
         {/* Legal Name */}
         <div className="flex flex-col gap-2">
           <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="legalName">
-            Registered Legal Name
+            Individual / Legal Name
             <Icon name="info" className="text-[14px] text-text-light cursor-help" />
           </label>
           <input 
             className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light" 
             id="legalName" 
-            placeholder="e.g. Acme Technologies Private Limited" 
+            placeholder="Leave blank to use operating name" 
             {...register("legalName")}
           />
         </div>
@@ -121,6 +109,9 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
             </select>
             <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
           </div>
+          <p className="font-ui text-[11px] text-ui-xs text-text-mid/70 leading-relaxed">
+            Select <strong>Sole Proprietorship</strong> if you are an individual freelancer, consultant, or professional without a registered business entity.
+          </p>
         </div>
 
         {/* Industry */}
@@ -142,7 +133,7 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
 
         {/* PAN Number */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pan">Permanent Account Number</label>
+          <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pan">Permanent Account Number (PAN)</label>
           <input 
             className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
             id="pan" 
@@ -203,8 +194,8 @@ export function StepBusinessProfile({ onTenantCreated }: { onTenantCreated: (id:
           <button className="font-ui text-[13px] text-ui-sm text-text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
             Save as Draft
           </button>
-          <button className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer" type="submit" disabled={isSubmitting || createTenant.isPending}>
-            {isSubmitting || createTenant.isPending ? "Establishing Profile..." : "Continue to Setup"}
+          <button className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Establishing Profile..." : "Continue to Setup"}
             <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>

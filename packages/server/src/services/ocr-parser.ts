@@ -1,4 +1,3 @@
-// @ts-nocheck
 // packages/server/src/services/ocr-parser.ts
 
 export interface ParsedLineItem {

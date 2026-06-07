@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { itrReturns, itrReturnLines, itrSchedules } = _db;

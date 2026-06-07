@@ -25,6 +25,7 @@ import { gstPaymentRouter } from "./gst-payment";
 import { itrReturnsRouter } from "./itr-returns";
 import { itrComputationRouter } from "./itr-computation";
 import { itrPaymentRouter } from "./itr-payment";
+import { tenantConfigRouter } from "./tenant-config";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -53,7 +54,7 @@ export const appRouter = router({
   itrReturns: itrReturnsRouter,
   itrComputation: itrComputationRouter,
   itrPayment: itrPaymentRouter,
+  tenantConfig: tenantConfigRouter,
 });
 
-// @ts-ignore TS2742
 export type AppRouter = typeof appRouter;

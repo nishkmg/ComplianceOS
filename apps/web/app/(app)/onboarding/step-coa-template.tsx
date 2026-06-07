@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 
 const TEMPLATES = [
   { id: "trading", name: "Trading & Retail", desc: "For wholesale and retail firms managing physical stock. Includes Inventory, COGS, and standard GST tax ledgers.", icon: "shopping_cart", recommended: true },
@@ -17,27 +17,25 @@ const TEMPLATES = [
 interface StepCoaTemplateProps {
   tenantId: string;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) {
+export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplateProps) {
   const [selectedTemplate, setSelectedTemplate] = useState("trading");
 
-  // @ts-ignore
-  const seedCoa = mockMutation({
-    onSuccess: () => {
-      showToast.success('Chart of accounts initialized');
-      onComplete();
-    },
-    onError: (error: any) => {
-      showToast.error(error.message || 'Failed to initialize CoA');
-    },
-  });
+  const [saving, setSaving] = useState(false);
 
   const handleSelect = async () => {
-    await seedCoa.mutateAsync({
-      tenantId,
-      templateId: selectedTemplate,
-    });
+    setSaving(true);
+    try {
+      await submitStep(3, { tenantId, data: { templateId: selectedTemplate } });
+      showToast.success('Chart of accounts initialized');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to initialize CoA');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -80,15 +78,28 @@ export function StepCoaTemplate({ tenantId, onComplete }: StepCoaTemplateProps) 
       </div>
 
       <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
-        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
-          You can modify, merge, or add individual ledgers after this step.
-        </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving}
+              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-[18px]" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+            You can modify, merge, or add individual ledgers after this step.
+          </p>
+        </div>
         <button
           onClick={handleSelect}
-          disabled={seedCoa.isPending}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+          disabled={saving}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {seedCoa.isPending ? "Generating Ledgers..." : "Initialise Ledgers"}
+          {saving ? "Generating Ledgers..." : "Initialise Ledgers"}
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>

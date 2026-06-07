@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as db from "../../../db/src/index";

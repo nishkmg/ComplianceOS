@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { eq, and, desc, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { advanceTaxLedger, selfAssessmentLedger } = _db;

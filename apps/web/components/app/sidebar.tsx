@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { useFiscalYear } from '@/hooks/use-fiscal-year';
+import { ModuleGate } from '@/components/ui/module-gate';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -12,6 +13,8 @@ interface NavItem {
   href: string;
   label: string;
   icon?: string;
+  /** If set, item is hidden when this module is disabled */
+  moduleKey?: string;
 }
 
 interface CollapsibleGroup {
@@ -22,6 +25,8 @@ interface CollapsibleGroup {
   /** pathname prefix that marks this group as active */
   basePath: string;
   children: NavItem[];
+  /** If set, group is hidden when this module is disabled */
+  moduleKey?: string;
 }
 
 interface NavSection {
@@ -53,8 +58,8 @@ const navSections: NavSection[] = [
   {
     label: 'Transactions',
     items: [
-      { href: '/invoices',    label: 'Invoices',    icon: 'receipt_long'         },
-      { href: '/receivables', label: 'Receivables', icon: 'account_balance'      },
+      { href: '/invoices',    label: 'Invoices',    icon: 'receipt_long',         moduleKey: 'invoicing' },
+      { href: '/receivables', label: 'Receivables', icon: 'account_balance',      moduleKey: 'invoicing' },
       { href: '/payments',    label: 'Payments',    icon: 'account_balance_wallet'},
     ],
   },
@@ -67,6 +72,7 @@ const navSections: NavSection[] = [
         label:    'GST',
         icon:     'gavel',
         basePath: '/gst',
+        moduleKey: 'gst',
         children: [
           { href: '/gst/returns',         label: 'Returns'        },
           { href: '/gst/reconciliation',  label: 'Reconciliation' },
@@ -80,6 +86,7 @@ const navSections: NavSection[] = [
         label:    'ITR',
         icon:     'description',
         basePath: '/itr',
+        moduleKey: 'itr',
         children: [
           { href: '/itr/returns',     label: 'Returns'     },
           { href: '/itr/computation', label: 'Computation' },
@@ -91,9 +98,9 @@ const navSections: NavSection[] = [
   {
     label: 'Operations',
     items: [
-      { href: '/inventory', label: 'Inventory', icon: 'inventory_2' },
-      { href: '/payroll',   label: 'Payroll',   icon: 'payments'    },
-      { href: '/employees', label: 'Employees', icon: 'group'       },
+      { href: '/inventory', label: 'Inventory', icon: 'inventory_2', moduleKey: 'inventory' },
+      { href: '/payroll',   label: 'Payroll',   icon: 'payments',    moduleKey: 'payroll' },
+      { href: '/employees', label: 'Employees', icon: 'group',       moduleKey: 'payroll' },
     ],
   },
   {
@@ -179,87 +186,96 @@ export function AppSidebar() {
 
             <div className="space-y-0.5">
               {section.items.map(item => {
-                /* ── Collapsible group (GST / ITR / Reports) ──────────────── */
-                if (isCollapsible(item)) {
-                  const groupActive = pathname.startsWith(item.basePath);
-                  const isOpen = openGroups[item.key] ?? groupActive;
+                const navItem = (() => {
+                  /* ── Collapsible group (GST / ITR / Reports) ──────────────── */
+                  if (isCollapsible(item)) {
+                    const groupActive = pathname.startsWith(item.basePath);
+                    const isOpen = openGroups[item.key] ?? groupActive;
 
+                    return (
+                      <div key={item.key}>
+                        <button
+                          onClick={() => toggleGroup(item.key)}
+                          className={[
+                            'w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-left',
+                            'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group',
+                            groupActive
+                              ? 'border-amber text-dark font-semibold'
+                              : 'border-transparent text-zinc-400 hover:text-dark hover:bg-lighter/40',
+                          ].join(' ')}
+                          aria-expanded={isOpen}
+                        >
+                          <Icon
+                            name={item.icon}
+                            size={16}
+                            className={groupActive ? 'text-amber' : 'text-zinc-400 group-hover:text-dark'}
+                          />
+                          <span className="flex-1 text-[13px]">{item.label}</span>
+                          <Icon
+                            name={isOpen ? 'expand_less' : 'expand_more'}
+                            size={14}
+                            className="text-zinc-300 shrink-0"
+                          />
+                        </button>
+
+                        {/* Sub-items — shown when group is open */}
+                        {isOpen && (
+                          <div className="ml-8 mt-0.5 space-y-0.5 border-l border-border-subtle pl-2">
+                            {item.children.map(child => {
+                              const childActive = isActive(child.href);
+                              return (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  className={[
+                                    'block px-2 py-1.5 rounded-[4px] text-[12px] transition-colors no-underline',
+                                    childActive
+                                      ? 'text-amber font-semibold bg-section-amber'
+                                      : 'text-zinc-400 hover:text-dark hover:bg-lighter/40',
+                                  ].join(' ')}
+                                >
+                                  {child.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  /* ── Plain nav link ───────────────────────────────────────── */
+                  const active = isActive(item.href);
                   return (
-                    <div key={item.key}>
-                      <button
-                        onClick={() => toggleGroup(item.key)}
-                        className={[
-                          'w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-left',
-                          'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group',
-                          groupActive
-                            ? 'border-amber text-dark font-semibold'
-                            : 'border-transparent text-zinc-400 hover:text-dark hover:bg-lighter/40',
-                        ].join(' ')}
-                        aria-expanded={isOpen}
-                      >
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={[
+                        'flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px]',
+                        'border-l-[3px] transition-colors no-underline group',
+                        active
+                          ? 'border-amber bg-white text-dark font-semibold shadow-sm dark:bg-zinc-800 dark:text-white'
+                          : 'border-transparent text-zinc-400 hover:text-dark hover:bg-lighter/40',
+                      ].join(' ')}
+                    >
+                      {item.icon && (
                         <Icon
                           name={item.icon}
                           size={16}
-                          className={groupActive ? 'text-amber' : 'text-zinc-400 group-hover:text-dark'}
+                          className={active ? 'text-amber' : 'text-zinc-400 group-hover:text-dark'}
                         />
-                        <span className="flex-1 text-[13px]">{item.label}</span>
-                        <Icon
-                          name={isOpen ? 'expand_less' : 'expand_more'}
-                          size={14}
-                          className="text-zinc-300 shrink-0"
-                        />
-                      </button>
-
-                      {/* Sub-items — shown when group is open */}
-                      {isOpen && (
-                        <div className="ml-8 mt-0.5 space-y-0.5 border-l border-border-subtle pl-2">
-                          {item.children.map(child => {
-                            const childActive = isActive(child.href);
-                            return (
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                className={[
-                                  'block px-2 py-1.5 rounded-[4px] text-[12px] transition-colors no-underline',
-                                  childActive
-                                    ? 'text-amber font-semibold bg-section-amber'
-                                    : 'text-zinc-400 hover:text-dark hover:bg-lighter/40',
-                                ].join(' ')}
-                              >
-                                {child.label}
-                              </Link>
-                            );
-                          })}
-                        </div>
                       )}
-                    </div>
+                      <span>{item.label}</span>
+                    </Link>
                   );
-                }
+                })();
 
-                /* ── Plain nav link ───────────────────────────────────────── */
-                const active = isActive(item.href);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={[
-                      'flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px]',
-                      'border-l-[3px] transition-colors no-underline group',
-                      active
-                        ? 'border-amber bg-white text-dark font-semibold shadow-sm dark:bg-zinc-800 dark:text-white'
-                        : 'border-transparent text-zinc-400 hover:text-dark hover:bg-lighter/40',
-                    ].join(' ')}
-                  >
-                    {item.icon && (
-                      <Icon
-                        name={item.icon}
-                        size={16}
-                        className={active ? 'text-amber' : 'text-zinc-400 group-hover:text-dark'}
-                      />
-                    )}
-                    <span>{item.label}</span>
-                  </Link>
-                );
+                /* Wrap in ModuleGate if item has moduleKey */
+                const modKey = item.moduleKey;
+                if (modKey) {
+                  return <ModuleGate key={modKey} module={modKey} redirect={false}>{navItem}</ModuleGate>;
+                }
+                return navItem;
               })}
             </div>
           </div>

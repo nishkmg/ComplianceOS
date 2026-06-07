@@ -1,223 +1,63 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { Icon } from '@/components/ui/icon';
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Icon } from "@/components/ui/icon";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
-import { formatIndianNumber } from "@/lib/format";
-import { showToast } from "@/lib/toast";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { getAccounts } from "@/lib/account-store";
+import { useSession } from "next-auth/react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface AccountRow {
+interface Account {
+  id: string;
   code: string;
   name: string;
-  type: string;
-  balance: number;
-  balanceType: string;
+  kind: string;
+  is_leaf: boolean;
+  is_active: boolean;
 }
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const ACCOUNTS: AccountRow[] = [
-  { code: "10101", name: "Cash Account",       type: "Asset",     balance: 500000,  balanceType: "Dr" },
-  { code: "10200", name: "Bank Account",        type: "Asset",     balance: 1250000, balanceType: "Dr" },
-  { code: "10300", name: "Trade Receivables",   type: "Asset",     balance: 350000,  balanceType: "Dr" },
-  { code: "10400", name: "GST Input",           type: "Asset",     balance: 45000,   balanceType: "Dr" },
-  { code: "20101", name: "Trade Payables",      type: "Liability", balance: 180000,  balanceType: "Cr" },
-  { code: "20200", name: "GST Output",          type: "Liability", balance: 45000,   balanceType: "Cr" },
-  { code: "20300", name: "TDS Payable",         type: "Liability", balance: 12000,   balanceType: "Cr" },
-  { code: "30100", name: "Capital Account",     type: "Equity",    balance: 1000000, balanceType: "Cr" },
-  { code: "40100", name: "Sales Revenue",       type: "Income",    balance: 2800000, balanceType: "Cr" },
-  { code: "50200", name: "Operating Expenses",  type: "Expense",   balance: 450000,  balanceType: "Dr" },
+const columns: ColumnDef<Account>[] = [
+  { key: "code", header: "Code", width: "120px", render: (row) => <span className="font-mono text-[12px] text-mid">{row.code}</span> },
+  { key: "name", header: "Account Name", sortable: true, render: (row) => <Link href={`/accounts/${row.id}`} className="font-ui text-[13px] text-amber-text hover:underline no-underline">{row.name}</Link> },
+  { key: "kind", header: "Kind", width: "120px", render: (row) => <span className="font-ui text-[12px] text-mid">{row.kind}</span> },
+  { key: "is_leaf", header: "Leaf", width: "80px", render: (row) => <span className={`text-[11px] font-bold uppercase ${row.is_leaf ? "text-success" : "text-mid"}`}>{row.is_leaf ? "Yes" : "No"}</span> },
 ];
 
-const typeBadge: Record<string, string> = {
-  Asset:     "bg-blue-50 text-blue-700 border-blue-200",
-  Liability: "bg-amber-50 text-amber-700 border-amber-200",
-  Equity:    "bg-green-50 text-green-700 border-green-200",
-  Income:    "bg-emerald-50 text-emerald-700 border-emerald-200",
-  Expense:   "bg-red-50 text-red-700 border-red-200",
-};
-
-const typeOptions = ["All", "Asset", "Liability", "Equity", "Income", "Expense"];
-
-// ─── Column definitions ───────────────────────────────────────────────────────
-
-const columns: ColumnDef<AccountRow>[] = [
-  {
-    key: "code",
-    header: "Code",
-    width: "120px",
-    render: (row) => <span className="font-mono text-[12px] text-mid">{row.code}</span>,
-  },
-  {
-    key: "name",
-    header: "Account Name",
-    sortable: true,
-    render: (row) => (
-      <Link href={`/accounts/${row.code}`} className="font-ui text-[13px] text-dark font-medium hover:text-amber no-underline transition-colors">
-        {row.name}
-      </Link>
-    ),
-  },
-  {
-    key: "type",
-    header: "Type",
-    width: "110px",
-    render: (row) => (
-      <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-sm ${typeBadge[row.type] || ''}`}>
-        {row.type}
-      </span>
-    ),
-  },
-  {
-    key: "balance",
-    header: "Balance (₹)",
-    align: "right",
-    sortable: true,
-    width: "180px",
-    render: (row) => (
-      <span className="font-mono text-[13px] tabular-nums">
-        {formatIndianNumber(row.balance, { currency: true })} <span className="text-[10px] text-mid">{row.balanceType}</span>
-      </span>
-    ),
-  },
-];
-
-// ─── Page Component ───────────────────────────────────────────────────────────
-
-function allAccounts() {
-  const stored = getAccounts();
-  const storedRows: AccountRow[] = stored.map(a => ({
-    code: a.code,
-    name: a.name,
-    type: a.kind,
-    balance: 0,
-    balanceType: (a.kind.toLowerCase() === "asset" || a.kind.toLowerCase() === "expense") ? "Dr" : "Cr",
-  }));
-  return [...ACCOUNTS, ...storedRows];
-}
-
-export default function AccountsFlatPage() {
-  const { activeFy } = useFiscalYear();
-  const [allAccts] = useState(allAccounts);
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("All");
+export default function AccountsPage() {
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/accounts?tenantId=${encodeURIComponent(tenantId)}`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        setAccounts(data.accounts || []);
+      } catch { /* ignore */ }
+      finally { setLoading(false); }
+    })();
+  }, [tenantId]);
 
-  const filtered = useMemo(
-    () =>
-      allAccts.filter(a => {
-        if (typeFilter !== "All" && a.type !== typeFilter) return false;
-        if (search && !a.name.toLowerCase().includes(search.toLowerCase()) && !a.code.includes(search)) return false;
-        return true;
-      }),
-    [typeFilter, search, allAccts]
-  );
-
-  const totalBalance = filtered.reduce((s, a) => s + a.balance, 0);
-
-  const handleExport = useCallback(() => {
-    if (filtered.length === 0) { showToast.error("No accounts to export."); return; }
-    const header = "Code,Name,Type,Balance,Balance Type";
-    const rows = filtered.map(a => `${a.code},"${a.name}",${a.type},${a.balance},${a.balanceType}`);
-    const csv = [header, ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = `accounts-${activeFy}.csv`; a.click();
-    URL.revokeObjectURL(url);
-    showToast.success(`Exported ${filtered.length} accounts.`);
-  }, [filtered, activeFy]);
-
+  if (loading) return <TableSkeleton rows={8} columns={4} />;
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            Ledger
-          </p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Chart of Accounts</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">Flat ledger view of all registered accounts. FY {activeFy}</p>
-        </div>
-        <div className="flex gap-3">
-          <button onClick={handleExport} className="btn-secondary flex items-center gap-1.5">
-            <Icon name="download" size={14} /> Export CSV
-          </button>
-          <Link
-            href="/accounts/new"
-            className="btn-primary no-underline flex items-center gap-1.5"
-          >
-            <Icon name="add" size={14} /> New Account
-          </Link>
-        </div>
+    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+      <div className="flex items-center justify-between">
+        <div><h1 className="font-display text-display-lg font-semibold text-dark">Accounts</h1></div>
+        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md shadow-sm no-underline">
+          <Icon name="add" size={14} /> New Account
+        </Link>
       </div>
-
-      {/* Filter + search */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-1 bg-surface-muted rounded-md p-0.5 border border-border">
-          {typeOptions.map(t => (
-            <button
-              key={t}
-              onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm capitalize ${
-                typeFilter === t
-                  ? "bg-surface text-dark shadow-sm"
-                  : "text-mid hover:text-dark bg-transparent"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+      {accounts.length > 0 ? (
+        <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm">
+          <DataTable columns={columns} data={accounts.filter(a => a.is_active !== false)} keyExtractor={(r) => r.id} />
         </div>
-        <div className="relative">
-          <Icon name="search" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-light pointer-events-none" />
-          <input
-            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
-            placeholder="Search accounts…"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* DataTable */}
-      {loading ? (
-        <TableSkeleton rows={10} columns={4} />
       ) : (
-        <DataTable<AccountRow>
-          data={filtered}
-          columns={columns}
-          keyExtractor={(row) => row.code}
-          pageSize={20}
-          emptyState={
-            <EmptyState
-              title="No accounts found"
-              description="Create your first account to start tracking your ledger."
-              action={{ label: "Create Account", onClick: () => window.location.href = "/accounts/new" }}
-              icon="account_tree"
-            />
-          }
-          footer={
-            <tr className="bg-surface-muted border-t-2 border-border">
-              <td colSpan={3} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
-                Total ({filtered.length} accounts)
-              </td>
-              <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
-                {formatIndianNumber(totalBalance, { currency: true })}
-              </td>
-            </tr>
-          }
-        />
+        <EmptyState icon="account_balance" title="No accounts" description="Create your first account to start building the chart of accounts." />
       )}
     </div>
   );

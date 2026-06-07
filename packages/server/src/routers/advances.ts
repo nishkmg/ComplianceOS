@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { createAdvance } from "../commands/create-advance";
 import { cancelAdvance } from "../commands/cancel-advance";
 
@@ -55,7 +54,7 @@ export const advancesRouter = router({
       narration: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return await createAdvance(ctx.db, ctx.tenantId, ctx.session!.user.id, input);
+      return await createAdvance(ctx.db, ctx.tenantId, ctx.session!.user.id, input as Parameters<typeof createAdvance>[3]);
     }),
 
   cancel: protectedProcedure

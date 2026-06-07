@@ -54,7 +54,12 @@ export const fySummaries = pgTable("fy_summaries", {
   totalExpenses: numeric("total_expenses", { precision: 18, scale: 2 }),
   netProfit: numeric("net_profit", { precision: 18, scale: 2 }),
   retainedEarnings: numeric("retained_earnings", { precision: 18, scale: 2 }),
+  totalAssets: numeric("total_assets", { precision: 18, scale: 2 }),
+  totalLiabilities: numeric("total_liabilities", { precision: 18, scale: 2 }),
+  totalEquity: numeric("total_equity", { precision: 18, scale: 2 }),
+  netIncome: numeric("net_income", { precision: 18, scale: 2 }),
   closedAt: timestamp("closed_at", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
   uniqueIndex("fy_summaries_tenant_fy_unique").on(table.tenantId, table.fiscalYear),
 ]);

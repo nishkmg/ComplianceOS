@@ -1,4 +1,3 @@
-// @ts-nocheck
 // packages/server/src/commands/create-purchase-receipt.ts
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq, and, inArray } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
@@ -26,13 +25,15 @@ export async function recordPayment(
 ): Promise<{
   paymentId: string;
   paymentNumber: string;
-  journalEntryId: string;
+  journalEntryId: string | null;
   allocations: Array<{ invoiceId: string; allocatedAmount: string }>;
 }> {
   const validated = RecordPaymentInputSchema.parse(input);
 
-  if (validated.allocations.length === 0) {
-    throw new Error("At least one allocation is required");
+  if (!validated.allocations || validated.allocations.length === 0) {
+    // Unallocated payment: insert payment record only. No JE, no event.
+    // Future: requires customer_advance account mapping for proper GL.
+    return await recordUnallocatedPayment(db, tenantId, actorId, validated);
   }
 
   // Normalize amount to string for DB
@@ -267,4 +268,45 @@ export async function recordPayment(
       allocatedAmount: String(a.allocatedAmount),
     })),
   };
+}
+
+async function recordUnallocatedPayment(
+  db: Database,
+  tenantId: string,
+  actorId: string,
+  validated: {
+    date?: string;
+    customerName?: string;
+    amount?: number;
+    paymentMethod?: "cash" | "bank" | "online" | "cheque";
+    referenceNumber?: string;
+    notes?: string;
+  },
+): Promise<{
+  paymentId: string;
+  paymentNumber: string;
+  journalEntryId: null;
+  allocations: [];
+}> {
+  const amountStr = String(validated.amount);
+  const paymentNumber = `PAY-${String(Date.now()).slice(-8)}`;
+
+  const result = await db.transaction(async (tx) => {
+    const payment = await tx.insert(payments).values({
+      tenantId,
+      paymentNumber,
+      date: validated.date!,
+      amount: amountStr,
+      paymentMethod: validated.paymentMethod!,
+      referenceNumber: validated.referenceNumber,
+      customerName: validated.customerName!,
+      notes: validated.notes,
+      status: "recorded",
+      createdBy: actorId,
+    }).returning({ id: payments.id });
+
+    return { paymentId: payment[0].id, paymentNumber };
+  });
+
+  return { ...result, journalEntryId: null, allocations: [] };
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { ESICalculationResult } from "../../../shared/src/index";
 
 interface ESIConfig {

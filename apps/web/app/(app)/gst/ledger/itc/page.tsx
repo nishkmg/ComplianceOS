@@ -1,107 +1,35 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Icon } from '@/components/ui/icon';
-import { formatIndianNumber } from "@/lib/format";
-import { showToast } from "@/lib/toast";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useState, useEffect } from "react";
+import { Icon } from "@/components/ui/icon";
+import { useSession } from "next-auth/react";
+import { EmptyState } from "@/components/ui/empty-state";
 
-export default function ITCSubLedgerPage() {
-  const { activeFy } = useFiscalYear();
-  const [selectedTax, setSelectedTax] = useState("all");
-
-  const allTransactions = [
-    { id: "1", date: "15 Oct 24", desc: "ITC on Capital Goods - B2B", ref: "SUP-8821", type: "IGST", amount: 45000, balance: 245600 },
-    { id: "2", date: "12 Oct 24", desc: "ITC on Inward Supplies", ref: "SRV-9012", type: "CGST", amount: 12000, balance: 200600 },
-  ];
-
-  const mockTransactions = useMemo(() =>
-    selectedTax === "all" ? allTransactions : allTransactions.filter(t => t.type === selectedTax),
-    [selectedTax]
-  );
-
+export default function ItcLedgerPage() {
+  const { data: session } = useSession(); const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const [entries, setEntries] = useState<any[]>([]); const [loading, setLoading] = useState(true);
+  useEffect(() => { if (!tenantId) return; (async () => { try { const r = await fetch(`/api/gst/ledger?tenantId=${encodeURIComponent(tenantId)}&type=cash`); if (r.ok) setEntries((await r.json()).entries?.filter((e: any) => e.tax_type === "itc") || []); } catch {} finally { setLoading(false); } })(); }, [tenantId]);
+  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
   return (
-    <div className="space-y-0 text-left">
-      {/* Page Header */}
-      <header className="flex justify-between items-end mb-12 border-b-[0.5px] border-border pb-8 mt-4">
-        <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Financial Year 2024-25  |  GSTIN: 27AACCV1234F1Z5</p>
-          <h1 className="font-display text-display-lg font-semibold text-dark">Input Tax Credit Ledger</h1>
-          <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">A rigorous, chronological record of eligible credit availability, utilization against outward tax liability, and mandated reversals as per Rule 42/43.</p>
-        </div>
-        <div className="flex gap-4 no-print">
-          <button onClick={() => showToast.info("Period filter: FY " + activeFy)} className="px-5 py-2 border border-border text-dark rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent shadow-sm">
-            <Icon name="filter_list" className="text-[18px]" /> FY {activeFy}
-          </button>
-        </div>
-      </header>
-
-      {/* KPI Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-surface border border-border border-t-2 border-t-amber p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-2 mb-4 text-mid">
-            <Icon name="account_balance" className="text-amber text-[18px]" />
-            <h3 className="font-ui text-[10px] uppercase font-bold tracking-widest">Total Available</h3>
-          </div>
-          <p className="font-mono text-2xl font-bold text-dark">₹ 2,45,600.00</p>
-        </div>
-        <div className="bg-surface border border-border p-6 shadow-sm">
-          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Utilized MTD</p>
-          <p className="font-mono text-2xl font-bold text-dark">₹ 85,000.00</p>
-        </div>
-        <div className="bg-surface border border-border p-6 shadow-sm">
-          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Pending Reversals</p>
-          <p className="font-mono text-2xl font-bold text-dark">0</p>
-        </div>
-        <div className="bg-surface border border-border p-6 shadow-sm">
-          <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Net Balance</p>
-          <p className="font-mono text-2xl font-bold text-success">₹ 2,45,600.00</p>
-        </div>
-      </div>
-
-      {/* Table Module */}
-      <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
-        <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
-            <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Transaction History</h3>
-            <div className="flex gap-4">
-               <select className="bg-transparent border border-border px-3 py-1 rounded text-xs outline-none font-ui text-[13px] font-bold uppercase tracking-widest text-mid" value={selectedTax} onChange={e => setSelectedTax(e.target.value)}>
-                  <option value="all">All Tax Types</option>
-                  <option value="IGST">IGST Only</option>
-                  <option value="CGST">CGST Only</option>
-                  <option value="SGST">SGST Only</option>
-               </select>
-            </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-surface-muted border-b border-stone-100 text-light font-ui text-[10px] uppercase tracking-widest">
-                <th className="py-4 px-6">Date</th>
-                <th className="py-4 px-6">Description / Reference</th>
-                <th className="py-4 px-6">Tax Component</th>
-                <th className="py-4 px-6 text-right">Addition (₹)</th>
-                <th className="py-4 px-6 text-right">Utilization (₹)</th>
-                <th className="py-4 px-6 text-right">Ledger Balance (₹)</th>
+    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+      <h1 className="font-display text-display-lg font-semibold text-dark">ITC Ledger</h1>
+      {entries.length === 0 ? <EmptyState icon="account_balance" title="No ITC entries" description="ITC entries will appear here once returns are filed." /> : (
+        <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
+          <table className="w-full text-left border-collapse"><thead><tr className="bg-surface-muted border-b border-border">
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Date</th>
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Description</th>
+            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Amount</th>
+          </tr></thead><tbody className="divide-y divide-border-subtle">
+            {entries.map((e: any) => (
+              <tr key={e.id} className="hover:bg-surface-muted transition-colors">
+                <td className="py-3 px-6 font-mono text-[12px] text-mid">{e.transaction_date ? new Date(e.transaction_date).toLocaleDateString("en-IN") : "—"}</td>
+                <td className="py-3 px-6 font-ui text-[13px] text-dark">{e.narration || e.transaction_type}</td>
+                <td className="py-3 px-6 text-right font-mono text-[13px] tabular-nums">₹{Number(e.amount || 0).toLocaleString("en-IN")}</td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-50 font-mono text-[13px]">
-              {mockTransactions.map((t) => (
-                <tr key={t.id} className="hover:bg-surface-muted/30 transition-colors">
-                  <td className="py-5 px-6 text-mid">{t.date}</td>
-                  <td className="py-5 px-6 text-left">
-                    <div className="font-ui text-[13px] font-bold text-dark text-sm">{t.desc}</div>
-                    <div className="text-[11px] text-light mt-0.5">{t.ref}</div>
-                  </td>
-                  <td className="py-5 px-6 font-ui text-[13px] font-bold text-dark">{t.type}</td>
-                  <td className="py-5 px-6 text-right text-success font-bold">₹ {formatIndianNumber(t.amount)}</td>
-                  <td className="py-5 px-6 text-right text-mid">—</td>
-                  <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(t.balance)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </tbody></table>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { eq, and, sql, sum, count } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { gstReturns, gstReturnLines, invoices, invoiceLines } = _db;
+import { getCurrentFiscalYear } from "@complianceos/shared";
 
 export const gstReconciliationRouter = router({
   reconcile: protectedProcedure
@@ -42,7 +42,7 @@ export const gstReconciliationRouter = router({
             returnType: "gstr3b",
             taxPeriodMonth: monthStr,
             taxPeriodYear: yearStr,
-            fiscalYear: "2026-27",
+            fiscalYear: getCurrentFiscalYear(new Date(`${yearStr}-${monthStr}-15`)),
             status: "draft",
             dueDate: `${yearStr}-${monthStr}-20`,
             createdBy: ctx.session!.user.id,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ITR Table Mapper Service
  * Maps computed tax data to Income Tax Department JSON structures

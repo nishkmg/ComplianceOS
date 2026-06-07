@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq, and, gte, lte, sql, not } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
@@ -153,12 +152,12 @@ export async function generateGSTR2B(
     const igst = Number(invoice.igstTotal);
     const cgst = Number(invoice.cgstTotal);
     const sgst = Number(invoice.sgstTotal);
-    const cess = 0; // TODO: add cess support
+    const cess = Number(invoice.cessAmount ?? 0);
 
     // Classify by table
-    const hasGstin = !!invoice.customerGstin; // For purchases, this is supplier GSTIN
+    const hasGstin = !!invoice.customerGstin;
     const isImport = invoice.customerState === "OUTSIDE_INDIA";
-    const isRCM = false; // TODO: add RCM flag to invoice schema
+    const isRCM = invoice.isRcm ?? false;
 
     if (isImport) {
       // Import of goods/services

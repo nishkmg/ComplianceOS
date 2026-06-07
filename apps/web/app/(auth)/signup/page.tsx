@@ -10,18 +10,31 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify({ name, email, password }),
-    });
-    if (res.ok) {
-      router.push("/login");
-    } else {
-      setError("Registration failed");
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (res.ok) {
+        window.location.href = "/login";
+      } else {
+        const body = await res.json().catch(() => ({}));
+        setError(body?.error || "Registration failed");
+      }
+    } catch {
+      setError("Connection error. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -104,9 +117,18 @@ export default function SignupPage() {
 
             {/* Action Button */}
             <div className="pt-4">
-              <button className="group w-full flex items-center justify-center gap-2 bg-amber rounded-md border-none px-6 py-3 font-ui font-medium text-[16px] text-white hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] transition-all duration-300 cursor-pointer shadow-sm" type="submit">
-                Continue to Firm Details
-                <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-300" />
+              <button className="group w-full flex items-center justify-center gap-2 bg-amber rounded-md border-none px-6 py-3 font-ui font-medium text-[16px] text-white hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" type="submit" disabled={submitting}>
+                {submitting ? (
+                  <>
+                    <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Creating account…
+                  </>
+                ) : (
+                  <>
+                    Continue to Firm Details
+                    <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-300" />
+                  </>
+                )}
               </button>
             </div>
           </form>

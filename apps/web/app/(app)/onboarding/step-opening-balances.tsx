@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import { Label } from "@/components/ui/label";
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 
@@ -19,23 +19,22 @@ interface OpeningBalance {
 interface StepOpeningBalancesProps {
   tenantId: string;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalancesProps) {
+export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpeningBalancesProps) {
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
 
-  const accounts: any[] = [];
+  const accounts: any[] = [
+    { id: "cash_bank", code: "11100", name: "Cash & Bank", kind: "asset", isLeaf: true },
+    { id: "receivables", code: "11200", name: "Trade Receivables", kind: "asset", isLeaf: true },
+    { id: "inventory", code: "11300", name: "Inventory", kind: "asset", isLeaf: true },
+    { id: "payables", code: "21100", name: "Trade Payables", kind: "liability", isLeaf: true },
+    { id: "gst_output", code: "21200", name: "GST Output", kind: "liability", isLeaf: true },
+  ];
 
-  const setupOpeningBalances = mockMutation({
-    onSuccess: () => {
-      showToast.success('Opening balances initialized');
-      onComplete();
-    },
-    onError: (error) => {
-      showToast.error(error.message || 'Failed to initialize balances');
-    },
-  });
+  const [saving, setSaving] = useState(false);
 
   const totals = useMemo(() => {
     let dr = 0;
@@ -49,27 +48,29 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
   }, [balances]);
 
   const handleContinue = async () => {
-    if (mode === "fresh_start") {
-      await setupOpeningBalances.mutateAsync({
-        tenantId,
-        fiscalYear: "2024-25",
-        input: { mode: "fresh_start", balances: [] },
-      });
-    } else {
-      if (totals.diff > 0.01) {
-        showToast.error('Trial balance must be equal. Please ensure debits match credits.');
-        return;
+    setSaving(true);
+    try {
+      if (mode === "fresh_start") {
+        await submitStep(6, { tenantId, data: { mode: "fresh_start" } });
+      } else {
+        if (totals.diff > 0.01) {
+          showToast.error('Trial balance must be equal. Ensure debits match credits.');
+          setSaving(false);
+          return;
+        }
+        const balanceData = Object.entries(balances).map(([accountId, b]) => ({
+          accountId,
+          debit: (b as { debit: number; credit: number }).debit,
+          credit: (b as { debit: number; credit: number }).credit,
+        }));
+        await submitStep(6, { tenantId, data: { mode: "migration", balances: balanceData } });
       }
-// @ts-ignore
-      const data = Object.entries(balances).map(([id, b]) => ({
-        accountId: id,
-        openingBalance: b.debit > 0 ? b.debit : -b.credit
-      }));
-      await setupOpeningBalances.mutateAsync({
-        tenantId,
-        fiscalYear: "2024-25",
-        input: { mode: "migration", balances: data },
-      });
+      showToast.success('Opening balances initialized');
+      await onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to initialize balances');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -188,15 +189,28 @@ export function StepOpeningBalances({ tenantId, onComplete }: StepOpeningBalance
       )}
 
       <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
-        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
-          Opening balances set here will form the Q1 starting position for FY 2024-25.
-        </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving || (mode === "migration" && totals.diff > 0.01)}
+              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-[18px]" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+            Opening balances set here will form the Q1 starting position for FY 2024-25.
+          </p>
+        </div>
         <button
           onClick={handleContinue}
-          disabled={setupOpeningBalances.isPending || (mode === "migration" && totals.diff > 0.01)}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-30"
+          disabled={saving || (mode === "migration" && totals.diff > 0.01)}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {setupOpeningBalances.isPending ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
+          {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
           <Icon name="rocket_launch" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>

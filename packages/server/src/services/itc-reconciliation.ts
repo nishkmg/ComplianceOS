@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ITC Reconciliation Service
  * 
@@ -7,7 +6,7 @@
  */
 
 import { z } from 'zod';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { logger } from '../lib/logger';
 
 // Constants
@@ -78,7 +77,7 @@ export interface ReconciliationSummary {
  * Load purchase register (books) for a given period
  */
 async function loadPurchaseRegister(
-  db: NodePgDatabase<any>,
+  db: PostgresJsDatabase<any>,
   tenantId: string,
   periodMonth: number,
   periodYear: number
@@ -99,7 +98,7 @@ async function loadPurchaseRegister(
  * In production, this would fetch from GSTN API or import from portal
  */
 async function loadGstr2bData(
-  _db: NodePgDatabase<any>,
+  _db: PostgresJsDatabase<any>,
   _tenantId: string,
   periodMonth: number,
   periodYear: number
@@ -284,7 +283,7 @@ export function categorizeMismatch(book: Invoice, gstr2b: Invoice): {
  * Main reconciliation function
  */
 export async function reconcileITC(
-  db: NodePgDatabase<any>,
+  db: PostgresJsDatabase<any>,
   tenantId: string,
   periodMonth: number,
   periodYear: number

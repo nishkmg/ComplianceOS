@@ -1,11 +1,11 @@
-// @ts-nocheck
 import { eq, and } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { invoices, invoiceLines } = _db;
+const { invoices, invoiceLines, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import { generateInvoicePdf, type InvoiceWithLines, type InvoiceConfig } from "../services/pdf-generator";
 import { EmailQueueService } from "../services/email-queue";
+import { stateCodeToGstPrefix, getStateName } from "@complianceos/shared";
 
 export async function sendInvoice(
   db: Database,
@@ -52,20 +52,38 @@ export async function sendInvoice(
     })),
   };
 
-  // Default company config - in real impl fetch from tenant config
+  // Fetch tenant config for invoice header
+  const [tenant] = await db.select({
+    name: tenants.name,
+    legalName: tenants.legalName,
+    stateCode: tenants.stateCode,
+    gstin: tenants.gstin,
+    pan: tenants.pan,
+    address: tenants.address,
+    bankAccount: tenants.bankAccount,
+    bankIfsc: tenants.bankIfsc,
+  }).from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+
+  if (!tenant) {
+    throw new Error("Tenant not found");
+  }
+  if (!tenant.stateCode) {
+    throw new Error("Tenant state code not configured. Update tenant config before sending invoices.");
+  }
+
   const config: InvoiceConfig = {
     company: {
-      name: "ComplianceOS Demo",
+      name: tenant.legalName || tenant.name,
       address: invoice.customerAddress || "123 Business Park, Suite 100",
       city: "Chennai",
-      state: "IN-TN",
-      gstin: "33AAAAA0000A1ZA",
-      pan: "AAAAA0000A",
+      state: stateCodeToGstPrefix(tenant.stateCode),
+      gstin: tenant.gstin || "",
+      pan: tenant.pan || "",
       email: "billing@example.com",
       phone: "+91 98765 43210",
-      bankName: "HDFC Bank",
-      bankAccount: "XXXXXXXX1234",
-      bankIfsc: "HDFC0001234",
+      bankName: "Bank",
+      bankAccount: tenant.bankAccount || "",
+      bankIfsc: tenant.bankIfsc || "",
     },
   };
 

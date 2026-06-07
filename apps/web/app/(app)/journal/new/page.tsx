@@ -7,23 +7,8 @@ import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { addEntry, getEntries, StoredEntry } from "@/lib/journal-store";
-
-const MOCK_ACCOUNTS = [
-  { id: "1", name: "Cash Account", code: "10101", type: "asset" },
-  { id: "2", name: "Bank Account", code: "10200", type: "asset" },
-  { id: "3", name: "Trade Receivables", code: "10300", type: "asset" },
-  { id: "4", name: "Sales Revenue", code: "40100", type: "income" },
-  { id: "5", name: "Operating Expenses", code: "50200", type: "expense" },
-  { id: "6", name: "Trade Payables", code: "20101", type: "liability" },
-  { id: "7", name: "Capital Account", code: "30100", type: "equity" },
-  { id: "8", name: "GST Output", code: "20200", type: "liability" },
-  { id: "9", name: "GST Input", code: "10400", type: "asset" },
-  { id: "10", name: "Equipment", code: "10500", type: "asset" },
-];
-
-const accountTypeMap: Record<string, { id: string; name: string; code: string; type: string }> = {};
-MOCK_ACCOUNTS.forEach(a => { accountTypeMap[a.id] = a; });
+import { useModules } from "@/hooks/use-modules";
+import { useSession } from "next-auth/react";
 
 const VOUCHER_TYPES = ["Journal Entry", "Receipt Voucher", "Payment Voucher", "Contra Voucher"] as const;
 
@@ -33,6 +18,13 @@ interface Line {
   debit: string;
   credit: string;
   description: string;
+}
+
+interface Account {
+  id: string;
+  code: string;
+  name: string;
+  kind: string;
 }
 
 function newLine(): Line {
@@ -60,20 +52,16 @@ function isFutureDate(dateStr: string): boolean {
   return d > today;
 }
 
-function entryNumberForFy(fy: string): string {
-  const mockMax = 6;
-  const stored = getEntries().filter(e => e.fiscalYear === fy);
-  const maxSeq = stored.reduce((max, e) => {
-    const match = e.entryNumber.match(/(\d+)$/);
-    return match ? Math.max(max, parseInt(match[1], 10)) : max;
-  }, mockMax);
-  const nextSeq = maxSeq + 1;
-  return `JE-${fy}-${String(nextSeq).padStart(3, "0")}`;
-}
-
 export default function NewJournalEntryPage() {
   const { activeFy } = useFiscalYear();
+  const { isEnabled, gstConfig } = useModules();
+  const { data: session } = useSession();
   const router = useRouter();
+  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accountsLoading, setAccountsLoading] = useState(true);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [narration, setNarration] = useState("");
   const [reference, setReference] = useState("");
@@ -83,7 +71,39 @@ export default function NewJournalEntryPage() {
   const savingRef = useRef(false);
   const [discardConfirm, setDiscardConfirm] = useState(false);
 
-  const entryNumber = useMemo(() => entryNumberForFy(activeFy), [activeFy]);
+  // Fetch real accounts from API
+  useEffect(() => {
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/accounts?tenantId=${encodeURIComponent(tenantId)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setAccounts(data.accounts || []);
+      } catch {
+        // fallback to empty
+      } finally {
+        setAccountsLoading(false);
+      }
+    })();
+  }, [tenantId]);
+
+  const accountMap = useMemo(() => {
+    const map: Record<string, Account> = {};
+    for (const a of accounts) map[a.id] = a;
+    return map;
+  }, [accounts]);
+
+  // Filter accounts based on module config and GST settings
+  const availableAccounts = useMemo(() => {
+    const gstOn = isEnabled("gst");
+    const itcOn = gstConfig.itcEligible;
+    return accounts.filter(a => {
+      if (a.kind === "Liability" && a.name.includes("GST") && !gstOn) return false;
+      if (a.kind === "Asset" && a.name.includes("GST Input") && !itcOn) return false;
+      return true;
+    });
+  }, [accounts, isEnabled, gstConfig]);
 
   const totalDebit = lines.reduce((sum, l) => sum + (parseFloat(l.debit) || 0), 0);
   const totalCredit = lines.reduce((sum, l) => sum + (parseFloat(l.credit) || 0), 0);
@@ -112,16 +132,16 @@ export default function NewJournalEntryPage() {
         warnings.push("Negative amounts are not allowed. Debit/Credit must be positive or zero.");
         break;
       }
-      const acct = accountTypeMap[line.accountId];
+      const acct = accountMap[line.accountId];
       if (!acct) continue;
       const amt = dVal || cVal;
       if (!amt || amt <= 0) continue;
       const isDebit = !!line.debit;
-      const normallyDr = acct.type === "asset" || acct.type === "expense";
+      const normallyDr = acct.kind === "Asset" || acct.kind === "Expense";
       if (isDebit && !normallyDr) {
-        warnings.push(`"${acct.name}" (${acct.type}) normally carries a credit balance. A debit entry may be unusual.`);
+        warnings.push(`"${acct.name}" (${acct.kind}) normally carries a credit balance. A debit entry may be unusual.`);
       } else if (!isDebit && normallyDr) {
-        warnings.push(`"${acct.name}" (${acct.type}) normally carries a debit balance. A credit entry may be unusual.`);
+        warnings.push(`"${acct.name}" (${acct.kind}) normally carries a debit balance. A credit entry may be unusual.`);
       }
     }
     return warnings;
@@ -145,7 +165,7 @@ export default function NewJournalEntryPage() {
   }, []);
 
   const handleSubmit = useCallback(async (status: 'draft' | 'posted' = 'posted') => {
-    if (savingRef.current) return;
+    if (savingRef.current || !userId || !tenantId) return;
     if (!narration.trim()) {
       showToast.error('Narration is required.');
       return;
@@ -173,37 +193,39 @@ export default function NewJournalEntryPage() {
     setSaving(true);
     savingRef.current = true;
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const entry: StoredEntry = {
-        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
-        entryNumber,
+      const body = {
+        tenantId,
+        fiscalYear: activeFy,
         date,
         narration: narration.trim(),
-        fiscalYear: activeFy,
-        type: voucherType,
-        reference,
-        status,
-        lines: lines.filter(l => l.accountId && ((parseFloat(l.debit) || 0) > 0 || (parseFloat(l.credit) || 0) > 0)).map(l => {
-          const acct = accountTypeMap[l.accountId];
-          return {
-            accountName: acct?.name ?? "Unknown",
-            accountCode: acct?.code ?? "",
-            debit: parseFloat(l.debit) || 0,
-            credit: parseFloat(l.credit) || 0,
-          };
-        }),
-        createdAt: new Date().toISOString(),
+        voucherType,
+        reference: reference.trim() || undefined,
+        createdBy: userId,
+        lines: lines.filter(l => l.accountId && ((parseFloat(l.debit) || 0) > 0 || (parseFloat(l.credit) || 0) > 0)).map(l => ({
+          accountId: l.accountId,
+          debit: parseFloat(l.debit) || 0,
+          credit: parseFloat(l.credit) || 0,
+          description: l.description || undefined,
+        })),
       };
-      addEntry(entry);
+      const res = await fetch("/api/journal/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.error || `Failed (${res.status})`);
+      }
       showToast.success(status === 'draft' ? 'Voucher draft saved' : 'Journal entry posted to ledger');
       router.push("/journal");
-    } catch {
-      showToast.error('An error occurred while saving.');
+    } catch (err: any) {
+      showToast.error(err.message || 'An error occurred while saving.');
     } finally {
       setSaving(false);
       savingRef.current = false;
     }
-  }, [isBalanced, narration, dateError, lines, entryNumber, date, activeFy, voucherType, reference, router]);
+  }, [isBalanced, narration, dateError, lines, date, activeFy, voucherType, reference, router, userId, tenantId]);
 
   const handleDiscard = useCallback(() => {
     const hasContent = narration || reference || lines.some(l => l.accountId || l.debit || l.credit || l.description);
@@ -265,13 +287,13 @@ export default function NewJournalEntryPage() {
           <div>
             <h1 className="font-display text-display-lg font-semibold text-dark">New Journal Entry</h1>
             <p className="text-[13px] text-secondary font-ui mt-1">
-              Record a new transaction in the general ledger
+              Record a new transaction in the general ledger{gstConfig.tdsApplicable ? " · TDS applicable" : ""}{gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
             </p>
           </div>
         </div>
         <div className="text-right">
           <p className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Entry #</p>
-          <p className="font-mono text-[13px] text-dark tabular-nums">{entryNumber}</p>
+          <p className="font-mono text-[13px] text-dark tabular-nums">Auto-generated</p>
         </div>
       </div>
 
@@ -383,7 +405,7 @@ export default function NewJournalEntryPage() {
                         onChange={(e) => updateLine(index, "accountId", e.target.value)}
                       >
                         <option value="">Select account…</option>
-                        {MOCK_ACCOUNTS.map(a => (
+                        {availableAccounts.map(a => (
                           <option key={a.id} value={a.id}>{a.code} · {a.name}</option>
                         ))}
                       </select>

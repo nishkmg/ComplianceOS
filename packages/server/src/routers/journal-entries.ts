@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { createJournalEntry } from "../commands/create-journal-entry";
 import { postJournalEntry } from "../commands/post-journal-entry";
 import { voidJournalEntry } from "../commands/void-journal-entry";
@@ -12,7 +11,7 @@ import * as _db from "../../../db/src/index";
 const { journalEntries } = _db;
 
 export const journalEntriesRouter = router({
-  list: publicProcedure
+  list: protectedProcedure
     .input(z.object({
       status: z.enum(["draft", "posted", "voided"]).optional(),
       fiscalYear: z.string().optional(),
@@ -30,7 +29,7 @@ export const journalEntriesRouter = router({
         .offset(input?.offset ?? 0);
     }),
 
-  get: publicProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
     const result = await ctx.db.select().from(journalEntries).where(
       and(eq(journalEntries.id, input.id), eq(journalEntries.tenantId, ctx.tenantId)),
     );
@@ -52,19 +51,19 @@ export const journalEntriesRouter = router({
       })),
     }))
     .mutation(async ({ ctx, input }) => {
-      return createJournalEntry(ctx.db, ctx.tenantId, ctx.session.user.id, input.fiscalYear, input);
+      return createJournalEntry(ctx.db, ctx.tenantId, ctx.session!.user.id, input.fiscalYear, input as Parameters<typeof createJournalEntry>[4]);
     }),
 
   post: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return postJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
+      return postJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
     }),
 
   void: protectedProcedure
     .input(z.object({ id: z.string().uuid(), reason: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return voidJournalEntry(ctx.db, ctx.tenantId, input.id, input.reason, ctx.session.user.id);
+      return voidJournalEntry(ctx.db, ctx.tenantId, input.id, input.reason, ctx.session!.user.id);
     }),
 
   modify: protectedProcedure
@@ -80,18 +79,18 @@ export const journalEntriesRouter = router({
       })).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return modifyJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session.user.id, input);
+      return modifyJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id, input as Parameters<typeof modifyJournalEntry>[4]);
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      return deleteJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session.user.id);
+      return deleteJournalEntry(ctx.db, ctx.tenantId, input.id, ctx.session!.user.id);
     }),
 
   correctNarration: protectedProcedure
     .input(z.object({ id: z.string().uuid(), newNarration: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return correctNarration(ctx.db, ctx.tenantId, input.id, input.newNarration, ctx.session.user.id);
+      return correctNarration(ctx.db, ctx.tenantId, input.id, input.newNarration, ctx.session!.user.id);
     }),
 });

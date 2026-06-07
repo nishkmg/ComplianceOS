@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { TDSCalculationResult } from "../../../shared/src/index";
 
 interface TaxSlab {

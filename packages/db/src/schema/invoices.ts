@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
-  pgTable, uuid, text, date, numeric, timestamp,
+  pgTable, uuid, text, date, numeric, timestamp, boolean,
   foreignKey, check, index, uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { invoiceStatusEnum, creditNoteStatusEnum } from "./enums";
@@ -61,6 +61,8 @@ export const invoices = pgTable("invoices", {
   notes: text("notes"),
   terms: text("terms"),
   fiscalYear: text("fiscal_year").notNull(),
+  cessAmount: numeric("cess_amount", { precision: 18, scale: 2 }).default("0").notNull(),
+  isRcm: boolean("is_rcm").default(false).notNull(),
   createdBy: uuid("created_by").notNull().references(() => users.id),
   sentAt: timestamp("sent_at", { withTimezone: true }),
   paidAt: timestamp("paid_at", { withTimezone: true }),

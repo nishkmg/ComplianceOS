@@ -1,31 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+  const submitLock = useRef(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-    if (result?.error) {
-      setError("Invalid credentials");
-    } else {
-      router.push("/dashboard");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error")) {
+      setError("Invalid email or password");
     }
-  }
+  }, []);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitLock.current) return;
+    submitLock.current = true;
+    setSubmitting(true);
+    setError("");
+
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/dashboard",
+      });
+    } catch {
+      setSubmitting(false);
+      submitLock.current = false;
+      setError("Connection error. Please try again.");
+    }
+  }, [email, password]);
 
   return (
     <div className="bg-surface-muted min-h-screen flex items-center justify-center p-6 selection:bg-amber selection:text-white">
@@ -55,6 +68,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={submitting}
               />
             </div>
 
@@ -74,12 +88,14 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={submitting}
                 />
                 {/* Password Toggle */}
                 <button 
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-secondary hover:text-dark border-none bg-transparent cursor-pointer"
+                  disabled={submitting}
                 >
                   <Icon name={showPassword ? 'visibility' : 'visibility_off'} className="text-[20px]" />
                 </button>
@@ -91,9 +107,22 @@ export default function LoginPage() {
             )}
 
             {/* Submit Button */}
-            <button className="w-full mt-4 bg-amber text-white font-ui font-medium text-[16px] rounded-md py-4 px-6 flex justify-center items-center group transition-all duration-300 hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] cursor-pointer border-none shadow-sm" type="submit">
-              Access Account
-              <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300 ease-in-out font-mono text-[18px]">→</span>
+            <button 
+              className="w-full mt-4 bg-amber text-white font-ui font-medium text-[16px] rounded-md py-4 px-6 flex justify-center items-center group transition-all duration-300 hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] cursor-pointer border-none shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" 
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <>
+                  <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Signing in…
+                </>
+              ) : (
+                <>
+                  Access Account
+                  <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300 ease-in-out font-mono text-[18px]">→</span>
+                </>
+              )}
             </button>
           </form>
 

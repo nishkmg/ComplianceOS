@@ -1,7 +1,8 @@
 import {
-  pgTable, uuid, text, numeric, timestamp, date,
+  pgTable, uuid, text, numeric, timestamp, date, bigint,
   uniqueIndex, index, foreignKey,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { stockMovementTypeEnum } from "./enums";
 import { products } from "./products";
 import { tenants } from "./tenants";
@@ -58,4 +59,21 @@ export const warehouseStock = pgTable("warehouse_stock", {
   uniqueIndex("warehouse_stock_tenant_product_warehouse_unique").on(
     table.tenantId, table.productId, table.warehouseId
   ),
+]);
+
+export const inventoryValuation = pgTable("inventory_valuation", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  tenantId: uuid("tenant_id").notNull(),
+  productId: uuid("product_id").notNull().references(() => products.id),
+  warehouseId: uuid("warehouse_id"),
+  quantityOnHand: numeric("quantity_on_hand", { precision: 18, scale: 4 }).notNull().default("0"),
+  totalValue: numeric("total_value", { precision: 18, scale: 2 }).notNull().default("0"),
+  cogsPerUnit: numeric("cogs_per_unit", { precision: 18, scale: 4 }).notNull().default("0"),
+  lastEventSequence: bigint("last_event_sequence", { mode: "bigint" }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("inventory_valuation_tenant_product_warehouse_unique").on(
+    table.tenantId, table.productId, sql`COALESCE(${table.warehouseId}, '00000000-0000-0000-0000-000000000000'::uuid)`
+  ),
+  index("inventory_valuation_tenant_product_idx").on(table.tenantId, table.productId),
 ]);

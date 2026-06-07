@@ -1,16 +1,24 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db, users, userTenants, tenants } from "@complianceos/db";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+import { supabaseRest } from "@/lib/supabase-rest";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const DEMO_EMAIL = "demo@arthvahi.in";
-const DEMO_TENANT_ID = process.env.DEMO_TENANT_ID || "demo-tenant-uuid";
+
+async function sbGet(path: string) {
+  const res = await supabaseRest(path);
+  if (!res.ok) {
+    return null;
+  }
+  return res.json;
+}
+
+function asRows<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
 
 const nextAuth = NextAuth({
-  adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" },
   providers: [
     Credentials({
@@ -20,25 +28,26 @@ const nextAuth = NextAuth({
       },
       async authorize(credentials: any) {
         if (!credentials?.email) return null;
-        
+
         if (DEMO_MODE && credentials.email === DEMO_EMAIL) {
-          const demoUser = await db.select().from(users).where(eq(users.email, DEMO_EMAIL)).limit(1);
-          if (demoUser[0]) {
-            return { id: demoUser[0].id, email: demoUser[0].email, name: demoUser[0].name };
-          }
+          const data = asRows<{ id: string; email: string; name: string }>(
+            await sbGet(`users?email=eq.${encodeURIComponent(DEMO_EMAIL)}&select=id,email,name`)
+          );
+          if (data[0]) return { id: data[0].id, email: data[0].email, name: data[0].name };
           return null;
         }
-        
-        const user = await db.select().from(users).where(eq(users.email, credentials.email)).limit(1);
-        if (!user[0]) return null;
-        
+
         if (!credentials.password) return null;
-        if (user[0].passwordHash) {
-          const valid = await bcrypt.compare(credentials.password, user[0].passwordHash);
+        const data = asRows<{ id: string; email: string; name: string; password_hash?: string | null }>(
+          await sbGet(`users?email=eq.${encodeURIComponent(credentials.email)}&select=id,email,name,password_hash`)
+        );
+        if (!data[0]) return null;
+
+        if (data[0].password_hash) {
+          const valid = await bcrypt.compare(credentials.password, data[0].password_hash);
           if (!valid) return null;
         }
-        
-        return { id: user[0].id, email: user[0].email, name: user[0].name };
+        return { id: data[0].id, email: data[0].email, name: data[0].name };
       },
     }),
   ],
@@ -46,22 +55,13 @@ const nextAuth = NextAuth({
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
-
-        // Look up tenant + onboarding_status (runs on server, not middleware)
-        const ut = await db
-          .select({ tenantId: userTenants.tenantId })
-          .from(userTenants)
-          .where(eq(userTenants.userId, user.id))
-          .limit(1);
-
+        const ut = asRows<{ tenant_id: string }>(await sbGet(`user_tenants?user_id=eq.${user.id}&select=tenant_id`));
         if (ut[0]) {
-          token.tenantId = ut[0].tenantId;
-          const t = await db
-            .select({ onboardingStatus: tenants.onboardingStatus })
-            .from(tenants)
-            .where(eq(tenants.id, ut[0].tenantId))
-            .limit(1);
-          token.onboardingComplete = t[0]?.onboardingStatus === "complete";
+          token.tenantId = ut[0].tenant_id;
+          const t = asRows<{ onboarding_status?: string | null }>(
+            await sbGet(`tenants?id=eq.${ut[0].tenant_id}&select=onboarding_status`)
+          );
+          token.onboardingComplete = t[0]?.onboarding_status === "complete";
         } else {
           token.tenantId = undefined;
           token.onboardingComplete = false;
@@ -69,7 +69,6 @@ const nextAuth = NextAuth({
       }
       return token;
     },
-
     async session({ session, token }: any) {
       session.user.id = token.id;
       session.user.tenantId = token.tenantId;
@@ -77,9 +76,7 @@ const nextAuth = NextAuth({
       return session;
     },
   },
-  pages: {
-    signIn: "/login",
-  },
+  pages: { signIn: "/login" },
 });
 
 export const handlers = nextAuth.handlers as any;

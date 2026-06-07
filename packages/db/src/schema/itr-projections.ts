@@ -3,6 +3,7 @@ import {
   uniqueIndex, index,
 } from "drizzle-orm/pg-core";
 import { tenants } from "./tenants";
+import { itrReturns } from "./itr-returns";
 
 export const itrAnnualIncomeProjection = pgTable("itr_annual_income_projection", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -30,6 +31,7 @@ export const itrAnnualIncomeProjection = pgTable("itr_annual_income_projection",
 export const itrTaxSummaryProjection = pgTable("itr_tax_summary_projection", {
   id: uuid("id").defaultRandom().primaryKey(),
   tenantId: uuid("tenant_id").notNull(),
+  itrReturnId: uuid("itr_return_id").references((): any => itrReturns.id),
   assessmentYear: text("assessment_year").notNull(),
   financialYear: text("financial_year").notNull(),
   taxRegime: text("tax_regime"),
@@ -43,6 +45,13 @@ export const itrTaxSummaryProjection = pgTable("itr_tax_summary_projection", {
   selfAssessmentTax: numeric("self_assessment_tax", { precision: 18, scale: 2 }).default("0"),
   balancePayable: numeric("balance_payable", { precision: 18, scale: 2 }).default("0"),
   refundDue: numeric("refund_due", { precision: 18, scale: 2 }).default("0"),
+  salaryIncome: numeric("salary_income", { precision: 18, scale: 2 }).default("0"),
+  housePropertyIncome: numeric("house_property_income", { precision: 18, scale: 2 }).default("0"),
+  businessIncome: numeric("business_income", { precision: 18, scale: 2 }).default("0"),
+  capitalGainsIncome: numeric("capital_gains_income", { precision: 18, scale: 2 }).default("0"),
+  otherSourcesIncome: numeric("other_sources_income", { precision: 18, scale: 2 }).default("0"),
+  totalDeductions: numeric("total_deductions", { precision: 18, scale: 2 }).default("0"),
+  taxableIncome: numeric("taxable_income", { precision: 18, scale: 2 }).default("0"),
   lastComputedAt: timestamp("last_computed_at", { withTimezone: true }),
   eventSequenceId: bigint("event_sequence_id", { mode: "bigint" }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),

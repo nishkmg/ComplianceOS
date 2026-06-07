@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { eq, and } from "drizzle-orm";
 import { advanceTaxLedger, itrReturns } from "../../../db/src/index";

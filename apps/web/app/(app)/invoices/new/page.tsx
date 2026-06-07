@@ -1,330 +1,69 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { addInvoice, StoredInvoice } from "@/lib/invoice-store";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface LineItem {
-  id: string;
-  description: string;
-  hsn: string;
-  qty: number;
-  rate: number;
-  gstRate: number;
-}
-
-const GST_RATES = [0, 5, 12, 18, 28];
-
-// ─── Page Component ───────────────────────────────────────────────────────────
+import { useSession } from "next-auth/react";
 
 export default function NewInvoicePage() {
-  const { activeFy } = useFiscalYear();
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
   const router = useRouter();
+  const [customerName, setCustomerName] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [lines, setLines] = useState([{ description: "", quantity: "1", rate: "" }]);
   const [saving, setSaving] = useState(false);
-  const [savedNumber, setSavedNumber] = useState<string | null>(null);
-  const [invoiceNumber, setInvoiceNumber] = useState(`INV-${activeFy}-0001`);
+  const savingRef = useRef(false);
 
-  // Set a realistic invoice number on mount (avoids hydration mismatch with random values)
-  useEffect(() => {
-    if (!savedNumber) {
-      setInvoiceNumber(`INV-${activeFy}-${String(Date.now()).slice(-5)}`);
-    }
-  }, [activeFy, savedNumber]);
-
-  const [customer, setCustomer] = useState({
-    name: "Mehta Textiles Pvt. Ltd.",
-    address: "45, Industrial Estate, Phase II, Ahmedabad, Gujarat 380015",
-    gstin: "24AABCM9876P1Z2",
-    state: "24 - Gujarat",
-  });
-
-  const today = new Date().toISOString().split("T")[0];
-  const defaultDue = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
-  const [date, setDate] = useState(today);
-  const [dueDate, setDueDate] = useState(defaultDue);
-  const [lineItems, setLineItems] = useState<LineItem[]>([
-    { id: "1", description: "Statutory Audit Fees — FY 23-24", hsn: "998221", qty: 1, rate: 150000, gstRate: 18 },
-  ]);
-
-  const totals = useMemo(() => {
-    let subtotal = 0;
-    let tax = 0;
-    lineItems.forEach(item => {
-      const base = item.qty * item.rate;
-      subtotal += base;
-      tax += base * (item.gstRate / 100);
-    });
-    return { subtotal, tax, total: subtotal + tax };
-  }, [lineItems]);
-
-  const addLine = () =>
-    setLineItems(prev => [...prev, { id: Math.random().toString(36).slice(2), description: "", hsn: "", qty: 1, rate: 0, gstRate: 18 }]);
-
-  const updateLine = (id: string, field: keyof LineItem, val: any) =>
-    setLineItems(prev => prev.map(item => (item.id === id ? { ...item, [field]: val } : item)));
-
-  const removeLine = (id: string) =>
-    setLineItems(prev => prev.filter(item => item.id !== id));
-
-  const handleSave = useCallback(async (status: "draft" | "sent") => {
-    if (saving) return;
-    if (!customer.name.trim()) { showToast.error("Customer name is required."); return; }
-    if (!lineItems.length || lineItems.every(l => !l.description)) { showToast.error("At least one line item is required."); return; }
-    setSaving(true);
+  const handleSubmit = async () => {
+    if (savingRef.current || !tenantId || !userId) return;
+    if (!customerName.trim()) { showToast.error("Customer name is required."); return; }
+    setSaving(true); savingRef.current = true;
     try {
-      await new Promise(resolve => setTimeout(resolve, 600));
-      const num = invoiceNumber;
-      const inv: StoredInvoice = {
-        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
-        invoiceNumber: num,
-        customerName: customer.name,
-        customerAddress: customer.address,
-        customerGstin: customer.gstin,
-        date,
-        dueDate,
-        fiscalYear: activeFy,
-        status,
-        lines: lineItems.map(l => ({ description: l.description, hsn: l.hsn, qty: l.qty, rate: l.rate, gstRate: l.gstRate })),
-        subtotal: totals.subtotal,
-        tax: totals.tax,
-        total: totals.total,
-        createdAt: new Date().toISOString(),
-      };
-      addInvoice(inv);
-      setSavedNumber(num);
-      showToast.success(status === "draft" ? "Invoice draft saved." : "Invoice finalized and sent to customer.");
+      const res = await fetch("/api/invoices", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tenantId, customerName: customerName.trim(), date, lines: lines.filter(l => l.description), createdBy: userId }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || `Failed (${res.status})`);
+      showToast.success("Invoice created");
       router.push("/invoices");
-    } catch {
-      showToast.error("Failed to save invoice.");
-    } finally {
-      setSaving(false);
-    }
-  }, [saving, customer, date, dueDate, lineItems, totals, activeFy, invoiceNumber, router]);
-
-  const handleDiscard = useCallback(() => {
-    const hasContent = lineItems.some(l => l.description) || date || dueDate;
-    if (hasContent && !window.confirm("Discard unsaved invoice?")) return;
-    router.back();
-  }, [lineItems, date, dueDate, router]);
+    } catch (err: any) { showToast.error(err.message); }
+    finally { setSaving(false); savingRef.current = false; }
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
+    <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => router.back()}
-            className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer"
-            aria-label="Go back"
-          >
-            <Icon name="arrow_back" size={20} />
-          </button>
-          <div>
-            <h1 className="font-display text-display-lg font-semibold text-dark">New Invoice</h1>
-            <p className="font-ui text-[11px] text-secondary mt-0.5">{invoiceNumber}</p>
-          </div>
+          <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
+          <h1 className="font-display text-display-lg font-semibold text-dark">New Invoice</h1>
         </div>
-        <div className="flex gap-3">
-          <button onClick={handleDiscard} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
-            Discard
-          </button>
-          <button onClick={() => handleSave("draft")} disabled={saving} className="px-4 py-2 border border-border text-dark text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
-            {saving ? "Saving…" : "Save Draft"}
-          </button>
-          <button onClick={() => handleSave("sent")} disabled={saving} className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
-            {saving ? "Sending…" : "Finalize & Send"} <Icon name="arrow_forward" size={14} />
-          </button>
-        </div>
+        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+          {saving ? "Creating…" : "Create Invoice"}
+        </button>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left: form */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Client details */}
-          <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
-            <div className="h-[2px] w-full bg-amber -mt-6 mb-6" />
-            <h3 className="font-ui text-[10px] font-bold text-light uppercase tracking-widest pb-2 mb-5 border-b border-border">
-              Client Details
-            </h3>
-            <div className="space-y-5">
-              <div className="space-y-1">
-                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Billed To</label>
-                <select className="w-full bg-surface border border-border rounded-md px-3 py-2.5 text-[13px] font-ui text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors">
-                  <option>{customer.name}</option>
-                  <option>Sharma Associates</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Date</label>
-                  <input
-                    type="date"
-                    className="w-full bg-surface border border-border rounded-md px-3 py-2.5 font-mono text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
-                    value={date}
-                    onChange={e => setDate(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Due Date</label>
-                  <input
-                    type="date"
-                    className="w-full bg-surface border border-border rounded-md px-3 py-2.5 font-mono text-[13px] outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
-                    value={dueDate}
-                    onChange={e => setDueDate(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+      <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-1.5">
+            <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Customer Name</label>
+            <input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} />
           </div>
-
-          {/* Line items */}
-          <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
-            <div className="flex items-center justify-between pb-2 mb-5 border-b border-border">
-              <h3 className="font-ui text-[10px] font-bold text-light uppercase tracking-widest">Line Items</h3>
-              <button
-                onClick={addLine}
-                className="text-amber hover:text-amber-hover font-bold text-[11px] flex items-center gap-1 transition-colors border-none bg-transparent cursor-pointer"
-              >
-                <Icon name="add" size={14} /> Add Item
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {lineItems.map(item => (
-                <div key={item.id} className="p-4 border border-border bg-surface-muted relative group rounded-md">
-                  <button
-                    onClick={() => removeLine(item.id)}
-                    className="absolute -right-2 -top-2 bg-surface border border-border rounded-full w-6 h-6 flex items-center justify-center text-light hover:text-danger hover:border-danger opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-                    aria-label="Remove item"
-                  >
-                    <Icon name="close" size={12} />
-                  </button>
-                  <input
-                    className="w-full bg-transparent border-b border-border border-dashed pb-1 mb-3 font-ui text-[13px] outline-none focus:border-amber transition-colors"
-                    placeholder="Item description"
-                    value={item.description}
-                    onChange={e => updateLine(item.id, "description", e.target.value)}
-                  />
-                  <div className="grid grid-cols-4 gap-3">
-                    <div className="space-y-1">
-                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Qty</label>
-                      <input
-                        type="number"
-                        className="w-full bg-transparent border-b border-border font-mono text-[13px] outline-none focus:border-amber transition-colors"
-                        value={item.qty}
-                        onChange={e => updateLine(item.id, "qty", parseFloat(e.target.value) || 0)}
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Rate</label>
-                      <input
-                        type="number"
-                        className="w-full bg-transparent border-b border-border font-mono text-[13px] outline-none focus:border-amber transition-colors"
-                        value={item.rate}
-                        onChange={e => updateLine(item.id, "rate", parseFloat(e.target.value) || 0)}
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">GST</label>
-                      <select
-                        className="w-full bg-transparent border-b border-border font-ui text-[13px] outline-none focus:border-amber transition-colors"
-                        value={item.gstRate}
-                        onChange={e => updateLine(item.id, "gstRate", parseInt(e.target.value))}
-                      >
-                        {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
-                      </select>
-                    </div>
-                    <div className="space-y-1 text-right">
-                      <label className="font-ui text-[11px] text-[9px] text-light uppercase font-bold">Amount</label>
-                      <p className="font-mono text-[13px] pt-1 tabular-nums">{formatIndianNumber(item.qty * item.rate)}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="space-y-1.5">
+            <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</label>
+            <input type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus:border-amber" value={date} onChange={e => setDate(e.target.value)} />
           </div>
         </div>
-
-        {/* Right: live preview */}
-        <div className="hidden lg:block lg:col-span-7">
-          <div className="sticky top-24 bg-surface p-10 shadow-screenshot border border-border min-h-[842px] flex flex-col text-[13px] font-ui text-[13px] text-dark">
-            {/* Preview header */}
-            <header className="flex justify-between items-start border-b border-border pb-8 mb-8">
-              <div>
-                <p className="font-display text-2xl font-bold tracking-tight">Arthvahi</p>
-                <p className="text-mid text-[11px] mt-2 leading-relaxed">
-                  1204, Lodha Excelus<br />
-                  Apollo Bunder, Mumbai 400001
-                </p>
-              </div>
-              <div className="text-right">
-                <h2 className="font-display text-xl uppercase tracking-widest text-mid/40 mb-4">Tax Invoice</h2>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-left text-[12px]">
-                  <span className="text-light uppercase font-bold">No:</span>
-                  <span className="font-mono text-right">INV-2024-0043</span>
-                  <span className="text-light uppercase font-bold">Date:</span>
-                  <span className="font-mono text-right">{date}</span>
-                </div>
-              </div>
-            </header>
-
-            {/* Bill to */}
-            <section className="mb-10">
-              <p className="text-[10px] text-amber-text uppercase font-bold tracking-widest mb-2">Billed To</p>
-              <h4 className="font-ui text-[13px] text-[15px] font-bold">{customer.name}</h4>
-              <p className="text-mid text-sm mt-1 max-w-xs leading-relaxed">{customer.address}</p>
-              <p className="text-mid text-sm mt-2 font-bold">GSTIN: {customer.gstin}</p>
-            </section>
-
-            {/* Items table */}
-            <table className="w-full text-left border-collapse mb-8">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold w-1/2">Description</th>
-                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold text-right">Qty</th>
-                  <th className="py-3 font-ui text-[10px] text-light uppercase font-bold text-right">Amount (₹)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border-subtle/50">
-                {lineItems.map((item, i) => (
-                  <tr key={i}>
-                    <td className="py-4 pr-4">
-                      <p className="font-medium">{item.description || "Unspecified Item"}</p>
-                      <p className="text-[11px] text-mid">HSN: {item.hsn || "—"}</p>
-                    </td>
-                    <td className="py-4 text-right font-mono text-[13px]">{item.qty}</td>
-                    <td className="py-4 text-right font-mono text-[13px] font-bold">{formatIndianNumber(item.qty * item.rate)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* Totals */}
-            <div className="flex justify-end mt-auto pt-8 border-t border-border">
-              <div className="w-1/2 space-y-2">
-                <div className="flex justify-between text-mid text-sm">
-                  <span>Subtotal</span>
-                  <span className="font-mono tabular-nums">₹ {formatIndianNumber(totals.subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-mid text-sm">
-                  <span>GST Amount</span>
-                  <span className="font-mono tabular-nums">₹ {formatIndianNumber(totals.tax)}</span>
-                </div>
-                <div className="flex justify-between border-t border-border pt-3 font-bold text-lg">
-                  <span className="uppercase text-xs tracking-widest pt-1">Total</span>
-                  <span className="font-mono text-amber tabular-nums">₹ {formatIndianNumber(totals.total)}</span>
-                </div>
-              </div>
-            </div>
+        {lines.map((l, i) => (
+          <div key={i} className="grid grid-cols-3 gap-4">
+            <input className="border border-border rounded-md px-4 py-2 font-ui text-sm focus:outline-none focus:border-amber" placeholder="Description" value={l.description} onChange={e => { const n = [...lines]; n[i].description = e.target.value; setLines(n); }} />
+            <input type="number" className="border border-border rounded-md px-4 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="Qty" value={l.quantity} onChange={e => { const n = [...lines]; n[i].quantity = e.target.value; setLines(n); }} />
+            <input type="number" className="border border-border rounded-md px-4 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="Rate" value={l.rate} onChange={e => { const n = [...lines]; n[i].rate = e.target.value; setLines(n); }} />
           </div>
-        </div>
+        ))}
+        <button onClick={() => setLines([...lines, { description: "", quantity: "1", rate: "" }])} className="text-amber text-[11px] font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>
       </div>
     </div>
   );

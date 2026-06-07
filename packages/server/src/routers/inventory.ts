@@ -1,8 +1,7 @@
-// @ts-nocheck
 // packages/server/src/routers/inventory.ts
 import { z } from "zod";
 import { eq, and, desc } from "drizzle-orm";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { stockMovements, inventoryConfig } = _db;
 import { createPurchaseReceipt } from "../commands/create-purchase-receipt";
@@ -39,7 +38,7 @@ export const inventoryRouter = router({
         ...input,
         inventoryAssetAccountId: config?.inventoryAssetAccountId ?? "",
         expenseAccountId: config?.cogsAccountId ?? "",
-      });
+      } as Parameters<typeof createPurchaseReceipt>[3]);
     }),
   
   salesDelivery: protectedProcedure
@@ -58,7 +57,7 @@ export const inventoryRouter = router({
         ...input,
         cogsAccountId: config?.cogsAccountId ?? "",
         inventoryAssetAccountId: config?.inventoryAssetAccountId ?? "",
-      });
+      } as Parameters<typeof createSalesDelivery>[3]);
     }),
   
   adjustStock: protectedProcedure
@@ -77,7 +76,7 @@ export const inventoryRouter = router({
       return adjustInventory(ctx.db, tenantId, userId, {
         ...input,
         adjustmentAccountId: config?.adjustmentAccountId ?? "",
-      });
+      } as Parameters<typeof adjustInventory>[3]);
     }),
   
   movements: protectedProcedure

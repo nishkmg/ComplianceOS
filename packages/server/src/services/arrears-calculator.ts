@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { ArrearsCalculationResult } from "../../../shared/src/index";
 
 interface ArrearsConfig {

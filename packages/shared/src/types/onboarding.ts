@@ -69,7 +69,7 @@ export const BusinessProfileInputSchema = z.object({
   businessType: BusinessTypeEnum,
   pan: z
     .string()
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, "PAN must match AAAAA9999A format")
+    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/i, "PAN must match AAAAA9999A format")
     .toUpperCase(),
   gstin: z
     .string()

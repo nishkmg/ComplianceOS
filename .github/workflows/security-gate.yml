@@ -1,0 +1,41 @@
+name: Security Gate
+
+on:
+  push:
+    branches: [main, staging, prod-hardening]
+  pull_request:
+    branches: [main, staging, prod-hardening]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  service-role-ban:
+    name: Ban SERVICE_ROLE_KEY in user paths
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for SERVICE_ROLE_KEY in apps/web (source only)
+        run: |
+          MATCHES=$(find apps/web -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) -not -path "apps/web/.next/*" -not -path "apps/web/node_modules/*" -print0 | xargs -0 grep -l "SERVICE_ROLE_KEY" || true)
+          if [ -n "$MATCHES" ]; then
+            echo "ERROR: SERVICE_ROLE_KEY must not be used under apps/web/."
+            echo "Offending files:"
+            echo "$MATCHES"
+            exit 1
+          fi
+          echo "OK: no SERVICE_ROLE_KEY references in apps/web/ source"
+
+      - name: Check for SERVICE_ROLE_KEY in tRPC routers
+        run: |
+          MATCHES=$(find packages/server/src/routers packages/server/src/commands -type f \( -name "*.ts" -o -name "*.tsx" \) -print0 2>/dev/null | xargs -0 grep -l "SERVICE_ROLE_KEY" || true)
+          if [ -n "$MATCHES" ]; then
+            echo "ERROR: SERVICE_ROLE_KEY must not be used in tRPC routers or commands."
+            echo "Offending files:"
+            echo "$MATCHES"
+            exit 1
+          fi
+          echo "OK: no SERVICE_ROLE_KEY references in routers/commands"

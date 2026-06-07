@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { z } from "zod";
 import { eq, and, desc, like, gte, lte, sql } from "drizzle-orm";
 import { router, protectedProcedure } from "../trpc";
@@ -9,7 +8,8 @@ import { voidInvoice } from "../commands/void-invoice";
 import { sendInvoice } from "../commands/send-invoice";
 import { createCreditNote } from "../commands/create-credit-note";
 import * as _db from "../../../db/src/index";
-const { invoices, invoiceLines } = _db;
+const { invoices, invoiceLines, tenants } = _db;
+import { stateCodeToGstPrefix } from "@complianceos/shared";
 
 export const invoicesRouter = router({
   list: protectedProcedure
@@ -91,8 +91,7 @@ export const invoicesRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { tenantId } = ctx.session!.user;
       const actorId = ctx.session!.user.id;
-      // -ignore - type mismatch
-      return createInvoice(ctx.db, tenantId, actorId, input);
+      return createInvoice(ctx.db, tenantId, actorId, input as Parameters<typeof createInvoice>[3]);
     }),
 
   modify: protectedProcedure
@@ -131,14 +130,25 @@ export const invoicesRouter = router({
         await tx.update(invoices).set(updateData).where(eq(invoices.id, input.id));
 
         // If lines are provided, replace them
-        // -ignore - type mismatch
-        if (data.lines && (data.lines as any[]).length > 0) {
+        const dataLines = (data as { lines?: unknown }).lines as Array<{
+          accountId: string;
+          description: string;
+          quantity: number | string;
+          unitPrice: number | string;
+          gstRate: number | string;
+          discountPercent?: number | string;
+        }> | undefined;
+        if (dataLines && dataLines.length > 0) {
           // Delete existing lines
           await tx.delete(invoiceLines).where(eq(invoiceLines.invoiceId, input.id));
 
           // Insert new lines
-          // -ignore - type mismatch
-          const lineCalculations = data.lines.map((line: any) => {
+          const [tenant] = await ctx.db.select({ stateCode: tenants.stateCode }).from(tenants).where(eq(tenants.id, ctx.tenantId)).limit(1);
+          if (!tenant?.stateCode) {
+            throw new Error("Tenant state code not configured");
+          }
+          const tenantState = stateCodeToGstPrefix(tenant.stateCode);
+          const lineCalculations = dataLines.map((line) => {
             const qty = Number(line.quantity);
             const unitPrice = Number(line.unitPrice);
             const gstRate = Number(line.gstRate);
@@ -146,7 +156,6 @@ export const invoicesRouter = router({
             const beforeDiscount = qty * unitPrice;
             const discountAmount = beforeDiscount * (discountPct / 100);
             const amount = beforeDiscount - discountAmount;
-            const tenantState = "IN-TN"; // TODO: from tenant config
 
             let cgstAmount = "0";
             let sgstAmount = "0";

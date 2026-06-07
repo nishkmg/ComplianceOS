@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { eq, and } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
@@ -107,8 +106,7 @@ export async function payAdvanceTax(
 
   // Validate installment number
   const validInstallments = Object.values(AdvanceTaxInstallmentNumber);
-  // -ignore - type check
-  if (!validInstallments.includes(installmentNumber as string)) {
+  if (!validInstallments.includes(installmentNumber as (typeof AdvanceTaxInstallmentNumber)[keyof typeof AdvanceTaxInstallmentNumber])) {
     throw new Error(`Invalid installment number: ${installmentNumber}. Must be 1-4`);
   }
 

@@ -14,3 +14,4 @@ login-snapshot.yml
 homepage-after-fix.png
 .vercel
 .env.vercel
+.env.test

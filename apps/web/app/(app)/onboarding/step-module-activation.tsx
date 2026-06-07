@@ -2,36 +2,20 @@
 
 import { useState } from "react";
 import { showToast } from "@/lib/toast";
-import { mockMutation } from "@/lib/mock-mutation";
+import { submitStep } from "@/lib/mock-mutation";
 import { Icon } from '@/components/ui/icon';
-
-const MODULES = [
-  { id: "accounting", name: "Core Ledger", desc: "Double-entry bookkeeping, financial statements, and multi-entity consolidation.", icon: "account_balance", required: true },
-  { id: "gst", name: "GST Compliance", desc: "Automated GSTR-1, 2B matching, and 3B preparation. Includes e-invoicing.", icon: "gavel" },
-  { id: "invoicing", name: "Billing & Invoicing", desc: "Compliant tax invoice generation, proforma tracking, and payment reminders.", icon: "receipt_long" },
-  { id: "inventory", name: "Inventory Ledger", desc: "Multi-warehouse tracking, stock valuation (FIFO), and low-stock alerts.", icon: "inventory_2" },
-  { id: "payroll", name: "Statutory Payroll", desc: "Salary processing, auto PF/ESI/PT calculation, and employee payslips.", icon: "groups" },
-  { id: "itr", name: "ITR Returns", desc: "Income tax computation for ITR-3/4 and advance tax tracking.", icon: "description" },
-];
+import { MODULES } from "@/lib/constants";
 
 interface StepModuleActivationProps {
   tenantId: string;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivationProps) {
+export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModuleActivationProps) {
   const [enabledModules, setEnabledModules] = useState<Set<string>>(new Set(["accounting", "gst", "invoicing"]));
 
-  // @ts-ignore
-  const saveProgress = mockMutation({
-    onSuccess: () => {
-      showToast.success('Module preferences saved');
-      onComplete();
-    },
-    onError: (error: any) => {
-      showToast.error(error.message || 'Failed to save module preferences');
-    },
-  });
+  const [saving, setSaving] = useState(false);
 
   const toggleModule = (id: string) => {
     if (id === "accounting") return;
@@ -41,13 +25,17 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
   };
 
   const handleContinue = async () => {
-    const data = Array.from(enabledModules).map(id => ({ module: id, enabled: true }));
-    await saveProgress.mutateAsync({
-      // @ts-ignore
-      tenantId,
-      step: 2,
-      data: { moduleActivation: data },
-    });
+    setSaving(true);
+    try {
+      const modules = Array.from(enabledModules).map(id => ({ module: id, enabled: true }));
+      await submitStep(2, { tenantId, data: { moduleActivation: modules } });
+      showToast.success('Module preferences saved');
+      onComplete();
+    } catch (error: any) {
+      showToast.error(error?.message || 'Failed to save module preferences');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -85,15 +73,28 @@ export function StepModuleActivation({ tenantId, onComplete }: StepModuleActivat
       </div>
 
       <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
-        <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
-          Accounting module is always active as the system core.
-        </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving}
+              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-[18px]" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+            Accounting module is always active as the system core.
+          </p>
+        </div>
         <button
           onClick={handleContinue}
-          disabled={saveProgress.isPending}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer"
+          disabled={saving}
+          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
-          {saveProgress.isPending ? "Saving..." : "Establish Framework"}
+          {saving ? "Saving..." : "Establish Framework"}
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>

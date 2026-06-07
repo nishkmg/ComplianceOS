@@ -76,7 +76,7 @@ export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
     history.replaceState = function (...args) {
       console.log("[NavLoader] replaceState", args[2]);
       origReplace(...args);
-      show("replace");
+      // Don't show loader — replaceState is used for URL param updates, not navigation
     };
 
     const onPopState = () => {

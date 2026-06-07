@@ -1,13 +1,15 @@
-import { NextResponse } from "next/server";
-// @ts-ignore
-import { db } from "@complianceos/db";
-import { sql } from "drizzle-orm";
+import { supabaseRest } from "@/lib/supabase-rest";
+
+export const runtime = "nodejs";
 
 async function checkDatabase(): Promise<{ status: string; latencyMs?: number; error?: string }> {
   try {
     const start = Date.now();
-    await db.execute(sql`SELECT 1`);
-    return { status: "connected", latencyMs: Date.now() - start };
+    const res = await supabaseRest("users?select=id&limit=1", { method: "GET" });
+    if (res.ok) {
+      return { status: "connected", latencyMs: Date.now() - start };
+    }
+    return { status: "error", error: `Supabase returned ${res.status}` };
   } catch (err: any) {
     return { status: "error", error: err.message };
   }
@@ -15,10 +17,7 @@ async function checkDatabase(): Promise<{ status: string; latencyMs?: number; er
 
 async function checkRedis(): Promise<{ status: string; latencyMs?: number; error?: string }> {
   const redisUrl = process.env.REDIS_URL;
-  if (!redisUrl) {
-    return { status: "not_configured" };
-  }
-  
+  if (!redisUrl) return { status: "not_configured" };
   try {
     const Redis = (await import("ioredis")).default;
     const redis = new Redis(redisUrl);
@@ -34,9 +33,8 @@ async function checkRedis(): Promise<{ status: string; latencyMs?: number; error
 
 async function checkProjector(): Promise<{ status: string; url?: string; error?: string; projectors?: string[] }> {
   const projectorUrl = process.env.PROJECTOR_URL || "http://localhost:3100";
-  
   try {
-    const res = await fetch(`${projectorUrl}/health`, { 
+    const res = await fetch(`${projectorUrl}/health`, {
       method: "GET",
       signal: AbortSignal.timeout(2000),
     });
@@ -51,28 +49,28 @@ async function checkProjector(): Promise<{ status: string; url?: string; error?:
 }
 
 export async function GET() {
-  const [dbHealth, redisHealth, projectorHealth] = await Promise.all([
-    checkDatabase(),
-    checkRedis(),
-    checkProjector(),
-  ]);
+  try {
+    const [db, redis, projector] = await Promise.all([
+      checkDatabase(),
+      checkRedis(),
+      checkProjector(),
+    ]);
 
-  const isHealthy = 
-    dbHealth.status === "connected" && 
-    redisHealth.status !== "error" && 
-    projectorHealth.status !== "error";
+    const overall = db.status === "connected" && redis.status !== "error" && projector.status !== "error" ? "healthy" : "degraded";
+    const httpStatus = overall === "healthy" ? 200 : 503;
 
-  return NextResponse.json({
-    status: isHealthy ? "healthy" : "degraded",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    version: process.env.npm_package_version || "unknown",
-    checks: {
-      database: dbHealth,
-      redis: redisHealth,
-      projector: projectorHealth,
-    },
-  }, {
-    status: isHealthy ? 200 : 503,
-  });
+    return Response.json({
+      status: overall,
+      version: process.env.npm_package_version || "0.0.1",
+      timestamp: new Date().toISOString(),
+      checks: { database: db, redis, projector },
+    }, {
+      status: httpStatus,
+    });
+  } catch (err: any) {
+    return Response.json({
+      status: "error",
+      error: err.message,
+    }, { status: 500 });
+  }
 }

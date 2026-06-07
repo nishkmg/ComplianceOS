@@ -1,8 +1,18 @@
-// @ts-nocheck
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { tenants, userTenants, tenantModuleConfig, moduleEnum } = _db;
-import type { BusinessProfileInput } from "../../../shared/src/index";
+
+export interface BusinessProfileInput {
+  name: string;
+  legalName: string;
+  businessType: string;
+  industry: string;
+  pan: string;
+  gstin?: string;
+  address: string;
+  state: string;
+  dateOfIncorporation?: string;
+}
 
 // Module activation matrix: businessType -> industry -> enabled modules
 function getModuleActivationMatrix(businessType: string, industry: string): Record<string, boolean> {

@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { z } from "zod";
-import { router, protectedProcedure } from "../index";
+import { router, protectedProcedure } from "../trpc";
 import { processPayroll } from "../commands/process-payroll";
 import { finalizePayroll } from "../commands/finalize-payroll";
 import { voidPayroll } from "../commands/void-payroll";
@@ -81,7 +80,7 @@ export const payrollRouter = router({
       narration: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return await processPayroll(ctx.db, ctx.tenantId, ctx.session!.user.id, input);
+      return await processPayroll(ctx.db, ctx.tenantId, ctx.session!.user.id, input as Parameters<typeof processPayroll>[3]);
     }),
 
   finalize: protectedProcedure
