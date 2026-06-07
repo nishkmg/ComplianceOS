@@ -40,7 +40,14 @@ async function checkProjector(): Promise<{ status: string; url?: string; error?:
     });
     if (res.ok) {
       const data = await res.json();
-      return { status: "healthy", url: projectorUrl, projectors: data.projectors };
+      return {
+        status: "healthy",
+        url: projectorUrl,
+        projectors: data.projectors,
+        notifyLagMs: data.notifyLagMs,
+        lastEventAt: data.lastEventAt,
+        listenerConnected: data.listenerConnected,
+      };
     }
     return { status: "unhealthy", url: projectorUrl };
   } catch (err: any) {
