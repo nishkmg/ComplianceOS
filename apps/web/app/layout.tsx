@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { validateEnv } from "@complianceos/shared/lib/env";
 import "./globals.css";
+
+validateEnv();
 
 export const metadata: Metadata = {
   title: "Arthvahi | Precision in Indian Accounting",

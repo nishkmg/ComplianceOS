@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./lib/env": {
+      "types": "./dist/lib/env.d.ts",
+      "import": "./dist/lib/env.js"
     }
   },
   "scripts": {

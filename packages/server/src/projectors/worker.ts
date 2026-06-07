@@ -1,5 +1,16 @@
 // @ts-nocheck
 import { createServer } from "http";
+// @ts-ignore — env validator lives in shared; .ts extension resolved at runtime by tsx
+import { validateEnv } from "@complianceos/shared/lib/env";
+
+try {
+  validateEnv();
+} catch (err) {
+  // @ts-ignore
+  console.error("[Projector Worker] Env validation failed:", (err).message);
+  process.exit(1);
+}
+
 import * as _db from "../../../db/src/index";
 const { db, projectorState, eventStore, tenants } = _db;
 import { eq, and, gt, asc, desc, sql } from "drizzle-orm";
