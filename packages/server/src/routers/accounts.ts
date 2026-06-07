@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { createAccount } from "../commands/create-account";
 import { modifyAccount } from "../commands/modify-account";
 import { deactivateAccount } from "../commands/deactivate-account";
@@ -9,11 +9,11 @@ import * as _db from "../../../db/src/index";
 const { accounts } = _db;
 
 export const accountsRouter = router({
-  list: publicProcedure.query(async ({ ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.select().from(accounts).where(eq(accounts.tenantId, ctx.tenantId));
   }),
 
-  get: publicProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
     const result = await ctx.db.select().from(accounts).where(
       and(eq(accounts.id, input.id), eq(accounts.tenantId, ctx.tenantId)),
     );

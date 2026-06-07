@@ -1,13 +1,13 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { accountBalances, journalEntryView } = _db;
 import type { TrialBalance, ProfitAndLoss, BalanceSheet, CashFlowStatement } from "../../../shared/src/index";
 
 export const balancesRouter = router({
-  ledger: publicProcedure
+  ledger: protectedProcedure
     .input(z.object({ accountId: z.string().uuid(), fiscalYear: z.string() }))
     .query(async ({ ctx, input }) => {
       const entries = await ctx.db.query.journalEntryView.findMany({
@@ -48,7 +48,7 @@ export const balancesRouter = router({
       };
     }),
 
-  trialBalance: publicProcedure
+  trialBalance: protectedProcedure
     .input(z.object({ fiscalYear: z.string() }))
     .query(async ({ ctx, input }): Promise<TrialBalance> => {
       const rows = await ctx.db.select().from(accountBalances).where(
@@ -71,7 +71,7 @@ export const balancesRouter = router({
       };
     }),
 
-  pAndL: publicProcedure
+  pAndL: protectedProcedure
     .input(z.object({ fiscalYear: z.string(), from: z.string().optional(), to: z.string().optional() }))
     .query(async ({ ctx, input }): Promise<ProfitAndLoss> => {
       const rows = await ctx.db.select().from(accountBalances).where(
@@ -91,7 +91,7 @@ export const balancesRouter = router({
       };
     }),
 
-  balanceSheet: publicProcedure
+  balanceSheet: protectedProcedure
     .input(z.object({ fiscalYear: z.string(), asOf: z.string().optional() }))
     .query(async ({ ctx, input }): Promise<BalanceSheet> => {
       return {
@@ -105,7 +105,7 @@ export const balancesRouter = router({
       };
     }),
 
-  cashFlow: publicProcedure
+  cashFlow: protectedProcedure
     .input(z.object({ fiscalYear: z.string(), from: z.string().optional(), to: z.string().optional() }))
     .query(async ({ ctx, input }): Promise<CashFlowStatement> => {
       return {

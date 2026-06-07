@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { createJournalEntry } from "../commands/create-journal-entry";
 import { postJournalEntry } from "../commands/post-journal-entry";
 import { voidJournalEntry } from "../commands/void-journal-entry";
@@ -12,7 +12,7 @@ import * as _db from "../../../db/src/index";
 const { journalEntries } = _db;
 
 export const journalEntriesRouter = router({
-  list: publicProcedure
+  list: protectedProcedure
     .input(z.object({
       status: z.enum(["draft", "posted", "voided"]).optional(),
       fiscalYear: z.string().optional(),
@@ -30,7 +30,7 @@ export const journalEntriesRouter = router({
         .offset(input?.offset ?? 0);
     }),
 
-  get: publicProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
     const result = await ctx.db.select().from(journalEntries).where(
       and(eq(journalEntries.id, input.id), eq(journalEntries.tenantId, ctx.tenantId)),
     );

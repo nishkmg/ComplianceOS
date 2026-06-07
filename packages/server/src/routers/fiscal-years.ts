@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { createFiscalYear } from "../commands/create-fiscal-year";
 import { closeFiscalYear } from "../commands/close-fiscal-year";
 import { eq, and } from "drizzle-orm";
@@ -8,11 +8,11 @@ import * as _db from "../../../db/src/index";
 const { fiscalYears } = _db;
 
 export const fiscalYearsRouter = router({
-  list: publicProcedure.query(async ({ ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.select().from(fiscalYears).where(eq(fiscalYears.tenantId, ctx.tenantId));
   }),
 
-  get: publicProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ ctx, input }) => {
     const result = await ctx.db.select().from(fiscalYears).where(
       and(eq(fiscalYears.id, input.id), eq(fiscalYears.tenantId, ctx.tenantId)),
     );

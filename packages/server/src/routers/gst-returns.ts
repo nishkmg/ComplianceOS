@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { generateGSTR1 } from "../commands/generate-gstr1";
 import { generateGSTR2B } from "../commands/generate-gstr2b";
 import { generateGSTR3B } from "../commands/generate-gstr3b";
@@ -12,7 +12,7 @@ import * as _shared from "../../../shared/src/index";
 const { GSTReturnStatus } = _shared;
 
 export const gstReturnsRouter = router({
-  list: publicProcedure
+  list: protectedProcedure
     .input(z.object({
       periodMonth: z.number().min(1).max(12).optional(),
       periodYear: z.number().min(2000).optional(),
@@ -49,7 +49,7 @@ export const gstReturnsRouter = router({
       }));
     }),
 
-  get: publicProcedure
+  get: protectedProcedure
     .input(z.object({ returnId: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
       const returns = await ctx.db.select().from(gstReturns).where(
