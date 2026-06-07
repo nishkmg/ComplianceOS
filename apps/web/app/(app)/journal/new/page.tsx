@@ -65,6 +65,7 @@ export default function NewJournalEntryPage() {
   const { activeFy } = useFiscalYear();
   const { isEnabled, gstConfig } = useModules();
   const router = useRouter();
+  const utils = api.useUtils();
 
   const { data: accountsData } = api.accounts.list.useQuery();
   const accounts: Account[] = useMemo(() => (accountsData as Account[] | undefined) ?? [], [accountsData]);
@@ -183,6 +184,24 @@ export default function NewJournalEntryPage() {
     }
     setSaving(true);
     savingRef.current = true;
+    const jeListInput = { fiscalYear: activeFy, limit: 500 };
+    const previousJeList = utils.journalEntries.list.getData(jeListInput);
+    const tempJeId = `temp-${Date.now()}`;
+    await utils.journalEntries.list.cancel(jeListInput);
+    const jeApply = (old: unknown) => {
+      const arr = (old as Array<Record<string, unknown>> | undefined) ?? [];
+      const tempRow: Record<string, unknown> = {
+        id: tempJeId,
+        entryNumber: "...",
+        date,
+        narration: narration.trim() || "(new entry)",
+        status: "draft",
+        debit: "0",
+        credit: "0",
+      };
+      return [tempRow, ...arr];
+    };
+    utils.journalEntries.list.setData(jeListInput, jeApply as never);
     try {
       await createEntry.mutateAsync({
         date,
@@ -197,8 +216,14 @@ export default function NewJournalEntryPage() {
         })),
       });
       showToast.success(status === 'draft' ? 'Voucher draft saved' : 'Journal entry posted to ledger');
+      await Promise.all([
+        utils.journalEntries.list.invalidate(jeListInput),
+        utils.balances.trialBalance.invalidate(),
+      ]);
+      router.refresh();
       router.push("/journal");
     } catch (err: unknown) {
+      utils.journalEntries.list.setData(jeListInput, (() => previousJeList) as never);
       showToast.error(err instanceof Error ? err.message : 'An error occurred while saving.');
     } finally {
       setSaving(false);
