@@ -13,13 +13,16 @@ import { AppTopBar } from "@/components/app/topbar";
 import { MobileNav } from "@/components/app/mobile-nav";
 import { FiscalYearProvider } from "@/hooks/use-fiscal-year";
 import { useModuleRedirect } from "@/hooks/use-module-redirect";
+import { RealtimeProvider } from "@/components/providers/realtime-provider";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <SessionProvider>
       <TRPCProvider>
         <FiscalYearProvider>
-          <AppShell>{children}</AppShell>
+          <RealtimeProvider>
+            <AppShell>{children}</AppShell>
+          </RealtimeProvider>
         </FiscalYearProvider>
       </TRPCProvider>
     </SessionProvider>
