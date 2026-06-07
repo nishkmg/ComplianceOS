@@ -40,6 +40,15 @@ describe('Row Level Security (RLS)', () => {
     dbTenant1 = drizzle(sqlTenant1, { schema });
     dbTenant2 = drizzle(sqlTenant2, { schema });
     dbSuperuser = drizzle(sqlSuperuser, { schema });
+
+    // Seed tenant fixtures (idempotent). Required for FK constraints in PII-table tests.
+    await dbSuperuser.execute(sql`
+      INSERT INTO tenants (id, name, pan, address, state, onboarding_status)
+      VALUES
+        (${TENANT_1_ID}, 'RLS Test Tenant 1', 'AAAAA0000A', '1 Test St', 'karnataka', 'complete'),
+        (${TENANT_2_ID}, 'RLS Test Tenant 2', 'BBBBB0000B', '2 Test St', 'maharashtra', 'complete')
+      ON CONFLICT (id) DO NOTHING
+    `);
   });
 
   afterAll(async () => {
@@ -222,9 +231,110 @@ describe('Row Level Security (RLS)', () => {
 
       // Query as tenant 2 (should not see tenant 1 events)
       const tenant2Events = await dbTenant2.select().from(schema.eventStore);
-      
+
       const tenant1EventIds = tenant2Events.map(e => e.id);
       expect(tenant1EventIds).not.toContain('event-tenant1-001');
+    });
+
+    it('should prevent cross-tenant event inserts', async () => {
+      try {
+        await dbTenant1.insert(schema.eventStore).values({
+          id: 'event-tenant1-leak',
+          tenantId: TENANT_2_ID,
+          aggregateType: 'journal_entry',
+          aggregateId: 'je-tenant2-001',
+          eventType: 'journal_entry_created',
+          payload: {},
+          sequence: 2n,
+          actorId: 'user-001',
+        });
+        expect.fail('RLS should have prevented cross-tenant event insert');
+      } catch (error: any) {
+        expect(error.message).toContain('row-level security');
+      }
+    });
+  });
+
+  describe('email queue isolation (PII table)', () => {
+    it('should isolate emails by tenant', async () => {
+      await dbSuperuser.execute(sql`
+        INSERT INTO email_queue (id, tenant_id, to_email, subject, body, scheduled_at)
+        VALUES ('aaaa1111-aaaa-aaaa-aaaa-000000000001', ${TENANT_1_ID}, 't1@example.com', 'T1', 'PII body 1', now())
+        ON CONFLICT (id) DO NOTHING
+      `);
+      await dbSuperuser.execute(sql`
+        INSERT INTO email_queue (id, tenant_id, to_email, subject, body, scheduled_at)
+        VALUES ('aaaa1111-aaaa-aaaa-aaaa-000000000002', ${TENANT_2_ID}, 't2@example.com', 'T2', 'PII body 2', now())
+        ON CONFLICT (id) DO NOTHING
+      `);
+
+      const tenant1Emails = await dbTenant1.execute(sql`SELECT id FROM email_queue WHERE id IN ('aaaa1111-aaaa-aaaa-aaaa-000000000001', 'aaaa1111-aaaa-aaaa-aaaa-000000000002')`);
+      const tenant2Emails = await dbTenant2.execute(sql`SELECT id FROM email_queue WHERE id IN ('aaaa1111-aaaa-aaaa-aaaa-000000000001', 'aaaa1111-aaaa-aaaa-aaaa-000000000002')`);
+
+      const t1Ids = tenant1Emails.map((r: any) => r.id);
+      const t2Ids = tenant2Emails.map((r: any) => r.id);
+
+      expect(t1Ids).toContain('aaaa1111-aaaa-aaaa-aaaa-000000000001');
+      expect(t1Ids).not.toContain('aaaa1111-aaaa-aaaa-aaaa-000000000002');
+      expect(t2Ids).toContain('aaaa1111-aaaa-aaaa-aaaa-000000000002');
+      expect(t2Ids).not.toContain('aaaa1111-aaaa-aaaa-aaaa-000000000001');
+    });
+  });
+
+  describe('ocr scan results isolation (PII table)', () => {
+    it('should isolate ocr scans by tenant', async () => {
+      await dbSuperuser.execute(sql`
+        INSERT INTO users (id, email, name) VALUES ('99999999-9999-9999-9999-999999999991', 'ocr1@example.com', 'OCR1')
+        ON CONFLICT (id) DO NOTHING
+      `);
+
+      await dbSuperuser.execute(sql`
+        INSERT INTO ocr_scan_results (id, tenant_id, uploaded_by, file_name, file_url, status)
+        VALUES ('bbbb1111-bbbb-bbbb-bbbb-000000000001', ${TENANT_1_ID}, '99999999-9999-9999-9999-999999999991', 'inv1.pdf', 's3://inv1', 'pending')
+        ON CONFLICT (id) DO NOTHING
+      `);
+      await dbSuperuser.execute(sql`
+        INSERT INTO ocr_scan_results (id, tenant_id, uploaded_by, file_name, file_url, status)
+        VALUES ('bbbb1111-bbbb-bbbb-bbbb-000000000002', ${TENANT_2_ID}, '99999999-9999-9999-9999-999999999991', 'inv2.pdf', 's3://inv2', 'pending')
+        ON CONFLICT (id) DO NOTHING
+      `);
+
+      const tenant1Scans = await dbTenant1.execute(sql`SELECT id FROM ocr_scan_results WHERE id IN ('bbbb1111-bbbb-bbbb-bbbb-000000000001', 'bbbb1111-bbbb-bbbb-bbbb-000000000002')`);
+      const tenant2Scans = await dbTenant2.execute(sql`SELECT id FROM ocr_scan_results WHERE id IN ('bbbb1111-bbbb-bbbb-bbbb-000000000001', 'bbbb1111-bbbb-bbbb-bbbb-000000000002')`);
+
+      const t1Ids = tenant1Scans.map((r: any) => r.id);
+      const t2Ids = tenant2Scans.map((r: any) => r.id);
+
+      expect(t1Ids).toContain('bbbb1111-bbbb-bbbb-bbbb-000000000001');
+      expect(t1Ids).not.toContain('bbbb1111-bbbb-bbbb-bbbb-000000000002');
+      expect(t2Ids).toContain('bbbb1111-bbbb-bbbb-bbbb-000000000002');
+      expect(t2Ids).not.toContain('bbbb1111-bbbb-bbbb-bbbb-000000000001');
+    });
+  });
+
+  describe('onboarding audit log isolation (PII table)', () => {
+    it('should isolate onboarding audit entries by tenant', async () => {
+      await dbSuperuser.execute(sql`
+        INSERT INTO onboarding_audit_log (id, tenant_id, user_id, step_number, step_key, action)
+        VALUES ('cccc1111-cccc-cccc-cccc-000000000001', ${TENANT_1_ID}, '99999999-9999-9999-9999-999999999991', 1, 'business', 'save')
+        ON CONFLICT (id) DO NOTHING
+      `);
+      await dbSuperuser.execute(sql`
+        INSERT INTO onboarding_audit_log (id, tenant_id, user_id, step_number, step_key, action)
+        VALUES ('cccc1111-cccc-cccc-cccc-000000000002', ${TENANT_2_ID}, '99999999-9999-9999-9999-999999999991', 1, 'business', 'save')
+        ON CONFLICT (id) DO NOTHING
+      `);
+
+      const tenant1Audits = await dbTenant1.execute(sql`SELECT id FROM onboarding_audit_log WHERE id IN ('cccc1111-cccc-cccc-cccc-000000000001', 'cccc1111-cccc-cccc-cccc-000000000002')`);
+      const tenant2Audits = await dbTenant2.execute(sql`SELECT id FROM onboarding_audit_log WHERE id IN ('cccc1111-cccc-cccc-cccc-000000000001', 'cccc1111-cccc-cccc-cccc-000000000002')`);
+
+      const t1Ids = tenant1Audits.map((r: any) => r.id);
+      const t2Ids = tenant2Audits.map((r: any) => r.id);
+
+      expect(t1Ids).toContain('cccc1111-cccc-cccc-cccc-000000000001');
+      expect(t1Ids).not.toContain('cccc1111-cccc-cccc-cccc-000000000002');
+      expect(t2Ids).toContain('cccc1111-cccc-cccc-cccc-000000000002');
+      expect(t2Ids).not.toContain('cccc1111-cccc-cccc-cccc-000000000001');
     });
   });
 });
