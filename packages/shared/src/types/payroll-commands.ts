@@ -33,6 +33,18 @@ export const ProcessPayrollInputSchema = z.object({
 
 export type ProcessPayrollInput = z.infer<typeof ProcessPayrollInputSchema>;
 
+export const CreatePayrollRunInputSchema = z.object({
+  employeeId: z.string().uuid(),
+  month: z.string().regex(/^\d{2}$/, "Month must be MM format"),
+  year: z.string().regex(/^\d{4}$/, "Year must be YYYY format"),
+  payrollNumber: z.string().optional(),
+  paymentDate: z.string().optional(),
+  narration: z.string().optional(),
+  arrears: z.string().optional(),
+});
+
+export type CreatePayrollRunInput = z.infer<typeof CreatePayrollRunInputSchema>;
+
 export const FinalizePayrollInputSchema = z.object({
   payrollRunId: z.string().uuid(),
 });
