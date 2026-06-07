@@ -9,6 +9,7 @@ import { api } from "@/lib/api";
 export default function EditInvoicePage() {
   const params = useParams(); const router = useRouter();
   const id = typeof params.id === "string" ? params.id : "";
+  const utils = api.useUtils();
   const [customerName, setCustomerName] = useState("");
 
   const { data: invoiceData, isLoading } = api.invoices.get.useQuery({ id }, { enabled: !!id });
@@ -22,11 +23,23 @@ export default function EditInvoicePage() {
   }, [invoiceData]);
 
   const handleSave = async () => {
+    if (!customerName.trim()) { showToast.error("Customer name is required."); return; }
+    const previousGet = utils.invoices.get.getData({ id });
+    const previousList = utils.invoices.list.getData({ page: 1, pageSize: 50 });
+    utils.invoices.get.setData({ id }, (old) => old ? { ...old, customerName } : old);
+    const listUpdater = (old: { invoices: Array<{ id: string } & Record<string, unknown>> } | undefined) => {
+      if (!old) return old;
+      return { ...old, invoices: old.invoices.map((r) => (r.id === id ? { ...r, customerName } : r)) };
+    };
+    utils.invoices.list.setData({ page: 1, pageSize: 50 }, listUpdater as never);
     try {
       await modify.mutateAsync({ id, data: { customerName } });
       showToast.success("Invoice updated");
+      router.refresh();
       router.push(`/invoices/${id}`);
     } catch (err: unknown) {
+      utils.invoices.get.setData({ id }, previousGet);
+      utils.invoices.list.setData({ page: 1, pageSize: 50 }, previousList);
       showToast.error(err instanceof Error ? err.message : "Failed to update");
     }
   };
