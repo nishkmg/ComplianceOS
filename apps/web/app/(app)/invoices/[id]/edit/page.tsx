@@ -1,46 +1,37 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
-import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
 export default function EditInvoicePage() {
   const params = useParams(); const router = useRouter();
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const id = typeof params.id === "string" ? params.id : "";
   const [customerName, setCustomerName] = useState("");
-  const [status, setStatus] = useState("draft");
-  const [loading, setLoading] = useState(true);
+
+  const { data: invoiceData, isLoading } = api.invoices.get.useQuery({ id }, { enabled: !!id });
+  const modify = api.invoices.modify.useMutation();
 
   useEffect(() => {
-    if (!params.id) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/invoices/${params.id}?tenantId=${tenantId || ""}`);
-        if (res.ok) {
-          const data = await res.json();
-          const inv = data.invoice || data;
-          if (inv) { setCustomerName(inv.customer_name || ""); setStatus(inv.status || "draft"); }
-        }
-      } catch {} finally { setLoading(false); }
-    })();
-  }, [params.id, tenantId]);
+    if (invoiceData) {
+      const inv = invoiceData as { customerName?: string };
+      if (inv.customerName) setCustomerName(inv.customerName);
+    }
+  }, [invoiceData]);
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/api/invoices/${params.id}`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tenantId, id: params.id, customer_name: customerName, status }),
-      });
-      if (!res.ok) throw new Error("Failed to update");
+      await modify.mutateAsync({ id, data: { customerName } });
       showToast.success("Invoice updated");
-      router.push(`/invoices/${params.id}`);
-    } catch (err: any) { showToast.error(err.message); }
+      router.push(`/invoices/${id}`);
+    } catch (err: unknown) {
+      showToast.error(err instanceof Error ? err.message : "Failed to update");
+    }
   };
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
 
   return (
     <div className="max-w-[600px] mx-auto space-y-8 pb-40">
@@ -50,12 +41,9 @@ export default function EditInvoicePage() {
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Customer Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} /></div>
-        <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Status</label>
-          <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={status} onChange={e => setStatus(e.target.value)}>
-            <option value="draft">Draft</option><option value="posted">Posted</option><option value="voided">Voided</option>
-          </select>
-        </div>
-        <button onClick={handleSave} className="w-full py-3 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer">Save</button>
+        <button onClick={handleSave} disabled={modify.isPending} className="w-full py-3 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+          {modify.isPending ? "Saving…" : "Save"}
+        </button>
       </div>
     </div>
   );

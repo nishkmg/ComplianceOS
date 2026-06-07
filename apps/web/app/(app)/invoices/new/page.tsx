@@ -1,37 +1,64 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
-import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
+
+interface ItemDraft {
+  description: string;
+  quantity: string;
+  rate: string;
+  hsnCode: string;
+  gstRate: string;
+}
+
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split("T")[0];
+}
 
 export default function NewInvoicePage() {
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const userId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
   const router = useRouter();
   const [customerName, setCustomerName] = useState("");
+  const [customerState, setCustomerState] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [lines, setLines] = useState([{ description: "", quantity: "1", rate: "" }]);
+  const [dueDate, setDueDate] = useState(addDays(new Date().toISOString().split("T")[0], 30));
+  const [items, setItems] = useState<ItemDraft[]>([{ description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }]);
   const [saving, setSaving] = useState(false);
   const savingRef = useRef(false);
 
+  const createInvoice = api.invoices.create.useMutation();
+
   const handleSubmit = async () => {
-    if (savingRef.current || !tenantId || !userId) return;
+    if (savingRef.current) return;
     if (!customerName.trim()) { showToast.error("Customer name is required."); return; }
+    const validItems = items.filter(i => i.description.trim() && i.rate);
+    if (validItems.length === 0) { showToast.error("At least one line with description and rate is required."); return; }
     setSaving(true); savingRef.current = true;
     try {
-      const res = await fetch("/api/invoices", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tenantId, customerName: customerName.trim(), date, lines: lines.filter(l => l.description), createdBy: userId }),
+      await createInvoice.mutateAsync({
+        date,
+        dueDate,
+        customerName: customerName.trim(),
+        ...(customerState.trim() ? { customerState: customerState.trim() } : {}),
+        items: validItems.map(i => ({
+          description: i.description.trim(),
+          quantity: Number(i.quantity) || 1,
+          rate: Number(i.rate) || 0,
+          ...(i.hsnCode.trim() ? { hsnCode: i.hsnCode.trim() } : {}),
+          ...(i.gstRate ? { gstRate: Number(i.gstRate) } : {}),
+        })),
       });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || `Failed (${res.status})`);
       showToast.success("Invoice created");
       router.push("/invoices");
-    } catch (err: any) { showToast.error(err.message); }
-    finally { setSaving(false); savingRef.current = false; }
+    } catch (err: unknown) {
+      showToast.error(err instanceof Error ? err.message : "Failed to create invoice");
+    } finally {
+      setSaving(false); savingRef.current = false;
+    }
   };
 
   return (
@@ -52,18 +79,28 @@ export default function NewInvoicePage() {
             <input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} />
           </div>
           <div className="space-y-1.5">
+            <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Customer State (optional)</label>
+            <input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={customerState} onChange={e => setCustomerState(e.target.value)} placeholder="e.g. Maharashtra" />
+          </div>
+          <div className="space-y-1.5">
             <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</label>
-            <input type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus:border-amber" value={date} onChange={e => setDate(e.target.value)} />
+            <input type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus:border-amber" value={date} onChange={e => { setDate(e.target.value); setDueDate(addDays(e.target.value, 30)); }} />
+          </div>
+          <div className="space-y-1.5">
+            <label className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Due Date</label>
+            <input type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus:border-amber" value={dueDate} onChange={e => setDueDate(e.target.value)} />
           </div>
         </div>
-        {lines.map((l, i) => (
-          <div key={i} className="grid grid-cols-3 gap-4">
-            <input className="border border-border rounded-md px-4 py-2 font-ui text-sm focus:outline-none focus:border-amber" placeholder="Description" value={l.description} onChange={e => { const n = [...lines]; n[i].description = e.target.value; setLines(n); }} />
-            <input type="number" className="border border-border rounded-md px-4 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="Qty" value={l.quantity} onChange={e => { const n = [...lines]; n[i].quantity = e.target.value; setLines(n); }} />
-            <input type="number" className="border border-border rounded-md px-4 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="Rate" value={l.rate} onChange={e => { const n = [...lines]; n[i].rate = e.target.value; setLines(n); }} />
+        {items.map((it, i) => (
+          <div key={i} className="grid grid-cols-12 gap-3">
+            <input className="col-span-4 border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus:border-amber" placeholder="Description" value={it.description} onChange={e => { const n = [...items]; n[i].description = e.target.value; setItems(n); }} />
+            <input type="number" className="col-span-1 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="Qty" value={it.quantity} onChange={e => { const n = [...items]; n[i].quantity = e.target.value; setItems(n); }} />
+            <input type="number" className="col-span-2 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="Rate" value={it.rate} onChange={e => { const n = [...items]; n[i].rate = e.target.value; setItems(n); }} />
+            <input className="col-span-3 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="HSN Code" value={it.hsnCode} onChange={e => { const n = [...items]; n[i].hsnCode = e.target.value; setItems(n); }} />
+            <input type="number" className="col-span-2 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus:border-amber" placeholder="GST%" value={it.gstRate} onChange={e => { const n = [...items]; n[i].gstRate = e.target.value; setItems(n); }} />
           </div>
         ))}
-        <button onClick={() => setLines([...lines, { description: "", quantity: "1", rate: "" }])} className="text-amber text-[11px] font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>
+        <button onClick={() => setItems([...items, { description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }])} className="text-amber text-[11px] font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>
       </div>
     </div>
   );
