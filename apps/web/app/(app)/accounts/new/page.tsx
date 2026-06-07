@@ -4,27 +4,27 @@ import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
-import { useSession } from "next-auth/react";
 import { ACCOUNT_KINDS, ACCOUNT_SUB_TYPES } from "@/lib/constants";
+import { api } from "@/lib/api";
 
 export default function NewAccountPage() {
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const router = useRouter();
   const [code, setCode] = useState(""); const [name, setName] = useState(""); const [kind, setKind] = useState("Asset"); const [subType, setSubType] = useState("CurrentAsset"); const [saving, setSaving] = useState(false);
 
+  const createAccount = api.accounts.create.useMutation();
+
   const handleSubmit = async () => {
-    if (!tenantId) return;
     if (!code || !name) { showToast.error("Code and name are required."); return; }
     setSaving(true);
     try {
-      const res = await fetch("/api/coa", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tenantId, code, name, kind, subType }) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed");
+      await createAccount.mutateAsync({ code, name, kind, subType } as Parameters<typeof createAccount.mutateAsync>[0]);
       showToast.success("Account created");
       router.push("/accounts");
-    } catch (err: any) { showToast.error(err.message); }
-    finally { setSaving(false); }
+    } catch (err: unknown) {
+      showToast.error(err instanceof Error ? err.message : "Failed to create account");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
