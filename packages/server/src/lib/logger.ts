@@ -1,3 +1,5 @@
+import { redactPII, redactObjectValues } from './pii-redactor';
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogContext {
@@ -24,6 +26,15 @@ interface LogEntry {
   };
 }
 
+let sentryAvailable = false;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const Sentry = require('@sentry/nextjs');
+  sentryAvailable = !!Sentry.captureException;
+} catch {
+  sentryAvailable = false;
+}
+
 function formatLogEntry(entry: LogEntry): string {
   return JSON.stringify({
     ...entry,
@@ -32,15 +43,19 @@ function formatLogEntry(entry: LogEntry): string {
 }
 
 function log(level: LogLevel, message: string, context?: LogContext, error?: Error) {
+  // PII-redact message and context before emitting
+  const redactedMsg = redactPII(message);
+  const redactedCtx = context ? redactObjectValues(context as Record<string, unknown>) as LogContext : undefined;
+
   const entry: LogEntry = {
     timestamp: new Date().toISOString(),
     level,
-    message,
-    context,
+    message: redactedMsg,
+    context: redactedCtx,
     ...(error && {
       error: {
         name: error.name,
-        message: error.message,
+        message: redactPII(error.message),
         stack: error.stack,
       },
     }),
@@ -60,7 +75,28 @@ function log(level: LogLevel, message: string, context?: LogContext, error?: Err
       break;
     case 'error':
       console.error(formatted);
+      maybeCaptureToSentry(entry);
       break;
+  }
+}
+
+function maybeCaptureToSentry(entry: LogEntry): void {
+  if (!sentryAvailable || process.env.NODE_ENV !== 'production') return;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const Sentry = require('@sentry/nextjs');
+    const extras: Record<string, unknown> = {};
+    if (entry.context) extras.context = entry.context;
+    if (entry.error) {
+      const err = new Error(entry.error.message);
+      err.name = entry.error.name;
+      err.stack = entry.error.stack;
+      Sentry.captureException(err, { level: 'error', extra: extras });
+    } else {
+      Sentry.captureMessage(entry.message, 'error');
+    }
+  } catch {
+    // Sentry not available this cycle — skip
   }
 }
 

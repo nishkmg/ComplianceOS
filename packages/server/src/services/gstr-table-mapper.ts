@@ -9,7 +9,34 @@
  */
 
 import { z } from 'zod';
+import { logger } from '../lib/logger';
+import type { Database } from '@complianceos/db';
+import { gstReturns, gstReturnLines, gstr9Schedules } from '@complianceos/db';
+import { eq, and, inArray } from 'drizzle-orm';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// OOM Guard
+// ─────────────────────────────────────────────────────────────────────────────
+export const CHUNK_SIZE = 1000;
+export const MAX_LINES = 50_000;
+
+/**
+ * Check input array size against MAX_LINES guard.
+ * Logs warning if threshold exceeded — caller should paginate.
+ * Returns truncated copy when over limit.
+ */
+export function checkArraySize<T>(arr: T[], label: string): T[] {
+  if (arr.length > MAX_LINES) {
+    logger.warn(
+      `[OOM GUARD] ${label}: ${arr.length} items exceeds MAX_LINES (${MAX_LINES}). Truncating to ${MAX_LINES}. Consider pagination.`
+    );
+    return arr.slice(0, MAX_LINES);
+  }
+  return arr;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Type Definitions
 // ─────────────────────────────────────────────────────────────────────────────
 // Type Definitions
 // ─────────────────────────────────────────────────────────────────────────────
@@ -295,6 +322,10 @@ export function mapToGSTR1(
   periodYear: string,
   gstin: string = ''
 ): GSTR1Result {
+  invoices = checkArraySize(invoices, `GSTR-1 invoices (${periodMonth}/${periodYear})`);
+  creditNotes = checkArraySize(creditNotes, `GSTR-1 credit-notes (${periodMonth}/${periodYear})`);
+  debitNotes = checkArraySize(debitNotes, `GSTR-1 debit-notes (${periodMonth}/${periodYear})`);
+
   const result: GSTR1Result = {
     ret_period: { month: periodMonth, year: periodYear },
     gstin,
@@ -655,6 +686,9 @@ export function mapToGSTR2B(
   periodYear: string,
   gstin: string = ''
 ): GSTR2BResult {
+  purchases = checkArraySize(purchases, `GSTR-2B purchases (${periodMonth}/${periodYear})`);
+  imports = checkArraySize(imports, `GSTR-2B imports (${periodMonth}/${periodYear})`);
+
   const result: GSTR2BResult = {
     ret_period: { month: periodMonth, year: periodYear },
     gstin,
@@ -960,6 +994,10 @@ export function mapToGSTR3B(
   periodYear: string,
   gstin: string = ''
 ): GSTR3BResult {
+  sales = checkArraySize(sales, `GSTR-3B sales (${periodMonth}/${periodYear})`);
+  purchases = checkArraySize(purchases, `GSTR-3B purchases (${periodMonth}/${periodYear})`);
+  itcReversal = checkArraySize(itcReversal, `GSTR-3B ITC reversals (${periodMonth}/${periodYear})`);
+
   const result: GSTR3BResult = {
     ret_period: { month: periodMonth, year: periodYear },
     gstin,
@@ -1171,6 +1209,219 @@ export function mapToGSTR3B(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// GSTR-9 Schedule Mapper
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface Gstr9ScheduleRow {
+  scheduleCode: string;
+  scheduleLabel: string;
+  totalTaxable: number;
+  totalIgst: number;
+  totalCgst: number;
+  totalSgst: number;
+  totalCess: number;
+  lineCount: number;
+  data: Array<Record<string, unknown>>;
+}
+
+const GSTR9_SCHEDULE_MAP: Record<string, string> = {
+  '4': 'Details of advances, adjustments',
+  '5A': 'Outward taxable supplies (other than reverse charge, zero rated)',
+  '5B': 'Outward taxable supplies (reverse charge)',
+  '5C': 'Outward taxable supplies (zero rated)',
+  '5D': 'Outward taxable supplies (nil rated/exempt)',
+  '6A': 'ITC claimed in GSTR-3B',
+  '6B': 'ITC claimed in GSTR-3B but not reflecting in GSTR-2A',
+  '6C': 'ITC claimed in annual return',
+  '6D': 'ITC reclaimed',
+  '6E': 'ITC in respect of other schedules',
+  '7A': 'ITC from GSTR-2A not availed',
+  '7B': 'ITC from other sources',
+  '8A': 'Supplies received from composition dealers',
+  '8B': 'Deemed supplies',
+  '8C': 'Import of goods',
+  '8D': 'Import of services',
+  '9': 'Late fee payable and paid',
+  '10': 'Interest payable and paid',
+  '11': 'Refund claimed',
+  '13': 'HSN-wise summary',
+};
+
+function aggregateGstr9Schedules(
+  returnLines: Array<{
+    tableNumber: string;
+    taxableValue: string;
+    igstAmount: string;
+    cgstAmount: string;
+    sgstAmount: string;
+    cessAmount: string;
+    transactionType: string;
+    placeOfSupply?: string;
+    gstin?: string;
+    partyName?: string;
+    sourceDocumentNumber?: string;
+    sourceDocumentDate?: string;
+  }>,
+): Gstr9ScheduleRow[] {
+  const schedules = new Map<string, Gstr9ScheduleRow>();
+
+  for (const line of returnLines) {
+    const tv = parseFloat(line.taxableValue) || 0;
+    const igst = parseFloat(line.igstAmount) || 0;
+    const cgst = parseFloat(line.cgstAmount) || 0;
+    const sgst = parseFloat(line.sgstAmount) || 0;
+    const cess = parseFloat(line.cessAmount) || 0;
+
+    // Derive schedule code from table number
+    let code = line.tableNumber;
+
+    // Map GSTR-3B tables → GSTR-9 schedules
+    // 3.1 outward supplies → 5A/5B/5C/5D
+    // 4 ITC → 6A
+    // 5 reversal → 7A/7B
+    switch (line.tableNumber) {
+      case '3.1': {
+        if (line.transactionType === 'reverse_charge') {
+          code = '5B';
+        } else if (line.placeOfSupply === '96') {
+          code = '5C';
+        } else if (tv === 0) {
+          code = '5D';
+        } else {
+          code = '5A';
+        }
+        break;
+      }
+      case '4': {
+        code = '6A';
+        break;
+      }
+      case '5': {
+        code = '7A';
+        break;
+      }
+      default: {
+        code = line.tableNumber;
+      }
+    }
+
+    if (!schedules.has(code)) {
+      schedules.set(code, {
+        scheduleCode: code,
+        scheduleLabel: GSTR9_SCHEDULE_MAP[code] || `Schedule ${code}`,
+        totalTaxable: 0,
+        totalIgst: 0,
+        totalCgst: 0,
+        totalSgst: 0,
+        totalCess: 0,
+        lineCount: 0,
+        data: [],
+      });
+    }
+
+    const s = schedules.get(code)!;
+    s.totalTaxable += tv;
+    s.totalIgst += igst;
+    s.totalCgst += cgst;
+    s.totalSgst += sgst;
+    s.totalCess += cess;
+    s.lineCount++;
+    s.data.push({
+      taxableValue: formatCurrency(tv),
+      igst: formatCurrency(igst),
+      cgst: formatCurrency(cgst),
+      sgst: formatCurrency(sgst),
+      cess: formatCurrency(cess),
+      transactionType: line.transactionType,
+      placeOfSupply: line.placeOfSupply,
+      gstin: line.gstin,
+      partyName: line.partyName,
+      invoiceNumber: line.sourceDocumentNumber,
+      invoiceDate: line.sourceDocumentDate,
+    });
+  }
+
+  return Array.from(schedules.values());
+}
+
+export async function generateGstr9Schedules(
+  db: Database,
+  returnId: string,
+  tenantId: string,
+): Promise<void> {
+  // Fetch the GSTR-9 return to get FY context
+  const returnRow = await db
+    .select({
+      fiscalYear: gstReturns.fiscalYear,
+    })
+    .from(gstReturns)
+    .where(and(eq(gstReturns.id, returnId), eq(gstReturns.tenantId, tenantId)))
+    .limit(1);
+
+  if (returnRow.length === 0) {
+    throw new Error(`GSTR-9 return ${returnId} not found`);
+  }
+
+  const { fiscalYear } = returnRow[0];
+  const fyParts = fiscalYear.split('-');
+  const fyStart = fyParts[0];
+  const fyEnd = fyParts[1];
+
+  // 1. Fetch all GSTR-3B line items for the same FY with posted/filed status
+  const gstr3bLines = await db
+    .select({
+      tableNumber: gstReturnLines.tableNumber,
+      taxableValue: gstReturnLines.taxableValue,
+      igstAmount: gstReturnLines.igstAmount,
+      cgstAmount: gstReturnLines.cgstAmount,
+      sgstAmount: gstReturnLines.sgstAmount,
+      cessAmount: gstReturnLines.cessAmount,
+      transactionType: gstReturnLines.transactionType,
+      placeOfSupply: gstReturnLines.placeOfSupply,
+      gstin: gstReturnLines.gstin,
+      partyName: gstReturnLines.partyName,
+      sourceDocumentNumber: gstReturnLines.sourceDocumentNumber,
+      sourceDocumentDate: gstReturnLines.sourceDocumentDate,
+    })
+    .from(gstReturnLines)
+    .innerJoin(gstReturns, eq(gstReturnLines.gstReturnId, gstReturns.id))
+    .where(
+      and(
+        eq(gstReturns.tenantId, tenantId),
+        eq(gstReturns.returnType, 'gstr3b'),
+        eq(gstReturns.fiscalYear, fiscalYear),
+        inArray(gstReturns.status, ['filed', 'completed']),
+      ),
+    );
+
+  // 2. Aggregate into GSTR-9 schedules
+  const schedules = aggregateGstr9Schedules(gstr3bLines);
+
+  // 3. Replace existing schedules for this return
+  await db.delete(gstr9Schedules).where(
+    and(eq(gstr9Schedules.returnId, returnId), eq(gstr9Schedules.tenantId, tenantId)),
+  );
+
+  if (schedules.length > 0) {
+    await db.insert(gstr9Schedules).values(
+      schedules.map((s) => ({
+        returnId,
+        tenantId,
+        scheduleCode: s.scheduleCode,
+        scheduleLabel: s.scheduleLabel,
+        totalTaxable: s.totalTaxable.toString(),
+        totalIgst: s.totalIgst.toString(),
+        totalCgst: s.totalCgst.toString(),
+        totalSgst: s.totalSgst.toString(),
+        totalCess: s.totalCess.toString(),
+        lineCount: s.lineCount,
+        data: s.data as unknown as typeof gstr9Schedules.$inferInsert['data'],
+      })),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Exports
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1182,4 +1433,5 @@ export type {
   GSTR1Result,
   GSTR2BResult,
   GSTR3BResult,
+  Gstr9ScheduleRow,
 };

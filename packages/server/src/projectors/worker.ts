@@ -1,4 +1,5 @@
 import { createServer } from "http";
+import { logger } from "../lib/logger";
 // @ts-ignore — env validator lives in shared; .ts extension resolved at runtime by tsx
 import { validateEnv } from "@complianceos/shared/lib/env";
 
@@ -6,7 +7,7 @@ try {
   validateEnv();
 } catch (err) {
   // @ts-ignore
-  console.error("[Projector Worker] Env validation failed:", (err).message);
+  logger.error("[Projector Worker] Env validation failed", err instanceof Error ? err : new Error(String(err)));
   process.exit(1);
 }
 
@@ -14,7 +15,6 @@ import * as _db from "../../../db/src/index";
 const { db, projectorState, eventStore, tenants } = _db;
 import { eq, and, sql } from "drizzle-orm";
 import postgres from "postgres";
-import { logger } from "../lib/logger";
 import { accountBalanceProjector } from "./account-balance.js";
 import { inventoryValuationProjector } from "./inventory-valuation.js";
 import { journalEntryViewProjector } from "./journal-entry-view.js";

@@ -9,7 +9,29 @@
  */
 
 import { z } from 'zod';
+import { logger } from '../lib/logger';
 import { type ITRComputation, type Deductions, TaxRegime, PresumptiveScheme } from "../../../shared/src/index";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OOM Guard
+// ─────────────────────────────────────────────────────────────────────────────
+export const CHUNK_SIZE = 1000;
+export const MAX_LINES = 50_000;
+
+/**
+ * Check input array size against MAX_LINES guard.
+ * Logs warning if threshold exceeded — caller should paginate.
+ * Returns truncated copy when over limit.
+ */
+export function checkArraySize<T>(arr: T[], label: string): T[] {
+  if (arr.length > MAX_LINES) {
+    logger.warn(
+      `[OOM GUARD] ${label}: ${arr.length} items exceeds MAX_LINES (${MAX_LINES}). Truncating to ${MAX_LINES}. Consider pagination.`
+    );
+    return arr.slice(0, MAX_LINES);
+  }
+  return arr;
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Type Definitions
@@ -429,6 +451,8 @@ export function mapToITR3(
   capitalGains?: AssetDisposalData[],
   otherSources?: OtherSourcesData
 ): ITR3Result {
+  if (houseProperties) houseProperties = checkArraySize(houseProperties, `ITR-3 house properties (${fy})`);
+  if (capitalGains) capitalGains = checkArraySize(capitalGains, `ITR-3 capital gains (${fy})`);
   const ay = getAssessmentYear(fy);
   
   const result: ITR3Result = {
@@ -680,6 +704,8 @@ export function mapToITR4(
   houseProperties?: HousePropertyData[],
   otherSources?: OtherSourcesData
 ): ITR4Result {
+  if (houseProperties) houseProperties = checkArraySize(houseProperties, `ITR-4 house properties (${fy})`);
+
   const ay = getAssessmentYear(fy);
   
   const result: ITR4Result = {

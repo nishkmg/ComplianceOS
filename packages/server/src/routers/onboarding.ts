@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
+import { logger } from "../lib/logger";
 import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { tenants } = _db;
@@ -262,7 +263,7 @@ export const onboardingRouter = router({
           dataSnapshot: stepData as any,
         });
       } catch (auditErr) {
-        console.error("[onboarding] Audit log failed:", auditErr);
+        logger.error("[onboarding] Audit log failed", auditErr instanceof Error ? auditErr : new Error(String(auditErr)));
       }
 
       return { success: true };
