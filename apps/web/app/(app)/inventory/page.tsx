@@ -1,19 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { Icon } from '@/components/ui/icon';
 import { KPISkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-
-const kpiTiles = [
-  { label: "Inventory Value", value: "45,20,500.00", delta: "+2.4% vs last period", variant: "neutral", icon: "account_balance_wallet" },
-  { label: "Low Stock Alerts", value: "24", delta: "Action required in 48h", variant: "amber", icon: "warning" },
-  { label: "Out of Stock", value: "08", delta: "Procurement pending", variant: "danger", icon: "error" },
-  { label: "HSN Compliance", value: "100%", delta: "All SKUs mapped", variant: "success", icon: "verified" },
-];
+import { api } from "@/lib/api";
 
 const lowStock = [
   { sku: "RM-002", name: "Steel Rods 12mm", available: 200, unit: "pcs", warehouse: "Main Depot", status: "low" },
@@ -23,11 +17,20 @@ const lowStock = [
 
 export default function InventoryDashboardPage() {
   const { activeFy } = useFiscalYear();
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = api.inventory.summary.useQuery(
+    {},
+    { staleTime: 0, refetchInterval: 30_000 },
+  );
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+  const kpiTiles = useMemo(() => {
+    if (!data) return [];
+    return [
+      { label: "Inventory Value", value: formatIndianNumber(parseFloat(data.totalValue), { currency: false }), delta: `${data.productCount} products tracked`, variant: "neutral" as const, icon: "account_balance_wallet" as const },
+      { label: "Low Stock Alerts", value: String(data.lowStock), delta: "Items below reorder threshold", variant: "amber" as const, icon: "warning" as const },
+      { label: "Out of Stock", value: String(data.outOfStock).padStart(2, "0"), delta: "Procurement pending", variant: "danger" as const, icon: "error" as const },
+      { label: "HSN Compliance", value: `${data.hsnCompliance}%`, delta: "All SKUs mapped", variant: "success" as const, icon: "verified" as const },
+    ];
+  }, [data]);
 
   return (
     <div className="space-y-8 text-left">
@@ -49,7 +52,7 @@ export default function InventoryDashboardPage() {
       </div>
 
       {/* KPI Grid */}
-      {loading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KPISkeleton />
           <KPISkeleton />
@@ -106,7 +109,7 @@ export default function InventoryDashboardPage() {
               <h3 className="font-ui text-sm font-medium font-bold text-dark">Critical Reorder List</h3>
               <Link href="/inventory/stock" className="text-ui-xs text-primary font-bold uppercase tracking-widest no-underline hover:underline">View Full Ledger</Link>
             </div>
-            {loading ? (
+            {isLoading ? (
               <TableSkeleton rows={5} columns={4} />
             ) : (
               <table className="w-full text-left border-collapse">
