@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { TaxCalculator } from './tax-calculator';
+import { TaxCalculator, calculate87ARebate, calculateSurchargeWithMarginalRelief, getSurchargeRate } from './tax-calculator';
 
 describe('TaxCalculator', () => {
   const calculator = new TaxCalculator();
@@ -251,11 +251,150 @@ describe('TaxCalculator', () => {
 
     it('should calculate cess on tax after rebate and surcharge', () => {
       const result = calculator.calculateTaxNewRegime(1000000, false);
-      // Tax: 55,000, No rebate, No surcharge
+      // Tax: 60,000, No rebate, No surcharge
       // Cess: 4% of 60,000 = 2,400
       // Total: 62,400
       expect(result.cess).toBe(2400);
       expect(result.totalTax).toBe(62400);
     });
+  });
+});
+
+// ============================================================================
+// Standalone function tests
+// ============================================================================
+
+describe('calculate87ARebate', () => {
+  describe('Old regime (threshold=₹5L, max=₹12,500)', () => {
+    it('gives full rebate at ₹4,90,000', () => {
+      // Tax at 4.9L old: 2.5L-4.9L=2.4L@5%=12,000
+      expect(calculate87ARebate(490000, 12000, 'old')).toBe(12000);
+    });
+
+    it('gives full rebate at exactly ₹5,00,000', () => {
+      // Tax at 5L old: 2.5L-5L=2.5L@5%=12,500
+      expect(calculate87ARebate(500000, 12500, 'old')).toBe(12500);
+    });
+
+    it('caps rebate at tax amount when tax < max', () => {
+      // Tax at 3L old: 2.5L-3L=0.5L@5%=2,500
+      expect(calculate87ARebate(300000, 2500, 'old')).toBe(2500);
+    });
+
+    it('applies marginal relief at ₹5,05,000', () => {
+      // excess = 5,000, rebate = 12,500 - 5,000 = 7,500
+      // tax at 5.05L: 2.5L-5L=12,500, 5L-5.05L=0.05L@5%=250, total=12,750
+      // rebate capped at min(12750, 7500) = 7500
+      expect(calculate87ARebate(505000, 12750, 'old')).toBe(7500);
+    });
+
+    it('applies marginal relief at ₹5,10,000', () => {
+      // excess = 10,000, rebate = 12,500 - 10,000 = 2,500
+      // tax at 5.1L: same as above + extra 5K@5%=250, total=13,000
+      expect(calculate87ARebate(510000, 13000, 'old')).toBe(2500);
+    });
+
+    it('zero rebate at ₹5,12,501 (excess > maxRebate)', () => {
+      // excess = 12,501, rebate = max(0, 12500-12501) = 0
+      expect(calculate87ARebate(512501, 13125, 'old')).toBe(0);
+    });
+  });
+
+  describe('New regime (threshold=₹7L, max=₹25,000)', () => {
+    it('gives full rebate at ₹6,90,000', () => {
+      // Tax: 3L-6L=3L@5%=15K, 6L-6.9L=0.9L@10%=9K, total=24,000
+      expect(calculate87ARebate(690000, 24000, 'new')).toBe(24000);
+    });
+
+    it('gives full rebate at exactly ₹7,00,000', () => {
+      // Tax: 3L-6L=15K, 6L-7L=1L@10%=10K, total=25,000
+      expect(calculate87ARebate(700000, 25000, 'new')).toBe(25000);
+    });
+
+    it('applies marginal relief at ₹7,10,000', () => {
+      // excess = 10,000, rebate = 25,000 - 10,000 = 15,000
+      // tax: 3L-6L=15K, 6L-7.1L=1.1L@10%=11K, total=26,000
+      expect(calculate87ARebate(710000, 26000, 'new')).toBe(15000);
+    });
+
+    it('applies marginal relief at ₹7,25,000', () => {
+      // excess = 25,000, rebate = 25,000 - 25,000 = 0
+      // tax: 3L-6L=15K, 6L-7.25L=1.25L@10%=12.5K, total=27,500
+      expect(calculate87ARebate(725000, 27500, 'new')).toBe(0);
+    });
+
+    it('zero rebate at ₹8,00,000 (excess > maxRebate)', () => {
+      // excess = 1L, rebate = max(0, 25000-100000) = 0
+      expect(calculate87ARebate(800000, 30000, 'new')).toBe(0);
+    });
+  });
+});
+
+describe('getSurchargeRate', () => {
+  it('0% at ₹50,00,000', () => {
+    expect(getSurchargeRate(5000000)).toBe(0);
+  });
+
+  it('0% below ₹50,00,000', () => {
+    expect(getSurchargeRate(4900000)).toBe(0);
+  });
+
+  it('10% at ₹50,00,001', () => {
+    expect(getSurchargeRate(5000001)).toBe(0.10);
+  });
+
+  it('10% at ₹99,99,999', () => {
+    expect(getSurchargeRate(9999999)).toBe(0.10);
+  });
+
+  it('15% at ₹1,00,00,000', () => {
+    expect(getSurchargeRate(10000000)).toBe(0.15);
+  });
+
+  it('25% at ₹2,00,00,000', () => {
+    expect(getSurchargeRate(20000000)).toBe(0.25);
+  });
+
+  it('37% at ₹5,00,00,000', () => {
+    expect(getSurchargeRate(50000000)).toBe(0.37);
+  });
+});
+
+describe('calculateSurchargeWithMarginalRelief', () => {
+  it('zero surcharge below ₹50L', () => {
+    expect(calculateSurchargeWithMarginalRelief(100000, 4000000)).toBe(0);
+  });
+
+  it('10% surcharge at ₹60L with no relief needed', () => {
+    // Tax=1.5L, surcharge=15K, excess=10L, relief not triggered
+    expect(calculateSurchargeWithMarginalRelief(150000, 6000000)).toBe(15000);
+  });
+
+  it('marginal relief triggers for income just above ₹50L', () => {
+    // Tax at ₹51L ≈ 1,53,000, surcharge 10%=15,300
+    // At ₹50L tax ≈ 1,50,000, total=1,50,000
+    // excess=1L, totalAtCurrent-taxAtThreshold=1,68,300-1,50,000=18,300
+    // 18,300 < 1,00,000 → no relief
+    const surcharge = calculateSurchargeWithMarginalRelief(153000, 5100000);
+    // Full 10% surcharge
+    expect(surcharge).toBe(15300);
+  });
+
+  it('15% surcharge at ₹1.1Cr', () => {
+    const surcharge = calculateSurchargeWithMarginalRelief(300000, 11000000);
+    // Rate=0.15, surcharge=45,000
+    expect(surcharge).toBe(45000);
+  });
+
+  it('25% surcharge at ₹2.1Cr', () => {
+    const surcharge = calculateSurchargeWithMarginalRelief(600000, 21000000);
+    // Rate=0.25, surcharge=1,50,000
+    expect(surcharge).toBe(150000);
+  });
+
+  it('37% surcharge at ₹5.1Cr', () => {
+    const surcharge = calculateSurchargeWithMarginalRelief(1500000, 51000000);
+    // Rate=0.37, surcharge=5,55,000
+    expect(surcharge).toBe(555000);
   });
 });

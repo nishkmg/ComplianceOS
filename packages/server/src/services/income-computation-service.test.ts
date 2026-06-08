@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { db } from '@complianceos/db';
 import { IncomeComputationService } from './income-computation-service';
 import type { HousePropertyData, AssetDisposalData } from './income-computation-service';
+import { splitCapitalGains } from './income-computation-service';
 
 // Mock DB
 vi.mock('@complianceos/db', () => ({
@@ -339,6 +340,32 @@ describe('IncomeComputationService', () => {
 
       expect(result.stcg.total).toBe('0');
       expect(result.ltcg.total).toBe('0');
+    });
+  });
+
+  describe('splitCapitalGains', () => {
+    it('splits STCG into 111A and other with default 80% equity ratio', () => {
+      const result = splitCapitalGains(100000, 200000);
+      expect(result.stcgSection111A).toBe(80000);  // 80% of 1L
+      expect(result.stcgOther).toBe(20000);         // 20% of 1L
+    });
+
+    it('splits LTCG into 112A and 112 with 60-40 ratio', () => {
+      const result = splitCapitalGains(0, 500000);
+      expect(result.ltcgSection112A).toBe(300000);  // 60% of 5L
+      expect(result.ltcgSection112).toBe(200000);   // 40% of 5L
+    });
+
+    it('default sub-categories are zero', () => {
+      const result = splitCapitalGains(0, 0);
+      expect(result.ltcgSection112FiftyPercent).toBe(0);
+      expect(result.ltcgSection112HundredPercent).toBe(0);
+    });
+
+    it('handles custom equity ratio', () => {
+      const result = splitCapitalGains(100000, 0, 0.5);
+      expect(result.stcgSection111A).toBe(50000);
+      expect(result.stcgOther).toBe(50000);
     });
   });
 

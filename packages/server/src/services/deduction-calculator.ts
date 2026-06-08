@@ -110,6 +110,37 @@ export interface TotalDeductionsResult {
   breakdown: AllDeductions;
 }
 
+export interface ChapterVIADeductions {
+  section80C: number;
+  section80CCD1B: number;
+  section80D: {
+    self: number;
+    parents: number;
+    total: number;
+  };
+  section80E: number;
+  section80CCG: number;
+  section80U: number;
+  section80DD: number;
+  total: number;
+}
+
+export interface Section80CCGResult {
+  investment: number;
+  deductionAllowed: number;
+  isFirstTimeClaim: boolean;
+}
+
+export interface Section80UResult {
+  disabilityPercentage: number;
+  deductionAllowed: number;
+}
+
+export interface Section80DDResult {
+  disabilityPercentage: number;
+  deductionAllowed: number;
+}
+
 export interface DeductionValidationResult {
   isValid: boolean;
   errors: string[];
@@ -126,6 +157,11 @@ export class DeductionCalculator {
   private static readonly LIMIT_80E_YEARS = 8;          // 8 years
   private static readonly LIMIT_80TTA = 10000;          // ₹10,000
   private static readonly LIMIT_80TTB = 50000;          // ₹50,000
+  private static readonly LIMIT_80CCG = 25000;          // ₹25,000 (RGESS)
+  private static readonly LIMIT_80U_40 = 75000;         // ₹75,000 (40%+ disability)
+  private static readonly LIMIT_80U_80 = 125000;        // ₹1,25,000 (80%+ disability)
+  private static readonly LIMIT_80DD_40 = 75000;        // ₹75,000 (40%+ dependent)
+  private static readonly LIMIT_80DD_80 = 125000;       // ₹1,25,000 (80%+ dependent)
   private static readonly SENIOR_CITIZEN_AGE = 60;
 
   /**
@@ -323,6 +359,68 @@ export class DeductionCalculator {
   }
 
   /**
+   * Calculate Section 80CCG deduction (RGESS — Rajiv Gandhi Equity Savings Scheme)
+   * 50% of investment, max ₹25,000 deduction
+   * Available only once in a lifetime
+   */
+  calculate80CCG(
+    investment: number,
+    isFirstTimeClaim: boolean = true
+  ): Section80CCGResult {
+    const eligibleInvestment = Math.max(0, investment);
+    const deductionAllowed = isFirstTimeClaim
+      ? Math.min(eligibleInvestment * 0.5, DeductionCalculator.LIMIT_80CCG)
+      : 0;
+
+    return {
+      investment: Math.round(eligibleInvestment),
+      deductionAllowed: Math.round(deductionAllowed),
+      isFirstTimeClaim,
+    };
+  }
+
+  /**
+   * Calculate Section 80U deduction for self-disability
+   * ₹75,000 for 40%+ disability
+   * ₹1,25,000 for severe disability (80%+)
+   */
+  calculate80U(disabilityPercentage: number): Section80UResult {
+    const percentage = Math.max(0, Math.min(100, disabilityPercentage));
+    const deductionAllowed =
+      percentage >= 80
+        ? DeductionCalculator.LIMIT_80U_80
+        : percentage >= 40
+          ? DeductionCalculator.LIMIT_80U_40
+          : 0;
+
+    return {
+      disabilityPercentage: percentage,
+      deductionAllowed: Math.round(deductionAllowed),
+    };
+  }
+
+  /**
+   * Calculate Section 80DD deduction for dependent disability
+   * ₹75,000 for 40%+ disability
+   * ₹1,25,000 for severe disability (80%+)
+   * For maintenance including medical treatment of dependent
+   */
+  calculate80DD(disabilityPercentage: number): Section80DDResult {
+    const percentage = Math.max(0, Math.min(100, disabilityPercentage));
+    const deductionAllowed =
+      percentage >= 80
+        ? DeductionCalculator.LIMIT_80DD_80
+        : percentage >= 40
+          ? DeductionCalculator.LIMIT_80DD_40
+          : 0;
+
+    return {
+      disabilityPercentage: percentage,
+      deductionAllowed: Math.round(deductionAllowed),
+    };
+  }
+
+  /**
    * Calculate total deductions under Chapter VI-A
    * Sums all eligible deductions
    */
@@ -341,6 +439,75 @@ export class DeductionCalculator {
     return {
       totalDeductions: Math.round(totalDeductions),
       breakdown: { ...deductions },
+    };
+  }
+
+  /**
+   * Calculate structured Chapter VI-A deduction summary
+   * Groups deductions by section with type-safe interface
+   */
+  calculateChapterVIADeductions(params: {
+    section80C: number;
+    section80CCD1B: number;
+    section80D: { self: number; parents: number };
+    section80E: number;
+    section80CCG: number;
+    section80U: number;
+    section80DD: number;
+    isSelfSenior?: boolean;
+    isParentsSenior?: boolean;
+  }): ChapterVIADeductions {
+    const section80C = Math.min(Math.max(0, params.section80C), 150000);
+    const section80CCD1B = Math.min(
+      Math.max(0, params.section80CCD1B),
+      50000
+    );
+
+    // 80D: apply age-based caps
+    const selfLimit = params.isSelfSenior ? 50000 : 25000;
+    const parentsLimit = params.isParentsSenior ? 50000 : 25000;
+    const selfDed = Math.min(Math.max(0, params.section80D.self), selfLimit);
+    const parentsDed = Math.min(
+      Math.max(0, params.section80D.parents),
+      parentsLimit
+    );
+    const section80D = {
+      self: selfDed,
+      parents: parentsDed,
+      total: selfDed + parentsDed,
+    };
+
+    // Cap combined 80D at ₹1L when both senior
+    if (params.isSelfSenior && params.isParentsSenior) {
+      section80D.total = Math.min(section80D.total, 100000);
+    }
+
+    const section80E = Math.max(0, params.section80E);
+    const section80CCG = Math.min(
+      Math.max(0, params.section80CCG),
+      25000
+    );
+    const section80U = Math.max(0, params.section80U);
+    const section80DD = Math.max(0, params.section80DD);
+
+    const total =
+      section80C +
+      section80CCD1B +
+      section80D.total +
+      section80E +
+      section80CCG +
+      section80U +
+      section80DD;
+
+    return {
+      section80C,
+      section80CCD1B,
+      section80D,
+      section80E,
+      section80CCG,
+      section80U,
+      section80DD,
+      total,
     };
   }
 

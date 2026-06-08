@@ -70,6 +70,100 @@ const SURCHARGE_RATES = [
 
 const HEC_RATE = 0.04; // Health & Education Cess: 4%
 
+/**
+ * Calculate 87A rebate with marginal relief.
+ *
+ * Old regime: threshold=₹5L, maxRebate=₹12,500
+ * New regime (115BAC): threshold=₹7L, maxRebate=₹25,000
+ *
+ * Marginal relief: for income marginally above threshold,
+ * rebate tapers so taxpayer doesn't lose full rebate on small excess.
+ * Formula: rebate = max(0, maxRebate - excess_income).
+ */
+export function calculate87ARebate(
+  totalIncome: number,
+  taxAmount: number,
+  regime: 'old' | 'new'
+): number {
+  const threshold = regime === 'old' ? 500000 : 700000;
+  const maxRebate = regime === 'old' ? 12500 : 25000;
+
+  if (totalIncome <= threshold) {
+    return Math.min(taxAmount, maxRebate);
+  }
+
+  // Marginal relief: rebate phases out linearly
+  const excess = totalIncome - threshold;
+  const rebate = Math.max(0, maxRebate - excess);
+  return Math.min(taxAmount, rebate);
+}
+
+/**
+ * Get surcharge rate based on total income.
+ * Exported for use by surcharge marginal relief.
+ */
+export function getSurchargeRate(totalIncome: number): number {
+  for (const tier of SURCHARGE_RATES) {
+    if (totalIncome <= tier.limit) {
+      return tier.rate;
+    }
+  }
+  return SURCHARGE_RATES[SURCHARGE_RATES.length - 1].rate;
+}
+
+/**
+ * Calculate surcharge with marginal relief.
+ *
+ * Marginal relief ensures that total (tax + surcharge) on income
+ * marginally above a surcharge threshold does not exceed the total
+ * at the threshold by more than the excess income.
+ */
+export function calculateSurchargeWithMarginalRelief(
+  taxAmount: number,
+  totalIncome: number
+): number {
+  const rate = getSurchargeRate(totalIncome);
+  if (rate === 0) return 0;
+
+  const surcharge = Math.round(taxAmount * rate);
+
+  // Surcharge thresholds and their associated rates
+  const tiers = [
+    { threshold: 5000000, lowerRate: 0 },
+    { threshold: 10000000, lowerRate: 0.10 },
+    { threshold: 20000000, lowerRate: 0.15 },
+    { threshold: 50000000, lowerRate: 0.25 },
+  ];
+
+  for (const tier of tiers) {
+    if (totalIncome > tier.threshold) {
+      const excessIncome = totalIncome - tier.threshold;
+
+      // Estimate tax at threshold (proportional approximation)
+      const taxAtThreshold = Math.round(
+        (taxAmount * tier.threshold) / totalIncome
+      );
+      const surchargeAtThreshold = Math.round(
+        taxAtThreshold * tier.lowerRate
+      );
+      const totalAtThreshold = taxAtThreshold + surchargeAtThreshold;
+
+      const totalAtCurrent = taxAmount + surcharge;
+
+      if (totalAtCurrent - totalAtThreshold > excessIncome) {
+        // Cap surcharge so total doesn't exceed threshold total + marginal
+        const adjusted = totalAtThreshold + excessIncome - taxAmount;
+        return Math.max(0, Math.round(adjusted));
+      }
+
+      // Only the first crossed threshold matters (closest one)
+      break;
+    }
+  }
+
+  return surcharge;
+}
+
 export class TaxCalculator {
   /**
    * Calculate tax under New Regime (Section 115BAC)
@@ -98,17 +192,14 @@ export class TaxCalculator {
       previousLimit = slab.limit;
     }
 
-    // Apply Rebate 87A (full rebate if income ≤ ₹7,00,000)
-    let rebate87A = 0;
-    if (totalIncome <= 700000) {
-      rebate87A = taxBeforeRebate; // Full rebate
-    }
+    // Apply Rebate 87A with marginal relief
+    const rebate87A = calculate87ARebate(totalIncome, taxBeforeRebate, 'new');
 
     const taxAfterRebate = taxBeforeRebate - rebate87A;
 
-    // Calculate surcharge (on tax after rebate)
-    const surchargeRate = this.getSurchargeRate(totalIncome);
-    const surcharge = taxAfterRebate * surchargeRate;
+    // Calculate surcharge with marginal relief
+    const surchargeRate = getSurchargeRate(totalIncome);
+    const surcharge = calculateSurchargeWithMarginalRelief(taxAfterRebate, totalIncome);
 
     // Calculate cess (on tax + surcharge)
     const cess = (taxAfterRebate + surcharge) * HEC_RATE;
@@ -186,17 +277,14 @@ export class TaxCalculator {
       previousLimit = slab.limit;
     }
 
-    // Apply Rebate 87A (full rebate if total income ≤ ₹5,00,000)
-    let rebate87A = 0;
-    if (totalIncome <= 500000) {
-      rebate87A = Math.min(taxBeforeRebate, 12500); // Max rebate ₹12,500
-    }
+    // Apply Rebate 87A with marginal relief
+    const rebate87A = calculate87ARebate(totalIncome, taxBeforeRebate, 'old');
 
     const taxAfterRebate = taxBeforeRebate - rebate87A;
 
-    // Calculate surcharge (on tax after rebate)
-    const surchargeRate = this.getSurchargeRate(totalIncome);
-    const surcharge = taxAfterRebate * surchargeRate;
+    // Calculate surcharge with marginal relief
+    const surchargeRate = getSurchargeRate(totalIncome);
+    const surcharge = calculateSurchargeWithMarginalRelief(taxAfterRebate, totalIncome);
 
     // Calculate cess (on tax + surcharge)
     const cess = (taxAfterRebate + surcharge) * HEC_RATE;
@@ -238,15 +326,4 @@ export class TaxCalculator {
     return result;
   }
 
-  /**
-   * Get surcharge rate based on total income
-   */
-  private getSurchargeRate(totalIncome: number): number {
-    for (const tier of SURCHARGE_RATES) {
-      if (totalIncome < tier.limit) {
-        return tier.rate;
-      }
-    }
-    return SURCHARGE_RATES[SURCHARGE_RATES.length - 1].rate;
-  }
 }

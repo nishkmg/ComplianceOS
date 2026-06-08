@@ -19,6 +19,56 @@ import { eq, and, sql } from 'drizzle-orm';
 // Type Definitions
 // ============================================================================
 
+/**
+ * Breakdown of capital gains by Schedule CG sub-category for tax rate differentiation.
+ *
+ * - stcgSection111A: 15% — listed equity shares/units on which STT paid (Sec 111A)
+ * - stcgOther:       15% / slab rate — other STCG assets
+ * - ltcgSection112A: 10% on gains > ₹1L — listed equity shares/units (STT paid)
+ * - ltcgSection112:  20% with indexation — unlisted assets
+ * - ltcg112FiftyPercent:  50% of LTCG from listed securities (pre-2018)
+ * - ltcg112HundredPercent: 100% of LTCG from specified assets
+ */
+export interface CapitalGainsBreakdown {
+  stcgSection111A: number;
+  stcgOther: number;
+  ltcgSection112A: number;
+  ltcgSection112: number;
+  ltcgSection112FiftyPercent: number;
+  ltcgSection112HundredPercent: number;
+}
+
+/**
+ * Split total capital gains into Schedule CG sub-categories.
+ * When per-asset data is unavailable, assumes a reasonable split
+ * based on typical portfolio composition.
+ *
+ * @param totalStcg — aggregate short-term capital gains
+ * @param totalLtcg — aggregate long-term capital gains
+ * @param equityRatio — fraction of STCG from listed equity (default 0.8)
+ */
+export function splitCapitalGains(
+  totalStcg: number,
+  totalLtcg: number,
+  equityRatio: number = 0.8
+): CapitalGainsBreakdown {
+  const stcgEquity = Math.round(totalStcg * equityRatio);
+  const stcgOther = totalStcg - stcgEquity;
+
+  // Assume 60% of LTCG is from listed equity (Sec 112A)
+  const ltcgEquity = Math.round(totalLtcg * 0.6);
+  const ltcgUnlisted = totalLtcg - ltcgEquity;
+
+  return {
+    stcgSection111A: stcgEquity,
+    stcgOther,
+    ltcgSection112A: ltcgEquity,
+    ltcgSection112: ltcgUnlisted,
+    ltcgSection112FiftyPercent: 0,
+    ltcgSection112HundredPercent: 0,
+  };
+}
+
 export interface SalaryIncomeResult {
   totalSalary: string;
   grossSalary: string;

@@ -278,6 +278,132 @@ describe('DeductionCalculator', () => {
     });
   });
 
+  describe('calculate80CCG', () => {
+    it('allows 50% of RGESS investment up to ₹25,000', () => {
+      const result = calculator.calculate80CCG(50000, true);
+      expect(result.deductionAllowed).toBe(25000);
+      expect(result.isFirstTimeClaim).toBe(true);
+    });
+
+    it('caps RGESS deduction at ₹25,000', () => {
+      const result = calculator.calculate80CCG(100000, true);
+      expect(result.deductionAllowed).toBe(25000);
+    });
+
+    it('zero deduction for second-time claim', () => {
+      const result = calculator.calculate80CCG(50000, false);
+      expect(result.deductionAllowed).toBe(0);
+      expect(result.isFirstTimeClaim).toBe(false);
+    });
+
+    it('handles zero investment', () => {
+      const result = calculator.calculate80CCG(0, true);
+      expect(result.deductionAllowed).toBe(0);
+    });
+  });
+
+  describe('calculate80U', () => {
+    it('allows ₹75,000 for 40% disability', () => {
+      const result = calculator.calculate80U(40);
+      expect(result.deductionAllowed).toBe(75000);
+    });
+
+    it('allows ₹1,25,000 for severe disability (80%+)', () => {
+      const result = calculator.calculate80U(80);
+      expect(result.deductionAllowed).toBe(125000);
+    });
+
+    it('allows ₹1,25,000 for 100% disability', () => {
+      const result = calculator.calculate80U(100);
+      expect(result.deductionAllowed).toBe(125000);
+    });
+
+    it('zero deduction below 40% disability', () => {
+      const result = calculator.calculate80U(30);
+      expect(result.deductionAllowed).toBe(0);
+    });
+  });
+
+  describe('calculate80DD', () => {
+    it('allows ₹75,000 for dependent with 40% disability', () => {
+      const result = calculator.calculate80DD(40);
+      expect(result.deductionAllowed).toBe(75000);
+    });
+
+    it('allows ₹1,25,000 for dependent with severe disability (80%+)', () => {
+      const result = calculator.calculate80DD(80);
+      expect(result.deductionAllowed).toBe(125000);
+    });
+
+    it('zero deduction below 40% disability', () => {
+      const result = calculator.calculate80DD(20);
+      expect(result.deductionAllowed).toBe(0);
+    });
+  });
+
+  describe('calculateChapterVIADeductions', () => {
+    it('aggregates all deductions with proper caps', () => {
+      const result = calculator.calculateChapterVIADeductions({
+        section80C: 200000,
+        section80CCD1B: 60000,
+        section80D: { self: 30000, parents: 40000 },
+        section80E: 100000,
+        section80CCG: 50000,
+        section80U: 125000,
+        section80DD: 0,
+        isSelfSenior: false,
+        isParentsSenior: true,
+      });
+
+      // 80C: capped at 1.5L
+      expect(result.section80C).toBe(150000);
+      // 80CCD1B: capped at 50K
+      expect(result.section80CCD1B).toBe(50000);
+      // 80D: self capped at 25K, parents capped at 50K (senior)
+      expect(result.section80D.self).toBe(25000);
+      expect(result.section80D.parents).toBe(40000);
+      expect(result.section80D.total).toBe(65000);
+      // 80E: full
+      expect(result.section80E).toBe(100000);
+      // 80CCG: capped at 25K
+      expect(result.section80CCG).toBe(25000);
+      // 80U: full
+      expect(result.section80U).toBe(125000);
+      // total
+      expect(result.total).toBe(150000 + 50000 + 65000 + 100000 + 25000 + 125000 + 0);
+    });
+
+    it('caps combined 80D at ₹1L when both senior', () => {
+      const result = calculator.calculateChapterVIADeductions({
+        section80C: 0,
+        section80CCD1B: 0,
+        section80D: { self: 60000, parents: 60000 },
+        section80E: 0,
+        section80CCG: 0,
+        section80U: 0,
+        section80DD: 0,
+        isSelfSenior: true,
+        isParentsSenior: true,
+      });
+      expect(result.section80D.self).toBe(50000);
+      expect(result.section80D.parents).toBe(50000);
+      expect(result.section80D.total).toBe(100000);
+    });
+
+    it('handles minimal deductions', () => {
+      const result = calculator.calculateChapterVIADeductions({
+        section80C: 0,
+        section80CCD1B: 0,
+        section80D: { self: 0, parents: 0 },
+        section80E: 0,
+        section80CCG: 0,
+        section80U: 0,
+        section80DD: 0,
+      });
+      expect(result.total).toBe(0);
+    });
+  });
+
   describe('validateDeductions', () => {
     it('should return valid for legitimate deductions', () => {
       const deductions = {
