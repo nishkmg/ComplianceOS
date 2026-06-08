@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { eq, and, inArray, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { accountBalances, accounts, cashFlowDefaultMapping, accountCashFlowOverrides } = _db;
+const { accountBalances, accounts, cashFlowDefaultMapping, accountCashFlowOverrides, journalEntryView } = _db;
 import type { TrialBalance, ProfitAndLoss, BalanceSheet, CashFlowStatement } from "../../../shared/src/index";
 
 const toNum = (v: string | null | undefined) => parseFloat(v ?? "0") || 0;
