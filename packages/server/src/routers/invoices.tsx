@@ -235,22 +235,24 @@ export const invoicesRouter = router({
       return result;
     }),
 
-  pdf: protectedProcedure
+  getPdfSignedUrl: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
       const { tenantId } = ctx.session!.user;
 
-      const invoice = await ctx.db
+      const [row] = await ctx.db
         .select({ pdfUrl: invoices.pdfUrl })
         .from(invoices)
         .where(and(eq(invoices.id, input.id), eq(invoices.tenantId, tenantId)))
         .limit(1);
 
-      if (!invoice[0]) {
-        throw new Error("Invoice not found");
-      }
+      if (!row) throw new Error("Invoice not found");
+      if (!row.pdfUrl) return { url: null };
 
-      return { pdfUrl: invoice[0].pdfUrl ?? null };
+      const { createStorageDriver, BUCKETS } = await import("../lib/storage");
+      const storage = createStorageDriver();
+      const url = await storage.signedUrl(BUCKETS.INVOICES, row.pdfUrl, 3600);
+      return { url };
     }),
 
   generatePdf: protectedProcedure
@@ -258,31 +260,98 @@ export const invoicesRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { tenantId } = ctx.session!.user;
 
-      const invoice = await ctx.db
+      const [inv] = await ctx.db
         .select()
         .from(invoices)
         .where(and(eq(invoices.id, input.id), eq(invoices.tenantId, tenantId)))
         .limit(1);
 
-      if (!invoice[0]) {
-        throw new Error("Invoice not found");
-      }
+      if (!inv) throw new Error("Invoice not found");
 
       const lines = await ctx.db
         .select()
         .from(invoiceLines)
         .where(eq(invoiceLines.invoiceId, input.id));
 
-      // PDF generation temporarily disabled - move to client-side
-      // const { pdf } = await import("@react-pdf/renderer");
-      // const { InvoicePDF } = await import("@complianceos/web/components/ui/invoice-pdf");
-      // const invoiceData = {...};
-      // const config = {...};
-      // const doc = pdf(<InvoicePDF invoice={invoiceData} config={config} />);
-      // const pdfBuffer = await doc.toBuffer();
-      // return { pdfUrl: ..., filename: ... };
-      
-      throw new Error("PDF generation not available - use client-side download");
+      const [tenant] = await ctx.db
+        .select({
+          name: tenants.name,
+          legalName: tenants.legalName,
+          stateCode: tenants.stateCode,
+          gstin: tenants.gstin,
+          pan: tenants.pan,
+          address: tenants.address,
+          bankAccount: tenants.bankAccount,
+          bankIfsc: tenants.bankIfsc,
+        })
+        .from(tenants)
+        .where(eq(tenants.id, tenantId))
+        .limit(1);
+
+      if (!tenant) throw new Error("Tenant not found");
+      if (!tenant.stateCode) throw new Error("Tenant state code not configured");
+
+      const { stateCodeToGstPrefix } = await import("@complianceos/shared");
+      const { generateInvoicePdf } = await import("../services/pdf-generator");
+
+      const invoiceData: import("../services/pdf-generator").InvoiceWithLines = {
+        id: inv.id,
+        invoiceNumber: inv.invoiceNumber,
+        date: inv.date,
+        dueDate: inv.dueDate,
+        customerName: inv.customerName,
+        customerEmail: inv.customerEmail,
+        customerGstin: inv.customerGstin,
+        customerAddress: inv.customerAddress,
+        customerState: inv.customerState,
+        status: inv.status,
+        subtotal: Number(inv.subtotal),
+        cgstTotal: Number(inv.cgstTotal),
+        sgstTotal: Number(inv.sgstTotal),
+        igstTotal: Number(inv.igstTotal),
+        discountTotal: Number(inv.discountTotal),
+        grandTotal: Number(inv.grandTotal),
+        fiscalYear: inv.fiscalYear,
+        notes: inv.notes,
+        terms: inv.terms,
+        lines: lines.map((l) => ({
+          description: l.description,
+          quantity: Number(l.quantity),
+          unitPrice: Number(l.unitPrice),
+          gstRate: Number(l.gstRate),
+          amount: Number(l.amount),
+          cgstAmount: Number(l.cgstAmount),
+          sgstAmount: Number(l.sgstAmount),
+          igstAmount: Number(l.igstAmount),
+          discountPercent: Number(l.discountPercent ?? 0),
+          discountAmount: Number(l.discountAmount ?? 0),
+        })),
+      };
+
+      const config: import("../services/pdf-generator").InvoiceConfig = {
+        company: {
+          name: tenant.legalName || tenant.name,
+          address: tenant.address || "",
+          city: "",
+          state: stateCodeToGstPrefix(tenant.stateCode),
+          gstin: tenant.gstin || "",
+          pan: tenant.pan || "",
+          email: "",
+          phone: "",
+          bankName: "",
+          bankAccount: tenant.bankAccount || "",
+          bankIfsc: tenant.bankIfsc || "",
+        },
+      };
+
+      const { url, storagePath } = await generateInvoicePdf(invoiceData, config);
+
+      await ctx.db
+        .update(invoices)
+        .set({ pdfUrl: storagePath, updatedAt: new Date() })
+        .where(eq(invoices.id, input.id));
+
+      return { pdfUrl: url, filename: `Invoice-${inv.invoiceNumber}.pdf` };
     }),
 
   listByCustomer: protectedProcedure

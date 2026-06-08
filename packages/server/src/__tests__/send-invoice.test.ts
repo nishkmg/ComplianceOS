@@ -45,7 +45,8 @@ describe("sendInvoice command", () => {
     vi.mocked(appendEvent).mockResolvedValue(undefined);
     vi.mocked(generateInvoicePdf).mockResolvedValue({
       buffer: Buffer.from("fake-pdf"),
-      url: "/tmp/invoices/test-invoice.pdf",
+      url: "https://storage.example.com/invoices/test-invoice.pdf?token=signed",
+      storagePath: "invoices/test-invoice.pdf",
     });
     // Reset mock implementation
     mockDb.select.mockClear();
@@ -181,7 +182,7 @@ describe("sendInvoice command", () => {
       "invoice_sent",
       expect.objectContaining({
         invoiceId,
-        pdfUrl: "/tmp/invoices/test-invoice.pdf",
+        pdfUrl: "invoices/test-invoice.pdf",
       }),
       actorId,
     );
@@ -189,7 +190,7 @@ describe("sendInvoice command", () => {
     // Verify return value
     expect(result).toEqual({
       invoiceId,
-      pdfUrl: "/tmp/invoices/test-invoice.pdf",
+      pdfUrl: "https://storage.example.com/invoices/test-invoice.pdf?token=signed",
       emailQueued: true,
     });
   });

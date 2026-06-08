@@ -88,7 +88,7 @@ export async function sendInvoice(
   };
 
   // Generate PDF
-  const { buffer, url: pdfUrl } = await generateInvoicePdf(invoiceData, config);
+  const { buffer, url: signedUrl, storagePath } = await generateInvoicePdf(invoiceData, config);
 
   // Update invoice with PDF URL
   const now = new Date();
@@ -96,7 +96,7 @@ export async function sendInvoice(
     .set({
       status: "sent",
       sentAt: now,
-      pdfUrl,
+      pdfUrl: storagePath,
       updatedAt: now,
     })
     .where(eq(invoices.id, invoiceId));
@@ -110,7 +110,7 @@ export async function sendInvoice(
       to: invoice.customerEmail,
       subject: `Invoice ${invoice.invoiceNumber} from ${config.company.name}`,
       body: buildEmailBody(invoice, config),
-      attachments: [{ filename: `Invoice-${invoice.invoiceNumber}.pdf`, url: pdfUrl }],
+      attachments: [{ filename: `Invoice-${invoice.invoiceNumber}.pdf`, url: signedUrl }],
     });
     emailQueued = true;
   }
@@ -119,10 +119,10 @@ export async function sendInvoice(
   await appendEvent(db, tenantId, "invoice", invoiceId, "invoice_sent", {
     invoiceId,
     sentAt: now.toISOString(),
-    pdfUrl,
+    pdfUrl: storagePath,
   }, actorId);
 
-  return { invoiceId, pdfUrl, emailQueued };
+  return { invoiceId, pdfUrl: signedUrl, emailQueued };
 }
 
 function buildEmailBody(invoice: typeof invoices.$inferSelect, config: InvoiceConfig): string {

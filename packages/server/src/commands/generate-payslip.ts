@@ -4,6 +4,7 @@ import * as _db from "../../../db/src/index";
 const { payrollRuns, payslips, employees, payrollLines, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import { generatePayslipPDF } from "../services/payslip-pdf";
+import { createStorageDriver, type StorageDriver, BUCKETS } from "../lib/storage";
 
 interface PayslipData {
   payrollRun: any;
@@ -164,8 +165,11 @@ export async function generatePayslip(
     totalDeductions: parseFloat(payrollRun.grossDeductions),
   });
 
+  const storage: StorageDriver = createStorageDriver();
   const filename = `payslip-${employee.employees.employeeCode}-${payrollRun.month}-${payrollRun.year}.pdf`;
-  const pdfUrl = await uploadPdfToStorage(pdfBuffer, filename, tenantId);
+  const storagePath = `payslips/${tenantId}/${payrollRun.year}/${filename}`;
+  await storage.upload(BUCKETS.PAYSLIPS, storagePath, pdfBuffer, "application/pdf");
+  const pdfUrl = await storage.signedUrl(BUCKETS.PAYSLIPS, storagePath, 604_800);
 
   const existingPayslip = await db.select()
     .from(payslips)
@@ -205,15 +209,4 @@ export async function generatePayslip(
   return { payslipId: payslip.id, pdfUrl };
 }
 
-async function uploadPdfToStorage(
-  pdfBuffer: Buffer,
-  filename: string,
-  tenantId: string,
-): Promise<string> {
-  const bucket = process.env.STORAGE_BUCKET ?? "complianceos-payslips";
-  const path = `payslips/${tenantId}/${new Date().getFullYear()}/${filename}`;
-  
-  // V1: Return path (actual S3 upload in production)
-  // TODO: Implement S3/GCS upload in production
-  return path;
-}
+

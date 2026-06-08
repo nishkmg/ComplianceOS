@@ -1,6 +1,7 @@
 import React from "react";
 import { renderToBuffer, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { Buffer } from "node:buffer";
+import { createStorageDriver, type StorageDriver, BUCKETS } from "../lib/storage";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -305,23 +306,13 @@ export interface PdfGeneratorService {
 export async function generateInvoicePdf(
   invoice: InvoiceWithLines,
   config: InvoiceConfig,
-): Promise<{ buffer: Buffer; url: string }> {
+): Promise<{ buffer: Buffer; url: string; storagePath: string }> {
   const buffer = await renderToBuffer(<InvoiceDocument invoice={invoice} config={config} />);
 
-  // Local dev: write to /tmp/invoices/{invoiceId}.pdf
-  const fs = await import("node:fs");
-  const path = await import("node:path");
-  const destDir = "/tmp/invoices";
-  fs.mkdirSync(destDir, { recursive: true });
-  const destPath = path.join(destDir, `${invoice.id}.pdf`);
-  fs.writeFileSync(destPath, buffer);
-  const url = destPath;
+  const storage: StorageDriver = createStorageDriver();
+  const storagePath = `invoices/${invoice.id}.pdf`;
+  await storage.upload(BUCKETS.INVOICES, storagePath, buffer, "application/pdf");
+  const url = await storage.signedUrl(BUCKETS.INVOICES, storagePath, 604_800);
 
-  return { buffer, url };
-}
-
-// Stub for future S3/R2 upload
-export async function uploadToS3(_buffer: Buffer, _invoiceId: string): Promise<string> {
-  // TODO: implement with AWS SDK or Cloudflare R2
-  throw new Error("S3 upload not implemented");
+  return { buffer, url, storagePath };
 }
