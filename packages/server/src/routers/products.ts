@@ -5,7 +5,7 @@ import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { products } = _db;
 import { createProduct } from "../commands/create-product";
-import { suggestHsnCode } from "../services/hsn-gst-mapping";
+import { searchHsn } from "../services/hsn-gst-mapping";
 
 export const productsRouter = router({
   list: protectedProcedure
@@ -76,6 +76,6 @@ export const productsRouter = router({
   suggestHsn: protectedProcedure
     .input(z.object({ searchTerm: z.string() }))
     .query(async ({ input }) => {
-      return suggestHsnCode(input.searchTerm);
+      return searchHsn(input.searchTerm);
     }),
 });

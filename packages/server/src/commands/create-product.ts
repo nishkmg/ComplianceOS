@@ -38,7 +38,7 @@ export async function createProduct(
   }
   
   // Auto-detect GST rate from HSN if not provided
-  const gstRate = validated.gstRate ?? getGstRateForHsn(validated.hsnCode);
+  const gstRate = validated.gstRate ?? await getGstRateForHsn(validated.hsnCode);
   
   const [product] = // -ignore - drizzle type
           await db.insert(products).values({

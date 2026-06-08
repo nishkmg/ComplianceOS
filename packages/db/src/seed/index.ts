@@ -1,4 +1,5 @@
 import { seedCashFlowDefaults } from "./cash-flow-defaults";
+import { seedHsnMaster } from "./hsn-master";
 import { seedDemoData } from "./demo-data";
 
 function assertSeedAllowed(): void {
@@ -35,6 +36,8 @@ function assertSeedAllowed(): void {
 export async function seed(): Promise<void> {
   console.log("Seeding cash flow defaults...");
   await seedCashFlowDefaults();
+  console.log("Seeding HSN master...");
+  await seedHsnMaster();
   console.log("Seed complete.");
 }
 
