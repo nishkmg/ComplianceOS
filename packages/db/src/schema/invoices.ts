@@ -67,6 +67,13 @@ export const invoices = pgTable("invoices", {
   sentAt: timestamp("sent_at", { withTimezone: true }),
   paidAt: timestamp("paid_at", { withTimezone: true }),
   pdfUrl: text("pdf_url"),
+  irn: text("irn"),
+  irnGeneratedAt: timestamp("irn_generated_at", { withTimezone: true }),
+  signedQrCode: text("signed_qr_code"),
+  irnCancelled: boolean("irn_cancelled").default(false),
+  ewbNo: text("ewb_no"),
+  ewbGeneratedAt: timestamp("ewb_generated_at", { withTimezone: true }),
+  ewbValidTill: timestamp("ewb_valid_till", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
