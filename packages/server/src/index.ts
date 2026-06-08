@@ -24,3 +24,11 @@ export { generateGstr2bPdf } from "./commands/generate-gstr2b-pdf";
 export { generateGstr3bPdf } from "./commands/generate-gstr3b-pdf";
 export { generateGstr9Pdf } from "./commands/generate-gstr9-pdf";
 export { generateItrPdf } from "./commands/generate-itr-pdf";
+
+// GSP adapter
+export { createGspAdapter } from "./services/gsp/index";
+export type { GspAdapter } from "./services/gsp/adapter";
+
+// E-filing
+export { createEfilingAdapter } from "./services/efiling/index";
+export type { EfilingAdapter } from "./services/efiling/adapter";
