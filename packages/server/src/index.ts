@@ -19,3 +19,8 @@ export { createAccount } from "./commands/create-account";
 export { createProduct } from "./commands/create-product";
 export { modifyInvoice } from "./commands/modify-invoice";
 export { bootstrapTenant } from "./commands/bootstrap-tenant";
+export { generateGstr1Pdf } from "./commands/generate-gstr1-pdf";
+export { generateGstr2bPdf } from "./commands/generate-gstr2b-pdf";
+export { generateGstr3bPdf } from "./commands/generate-gstr3b-pdf";
+export { generateGstr9Pdf } from "./commands/generate-gstr9-pdf";
+export { generateItrPdf } from "./commands/generate-itr-pdf";

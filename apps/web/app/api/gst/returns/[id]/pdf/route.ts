@@ -1,20 +1,16 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { eq, and } from "drizzle-orm";
 import { db } from "@complianceos/db";
 import * as _db from "@complianceos/db";
 const { gstReturns } = _db;
-import { generateGstr1Pdf } from "@complianceos/server/commands/generate-gstr1-pdf";
-import { generateGstr2bPdf } from "@complianceos/server/commands/generate-gstr2b-pdf";
-import { generateGstr3bPdf } from "@complianceos/server/commands/generate-gstr3b-pdf";
-import { generateGstr9Pdf } from "@complianceos/server/commands/generate-gstr9-pdf";
+import { generateGstr1Pdf, generateGstr2bPdf, generateGstr3bPdf, generateGstr9Pdf } from "@complianceos/server";
 
 export const runtime = "nodejs";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

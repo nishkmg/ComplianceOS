@@ -43,7 +43,7 @@ export class SupabaseStorageDriver implements StorageDriver {
         Authorization: `Bearer ${this.serviceRoleKey}`,
         "Content-Type": contentType,
       },
-      body: data,
+      body: data as any,
     });
     if (!res.ok) {
       const body = await res.text();

@@ -43,7 +43,7 @@ export async function GET(req: Request) {
       return Response.json({ return: { ...itrReturn, lines } });
     }
 
-    const { generateItrPdf } = await import("@complianceos/server/src/commands/generate-itr-pdf");
+    const { generateItrPdf } = await import("@complianceos/server");
     const db = getDb();
 
     const { supabaseRest } = await import("@/lib/supabase-rest");
@@ -55,7 +55,7 @@ export async function GET(req: Request) {
     if (!rows.length) return Response.json({ error: "ITR return not found" }, { status: 404 });
 
     const itrReturn = rows[0];
-    const formType = mapReturnTypeToFormType(itrReturn.return_type);
+    const formType = MAP_RETURN_TYPE_TO_FORM_TYPE[itrReturn.return_type?.toLowerCase() ?? ""] ?? null;
     if (!formType) return Response.json({ error: `Unknown return type: ${itrReturn.return_type}` }, { status: 400 });
 
     const result = await generateItrPdf(db, tenantId, {
@@ -83,15 +83,12 @@ export async function GET(req: Request) {
   }
 }
 
-function mapReturnTypeToFormType(returnType: string | null | undefined): string | null {
-  const map: Record<string, string> = {
-    itr1: "ITR-1",
-    itr2: "ITR-2",
-    itr3: "ITR-3",
-    itr4: "ITR-4",
-    itr5: "ITR-5",
-    itr6: "ITR-6",
-    itr7: "ITR-7",
-  };
-  return map[returnType?.toLowerCase() ?? ""] ?? null;
-}
+const MAP_RETURN_TYPE_TO_FORM_TYPE: Record<string, string> = {
+  itr1: "ITR-1",
+  itr2: "ITR-2",
+  itr3: "ITR-3",
+  itr4: "ITR-4",
+  itr5: "ITR-5",
+  itr6: "ITR-6",
+  itr7: "ITR-7",
+};
