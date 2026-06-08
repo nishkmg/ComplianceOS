@@ -1,95 +1,104 @@
 "use client";
 
+import { useCallback } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-interface CfItem { label: string; amount: number }
-interface CfSection { title: string; items: CfItem[]; total: number }
-
-const cfDataByFy: Record<string, { sections: CfSection[]; openingCash: number }> = {
-  '2026-27': {
-    sections: [
-      {
-        title: "A. Cash Flow from Operating Activities",
-        items: [
-          { label: "Profit Before Tax",                    amount: 2146000 },
-          { label: "Adjustments for Depreciation",          amount: 248000 },
-          { label: "Interest Income",                       amount: -24600 },
-          { label: "Working Capital Changes",               amount: -452000 },
-        ],
-        total: 1917400,
-      },
-      {
-        title: "B. Cash Flow from Investing Activities",
-        items: [
-          { label: "Purchase of Property, Plant & Equipment", amount: -450000 },
-          { label: "Proceeds from Sale of Investments",     amount: 125000 },
-          { label: "Interest Received",                     amount: 24600 },
-        ],
-        total: -300400,
-      },
-      {
-        title: "C. Cash Flow from Financing Activities",
-        items: [
-          { label: "Repayment of Long-term Borrowings",     amount: -250000 },
-          { label: "Interest Paid",                         amount: -18500 },
-          { label: "Dividends Paid",                        amount: -100000 },
-        ],
-        total: -368500,
-      },
-    ],
-    openingCash: 4876390,
-  },
-  '2025-26': {
-    sections: [
-      {
-        title: "A. Cash Flow from Operating Activities",
-        items: [
-          { label: "Profit Before Tax",                    amount: 1683000 },
-          { label: "Adjustments for Depreciation",          amount: 220000 },
-          { label: "Interest Income",                       amount: -18200 },
-          { label: "Working Capital Changes",               amount: -380000 },
-        ],
-        total: 1504800,
-      },
-      {
-        title: "B. Cash Flow from Investing Activities",
-        items: [
-          { label: "Purchase of Property, Plant & Equipment", amount: -350000 },
-          { label: "Proceeds from Sale of Investments",     amount: 98000 },
-          { label: "Interest Received",                     amount: 18200 },
-        ],
-        total: -233800,
-      },
-      {
-        title: "C. Cash Flow from Financing Activities",
-        items: [
-          { label: "Repayment of Long-term Borrowings",     amount: -200000 },
-          { label: "Interest Paid",                         amount: -15000 },
-          { label: "Dividends Paid",                        amount: -80000 },
-        ],
-        total: -295000,
-      },
-    ],
-    openingCash: 4120000,
-  },
-};
+import { api } from "@/lib/api";
+import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
+interface CfSection { title: string; items: { label: string; amount: string }[]; total: string }
+
 export default function CashFlowPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
-  const fyCf = cfDataByFy[fiscalYear] ?? cfDataByFy['2026-27'];
-  const sections = fyCf.sections;
-  const netChange = sections.reduce((s, sec) => s + sec.total, 0);
-  const openingCash = fyCf.openingCash;
+
+  const utils = api.useUtils();
+  const { data, isLoading, error } = api.balances.cashFlow.useQuery(
+    { fiscalYear },
+    { staleTime: 0, refetchInterval: 30_000 },
+  );
+
+  const invalidate = useCallback(() => {
+    void utils.balances.cashFlow.invalidate();
+  }, [utils]);
+  useRealtimeSubscription("account_balances", invalidate);
+
+  const sections: CfSection[] = [
+    {
+      title: "A. Cash Flow from Operating Activities",
+      items: data?.operatingActivities ?? [],
+      total: data?.cashFromOperations ?? "0",
+    },
+    {
+      title: "B. Cash Flow from Investing Activities",
+      items: data?.investingActivities ?? [],
+      total: data?.cashFromInvesting ?? "0",
+    },
+    {
+      title: "C. Cash Flow from Financing Activities",
+      items: data?.financingActivities ?? [],
+      total: data?.cashFromFinancing ?? "0",
+    },
+  ];
+
+  const netChange = parseFloat(data?.netCashFlow || "0");
+  const openingCash = 0;
   const closingCash = openingCash + netChange;
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="font-display text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+        <Card className="bg-surface border border-border p-8 text-center">
+          <p className="text-danger font-medium mb-4">Failed to load cash flow statement</p>
+          <Button onClick={() => utils.balances.cashFlow.invalidate()}>Retry</Button>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <h1 className="font-display text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+        <Card className="bg-surface border border-border p-8">
+          <div className="space-y-3 animate-pulse">
+            <div className="h-6 bg-surface-muted rounded w-1/3" />
+            <div className="h-4 bg-surface-muted rounded w-1/2" />
+            <div className="h-4 bg-surface-muted rounded w-2/3" />
+            <div className="h-4 bg-surface-muted rounded w-1/2" />
+            <div className="h-4 bg-surface-muted rounded w-3/4" />
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (sections.every(s => s.items.length === 0)) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
+          <div>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+              Financial Report · FY {fiscalYear}
+            </p>
+            <h1 className="font-display text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+            <p className="text-[13px] text-secondary font-ui mt-1">For the year ended March 31, {parseInt(fiscalYear.split('-')[1]) + 2000} (Indirect Method)</p>
+          </div>
+        </div>
+        <Card className="bg-surface border border-border p-12 text-center">
+          <Icon name="receipt_long" size={32} className="text-light mx-auto mb-3" />
+          <p className="font-display text-lg text-dark mb-1">No entries for FY {fiscalYear}</p>
+          <p className="font-ui text-[12px] text-mid">Post journal entries to populate the cash flow statement.</p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -154,14 +163,14 @@ export default function CashFlowPage() {
                   >
                     <div className="col-span-8 font-ui text-[13px] text-dark pl-4">{item.label}</div>
                     <div className={`col-span-2 text-right font-mono text-[13px] tabular-nums ${
-                      item.amount < 0 ? 'text-danger' : 'text-dark'
+                      parseFloat(item.amount) < 0 ? 'text-danger' : 'text-dark'
                     } print:text-black`}>
-                      {item.amount < 0
-                        ? `(${formatIndianNumber(Math.abs(item.amount))})`
-                        : formatIndianNumber(item.amount)}
+                      {parseFloat(item.amount) < 0
+                        ? `(${formatIndianNumber(Math.abs(parseFloat(item.amount)))})`
+                        : formatIndianNumber(parseFloat(item.amount))}
                     </div>
                     <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-light">
-                      {formatIndianNumber(Math.abs(Math.round(item.amount * 0.85)))}
+                      {formatIndianNumber(Math.abs(Math.round(parseFloat(item.amount) * 0.85)))}
                     </div>
                   </div>
                 ))}
@@ -170,11 +179,11 @@ export default function CashFlowPage() {
                     Net Cash from {section.title.split(" from ").pop()}
                   </div>
                   <div className={`col-span-2 text-right font-mono text-[13px] tabular-nums ${
-                    section.total < 0 ? 'text-danger' : 'text-dark'
+                    parseFloat(section.total) < 0 ? 'text-danger' : 'text-dark'
                   } print:text-black`}>
-                    {section.total < 0
-                      ? `(${formatIndianNumber(Math.abs(section.total))})`
-                      : formatIndianNumber(section.total)}
+                    {parseFloat(section.total) < 0
+                      ? `(${formatIndianNumber(Math.abs(parseFloat(section.total)))})`
+                      : formatIndianNumber(parseFloat(section.total))}
                   </div>
                   <div className="col-span-2" />
                 </div>
