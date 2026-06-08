@@ -1,56 +1,87 @@
 "use client";
 
+import { useCallback } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-
-// ─── Mock data — Schedule III format ──────────────────────────────────────────
-
-interface PlItem { label: string; amount: number; note: string }
-const plDataByFy: Record<string, { revenue: PlItem[]; expenses: PlItem[] }> = {
-  '2026-27': {
-    revenue: [
-      { label: "Revenue from Operations", amount: 12450000, note: "1" },
-      { label: "Other Income", amount: 24600, note: "2" },
-    ],
-    expenses: [
-      { label: "Cost of Materials Consumed", amount: 8240000, note: "3" },
-      { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -400000, note: "4" },
-      { label: "Employee Benefits Expense", amount: 1245000, note: "5" },
-      { label: "Finance Costs", amount: 18500, note: "6" },
-      { label: "Depreciation and Amortisation Expense", amount: 248000, note: "7" },
-      { label: "Other Expenses", amount: 570000, note: "8" },
-    ],
-  },
-  '2025-26': {
-    revenue: [
-      { label: "Revenue from Operations", amount: 9850000, note: "1" },
-      { label: "Other Income", amount: 18200, note: "2" },
-    ],
-    expenses: [
-      { label: "Cost of Materials Consumed", amount: 6500000, note: "3" },
-      { label: "Changes in Inventories of FG, WIP & Stock-in-Trade", amount: -300000, note: "4" },
-      { label: "Employee Benefits Expense", amount: 1080000, note: "5" },
-      { label: "Finance Costs", amount: 15000, note: "6" },
-      { label: "Depreciation and Amortisation Expense", amount: 220000, note: "7" },
-      { label: "Other Expenses", amount: 460000, note: "8" },
-    ],
-  },
-};
+import { api } from "@/lib/api";
+import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ProfitLossPage() {
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
-  const fyPl = plDataByFy[fiscalYear] ?? plDataByFy['2026-27'];
-  const { revenue: revenueItems, expenses: expenseItems } = fyPl;
-  const totalRevenue = revenueItems.reduce((s, i) => s + i.amount, 0);
-  const totalExpenses = expenseItems.reduce((s, i) => s + i.amount, 0);
-  const netProfit = totalRevenue - totalExpenses;
+
+  const utils = api.useUtils();
+  const { data, isLoading, error } = api.balances.pAndL.useQuery(
+    { fiscalYear },
+    { staleTime: 0, refetchInterval: 30_000 },
+  );
+
+  const invalidate = useCallback(() => {
+    void utils.balances.pAndL.invalidate();
+  }, [utils]);
+  useRealtimeSubscription("account_balances", invalidate);
+
+  const revenueItems = data?.revenue ?? [];
+  const expenseItems = data?.expenses ?? [];
+  const totalRevenue = parseFloat(data?.totalRevenue || "0");
+  const totalExpenses = parseFloat(data?.totalExpenses || "0");
+  const netProfit = parseFloat(data?.netProfit || "0");
   const isProfit = netProfit >= 0;
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+        <Card className="bg-surface border border-border p-8 text-center">
+          <p className="text-danger font-medium mb-4">Failed to load profit & loss</p>
+          <Button onClick={() => utils.balances.pAndL.invalidate()}>Retry</Button>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+        <Card className="bg-surface border border-border p-8">
+          <div className="space-y-3 animate-pulse">
+            <div className="h-6 bg-surface-muted rounded w-1/3" />
+            <div className="h-4 bg-surface-muted rounded w-1/2" />
+            <div className="h-4 bg-surface-muted rounded w-2/3" />
+            <div className="h-4 bg-surface-muted rounded w-1/2" />
+            <div className="h-4 bg-surface-muted rounded w-3/4" />
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (revenueItems.length === 0 && expenseItems.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
+          <div>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+              Financial Performance · FY {fiscalYear}
+            </p>
+            <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+            <p className="font-ui text-[13px] text-secondary mt-1">Schedule III — Section 129 of Companies Act, 2013</p>
+          </div>
+        </div>
+        <Card className="bg-surface border border-border p-12 text-center">
+          <Icon name="receipt_long" size={32} className="text-light mx-auto mb-3" />
+          <p className="font-display text-lg text-dark mb-1">No entries for FY {fiscalYear}</p>
+          <p className="font-ui text-[12px] text-mid">Post journal entries to populate the profit & loss.</p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -100,15 +131,14 @@ export default function ProfitLossPage() {
               <h3 className="font-display text-display-sm text-dark uppercase tracking-wider print:text-black">I. Revenue</h3>
             </div>
             <div className="divide-y-[0.5px] divide-border-subtle">
-              {revenueItems.map(item => (
-                <div key={item.label} className="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-surface-muted/50 transition-colors">
-                  <div className="col-span-7 font-ui text-[13px] text-dark">{item.label}</div>
-                  <div className="col-span-1 font-mono text-[10px] text-light text-center">{item.note}</div>
+              {revenueItems.map((item, i) => (
+                <div key={`rev-${i}`} className="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-surface-muted/50 transition-colors">
+                  <div className="col-span-8 font-ui text-[13px] text-dark">{item.label}</div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-light">
                     {/* Previous period placeholder */}
                   </div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(item.amount, { currency: false })}
+                    ₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}
                   </div>
                 </div>
               ))}
@@ -128,15 +158,14 @@ export default function ProfitLossPage() {
               <h3 className="font-display text-display-sm text-dark uppercase tracking-wider print:text-black">II. Expenses</h3>
             </div>
             <div className="divide-y-[0.5px] divide-border-subtle">
-              {expenseItems.map(item => (
-                <div key={item.label} className="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-surface-muted/50 transition-colors">
-                  <div className="col-span-7 font-ui text-[13px] text-dark">{item.label}</div>
-                  <div className="col-span-1 font-mono text-[10px] text-light text-center">{item.note}</div>
+              {expenseItems.map((item, i) => (
+                <div key={`exp-${i}`} className="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-surface-muted/50 transition-colors">
+                  <div className="col-span-8 font-ui text-[13px] text-dark">{item.label}</div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-light">
                     {/* Previous period placeholder */}
                   </div>
                   <div className="col-span-2 text-right font-mono text-[13px] tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(Math.abs(item.amount), { currency: false })}
+                    ₹ {formatIndianNumber(Math.abs(parseFloat(item.amount)), { currency: false })}
                   </div>
                 </div>
               ))}
