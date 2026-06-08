@@ -7,7 +7,6 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
 
@@ -111,7 +110,7 @@ export default function BalanceSheetPage() {
             onChange={e => setAsOfDate(e.target.value)}
             className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
           />
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => showToast.success("Balance sheet PDF exported.")}>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.open(`/api/reports/balance-sheet/pdf?fy=${fiscalYear}&asOf=${asOfDate}`, '_blank')}>
             <Icon name="download" size={14} /> Export PDF
           </Button>
           <Link

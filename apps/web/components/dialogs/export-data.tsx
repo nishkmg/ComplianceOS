@@ -98,7 +98,7 @@ export function ExportDataDialog({
         <DialogFooter className="px-8 py-6 border-t-[0.5px] border-border-subtle bg-section-muted flex flex-row items-center justify-end gap-4">
           <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
-            onClick={() => onExport({ fiscalYear, format })}
+            onClick={() => format === 'pdf' ? window.open('/api/export?format=pdf', '_blank') : onExport({ fiscalYear, format })}
             className="bg-amber text-white font-ui text-sm px-8 py-3 rounded-sm hover:bg-amber-hover transition-all shadow-sm border-none cursor-pointer flex items-center gap-2"
           >
             <Icon name="download" className="text-sm" />

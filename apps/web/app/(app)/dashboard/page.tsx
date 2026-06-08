@@ -86,6 +86,30 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Quick actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
+          <div>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">GST Compliance</p>
+            <h3 className="font-display text-lg font-semibold text-dark">File GSTR-3B</h3>
+            <p className="font-ui text-[12px] text-mid mt-1">Period: {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
+          </div>
+          <Link href="/gst/returns" className="bg-amber text-white px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
+            <Icon name="download" className="text-[14px]" /> File Now
+          </Link>
+        </div>
+        <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
+          <div>
+            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">Income Tax</p>
+            <h3 className="font-display text-lg font-semibold text-dark">Generate ITR</h3>
+            <p className="font-ui text-[12px] text-mid mt-1">AY: {`${Number(activeFy.split('-')[0]) + 1}-${activeFy.split('-')[1]}`}</p>
+          </div>
+          <Link href="/itr/returns" className="bg-amber text-white px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
+            <Icon name="description" className="text-[14px]" /> Generate
+          </Link>
+        </div>
+      </div>
+
       <div className="bg-surface border border-border rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber" />
         <div className="px-6 py-4 bg-surface-muted border-b border-border flex items-center justify-between">

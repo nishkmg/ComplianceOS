@@ -3,7 +3,6 @@
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 
 export default function ITRReturnDetailPage() {
@@ -27,12 +26,20 @@ export default function ITRReturnDetailPage() {
           <h1 className="font-display text-display-lg font-semibold text-dark">Financial Year {fy || activeFy}</h1>
           <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {ay} | PAN: ABCDE1234F</p>
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => showToast.success("ITR data exported.")} className="border border-border text-dark px-6 py-2.5 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent">
-            <Icon name="download" className="text-[18px]" />
-            Export Data
+        <div className="flex items-center gap-2">
+          <button onClick={() => window.open(`/api/itr/returns/${id}/pdf?format=summary`, '_blank')} className="border border-border text-dark px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
+            <Icon name="download" className="text-[14px]" />
+            Summary
           </button>
-          <button onClick={() => showToast.success("Return finalized for filing.")} className="bg-amber text-white px-6 py-2.5 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all flex items-center gap-2 border-none shadow-sm cursor-pointer">
+          <button onClick={() => window.open(`/api/itr/returns/${id}/pdf?format=itr-v`, '_blank')} className="border border-border text-dark px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
+            <Icon name="download" className="text-[14px]" />
+            ITR-V
+          </button>
+          <button onClick={() => window.open(`/api/itr/returns/${id}/pdf?format=json`, '_blank')} className="border border-border text-dark px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
+            <Icon name="download" className="text-[14px]" />
+            JSON
+          </button>
+          <button onClick={() => window.open(`/api/itr/returns/${id}/finalize`, '_blank')} className="bg-amber text-white px-4 py-2 font-ui text-[11px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all flex items-center gap-1.5 border-none shadow-sm cursor-pointer rounded-sm">
             Finalize Filing →
           </button>
         </div>

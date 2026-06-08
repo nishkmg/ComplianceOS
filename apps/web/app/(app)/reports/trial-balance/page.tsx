@@ -8,7 +8,6 @@ import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
 
@@ -149,7 +148,7 @@ export default function TrialBalancePage() {
             <option>2025-26</option>
             <option>2024-25</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => showToast.success("Trial balance PDF exported.")}>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.open(`/api/reports/trial-balance/pdf?fy=${fiscalYear}`, '_blank')}>
             <Icon name="download" size={14} /> Export PDF
           </Button>
           <Link

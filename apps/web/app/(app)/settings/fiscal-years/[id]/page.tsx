@@ -31,7 +31,7 @@ export default function FiscalYearDetailPage() {
           <p className="text-[13px] text-secondary font-ui mt-1">Reporting period: April 1, 2024 — March 31, 2025</p>
         </div>
         <div className="flex gap-4">
-          <button onClick={() => showToast.success("Ledger exported for FY 2024-25.")} className="btn-secondary flex items-center gap-2">
+          <button onClick={() => window.open(`/api/ledger/export?fy=${activeFy}`, '_blank')} className="btn-secondary flex items-center gap-2">
             <Icon name="download" className="text-[18px]" />
             Export Ledger
           </button>
