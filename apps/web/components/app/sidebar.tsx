@@ -198,7 +198,7 @@ export function AppSidebar() {
                           onClick={() => toggleGroup(item.key)}
                           className={[
                             'w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-left',
-                            'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group',
+                            'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group active:scale-[0.98]',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                             groupActive
                               ? 'border-amber text-dark font-semibold'
@@ -254,7 +254,7 @@ export function AppSidebar() {
                       href={item.href}
                       className={[
                         'flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px]',
-                        'border-l-[3px] transition-colors no-underline group',
+                        'border-l-[3px] transition-colors no-underline group active:scale-[0.98]',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                         active
                           ? 'border-amber bg-white text-dark font-semibold shadow-sm'
@@ -376,12 +376,12 @@ export function AppSidebar() {
       <div className="px-3 py-3 border-t-[0.5px] border-border-subtle shrink-0">
         <Link
           href="/support"
-          className="flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+          className="flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
         >
           <Icon name="contact_support" size={16} />
           <span>Support</span>
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
           <Icon name="logout" size={16} />
           <span>Sign Out</span>
         </button>

@@ -69,13 +69,13 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-4">
                 <Link 
                   href="/signup" 
-                  className="bg-amber text-white px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-amber-hover transition-all group rounded-none inline-flex items-center gap-1"
+                  className="bg-amber text-white px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1"
                 >
                   Get Started Today <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                 </Link>
                 <Link 
                   href="/contact" 
-                  className="border border-border-subtle text-dark px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white transition-all rounded-none inline-flex items-center gap-1"
+                  className="border border-border-subtle text-dark px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1"
                 >
                   Book a Demo
                 </Link>
@@ -117,7 +117,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── Core Benefits ─── */}
-        <section className="py-space-128 px-8 max-w-[1320px] mx-auto">
+        <section className="py-space-128 px-8 max-w-[1200px] mx-auto">
           <div className="mb-16 text-left">
             <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">Built for precision</span>
             <h2 className="font-display text-marketing-xl mt-4 max-w-2xl font-semibold leading-snug tracking-tight">Ledger-first design for the modern Indian enterprise.</h2>
@@ -135,7 +135,7 @@ export default function HomePage() {
 
         {/* ─── Product Demo ─── */}
         <section className="bg-section-dark py-space-128 overflow-hidden text-center">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1200px] mx-auto px-8">
             <div className="mb-16">
               <h2 className="font-display text-marketing-xl text-white mb-6 font-semibold leading-snug tracking-tight">Experience the precision.</h2>
               <div className="flex justify-center gap-8 border-b border-white/10">
@@ -223,7 +223,7 @@ export default function HomePage() {
 
         {/* ─── Testimonials ─── */}
         <section className="bg-section-muted px-8 border-y-[0.5px] border-border-subtle overflow-hidden pt-32 pb-32">
-          <div className="max-w-[1320px] mx-auto text-center">
+          <div className="max-w-[1200px] mx-auto text-center">
             <div className="mb-16 text-center">
               <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">Testimonials</span>
               <h2 className="font-display text-marketing-xl mt-4 font-semibold leading-snug tracking-tight">Loved by Founders &amp; CAs.</h2>
@@ -254,10 +254,10 @@ export default function HomePage() {
             <h2 className="font-display text-marketing-xl mb-6 font-semibold leading-snug tracking-tight">Ready to bring precision to your books?</h2>
             <p className="text-ui-lg text-secondary mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
             <div className="flex flex-col md:flex-row justify-center gap-6">
-              <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-amber-hover transition-all group rounded-none inline-flex items-center gap-1">
+              <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1">
                 Start Free Trial <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              <Link href="/contact" className="border border-border-subtle text-dark px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white transition-all rounded-none inline-flex items-center gap-1">
+              <Link href="/contact" className="border border-border-subtle text-dark px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1">
                 Talk to Us
               </Link>
             </div>
