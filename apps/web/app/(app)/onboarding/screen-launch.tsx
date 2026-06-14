@@ -61,7 +61,7 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
               { label: "Compliance Ready", icon: "verified" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-2">
-                <Icon name="check" className="text-green-600 text-[16px]" />
+                <Icon name="check" className="text-success text-[16px]" />
                 <span className="font-ui text-[12px] text-text-mid">{item.label}</span>
               </div>
             ))}

@@ -77,7 +77,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
             placeholder="e.g. Acme Technologies" 
             {...register("name")}
           />
-          {errors.name && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.name.message}</p>}
+          {errors.name && <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.name.message}</p>}
         </div>
 
         {/* Legal Name */}
@@ -141,7 +141,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
             placeholder="ABCDE1234F" 
             {...register("pan")}
           />
-          {errors.pan && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.pan.message}</p>}
+          {errors.pan && <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.pan.message}</p>}
         </div>
 
         {/* GSTIN */}
@@ -186,7 +186,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
             rows={3}
             {...register("address")}
           ></textarea>
-          {errors.address && <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.address.message}</p>}
+          {errors.address && <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.address.message}</p>}
         </div>
 
         {/* Footer Actions */}

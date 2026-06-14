@@ -132,7 +132,7 @@ export default function InventoryDashboardPage() {
                       <td className="py-4 px-6 font-ui text-[13px] text-mid">{item.warehouse}</td>
                       <td className="py-4 px-6">
                         <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
-                          item.status === 'critical' ? 'bg-danger-bg text-danger border-red-200' : 'bg-amber-50 text-amber-text border-amber-200'
+                          item.status === 'critical' ? 'bg-danger-bg text-danger border-danger/20' : 'bg-amber-50 text-amber-text border-amber-200'
                         }`}>
                           {item.status}
                         </span>

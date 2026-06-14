@@ -40,7 +40,7 @@ export default function ITRRegimeComparisonPage() {
       </div>
 
       {/* Recommendation Banner */}
-      <div className="bg-success-bg border border-green-200 p-6 mb-12 flex items-start gap-4">
+      <div className="bg-success-bg border border-success/20 p-6 mb-12 flex items-start gap-4">
         <Icon name="check_circle" className="text-success text-3xl" />
         <div>
           <h3 className="font-ui text-lg text-lg font-bold text-dark mb-1">New Regime Recommended</h3>

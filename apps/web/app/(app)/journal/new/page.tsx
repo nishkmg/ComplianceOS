@@ -299,7 +299,7 @@ export default function NewJournalEntryPage() {
       </div>
 
       {dateError && (
-        <div className="bg-danger-bg border border-red-200 px-4 py-2.5 rounded-md flex items-center gap-2">
+        <div className="bg-danger-bg border border-danger/20 px-4 py-2.5 rounded-md flex items-center gap-2">
           <Icon name="warning" size={16} className="text-danger shrink-0" />
           <span className="font-ui text-[12px] text-danger font-medium">{dateError}</span>
         </div>
@@ -476,9 +476,9 @@ export default function NewJournalEntryPage() {
         <div
           className={`px-5 py-3.5 border rounded-md flex items-center justify-between transition-colors duration-300 ${
             isBalanced
-              ? "bg-success-bg border-green-200"
+              ? "bg-success-bg border-success/20"
               : totalDebit > 0
-                ? "bg-danger-bg border-red-200"
+                ? "bg-danger-bg border-danger/20"
                 : "bg-surface-muted border-border"
           }`}
         >

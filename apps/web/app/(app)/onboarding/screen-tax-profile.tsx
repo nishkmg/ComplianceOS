@@ -80,7 +80,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
             {...register("pan")}
           />
           {errors.pan && (
-            <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+            <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
               {errors.pan.message}
             </p>
           )}
@@ -130,7 +130,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
                 {...register("gstin")}
               />
               {errors.gstin && (
-                <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+                <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
                   {errors.gstin.message}
                 </p>
               )}
@@ -181,7 +181,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
                 {...register("tan")}
               />
               {errors.tan && (
-                <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+                <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
                   {errors.tan.message}
                 </p>
               )}

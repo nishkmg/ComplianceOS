@@ -169,7 +169,7 @@ export default function ITRAdvanceTaxPage() {
                     <td className="py-5 px-6 text-right font-bold text-dark">{formatIndianNumber(i.amount)}</td>
                     <td className="py-5 px-6">
                       <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
-                        i.status === 'paid' ? 'bg-success-bg text-success border-green-200' : 'bg-amber-50 text-amber-text border-amber-200'
+                        i.status === 'paid' ? 'bg-success-bg text-success border-success/20' : 'bg-amber-50 text-amber-text border-amber-200'
                       }`}>
                         {i.status}
                       </span>

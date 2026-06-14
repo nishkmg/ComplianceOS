@@ -215,9 +215,9 @@ export default function CustomerDetailPage() {
                   <td className="py-4 px-6">
                     <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
                       inv.status === "paid"
-                        ? "bg-success-bg text-success border-green-200"
+                        ? "bg-success-bg text-success border-success/20"
                         : inv.status === "overdue"
-                          ? "bg-danger-bg text-danger border-red-200"
+                          ? "bg-danger-bg text-danger border-danger/20"
                           : "bg-surface-muted text-mid border-border"
                     }`}>
                       {inv.status}

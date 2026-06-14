@@ -67,7 +67,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("fullName")}
             />
             {errors.fullName && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.fullName.message}</p>
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.fullName.message}</p>
             )}
           </div>
 
@@ -82,7 +82,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("designation")}
             />
             {errors.designation && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.designation.message}</p>
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.designation.message}</p>
             )}
           </div>
 
@@ -98,7 +98,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("mobile")}
             />
             {errors.mobile && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.mobile.message}</p>
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.mobile.message}</p>
             )}
           </div>
 
@@ -114,7 +114,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">{errors.email.message}</p>
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.email.message}</p>
             )}
           </div>
         </div>

@@ -85,7 +85,7 @@ export default function ITRPaymentHistoryPage() {
                   <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(p.amount)}</td>
                   <td className="py-5 px-6">
                     <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-widest border rounded-md ${
-                      p.status === 'completed' ? 'bg-success-bg text-success border-green-200' : 'bg-amber-50 text-amber-text border-amber-200'
+                      p.status === 'completed' ? 'bg-success-bg text-success border-success/20' : 'bg-amber-50 text-amber-text border-amber-200'
                     }`}>
                       {p.status}
                     </span>

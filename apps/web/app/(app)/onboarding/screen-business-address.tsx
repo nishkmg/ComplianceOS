@@ -72,7 +72,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               {...register("addressLine1")}
             />
             {errors.addressLine1 && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
                 {errors.addressLine1.message}
               </p>
             )}
@@ -135,7 +135,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               {...register("city")}
             />
             {errors.city && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
                 {errors.city.message}
               </p>
             )}
@@ -154,7 +154,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               {...register("pincode")}
             />
             {errors.pincode && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
                 {errors.pincode.message}
               </p>
             )}

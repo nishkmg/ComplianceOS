@@ -149,7 +149,7 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
                       <button
                         type="button"
                         onClick={() => removeMember(m.email)}
-                        className="text-text-light hover:text-red-600 transition-colors border-none bg-transparent cursor-pointer"
+                        className="text-text-light hover:text-danger transition-colors border-none bg-transparent cursor-pointer"
                       >
                         <Icon name="close" className="text-[18px]" />
                       </button>

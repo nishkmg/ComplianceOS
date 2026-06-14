@@ -78,7 +78,7 @@ export default function ScanReceiptPage() {
             <div className="p-6 border-b-[0.5px] border-border bg-surface-muted flex justify-between items-center">
               <h2 className="font-ui text-lg font-medium text-on-surface">Extracted Data</h2>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                <span className="w-2 h-2 rounded-full bg-success"></span>
                 <span className="font-ui text-[10px] text-text-mid uppercase tracking-widest font-bold">High Confidence</span>
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function ScanReceiptPage() {
               <div className="flex flex-col gap-2">
                 <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Payer Name
-                  <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-success"></span>
                 </label>
                 <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="Tech Solutions India Pvt Ltd" />
               </div>
@@ -106,7 +106,7 @@ export default function ScanReceiptPage() {
               <div className="flex flex-col gap-2">
                 <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Transaction Date
-                  <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-success"></span>
                 </label>
                 <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="24-Oct-2023" />
               </div>
@@ -114,7 +114,7 @@ export default function ScanReceiptPage() {
               <div className="flex flex-col gap-2">
                 <label className="font-ui text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   UTR / Ref Number
-                  <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-success"></span>
                 </label>
                 <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-[13px] text-on-surface outline-none focus:border-primary" type="text" defaultValue="HDFCR529482710" />
               </div>

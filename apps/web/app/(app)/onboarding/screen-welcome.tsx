@@ -175,12 +175,12 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
           </div>
 
           {extractedData && (
-            <div className="bg-green-50 border border-green-200 rounded-md p-4">
-              <p className="font-ui text-[12px] font-bold text-green-800 mb-2">
+            <div className="bg-success-subtle border border-success/20 rounded-md p-4">
+              <p className="font-ui text-[12px] font-bold text-success mb-2">
                 <Icon name="check_circle" className="inline mr-1" />
                 Document Extracted
               </p>
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-green-700">
+              <div className="grid grid-cols-2 gap-2 text-[11px] text-success">
                 {extractedData.legalName && <p>Legal Name: {extractedData.legalName}</p>}
                 {extractedData.gstin && <p>GSTIN: {extractedData.gstin}</p>}
                 {extractedData.pan && <p>PAN: {extractedData.pan}</p>}
@@ -206,7 +206,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
               {...register("businessName")}
             />
             {errors.businessName && (
-              <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
                 {errors.businessName.message}
               </p>
             )}

@@ -70,7 +70,7 @@ export default function InventoryExpiryPage() {
                 <td className="px-6 py-4 text-mid">{p.expiry}</td>
                 <td className={`px-6 py-4 text-right font-bold ${p.days < 30 ? 'text-danger' : 'text-amber-text'}`}>{p.days}d</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-block px-2 py-0.5 text-[9px] font-bold uppercase rounded-md border ${p.status === 'critical' ? 'bg-danger-bg text-danger border-red-200' : 'bg-amber-50 text-amber-text border-amber-200'}`}>
+                  <span className={`inline-block px-2 py-0.5 text-[9px] font-bold uppercase rounded-md border ${p.status === 'critical' ? 'bg-danger-bg text-danger border-danger/20' : 'bg-amber-50 text-amber-text border-amber-200'}`}>
                     {p.status === 'critical' ? 'Critical' : 'Expiring'}
                   </span>
                 </td>

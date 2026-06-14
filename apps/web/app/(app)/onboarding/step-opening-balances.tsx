@@ -176,7 +176,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
             </table>
           </div>
 
-          <div className={`p-6 border-[0.5px] rounded-md flex items-center justify-between ${totals.diff === 0 ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+          <div className={`p-6 border-[0.5px] rounded-md flex items-center justify-between ${totals.diff === 0 ? 'bg-success-subtle border-success/20 text-success' : 'bg-danger-subtle border-danger/20 text-danger'}`}>
             <div className="flex items-center gap-3">
               <Icon name={totals.diff === 0 ? 'check_circle' : 'warning'} />
               <p className="font-ui text-[13px] font-bold uppercase tracking-widest text-xs">

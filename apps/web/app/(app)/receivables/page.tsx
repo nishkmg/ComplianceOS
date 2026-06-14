@@ -160,7 +160,7 @@ export default function ReceivablesSummaryPage() {
                       <p className="font-ui text-[13px] font-semibold text-dark">{d.name}</p>
                       <span className={`inline-block px-2 py-0.5 mt-1.5 text-[9px] uppercase font-bold tracking-widest border rounded-md ${
                         d.status === "overdue"
-                          ? "bg-danger-bg text-danger border-red-200"
+                          ? "bg-danger-bg text-danger border-danger/20"
                           : d.status === "partial"
                             ? "bg-amber-50 text-amber-text border-amber-200"
                             : "bg-surface-muted text-mid border-border"

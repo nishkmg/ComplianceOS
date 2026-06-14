@@ -98,7 +98,7 @@ export function ScreenBusinessStructure({ tenantId, onComplete, onBack }: Screen
         </div>
 
         {errors.businessType && (
-          <p className="text-red-600 text-[10px] uppercase font-bold tracking-wider">
+          <p className="text-danger text-[10px] uppercase font-bold tracking-wider">
             {errors.businessType.message}
           </p>
         )}

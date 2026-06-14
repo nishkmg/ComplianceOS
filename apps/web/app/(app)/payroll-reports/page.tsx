@@ -79,7 +79,7 @@ export default function PayrollReportsPage() {
                 <td className="py-5 px-6 text-mid">Oct 2024</td>
                 <td className="py-5 px-6 text-mid">15 Nov 2024</td>
                 <td className="py-5 px-6 text-right">
-                  <span className="inline-block px-2 py-0.5 bg-success-bg text-success border border-green-200 text-[9px] font-bold uppercase rounded-md">Filled</span>
+                  <span className="inline-block px-2 py-0.5 bg-success-bg text-success border border-success/20 text-[9px] font-bold uppercase rounded-md">Filled</span>
                 </td>
               </tr>
               <tr className="hover:bg-surface-muted/50 transition-colors">
@@ -87,7 +87,7 @@ export default function PayrollReportsPage() {
                 <td className="py-5 px-6 text-mid">Sep 2024</td>
                 <td className="py-5 px-6 text-mid">15 Oct 2024</td>
                 <td className="py-5 px-6 text-right">
-                  <span className="inline-block px-2 py-0.5 bg-success-bg text-success border border-green-200 text-[9px] font-bold uppercase rounded-md">Filled</span>
+                  <span className="inline-block px-2 py-0.5 bg-success-bg text-success border border-success/20 text-[9px] font-bold uppercase rounded-md">Filled</span>
                 </td>
               </tr>
             </tbody>

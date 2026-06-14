@@ -66,7 +66,7 @@ export default function FiscalYearsPage() {
                       <td className="py-5 px-6 font-mono text-[12px] text-mid">{fy.period}</td>
                       <td className="py-5 px-6">
                         <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-widest border rounded-md ${
-                          fy.status === 'open' ? 'bg-success-bg text-success border-green-200' :
+                          fy.status === 'open' ? 'bg-success-bg text-success border-success/20' :
                           fy.status === 'closed' ? 'bg-surface-muted text-mid border-zinc-200' :
                           'bg-surface-muted text-light border-stone-100'
                         }`}>
