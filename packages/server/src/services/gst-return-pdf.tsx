@@ -193,7 +193,7 @@ function TableRow({ cells, isHeader }: { cells: string[]; isHeader?: boolean }) 
   return (
     <View style={Row}>
       {cells.map((c, i) => (
-        <Text key={i} style={[styles.cell, i > 0 && i > cells.length - 4 ? styles.numericCell : undefined]}>
+        <Text key={i} style={[styles.cell, i > 0 && i > cells.length - 4 ? styles.numericCell : {}]}>
           {c}
         </Text>
       ))}

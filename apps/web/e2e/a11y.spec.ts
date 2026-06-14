@@ -10,8 +10,8 @@ test.describe('Accessibility compliance', () => {
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
 
-    const critical = results.violations.filter(v => v.impact === 'critical');
-    const serious = results.violations.filter(v => v.impact === 'serious');
+    const critical = results.violations.filter((v: { impact?: string }) => v.impact === 'critical');
+    const serious = results.violations.filter((v: { impact?: string }) => v.impact === 'serious');
 
     expect(critical.length).toBe(0);
     expect(serious.length).toBe(0);
@@ -25,8 +25,8 @@ test.describe('Accessibility compliance', () => {
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
 
-    const critical = results.violations.filter(v => v.impact === 'critical');
-    const serious = results.violations.filter(v => v.impact === 'serious');
+    const critical = results.violations.filter((v: { impact?: string }) => v.impact === 'critical');
+    const serious = results.violations.filter((v: { impact?: string }) => v.impact === 'serious');
 
     expect(critical.length).toBe(0);
     expect(serious.length).toBe(0);

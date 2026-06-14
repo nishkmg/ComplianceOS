@@ -101,14 +101,14 @@ describe("enums", () => {
     expect(jeStatusEnum.enumValues).toEqual(["draft", "posted", "voided"]);
   });
 
-  // Aggregate Types: 3
-  it("aggregateTypeEnum has 3 values", () => {
-    expect(aggregateTypeEnum.enumValues).toHaveLength(3);
+  // Aggregate Types: 13
+  it("aggregateTypeEnum has 13 values", () => {
+    expect(aggregateTypeEnum.enumValues).toHaveLength(13);
   });
 
-  // Event Types: 12
-  it("eventTypeEnum has 12 values", () => {
-    expect(eventTypeEnum.enumValues).toHaveLength(12);
+  // Event Types: 48 (journal_entry*, account*, fiscal_year*, invoice*, credit_note*, payment*, employee*, salary_structure*, payroll*, advance*, gst_*, purchase*, income/tax/itr)
+  it("eventTypeEnum has 48 values", () => {
+    expect(eventTypeEnum.enumValues).toHaveLength(48);
   });
 
   // Cash Flow Categories: 3
@@ -116,8 +116,8 @@ describe("enums", () => {
     expect(cashFlowCategoryEnum.enumValues).toHaveLength(3);
   });
 
-  // FY Status: 2
-  it("fyStatusEnum has 2 values", () => {
-    expect(fyStatusEnum.enumValues).toHaveLength(2);
+  // FY Status: 3 (open, closed, pending_close)
+  it("fyStatusEnum has 3 values", () => {
+    expect(fyStatusEnum.enumValues).toHaveLength(3);
   });
 });

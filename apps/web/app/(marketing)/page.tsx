@@ -250,7 +250,7 @@ export default function HomePage() {
 
         {/* ─── Conversion Section ─── */}
         <section className="py-space-128 px-8 bg-section-amber">
-          <div className="max-w-[800px] mx-auto text-center border border-primary/20 p-16 bg-white/50 backdrop-blur-sm shadow-xl rounded-none">
+          <div className="max-w-[800px] mx-auto text-center border border-primary/20 p-16 bg-white shadow-xl rounded-none">
             <h2 className="font-display text-marketing-xl mb-6 font-semibold leading-snug tracking-tight">Ready to bring precision to your books?</h2>
             <p className="text-ui-lg text-secondary mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
             <div className="flex flex-col md:flex-row justify-center gap-6">

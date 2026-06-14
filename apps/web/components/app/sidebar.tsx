@@ -165,7 +165,7 @@ export function AppSidebar() {
 
   return (
     <aside
-      className="bg-sidebar dark:bg-slate-900 h-screen w-64 fixed left-0 top-0 border-r-[0.5px] border-border-subtle dark:border-slate-800 flex flex-col z-40 hidden lg:flex"
+      className="bg-sidebar h-screen w-64 fixed left-0 top-0 border-r-[0.5px] border-border-subtle flex flex-col z-40 hidden lg:flex"
       aria-label="Primary navigation"
     >
       {/* ── Topbar spacer ─────────────────────────────────────────────────── */}
@@ -178,7 +178,7 @@ export function AppSidebar() {
             {/* Section header */}
             {section.label && (
               <div className="px-3 pb-1">
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300 select-none">
+                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-sidebar-dim select-none">
                   {section.label}
                 </span>
               </div>
@@ -199,22 +199,23 @@ export function AppSidebar() {
                           className={[
                             'w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-left',
                             'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group',
+                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                             groupActive
                               ? 'border-amber text-dark font-semibold'
-                              : 'border-transparent text-zinc-400 hover:text-dark hover:bg-lighter/40',
+                              : 'border-transparent text-sidebar-muted hover:text-dark hover:bg-lighter/40',
                           ].join(' ')}
                           aria-expanded={isOpen}
                         >
                           <Icon
                             name={item.icon}
                             size={16}
-                            className={groupActive ? 'text-amber' : 'text-zinc-400 group-hover:text-dark'}
+                            className={groupActive ? 'text-amber' : 'text-sidebar-muted group-hover:text-dark'}
                           />
                           <span className="flex-1 text-[13px]">{item.label}</span>
                           <Icon
                             name={isOpen ? 'expand_less' : 'expand_more'}
                             size={14}
-                            className="text-zinc-300 shrink-0"
+                            className="text-sidebar-dim shrink-0"
                           />
                         </button>
 
@@ -229,9 +230,10 @@ export function AppSidebar() {
                                   href={child.href}
                                   className={[
                                     'block px-2 py-1.5 rounded-[4px] text-[12px] transition-colors no-underline',
+                                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                                     childActive
                                       ? 'text-amber font-semibold bg-section-amber'
-                                      : 'text-zinc-400 hover:text-dark hover:bg-lighter/40',
+                                      : 'text-sidebar-muted hover:text-dark hover:bg-lighter/40',
                                   ].join(' ')}
                                 >
                                   {child.label}
@@ -253,16 +255,17 @@ export function AppSidebar() {
                       className={[
                         'flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px]',
                         'border-l-[3px] transition-colors no-underline group',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                         active
-                          ? 'border-amber bg-white text-dark font-semibold shadow-sm dark:bg-zinc-800 dark:text-white'
-                          : 'border-transparent text-zinc-400 hover:text-dark hover:bg-lighter/40',
+                          ? 'border-amber bg-white text-dark font-semibold shadow-sm'
+                          : 'border-transparent text-sidebar-muted hover:text-dark hover:bg-lighter/40',
                       ].join(' ')}
                     >
                       {item.icon && (
                         <Icon
                           name={item.icon}
                           size={16}
-                          className={active ? 'text-amber' : 'text-zinc-400 group-hover:text-dark'}
+                          className={active ? 'text-amber' : 'text-sidebar-muted group-hover:text-dark'}
                         />
                       )}
                       <span>{item.label}</span>
@@ -285,34 +288,34 @@ export function AppSidebar() {
       {/* ── Fiscal Year Footer ─────────────────────────────────────────────── */}
       <div className="relative border-t border-border-subtle shrink-0">
         <button
-          className="w-full p-3 text-left cursor-pointer hover:bg-lighter/20 transition-colors border-none bg-transparent"
+          className="w-full p-3 text-left cursor-pointer hover:bg-lighter/20 transition-colors border-none bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
           onClick={() => setShowFyPopover(prev => !prev)}
           aria-expanded={showFyPopover}
           aria-label="Switch fiscal year"
         >
-          <div className="text-[10px] text-zinc-300 uppercase tracking-wide mb-1 select-none">
+          <div className="text-[10px] text-sidebar-dim uppercase tracking-wide mb-1 select-none">
             Active Fiscal Year
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[12px] text-zinc-400 font-medium font-mono">FY {activeFy}</span>
+            <span className="text-[12px] text-sidebar-muted font-medium font-mono">FY {activeFy}</span>
             <div className="flex items-center gap-2">
               <span className={[
                 'px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-sm',
                 currentFy.status === 'open'
                   ? 'bg-success-bg text-success'
-                  : 'bg-lighter text-zinc-400',
+                  : 'bg-lighter text-sidebar-muted',
               ].join(' ')}>
                 {currentFy.status}
               </span>
               <Icon
                 name={showFyPopover ? 'expand_less' : 'expand_more'}
                 size={14}
-                className="text-zinc-300"
+                className="text-sidebar-dim"
               />
             </div>
           </div>
           {currentFy.status === 'open' && (
-            <div className="text-[9px] text-zinc-300 mt-0.5 font-mono">
+            <div className="text-[9px] text-sidebar-dim mt-0.5 font-mono">
               {currentFy.daysRemaining} days remaining
             </div>
           )}
@@ -333,13 +336,14 @@ export function AppSidebar() {
                   className={[
                     'w-full text-left px-4 py-3 transition-colors border-none bg-transparent cursor-pointer',
                     'border-l-[3px]',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                     selected
                       ? 'border-amber bg-section-amber'
                       : 'border-transparent hover:bg-section-amber',
                   ].join(' ')}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`font-mono text-[13px] ${selected ? 'font-bold text-dark' : 'text-zinc-400'}`}>
+                    <span className={`font-mono text-[13px] ${selected ? 'font-bold text-dark' : 'text-sidebar-muted'}`}>
                       {fy.name}
                     </span>
                     <div className="flex items-center gap-2">
@@ -347,7 +351,7 @@ export function AppSidebar() {
                         'text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-sm border',
                         fy.status === 'open'
                           ? 'bg-section-amber text-amber-text border-amber-200'
-                          : 'bg-lighter text-zinc-400 border-border-subtle',
+                          : 'bg-lighter text-sidebar-muted border-border-subtle',
                       ].join(' ')}>
                         {fy.status}
                       </span>
@@ -357,7 +361,7 @@ export function AppSidebar() {
                     </div>
                   </div>
                   {fy.status === 'open' && fy.daysRemaining > 0 && (
-                    <div className="text-[9px] text-zinc-300 mt-0.5 font-mono">
+                    <div className="text-[9px] text-sidebar-dim mt-0.5 font-mono">
                       {fy.daysRemaining} days remaining
                     </div>
                   )}
@@ -372,12 +376,12 @@ export function AppSidebar() {
       <div className="px-3 py-3 border-t-[0.5px] border-border-subtle shrink-0">
         <Link
           href="/support"
-          className="flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-zinc-400 hover:bg-lighter/40 hover:text-dark transition-colors no-underline"
+          className="flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
         >
           <Icon name="contact_support" size={16} />
           <span>Support</span>
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
           <Icon name="logout" size={16} />
           <span>Sign Out</span>
         </button>

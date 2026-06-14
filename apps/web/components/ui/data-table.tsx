@@ -189,7 +189,7 @@ export function DataTable<T>({
               onClick={() => setPage(p => Math.max(0, p - 1))}
               disabled={safePage === 0}
               aria-label="Previous page"
-              className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
+              className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
             >
               <Icon name="chevron_left" className="text-[18px]" />
             </button>
@@ -210,6 +210,7 @@ export function DataTable<T>({
                   onClick={() => setPage(pageNum)}
                   className={cn(
                     'w-7 h-7 rounded text-[11px] font-mono font-medium transition-colors border-none cursor-pointer',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2',
                     pageNum === safePage
                       ? 'bg-amber text-white'
                       : 'bg-transparent text-mid hover:bg-surface-muted'
@@ -223,7 +224,7 @@ export function DataTable<T>({
               onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
               disabled={safePage >= totalPages - 1}
               aria-label="Next page"
-              className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer"
+              className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
             >
               <Icon name="chevron_right" className="text-[18px]" />
             </button>
