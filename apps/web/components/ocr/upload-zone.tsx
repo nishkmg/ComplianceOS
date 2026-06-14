@@ -58,7 +58,7 @@ export function UploadZone({ tenantId, onUploadComplete, onError }: UploadZonePr
       onDragLeave={() => setDragOver(false)}
       onDrop={onDrop}
       onClick={() => document.getElementById("ocr-file-input")?.click()}
-      className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
+      className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors transition-shadow ${
         dragOver ? "border-blue-500 bg-section-amber" : "border-border-subtle bg-section-muted hover:border-gray-400"
       }`}
     >

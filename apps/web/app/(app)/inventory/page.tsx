@@ -18,7 +18,7 @@ const lowStock = [
 export default function InventoryDashboardPage() {
   const { activeFy } = useFiscalYear();
   const { data, isLoading } = api.inventory.summary.useQuery(
-    {},
+    undefined,
     { staleTime: 0, refetchInterval: 30_000 },
   );
 
@@ -38,7 +38,7 @@ export default function InventoryDashboardPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Operations Control · FY {activeFy}</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Inventory Overview</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Overview</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Strategic assessment of working capital locked in commodities and finished goods across all entities.</p>
         </div>
         <div className="flex gap-3">
@@ -62,7 +62,7 @@ export default function InventoryDashboardPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {kpiTiles.map((tile) => (
-            <div key={tile.label} className={`bg-surface border border-border border-t-2 p-6 shadow-sm hover:shadow-md transition-all ${
+            <div key={tile.label} className={`bg-surface border border-border border-t-2 p-6 shadow-sm hover:shadow-md transition-shadow ${
               tile.variant === 'amber' ? 'border-t-amber' :
               tile.variant === 'danger' ? 'border-t-red-600' :
               tile.variant === 'success' ? 'border-t-green-600' :
@@ -155,21 +155,21 @@ export default function InventoryDashboardPage() {
                   <Icon name="inventory" className="text-amber" />
                   <span className="font-ui text-[13px]">Inward Stock</span>
                 </div>
-                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-mid" />
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity text-mid" />
               </button>
               <button onClick={() => showToast.success("Dispatch order form opened.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Icon name="local_shipping" className="text-amber" />
                   <span className="font-ui text-[13px]">Dispatch Order</span>
                 </div>
-                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-mid" />
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity text-mid" />
               </button>
               <button onClick={() => showToast.success("Valuation report generated.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Icon name="assessment" className="text-amber" />
                   <span className="font-ui text-[13px]">Valuation Report</span>
                 </div>
-                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-all text-mid" />
+                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity text-mid" />
               </button>
             </div>
           </div>

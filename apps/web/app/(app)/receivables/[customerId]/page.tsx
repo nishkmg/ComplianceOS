@@ -104,7 +104,7 @@ export default function CustomerDetailPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-      <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">{customer.name}</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark tracking-tight">{customer.name}</h1>
       <Badge variant="success">Active</Badge>
     </div>
     <p className="font-ui text-[13px] text-secondary">

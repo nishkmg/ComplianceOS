@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 export default function ItrPaymentPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">ITR Payment</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Payment</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
           <Icon name="account_balance" className="text-3xl text-amber mb-4" />

@@ -11,7 +11,7 @@ export default function TeamSalaryPreviewPage() {
       <div className="flex justify-between items-end gap-4 border-b border-border pb-6 mb-8">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Payroll Management · FY {activeFy}</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Salary Preview</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Salary Preview</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Review individual employee compensation details for October 2023 before final authorization.</p>
         </div>
         <button onClick={() => showToast.success("Payroll authorized successfully.")} className="btn btn-primary flex items-center gap-2">

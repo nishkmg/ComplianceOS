@@ -21,7 +21,7 @@ export default function SupportPage() {
 
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">Support</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">Support</h1>
       <p className="font-ui text-[13px] text-text-mid">Need help? Send us a message and we'll get back to you.</p>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="space-y-1.5">

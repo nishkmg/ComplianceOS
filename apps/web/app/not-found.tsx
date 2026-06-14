@@ -16,10 +16,10 @@ export default function NotFoundPage() {
         </div>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Link href="/dashboard" className="inline-flex items-center justify-center px-8 py-4 bg-amber text-white font-ui text-sm font-bold uppercase tracking-widest border border-amber transition-all hover:bg-amber-hover no-underline shadow-sm">
+          <Link href="/dashboard" className="inline-flex items-center justify-center px-8 py-4 bg-amber text-white font-ui text-sm font-bold uppercase tracking-widest border border-amber transition-colors hover:bg-amber-hover no-underline shadow-sm">
             Return to Dashboard
           </Link>
-          <Link href="/support" className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-secondary font-ui text-sm font-bold uppercase tracking-widest border border-transparent transition-all hover:text-on-surface no-underline">
+          <Link href="/support" className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-secondary font-ui text-sm font-bold uppercase tracking-widest border border-transparent transition-colors hover:text-on-surface no-underline">
             Contact Support
           </Link>
         </div>

@@ -28,7 +28,7 @@ export default function EmployeesPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-display-lg font-semibold text-dark">Employees</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">Employees</h1>
         <Link href="/employees/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> Add Employee</Link>
       </div>
       {employees.length > 0 ? <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden"><DataTable columns={columns} data={employees} keyExtractor={(r) => r.id} /></div> : <EmptyState icon="group" title="No employees" description="Add your first employee to get started." />}

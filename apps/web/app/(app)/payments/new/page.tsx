@@ -107,7 +107,7 @@ export default function NewPaymentPage() {
             <Icon name="arrow_back" size={20} />
           </button>
           <div>
-            <h1 className="font-display text-display-lg font-semibold text-dark">Record Transaction</h1>
+            <h1 className="font-ui text-display-lg font-semibold text-dark">Record Transaction</h1>
             <p className="font-ui text-[11px] text-secondary mt-0.5">
               Record incoming or outgoing payments. FY {activeFy}
               {gstConfig.tdsApplicable ? " · TDS applicable" : ""}
@@ -125,7 +125,7 @@ export default function NewPaymentPage() {
           <button
             onClick={handleRecord}
             disabled={saving || !paymentAmount}
-            className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? "Saving…" : "Commit to Ledger"}
           </button>
@@ -153,7 +153,7 @@ export default function NewPaymentPage() {
             <div
               key={opt.value}
               onClick={() => setType(opt.value)}
-              className={`relative p-5 border rounded-md cursor-pointer transition-all ${
+              className={`relative p-5 border rounded-md cursor-pointer transition-colors transition-shadow ${
                 type === opt.value
                   ? "border-amber bg-amber-50 ring-1 ring-amber"
                   : "border-border bg-surface hover:bg-surface-muted"
@@ -267,7 +267,7 @@ export default function NewPaymentPage() {
               This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.
             </p>
           </div>
-          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber-600 text-amber-700 text-[10px] font-bold uppercase tracking-widest hover:bg-surface transition-all cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
+          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber-600 text-amber-700 text-[10px] font-bold uppercase tracking-widest hover:bg-surface transition-colors cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
             Open Allocation Wizard
           </button>
         </div>

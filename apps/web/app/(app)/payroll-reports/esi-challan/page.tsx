@@ -12,7 +12,7 @@ export default function ESIChallanPage() {
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 backdrop-blur-sm -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Statutory Filings</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">ESI Challan Report</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">ESI Challan Report</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Generate data for Employee State Insurance filings.</p>
         </div>
         <button className="btn btn-primary flex items-center gap-2">

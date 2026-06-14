@@ -124,7 +124,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {benefits.map((b) => (
-              <div key={b.title} className="bg-white p-8 border border-border-subtle border-t-2 border-t-amber shadow-card transition-all hover:shadow-lg group rounded-none">
+              <div key={b.title} className="bg-white p-8 border border-border-subtle border-t-2 border-t-amber shadow-card transition-shadow hover:shadow-lg group rounded-none">
                 <Icon name={b.icon} className="text-primary mb-6 block group-hover:scale-110 transition-transform" size={32} />
                 <h3 className="font-ui text-ui-lg font-bold mb-4 text-dark">{b.title}</h3>
                 <p className="font-ui text-ui-sm text-secondary leading-relaxed">{b.desc}</p>
@@ -230,7 +230,7 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
               {testimonials.map((t) => (
-                <div key={t.author} className="bg-white p-12 border border-border-subtle relative group hover:border-amber transition-all rounded-none">
+                <div key={t.author} className="bg-white p-12 border border-border-subtle relative group hover:border-amber transition-colors rounded-none">
                   <Icon name="format_quote" className="text-amber text-6xl opacity-20 absolute top-8 left-8 select-none" />
                   <p className="text-ui-lg italic font-display text-dark mb-8 relative z-10 leading-relaxed">
                     "{t.quote}"

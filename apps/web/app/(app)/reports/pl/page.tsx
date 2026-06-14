@@ -87,7 +87,7 @@ export default function PLScheduleIIIPage() {
         <div className="flex justify-between items-end mb-gutter-wide pb-4 border-b-[0.5px] border-border text-left">
           <div>
             <p className="font-ui text-[10px] text-amber uppercase tracking-widest block mb-2 font-bold">Schedule III Document · FY {fiscalYear}</p>
-            <h1 className="font-display text-2xl font-semibold text-dark">Profit & Loss</h1>
+            <h1 className="font-ui text-2xl font-semibold text-dark">Profit & Loss</h1>
           </div>
             <div className="flex gap-3">
               <select className="border-[0.5px] border-border px-4 py-2 text-ui-sm outline-none bg-surface" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
@@ -105,7 +105,7 @@ export default function PLScheduleIIIPage() {
           <div className="bg-surface border-[0.5px] border-border p-12 shadow-sm">
             {/* Report Header */}
             <header className="text-center mb-10 pb-8 border-b-[0.5px] border-border">
-              <p className="font-display text-[26px] font-normal text-dark mb-1">Arthvahi</p>
+              <p className="font-ui text-[26px] font-normal text-dark mb-1">Arthvahi</p>
               <h2 className="font-ui text-text-mid uppercase tracking-widest mb-4">Statement of Profit and Loss</h2>
               <p className="font-ui text-[13px] text-text-light italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000}</p>
               <p className="font-ui text-[13px] text-text-light mt-1">(All amounts in ₹ Lakhs, unless otherwise stated)</p>

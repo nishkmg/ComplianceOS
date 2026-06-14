@@ -82,3 +82,72 @@ export const GST_TYPES = [
   { id: "composition", name: "Composition", desc: "Simplified scheme for small businesses with fixed tax rates." },
   { id: "none", name: "Not Registered", desc: "Select if your business is below the GST threshold." },
 ];
+
+export const MIGRATION_SOURCES = [
+  { value: "tally", label: "Tally" },
+  { value: "busy", label: "Busy" },
+  { value: "zoho", label: "Zoho Books" },
+  { value: "quickbooks", label: "QuickBooks" },
+  { value: "excel", label: "Excel / CSV" },
+  { value: "manual", label: "Start Fresh (No Migration)" },
+];
+
+export const MIGRATION_UPLOAD_TYPES = [
+  { value: "chart_of_accounts", label: "Chart of Accounts" },
+  { value: "opening_balances", label: "Opening Balances" },
+  { value: "ledgers", label: "General Ledgers" },
+  { value: "vouchers", label: "Vouchers / Journals" },
+  { value: "masters", label: "Party & Item Masters" },
+];
+
+export const DEDUCTOR_CATEGORIES = [
+  { value: "a", label: "A — Government" },
+  { value: "b", label: "B — Statutory/Autonomous Body" },
+  { value: "c", label: "C — Company (Listed/Unlisted)" },
+  { value: "d", label: "D — Partnership Firm" },
+  { value: "e", label: "E — AOP/BOI/Trust" },
+  { value: "f", label: "F — Sole Proprietor" },
+  { value: "g", label: "G — Individual (Other)" },
+  { value: "h", label: "H — HUF" },
+];
+
+export const TEAM_ROLES = [
+  { value: "admin", label: "Admin" },
+  { value: "accountant", label: "Accountant" },
+  { value: "viewer", label: "Viewer" },
+  { value: "tax_consultant", label: "Tax Consultant" },
+];
+
+export const ONBOARDING_ROLES = [
+  { value: "owner", label: "Business Owner", desc: "Full access to all modules and settings." },
+  { value: "accountant", label: "Accountant / CA", desc: "Day-to-day bookkeeping and compliance." },
+  { value: "manager", label: "Operations Manager", desc: "Invoicing, inventory, and team oversight." },
+  { value: "consultant", label: "Tax Consultant", desc: "ITR/GST filing and advisory." },
+];
+
+export const EMPLOYEE_COUNT_OPTIONS = [
+  { value: "1", label: "1 (Just me)" },
+  { value: "2-5", label: "2–5" },
+  { value: "6-20", label: "6–20" },
+  { value: "21-50", label: "21–50" },
+  { value: "51-200", label: "51–200" },
+  { value: "200+", label: "200+" },
+];
+
+export const IRP_PROVIDERS = [
+  { value: "icici", label: "ICAI — IRIS" },
+  { value: "clearing", label: "ClearTax" },
+  { value: "saginfotech", label: "SAG Infotech" },
+  { value: "vyapar", label: "Vyapar" },
+  { value: "manual", label: "Manual Upload" },
+];
+
+export const CURRENT_TOOLS = [
+  { value: "tally", label: "Tally" },
+  { value: "busy", label: "Busy" },
+  { value: "zoho", label: "Zoho Books" },
+  { value: "quickbooks", label: "QuickBooks" },
+  { value: "excel", label: "Excel / Google Sheets" },
+  { value: "pen_paper", label: "Pen & Paper" },
+  { value: "none", label: "No Accounting Software" },
+];

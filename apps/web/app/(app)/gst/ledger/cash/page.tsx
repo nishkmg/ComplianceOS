@@ -14,7 +14,7 @@ export default function CashLedgerPage() {
   if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">Cash Ledger</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">Cash Ledger</h1>
       {entries.length === 0 ? <EmptyState icon="account_balance" title="No entries" description="Cash ledger entries appear here once GST payments are made." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">

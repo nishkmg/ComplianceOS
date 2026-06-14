@@ -30,7 +30,7 @@ export default function ItrReturnsPage() {
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/itr/returns" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
-        <h1 className="font-display text-display-lg font-semibold text-dark">ITR Returns — {params.financialYear}</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Returns — {params.financialYear}</h1>
       </div>
       <EmptyState icon="description" title="No returns yet" description="ITR returns for this year will appear once they are prepared." />
     </div>

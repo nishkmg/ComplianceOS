@@ -26,7 +26,7 @@ export default function ITRRegimeComparisonPage() {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
         <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">FY {activeFy}</p>
-        <h1 className="font-display text-2xl font-semibold text-dark mb-2">Regime Comparison</h1>
+        <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Regime Comparison</h1>
         <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">A detailed analysis of tax liability under the Old and New tax regimes based on current inputs.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -43,7 +43,7 @@ export default function ITRRegimeComparisonPage() {
       <div className="bg-success-bg border border-green-200 p-6 mb-12 flex items-start gap-4">
         <Icon name="check_circle" className="text-success text-3xl" />
         <div>
-          <h3 className="font-display text-lg text-lg font-bold text-dark mb-1">New Regime Recommended</h3>
+          <h3 className="font-ui text-lg text-lg font-bold text-dark mb-1">New Regime Recommended</h3>
           <p className="font-ui text-[13px] text-mid">Opting for the New Regime saves <span className="font-mono text-dark font-bold text-base">₹ {formatIndianNumber(2421120 - 2324400)}</span> in total tax liability for the current assessment year.</p>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function ITRRegimeComparisonPage() {
         {/* Old Regime Card */}
         <div className="bg-surface border border-border shadow-sm flex flex-col">
           <div className="p-6 border-b-[0.5px] border-border bg-surface-muted">
-            <h3 className="font-display text-lg text-lg font-bold text-mid uppercase tracking-widest text-xs">Old Tax Regime</h3>
+            <h3 className="font-ui text-lg text-lg font-bold text-mid uppercase tracking-widest text-xs">Old Tax Regime</h3>
           </div>
           <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
             {comparisonData.map((row, i) => (
@@ -76,7 +76,7 @@ export default function ITRRegimeComparisonPage() {
           <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
           <div className="p-6 border-b-[0.5px] border-amber/20 bg-amber-50">
             <div className="flex justify-between items-center">
-              <h3 className="font-display text-lg text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
+              <h3 className="font-ui text-lg text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
               <span className="bg-primary text-white px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest">Recommended</span>
             </div>
           </div>

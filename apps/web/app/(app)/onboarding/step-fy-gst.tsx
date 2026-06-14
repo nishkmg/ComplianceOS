@@ -59,7 +59,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
       {/* Section Header */}
       <div>
         <span className="font-ui text-[11px] text-ui-xs text-amber-text uppercase tracking-widest block mb-4">Fiscal Policy</span>
-        <h1 className="font-display text-display-xl text-on-surface mb-4">Fiscal Configuration</h1>
+        <h1 className="font-ui text-display-xl text-on-surface mb-4">Fiscal Configuration</h1>
         <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
           Establish the foundational tax parameters for your ledger. These settings dictate automated compliance checks and filing schedules.
         </p>

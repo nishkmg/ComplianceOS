@@ -43,7 +43,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
       {/* Section Header */}
       <div>
         <span className="font-ui text-[11px] text-ui-xs text-amber-text uppercase tracking-widest block mb-4">Architecture</span>
-        <h1 className="font-display text-display-xl text-on-surface mb-4">Configure Ledger Modules</h1>
+        <h1 className="font-ui text-display-xl text-on-surface mb-4">Configure Ledger Modules</h1>
         <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
           Select the specific functional modules required for your organization's fiscal operations. These can be adjusted post-onboarding within system settings.
         </p>
@@ -55,7 +55,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
           <div
             key={mod.id}
             onClick={() => toggleModule(mod.id)}
-            className={`group border-[0.5px] border-border p-6 flex flex-col relative transition-all duration-300 cursor-pointer ${
+            className={`group border-[0.5px] border-border p-6 flex flex-col relative transition-colors transition-shadow duration-300 cursor-pointer ${
               enabledModules.has(mod.id) ? "bg-amber-50 border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
             }`}
           >

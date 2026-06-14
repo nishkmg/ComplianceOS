@@ -12,7 +12,7 @@ const sections = [
 export default function GstLedgerPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">GST Ledgers</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">GST Ledgers</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {sections.map(s => (
           <Link key={s.href} href={s.href} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">

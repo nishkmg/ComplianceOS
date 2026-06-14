@@ -78,7 +78,7 @@ export default function ITRSelfAssessmentPage() {
       {/* Page Header */}
       <div className="mb-12">
         <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">{ayLabels[activeFy] ?? "2027-28"} · FY {activeFy}</p>
-        <h1 className="font-display text-2xl font-semibold text-dark mb-2">Self-Assessment Tax</h1>
+        <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Self-Assessment Tax</h1>
         <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">Review your total tax liability, apply available credits, and determine the final self-assessment tax due before filing.</p>
       </div>
 

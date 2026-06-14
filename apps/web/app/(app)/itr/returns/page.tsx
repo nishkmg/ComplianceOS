@@ -11,7 +11,7 @@ export default function ItrReturnsListPage() {
 
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">ITR Returns</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Returns</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {fiscalYears.map(fy => (
           <Link key={fy.year} href={`/itr/returns/${fy.year}`} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">

@@ -71,7 +71,7 @@ export function DeleteEntityDialog({
           <button 
             onClick={onConfirm}
             disabled={input !== 'DELETE'}
-            className="bg-red-600 text-white px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-red-700 transition-all border-none shadow-sm cursor-pointer disabled:opacity-30"
+            className="bg-red-600 text-white px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-red-700 transition-colors border-none shadow-sm cursor-pointer disabled:opacity-30"
           >
             Permanently Delete
           </button>

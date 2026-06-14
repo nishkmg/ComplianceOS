@@ -104,7 +104,7 @@ export const gstLiabilityProjector: Projector = {
         const utgst = parseFloat(line.utgstAmount || "0") * sign;
         const cess = parseFloat(line.cessAmount || "0") * sign;
 
-        if (igst > 0) {
+        if (igst !== 0) {
           await upsertLiability(db, {
             tenantId, taxType: "igst", liabilityType: "output_tax",
             taxPayable: igst, interestPayable: 0, penaltyPayable: 0,
@@ -115,7 +115,7 @@ export const gstLiabilityProjector: Projector = {
             createdBy: event.createdBy,
           });
         }
-        if (cgst > 0) {
+        if (cgst !== 0) {
           await upsertLiability(db, {
             tenantId, taxType: "cgst", liabilityType: "output_tax",
             taxPayable: cgst, interestPayable: 0, penaltyPayable: 0,
@@ -126,7 +126,7 @@ export const gstLiabilityProjector: Projector = {
             createdBy: event.createdBy,
           });
         }
-        if (sgst > 0) {
+        if (sgst !== 0) {
           await upsertLiability(db, {
             tenantId, taxType: "sgst", liabilityType: "output_tax",
             taxPayable: sgst, interestPayable: 0, penaltyPayable: 0,
@@ -137,7 +137,7 @@ export const gstLiabilityProjector: Projector = {
             createdBy: event.createdBy,
           });
         }
-        if (utgst > 0) {
+        if (utgst !== 0) {
           await upsertLiability(db, {
             tenantId, taxType: "utgst", liabilityType: "output_tax",
             taxPayable: utgst, interestPayable: 0, penaltyPayable: 0,
@@ -148,7 +148,7 @@ export const gstLiabilityProjector: Projector = {
             createdBy: event.createdBy,
           });
         }
-        if (cess > 0) {
+        if (cess !== 0) {
           await upsertLiability(db, {
             tenantId, taxType: "cess", liabilityType: "output_tax",
             taxPayable: cess, interestPayable: 0, penaltyPayable: 0,

@@ -31,7 +31,7 @@ export default function InvoiceDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
-          <div><h1 className="font-display text-display-lg font-semibold text-dark">{inv.invoiceNumber}</h1></div>
+          <div><h1 className="font-ui text-display-lg font-semibold text-dark">{inv.invoiceNumber}</h1></div>
         </div>
         <Badge variant={inv.status === "posted" ? "success" : "amber"}>{inv.status}</Badge>
       </div>

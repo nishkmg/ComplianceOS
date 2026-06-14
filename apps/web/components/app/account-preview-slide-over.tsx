@@ -92,7 +92,7 @@ export function AccountPreviewSlideOver({
             Full History
 // @ts-ignore
           </Link>
-          <button className="flex-1 bg-amber text-white py-3 font-ui text-xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-sm border-none cursor-pointer shadow-sm">
+          <button className="flex-1 bg-amber text-white py-3 font-ui text-xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-sm border-none cursor-pointer shadow-sm">
             New Journal
           </button>
         </footer>

@@ -19,7 +19,7 @@ export default function FiscalYearsPage() {
       <header className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div className="text-left">
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Settings · FY {activeFy} / Fiscal Years</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Fiscal Years</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Fiscal Years</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Manage accounting periods, statutory boundaries, and ledger lifecycle constraints for your organization.</p>
         </div>
         <div className="flex gap-3 shrink-0">

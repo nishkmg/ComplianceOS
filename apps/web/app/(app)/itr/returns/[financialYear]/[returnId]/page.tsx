@@ -23,7 +23,7 @@ export default function ITRReturnDetailPage() {
             <Icon name="chevron_right" className="text-[14px]" />
             <span className="text-dark font-bold">ITR Detail</span>
           </div>
-          <h1 className="font-display text-display-lg font-semibold text-dark">Financial Year {fy || activeFy}</h1>
+          <h1 className="font-ui text-display-lg font-semibold text-dark">Financial Year {fy || activeFy}</h1>
           <p className="font-ui text-[13px] text-secondary mt-1">Assessment Year: {ay} | PAN: ABCDE1234F</p>
         </div>
         <div className="flex items-center gap-2">
@@ -39,7 +39,7 @@ export default function ITRReturnDetailPage() {
             <Icon name="download" className="text-[14px]" />
             JSON
           </button>
-          <button onClick={() => window.open(`/api/itr/returns/${id}/finalize`, '_blank')} className="bg-amber text-white px-4 py-2 font-ui text-[11px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all flex items-center gap-1.5 border-none shadow-sm cursor-pointer rounded-sm">
+          <button onClick={() => window.open(`/api/itr/returns/${id}/finalize`, '_blank')} className="bg-amber text-white px-4 py-2 font-ui text-[11px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors flex items-center gap-1.5 border-none shadow-sm cursor-pointer rounded-sm">
             Finalize Filing →
           </button>
         </div>

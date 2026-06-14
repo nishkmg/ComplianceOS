@@ -108,7 +108,7 @@ export default function InvoicingPage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Start invoicing the right way.</h2>
             <p className="font-ui text-ui-md text-secondary mb-10">GST-compliant, automatically posted, and ready to send in one click.</p>
-            <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-all no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
               Start Free <span>→</span>
             </Link>
           </div>

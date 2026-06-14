@@ -31,7 +31,7 @@ export default function LedgerReportPage() {
 
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">Ledger Report</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">Ledger Report</h1>
       <div className="space-y-1.5">
         <label className="font-ui text-[10px] text-light uppercase font-bold">Account</label>
         <select className="w-full max-w-md border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={selectedAccount} onChange={e => setSelectedAccount(e.target.value)}>

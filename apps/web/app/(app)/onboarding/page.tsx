@@ -122,7 +122,7 @@ export default function OnboardingPage() {
       <div className="max-w-4xl w-full mx-auto px-gutter-desktop flex flex-col gap-space-48 text-left">
         <header className="flex flex-col gap-6">
           <div className="flex justify-between items-end border-b border-border pb-6">
-            <h1 className="font-display text-display-lg font-bold tracking-tight text-dark">
+            <h1 className="font-ui text-display-lg font-bold tracking-tight text-dark">
               Onboarding
             </h1>
             <div className="font-ui text-[11px] text-secondary uppercase tracking-widest">
@@ -139,7 +139,7 @@ export default function OnboardingPage() {
                   key={s.number}
                   title={`${s.title}${isCompleted ? " (click to revisit)" : ""}`}
                   onClick={() => isCompleted && handleGoToStep(s.number)}
-                  className={`flex-1 rounded-sm transition-all duration-500 ${
+                  className={`flex-1 rounded-sm transition-[width] duration-500 ${
                     isActive ? "bg-amber" : "bg-border-subtle"
                   } ${isCompleted ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
                 />

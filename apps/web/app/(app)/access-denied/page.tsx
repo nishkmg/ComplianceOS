@@ -9,7 +9,7 @@ export default function AccessDeniedPage() {
       {/* Minimal Header */}
       <header className="w-full border-b-[0.5px] border-border bg-surface/80 backdrop-blur-md px-8 py-6 sticky top-0 z-50">
         <div className="max-w-[1320px] mx-auto flex items-center justify-start text-left">
-          <span className="font-display text-lg font-bold tracking-tighter text-dark uppercase">Arthvahi</span>
+          <span className="font-ui text-lg font-bold tracking-tighter text-dark uppercase">Arthvahi</span>
         </div>
       </header>
 
@@ -19,7 +19,7 @@ export default function AccessDeniedPage() {
             <div className="w-16 h-16 rounded-md border-[0.5px] border-border flex items-center justify-center bg-surface mb-6 shadow-sm">
               <Icon name="lock" className="text-text-mid text-3xl" />
             </div>
-            <h1 className="font-display text-2xl font-semibold text-dark mb-4">Access Denied</h1>
+            <h1 className="font-ui text-2xl font-semibold text-dark mb-4">Access Denied</h1>
             <p className="text-[13px] text-secondary font-ui max-w-sm mx-auto leading-relaxed">
               You do not have the required permissions to view this module. This action has been logged for security compliance.
             </p>
@@ -36,7 +36,7 @@ export default function AccessDeniedPage() {
           </div>
 
           <div className="pt-4">
-            <Link href="/dashboard" className="group inline-flex items-center justify-center bg-amber text-white px-10 py-4 font-ui text-[13px] font-bold uppercase tracking-widest shadow-sm hover:bg-amber-hover transition-all no-underline">
+            <Link href="/dashboard" className="group inline-flex items-center justify-center bg-amber text-white px-10 py-4 font-ui text-[13px] font-bold uppercase tracking-widest shadow-sm hover:bg-amber-hover transition-colors no-underline">
               Go to Dashboard
               <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform ml-2" />
             </Link>

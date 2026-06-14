@@ -25,7 +25,7 @@ export default function FiscalYearDetailPage() {
         <div className="text-left">
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Fiscal Year Detail · FY {activeFy}</p>
           <div className="flex items-center gap-4 mb-3">
-            <h1 className="font-display text-display-lg font-semibold text-dark tracking-tight">FY 2024-25</h1>
+            <h1 className="font-ui text-display-lg font-semibold text-dark tracking-tight">FY 2024-25</h1>
             <span className="font-ui text-[10px] uppercase tracking-widest text-mid border border-zinc-200 px-3 py-1 bg-surface-muted rounded-md font-bold">Closed</span>
           </div>
           <p className="text-[13px] text-secondary font-ui mt-1">Reporting period: April 1, 2024 — March 31, 2025</p>
@@ -79,7 +79,7 @@ export default function FiscalYearDetailPage() {
       <section className="border-t-[0.5px] border-border pt-16 text-left">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
           <div className="md:col-span-5">
-            <h2 className="font-display text-3xl text-dark mb-6 font-bold">Year-End Finalization</h2>
+            <h2 className="font-ui text-3xl text-dark mb-6 font-bold">Year-End Finalization</h2>
             <p className="font-ui text-sm font-medium text-sm text-mid leading-relaxed mb-6">
               Initiating the closure of a fiscal year locks all ledgers and prevents further modifications to the accounting period. This process is mandatory for generating final statutory reports.
             </p>

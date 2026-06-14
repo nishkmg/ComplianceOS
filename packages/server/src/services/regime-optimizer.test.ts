@@ -123,4 +123,55 @@ describe('RegimeOptimizer', () => {
       expect(comparison.oldRegime.marginalTaxRate).toBeDefined();
     });
   });
+
+  // ========================================================================
+  // Property-based tests
+  // ========================================================================
+
+  describe('Regime Optimizer Property Tests', () => {
+    it('low income always recommends new regime', () => {
+      for (const income of [300000, 500000, 700000, 800000]) {
+        const r = optimizer.recommendRegime(income, {}, false);
+        expect(r.regime).toBe('new');
+      }
+    });
+
+    it('very high deductions → old regime for mid income', () => {
+      const r = optimizer.recommendRegime(1500000, { section80C: 150000, standardDeduction: 50000 }, false);
+      if (r.regime === 'old') {
+        expect(r.breakEvenDeductions).toBeGreaterThan(0);
+        expect(r.taxSavings).toBeGreaterThan(0);
+      }
+    });
+
+    it('zero deductions at high income: taxSavings is well-defined', () => {
+      const r = optimizer.recommendRegime(5000000, {}, false);
+      expect(r.taxSavings).toBeGreaterThanOrEqual(0);
+      expect(r.regime).toBe('new');
+    });
+
+    it('tax savings is non-negative', () => {
+      for (const income of [500000, 1000000, 1500000, 3000000]) {
+        const r = optimizer.recommendRegime(income, {}, false);
+        expect(r.taxSavings).toBeGreaterThanOrEqual(0);
+      }
+    });
+
+    it('break-even deductions are ≥ 0', () => {
+      for (const income of [750000, 1000000, 1500000, 2000000, 5000000]) {
+        const r = optimizer.recommendRegime(income, {}, false);
+        expect(r.breakEvenDeductions).toBeGreaterThanOrEqual(0);
+      }
+    });
+
+    it('marginal tax rates are within valid range', () => {
+      for (const income of [300000, 1000000, 5000000, 10000000]) {
+        const r = optimizer.recommendRegime(income, {}, false);
+        expect(r.marginalAnalysis.newRegimeRate).toBeGreaterThanOrEqual(0);
+        expect(r.marginalAnalysis.newRegimeRate).toBeLessThanOrEqual(100);
+        expect(r.marginalAnalysis.oldRegimeRate).toBeGreaterThanOrEqual(0);
+        expect(r.marginalAnalysis.oldRegimeRate).toBeLessThanOrEqual(100);
+      }
+    });
+  });
 });

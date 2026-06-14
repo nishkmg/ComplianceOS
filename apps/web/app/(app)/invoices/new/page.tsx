@@ -126,7 +126,7 @@ export default function NewInvoicePage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
-          <h1 className="font-display text-display-lg font-semibold text-dark">New Invoice</h1>
+          <h1 className="font-ui text-display-lg font-semibold text-dark">New Invoice</h1>
         </div>
         <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
           {saving ? "Creating…" : "Create Invoice"}

@@ -19,7 +19,7 @@ export default function GSTMismatchesPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-display-lg font-semibold text-dark">2B Mismatches</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">2B Mismatches</h1>
         <div className="flex items-center gap-3">
           <select className="border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus:border-amber" value={periodMonth} onChange={e => setPeriodMonth(Number(e.target.value))}>
             {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}

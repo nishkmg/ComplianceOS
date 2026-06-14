@@ -55,7 +55,7 @@ export default function JournalEntryDetailPage() {
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
           <div>
-            <h1 className="font-display text-display-lg font-semibold text-dark">{entry.entryNumber}</h1>
+            <h1 className="font-ui text-display-lg font-semibold text-dark">{entry.entryNumber}</h1>
             <p className="text-[13px] text-secondary font-ui mt-1">{entry.fiscalYear}</p>
           </div>
         </div>

@@ -256,7 +256,7 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
     <div className="flex flex-col gap-12 text-left">
       {/* Section Header */}
       <div>
-        <h1 className="font-display text-display-xl text-on-surface mb-6">Review & Customize Ledger</h1>
+        <h1 className="font-ui text-display-xl text-on-surface mb-6">Review & Customize Ledger</h1>
         <p className="font-ui text-ui-lg text-text-mid max-w-3xl leading-relaxed">
           The following chart of accounts has been generated based on your template. De-select any ledgers you do not require, or add new sub-ledgers later.
         </p>

@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GSTR-1 PDF snapshot > renders with sample return data and matches hash > gstr1-pdf 1`] = `"50ea3a975d4a38c0857b09869b548bcc03041316668ca087d188f01108fde189"`;
+
+exports[`GSTR-3B PDF snapshot > renders with sample return data and matches hash > gstr3b-pdf 1`] = `"c7483a6733587e727190c86832a5fc28e7f26ea4e9f5b51b7cc0af3e1b97428f"`;
+
+exports[`ITR-3 PDF snapshot > renders with sample taxpayer data and matches hash > itr3-pdf 1`] = `"1e86be6193618722d0e9318c5f3486a410c477aa01cb9a9d58b96a635a3b72cd"`;
+
+exports[`Invoice PDF snapshot > renders with sample data and matches hash > invoice-pdf 1`] = `"de2508c42d4bf4e0cd6551859e8ce002a61d51e56c866349fed97446dcb7d83e"`;

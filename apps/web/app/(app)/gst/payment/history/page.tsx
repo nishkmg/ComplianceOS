@@ -16,7 +16,7 @@ export default function PaymentHistoryPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-display-lg font-semibold text-dark">Payment History</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">Payment History</h1>
         <Link href="/gst/payment" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> New Payment</Link>
       </div>
       {payments.length === 0 ? <EmptyState icon="payments" title="No payments yet" description="GST challan payments will appear here." /> : (

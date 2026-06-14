@@ -50,7 +50,7 @@ export default function EditInvoicePage() {
     <div className="max-w-[600px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
-        <h1 className="font-display text-display-lg font-semibold text-dark">Edit Invoice</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">Edit Invoice</h1>
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Customer Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} /></div>

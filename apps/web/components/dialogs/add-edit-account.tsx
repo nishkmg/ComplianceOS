@@ -44,7 +44,7 @@ export function AddAccountDialog({
             <div className="col-span-2">
               <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Name</label>
               <input 
-                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus:border-amber outline-none transition-all" 
+                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus:border-amber outline-none transition-colors" 
                 placeholder="e.g. ICICI Corporate Account"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -117,7 +117,7 @@ export function AddAccountDialog({
           <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={() => onConfirm(formData)}
-            className="bg-amber text-white font-ui text-sm px-8 py-3 rounded-sm hover:bg-amber-hover transition-all shadow-sm border-none cursor-pointer"
+            className="bg-amber text-white font-ui text-sm px-8 py-3 rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
           >
             Create Ledger
           </button>

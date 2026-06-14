@@ -20,7 +20,7 @@ export default function AccountingPage() {
               From journal entry to balance sheet — every rupee is validated at the point of entry. Not at month end.
             </p>
             <div className="flex gap-6">
-              <Link href="/signup" className="bg-amber text-white px-8 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-all no-underline rounded-sm shadow-sm">
+              <Link href="/signup" className="bg-amber text-white px-8 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm">
                 Start Building <span className="inline-block ml-2">→</span>
               </Link>
             </div>
@@ -71,7 +71,7 @@ export default function AccountingPage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Start with the accounting module.</h2>
             <p className="font-ui text-ui-md text-secondary mb-10">No modules to configure. No onboarding calls. The ledger is ready.</p>
-            <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-all no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
               Get started <span className="inline-block">→</span>
             </Link>
           </div>

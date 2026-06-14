@@ -22,7 +22,7 @@ export default function PeriodPage() {
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/gst/returns" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
-        <h1 className="font-display text-display-lg font-semibold text-dark">Period: {month}/{fy}</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">Period: {month}/{fy}</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {forms.map(f => (

@@ -78,7 +78,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
     <div className="flex flex-col gap-12 text-left">
       {/* Section Header */}
       <div>
-        <h1 className="font-display text-display-xl text-on-surface mb-3">Opening Balances</h1>
+        <h1 className="font-ui text-display-xl text-on-surface mb-3">Opening Balances</h1>
         <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
           Establish the initial financial state for this entity. You may begin with a clean slate or carry forward balances from a previous period.
         </p>

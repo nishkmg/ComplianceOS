@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/icon";
 export default function GstPaymentPage() {
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">GST Payment</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">GST Payment</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link href="/gst/payment/history" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="history" className="text-3xl text-amber mb-4" />

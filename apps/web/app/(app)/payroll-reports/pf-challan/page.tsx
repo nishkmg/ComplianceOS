@@ -21,7 +21,7 @@ export default function PFChallanPage() {
             <Icon name="chevron_right" className="text-[12px]" />
             <span>Statutory Filings</span>
           </div>
-          <h1 className="font-display text-2xl font-semibold text-dark">PF Challan Report</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">PF Challan Report</h1>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">

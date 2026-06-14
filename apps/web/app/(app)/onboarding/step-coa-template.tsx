@@ -42,7 +42,7 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
     <div className="flex flex-col gap-12 text-left">
       {/* Section Header */}
       <div>
-        <h1 className="font-display text-display-xl text-on-surface mb-6">Select CoA Template</h1>
+        <h1 className="font-ui text-display-xl text-on-surface mb-6">Select CoA Template</h1>
         <p className="font-ui text-ui-lg text-text-mid max-w-3xl leading-relaxed">
           Choose a baseline structure tailored to your business operations. These templates are strictly aligned with standard Indian accounting practices and statutory compliance requirements.
         </p>
@@ -54,7 +54,7 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
           <div
             key={t.id}
             onClick={() => setSelectedTemplate(t.id)}
-            className={`group border-[0.5px] border-border p-8 flex flex-col relative transition-all duration-300 cursor-pointer ${
+            className={`group border-[0.5px] border-border p-8 flex flex-col relative transition-colors transition-shadow duration-300 cursor-pointer ${
               selectedTemplate === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
             }`}
           >
@@ -63,7 +63,7 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
               <Icon name={t.icon} className={`text-3xl ${selectedTemplate === t.id ? "text-amber" : "text-stone-300"}`} />
               {t.recommended && <span className="font-ui text-[11px] text-[9px] uppercase tracking-widest bg-stone-900 text-white px-2 py-0.5 rounded-md">Recommended</span>}
             </div>
-            <h3 className="font-display text-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
+            <h3 className="font-ui text-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
             <p className="font-ui text-[13px] text-ui-sm text-text-mid leading-relaxed flex-1">
               {t.desc}
             </p>

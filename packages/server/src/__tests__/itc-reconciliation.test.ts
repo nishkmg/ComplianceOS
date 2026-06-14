@@ -458,6 +458,104 @@ describe('ITC Reconciliation', () => {
     });
   });
 
+  // ========================================================================
+  // Property-based tests
+  // ========================================================================
+
+  describe('ITC Property Tests', () => {
+    it('exact match by invoice# + GSTIN + value + tax → full ITC', () => {
+      const book = createInvoice({ invoiceNumber: 'INV-PROP-1', supplierGstin: '27AABCU9603R1ZM', totalValue: 5000, totalTax: 900 });
+      const gstr = createInvoice({ invoiceNumber: 'INV-PROP-1', supplierGstin: '27AABCU9603R1ZM', totalValue: 5000, totalTax: 900 });
+      const r = isInvoicesMatch(book, gstr);
+      expect(r.matches).toBe(true);
+      expect(r.confidence).toBe('exact');
+    });
+
+    it('GSTIN mismatch → zero ITC even with same invoice#', () => {
+      const book = createInvoice({ invoiceNumber: 'INV-PROP-2', supplierGstin: '27AABCU9603R1ZM', totalValue: 5000, totalTax: 900 });
+      const gstr = createInvoice({ invoiceNumber: 'INV-PROP-2', supplierGstin: '27AAAAA0000A1Z5', totalValue: 5000, totalTax: 900 });
+      const r = isInvoicesMatch(book, gstr);
+      expect(r.matches).toBe(false);
+    });
+
+    it('value diff ≤ 1% and ≤ ₹100 → tolerance match', () => {
+      const book = createInvoice({ invoiceNumber: 'INV-3', totalValue: 10000, totalTax: 1800 });
+      const gstr = createInvoice({ invoiceNumber: 'INV-3', totalValue: 10099, totalTax: 1800 });
+      const r = isInvoicesMatch(book, gstr);
+      expect(r.matches).toBe(true);
+      expect(r.confidence).toBe('tolerance');
+    });
+
+    it('value diff > 1% or > ₹100 → no match', () => {
+      const book = createInvoice({ invoiceNumber: 'INV-4', totalValue: 10000, totalTax: 1800 });
+      const gstr = createInvoice({ invoiceNumber: 'INV-4', totalValue: 10101, totalTax: 1800 });
+      const r = isInvoicesMatch(book, gstr);
+      expect(r.matches).toBe(false);
+    });
+
+    it('matched + unmatchedBooks = total books', () => {
+      const books = [
+        createInvoice({ id: 'b1', invoiceNumber: 'INV-A', totalValue: 1000, totalTax: 180 }),
+        createInvoice({ id: 'b2', invoiceNumber: 'INV-B', totalValue: 2000, totalTax: 360 }),
+        createInvoice({ id: 'b3', invoiceNumber: 'INV-C', totalValue: 3000, totalTax: 540 }),
+      ];
+      const gstr = [
+        createInvoice({ id: 'g1', invoiceNumber: 'INV-A', totalValue: 1000, totalTax: 180 }),
+      ];
+      const result = matchInvoices(books, gstr);
+      expect(result.matched.length + result.unmatchedBooks.length).toBe(books.length);
+    });
+
+    it('matched + unmatchedGstr2b = total GSTR-2B', () => {
+      const books = [
+        createInvoice({ id: 'b1', invoiceNumber: 'INV-A', totalValue: 1000, totalTax: 180 }),
+      ];
+      const gstr = [
+        createInvoice({ id: 'g1', invoiceNumber: 'INV-A', totalValue: 1000, totalTax: 180 }),
+        createInvoice({ id: 'g2', invoiceNumber: 'INV-B', totalValue: 2000, totalTax: 360 }),
+      ];
+      const result = matchInvoices(books, gstr);
+      expect(result.matched.length + result.unmatchedGstr2b.length).toBe(gstr.length);
+    });
+
+    it('match rate = matched / totalBooks * 100', () => {
+      const books = [createInvoice({ id: 'b1', invoiceNumber: 'A', totalValue: 1000, totalTax: 180 })];
+      const gstr = [createInvoice({ id: 'g1', invoiceNumber: 'A', totalValue: 1000, totalTax: 180 })];
+      const result = matchInvoices(books, gstr);
+      const summary = getReconciliationSummary(
+        { matched: result.matched, mismatched: [], pending: [] },
+        books,
+        gstr
+      );
+      expect(summary.matchRate).toBe(100);
+    });
+
+    it('match rate 0 when no overlap', () => {
+      const books = [createInvoice({ id: 'b1', invoiceNumber: 'A', totalValue: 1000, totalTax: 180 })];
+      const gstr = [createInvoice({ id: 'g1', invoiceNumber: 'B', totalValue: 2000, totalTax: 360 })];
+      const result = matchInvoices(books, gstr);
+      const summary = getReconciliationSummary(
+        { matched: result.matched, mismatched: [], pending: [] },
+        books,
+        gstr
+      );
+      expect(summary.matchRate).toBe(0);
+    });
+
+    it('duplicate invoice# from different suppliers → matched by GSTIN', () => {
+      const books = [
+        createInvoice({ id: 'b1', invoiceNumber: 'INV-001', supplierGstin: '27AAAAA0000A1Z5' }),
+        createInvoice({ id: 'b2', invoiceNumber: 'INV-001', supplierGstin: '27BBBBB0000B1Z5' }),
+      ];
+      const gstr = [
+        createInvoice({ id: 'g1', invoiceNumber: 'INV-001', supplierGstin: '27AAAAA0000A1Z5' }),
+        createInvoice({ id: 'g2', invoiceNumber: 'INV-001', supplierGstin: '27BBBBB0000B1Z5' }),
+      ];
+      const result = matchInvoices(books, gstr);
+      expect(result.matched.length).toBe(2);
+    });
+  });
+
   describe('Edge Cases', () => {
     it('should handle zero-value invoices', () => {
       const books = [

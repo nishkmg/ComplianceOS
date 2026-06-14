@@ -48,7 +48,7 @@ export default function EmployeeSalaryPage() {
     <div className="space-y-6">
       <div>
         <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Employee Profile</p>
-        <h1 className="font-display text-display-lg font-semibold text-dark">Salary Structure</h1>
+        <h1 className="font-ui text-display-lg font-semibold text-dark">Salary Structure</h1>
         <p className="text-[13px] text-secondary font-ui mt-1">Configure employee compensation</p>
       </div>
 
@@ -61,7 +61,7 @@ export default function EmployeeSalaryPage() {
         </div>
 
         <div className="card overflow-hidden">
-          <div className="px-4 py-3 border-b border-border font-display text-[14px] font-normal text-dark">Components</div>
+          <div className="px-4 py-3 border-b border-border font-ui text-[14px] font-normal text-dark">Components</div>
           <table className="table table-dense">
             <thead>
               <tr>

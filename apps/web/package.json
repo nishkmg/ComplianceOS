@@ -49,6 +49,7 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@complianceos/db": "workspace:*",
     "@complianceos/server": "workspace:*",
     "@complianceos/shared": "workspace:*",

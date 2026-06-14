@@ -438,4 +438,98 @@ describe('DeductionCalculator', () => {
       expect(result.isValid).toBe(false);
     });
   });
+
+  // ========================================================================
+  // Property-based tests
+  // ========================================================================
+
+  describe('Deduction Calculator Property Tests', () => {
+    it('80C deduction never exceeds ₹1,50,000', () => {
+      for (const amount of [0, 100000, 150000, 200000, 500000]) {
+        const r = calculator.calculate80C({ ppf: amount });
+        expect(r.deductionAllowed).toBeLessThanOrEqual(150000);
+        expect(r.deductionAllowed).toBeGreaterThanOrEqual(0);
+      }
+    });
+
+    it('80C deduction is min(totalInvestment, 1.5L)', () => {
+      expect(calculator.calculate80C({ ppf: 50000 }).deductionAllowed).toBe(50000);
+      expect(calculator.calculate80C({ ppf: 150000 }).deductionAllowed).toBe(150000);
+      expect(calculator.calculate80C({ ppf: 200000 }).deductionAllowed).toBe(150000);
+      expect(calculator.calculate80C({ ppf: 50000, lic: 60000 }).deductionAllowed).toBe(110000);
+    });
+
+    it('80D self limit: ₹25K regular, ₹50K senior', () => {
+      for (const premium of [0, 10000, 25000, 50000, 100000]) {
+        const regular = calculator.calculate80D({ self: premium }, false, false);
+        expect(regular.breakdown.self).toBeLessThanOrEqual(25000);
+        const senior = calculator.calculate80D({ self: premium }, true, false);
+        expect(senior.breakdown.self).toBeLessThanOrEqual(50000);
+      }
+    });
+
+    it('80CCD1B capped at ₹50,000', () => {
+      for (const contrib of [0, 5000, 50000, 100000]) {
+        const r = calculator.calculate80CCD1B(contrib);
+        expect(r.deductionAllowed).toBe(Math.min(contrib, 50000));
+      }
+    });
+
+    it('80E deduction is allowed for 7 years from loan start', () => {
+      for (const year of [1, 3, 7]) {
+        const r = calculator.calculate80E(100000, year);
+        expect(r.isEligible).toBe(true);
+        expect(r.deductionAllowed).toBe(100000);
+      }
+      const after = calculator.calculate80E(100000, 8);
+      expect(after.isEligible).toBe(false);
+      expect(after.deductionAllowed).toBe(0);
+    });
+
+    it('80TTA capped at ₹10K, 80TTB capped at ₹50K', () => {
+      for (const interest of [0, 5000, 10000, 50000]) {
+        expect(calculator.calculate80TTA(interest, false).deductionAllowed)
+          .toBe(Math.min(interest, 10000));
+        expect(calculator.calculate80TTB(interest, true).deductionAllowed)
+          .toBe(Math.min(interest, 50000));
+      }
+    });
+
+    it('80G deduction never exceeds total donation', () => {
+      const donations = [
+        { name: 'Fund A', amount: 50000, rate: 100 },
+        { name: 'Fund B', amount: 30000, rate: 50, subjectToLimit: true },
+      ];
+      const r = calculator.calculate80G(donations, 1000000);
+      expect(r.deductionAllowed).toBeLessThanOrEqual(r.totalDonation);
+    });
+
+    it('80U and 80DD: ≥80% disability = ₹1,25,000, ≥40% = ₹75,000, <40% = ₹0', () => {
+      expect(calculator.calculate80U(100).deductionAllowed).toBe(125000);
+      expect(calculator.calculate80DD(90).deductionAllowed).toBe(125000);
+      expect(calculator.calculate80U(50).deductionAllowed).toBe(75000);
+      expect(calculator.calculate80DD(40).deductionAllowed).toBe(75000);
+      expect(calculator.calculate80U(30).deductionAllowed).toBe(0);
+      expect(calculator.calculate80DD(20).deductionAllowed).toBe(0);
+    });
+
+    it('total deductions from various sections sum correctly', () => {
+      const r = calculator.calculateTotalDeductions({
+        section80C: 100000,
+        section80D: 25000,
+        section80CCD1B: 50000,
+        section80E: 80000,
+        section80G: 15000,
+        section80TTA: 10000,
+      });
+      expect(r.totalDeductions).toBe(100000 + 25000 + 50000 + 80000 + 15000 + 10000);
+    });
+
+    it('every deduction yields non-negative allowed amount', () => {
+      expect(calculator.calculate80CCD1B(-50).deductionAllowed).toBeGreaterThanOrEqual(0);
+      expect(calculator.calculate80E(-1000, 1).deductionAllowed).toBeGreaterThanOrEqual(0);
+      expect(calculator.calculate80TTA(-100, false).deductionAllowed).toBeGreaterThanOrEqual(0);
+      expect(calculator.calculate80TTB(-100, true).deductionAllowed).toBeGreaterThanOrEqual(0);
+    });
+  });
 });

@@ -22,7 +22,7 @@ export default function ScanReceiptPage() {
         <div className="mb-8 flex justify-between items-end">
           <div>
             <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Automated Ledger</p>
-            <h1 className="font-display text-2xl font-semibold text-dark">Receipt Scan (OCR)</h1>
+            <h1 className="font-ui text-2xl font-semibold text-dark">Receipt Scan (OCR)</h1>
             <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl">Upload payment vouchers and bank receipts for automatic data extraction and ledger reconciliation.</p>
           </div>
           <div className="flex gap-4">

@@ -9,7 +9,7 @@ export default function Form16Page() {
           <div className="flex items-center gap-2 text-[10px] font-bold text-amber uppercase tracking-widest mb-2">
             <Icon name="description" className="text-sm" /> Form 16 Data Export
           </div>
-          <h1 className="font-display text-2xl font-semibold text-dark">Employee Tax Report</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Employee Tax Report</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">Under Section 203 of the Income-tax Act, 1961</p>
         </div>
         <div className="flex gap-3">

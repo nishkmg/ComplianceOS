@@ -17,14 +17,14 @@ export default function ITRRecordPaymentPage() {
             <Icon name="chevron_right" className="text-[14px]" />
             <span>Tax Payments</span>
           </p>
-          <h1 className="font-display text-display-lg font-semibold text-dark">Record ITR Payment</h1>
+          <h1 className="font-ui text-display-lg font-semibold text-dark">Record ITR Payment</h1>
         </div>
         <div className="flex items-center gap-4">
           <span className="font-ui text-[10px] uppercase tracking-widest font-bold text-mid flex items-center gap-1">
             <Icon name="cloud_done" className="text-[16px] text-success" />
             Draft saved locally
           </span>
-          <button onClick={() => showToast.success("Payment committed to ledger.")} className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all border-none cursor-pointer shadow-sm">
+          <button onClick={() => showToast.success("Payment committed to ledger.")} className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm">
             Commit to Ledger
           </button>
         </div>
@@ -46,7 +46,7 @@ export default function ITRRecordPaymentPage() {
                   <div 
                     key={item.id}
                     onClick={() => setType(item.id)}
-                    className={`relative p-4 border rounded-md transition-all cursor-pointer ${type === item.id ? 'border-amber bg-amber-50 ring-1 ring-amber' : 'border-border bg-surface hover:bg-surface-muted'}`}
+                    className={`relative p-4 border rounded-md transition-colors cursor-pointer ${type === item.id ? 'border-amber bg-amber-50 ring-1 ring-amber' : 'border-border bg-surface hover:bg-surface-muted'}`}
                   >
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-ui text-[13px] font-bold text-dark">{item.name}</span>

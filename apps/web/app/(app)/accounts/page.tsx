@@ -31,8 +31,8 @@ export default function AccountsPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <div><h1 className="font-display text-display-lg font-semibold text-dark">Accounts</h1></div>
-        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md shadow-sm no-underline">
+        <div><h1 className="font-ui text-display-lg font-semibold text-dark">Accounts</h1></div>
+        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
           <Icon name="add" size={14} /> New Account
         </Link>
       </div>

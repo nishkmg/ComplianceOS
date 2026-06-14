@@ -335,7 +335,7 @@ export default function ITRComputationPage() {
       <div className="px-8 py-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 -mx-8 -mt-8 mb-8 bg-surface/50 sticky top-0 z-20 backdrop-blur-sm print:static print:bg-white print:border-black">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2 print:text-black">{ayLabel[selectedFY] ?? "AY 2027-28"} | Individual</p>
-          <h1 className="font-display text-2xl font-semibold text-dark print:text-black">ITR Computation</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark print:text-black">ITR Computation</h1>
         </div>
         <div className="flex flex-wrap gap-3 items-center print:hidden">
           <select
@@ -389,13 +389,13 @@ export default function ITRComputationPage() {
           <div className="flex bg-surface-muted border border-border rounded-md p-1">
             <button
               onClick={() => setRegime("old")}
-              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-all cursor-pointer border-none ${regime === "old" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
+              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-colors cursor-pointer border-none ${regime === "old" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
             >
               Old Regime
             </button>
             <button
               onClick={() => setRegime("new")}
-              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-all cursor-pointer border-none ${regime === "new" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
+              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-colors cursor-pointer border-none ${regime === "new" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
             >
               New Regime
             </button>
@@ -477,7 +477,7 @@ export default function ITRComputationPage() {
           <div className="space-y-6">
             <Card className="bg-dark text-zinc-100 overflow-hidden shadow-xl border border-stone-800 rounded-none print:bg-white print:text-black print:border-black">
               <CardHeader className="p-6 border-b border-stone-800 print:border-black">
-                <h3 className="font-display text-lg font-bold text-amber-text mb-1 print:text-black">Tax Computation</h3>
+                <h3 className="font-ui text-lg font-bold text-amber-text mb-1 print:text-black">Tax Computation</h3>
                 <p className="text-[10px] text-light font-bold uppercase tracking-widest print:text-mid">
                   {regime === "old" ? "Old Tax Regime" : "New Tax Regime"} Applied
                 </p>

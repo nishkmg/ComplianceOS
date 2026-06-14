@@ -286,7 +286,7 @@ export default function NewJournalEntryPage() {
             <Icon name="arrow_back" size={20} />
           </button>
           <div>
-            <h1 className="font-display text-display-lg font-semibold text-dark">New Journal Entry</h1>
+            <h1 className="font-ui text-display-lg font-semibold text-dark">New Journal Entry</h1>
             <p className="text-[13px] text-secondary font-ui mt-1">
               Record a new transaction in the general ledger{gstConfig.tdsApplicable ? " · TDS applicable" : ""}{gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
             </p>

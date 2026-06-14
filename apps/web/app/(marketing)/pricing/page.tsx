@@ -79,7 +79,7 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-space-128 items-stretch">
           {plans.map((plan) => (
-            <div key={plan.name} className={`bg-white border border-border-subtle p-10 flex flex-col relative transition-all duration-300 ${plan.popular ? 'border-t-2 border-t-primary shadow-screenshot' : 'shadow-card'}`}>
+            <div key={plan.name} className={`bg-white border border-border-subtle p-10 flex flex-col relative transition-colors transition-shadow duration-300 ${plan.popular ? 'border-t-2 border-t-primary shadow-screenshot' : 'shadow-card'}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] px-4 py-1.5 uppercase font-bold tracking-widest">Most Popular</div>
               )}
@@ -112,7 +112,7 @@ export default function PricingPage() {
               </ul>
               <Link 
                 href={plan.href} 
-                className={`w-full py-3 text-ui-sm font-ui font-bold flex justify-center items-center group transition-all no-underline ${plan.popular ? 'bg-primary text-white' : 'border border-border-subtle text-dark hover:bg-on-surface hover:text-white'}`}
+                className={`w-full py-3 text-ui-sm font-ui font-bold flex justify-center items-center group transition-colors no-underline ${plan.popular ? 'bg-primary text-white' : 'border border-border-subtle text-dark hover:bg-on-surface hover:text-white'}`}
               >
                 {plan.cta} {plan.popular && <span className="ml-2 transform group-hover:translate-x-1 duration-200">→</span>}
               </Link>

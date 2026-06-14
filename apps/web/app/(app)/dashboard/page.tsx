@@ -64,7 +64,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="font-display text-display-xl text-dark">{greeting}, {companyName}</h1>
+            <h1 className="font-ui text-display-xl text-dark">{greeting}, {companyName}</h1>
             <span className="font-mono text-[10px] uppercase tracking-wider text-mid bg-surface-muted px-2 py-0.5 rounded-md border border-border shrink-0 font-medium">FY {activeFy}</span>
           </div>
           <p className="text-[13px] text-secondary font-ui mt-1">{today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
@@ -91,7 +91,7 @@ export default function DashboardPage() {
         <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
           <div>
             <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">GST Compliance</p>
-            <h3 className="font-display text-lg font-semibold text-dark">File GSTR-3B</h3>
+            <h3 className="font-ui text-lg font-semibold text-dark">File GSTR-3B</h3>
             <p className="font-ui text-[12px] text-mid mt-1">Period: {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
           </div>
           <Link href="/gst/returns" className="bg-amber text-white px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
@@ -101,7 +101,7 @@ export default function DashboardPage() {
         <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
           <div>
             <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">Income Tax</p>
-            <h3 className="font-display text-lg font-semibold text-dark">Generate ITR</h3>
+            <h3 className="font-ui text-lg font-semibold text-dark">Generate ITR</h3>
             <p className="font-ui text-[12px] text-mid mt-1">AY: {`${Number(activeFy.split('-')[0]) + 1}-${activeFy.split('-')[1]}`}</p>
           </div>
           <Link href="/itr/returns" className="bg-amber text-white px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">

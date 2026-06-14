@@ -60,7 +60,7 @@ export default function InventoryReportsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8 mt-0 mb-8">
         <div className="text-left">
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports · FY {activeFy}</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Inventory Valuation</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Valuation</h1>
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Comprehensive breakdown of current stock levels, calculated asset values, and recent movement metrics across all registered warehouses.</p>
         </div>
         <div className="flex items-center gap-3">

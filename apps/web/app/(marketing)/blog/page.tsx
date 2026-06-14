@@ -69,7 +69,7 @@ export default function BlogIndexPage() {
             {posts.slice(1).map((post) => (
               <article key={post.slug} className="group text-left">
                 <div className="aspect-[16/10] overflow-hidden mb-6 bg-white border border-border-subtle">
-                  <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
+                  <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-[filter,transform] duration-500" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
                 </div>
                 <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">{post.category}</span>
                 <Link href={`/blog/${post.slug}`} className="no-underline">

@@ -98,7 +98,7 @@ export default function PaymentsPage() {
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-display-lg font-semibold text-dark">Payments</h1>
+          <h1 className="font-ui text-display-lg font-semibold text-dark">Payments</h1>
           <p className="text-[13px] text-secondary font-ui mt-1">FY {activeFy}</p>
         </div>
         <div className="flex gap-3">
@@ -109,7 +109,7 @@ export default function PaymentsPage() {
           <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
             <Icon name="download" size={14} /> Export
           </button>
-          <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md shadow-sm no-underline">
+          <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
             <Icon name="add" size={14} /> Record Payment
           </Link>
         </div>

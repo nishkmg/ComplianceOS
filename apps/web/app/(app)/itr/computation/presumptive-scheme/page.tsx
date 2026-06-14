@@ -22,7 +22,7 @@ export default function ITRPresumptivePage() {
           <Icon name="calculate" className="text-[14px]" />
           Tax Calculation Engine
         </p>
-        <h1 className="font-display text-2xl font-semibold text-dark mb-2">Presumptive Taxation Model</h1>
+        <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Presumptive Taxation Model</h1>
         <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">
           Evaluate deemed income under sections 44AD (Business) and 44ADA (Profession). Compare presumptive outputs against actual book profit to determine audit applicability.
         </p>
@@ -31,8 +31,8 @@ export default function ITRPresumptivePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1200px] mx-auto">
         {/* Left Column: Inputs */}
         <div className="lg:col-span-7 flex flex-col gap-6">
-          <div className="bg-surface border border-border p-8 rounded-md border-t-2 border-t-amber shadow-sm hover:shadow-md transition-all">
-            <h2 className="font-display text-lg text-lg font-bold text-dark mb-6">Parameter Configuration</h2>
+          <div className="bg-surface border border-border p-8 rounded-md border-t-2 border-t-amber shadow-sm hover:shadow-md transition-shadow">
+            <h2 className="font-ui text-lg text-lg font-bold text-dark mb-6">Parameter Configuration</h2>
             <form className="space-y-8">
               {/* Scheme Selection */}
               <div className="text-left">
@@ -40,7 +40,7 @@ export default function ITRPresumptivePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div 
                     onClick={() => setSection("44ad")}
-                    className={`relative flex flex-col p-4 border rounded-md cursor-pointer transition-all ${section === '44ad' ? 'border-amber bg-amber-50' : 'border-border hover:bg-surface-muted'}`}
+                    className={`relative flex flex-col p-4 border rounded-md cursor-pointer transition-colors transition-shadow ${section === '44ad' ? 'border-amber bg-amber-50' : 'border-border hover:bg-surface-muted'}`}
                   >
                     <span className="font-ui text-dark font-bold">Section 44AD</span>
                     <span className="font-ui text-[10px] text-mid mt-1 uppercase">Eligible Business</span>
@@ -48,7 +48,7 @@ export default function ITRPresumptivePage() {
                   </div>
                   <div 
                     onClick={() => setSection("44ada")}
-                    className={`relative flex flex-col p-4 border rounded-md cursor-pointer transition-all ${section === '44ada' ? 'border-amber bg-amber-50' : 'border-border hover:bg-surface-muted'}`}
+                    className={`relative flex flex-col p-4 border rounded-md cursor-pointer transition-colors transition-shadow ${section === '44ada' ? 'border-amber bg-amber-50' : 'border-border hover:bg-surface-muted'}`}
                   >
                     <span className="font-ui text-dark font-bold">Section 44ADA</span>
                     <span className="font-ui text-[10px] text-mid mt-1 uppercase">Specified Profession</span>
@@ -93,7 +93,7 @@ export default function ITRPresumptivePage() {
         {/* Right Column: Output */}
         <div className="lg:col-span-5 flex flex-col gap-6">
           <div className="bg-dark text-white p-8 rounded-md shadow-xl flex flex-col border border-stone-800">
-            <h3 className="font-display text-lg text-lg font-bold text-amber-text mb-8">Computation Result</h3>
+            <h3 className="font-ui text-lg text-lg font-bold text-amber-text mb-8">Computation Result</h3>
             
             <div className="space-y-6">
               <div className="flex justify-between items-end border-b border-stone-800 pb-4">
@@ -108,7 +108,7 @@ export default function ITRPresumptivePage() {
             </div>
 
             <div className="mt-auto pt-12">
-               <button onClick={() => showToast.success("Presumptive income applied to computation.")} className="w-full bg-amber text-white py-4 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-all rounded-md border-none cursor-pointer flex items-center justify-center gap-2">
+               <button onClick={() => showToast.success("Presumptive income applied to computation.")} className="w-full bg-amber text-white py-4 font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md border-none cursor-pointer flex items-center justify-center gap-2">
                   Apply to Computation
                   <Icon name="arrow_forward" />
                 </button>

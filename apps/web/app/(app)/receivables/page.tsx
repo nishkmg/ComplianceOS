@@ -70,7 +70,7 @@ export default function ReceivablesSummaryPage() {
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
             Treasury
           </p>
-          <h1 className="font-display text-display-lg font-semibold text-dark leading-tight">Receivables Summary</h1>
+          <h1 className="font-ui text-display-lg font-semibold text-dark leading-tight">Receivables Summary</h1>
           <p className="font-ui text-[13px] text-secondary mt-1">
             A comprehensive view of outstanding invoices, aging buckets, and customer balances.
           </p>
@@ -134,7 +134,7 @@ export default function ReceivablesSummaryPage() {
                     </div>
                     <div className="w-full bg-lighter/60 h-1.5 rounded-full overflow-hidden">
                       <div
-                        className={`h-full transition-all duration-1000 rounded-full ${
+                        className={`h-full transition-[width] duration-1000 rounded-full ${
                           bucket.label.includes(">") ? "bg-danger" : "bg-amber"
                         }`}
                         style={{ width: `${bucket.percentage}%` }}

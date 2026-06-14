@@ -5,6 +5,7 @@ import { db } from "@complianceos/db";
 import * as _db from "@complianceos/db";
 const { gstReturns } = _db;
 import { generateGstr1Pdf, generateGstr2bPdf, generateGstr3bPdf, generateGstr9Pdf } from "@complianceos/server";
+import { streamPdf } from "@/lib/pdf-stream";
 
 export const runtime = "nodejs";
 
@@ -47,9 +48,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     const filename = `${type.toUpperCase()}_${params.id.slice(0, 8)}.pdf`;
-    return NextResponse.redirect(result.signedUrl, {
-      headers: { "Content-Disposition": `attachment; filename="${filename}"` },
-    });
+    return streamPdf(result.signedUrl, filename);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

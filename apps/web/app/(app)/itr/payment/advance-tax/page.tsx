@@ -92,7 +92,7 @@ export default function ITRAdvanceTaxPage() {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
         <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Tax Compliance Calendar</p>
-        <h1 className="font-display text-2xl font-semibold text-dark mb-2">Advance Tax Tracking</h1>
+        <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Advance Tax Tracking</h1>
         <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">Ensure timely payment of advance tax instalments to avoid penal interest under Section 234B and 234C.</p>
         </div>
         <div className="flex gap-3">
@@ -114,7 +114,7 @@ export default function ITRAdvanceTaxPage() {
               <span className="font-mono text-[12px] font-bold text-dark">{completionPercent}%</span>
             </div>
             <div className="w-full bg-surface-muted rounded-full h-2.5">
-              <div className="bg-amber h-2.5 rounded-full transition-all" style={{ width: `${completionPercent}%` }} />
+              <div className="bg-amber h-2.5 rounded-full transition-[width]" style={{ width: `${completionPercent}%` }} />
             </div>
           </div>
           <div className="text-right flex gap-6">
@@ -188,7 +188,7 @@ export default function ITRAdvanceTaxPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setShowRecordModal(false)}>
           <div className="bg-surface rounded-xl shadow-2xl border border-border w-full max-w-md p-8" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-display text-lg font-semibold text-dark">Record Payment</h3>
+              <h3 className="font-ui text-lg font-semibold text-dark">Record Payment</h3>
               <button onClick={() => setShowRecordModal(false)} className="border-none bg-transparent cursor-pointer text-mid hover:text-dark"><Icon name="close" /></button>
             </div>
             <div className="space-y-5">

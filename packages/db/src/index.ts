@@ -77,6 +77,7 @@ export const tenantModuleConfig = schema.tenantModuleConfig;
 export const users = schema.users;
 export const userTenants = schema.userTenants;
 export const hsnMaster = schema.hsnMaster;
+export const gstr9Schedules = schema.gstr9Schedules;
 
 // Re-export enums
 export const businessTypeEnum = schema.businessTypeEnum;

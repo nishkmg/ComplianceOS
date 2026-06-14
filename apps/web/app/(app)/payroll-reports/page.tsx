@@ -11,7 +11,7 @@ export default function PayrollReportsPage() {
       <header className="bg-surface border-b-[0.5px] border-border px-8 py-6 sticky top-0 z-30 flex justify-between items-end -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Module Overview</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Payroll Reports</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Payroll Reports</h1>
         </div>
         <div className="flex gap-4">
           <button className="btn btn-secondary">Filter Records</button>

@@ -167,4 +167,76 @@ describe('AdvanceTaxCalculator', () => {
       expect(shortfall2).toBe(5000);
     });
   });
+
+  // ========================================================================
+  // Property-based tests
+  // ========================================================================
+
+  describe('Advance Tax Property Tests', () => {
+    it('total tax split into 4 installments at 15%/45%/75%/100%', () => {
+      for (const total of [100000, 500000, 1000000, 1234567]) {
+        const schedule = calculator.getInstallmentSchedule(total);
+        expect(schedule).toHaveLength(4);
+        expect(schedule[0].payablePercent).toBe(15);
+        expect(schedule[1].payablePercent).toBe(45);
+        expect(schedule[2].payablePercent).toBe(75);
+        expect(schedule[3].payablePercent).toBe(100);
+        expect(schedule[3].cumulativeAmount).toBe(total);
+      }
+    });
+
+    it('each cumulative amount ≥ previous', () => {
+      for (const total of [100000, 500000, 1000000]) {
+        const schedule = calculator.getInstallmentSchedule(total);
+        for (let i = 1; i < schedule.length; i++) {
+          expect(schedule[i].cumulativeAmount).toBeGreaterThanOrEqual(
+            schedule[i - 1].cumulativeAmount
+          );
+        }
+      }
+    });
+
+    it('fourth installment = remaining > 0', () => {
+      for (const total of [100000, 500000, 1000000]) {
+        const schedule = calculator.getInstallmentSchedule(total);
+        expect(schedule[3].amount).toBeGreaterThan(0);
+        expect(schedule[3].remainingAmount).toBe(0);
+        const sumAmount = schedule.reduce((a, s) => a + s.amount, 0);
+        expect(sumAmount).toBe(total);
+      }
+    });
+
+    it('installment amounts are non-negative', () => {
+      for (const total of [100000, 500000, 1000000, 1, 9999]) {
+        const schedule = calculator.getInstallmentSchedule(total);
+        for (const inst of schedule) {
+          expect(inst.amount).toBeGreaterThanOrEqual(0);
+          expect(inst.cumulativeAmount).toBeGreaterThanOrEqual(0);
+          expect(inst.remainingAmount).toBeGreaterThanOrEqual(0);
+        }
+      }
+    });
+
+    it('net advance tax is always total minus TDS', () => {
+      for (const { total, tds } of [
+        { total: 100000, tds: 40000 },
+        { total: 50000, tds: 60000 },
+        { total: 80000, tds: 0 },
+        { total: 0, tds: 0 },
+      ]) {
+        const r = calculator.calculateAdvanceTax(total, tds);
+        expect(r.netAdvanceTax).toBe(Math.max(0, total - tds));
+      }
+    });
+
+    it('mandatory when net ≥ ₹10,000, not mandatory when < ₹10,000', () => {
+      expect(calculator.checkMandatory(800000, 15000).isMandatory).toBe(true);
+      expect(calculator.checkMandatory(500000, 5000).isMandatory).toBe(false);
+    });
+
+    it('senior citizens exempt from advance tax', () => {
+      expect(calculator.checkMandatory(800000, 15000, true, 65).isMandatory).toBe(false);
+      expect(calculator.checkMandatory(800000, 15000, false, 45).isMandatory).toBe(true);
+    });
+  });
 });

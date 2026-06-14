@@ -24,7 +24,7 @@ export default function ITRPaymentHistoryPage() {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6 mt-4">
         <div>
           <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Statutory Records · FY {activeFy}</p>
-          <h1 className="font-display text-2xl font-semibold text-dark">Income Tax Payments</h1>
+          <h1 className="font-ui text-2xl font-semibold text-dark">Income Tax Payments</h1>
           <p className="font-ui text-[13px] text-secondary mt-1 max-w-2xl leading-relaxed">Historical record of all tax payments, challans, and BSR-coded acknowledgements for current and previous assessment years.</p>
         </div>
         <div className="flex gap-3">

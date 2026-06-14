@@ -55,7 +55,7 @@ export default function NewEmployeePage() {
           </button>
           <div>
             <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">HR Management</p>
-            <h1 className="font-display text-display-lg font-semibold text-dark">Statutory Register</h1>
+            <h1 className="font-ui text-display-lg font-semibold text-dark">Statutory Register</h1>
           </div>
         </div>
         <div className="flex gap-4">

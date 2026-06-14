@@ -103,12 +103,11 @@ export function calculate87ARebate(
  * Exported for use by surcharge marginal relief.
  */
 export function getSurchargeRate(totalIncome: number): number {
-  for (const tier of SURCHARGE_RATES) {
-    if (totalIncome <= tier.limit) {
-      return tier.rate;
-    }
-  }
-  return SURCHARGE_RATES[SURCHARGE_RATES.length - 1].rate;
+  if (totalIncome <= 5000000) return 0;
+  if (totalIncome < 10000000) return 0.10;
+  if (totalIncome < 20000000) return 0.15;
+  if (totalIncome < 50000000) return 0.25;
+  return 0.37;
 }
 
 /**

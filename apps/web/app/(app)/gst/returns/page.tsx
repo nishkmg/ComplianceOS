@@ -29,7 +29,7 @@ export default function GstReturnsPage() {
   if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">GST Returns</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">GST Returns</h1>
       {returns.length === 0 ? <EmptyState icon="gavel" title="No returns yet" description="GST returns will appear here once created." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">

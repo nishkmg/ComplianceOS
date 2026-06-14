@@ -62,7 +62,7 @@ export function CloseFiscalYearDialog({
           <button onClick={onClose} className="font-ui text-xs font-bold uppercase tracking-widest text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={onConfirm}
-            className="bg-red-600 text-white font-ui text-xs font-bold uppercase tracking-widest px-8 py-3 rounded-sm hover:bg-red-700 transition-all shadow-sm border-none cursor-pointer"
+            className="bg-red-600 text-white font-ui text-xs font-bold uppercase tracking-widest px-8 py-3 rounded-sm hover:bg-red-700 transition-colors shadow-sm border-none cursor-pointer"
           >
             I Understand, Close Year
           </button>

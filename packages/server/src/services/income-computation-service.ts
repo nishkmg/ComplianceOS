@@ -590,16 +590,18 @@ export class IncomeComputationService {
       0n
     );
 
-    // Capital gains total
-    const totalCapitalGains = BigInt(capitalGainsResult.stcg.total) + BigInt(capitalGainsResult.ltcg.total);
+    // Capital gains totals (separated for set-off rules)
+    const stcg = BigInt(capitalGainsResult.stcg.total);
+    const ltcg = BigInt(capitalGainsResult.ltcg.total);
+    const totalCapitalGains = stcg + ltcg;
 
     // Breakdown
     const salaryIncome = BigInt(salaryResult.totalSalary);
     const businessIncome = BigInt(businessResult.businessProfit);
     const otherSourcesIncome = BigInt(otherSourcesResult.totalIncome);
 
-    // Apply inter-head set-off
-    let grossTotalIncome = salaryIncome + totalHouseProperty + businessIncome + totalCapitalGains + otherSourcesIncome;
+    // Apply inter-head set-off (LTCG excluded — cannot be set off against business loss)
+    let grossTotalIncome = salaryIncome + totalHouseProperty + businessIncome + stcg + otherSourcesIncome;
 
     // Track carried forward losses
     const carriedForwardLosses: GrossTotalIncomeResult['carriedForwardLosses'] = [];
@@ -622,9 +624,11 @@ export class IncomeComputationService {
         if (source.amount > 0 && remainingLoss > 0) {
           const setOffAmount = Math.min(source.amount, remainingLoss);
           remainingLoss -= setOffAmount;
-          grossTotalIncome -= BigInt(setOffAmount);
         }
       }
+
+      // Exclude carried-forward loss from GTI (initial sum includes full negative businessIncome)
+      grossTotalIncome += BigInt(remainingLoss);
 
       // Carry forward remaining loss
       if (remainingLoss > 0) {
@@ -651,6 +655,9 @@ export class IncomeComputationService {
         });
       }
     }
+
+    // Add LTCG — excluded from set-off against business loss
+    grossTotalIncome += ltcg;
 
     return {
       grossTotalIncome: grossTotalIncome.toString(),

@@ -130,7 +130,7 @@ export default function LoginPage() {
           <div className="mt-8 pt-6 border-t-[0.5px] border-border-subtle text-center">
             <p className="font-ui text-ui-sm text-secondary">
               New to Arthvahi? 
-              <Link className="text-amber font-medium hover:text-amber-hover hover:underline underline-offset-4 transition-all ml-1 no-underline" href="/signup">Create Account</Link>
+              <Link className="text-amber font-medium hover:text-amber-hover hover:underline underline-offset-4 transition-colors ml-1 no-underline" href="/signup">Create Account</Link>
             </p>
           </div>
         </div>

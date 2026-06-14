@@ -13,7 +13,7 @@ export default function ContactSuccessPage() {
         <h1 className="font-display text-marketing-xl text-dark mb-4">Message sent successfully.</h1>
         <p className="font-ui text-ui-lg text-secondary max-w-lg mx-auto leading-relaxed mb-12">Thank you for reaching out. Our team typically responds within 24 hours during business days.</p>
         <div className="flex gap-4">
-          <Link href="/" className="bg-amber text-white px-8 py-4 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-all no-underline rounded-sm shadow-sm">
+          <Link href="/" className="bg-amber text-white px-8 py-4 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm">
             Return to Home
           </Link>
         </div>

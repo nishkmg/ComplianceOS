@@ -19,7 +19,7 @@ export default function ScanInvoicePage() {
 
   return (
     <div className="max-w-[600px] mx-auto space-y-8 pb-40">
-      <h1 className="font-display text-display-lg font-semibold text-dark">Scan Invoice</h1>
+      <h1 className="font-ui text-display-lg font-semibold text-dark">Scan Invoice</h1>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="border-2 border-dashed border-border rounded-md p-12 text-center cursor-pointer hover:bg-surface-muted transition-colors" onClick={() => inputRef.current?.click()}>
           <Icon name="upload_file" className="text-4xl text-light mb-4" />

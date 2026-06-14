@@ -60,7 +60,7 @@ export default function InvoicePdfPage() {
       </div>
       <div className="bg-white border border-border rounded-md p-10 shadow-sm" id="invoice-pdf">
         <div className="flex justify-between items-start mb-10">
-          <div><h1 className="font-display text-2xl font-bold text-dark">INVOICE</h1><p className="font-mono text-sm text-mid mt-1">{invNum}</p></div>
+          <div><h1 className="font-ui text-2xl font-bold text-dark">INVOICE</h1><p className="font-mono text-sm text-mid mt-1">{invNum}</p></div>
           <div className="text-right"><p className="font-ui text-sm font-bold text-dark">Arthvahi</p></div>
         </div>
         <div className="grid grid-cols-2 gap-6 mb-10 pb-6 border-b border-border">
@@ -98,7 +98,7 @@ export default function InvoicePdfPage() {
 
         <div className="mt-6 pt-6 border-t border-border text-right">
           <p className="font-ui text-sm text-mid">Total</p>
-          <p className="font-display text-3xl font-bold text-dark">{formatIndianNumber(grandTotal, { currency: true })}</p>
+          <p className="font-ui text-3xl font-bold text-dark">{formatIndianNumber(grandTotal, { currency: true })}</p>
         </div>
       </div>
     </div>
