@@ -1,4 +1,5 @@
-import { supabaseRest } from "@/lib/supabase-rest";
+import { db, employees } from "@complianceos/db";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -6,13 +7,9 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const tenantId = url.searchParams.get("tenantId");
     if (!tenantId) return Response.json({ error: "tenantId required" }, { status: 400 });
-    const id = url.searchParams.get("id");
-    if (id) {
-      const res = await supabaseRest(`employees?id=eq.${encodeURIComponent(id)}&tenant_id=eq.${encodeURIComponent(tenantId)}`, { method: "GET" });
-      const rows = Array.isArray(res.json) ? res.json : [];
-      return Response.json({ employee: rows[0] || null });
-    }
-    const res = await supabaseRest(`employees?tenant_id=eq.${encodeURIComponent(tenantId)}&order=first_name.asc`, { method: "GET" });
-    return Response.json({ employees: Array.isArray(res.json) ? res.json : [] });
+    const rows = await db.select().from(employees).where(eq(employees.tenantId, tenantId)).orderBy(asc(employees.firstName));
+    return Response.json({ employees: rows });
   } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
+
+

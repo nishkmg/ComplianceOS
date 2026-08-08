@@ -1,4 +1,5 @@
-import { supabaseRest } from "@/lib/supabase-rest";
+import { db, payments } from "@complianceos/db";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 
 export const runtime = "nodejs";
@@ -7,19 +8,13 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const tenantId = url.searchParams.get("tenantId");
-    if (!tenantId) {
-      return Response.json({ error: "tenantId is required" }, { status: 400 });
-    }
-    const res = await supabaseRest(
-      `payments?tenant_id=eq.${encodeURIComponent(tenantId)}&order=date.desc,created_at.desc`,
-      { method: "GET" }
-    );
-    return Response.json({ payments: Array.isArray(res.json) ? res.json : [] });
-  } catch (err: any) {
-    console.error("[payments] GET error:", err.message);
-    return Response.json({ error: err.message }, { status: 500 });
-  }
+    if (!tenantId) return Response.json({ error: "tenantId is required" }, { status: 400 });
+    const rows = await db.select().from(payments).where(eq(payments.tenantId, tenantId)).orderBy(desc(payments.date), desc(payments.createdAt));
+    return Response.json({ payments: rows });
+  } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
+
+
 
 export async function POST(req: Request) {
   try {

@@ -1,3 +1,5 @@
+import { db, invoiceView } from "@complianceos/db";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 export const runtime = "nodejs";
 
@@ -12,15 +14,12 @@ export async function GET(req: Request) {
     const tenantId = url.searchParams.get("tenantId");
     const id = getIdFromPath(url.pathname);
     if (!tenantId || !id) return Response.json({ error: "tenantId and id required" }, { status: 400 });
-
-    const { supabaseRest } = await import("@/lib/supabase-rest");
-    const res = await supabaseRest(`invoice_view?tenant_id=eq.${encodeURIComponent(tenantId)}&id=eq.${encodeURIComponent(id)}`, { method: "GET" });
-    const rows = Array.isArray(res.json) ? res.json : [];
-    return Response.json({ invoice: rows[0] || null });
-  } catch (err: any) {
-    return Response.json({ error: err.message }, { status: 500 });
-  }
+    const [row] = await db.select().from(invoiceView).where(and(eq(invoiceView.tenantId, tenantId), eq(invoiceView.invoiceId, id))).limit(1);
+    return Response.json({ invoice: row || null });
+  } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
+
+
 
 export async function PATCH(req: Request) {
   try {

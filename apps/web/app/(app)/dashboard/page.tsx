@@ -47,13 +47,15 @@ export default function DashboardPage() {
         if (r.ok) {
           const data = await r.json();
           setEntries((data.entries || []).slice(0, 8));
+          setTotals(data.totals || { debit: 0, credit: 0 });
         }
       } catch {} finally { setLoading(false); }
     })();
   }, [tenantId, activeFy]);
 
-  const totalDebit = useMemo(() => entries.reduce((s, e) => s + e.debit, 0), [entries]);
-  const totalCredit = useMemo(() => entries.reduce((s, e) => s + e.credit, 0), [entries]);
+  const [totals, setTotals] = useState({ debit: 0, credit: 0 });
+  const totalDebit = totals.debit;
+  const totalCredit = totals.credit;
   const postedCount = useMemo(() => entries.filter(e => e.status === "posted").length, [entries]);
   const draftCount = useMemo(() => entries.filter(e => e.status === "draft").length, [entries]);
 

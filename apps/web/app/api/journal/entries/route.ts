@@ -1,9 +1,11 @@
+import { and, desc, eq, sql } from "drizzle-orm";
+import { db, journalEntries } from "@complianceos/db";
+import { journalEntryLines } from "@complianceos/db";
 import { getDb } from "@/lib/db";
-import { supabaseRest } from "@/lib/supabase-rest";
 
 export const runtime = "nodejs";
 
-// ─── GET: list journal entries ─────────────────────────────────────────
+// ─── GET: list journal entries (with line totals + FY totals) ─────────
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -14,36 +16,49 @@ export async function GET(req: Request) {
       return Response.json({ error: "tenantId is required" }, { status: 400 });
     }
 
-    let path = `journal_entries?tenant_id=eq.${encodeURIComponent(tenantId)}&order=date.desc,created_at.desc`;
-    if (fiscalYear) {
-      path += `&fiscal_year=eq.${encodeURIComponent(fiscalYear)}`;
-    }
+    const where = [eq(journalEntries.tenantId, tenantId)];
+    if (fiscalYear) where.push(eq(journalEntries.fiscalYear, fiscalYear));
 
-    const res = await supabaseRest(path, { method: "GET" });
-    if (!res.ok) {
-      return Response.json({ error: "Failed to fetch entries" }, { status: 500 });
-    }
-
-    const entries = Array.isArray(res.json) ? res.json : [];
-
-    const enriched = await Promise.all(
-      entries.map(async (entry: any) => {
-        const linesRes = await supabaseRest(
-          `journal_entry_lines?journal_entry_id=eq.${encodeURIComponent(entry.id)}&select=debit,credit`,
-          { method: "GET" }
-        );
-        const lines = linesRes.ok && Array.isArray(linesRes.json) ? linesRes.json : [];
-        let totalDebit = 0;
-        let totalCredit = 0;
-        for (const line of lines) {
-          totalDebit += parseFloat(line.debit) || 0;
-          totalCredit += parseFloat(line.credit) || 0;
-        }
-        return { ...entry, debit: totalDebit, credit: totalCredit };
+    const rows = await db
+      .select({
+        id: journalEntries.id,
+        entry_number: journalEntries.entryNumber,
+        date: journalEntries.date,
+        narration: journalEntries.narration,
+        status: journalEntries.status,
+        reference_type: journalEntries.referenceType,
+        reference_id: journalEntries.referenceId,
+        fiscal_year: journalEntries.fiscalYear,
+        created_at: journalEntries.createdAt,
+        debit: sql<string>`coalesce(sum(${journalEntryLines.debit}), 0)`,
+        credit: sql<string>`coalesce(sum(${journalEntryLines.credit}), 0)`,
       })
-    );
+      .from(journalEntries)
+      .leftJoin(journalEntryLines, eq(journalEntryLines.journalEntryId, journalEntries.id))
+      .where(and(...where))
+      .groupBy(journalEntries.id)
+      .orderBy(desc(journalEntries.date), desc(journalEntries.createdAt));
 
-    return Response.json({ entries: enriched });
+    const entries = rows.map((r) => ({
+      ...r,
+      debit: parseFloat(r.debit),
+      credit: parseFloat(r.credit),
+    }));
+
+    // FY totals (dashboard KPIs — previously computed from a slice of rows)
+    const [totals] = await db
+      .select({
+        debit: sql<string>`coalesce(sum(${journalEntryLines.debit}), 0)`,
+        credit: sql<string>`coalesce(sum(${journalEntryLines.credit}), 0)`,
+      })
+      .from(journalEntryLines)
+      .innerJoin(journalEntries, eq(journalEntries.id, journalEntryLines.journalEntryId))
+      .where(and(...where));
+
+    return Response.json({
+      entries,
+      totals: { debit: parseFloat(totals?.debit ?? "0"), credit: parseFloat(totals?.credit ?? "0") },
+    });
   } catch (err: any) {
     console.error("[journal] GET error:", err.message);
     return Response.json({ error: err.message }, { status: 500 });

@@ -1,4 +1,5 @@
-import { supabaseRest } from "@/lib/supabase-rest";
+import { db, eventStore } from "@complianceos/db";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -6,9 +7,9 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const tenantId = url.searchParams.get("tenantId");
     if (!tenantId) return Response.json({ error: "tenantId required" }, { status: 400 });
-    const res = await supabaseRest(`event_store?tenant_id=eq.${encodeURIComponent(tenantId)}&order=created_at.desc&limit=100`, { method: "GET" });
-    return Response.json({ entries: Array.isArray(res.json) ? res.json : [] });
-  } catch (err: any) {
-    return Response.json({ error: err.message }, { status: 500 });
-  }
+    const rows = await db.select().from(eventStore).where(eq(eventStore.tenantId, tenantId)).orderBy(desc(eventStore.createdAt)).limit(100);
+    return Response.json({ entries: rows });
+  } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
+
+

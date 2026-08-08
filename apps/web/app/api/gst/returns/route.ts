@@ -1,4 +1,5 @@
-import { supabaseRest } from "@/lib/supabase-rest";
+import { db, gstReturns } from "@complianceos/db";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -7,9 +8,11 @@ export async function GET(req: Request) {
     const tenantId = url.searchParams.get("tenantId");
     const fiscalYear = url.searchParams.get("fiscalYear");
     if (!tenantId) return Response.json({ error: "tenantId required" }, { status: 400 });
-    let path = `gst_returns?tenant_id=eq.${encodeURIComponent(tenantId)}&order=created_at.desc`;
-    if (fiscalYear) path += `&fiscal_year=eq.${encodeURIComponent(fiscalYear)}`;
-    const res = await supabaseRest(path, { method: "GET" });
-    return Response.json({ returns: Array.isArray(res.json) ? res.json : [] });
+    const where = [eq(gstReturns.tenantId, tenantId)];
+    if (fiscalYear) where.push(eq(gstReturns.fiscalYear, fiscalYear));
+    const rows = await db.select().from(gstReturns).where(and(...where)).orderBy(desc(gstReturns.createdAt));
+    return Response.json({ returns: rows });
   } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
+
+

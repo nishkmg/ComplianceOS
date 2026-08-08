@@ -17,6 +17,7 @@ const handler = async (req: Request) => {
   const { fetchRequestHandler } = await import("@trpc/server/adapters/fetch");
   const { appRouter } = await import("@complianceos/server");
   const session = await auth();
+  const tenantId = ((session?.user as Record<string, unknown> | undefined)?.tenantId as string | undefined) ?? "";
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
@@ -24,9 +25,9 @@ const handler = async (req: Request) => {
     createContext: () => ({
       db: getDb() || ({} as any),
       session: session
-        ? { user: { id: session.user?.id || "", tenantId: "" } }
+        ? { user: { id: session.user?.id || "", tenantId } }
         : null,
-      tenantId: "",
+      tenantId,
     }),
   });
 };
