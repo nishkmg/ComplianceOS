@@ -1,22 +1,16 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { supabaseRest } from "@/lib/supabase-rest";
+import { eq } from "drizzle-orm";
+import {
+  db,
+  users,
+  userTenants,
+  tenants,
+} from "@complianceos/db";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
-const DEMO_EMAIL = "demo@arthvahi.in";
-
-async function sbGet(path: string) {
-  const res = await supabaseRest(path);
-  if (!res.ok) {
-    return null;
-  }
-  return res.json;
-}
-
-function asRows<T>(value: unknown): T[] {
-  return Array.isArray(value) ? (value as T[]) : [];
-}
+const DEMO_EMAIL = "demo@complianceos.test";
 
 const nextAuth = NextAuth({
   session: { strategy: "jwt" },
@@ -26,42 +20,54 @@ const nextAuth = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials) {
         if (!credentials?.email) return null;
 
-        if (DEMO_MODE && credentials.email === DEMO_EMAIL) {
-          const data = asRows<{ id: string; email: string; name: string }>(
-            await sbGet(`users?email=eq.${encodeURIComponent(DEMO_EMAIL)}&select=id,email,name`)
-          );
-          if (data[0]) return { id: data[0].id, email: data[0].email, name: data[0].name };
-          return null;
+        const [user] = await db
+          .select({
+            id: users.id,
+            email: users.email,
+            name: users.name,
+            passwordHash: users.passwordHash,
+          })
+          .from(users)
+          .where(eq(users.email, String(credentials.email)))
+          .limit(1);
+        if (!user) return null;
+
+        // Demo shortcut: no password check in demo mode
+        if (DEMO_MODE && user.email === DEMO_EMAIL) {
+          return { id: user.id, email: user.email, name: user.name };
         }
 
         if (!credentials.password) return null;
-        const data = asRows<{ id: string; email: string; name: string; password_hash?: string | null }>(
-          await sbGet(`users?email=eq.${encodeURIComponent(credentials.email)}&select=id,email,name,password_hash`)
-        );
-        if (!data[0]) return null;
-
-        if (data[0].password_hash) {
-          const valid = await bcrypt.compare(credentials.password, data[0].password_hash);
+        if (user.passwordHash) {
+          const valid = await bcrypt.compare(String(credentials.password), user.passwordHash);
           if (!valid) return null;
         }
-        return { id: data[0].id, email: data[0].email, name: data[0].name };
+        return { id: user.id, email: user.email, name: user.name };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        const ut = asRows<{ tenant_id: string }>(await sbGet(`user_tenants?user_id=eq.${user.id}&select=tenant_id`));
-        if (ut[0]) {
-          token.tenantId = ut[0].tenant_id;
-          const t = asRows<{ onboarding_status?: string | null }>(
-            await sbGet(`tenants?id=eq.${ut[0].tenant_id}&select=onboarding_status`)
-          );
-          token.onboardingComplete = t[0]?.onboarding_status === "complete";
+        const userId = user.id;
+        if (!userId) return token;
+        token.id = userId;
+        const [ut] = await db
+          .select({ tenantId: userTenants.tenantId })
+          .from(userTenants)
+          .where(eq(userTenants.userId, userId))
+          .limit(1);
+        if (ut) {
+          token.tenantId = ut.tenantId;
+          const [t] = await db
+            .select({ onboardingStatus: tenants.onboardingStatus })
+            .from(tenants)
+            .where(eq(tenants.id, ut.tenantId))
+            .limit(1);
+          token.onboardingComplete = t?.onboardingStatus === "complete";
         } else {
           token.tenantId = undefined;
           token.onboardingComplete = false;

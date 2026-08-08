@@ -1,39 +1,39 @@
 {
-  "generatedAt": "2026-08-08T07:42:05.518Z",
+  "generatedAt": "2026-08-08T08:20:44.028Z",
   "metrics": {
     "contrast": {
-      "passing": 4,
-      "total": 13,
+      "passing": 12,
+      "total": 12,
       "matrix": [
         {
           "label": "action text on surface",
           "fg": "amber",
           "bg": "surface",
-          "ratio": 3.19,
-          "pass": false,
+          "ratio": 5.02,
+          "pass": true,
           "missing": false
         },
         {
           "label": "action text on page bg",
           "fg": "amber",
           "bg": "lightest",
-          "ratio": 3.05,
-          "pass": false,
+          "ratio": 4.81,
+          "pass": true,
           "missing": false
         },
         {
           "label": "white on action CTA",
           "fg": "#FFFFFF",
           "bg": "amber",
-          "ratio": 3.19,
-          "pass": false,
+          "ratio": 5.02,
+          "pass": true,
           "missing": false
         },
         {
           "label": "white on action hover",
           "fg": "#FFFFFF",
           "bg": "amber-hover",
-          "ratio": 5.02,
+          "ratio": 7.09,
           "pass": true,
           "missing": false
         },
@@ -41,32 +41,32 @@
           "label": "success on white",
           "fg": "success",
           "bg": "surface",
-          "ratio": 2.54,
-          "pass": false,
+          "ratio": 5.48,
+          "pass": true,
           "missing": false
         },
         {
           "label": "success on success-bg",
-          "fg": "success",
+          "fg": "success-deep",
           "bg": "success-bg",
-          "ratio": 2.24,
-          "pass": false,
+          "ratio": 6.78,
+          "pass": true,
           "missing": false
         },
         {
           "label": "danger on white",
           "fg": "danger",
           "bg": "surface",
-          "ratio": 3.67,
-          "pass": false,
+          "ratio": 4.83,
+          "pass": true,
           "missing": false
         },
         {
           "label": "danger on danger-bg",
-          "fg": "danger",
+          "fg": "danger-deep",
           "bg": "danger-bg",
-          "ratio": 3.06,
-          "pass": false,
+          "ratio": 5.39,
+          "pass": true,
           "missing": false
         },
         {
@@ -87,18 +87,10 @@
         },
         {
           "label": "input border vs surface (UI)",
-          "fg": "border",
+          "fg": "border-strong",
           "bg": "surface",
-          "ratio": 1.27,
-          "pass": false,
-          "missing": false
-        },
-        {
-          "label": "outline border vs surface (UI)",
-          "fg": "lighter",
-          "bg": "surface",
-          "ratio": 1.48,
-          "pass": false,
+          "ratio": 3.38,
+          "pass": true,
           "missing": false
         },
         {
@@ -109,12 +101,114 @@
           "pass": true,
           "missing": false
         }
-      ]
+      ],
+      "darkPassing": {
+        "count": 10,
+        "total": 10,
+        "matrix": [
+          {
+            "label": "action text on surface",
+            "fg": "amber",
+            "bg": "surface",
+            "ratio": 8.49,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "action text on page bg",
+            "fg": "amber",
+            "bg": "lightest",
+            "ratio": 9.16,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "ink on action CTA",
+            "fg": "#1C1917",
+            "bg": "amber",
+            "ratio": 8.14,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "ink on action hover",
+            "fg": "#1C1917",
+            "bg": "amber-hover",
+            "ratio": 10.48,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "success on white",
+            "fg": "success",
+            "bg": "surface",
+            "ratio": 9.48,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "success on success-bg",
+            "fg": "success-deep",
+            "bg": "success-bg",
+            "ratio": 0,
+            "pass": false,
+            "missing": true
+          },
+          {
+            "label": "danger on white",
+            "fg": "danger",
+            "bg": "surface",
+            "ratio": 6.59,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "danger on danger-bg",
+            "fg": "danger-deep",
+            "bg": "danger-bg",
+            "ratio": 0,
+            "pass": false,
+            "missing": true
+          },
+          {
+            "label": "mid text on surface",
+            "fg": "mid",
+            "bg": "surface",
+            "ratio": 6.86,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "light text on surface",
+            "fg": "light",
+            "bg": "surface",
+            "ratio": 7.11,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "input border vs surface (UI)",
+            "fg": "border-strong",
+            "bg": "surface",
+            "ratio": 4,
+            "pass": true,
+            "missing": false
+          },
+          {
+            "label": "sidebar-muted on sidebar (UI)",
+            "fg": "sidebar-muted",
+            "bg": "sidebar",
+            "ratio": 6.91,
+            "pass": true,
+            "missing": false
+          }
+        ]
+      }
     },
     "tokens": {
       "arbitraryValues": 1642,
       "rawPaletteUtilities": 134,
-      "hexLiterals": 24,
+      "hexLiterals": 25,
       "unpairedOutlineNone": 199,
       "focusVisible": 80,
       "darkClasses": 27,
@@ -131,16 +225,16 @@
       "serverPages": 14
     },
     "fonts": {
-      "fontsourceImports": 8,
-      "usesNextFont": false
+      "fontsourceImports": 0,
+      "usesNextFont": true
     }
   },
   "verdicts": {
-    "contrastBodyTextAA": false,
+    "contrastBodyTextAA": true,
     "noRawPalette": false,
     "noUnpairedOutlineNone": false,
     "routeLoadingStates": false,
     "asyncAnnounced": true,
-    "fontPipeline": false
+    "fontPipeline": true
   }
 }

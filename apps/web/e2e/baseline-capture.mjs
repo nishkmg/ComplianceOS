@@ -48,7 +48,7 @@ const viewports = process.argv.includes("--desktop-only")
   : VIEWPORTS;
 
 mkdirSync(OUT, { recursive: true });
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PLAYWRIGHT_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_EXECUTABLE } : {});
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
 
@@ -57,21 +57,28 @@ const failed = [];
 for (const v of viewports) {
   await page.setViewportSize({ width: v.width, height: v.height });
 
-  // Fresh login per viewport (session cookies are viewport-independent but keep it simple)
-  await page.goto(`${BASE}/login`, { waitUntil: "networkidle" });
+  // Fresh login per viewport
+  await ctx.clearCookies();
+  await page.goto(`${BASE}/login`, { waitUntil: "load", timeout: 60000 }).catch(async () => {
+    await page.goto(`${BASE}/login`, { waitUntil: "load", timeout: 60000 });
+  });
+  await page.getByLabel("Email").waitFor({ timeout: 45000 });
   await page.getByLabel("Email").fill("demo@complianceos.test");
   await page.getByLabel("Password").fill("demo123");
-  await page.getByRole("button", { name: /sign in/i }).click();
-  await page.waitForURL(/\/(dashboard|onboarding)/, { timeout: 20000 }).catch(() => {});
+  await page.getByRole("button", { name: /access account/i }).click();
+  await page.waitForURL(/\/(dashboard|onboarding)/, { timeout: 25000 }).catch(() => {});
+  const authed = page.url().includes("/dashboard") || page.url().includes("/onboarding");
 
   for (const route of ROUTES) {
-    if (route.auth && !page.url().includes("/dashboard") && !page.url().includes("/onboarding")) {
+    if (route.auth && !authed) {
       failed.push(`${route.label}:login-not-established`);
       continue;
     }
     try {
-      await page.goto(`${BASE}${route.path}`, { waitUntil: "networkidle", timeout: 25000 });
-      await page.waitForTimeout(600); // let client-side fetch settle
+      await page.goto(`${BASE}${route.path}`, { waitUntil: "load", timeout: 25000 }).catch(async () => {
+        await page.goto(`${BASE}${route.path}`, { waitUntil: "load", timeout: 25000 });
+      });
+      await page.waitForTimeout(800); // let client-side fetch settle
       const file = join(OUT, `${route.label}-${v.name}.png`);
       await page.screenshot({ path: file, fullPage: true });
       ok.push(`${route.label}@${v.name}`);

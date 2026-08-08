@@ -46,12 +46,19 @@ const contrast = (a, b) => {
   return +((l1 + 0.05) / (l2 + 0.05)).toFixed(2);
 };
 
-// Pull hex values from globals.css :root block (authoritative runtime tokens)
+// Pull hex values from tokens.css (@theme = light, [data-theme="dark"] = dark)
 const css = readFileSync(join(web, "app/globals.css"), "utf8");
-const rootBlock = (css.match(/:root\s*\{([\s\S]*?)\n\}/) || [])[1] || "";
-const tokens = {};
-for (const m of rootBlock.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-fA-F]{3,8})/g))
-  tokens[m[1].replace(/^color-/, "")] = m[2];
+const tokensCss = readFileSync(join(web, "styles/tokens.css"), "utf8");
+const themeBlock = (tokensCss.match(/@theme\s*\{([\s\S]*?)\n\}/) || [])[1] || "";
+const darkBlock = (tokensCss.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\n\}/) || [])[1] || "";
+const parse = (block) => {
+  const out = {};
+  for (const m of block.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-fA-F]{3,8})/g))
+    out[m[1].replace(/^color-/, "")] = m[2];
+  return out;
+};
+const tokens = parse(themeBlock);
+const darkTokens = parse(darkBlock);
 
 // Canonical AA checks (fg token name or literal, bg token name or literal)
 const checks = [
@@ -60,21 +67,33 @@ const checks = [
   ["white on action CTA", "#FFFFFF", "amber", "body"],
   ["white on action hover", "#FFFFFF", "amber-hover", "body"],
   ["success on white", "success", "surface", "body"],
-  ["success on success-bg", "success", "success-bg", "body"],
+  ["success on success-bg", "success-deep", "success-bg", "body"],
   ["danger on white", "danger", "surface", "body"],
-  ["danger on danger-bg", "danger", "danger-bg", "body"],
+  ["danger on danger-bg", "danger-deep", "danger-bg", "body"],
   ["mid text on surface", "mid", "surface", "body"],
   ["light text on surface", "light", "surface", "body"],
-  ["input border vs surface (UI)", "border", "surface", "ui"],
-  ["outline border vs surface (UI)", "lighter", "surface", "ui"],
+  ["input border vs surface (UI)", "border-strong", "surface", "ui"],
   ["sidebar-muted on sidebar (UI)", "sidebar-muted", "sidebar", "ui"],
 ];
-const resolveColor = (v) => (v.startsWith("#") ? v : tokens[v]);
+const resolveColor = (v, palette) => (v.startsWith("#") ? v : palette[v]);
 const matrix = checks.map(([label, fg, bg, kind]) => {
-  const ratio = contrast(resolveColor(fg), resolveColor(bg));
+  const ratio = contrast(resolveColor(fg, tokens), resolveColor(bg, tokens));
   const pass = kind === "body" ? ratio >= 4.5 : ratio >= 3;
-  return { label, fg, bg, ratio, pass, missing: !resolveColor(fg) || !resolveColor(bg) };
+  return { label, fg, bg, ratio, pass, missing: !resolveColor(fg, tokens) || !resolveColor(bg, tokens) };
 });
+const darkChecks = checks.map((c) =>
+  c[0].startsWith("white on action") ? [c[0].replace("white", "ink"), "#1C1917", c[2], "body"] : c
+);
+const darkMatrix = darkChecks.map(([label, fg, bg, kind]) => {
+  const f = resolveColor(fg, darkTokens);
+  const b = resolveColor(bg, darkTokens);
+  if (!f || !b) return { label, fg, bg, ratio: 0, pass: false, missing: true };
+  const ratio = contrast(f, b);
+  const pass = kind === "body" ? ratio >= 4.5 : ratio >= 3;
+  return { label, fg, bg, ratio, pass, missing: false };
+});
+const darkPassing = darkMatrix.filter((c) => c.pass && !c.missing).length;
+const darkTotal = darkMatrix.filter((c) => !c.missing).length;
 
 // ── Token discipline ──────────────────────────────────────────────────────
 const count = (re) =>
@@ -105,8 +124,10 @@ const clientPages = pages.filter((f) => /^["']use client["']/m.test(pageSrc(f)))
 const fontsourceImports = (css.match(/@import '@fontsource[^']+'/g) || []).length;
 const nextFont = /next\/font/.test(css) || /next\/font/.test(readFileSync(join(web, "app/layout.tsx"), "utf8"));
 
+const lightPassing = matrix.filter((c) => c.pass && !c.missing).length;
+const lightTotal = matrix.filter((c) => !c.missing).length;
 const metrics = {
-  contrast: { passing: matrix.filter((c) => c.pass && !c.missing).length, total: matrix.length, matrix },
+  contrast: { passing: lightPassing, total: lightTotal, matrix, darkPassing: { count: darkPassing, total: darkTotal, matrix: darkMatrix } },
   tokens: {
     arbitraryValues,
     rawPaletteUtilities: rawPalette,
@@ -130,7 +151,7 @@ const metrics = {
 };
 
 const verdicts = {
-  contrastBodyTextAA: metrics.contrast.passing === metrics.contrast.total,
+  contrastBodyTextAA: metrics.contrast.passing === metrics.contrast.total && metrics.contrast.darkPassing.count === metrics.contrast.darkPassing.total,
   noRawPalette: metrics.tokens.rawPaletteUtilities === 0,
   noUnpairedOutlineNone: metrics.tokens.unpairedOutlineNone === 0,
   routeLoadingStates: metrics.states.loadingFiles === metrics.states.routes,
@@ -143,8 +164,10 @@ writeFileSync(out, JSON.stringify({ generatedAt: new Date().toISOString(), metri
 // ── Human summary ─────────────────────────────────────────────────────────
 const fail = (c) => (c.pass ? "PASS" : c.missing ? "MISSING-TOKEN" : "FAIL");
 console.log("── DESIGN AUDIT ─────────────────────────────────────");
-console.log("Contrast:");
+console.log("Contrast (light):");
 for (const c of matrix) console.log(`  ${fail(c).padEnd(13)} ${String(c.ratio).padStart(5)}  ${c.label}`);
+console.log("Contrast (dark):");
+for (const c of darkMatrix) console.log(`  ${fail(c).padEnd(13)} ${String(c.ratio).padStart(5)}  ${c.label}`);
 console.log("\nTokens:");
 for (const [k, v] of Object.entries(metrics.tokens)) console.log(`  ${k.padEnd(22)} ${v}`);
 console.log("\nStates:");

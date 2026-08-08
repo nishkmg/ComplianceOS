@@ -1,5 +1,6 @@
 // packages/db/src/seed/demo-data.ts
 import { db } from "../index";
+import bcrypt from "bcryptjs";
 import { users, userTenants } from "../schema/users";
 import { tenants } from "../schema/tenants";
 import { fiscalYears } from "../schema/fiscal-years";
@@ -55,6 +56,7 @@ export async function seedDemoData() {
     id: DEMO_USER_ID,
     email: "demo@complianceos.test",
     name: "Demo User",
+    passwordHash: await bcrypt.hash("demo123", 10),
   });
 
   // 2. Create demo tenant

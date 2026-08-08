@@ -1,0 +1,138 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   TOKENS — single source of truth for the design system.
+   Tailwind v4 emits :root vars from @theme; `[data-theme="dark"]` overrides
+   the same vars, so utilities AND hand-written component CSS flip together.
+   Phase 1 of the 2026-08 UI overhaul — values are AA-compliant by construction
+   (see scripts/design-audit.mjs contrast matrix).
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Fonts — set by next/font in app/layout.tsx (IBM Plex family) */
+  --font-display: var(--font-display-family), ui-serif, Georgia, serif;
+  --font-ui: var(--font-ui-family), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-family), ui-monospace, "SF Mono", monospace;
+  --font-devanagari: var(--font-devanagari-family), ui-sans-serif, system-ui, sans-serif;
+
+  /* ── Accent (amber) ────────────────────────────────────────────────
+     --color-amber        action ink / interactive text  (#B45309, 5.02:1 on white)
+     --color-amber-hover  action hover / pressed          (#92400E, 7.09:1)
+     --color-amber-bright decorative fills, focus accents (#D97706 — never text) */
+  --color-amber: #B45309;
+  --color-amber-hover: #92400E;
+  --color-amber-bright: #D97706;
+  --color-amber-soft: rgba(217, 119, 6, 0.08);
+
+  /* ── Semantic states ─────────────────────────────────────────────── */
+  --color-success: #047857;
+  --color-success-deep: #065F46;
+  --color-success-bg: #D1FAE5;
+  --color-danger: #DC2626;
+  --color-danger-deep: #B91C1C;
+  --color-danger-bg: #FFE4E6;
+
+  /* ── Neutrals (zinc-based) ───────────────────────────────────────── */
+  --color-dark: #18181B;
+  --color-mid: #52525B;
+  --color-light: #71717A;
+  --color-lighter: #D4D4D8;
+  --color-lightest: #FAFAFA;
+
+  /* ── Surfaces ────────────────────────────────────────────────────── */
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #FAFAFA;
+  --color-sidebar: #18181B;
+  --color-sidebar-muted: #A1A1AA;
+  --color-sidebar-dim: #D4D4D8;
+
+  /* ── Borders ───────────────────────────────────────────────────────
+     --color-border         decorative hairlines (cards, dividers)
+     --color-border-strong  interactive boundaries (inputs, focus) ≥3:1 */
+  --color-border: #E4E4E7;
+  --color-border-strong: #8B8B93;
+  --color-outline: #D4D4D8;
+
+  /* ── Focus ───────────────────────────────────────────────────────── */
+  --color-focus: #B45309;
+
+  /* ── Font sizes (existing scale, kept) ───────────────────────────── */
+  --text-ui-md: 14px;
+  --text-ui-sm: 13px;
+  --text-ui-xs: 12px;
+  --text-ui-lg: 16px;
+  --text-mono-sm: 12px;
+  --text-mono-md: 14px;
+  --text-mono-lg: 16px;
+  --text-marketing-hero: 64px;
+  --text-marketing-xl: 48px;
+  --text-display-xl: 36px;
+  --text-display-lg: 24px;
+
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.15;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  --spacing-space-48: 48px;
+  --spacing-space-64: 64px;
+  --spacing-space-96: 96px;
+  --spacing-space-128: 128px;
+  --spacing-gutter-desktop: 24px;
+  --spacing-gutter-wide: 32px;
+  --spacing-margin-mobile: 16px;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-screenshot: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Dark theme ─────────────────────────────────────────────────────────────
+   Set via data-theme="dark" on <html> (theme-toggle + no-flash bootstrap).
+   Contrast-verified pairs (see contrast math in scripts/design-audit.mjs). */
+[data-theme="dark"] {
+  --color-amber: #F59E0B;
+  --color-amber-hover: #FBBF24;
+  --color-amber-bright: #D97706;
+  --color-amber-soft: rgba(245, 158, 11, 0.1);
+
+  --color-success: #34D399;
+  --color-success-deep: #6EE7B7;
+  --color-success-bg: rgba(6, 78, 59, 0.35);
+  --color-danger: #F87171;
+  --color-danger-deep: #FCA5A5;
+  --color-danger-bg: rgba(127, 29, 29, 0.35);
+
+  --color-dark: #EDEDF0;
+  --color-mid: #9E9EA8;
+  --color-light: #A1A1AA;
+  --color-lighter: #3F3F46;
+  --color-lightest: #0B0B0D;
+
+  --color-surface: #151518;
+  --color-surface-muted: #1C1C20;
+  --color-sidebar: #18181B;
+  --color-sidebar-muted: #A1A1AA;
+  --color-sidebar-dim: #D4D4D8;
+
+  --color-border: #2A2A30;
+  --color-border-strong: #75757F;
+  --color-outline: #3F3F46;
+
+  --color-focus: #F59E0B;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+/* Color-scheme so form controls/scrollbars follow the theme */
+:root { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }

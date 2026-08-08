@@ -15,3 +15,4 @@ homepage-after-fix.png
 .vercel
 .env.vercel
 .env.test
+e2e/__baseline__/

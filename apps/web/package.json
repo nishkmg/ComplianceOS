@@ -14,9 +14,6 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.0",
-    "@fontsource/dm-mono": "^5.2.7",
-    "@fontsource/playfair-display": "^5.2.8",
-    "@fontsource/syne": "^5.2.7",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-dialog": "^1.1.15",
     "@react-pdf/renderer": "^4.5.1",
