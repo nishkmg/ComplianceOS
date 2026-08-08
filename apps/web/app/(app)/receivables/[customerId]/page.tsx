@@ -8,60 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { api } from "@/lib/api";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
-
-interface CustomerData {
-  name: string; gstin: string; address: string; email: string;
-  totalInvoiced: number; outstanding: number; overdue: number; status: string; age: number;
-}
-
-interface InvoiceRow {
-  id: string; number: string; date: string; dueDate: string;
-  amount: number; balance: number; status: string;
-}
-
-const customers: Record<string, CustomerData> = {
-  reliance: {
-    name: "Reliance Industries Ltd.", gstin: "27AAACA6873Q1Z2",
-    address: "Maker Chambers IV, 222 Nariman Point, Mumbai, Maharashtra — 400021",
-    email: "billing@ril.com", totalInvoiced: 4250000, outstanding: 850000, overdue: 125000, status: "Active", age: 124,
-  },
-  acme: {
-    name: "Acme Corporation", gstin: "09AABCT1234E1ZP",
-    address: "12 Business Park, Andheri East, Mumbai — 400093",
-    email: "accounts@acmecorp.in", totalInvoiced: 1850000, outstanding: 412000, overdue: 180000, status: "Active", age: 89,
-  },
-  techsol: {
-    name: "TechSolutions India", gstin: "29AABCT5678K1ZR",
-    address: "Whitefield Main Road, Bengaluru — 560066",
-    email: "finance@techsol.in", totalInvoiced: 980000, outstanding: 245000, overdue: 0, status: "Active", age: 45,
-  },
-  delta: {
-    name: "Delta Systems", gstin: "33AABCT9012K1ZL",
-    address: "Cyber City, Hitech City, Hyderabad — 500081",
-    email: "payables@deltasys.in", totalInvoiced: 750000, outstanding: 195000, overdue: 45000, status: "Active", age: 62,
-  },
-};
-
-const invoicesByCustomer: Record<string, InvoiceRow[]> = {
-  reliance: [
-    { id: "1", number: "INV-2026-27-001", date: "15 Apr 2026", dueDate: "15 May 2026", amount: 200600, balance: 0, status: "paid" },
-    { id: "2", number: "INV-2026-27-003", date: "10 May 2026", dueDate: "09 Jun 2026", amount: 150000, balance: 150000, status: "overdue" },
-    { id: "101", number: "INV-2025-26-001", date: "12 Jan 2026", dueDate: "11 Feb 2026", amount: 180000, balance: 0, status: "paid" },
-  ],
-  acme: [
-    { id: "3", number: "INV-2026-27-002", date: "18 Apr 2026", dueDate: "18 May 2026", amount: 412000, balance: 250000, status: "partial" },
-    { id: "102", number: "INV-2025-26-002", date: "10 Nov 2025", dueDate: "10 Dec 2025", amount: 310000, balance: 0, status: "paid" },
-  ],
-  techsol: [
-    { id: "4", number: "INV-2026-27-005", date: "25 Apr 2026", dueDate: "25 May 2026", amount: 245000, balance: 245000, status: "pending" },
-  ],
-  delta: [
-    { id: "5", number: "INV-2026-27-004", date: "10 Apr 2026", dueDate: "10 May 2026", amount: 195000, balance: 195000, status: "overdue" },
-    { id: "103", number: "INV-2025-26-003", date: "05 Aug 2025", dueDate: "04 Sep 2025", amount: 280000, balance: 0, status: "paid" },
-  ],
-};
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -70,16 +19,37 @@ export default function CustomerDetailPage() {
   const params = useParams();
   const router = useRouter();
   const customerId = params.customerId as string;
+  const customerName = decodeURIComponent(customerId);
 
   const [activeTab, setActiveTab] = useState("Invoices");
-  const customer = customers[customerId];
+  const { data: customerData, isLoading } = api.receivables.customer.useQuery({ customerName });
 
-  // FY-aware invoices — filter by FY prefix in invoice number
-  const allInvoices = invoicesByCustomer[customerId] ?? [];
-  const invoices = useMemo(() =>
-    allInvoices.filter(inv => inv.number.includes(activeFy)),
-    [allInvoices, activeFy]
-  );
+  const customer = customerData
+    ? {
+        name: customerData.customerName,
+        gstin: "",
+        address: "",
+        email: "",
+        totalInvoiced: customerData.outstandingInvoices.reduce((s, i) => s + i.grandTotal, 0),
+        outstanding: customerData.totalOutstanding,
+        overdue: customerData.outstandingInvoices.reduce(
+          (s, i) => s + (new Date(i.dueDate) < new Date() ? i.outstandingAmount : 0),
+          0,
+        ),
+        status: "Active",
+        age: customerData.outstandingInvoices.length,
+      }
+    : null;
+
+  const invoices = (customerData?.outstandingInvoices ?? []).map((inv) => ({
+    id: inv.id,
+    number: inv.invoiceNumber,
+    date: new Date(inv.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    dueDate: new Date(inv.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    amount: inv.grandTotal,
+    balance: inv.outstandingAmount,
+    status: inv.status,
+  }));
 
   if (!customer) {
     return (
@@ -108,7 +78,7 @@ export default function CustomerDetailPage() {
       <Badge variant="success">Active</Badge>
     </div>
     <p className="font-ui text-[13px] text-secondary">
-            {customer.gstin} · {customer.email} · {customer.age} days on ledger
+            {customer.gstin} · {customer.email} · {customer.age} open invoices
           </p>
         </div>
         <div className="flex gap-3">
@@ -214,13 +184,13 @@ export default function CustomerDetailPage() {
                   </td>
                   <td className="py-4 px-6">
                     <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
-                      inv.status === "paid"
-                        ? "bg-success-bg text-success border-success/20"
-                        : inv.status === "overdue"
+                      inv.status === "paid" || inv.status === "draft"
+                        ? "bg-surface-muted text-mid border-border"
+                        : inv.balance > 0
                           ? "bg-danger-bg text-danger-deep border-danger/20"
-                          : "bg-surface-muted text-mid border-border"
+                          : "bg-success-bg text-success-deep border-success/20"
                     }`}>
-                      {inv.status}
+                      {inv.status === "partially_paid" ? "partially paid" : inv.status}
                     </span>
                   </td>
                 </tr>

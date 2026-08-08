@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T16:10:07.877Z",
+  "generatedAt": "2026-08-08T18:09:17.348Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,7 +206,7 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 1646,
+      "arbitraryValues": 1643,
       "rawPaletteUtilities": 124,
       "hexLiterals": 25,
       "unpairedOutlineNone": 200,
@@ -217,7 +217,7 @@
     "states": {
       "routes": 97,
       "loadingFiles": 1,
-      "pagesWithLoading": 21,
+      "pagesWithLoading": 22,
       "pagesWithErrorHandling": 5,
       "pagesWithEmptyState": 28,
       "ariaLiveAnnouncers": 7,

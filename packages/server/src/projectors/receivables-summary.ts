@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { receivablesSummary } = _db;
+const { receivablesSummary, eventStore } = _db;
 import type { Projector } from "./types.js";
 
 function computeAging(
@@ -41,187 +41,81 @@ export const ReceivablesProjector: Projector = {
     const customerName = payload.customerName ?? "";
     if (!customerName) return;
 
-    // Fetch current row
-    const existing = await (db as any)
-      .select()
-      .from(receivablesSummary)
+    // Recompute this customer's row from the full event log — the projector
+    // must be replay-idempotent (account-balance style), not incremental:
+    // incremental adds double-count on event replay.
+    const events = await (db as any).select()
+      .from(eventStore)
       .where(
-        eq(receivablesSummary.tenantId, event.tenantId),
-        eq(receivablesSummary.customerName, customerName),
+        and(
+          eq(eventStore.tenantId, event.tenantId),
+          sql`${eventStore.payload}->>'customerName' = ${customerName}`,
+        ),
       )
-      .limit(1);
+      .orderBy(eventStore.sequence);
 
-    const current = existing[0];
+    let total = 0;
+    let buckets = { current030: 0, aging3160: 0, aging6190: 0, aging90Plus: 0 };
+    let customerGstin: string | null = null;
+    let lastPaymentDate: string | null = null;
+    let lastPaymentAmount: string | null = null;
 
-    if (event.eventType === "invoice_posted") {
-      const amount = parseFloat(payload.grandTotal || "0");
-      const existingTotal = parseFloat(current?.totalOutstanding || "0");
-      const existingCurrent030 = parseFloat(current?.current030 || "0");
-      const existing3160 = parseFloat(current?.aging3160 || "0");
-      const existing6190 = parseFloat(current?.aging6190 || "0");
-      const existing90Plus = parseFloat(current?.aging90Plus || "0");
-
-      const aging = computeAging(payload.dueDate, payload.grandTotal || "0");
-      const newCurrent030 = existingCurrent030 + parseFloat(aging.current030);
-      const new3160 = existing3160 + parseFloat(aging.aging3160);
-      const new6190 = existing6190 + parseFloat(aging.aging6190);
-      const new90Plus = existing90Plus + parseFloat(aging.aging90Plus);
-
-      await (db as any)
-        .insert(receivablesSummary)
-        .values({
-          tenantId: event.tenantId,
-          customerName,
-          customerGstin: payload.customerGstin ?? null,
-          totalOutstanding: String((existingTotal + amount).toFixed(2)),
-          current030: String(newCurrent030.toFixed(2)),
-          aging3160: String(new3160.toFixed(2)),
-          aging6190: String(new6190.toFixed(2)),
-          aging90Plus: String(new90Plus.toFixed(2)),
-          lastPaymentDate: null,
-          lastPaymentAmount: null,
-        })
-        .onConflictDoUpdate({
-          target: [receivablesSummary.tenantId, receivablesSummary.customerName],
-          set: {
-            customerGstin: payload.customerGstin ?? current?.customerGstin,
-            totalOutstanding: String((existingTotal + amount).toFixed(2)),
-            current030: String(newCurrent030.toFixed(2)),
-            aging3160: String(new3160.toFixed(2)),
-            aging6190: String(new6190.toFixed(2)),
-            aging90Plus: String(new90Plus.toFixed(2)),
-          },
-        });
-    } else if (event.eventType === "payment_recorded") {
-      const amount = parseFloat(payload.amount || "0");
-      const existingTotal = parseFloat(current?.totalOutstanding || "0");
-      const existingCurrent030 = parseFloat(current?.current030 || "0");
-      const existing3160 = parseFloat(current?.aging3160 || "0");
-      const existing6190 = parseFloat(current?.aging6190 || "0");
-      const existing90Plus = parseFloat(current?.aging90Plus || "0");
-
-      // Reduce from current bucket first, then aging
-      const newTotal = Math.max(0, existingTotal - amount);
-      let remaining = amount;
-      let newCurrent030 = existingCurrent030;
-      let new3160 = existing3160;
-      let new6190 = existing6190;
-      let new90Plus = existing90Plus;
-
-      // Apply payment to 90+ first, then 61-90, then 31-60, then current
-      if (remaining > 0 && existing90Plus > 0) {
-        const reduction = Math.min(remaining, existing90Plus);
-        new90Plus = Math.max(0, existing90Plus - reduction);
-        remaining -= reduction;
+    for (const e of events) {
+      const p = e.payload as Record<string, any>;
+      if (e.eventType === "invoice_posted") {
+        const amount = parseFloat(p.grandTotal || "0");
+        total += amount;
+        const aging = computeAging(p.dueDate ?? null, p.grandTotal || "0");
+        buckets.current030 += parseFloat(aging.current030);
+        buckets.aging3160 += parseFloat(aging.aging3160);
+        buckets.aging6190 += parseFloat(aging.aging6190);
+        buckets.aging90Plus += parseFloat(aging.aging90Plus);
+        customerGstin = customerGstin ?? p.customerGstin ?? null;
+      } else if (e.eventType === "payment_recorded") {
+        const amount = parseFloat(p.amount || "0");
+        total = Math.max(0, total - amount);
+        // reduce oldest buckets first
+        let remaining = amount;
+        for (const key of ["aging90Plus", "aging6190", "aging3160", "current030"] as const) {
+          if (remaining <= 0) break;
+          const reduce = Math.min(remaining, buckets[key]);
+          buckets[key] = Math.max(0, buckets[key] - reduce);
+          remaining -= reduce;
+        }
+        lastPaymentDate = p.date ? String(p.date).slice(0, 10) : null;
+        lastPaymentAmount = String(amount.toFixed(2));
+      } else if (e.eventType === "invoice_voided") {
+        const amount = parseFloat(p.grandTotal || p.amount || "0");
+        total = Math.max(0, total - amount);
       }
-      if (remaining > 0 && existing6190 > 0) {
-        const reduction = Math.min(remaining, existing6190);
-        new6190 = Math.max(0, existing6190 - reduction);
-        remaining -= reduction;
-      }
-      if (remaining > 0 && existing3160 > 0) {
-        const reduction = Math.min(remaining, existing3160);
-        new3160 = Math.max(0, existing3160 - reduction);
-        remaining -= reduction;
-      }
-      if (remaining > 0 && existingCurrent030 > 0) {
-        const reduction = Math.min(remaining, existingCurrent030);
-        newCurrent030 = Math.max(0, existingCurrent030 - reduction);
-        remaining -= reduction;
-      }
-
-      await (db as any)
-        .insert(receivablesSummary)
-        .values({
-          tenantId: event.tenantId,
-          customerName,
-          customerGstin: current?.customerGstin ?? null,
-          totalOutstanding: String(newTotal.toFixed(2)),
-          current030: String(newCurrent030.toFixed(2)),
-          aging3160: String(new3160.toFixed(2)),
-          aging6190: String(new6190.toFixed(2)),
-          aging90Plus: String(new90Plus.toFixed(2)),
-          lastPaymentDate: payload.date ? new Date(payload.date) : null,
-          lastPaymentAmount: String(amount.toFixed(2)),
-        })
-        .onConflictDoUpdate({
-          target: [receivablesSummary.tenantId, receivablesSummary.customerName],
-          set: {
-            totalOutstanding: String(newTotal.toFixed(2)),
-            current030: String(newCurrent030.toFixed(2)),
-            aging3160: String(new3160.toFixed(2)),
-            aging6190: String(new6190.toFixed(2)),
-            aging90Plus: String(new90Plus.toFixed(2)),
-            lastPaymentDate: payload.date ? new Date(payload.date) : null,
-            lastPaymentAmount: String(amount.toFixed(2)),
-          },
-        });
-    } else if (event.eventType === "payment_voided") {
-      // payment_voided adds back to outstanding (same logic as payment_recorded in reverse)
-      const amount = parseFloat(payload.amount || "0");
-      const existingTotal = parseFloat(current?.totalOutstanding || "0");
-      const existingCurrent030 = parseFloat(current?.current030 || "0");
-      const existing3160 = parseFloat(current?.aging3160 || "0");
-      const existing6190 = parseFloat(current?.aging6190 || "0");
-      const existing90Plus = parseFloat(current?.aging90Plus || "0");
-
-      const newTotal = existingTotal + amount;
-      // Add back to oldest bucket (90+ first for void reversal)
-      const new90Plus = existing90Plus + amount;
-
-      await (db as any)
-        .insert(receivablesSummary)
-        .values({
-          tenantId: event.tenantId,
-          customerName,
-          customerGstin: current?.customerGstin ?? null,
-          totalOutstanding: String(newTotal.toFixed(2)),
-          current030: String(existingCurrent030.toFixed(2)),
-          aging3160: String(existing3160.toFixed(2)),
-          aging6190: String(existing6190.toFixed(2)),
-          aging90Plus: String(new90Plus.toFixed(2)),
-          lastPaymentDate: null,
-          lastPaymentAmount: null,
-        })
-        .onConflictDoUpdate({
-          target: [receivablesSummary.tenantId, receivablesSummary.customerName],
-          set: {
-            totalOutstanding: String(newTotal.toFixed(2)),
-            aging90Plus: String(new90Plus.toFixed(2)),
-          },
-        });
-    } else if (event.eventType === "invoice_voided") {
-      const amount = parseFloat(payload.grandTotal || "0");
-      const existingTotal = parseFloat(current?.totalOutstanding || "0");
-      const existingCurrent030 = parseFloat(current?.current030 || "0");
-      const existing3160 = parseFloat(current?.aging3160 || "0");
-      const existing6190 = parseFloat(current?.aging6190 || "0");
-      const existing90Plus = parseFloat(current?.aging90Plus || "0");
-
-      const newTotal = Math.max(0, existingTotal - amount);
-      const newCurrent030 = Math.max(0, existingCurrent030 - amount);
-
-      await (db as any)
-        .insert(receivablesSummary)
-        .values({
-          tenantId: event.tenantId,
-          customerName,
-          customerGstin: current?.customerGstin ?? null,
-          totalOutstanding: String(newTotal.toFixed(2)),
-          current030: String(newCurrent030.toFixed(2)),
-          aging3160: String(existing3160.toFixed(2)),
-          aging6190: String(existing6190.toFixed(2)),
-          aging90Plus: String(existing90Plus.toFixed(2)),
-          lastPaymentDate: null,
-          lastPaymentAmount: null,
-        })
-        .onConflictDoUpdate({
-          target: [receivablesSummary.tenantId, receivablesSummary.customerName],
-          set: {
-            totalOutstanding: String(newTotal.toFixed(2)),
-            current030: String(newCurrent030.toFixed(2)),
-          },
-        });
     }
+
+    await (db as any)
+      .insert(receivablesSummary)
+      .values({
+        tenantId: event.tenantId,
+        customerName,
+        customerGstin,
+        totalOutstanding: String(total.toFixed(2)),
+        current030: String(buckets.current030.toFixed(2)),
+        aging3160: String(buckets.aging3160.toFixed(2)),
+        aging6190: String(buckets.aging6190.toFixed(2)),
+        aging90Plus: String(buckets.aging90Plus.toFixed(2)),
+        lastPaymentDate,
+        lastPaymentAmount,
+      })
+      .onConflictDoUpdate({
+        target: [receivablesSummary.tenantId, receivablesSummary.customerName],
+        set: {
+          customerGstin,
+          totalOutstanding: String(total.toFixed(2)),
+          current030: String(buckets.current030.toFixed(2)),
+          aging3160: String(buckets.aging3160.toFixed(2)),
+          aging6190: String(buckets.aging6190.toFixed(2)),
+          aging90Plus: String(buckets.aging90Plus.toFixed(2)),
+          lastPaymentDate,
+          lastPaymentAmount,
+        },
+      });
   },
 };

@@ -23,11 +23,13 @@ export async function appendEvent(
   payload: Record<string, unknown>,
   actorId: string,
 ): Promise<{ id: string; sequence: bigint }> {
-  // Compute next sequence for this aggregate (sequence per aggregate)
+  // Sequence is global per tenant (cross-aggregate order must be defined —
+  // projectors track a single per-tenant cursor; per-aggregate sequences
+  // made payment_recorded/invoice_posted order arbitrary).
   const maxResult = await db
     .select({ maxSeq: max(eventStore.sequence) })
     .from(eventStore)
-    .where(eq(eventStore.aggregateId, aggregateId));
+    .where(eq(eventStore.tenantId, tenantId));
   const nextSequence = (maxResult[0]?.maxSeq ?? 0n) + 1n;
 
   try {
@@ -43,7 +45,7 @@ export async function appendEvent(
 
     return result[0];
   } catch (err: unknown) {
-    // If unique constraint on (aggregate_id, sequence) was violated,
+    // If unique constraint on (tenant_id, sequence) was violated,
     // a retry tried to re-append the same sequence. Return existing event.
     const pgErr = err as { code?: string };
     if (pgErr?.code === '23505') {
@@ -52,7 +54,7 @@ export async function appendEvent(
         .from(eventStore)
         .where(
           and(
-            eq(eventStore.aggregateId, aggregateId),
+            eq(eventStore.tenantId, tenantId),
             eq(eventStore.sequence, nextSequence),
           ),
         )

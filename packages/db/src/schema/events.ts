@@ -16,7 +16,7 @@ export const eventStore = pgTable("event_store", {
   actorId: uuid("actor_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
-  uniqueIndex("event_store_aggregate_id_sequence_unique").on(table.aggregateId, table.sequence),
+  uniqueIndex("event_store_tenant_id_sequence_unique").on(table.tenantId, table.sequence),
   index("event_store_tenant_id_idx").on(table.tenantId),
   index("event_store_sequence_idx").on(table.sequence),
 ]);

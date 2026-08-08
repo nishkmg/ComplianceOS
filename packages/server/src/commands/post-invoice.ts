@@ -139,10 +139,28 @@ export async function postInvoice(
     .where(eq(invoices.id, invoiceId));
 
   // Append event
+  // Snapshot the invoice on the event — projectors (receivables, invoice-view)
+  // rely on these fields; a thin { invoiceId, journalEntryId, postedAt }
+  // payload made cross-aggregate projections impossible.
   await appendEvent(db, tenantId, "invoice", invoiceId, "invoice_posted", {
     invoiceId,
     journalEntryId: jeResult.entryId,
     postedAt: new Date().toISOString(),
+    date: invoice[0].date,
+    dueDate: invoice[0].dueDate,
+    invoiceNumber: invoice[0].invoiceNumber,
+    customerName: invoice[0].customerName,
+    customerGstin: invoice[0].customerGstin ?? null,
+    customerEmail: invoice[0].customerEmail ?? null,
+    customerState: invoice[0].customerState ?? null,
+    status: "sent",
+    subtotal: String(invoice[0].subtotal),
+    cgstTotal: String(invoice[0].cgstTotal),
+    sgstTotal: String(invoice[0].sgstTotal),
+    igstTotal: String(invoice[0].igstTotal),
+    discountTotal: String(invoice[0].discountTotal),
+    grandTotal: String(invoice[0].grandTotal),
+    fiscalYear: invoice[0].fiscalYear,
   }, actorId);
 
   return { invoiceId, journalEntryId: jeResult.entryId };

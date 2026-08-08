@@ -178,6 +178,32 @@ async function processProjector(projector: Projector, tenantId: string): Promise
     });
   }
 }
+/**
+ * On-demand projector replay for a single tenant (demo seed + ops scripts).
+ * Runs every projector in batches until all pending events are caught up.
+ * Safe to re-run — projectors are idempotent upserts driven by sequence.
+ */
+export async function runProjectorsForTenant(tenantId: string, maxBatches = 200): Promise<void> {
+  for (let round = 0; round < maxBatches; round++) {
+    let progressed = false;
+    for (const projector of projectors) {
+      const [before] = await db
+        .select({ lastProcessedSequence: projectorState.lastProcessedSequence })
+        .from(projectorState)
+        .where(and(eq(projectorState.tenantId, tenantId), eq(projectorState.projectorName, projector.name)))
+        .limit(1);
+      await processProjector(projector, tenantId);
+      const [after] = await db
+        .select({ lastProcessedSequence: projectorState.lastProcessedSequence })
+        .from(projectorState)
+        .where(and(eq(projectorState.tenantId, tenantId), eq(projectorState.projectorName, projector.name)))
+        .limit(1);
+      if ((after?.lastProcessedSequence ?? "0") !== (before?.lastProcessedSequence ?? "0")) progressed = true;
+    }
+    if (!progressed) break;
+  }
+}
+
 
 let lastProcessedAt = Date.now();
 let lastEventAt: string | null = null;
@@ -376,9 +402,13 @@ const healthServer = createServer((req, res) => {
 });
 
 const PORT = parseInt(process.env.PROJECTOR_PORT ?? "3100", 10);
-healthServer.listen(PORT, () => {
-  logger.info(`[Projector Worker] Health check listening`, { port: PORT });
-});
+
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
+  healthServer.listen(PORT, () => {
+    logger.info(`[Projector Worker] Health check listening`, { port: PORT });
+  });
+}
 
 async function shutdown(signal: string) {
   shuttingDown = true;
@@ -389,7 +419,8 @@ async function shutdown(signal: string) {
   setTimeout(() => process.exit(1), 10_000).unref();
 }
 
-process.on("SIGTERM", () => void shutdown("SIGTERM"));
-process.on("SIGINT", () => void shutdown("SIGINT"));
-
-main().catch((err) => logger.error("[Projector Worker] Fatal error", err as Error));
+if (isMain) {
+  process.on("SIGTERM", () => void shutdown("SIGTERM"));
+  process.on("SIGINT", () => void shutdown("SIGINT"));
+  main().catch((err) => logger.error("[Projector Worker] Fatal error", err as Error));
+}

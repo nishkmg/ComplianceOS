@@ -19,6 +19,17 @@ export const InvoiceViewProjector: Projector = {
     const payload = event.payload as any;
     if (!payload.invoiceId) return;
 
+    // invoice_posted carries only { invoiceId, journalEntryId, postedAt } —
+    // update status on the row created by invoice_created instead of
+    // delete+insert (which would null the date columns).
+    if (event.eventType === "invoice_posted") {
+      await (db as any)
+        .update(invoiceView)
+        .set({ status: "sent", updatedAt: new Date() })
+        .where(eq(invoiceView.invoiceId, payload.invoiceId));
+      return;
+    }
+
     // Delete existing row (idempotent upsert via delete+insert)
     await (db as any).delete(invoiceView).where(
       eq(invoiceView.invoiceId, payload.invoiceId),

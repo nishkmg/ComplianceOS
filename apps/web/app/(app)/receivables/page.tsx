@@ -6,61 +6,43 @@ import { Icon } from '@/components/ui/icon';
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { api } from "@/lib/api";
+import { KpiTile } from "@/components/ui/kpi-tile";
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-interface AgingBucket { label: string; amount: number; percentage: number }
-interface DebtorRow { id: string; name: string; amount: number; status: string }
-
-const agingByFy: Record<string, AgingBucket[]> = {
-  '2026-27': [
-    { label: "Current",    amount: 1245000, percentage: 45 },
-    { label: "1-30 Days",  amount: 845200,  percentage: 30 },
-    { label: "31-60 Days", amount: 412040,  percentage: 15 },
-    { label: "61-90 Days", amount: 245000,  percentage: 8 },
-    { label: "> 90 Days",  amount: 45000,   percentage: 2 },
-  ],
-  '2025-26': [
-    { label: "Current",    amount: 980000, percentage: 40 },
-    { label: "1-30 Days",  amount: 620000, percentage: 25 },
-    { label: "31-60 Days", amount: 380000, percentage: 16 },
-    { label: "61-90 Days", amount: 210000, percentage: 9 },
-    { label: "> 90 Days",  amount: 85000,  percentage: 10 },
-  ],
-};
-
-const debtorsByFy: Record<string, DebtorRow[]> = {
-  '2026-27': [
-    { id: "reliance", name: "Reliance Industries Ltd.", amount: 850000, status: "partial" },
-    { id: "acme",     name: "Acme Corporation",         amount: 412000, status: "overdue" },
-    { id: "techsol",  name: "TechSolutions India",      amount: 245000, status: "pending" },
-  ],
-  '2025-26': [
-    { id: "reliance", name: "Reliance Industries Ltd.", amount: 620000, status: "pending" },
-    { id: "acme",     name: "Acme Corporation",         amount: 380000, status: "overdue" },
-    { id: "delta",    name: "Delta Systems",            amount: 195000, status: "partial" },
-  ],
-};
-
-// ─── Page Component ───────────────────────────────────────────────────────────
-
-export default function ReceivablesSummaryPage() {
+export default function ReceivablesPage() {
   const { activeFy } = useFiscalYear();
-  const [loading, setLoading] = useState(true);
+  const { data: aging, isLoading: agingLoading } = api.receivables.aging.useQuery();
+  const { data: summaries, isLoading: summaryLoading } = api.receivables.summary.useQuery();
+  const loading = agingLoading || summaryLoading;
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+  const pct = (part: number, total: number) => (total > 0 ? Math.round((part / total) * 100) : 0);
+  const agingBuckets = aging
+    ? [
+        { label: "0-30 Days", amount: aging.current030, percentage: pct(aging.current030, aging.total) },
+        { label: "31-60 Days", amount: aging.aging3160, percentage: pct(aging.aging3160, aging.total) },
+        { label: "61-90 Days", amount: aging.aging6190, percentage: pct(aging.aging6190, aging.total) },
+        { label: "> 90 Days", amount: aging.aging90Plus, percentage: pct(aging.aging90Plus, aging.total) },
+      ]
+    : [];
 
-  const agingBuckets = agingByFy[activeFy] ?? agingByFy['2026-27'];
-  const topDebtors = debtorsByFy[activeFy] ?? debtorsByFy['2026-27'];
+  const totalOutstanding = aging?.total ?? 0;
+  const totalOverdue = aging ? aging.aging3160 + aging.aging6190 + aging.aging90Plus : 0;
+  const unpaidCount = (summaries ?? []).filter((r) => r.totalOutstanding > 0).length;
 
-  const avgCollectionPeriod: Record<string, number> = { '2026-27': 24, '2025-26': 28 };
-  const avgDays = avgCollectionPeriod[activeFy] ?? 24;
-
-  const totalOutstanding = agingBuckets.reduce((s, b) => s + b.amount, 0);
-  const totalOverdue = agingBuckets.filter(b => b.label.includes("Days") || b.label.includes(">"))
-    .reduce((s, b) => s + b.amount, 0);
+  const topDebtors = [...(summaries ?? [])]
+    .sort((a, b) => b.totalOutstanding - a.totalOutstanding)
+    .slice(0, 5)
+    .map((r) => ({
+      id: encodeURIComponent(r.customerName),
+      name: r.customerName,
+      amount: r.totalOutstanding,
+      status:
+        r.totalOutstanding > 0
+          ? r.aging3160 + r.aging6190 + r.aging90Plus > 0
+            ? "overdue"
+            : "partial"
+          : "cleared",
+    }));
 
   return (
     <div className="space-y-8">
@@ -86,22 +68,9 @@ export default function ReceivablesSummaryPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-amber">
-            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Total Outstanding</p>
-            <p className="font-mono text-2xl font-bold text-dark tabular-nums">
-              {formatIndianNumber(totalOutstanding, { currency: true })}
-            </p>
-          </div>
-          <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-danger">
-            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Overdue (&gt;30 Days)</p>
-            <p className="font-mono text-2xl font-bold text-danger tabular-nums">
-              {formatIndianNumber(totalOverdue, { currency: true })}
-            </p>
-          </div>
-          <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-dark">
-            <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-3 font-bold">Avg. Collection Period</p>
-            <p className="font-mono text-2xl font-bold text-dark">{avgDays} Days</p>
-          </div>
+          <KpiTile label="Total Outstanding" value={formatIndianNumber(totalOutstanding, { currency: true })} icon="receipt_long" />
+          <KpiTile label="Overdue (&gt;30 Days)" variant="danger" value={formatIndianNumber(totalOverdue, { currency: true })} icon="clock" />
+          <KpiTile label="Unpaid Customers" variant="amber" value={String(unpaidCount)} subtext="customers" icon="groups" />
         </div>
       )}
 
@@ -163,7 +132,7 @@ export default function ReceivablesSummaryPage() {
                           ? "bg-danger-bg text-danger-deep border-danger/20"
                           : d.status === "partial"
                             ? "bg-amber-soft text-amber border-amber-bright/30"
-                            : "bg-surface-muted text-mid border-border"
+                            : "bg-success-bg text-success-deep border-success/20"
                       }`}>
                         {d.status}
                       </span>

@@ -69,6 +69,7 @@ export async function seedDemoData() {
     gstin: "27ABCDE1234F1Z5",
     address: "123 Business Street, Mumbai, Maharashtra 400001",
     state: "maharashtra",
+    stateCode: "27",
     industry: "services_professional",
     gstRegistration: "regular",
     onboardingStatus: "complete",
