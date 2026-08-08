@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS gstr9_schedules (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  return_id uuid NOT NULL REFERENCES gstr_returns(id),
+  return_id uuid NOT NULL,
   tenant_id uuid NOT NULL,
   schedule_code varchar(20) NOT NULL,
   schedule_label text NOT NULL,

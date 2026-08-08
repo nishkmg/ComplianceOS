@@ -137,7 +137,7 @@ CREATE TABLE "itr_field_mappings" (
 );
 --> statement-breakpoint
 ALTER TABLE "itr_return_lines" ADD CONSTRAINT "itr_return_lines_return_id_itr_returns_id_fk" FOREIGN KEY ("return_id") REFERENCES "public"."itr_returns"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "itr_returns" ADD CONSTRAINT "itr_returns_financial_year_fiscal_years_id_fk" FOREIGN KEY ("financial_year") REFERENCES "public"."fiscal_years"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+
 ALTER TABLE "itr_returns" ADD CONSTRAINT "itr_returns_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "itr_returns" ADD CONSTRAINT "itr_returns_filed_by_users_id_fk" FOREIGN KEY ("filed_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "itr_schedules" ADD CONSTRAINT "itr_schedules_return_id_itr_returns_id_fk" FOREIGN KEY ("return_id") REFERENCES "public"."itr_returns"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

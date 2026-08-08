@@ -73,7 +73,7 @@ CREATE TABLE "inventory_config" (
 	"tenant_id" uuid NOT NULL,
 	"valuation_method" "valuation_method" DEFAULT 'fifo' NOT NULL,
 	"default_warehouse_id" uuid,
-	"auto_create_je" text DEFAULT 'true' NOT NULL,
+	"auto_create_je" boolean DEFAULT true NOT NULL,
 	"inventory_asset_account_id" uuid,
 	"cogs_account_id" uuid,
 	"adjustment_account_id" uuid

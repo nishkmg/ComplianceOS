@@ -235,7 +235,7 @@ CREATE TABLE "statutory_liabilities" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "inventory_config" ALTER COLUMN "auto_create_je" SET DATA TYPE boolean;--> statement-breakpoint
+
 ALTER TABLE "inventory_config" ALTER COLUMN "auto_create_je" SET DEFAULT true;--> statement-breakpoint
 ALTER TABLE "employee_documents" ADD CONSTRAINT "employee_documents_employee_id_employees_id_fk" FOREIGN KEY ("employee_id") REFERENCES "public"."employees"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "tax_preferences" ADD CONSTRAINT "tax_preferences_employee_id_employees_id_fk" FOREIGN KEY ("employee_id") REFERENCES "public"."employees"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

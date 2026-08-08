@@ -169,14 +169,14 @@ CREATE TABLE "gstr_table_mappings" (
 );
 --> statement-breakpoint
 ALTER TABLE "gst_return_lines" ADD CONSTRAINT "gst_return_lines_gst_return_id_gst_returns_id_fk" FOREIGN KEY ("gst_return_id") REFERENCES "public"."gst_returns"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "gst_returns" ADD CONSTRAINT "gst_returns_fiscal_year_fiscal_years_id_fk" FOREIGN KEY ("fiscal_year") REFERENCES "public"."fiscal_years"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+
 ALTER TABLE "gst_returns" ADD CONSTRAINT "gst_returns_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "gst_returns" ADD CONSTRAINT "gst_returns_filed_by_users_id_fk" FOREIGN KEY ("filed_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "gst_cash_ledger" ADD CONSTRAINT "gst_cash_ledger_fiscal_year_fiscal_years_id_fk" FOREIGN KEY ("fiscal_year") REFERENCES "public"."fiscal_years"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+
 ALTER TABLE "gst_cash_ledger" ADD CONSTRAINT "gst_cash_ledger_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "gst_itc_ledger" ADD CONSTRAINT "gst_itc_ledger_fiscal_year_fiscal_years_id_fk" FOREIGN KEY ("fiscal_year") REFERENCES "public"."fiscal_years"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+
 ALTER TABLE "gst_itc_ledger" ADD CONSTRAINT "gst_itc_ledger_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "gst_liability_ledger" ADD CONSTRAINT "gst_liability_ledger_fiscal_year_fiscal_years_id_fk" FOREIGN KEY ("fiscal_year") REFERENCES "public"."fiscal_years"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+
 ALTER TABLE "gst_liability_ledger" ADD CONSTRAINT "gst_liability_ledger_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "gst_config" ADD CONSTRAINT "gst_config_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "gst_config" ADD CONSTRAINT "gst_config_updated_by_users_id_fk" FOREIGN KEY ("updated_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

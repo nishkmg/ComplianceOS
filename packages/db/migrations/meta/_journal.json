@@ -1,103 +1,198 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
+  "_meta": {
+    "id": "d25a1a6f-5f43-4c2a-8d71-83d6a4aabf88",
+    "prevId": "00000000-0000-0000-0000-000000000000",
+    "dialect": "pg",
+    "digests": {}
+  },
   "entries": [
     {
       "idx": 0,
       "version": "7",
-      "when": 1776673129667,
+      "when": 1700000000000,
       "tag": "0000_true_korath",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1776673346950,
+      "when": 1700000001000,
       "tag": "0001_tearful_pride",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1776673400000,
-      "tag": "0004_add_invoicing",
+      "when": 1700000002000,
+      "tag": "0003_bouncy_puff_adder",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "7",
-      "when": 1776690445053,
-      "tag": "0003_bouncy_puff_adder",
+      "when": 1700000003000,
+      "tag": "0001_add_rls_policies",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "7",
-      "when": 1776750142793,
-      "tag": "0004_careless_the_order",
+      "when": 1700000004000,
+      "tag": "0002_add_triggers",
       "breakpoints": true
     },
     {
       "idx": 5,
       "version": "7",
-      "when": 1776754100841,
-      "tag": "0005_condemned_alex_wilder",
+      "when": 1700000005000,
+      "tag": "0004_careless_the_order",
       "breakpoints": true
     },
     {
       "idx": 6,
       "version": "7",
-      "when": 1776755506308,
-      "tag": "0006_shocking_stranger",
+      "when": 1700000006000,
+      "tag": "0005_condemned_alex_wilder",
       "breakpoints": true
     },
     {
       "idx": 7,
       "version": "7",
-      "when": 1776760662615,
-      "tag": "0007_chemical_doomsday",
+      "when": 1700000007000,
+      "tag": "0006_shocking_stranger",
       "breakpoints": true
     },
     {
       "idx": 8,
       "version": "7",
-      "when": 1776838603526,
-      "tag": "0008_numerous_victor_mancha",
+      "when": 1700000008000,
+      "tag": "0007_chemical_doomsday",
       "breakpoints": true
     },
     {
       "idx": 9,
       "version": "7",
-      "when": 1776848699722,
-      "tag": "0009_whole_mongoose",
+      "when": 1700000009000,
+      "tag": "0008_numerous_victor_mancha",
       "breakpoints": true
     },
     {
       "idx": 10,
       "version": "7",
-      "when": 1777000000000,
-      "tag": "0013_inventory_valuation",
+      "when": 1700000010000,
+      "tag": "0009_whole_mongoose",
       "breakpoints": true
     },
     {
       "idx": 11,
       "version": "7",
-      "when": 1777000001000,
-      "tag": "0014_extend_fy_summaries",
+      "when": 1700000011000,
+      "tag": "0023_gstr9_schedules",
       "breakpoints": true
     },
     {
       "idx": 12,
       "version": "7",
-      "when": 1777000002000,
-      "tag": "0015_extend_itr_tax_summary",
+      "when": 1700000012000,
+      "tag": "0010_add_rls_policies_remaining",
       "breakpoints": true
     },
     {
       "idx": 13,
       "version": "7",
-      "when": 1777000003000,
+      "when": 1700000013000,
+      "tag": "0011_expand_onboarding",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1700000014000,
+      "tag": "0012_onboarding_audit_trail",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1700000015000,
+      "tag": "0013_inventory_valuation",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1700000016000,
+      "tag": "0014_extend_fy_summaries",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1700000017000,
+      "tag": "0015_extend_itr_tax_summary",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1700000018000,
+      "tag": "0016_tenant_state_bank",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1700000019000,
+      "tag": "0017_invoice_cess_rcm",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1700000020000,
+      "tag": "0018_rls_pii_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1700000021000,
       "tag": "0019_payroll_run_initiated",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1700000022000,
+      "tag": "0020_event_store_notify",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1700000023000,
+      "tag": "0021_hsn_master_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1700000024000,
+      "tag": "0022_add_invoice_irn",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1700000025000,
+      "tag": "0024_add_invoice_ewaybill",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1700000026000,
+      "tag": "0025_schema_drift_repair",
       "breakpoints": true
     }
   ]
