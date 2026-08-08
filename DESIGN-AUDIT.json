@@ -1,0 +1,146 @@
+{
+  "generatedAt": "2026-08-08T07:42:05.518Z",
+  "metrics": {
+    "contrast": {
+      "passing": 4,
+      "total": 13,
+      "matrix": [
+        {
+          "label": "action text on surface",
+          "fg": "amber",
+          "bg": "surface",
+          "ratio": 3.19,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "action text on page bg",
+          "fg": "amber",
+          "bg": "lightest",
+          "ratio": 3.05,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "white on action CTA",
+          "fg": "#FFFFFF",
+          "bg": "amber",
+          "ratio": 3.19,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "white on action hover",
+          "fg": "#FFFFFF",
+          "bg": "amber-hover",
+          "ratio": 5.02,
+          "pass": true,
+          "missing": false
+        },
+        {
+          "label": "success on white",
+          "fg": "success",
+          "bg": "surface",
+          "ratio": 2.54,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "success on success-bg",
+          "fg": "success",
+          "bg": "success-bg",
+          "ratio": 2.24,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "danger on white",
+          "fg": "danger",
+          "bg": "surface",
+          "ratio": 3.67,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "danger on danger-bg",
+          "fg": "danger",
+          "bg": "danger-bg",
+          "ratio": 3.06,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "mid text on surface",
+          "fg": "mid",
+          "bg": "surface",
+          "ratio": 7.73,
+          "pass": true,
+          "missing": false
+        },
+        {
+          "label": "light text on surface",
+          "fg": "light",
+          "bg": "surface",
+          "ratio": 4.83,
+          "pass": true,
+          "missing": false
+        },
+        {
+          "label": "input border vs surface (UI)",
+          "fg": "border",
+          "bg": "surface",
+          "ratio": 1.27,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "outline border vs surface (UI)",
+          "fg": "lighter",
+          "bg": "surface",
+          "ratio": 1.48,
+          "pass": false,
+          "missing": false
+        },
+        {
+          "label": "sidebar-muted on sidebar (UI)",
+          "fg": "sidebar-muted",
+          "bg": "sidebar",
+          "ratio": 6.91,
+          "pass": true,
+          "missing": false
+        }
+      ]
+    },
+    "tokens": {
+      "arbitraryValues": 1642,
+      "rawPaletteUtilities": 134,
+      "hexLiterals": 24,
+      "unpairedOutlineNone": 199,
+      "focusVisible": 80,
+      "darkClasses": 27,
+      "distinctRadii": 10
+    },
+    "states": {
+      "routes": 97,
+      "loadingFiles": 0,
+      "pagesWithLoading": 21,
+      "pagesWithErrorHandling": 5,
+      "pagesWithEmptyState": 28,
+      "ariaLiveAnnouncers": 4,
+      "clientPages": 83,
+      "serverPages": 14
+    },
+    "fonts": {
+      "fontsourceImports": 8,
+      "usesNextFont": false
+    }
+  },
+  "verdicts": {
+    "contrastBodyTextAA": false,
+    "noRawPalette": false,
+    "noUnpairedOutlineNone": false,
+    "routeLoadingStates": false,
+    "asyncAnnounced": true,
+    "fontPipeline": false
+  }
+}

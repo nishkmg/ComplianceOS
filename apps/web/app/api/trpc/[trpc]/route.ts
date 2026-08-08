@@ -1,17 +1,14 @@
 import { auth } from "@/lib/auth";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
 export const runtime = "nodejs";
 
-let db: any = null;
+let db: ReturnType<typeof drizzle> | null = null;
 
 function getDb() {
   if (!db && process.env.DATABASE_URL) {
-    // Dynamically import to avoid build-time evaluation
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { drizzle } = require("drizzle-orm/postgres-js");
-    const postgres = require("postgres");
-    const queryClient = postgres(process.env.DATABASE_URL, { prepare: false });
-    db = drizzle(queryClient);
+    db = drizzle(postgres(process.env.DATABASE_URL, { prepare: false }));
   }
   return db;
 }

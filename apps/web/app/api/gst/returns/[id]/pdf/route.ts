@@ -9,8 +9,9 @@ import { streamPdf } from "@/lib/pdf-stream";
 
 export const runtime = "nodejs";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,7 +24,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     const [gstReturn] = await db.select({ tenantId: gstReturns.tenantId }).from(gstReturns)
-      .where(and(eq(gstReturns.id, params.id))).limit(1);
+      .where(and(eq(gstReturns.id, id))).limit(1);
     if (!gstReturn) {
       return NextResponse.json({ error: "Return not found" }, { status: 404 });
     }
@@ -32,22 +33,22 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
     switch (type) {
       case "gstr1":
-        result = await generateGstr1Pdf(db, gstReturn.tenantId, params.id);
+        result = await generateGstr1Pdf(db, gstReturn.tenantId, id);
         break;
       case "gstr2b":
-        result = await generateGstr2bPdf(db, gstReturn.tenantId, params.id);
+        result = await generateGstr2bPdf(db, gstReturn.tenantId, id);
         break;
       case "gstr3b":
-        result = await generateGstr3bPdf(db, gstReturn.tenantId, params.id);
+        result = await generateGstr3bPdf(db, gstReturn.tenantId, id);
         break;
       case "gstr9":
-        result = await generateGstr9Pdf(db, gstReturn.tenantId, params.id);
+        result = await generateGstr9Pdf(db, gstReturn.tenantId, id);
         break;
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 });
     }
 
-    const filename = `${type.toUpperCase()}_${params.id.slice(0, 8)}.pdf`;
+    const filename = `${type.toUpperCase()}_${id.slice(0, 8)}.pdf`;
     return streamPdf(result.signedUrl, filename);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

@@ -1,194 +1,89 @@
-# ComplianceOS AGENTS.md
+# Arthvahi / ComplianceOS — AGENTS.md
 
-## Caveman Mode Activation
+## Identity & Current State
 
-Terse like caveman. Technical substance exact. Only fluff die.
-Drop: articles, filler (just/really/basically), pleasantries, hedging.
-Fragments OK. Short synonyms. Code unchanged.
-Pattern: [thing] [action] [reason]. [next step].
-ACTIVE EVERY RESPONSE. No revert after many turns. No filler drift.
-Code/commits/PRs: normal. Off: "stop caveman" / "normal mode".
+Indian business compliance platform. Product name **Arthvahi**, repo/brand **ComplianceOS**. Modules shipped: double-entry accounting (event-sourced), invoicing + PDF, receivables, FIFO inventory, payroll (PF/ESI/TDS), GST (GSTR-1/2B/3B, e-invoice IRN, e-way bill, HSN master), ITR-3/4 + tax computation, OCR (Tesseract.js), onboarding.
 
-Default intensity: **ultra**.
-- ultra: Abbreviate (DB/auth/config/req/res/fn/impl), strip conjunctions, arrows for causality (X → Y), one word when one word enough.
-- Switch mode: `/caveman lite|full|ultra`
+In-flight work lives in **`docs/superpowers/plans/2026-06-06-production-hardening.md`** (auth rework off Supabase service-role, projector fixes, realtime, one-click PDF, GSP/e-filing adapters, HSN/IRN/e-way-bill depth, tests/observability) and **`docs/superpowers/plans/2026-05-02-ui-redesign-implementation.md`**. UI audit tracking: **`IMPECCABLE-AUDIT.md`** (P1–P4 polish). The older `2026-04-20-*` plan/spec files no longer exist — do not reference them.
 
-Example output:
-- Normal: "The reason your React component is re-rendering is likely because you're creating a new object reference on each render cycle..."
-- Ultra: "Inline obj → new ref → re-render. useMemo."
+## Commands (exact)
 
-## File Write/Rewrite Output
+```bash
+pnpm install                     # pnpm >=9, Node 20
+pnpm dev                         # turbo: all workspaces (web on :3000)
+pnpm build | lint | typecheck | test
+pnpm db:generate | db:migrate | db:seed     # drizzle-kit via turbo
+pnpm --filter @complianceos/web  ...        # scope: web | server | db | shared
+pnpm --filter @complianceos/db db:seed:demo        # SEED_DEMO=true
+pnpm --filter @complianceos/db db:seed:demo:clean  # removes demo tenant data
+pnpm --filter @complianceos/server test -- src/commands/foo.test.ts   # single vitest file
+pnpm --filter @complianceos/web test:e2e | test:e2e:headed | test:e2e:ui   # Playwright
+```
 
-When performing file write or rewrite operations:
-- Do NOT output the full content or diff of changes in the terminal/chat window
-- Only output brief confirmation: "File written: [path]" or "Updated: [path]"
-- If user explicitly requests to see changes, then show them
-- Code blocks, file paths OK to show; full content changes NOT
-- Exception: Error messages if write fails
+Notes:
+- `turbo test` runs only the vitest suites (web has no `test` script) — **e2e is never included**; run Playwright separately.
+- `test:watch` exists only in `@complianceos/db`.
+- README advertises `pnpm test:coverage` — no such root script; use package-level `vitest --coverage` if needed.
+- Seeding is env-gated (`SEED_DEMO`, `ALLOW_SEED`, `ALLOW_PROD_SEED`): never seed prod without explicit flags.
 
-Example:
-- Not: "Here are the changes I made to file.ts:\n```typescript\n...full file content...\n```"
-- Yes: "Updated: /path/to/file.ts"
+## Monorepo
 
-## Output Rules
+```
+apps/web        Next.js 15 App Router. app/ groups: (app) (auth) (marketing) + api/
+                middleware.ts, i18n via messages/, Sentry instrumentation
+packages/server Command handlers (validation → append event), projectors/ + worker.ts,
+                tRPC routers, services/ (efiling, gsp, calculators), __tests__/
+packages/db     Drizzle schema (src/schema/index.ts), SQL migrations/ (29 files),
+                RLS policies (rls.ts, rls-payroll.ts), seed/
+packages/shared Types, Zod schemas, constants shared by all
+config/         tsconfig.base.json (TS strict, no `any`)
+ops/monitoring  alerting-rules.yml; ecosystem.config.cjs = PM2 (web + projector)
+```
 
-### Minimum Output Mode
-- NEVER show thinking, reasoning, or chain-of-thought
-- NEVER show tool invocations or tool results (unless user asks)
-- NEVER show diffs, patches, or file change details
-- ONLY show: task completion, errors, or user questions
+## Architecture rules (do not break)
 
-### File Operations
-- Write/Edit: Brief "Done" or "Updated: [path]" only
-- Read: Only output if user asks a question about content
-- Skip: tool result summaries in output
+- **Event store is the sole write path.** Commands validate → append event. Projectors (idempotent upserts, SKIP LOCKED) build reads — projectors must never be treated as source of truth or bypass event ordering.
+- **RLS per tenant (`tenant_id` on all tables).** NEVER reach for `SUPABASE_SERVICE_ROLE_KEY` / bypass RLS for convenience: `security-gate.yml` bans it in `apps/web/**` and `packages/server/{routers,commands}` and CI fails. Keep service-role out of user paths (hardening Task 1.1).
+- tRPC defaults to `protectedProcedure`; `publicProcedure` only where intended (hardening Task 1.5).
+- No new `@ts-nocheck` — existing ones are being stripped (Task 1.6).
+- Drizzle migration numbering: if a generated id collides, renumber to the next free (see `fix: renumber e-way-bill migration 0022->0024`), never reuse.
 
-### Task Completion
-- Single-line summary: "[action] done" or "Done: [task]"
-- No verbose status, no progress bars, no checkpoints
-- If user asks "what changed?", THEN show details
+## Testing quirks
 
-### Tool Invocation Silence
-- Do NOT output tool names being invoked
-- Do NOT output success/failure status of tools
-- Exception: Actual errors that block task completion
+- Tests hit a **real PostgreSQL 16 + Redis 7**. CI (`.github/workflows/ci.yml`) spins services and exports `DATABASE_URL`/`REDIS_URL`; locally: `docker compose up -d` (or brew), `createdb complianceos_dev`, and run **`pnpm db:migrate` before `pnpm test`** — vitest configs load no dotenv.
+- **This machine's local stack:** ports 5432/6379 belong to ANOTHER project's containers (`traceshield`). ComplianceOS runs in its own containers: postgres `localhost:5433` (complianceos/complianceos, db `complianceos_dev`) + redis `localhost:6380`. Root `.env` and `apps/web/.env.local` were stale (supabase-era) and now point at those ports. Note **`apps/web/.env.local` overrides `.env`** for Next — check both when env changes don't stick.
+- `db:seed` (`SEED_DEMO=true`, requires `NODE_ENV=development` or `ALLOW_SEED=1`) **completes but never exits** — the pool stays open. Run with a timeout; verify `users`/`tenants` rows separately.
+- Snapshot/PDF fixtures in `packages/server/src/__tests__/pdf-snapshots` — PDF output changes break them; review deliberately.
+- Vitest excludes macOS `._*` junk (`exclude: **/._*.test.ts`).
 
-## Karpathy Guidelines (Always Active)
+## Repo gotchas
 
-### 1. Think Before Coding
-- State assumptions explicitly — ask rather than guess
-- Present multiple interpretations when ambiguity exists
-- Push back when a simpler approach exists
-- Stop and ask when confused
+- Root is full of macOS `._*` AppleDouble files — gitignored, treated as absence. Don't delete; exclude from globs.
+- `.opencode/agents/{advisor,builder,reviewer,coordinator}.md` are **symlinks to `~/.config/opencode/agents/*.md`** (the shared agent pool). They may resolve to nothing from odd sandboxes — read via the symlink target; do not materialize copies.
+- Session memory auto-accumulates in **`.opencode/memory/`** (summary.md + session-*.md). On resume, read `summary.md` first — it holds task state, decisions, avoided regressions. Keep it updated when you finish a chunk of work.
+- `.env`, `.env.test`, `.env.vercel` are gitignored. Template: `.env.example` (has SUPABASE/storage keys my need for OCR uploads). `docker-compose.yml` gives working defaults.
+- **Migrations were repaired (`fix(db): repair migration set…`)**: 0004_add_invoicing + 0003_add_tenants_onboarding deleted (full duplicates), journal rebuilt in dependency order (file-name order ≠ apply order), bogus FKs (text→uuid) stripped, 0010 rewritten against current tables, 0025 adds schema drift fixes. If a fresh `db:migrate` fails again, suspect *stale schema drift*, not ordering.
+- **`drizzle-kit migrate` records applied state in schema `drizzle` (`__drizzle_migrations`)** — `DROP SCHEMA public CASCADE` does NOT reset it; drop `drizzle` schema too or re-runs skip everything and only new migrations apply (they fail, e.g. "relation users does not exist").
+- Migration authoring: drizzle generates `CREATE TABLE IF NOT EXISTS` + `ADD COLUMN IF NOT EXISTS` in 0012+/0016+ style — when hand-editing old migration files, existing DBs that applied them skip them (journal hash), fresh DBs replay them — never re-apply applied files on fresh DBs unless both paths are verified.
 
-### 2. Simplicity First
-- Minimum code that solves the problem
-- No speculative abstractions or "flexibility"
-- If 200 lines could be 50, rewrite it
+## Style / workflow
 
-### 3. Surgical Changes
-- Touch only what you must
-- Don't "improve" unrelated code, comments, or formatting
-- Match existing style
-- Remove only imports/variables YOUR changes made unused
+- Caveman mode always on for chat; code, commits, and PRs in normal language. No filler drift.
+- Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, with scopes like `fix(ui): …`, `feat(tax): …`.
+- TS strict; verify with `pnpm typecheck` (turbo) before claiming a change complete.
+- Design conventions live in **`DESIGN.md`** (tokens, typography, primary `#D97706`) — UI changes should respect it; audit feedback in `IMPECCABLE-AUDIT.md`.
+- Final commit per task, with the design polish convention `fix(ui): P<N> …` matching the audit phases.
 
-### 4. Goal-Driven Execution
-- Define success criteria, not just tasks
-- Write tests first, then make them pass
-- Loop until verified
+## Self-healing / self-learning / self-improving (encode in every agent)
 
----
+1. **Fix-first, prove-last.** Any failing verification (lint, typecheck, test, e2e, build) → fix the root cause and re-run the full relevant loop until green. No `@ts-nocheck`, no skipped/fake tests, no swallowed errors.
+2. **Verify before marking done.** Every task trains the loop: query `typecheck` + affected tests; schema changes also `db:generate` + `db:migrate`; UI also `next build` and e2e spec when layout/routes touched.
+3. **Learn in-place.** — Discover anything non-obvious (env, migration trap, RLS gap, naming collision) → add ONE line to the matching gotcha/structure list in this file same session. Repetitions of the same mistake across sessions are a failure of the file, not of re-telling; keep a diff surgical.
+4. **Check the plan registry before inventing.** — `.opencode/memory/` and `.opencode/plans/` + `docs/superpowers/` define approved scope. Old-plans checkboxes in `docs/superpowers/plans/*.md` are often stale vs git history/status — trust committed code + git log over unchecked boxes; note the delta in summary.md.
+5. **Recover cleanly.** — Projector worker or pre-committed migrations crash → root cause, replay idempotently, verify ledger invariants (debit=credit, gapless numbers) before proceeding; never carry partial state as truth.
+6. **Route through known roles** — `coordinator` dispatches, `builder` implements, `reviewer` audits baseline-gated tasks, `advisor` for ambiguity. If a role is thin/unreliable, fall back to code review and verification instead of skipping the step.
+7. **Contract with the user** — if a plan/backlog item would double down on a known-bad pattern (service-role anywhere, publicProcedure stretch), do not implement gold-plating; surface the conflict first (one question, not a barrage).
 
-## Project: ComplianceOS
+## CI
 
-**Purpose:** Double-entry accounting engine with event sourcing for multi-tenant compliance management
-
-**Tech Stack:**
-- Next.js 15 (App Router), React 19, TypeScript 5
-- tRPC v11, Drizzle ORM, PostgreSQL 16, Redis 7
-- NextAuth.js v5, Zod, Tailwind CSS, Shadcn/UI
-- pnpm + Turborepo, Railway (infra)
-
-**Architecture:**
-- Event-sourced command handlers → append-only event store
-- Node.js projector worker (SKIP LOCKED) → projection tables
-- Next.js App Router serves frontend + tRPC API
-- PostgreSQL RLS enforces multi-tenant isolation
-
-**Key Packages:**
-- `apps/web` - Next.js frontend + tRPC API
-- `packages/db` - Drizzle schema, migrations, seed data
-- `packages/server` - Command handlers, projectors, tRPC routers
-- `packages/shared` - Types, Zod schemas, constants
-
-**Plan:** `docs/superpowers/plans/2026-04-20-core-accounting-engine.md`
-
-**Sub-agent Assignments (Core Accounting Engine — Sub-project #1 of 8):**
-
-| Agent | Role | Responsibility |
-|-------|------|----------------|
-| @advisor | Architecture/Design | Event sourcing patterns, PostgreSQL RLS, projector design |
-| @builder | Implementation | Command handlers, projectors, tRPC routers, Drizzle schema |
-| @reviewer | Validation | Security audit, balance constraint verification, RLS policies |
-
-**Detailed Agent Roster — ComplianceOS Core Accounting Engine**
-
-### @advisor Pool (Architecture/Design decisions)
-
-| Sub-agent | When to invoke |
-|---|---|
-| `engineering-software-architect` | Event sourcing edge cases, snapshot strategy, aggregate boundary decisions |
-| `engineering-backend-architect` | Command handler design, projector loop architecture, DB transaction patterns |
-| `design-ux-architect` | Frontend component architecture, page structure, Shadcn/UI customization |
-| `product-manager` | Scope clarification, requirement ambiguity, priority decisions |
-
-### @builder Pool (Implementation)
-
-| Sub-agent | When to invoke |
-|---|---|
-| `engineering-frontend-developer` | Next.js pages, App Router layouts, tRPC client integration |
-| `engineering-devops-automator` | Railway setup, PM2 config, Dockerfiles, environment variables |
-| `engineering-database-optimizer` | Drizzle schema, indexes, Postgres triggers, RLS policy optimization |
-| `frontend-design` | High-design-quality UI components, dashboard widgets |
-| `make-interfaces-feel-better` | Micro-interactions, hover states, shadows, typography polish |
-| `test-driven-development` | Write tests first for command handlers and projectors |
-| `systematic-debugging` | Bug investigation in command handlers, projector logic |
-| `executing-plans` | Execute implementation plan task-by-task |
-
-### @reviewer Pool (Validation)
-
-| Sub-agent | When to invoke |
-|---|---|
-| `security-engineer` | RLS policy audit, OWASP top 10, injection prevention in tRPC |
-| `testing-reality-checker` | Pre-merge gate — requires overwhelming proof before claiming done |
-| `testing-performance-benchmarker` | Projector throughput, DB query performance, report render speed |
-| `compliance-auditor` | India financial compliance edge cases, data retention enforcement |
-| `code-reviewer` | Correctness, maintainability, security of implementation |
-| `lint` | Auto-fix ESLint/TypeScript issues |
-| `verification-before-completion` | Run verification commands before claiming task done |
-
-### Supporting Cast (On-demand, not assigned to a role)
-
-| Sub-agent | When to invoke |
-|---|---|
-| `railway` | Railway CLI deployment, Postgres/Redis provisioning |
-| `github-workflows` | GitHub Actions CI/CD pipeline setup |
-| `analytics-reporter` | Financial report data shaping for dashboard widgets |
-| `technical-writer` | README, API documentation |
-| `web-design-guidelines` | Accessibility check (WCAG baseline) |
-| `react-best-practices` | Next.js 15 + React 19 performance patterns |
-| `code-optimizer` | Performance anti-pattern scan in projector loop |
-| `best-practices` | Security/compatibility/code quality audit |
-
-**Spec Reference:** `docs/superpowers/specs/2026-04-20-core-accounting-engine-design-V1.1.md`
-**Plan Reference:** `docs/superpowers/plans/2026-04-20-core-accounting-engine.md`
-
-**Key Implementation Boundaries:**
-- Event store: append-only, sequence per aggregate
-- Command handlers: validate → decision → event append
-- Projectors: idempotent upserts, SKIP LOCKED processing
-- Multi-tenancy: PostgreSQL RLS, tenant_id on all tables
-- Fiscal years: Indian FY (Apr–Mar), max 2 concurrent open FYs
-
-**Sub-project #1 Scope (Core Accounting Engine):**
-- Double-entry ledger with event sourcing
-- Chart of accounts (hierarchical, 4-level max depth, leaf-only JE lines)
-- Journal entries: draft/posted/voided lifecycle, gapless entry numbers per FY
-- Financial statements: Trial Balance, P&L (Schedule III + proprietorship), Balance Sheet, Cash Flow (indirect method)
-- Snapshot strategy: every 10 events per aggregate, mandatory on FY close
-- Projector worker: serial processing with SKIP LOCKED, PM2 supervision
-- FY rules: max 2 open, 90-day grace + 30-day hard deadline auto-close, `pending_close` state for drafts
-
-**Current FY:** 2026-27 (Apr 2026 – Mar 2027)
-
-### Execution Protocol
-
-**When execution is confirmed, the following protocol is followed:**
-
-1. **Subagent-driven development** — `@coordinator` dispatches one `@builder` subagent per task from the implementation plan
-2. **Checkpoint review** — `@reviewer` subagents fire after Tasks 5, 10, 13, 17, 20
-3. **Advisor on-call** — `@advisor` subagents are invoked when ambiguous design decisions arise mid-task
-4. **Supporting cast as needed** — `railway`, `github-workflows`, `lint`, `react-best-practices`, etc. are invoked per task needs
-5. **Verification before completion** — `verification-before-completion` fires before marking any task done
-6. **Caveman mode always on** — terse output, no fluff, one-word answers when one word suffices
-7. **Frequent commits** — each completed task gets its own commit with conventional commit message
+Push to `main` + `prod-hardening` and PRs → CI: lint → typecheck → build → test with postgres/redis services; build job depends on the rest. `security-gate.yml` blocks any `SUPABASE_SERVICE_ROLE_KEY` under `apps/web` and server routers/commands.

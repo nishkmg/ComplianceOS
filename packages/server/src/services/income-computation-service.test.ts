@@ -38,7 +38,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeSalaryIncome('tenant-123', '2024-25');
+      const result = await service.computeSalaryIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
       expect(result.totalSalary).toBe('0');
       expect(result.grossSalary).toBe('0');
@@ -58,7 +58,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeSalaryIncome('tenant-123', '2024-25');
+      const result = await service.computeSalaryIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
       expect(result.totalSalary).toBe('157000');
     });
@@ -78,7 +78,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeSalaryIncome('tenant-123', '2024-25');
+      const result = await service.computeSalaryIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
       expect(result.totalSalary).toBe('50000');
     });
@@ -186,7 +186,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeBusinessIncome('tenant-123', '2024-25', 'normal');
+      const result = await service.computeBusinessIncome('11111111-1111-1111-1111-111111111111', '2024-25', 'normal');
 
       // Profit = Revenue (800000) - Expenses (350000) = 450000
       expect(result.businessProfit).toBe('450000');
@@ -202,7 +202,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeBusinessIncome('tenant-123', '2024-25', '44AD');
+      const result = await service.computeBusinessIncome('11111111-1111-1111-1111-111111111111', '2024-25', '44AD');
 
       // 8% of 2000000 = 160000
       expect(result.businessProfit).toBe('160000');
@@ -221,7 +221,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeBusinessIncome('tenant-123', '2024-25', '44AD');
+      const result = await service.computeBusinessIncome('11111111-1111-1111-1111-111111111111', '2024-25', '44AD');
 
       // Digital: 600000 × 6% = 36000, Cash: 400000 × 8% = 32000, Total = 68000
       expect(result.businessProfit).toBe('68000');
@@ -236,7 +236,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeBusinessIncome('tenant-123', '2024-25', '44ADA');
+      const result = await service.computeBusinessIncome('11111111-1111-1111-1111-111111111111', '2024-25', '44ADA');
 
       // 50% of 1500000 = 750000
       expect(result.businessProfit).toBe('750000');
@@ -250,7 +250,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeBusinessIncome('tenant-123', '2024-25', 'normal');
+      const result = await service.computeBusinessIncome('11111111-1111-1111-1111-111111111111', '2024-25', 'normal');
 
       expect(result.businessProfit).toBe('0');
     });
@@ -383,7 +383,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeOtherSources('tenant-123', '2024-25');
+      const result = await service.computeOtherSources('11111111-1111-1111-1111-111111111111', '2024-25');
 
       expect(result.totalIncome).toBe('85000');
     });
@@ -401,7 +401,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeOtherSources('tenant-123', '2024-25');
+      const result = await service.computeOtherSources('11111111-1111-1111-1111-111111111111', '2024-25');
 
       expect(result.interestIncome).toBe('50000');
       expect(result.dividendIncome).toBe('20000');
@@ -415,7 +415,7 @@ describe('IncomeComputationService', () => {
         }),
       } as any);
 
-      const result = await service.computeOtherSources('tenant-123', '2024-25');
+      const result = await service.computeOtherSources('11111111-1111-1111-1111-111111111111', '2024-25');
 
       expect(result.totalIncome).toBe('0');
     });
@@ -454,7 +454,7 @@ describe('IncomeComputationService', () => {
         dividendIncome: '25000',
       } as any);
 
-      const result = await service.computeGrossTotalIncome('tenant-123', '2024-25');
+      const result = await service.computeGrossTotalIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
       // Salary: 500000 (after standard deduction)
       // House Property: -150000
@@ -498,7 +498,7 @@ describe('IncomeComputationService', () => {
         dividendIncome: '0',
       } as any);
 
-      const result = await service.computeGrossTotalIncome('tenant-123', '2024-25');
+      const result = await service.computeGrossTotalIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
       // Business loss (-200000) set off against:
       // House Property (100000) + STCG (50000) + Other Sources (30000) = 180000

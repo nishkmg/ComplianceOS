@@ -53,10 +53,13 @@
     "@complianceos/db": "workspace:*",
     "@complianceos/server": "workspace:*",
     "@complianceos/shared": "workspace:*",
+    "@eslint/eslintrc": "^3.3.6",
     "@playwright/test": "^1.59.1",
     "@types/bcryptjs": "^3.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.23",
     "playwright": "^1.59.1",
     "typescript": "^5.7.0"
   }

@@ -258,12 +258,12 @@ describe('Row Level Security (RLS)', () => {
   describe('email queue isolation (PII table)', () => {
     it('should isolate emails by tenant', async () => {
       await dbSuperuser.execute(sql`
-        INSERT INTO email_queue (id, tenant_id, to_email, subject, body, scheduled_at)
+        INSERT INTO email_queue (id, tenant_id, "to", subject, body, scheduled_at)
         VALUES ('aaaa1111-aaaa-aaaa-aaaa-000000000001', ${TENANT_1_ID}, 't1@example.com', 'T1', 'PII body 1', now())
         ON CONFLICT (id) DO NOTHING
       `);
       await dbSuperuser.execute(sql`
-        INSERT INTO email_queue (id, tenant_id, to_email, subject, body, scheduled_at)
+        INSERT INTO email_queue (id, tenant_id, "to", subject, body, scheduled_at)
         VALUES ('aaaa1111-aaaa-aaaa-aaaa-000000000002', ${TENANT_2_ID}, 't2@example.com', 'T2', 'PII body 2', now())
         ON CONFLICT (id) DO NOTHING
       `);
