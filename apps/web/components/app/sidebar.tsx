@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { ThemeToggle } from '@/components/app/theme-toggle';
 import { useFiscalYear } from '@/hooks/use-fiscal-year';
 import { ModuleGate } from '@/components/ui/module-gate';
 
@@ -372,8 +373,9 @@ export function AppSidebar() {
         )}
       </div>
 
-      {/* ── Support + Sign Out ─────────────────────────────────────────────── */}
-      <div className="px-3 py-3 border-t-[0.5px] border-border-subtle shrink-0">
+      {/* ── Theme + Support + Sign Out ────────────────────────────────────── */}
+      <div className="px-3 py-3 border-t-[0.5px] border-border-subtle shrink-0 space-y-0.5">
+        <ThemeToggle />
         <Link
           href="/support"
           className="flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"

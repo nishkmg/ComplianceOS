@@ -1,28 +1,70 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
+import { Icon } from "@/components/ui/icon";
 
-import { Icon } from '@/components/ui/icon';
+export type Theme = "light" | "dark" | "system";
+
+const STORAGE_KEY = "theme";
+
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  const resolved =
+    theme === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : theme;
+  root.dataset.theme = resolved;
+}
+
+function currentTheme(): Theme {
+  if (typeof window === "undefined") return "light";
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored === "dark" || stored === "light" || stored === "system" ? stored : "light";
+}
+
+const NEXT: Record<Theme, Theme> = { light: "dark", dark: "system", system: "light" };
+
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (dark) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [dark]);
+    setTheme(currentTheme());
+    applyTheme(currentTheme());
+  }, []);
+
+  useEffect(() => {
+    if (theme !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => applyTheme("system");
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [theme]);
+
+  const cycle = useCallback(() => {
+    setTheme((t) => {
+      const next = NEXT[t];
+      localStorage.setItem(STORAGE_KEY, next);
+      applyTheme(next);
+      return next;
+    });
+  }, []);
+
+  const label = theme === "dark" ? "Switch to system theme" : theme === "light" ? "Switch to dark theme" : "Switch to light theme";
 
   return (
     <button
-      onClick={() => setDark(d => !d)}
-      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="flex items-center gap-3 px-4 py-2 text-[13px] text-mid hover:bg-lighter rounded-[4px] transition-colors border-none bg-transparent cursor-pointer w-full"
+      onClick={cycle}
+      aria-label={label}
+      title={label}
+      className="flex w-full items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:text-dark hover:bg-lighter/40 transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
     >
-      <Icon name={dark ? 'light_mode' : 'dark_mode'} className="text-lg" />
-      <span>{dark ? 'Light Mode' : 'Dark Mode'}</span>
+      <Icon name={theme === "dark" ? "dark_mode" : theme === "light" ? "light_mode" : "brightness_auto"} className="text-lg" />
+      <span className="flex-1 text-left">
+        {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
+      </span>
+      <span className="text-[10px] uppercase tracking-wider text-sidebar-muted/80">Theme</span>
     </button>
   );
 }

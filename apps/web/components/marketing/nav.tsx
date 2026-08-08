@@ -15,9 +15,9 @@ export function MarketingNav() {
   }, []);
 
   return (
-    <nav className="sticky top-0 w-full z-50 bg-section-muted/90 border-b-[0.5px] border-border-subtle dark:bg-stone-950/90 dark:border-stone-800 transition-colors" style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+    <nav className="sticky top-0 w-full z-50 bg-section-muted/90 border-b-[0.5px] border-border-subtle transition-colors" style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
       <div className="flex justify-between items-center h-16 px-8 max-w-[1320px] mx-auto">
-        <Link href="/" className="text-xl font-bold tracking-tighter text-dark dark:text-stone-50 no-underline">
+        <Link href="/" className="text-xl font-bold tracking-tighter text-dark no-underline">
           Arthvahi
         </Link>
         
@@ -37,7 +37,7 @@ export function MarketingNav() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-mid dark:text-light font-medium hover:text-amber transition-colors duration-200 no-underline hidden md:block">
+          <Link href="/login" className="text-mid font-medium hover:text-amber transition-colors duration-200 no-underline hidden md:block">
             Log In
           </Link>
           <Link href="/signup" className="bg-amber text-white px-6 py-2 rounded-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-transform active:scale-95 text-sm no-underline inline-block">

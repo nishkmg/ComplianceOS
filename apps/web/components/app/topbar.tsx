@@ -28,11 +28,11 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
   const userInitials = getInitials(userName);
 
   return (
-    <header className="bg-sidebar dark:bg-slate-950/80 backdrop-blur-md border-b-[0.5px] border-border-subtle dark:border-slate-800 flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-ui antialiased no-print">
+    <header className="bg-sidebar border-b-[0.5px] border-border-subtle flex justify-between items-center w-full px-6 h-14 fixed top-0 z-50 font-ui antialiased no-print">
 
       {/* Left: brand */}
       <div className="flex items-center gap-4">
-        <span className="font-bold text-lg tracking-tight text-dark dark:text-zinc-100 hidden md:inline">
+        <span className="font-bold text-lg tracking-tight text-sidebar-dim hidden md:inline">
           Arthvahi
         </span>
       </div>
@@ -56,7 +56,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
         {/* Notifications */}
         <button
           aria-label="Notifications"
-          className="text-mid hover:text-dark dark:hover:text-white transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70 rounded-[4px] hover:bg-lighter/40"
+          className="text-sidebar-muted hover:text-dark transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70 rounded-[4px] hover:bg-lighter/40"
         >
           <Icon name="notifications" size={18} />
         </button>

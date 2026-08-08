@@ -57,6 +57,7 @@ import {
   MoreVertical,
   Sun,
   Moon,
+  Monitor,
   Languages,
   User,
   UserPlus,
@@ -151,6 +152,7 @@ const iconMap: Record<string, LucideIcon> = {
   more_vert: MoreVertical,
   light_mode: Sun,
   dark_mode: Moon,
+  brightness_auto: Monitor,
   translate: Languages,
   // Added for sidebar nav and topbar
   person: User,

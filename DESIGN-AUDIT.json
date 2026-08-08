@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T15:00:23.097Z",
+  "generatedAt": "2026-08-08T16:10:07.877Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,17 +206,17 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 1645,
-      "rawPaletteUtilities": 134,
+      "arbitraryValues": 1646,
+      "rawPaletteUtilities": 124,
       "hexLiterals": 25,
-      "unpairedOutlineNone": 199,
-      "focusVisible": 84,
-      "darkClasses": 26,
+      "unpairedOutlineNone": 200,
+      "focusVisible": 89,
+      "darkClasses": 2,
       "distinctRadii": 10
     },
     "states": {
       "routes": 97,
-      "loadingFiles": 0,
+      "loadingFiles": 1,
       "pagesWithLoading": 21,
       "pagesWithErrorHandling": 5,
       "pagesWithEmptyState": 28,

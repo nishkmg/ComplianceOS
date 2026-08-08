@@ -4,7 +4,9 @@ import { useState, useEffect, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { KpiTile } from "@/components/ui/kpi-tile";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton, KPISkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -55,25 +57,24 @@ export default function DashboardPage() {
   const postedCount = useMemo(() => entries.filter(e => e.status === "posted").length, [entries]);
   const draftCount = useMemo(() => entries.filter(e => e.status === "draft").length, [entries]);
 
-  const companyName = "Your Business";
+  const companyName = (session?.user as Record<string, unknown> | undefined)?.name as string || "Your Business";
   const today = new Date();
   const greeting = today.getHours() < 12 ? "Good morning" : today.getHours() < 18 ? "Good afternoon" : "Good evening";
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="font-ui text-display-xl text-dark">{greeting}, {companyName}</h1>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-mid bg-surface-muted px-2 py-0.5 rounded-md border border-border shrink-0 font-medium">FY {activeFy}</span>
-          </div>
-          <p className="text-[13px] text-secondary font-ui mt-1">{today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
-        </div>
-        <Link href="/journal/new" className="bg-amber text-white px-5 py-2 flex items-center gap-2 hover:bg-amber-hover transition-colors active:scale-95 group no-underline rounded-md shadow-sm">
-          <span className="font-ui text-[10px] uppercase tracking-wider font-bold">Add Entry</span>
-          <span className="transition-transform group-hover:translate-x-1">→</span>
-        </Link>
-      </div>
+      <PageHeader
+        title={`${greeting}, ${companyName}`}
+        description={`${today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })} · FY ${activeFy}`}
+        actions={
+          <Link href="/journal/new" className="no-underline">
+            <Button size="sm">
+              <Icon name="add" className="text-[16px]" />
+              Add Entry
+            </Button>
+          </Link>
+        }
+      />
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"><KPISkeleton /><KPISkeleton /><KPISkeleton /><KPISkeleton /></div>
