@@ -171,7 +171,7 @@ export default function TrialBalancePage() {
 
         {/* Balance check */}
         <div className={`mx-8 mt-6 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest rounded-md flex items-center gap-2 ${
-          isBalanced ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
+          isBalanced ? "bg-success-bg text-success-deep" : "bg-danger-bg text-danger-deep"
         } print:border print:rounded-none`}>
           <Icon name={isBalanced ? "check_circle" : "warning"} size={16} />
           {isBalanced ? "Trial Balance is balanced" : "Trial Balance is NOT balanced"}
@@ -244,7 +244,7 @@ export default function TrialBalancePage() {
         </div>
 
         {isBalanced && (
-          <div className="mx-8 mb-6 px-4 py-2 bg-success-bg text-success font-medium text-[11px] rounded-md print:border print:rounded-none print:text-black print:bg-transparent">
+          <div className="mx-8 mb-6 px-4 py-2 bg-success-bg text-success-deep font-medium text-[11px] rounded-md print:border print:rounded-none print:text-black print:bg-transparent">
             ✓ Total Debits match Total Credits — Trial Balance is in order
           </div>
         )}

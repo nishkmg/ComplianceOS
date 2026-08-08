@@ -209,7 +209,7 @@ export function AppSidebar() {
                           <Icon
                             name={item.icon}
                             size={16}
-                            className={groupActive ? 'text-amber' : 'text-sidebar-muted group-hover:text-dark'}
+                            className={groupActive ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-dark'}
                           />
                           <span className="flex-1 text-[13px]">{item.label}</span>
                           <Icon
@@ -232,7 +232,7 @@ export function AppSidebar() {
                                     'block px-2 py-1.5 rounded-[4px] text-[12px] transition-colors no-underline',
                                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                                     childActive
-                                      ? 'text-amber font-semibold bg-section-amber'
+                                      ? 'text-amber-bright font-semibold bg-section-amber'
                                       : 'text-sidebar-muted hover:text-dark hover:bg-lighter/40',
                                   ].join(' ')}
                                 >
@@ -265,7 +265,7 @@ export function AppSidebar() {
                         <Icon
                           name={item.icon}
                           size={16}
-                          className={active ? 'text-amber' : 'text-sidebar-muted group-hover:text-dark'}
+                          className={active ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-dark'}
                         />
                       )}
                       <span>{item.label}</span>
@@ -350,13 +350,13 @@ export function AppSidebar() {
                       <span className={[
                         'text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-sm border',
                         fy.status === 'open'
-                          ? 'bg-section-amber text-amber-text border-amber-200'
+                          ? 'bg-section-amber text-amber-bright border-amber-bright/30'
                           : 'bg-lighter text-sidebar-muted border-border-subtle',
                       ].join(' ')}>
                         {fy.status}
                       </span>
                       {selected && (
-                        <Icon name="check" size={14} className="text-amber" />
+                        <Icon name="check" size={14} className="text-amber-bright" />
                       )}
                     </div>
                   </div>
@@ -381,7 +381,7 @@ export function AppSidebar() {
           <Icon name="contact_support" size={16} />
           <span>Support</span>
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
           <Icon name="logout" size={16} />
           <span>Sign Out</span>
         </button>

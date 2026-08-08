@@ -18,7 +18,7 @@ interface Account {
 
 const columns: ColumnDef<Account>[] = [
   { key: "code", header: "Code", width: "120px", render: (row) => <span className="font-mono text-[12px] text-mid">{row.code}</span> },
-  { key: "name", header: "Account Name", sortable: true, render: (row) => <Link href={`/accounts/${row.id}`} className="font-ui text-[13px] text-amber-text hover:underline no-underline">{row.name}</Link> },
+  { key: "name", header: "Account Name", sortable: true, render: (row) => <Link href={`/accounts/${row.id}`} className="font-ui text-[13px] text-amber hover:underline no-underline">{row.name}</Link> },
   { key: "kind", header: "Kind", width: "120px", render: (row) => <span className="font-ui text-[12px] text-mid">{row.kind}</span> },
   { key: "isLeaf", header: "Leaf", width: "80px", render: (row) => <span className={`text-[11px] font-bold uppercase ${row.isLeaf ? "text-success" : "text-mid"}`}>{row.isLeaf ? "Yes" : "No"}</span> },
 ];

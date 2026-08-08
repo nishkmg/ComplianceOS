@@ -162,7 +162,7 @@ export default function ITRSelfAssessmentPage() {
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-surface border border-border p-6 rounded-md">
             <div className="flex items-start gap-3">
-              <Icon name="info" className="text-amber-text mt-1" />
+              <Icon name="info" className="text-amber mt-1" />
               <div>
                 <h4 className="font-ui text-sm font-medium font-bold text-dark mb-2">Payment Required</h4>
                 <p className="font-ui text-[13px] text-dark-variant leading-relaxed">

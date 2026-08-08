@@ -27,7 +27,7 @@ export function AccountPreviewSlideOver({
         {/* Header */}
         <header className="px-8 py-6 border-b border-border-subtle flex justify-between items-start bg-section-muted">
           <div className="text-left">
-            <span className="font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold mb-1 block">Account Quick View</span>
+            <span className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold mb-1 block">Account Quick View</span>
             <h2 className="font-display text-lg font-bold text-dark">{account.name}</h2>
             <p className="font-mono text-[11px] text-light uppercase tracking-wider mt-1">{account.code} · {account.kind}</p>
           </div>

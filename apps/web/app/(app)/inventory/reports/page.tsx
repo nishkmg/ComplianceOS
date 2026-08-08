@@ -78,7 +78,7 @@ export default function InventoryReportsPage() {
       {/* Report Controls */}
       <div className="bg-surface border border-border p-6 shadow-sm border-t-2 border-t-amber flex flex-col lg:flex-row gap-6 items-end">
         <div className="w-full lg:w-1/3 text-left">
-          <label className="block font-ui text-[10px] uppercase tracking-widest text-amber-text mb-2 font-bold">Report Type</label>
+          <label className="block font-ui text-[10px] uppercase tracking-widest text-amber mb-2 font-bold">Report Type</label>
           <div className="relative">
             <select 
               className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none appearance-none"
@@ -118,7 +118,7 @@ export default function InventoryReportsPage() {
             <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
               {reportData.map((row) => (
                 <tr key={row.sku} className="hover:bg-surface-muted/30 transition-colors">
-                  <td className="py-4 px-6 font-medium text-amber-text">{row.sku}</td>
+                  <td className="py-4 px-6 font-medium text-amber">{row.sku}</td>
                   <td className="py-4 px-6 font-ui text-[13px] font-bold text-dark">{row.name}</td>
                   <td className="py-4 px-6 font-ui text-[13px] text-mid">{row.category}</td>
                   <td className="py-4 px-6 text-right text-dark">{row.qty.toLocaleString('en-IN')}</td>

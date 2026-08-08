@@ -217,7 +217,7 @@ export default function CustomerDetailPage() {
                       inv.status === "paid"
                         ? "bg-success-bg text-success border-success/20"
                         : inv.status === "overdue"
-                          ? "bg-danger-bg text-danger border-danger/20"
+                          ? "bg-danger-bg text-danger-deep border-danger/20"
                           : "bg-surface-muted text-mid border-border"
                     }`}>
                       {inv.status}

@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 interface PayrollRun { id: string; payroll_number: string; month: string; year: string; status: string; net_pay: string; }
 
 const columns: ColumnDef<PayrollRun>[] = [
-  { key: "payroll_number", header: "Run #", width: "150px", render: (r) => <Link href={`/payroll/${r.id}`} className="font-mono text-[12px] text-amber-text hover:underline no-underline">{r.payroll_number}</Link> },
+  { key: "payroll_number", header: "Run #", width: "150px", render: (r) => <Link href={`/payroll/${r.id}`} className="font-mono text-[12px] text-amber hover:underline no-underline">{r.payroll_number}</Link> },
   { key: "month", header: "Period", sortable: true, render: (r) => <span className="font-ui text-[13px] text-dark">{r.month} {r.year}</span> },
   { key: "net_pay", header: "Net Pay", align: "right", render: (r) => <span className="font-mono text-[13px] tabular-nums">₹{Number(r.net_pay || 0).toLocaleString("en-IN")}</span> },
   { key: "status", header: "Status", align: "center", width: "100px", render: (r) => <Badge variant={r.status === "finalized" ? "success" : r.status === "draft" ? "amber" : "gray"}>{r.status}</Badge> },

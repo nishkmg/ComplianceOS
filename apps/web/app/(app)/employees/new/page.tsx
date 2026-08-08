@@ -73,7 +73,7 @@ export default function NewEmployeePage() {
           <div className="p-8 space-y-8">
             {/* Section: Personal Details */}
             <section>
-              <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Personal Details</h3>
+              <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Personal Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Employee Code *</label>
@@ -104,7 +104,7 @@ export default function NewEmployeePage() {
 
             {/* Section: Statutory Identifiers */}
             <section>
-              <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Statutory Identifiers</h3>
+              <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Statutory Identifiers</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">PAN Number *</label>
@@ -123,7 +123,7 @@ export default function NewEmployeePage() {
 
             {/* Section: Employment */}
             <section>
-              <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Employment Details</h3>
+              <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Employment Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Designation</label>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 // @ts-ignore
 export function SectionLabel({ children }) {
   return (
-    <div className="font-ui text-[11px] font-medium text-amber-text uppercase tracking-widest mb-4">
+    <div className="font-ui text-[11px] font-medium text-amber uppercase tracking-widest mb-4">
       {children}
     </div>
   );

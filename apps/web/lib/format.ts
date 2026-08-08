@@ -167,3 +167,22 @@ export function calculateBalance(
     balanced,
   };
 }
+
+/**
+ * Money cell formatter — canonical for financial tables.
+ * Negative amounts render in parentheses, zero as a dash, always tabular.
+ */
+export function formatAmount(
+  value: number | string | null | undefined,
+  options: { currency?: boolean; decimals?: number } = {}
+): string {
+  const { currency = true, decimals = 2 } = options;
+  const num = typeof value === "string" ? parseFloat(value) : (value ?? 0);
+  if (Number.isNaN(num)) return "—";
+  if (num === 0) return "—";
+  const abs = Math.abs(num);
+  const sign = num < 0 ? "(" : "";
+  const end = num < 0 ? ")" : "";
+  const body = formatIndianNumber(abs, { currency, decimals });
+  return `${sign}${body}${end}`;
+}

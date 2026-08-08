@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { Button } from '@/components/ui/button';
 
 interface EmptyStateProps {
   title: string;
@@ -11,36 +12,20 @@ interface EmptyStateProps {
   icon?: string;
 }
 
-export function EmptyState({
-  title,
-  description,
-  action,
-  icon = "inbox",
-}: EmptyStateProps) {
+export function EmptyState({ title, description, action, icon = "inbox" }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-      <div className="w-20 h-20 rounded-sm border border-border-subtle flex items-center justify-center bg-white mb-8 shadow-sm">
-        <Icon name={icon} className="text-4xl text-light/40" />
+    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-surface-muted border border-border">
+        <Icon name={icon} className="text-2xl text-light" />
       </div>
-      
-      <h3 className="font-display text-2xl font-bold text-dark mb-3">
-        {title}
-      </h3>
-
+      <h3 className="font-ui text-base font-semibold text-dark">{title}</h3>
       {description && (
-        <p className="font-ui text-sm text-mid max-w-md mb-10 leading-relaxed">
-          {description}
-        </p>
+        <p className="mt-1.5 max-w-md font-ui text-[13px] leading-relaxed text-mid">{description}</p>
       )}
-
       {action && (
-        <button
-          onClick={action.onClick}
-          className="bg-amber text-white px-10 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-sm border-none shadow-sm cursor-pointer flex items-center gap-2 group"
-        >
+        <Button onClick={action.onClick} className="mt-6">
           {action.label}
-          <Icon name="arrow_forward" className="text-lg group-hover:translate-x-1 transition-transform" />
-        </button>
+        </Button>
       )}
     </div>
   );

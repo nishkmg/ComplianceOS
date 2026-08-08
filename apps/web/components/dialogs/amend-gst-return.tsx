@@ -51,7 +51,7 @@ export function AmendGstReturnDialog({
         </DialogHeader>
 
         <div className="p-6 flex-1 overflow-y-auto text-left">
-          <label className="block font-ui text-[10px] text-amber-text uppercase tracking-widest mb-2 font-bold">Amendment Data (JSON)</label>
+          <label className="block font-ui text-[10px] text-amber uppercase tracking-widest mb-2 font-bold">Amendment Data (JSON)</label>
           <div className="border border-border-subtle rounded-sm relative bg-white">
             <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-section-muted">
               <span className="font-mono text-[12px] text-mid">return_payload.json</span>

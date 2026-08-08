@@ -43,6 +43,7 @@
   --color-sidebar: #18181B;
   --color-sidebar-muted: #A1A1AA;
   --color-sidebar-dim: #D4D4D8;
+  --color-sidebar-danger: #F87171; /* red-400: readable on the always-dark sidebar */
 
   /* ── Borders ───────────────────────────────────────────────────────
      --color-border         decorative hairlines (cards, dividers)
@@ -120,6 +121,7 @@
   --color-sidebar: #18181B;
   --color-sidebar-muted: #A1A1AA;
   --color-sidebar-dim: #D4D4D8;
+  --color-sidebar-danger: #F87171; /* red-400: readable on the always-dark sidebar */
 
   --color-border: #2A2A30;
   --color-border-strong: #75757F;

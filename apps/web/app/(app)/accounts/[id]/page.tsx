@@ -42,7 +42,7 @@ export default function AccountDetailPage() {
             ) : transactions.map((t, i) => (
               <tr key={t.id || i} className="hover:bg-surface-muted transition-colors">
                 <td className="py-3 px-6 font-mono text-[12px] text-mid">{t.date ? new Date(t.date).toLocaleDateString("en-IN") : "—"}</td>
-                <td className="py-3 px-6 font-mono text-[12px] text-amber-text">{t.entryNumber || "—"}</td>
+                <td className="py-3 px-6 font-mono text-[12px] text-amber">{t.entryNumber || "—"}</td>
                 <td className="py-3 px-6 font-ui text-[13px] text-dark">{t.description || "—"}</td>
                 <td className="py-3 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(t.debit || "0") > 0 ? formatIndianNumber(parseFloat(t.debit), { currency: true }) : "—"}</td>
                 <td className="py-3 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(t.credit || "0") > 0 ? formatIndianNumber(parseFloat(t.credit), { currency: true }) : "—"}</td>

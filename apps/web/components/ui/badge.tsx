@@ -1,36 +1,31 @@
-import { ReactNode } from 'react';
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-export type BadgeVariant = 'amber' | 'success' | 'gray' | 'danger';
+const badgeVariants = cva(
+  "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-ui text-[11px] font-medium leading-5 tracking-wide",
+  {
+    variants: {
+      variant: {
+        success: "bg-success-bg text-success-deep",
+        danger: "bg-danger-bg text-danger-deep",
+        amber: "bg-amber-soft text-amber",
+        neutral: "bg-surface-muted text-mid border border-border",
+        gray: "bg-lighter/70 text-mid",
+      },
+    },
+    defaultVariants: {
+      variant: "neutral",
+    },
+  }
+);
 
-interface BadgeProps {
-  variant?: BadgeVariant;
-  children: ReactNode;
-  className?: string;
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
+  return <span className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
-/**
- * Status Badge Component
- * 
- * Small pill-shaped badge for status indicators.
- * Uses semantic colors per §2.5:
- * - amber: Draft entries
- * - success: Posted entries, completed status
- * - gray: Voided entries, inactive status
- * - danger: Error states, overdue
- * 
- * Styling per §1.6:
- * - radius-sm (4px)
- * - ui-xs Syne font
- * - 4px leading dot (when used)
- */
-import { cn } from '@/lib/utils';
-
-export function Badge({ variant = 'gray', children, className = '' }: BadgeProps) {
-  return (
-    <span
-      className={cn("badge", `badge-${variant}`, className)}
-    >
-      {children}
-    </span>
-  );
-}
+export { Badge, badgeVariants };

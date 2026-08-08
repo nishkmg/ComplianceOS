@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T08:20:44.028Z",
+  "generatedAt": "2026-08-08T15:00:23.097Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,12 +206,12 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 1642,
+      "arbitraryValues": 1645,
       "rawPaletteUtilities": 134,
       "hexLiterals": 25,
       "unpairedOutlineNone": 199,
-      "focusVisible": 80,
-      "darkClasses": 27,
+      "focusVisible": 84,
+      "darkClasses": 26,
       "distinctRadii": 10
     },
     "states": {
@@ -220,7 +220,7 @@
       "pagesWithLoading": 21,
       "pagesWithErrorHandling": 5,
       "pagesWithEmptyState": 28,
-      "ariaLiveAnnouncers": 4,
+      "ariaLiveAnnouncers": 7,
       "clientPages": 83,
       "serverPages": 14
     },

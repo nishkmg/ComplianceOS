@@ -25,7 +25,7 @@ export default function LegalPage({ title, lastUpdated, children }: { title: str
             
             <nav className="mb-10 font-ui text-[13px] space-y-2">
               {sections.map((s) => (
-                <a key={s.id} href={`#${s.id}`} className="block text-amber-text hover:underline">{s.title}</a>
+                <a key={s.id} href={`#${s.id}`} className="block text-amber hover:underline">{s.title}</a>
               ))}
             </nav>
             

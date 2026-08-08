@@ -35,7 +35,7 @@ export default function AuditLogPage() {
             <tbody className="divide-y divide-border-subtle">
               {entries.map(e => (
                 <tr key={e.id} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-3 px-6 font-mono text-[11px] text-amber-text">{e.event_type?.replace(/_/g, ' ')}</td>
+                  <td className="py-3 px-6 font-mono text-[11px] text-amber">{e.event_type?.replace(/_/g, ' ')}</td>
                   <td className="py-3 px-6 font-ui text-[12px] text-dark">{e.aggregate_type}</td>
                   <td className="py-3 px-6 font-mono text-[11px] text-mid">{e.aggregate_id?.substring(0, 8)}…</td>
                   <td className="py-3 px-6 font-mono text-[11px] text-mid">{e.created_at ? new Date(e.created_at).toLocaleString("en-IN") : "—"}</td>

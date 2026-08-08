@@ -26,7 +26,7 @@ export default function GstReturnsPage() {
     })();
   }, [tenantId]);
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-light animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <h1 className="font-ui text-display-lg font-semibold text-dark">GST Returns</h1>
@@ -43,7 +43,7 @@ export default function GstReturnsPage() {
             <tbody className="divide-y divide-border-subtle">
               {returns.map(r => (
                 <tr key={r.id} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-3 px-6 font-mono text-[12px] text-amber-text"><Link href={`/gst/returns/${r.tax_period_year}/${r.return_type}`} className="hover:underline no-underline text-inherit">{r.return_number}</Link></td>
+                  <td className="py-3 px-6 font-mono text-[12px] text-amber"><Link href={`/gst/returns/${r.tax_period_year}/${r.return_type}`} className="hover:underline no-underline text-inherit">{r.return_number}</Link></td>
                   <td className="py-3 px-6 font-ui text-[13px] text-dark">{monthNames[parseInt(r.tax_period_month)] || r.tax_period_month} {r.tax_period_year}</td>
                   <td className="py-3 px-6 font-mono text-[12px] text-mid">{r.due_date ? new Date(r.due_date).toLocaleDateString("en-IN") : "—"}</td>
                   <td className="py-3 px-6 font-mono text-[13px] tabular-nums text-right">₹{Number(r.total_tax_payable || 0).toLocaleString("en-IN")}</td>

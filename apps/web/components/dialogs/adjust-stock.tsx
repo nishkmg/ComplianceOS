@@ -59,7 +59,7 @@ export function AdjustStockDialog({
           <div className="flex flex-col gap-6 text-left">
             <div className="flex gap-6">
               <div className="flex-1">
-                <label className="block font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold mb-2">Adjustment Qty (+/-)</label>
+                <label className="block font-ui text-[10px] text-amber uppercase tracking-widest font-bold mb-2">Adjustment Qty (+/-)</label>
                 <div className="relative flex items-center border border-border bg-white focus-within:border-amber h-12 rounded-sm">
                   <Icon name="calculate" className="text-light pl-4 pr-2 text-[20px]" />
                   <input 

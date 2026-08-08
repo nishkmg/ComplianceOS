@@ -50,7 +50,7 @@ export default function ITRReturnDetailPage() {
         <div className="bg-surface border border-border p-8 shadow-sm">
           <div className="flex justify-between items-center mb-8">
             <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Filing Workflow Status</h3>
-            <span className="px-3 py-1 bg-amber-50 text-amber-text border border-amber-200 text-[10px] font-bold uppercase tracking-widest rounded-md">Ready for Review</span>
+            <span className="px-3 py-1 bg-amber-soft text-amber border border-amber-200 text-[10px] font-bold uppercase tracking-widest rounded-md">Ready for Review</span>
           </div>
           <div className="flex gap-4 w-full h-1 mb-2">
             <div className="flex-1 bg-success-bg0 rounded-md"></div>
@@ -89,7 +89,7 @@ export default function ITRReturnDetailPage() {
            </div>
 
            <div className="bg-dark text-white p-8 shadow-xl border border-stone-950">
-             <h4 className="text-amber-text font-ui text-[13px] font-bold mb-6 uppercase tracking-widest text-[10px]">Tax Calculation</h4>
+             <h4 className="text-amber font-ui text-[13px] font-bold mb-6 uppercase tracking-widest text-[10px]">Tax Calculation</h4>
              <div className="space-y-4">
                 <div className="flex justify-between font-ui text-[13px] opacity-60">
                    <span>Total Tax Liability</span>
@@ -100,8 +100,8 @@ export default function ITRReturnDetailPage() {
                    <span className="font-mono text-green-400">₹ 5,55,525</span>
                 </div>
                 <div className="flex justify-between font-ui text-[13px] text-lg pt-6 mt-4 border-t border-stone-800 font-bold">
-                   <span className="text-amber-text">Net Tax Payable</span>
-                   <span className="font-mono text-amber-text">₹ 6,06,975</span>
+                   <span className="text-amber">Net Tax Payable</span>
+                   <span className="font-mono text-amber">₹ 6,06,975</span>
                 </div>
              </div>
            </div>

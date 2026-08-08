@@ -37,7 +37,7 @@ export function ExportDataDialog({
         <div className="p-8 flex flex-col gap-8 bg-white overflow-y-auto max-h-[70vh] text-left">
           {/* Section: FY */}
           <div className="flex flex-col gap-4">
-            <label className="font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold">Select Period</label>
+            <label className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Select Period</label>
             <div className="grid grid-cols-2 gap-4">
               <div className="relative">
                 <select 
@@ -59,7 +59,7 @@ export function ExportDataDialog({
 
           {/* Section: Modules */}
           <div className="flex flex-col gap-4">
-            <label className="font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold">Select Modules</label>
+            <label className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Select Modules</label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {['General Ledger', 'GST Data', 'Employee Records', 'ITR Computation'].map((m) => (
                 <label key={m} className="flex items-start gap-3 p-4 border border-border-subtle rounded-sm hover:bg-section-muted cursor-pointer transition-colors has-[:checked]:border-amber has-[:checked]:bg-section-amber">
@@ -77,7 +77,7 @@ export function ExportDataDialog({
 
           {/* Section: Format */}
           <div className="flex flex-col gap-4">
-            <label className="font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold">Export Format</label>
+            <label className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Export Format</label>
             <div className="flex gap-4">
               {[
                 { id: 'xlsx', name: 'Excel (.xlsx)', icon: 'table' },

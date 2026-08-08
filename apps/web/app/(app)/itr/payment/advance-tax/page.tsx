@@ -134,7 +134,7 @@ export default function ITRAdvanceTaxPage() {
         {/* Liability Summary */}
         <section className="bg-dark text-white p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl border border-stone-950">
           <div className="text-left flex-1">
-            <h3 className="text-amber-text font-ui text-lg font-bold mb-2">Projected Annual Liability</h3>
+            <h3 className="text-amber font-ui text-lg font-bold mb-2">Projected Annual Liability</h3>
             <p className="text-light font-ui text-[13px] leading-relaxed">Based on your current fiscal P&L data and estimated non-business income for FY {activeFy}.</p>
           </div>
           <div className="text-right">
@@ -169,7 +169,7 @@ export default function ITRAdvanceTaxPage() {
                     <td className="py-5 px-6 text-right font-bold text-dark">{formatIndianNumber(i.amount)}</td>
                     <td className="py-5 px-6">
                       <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
-                        i.status === 'paid' ? 'bg-success-bg text-success border-success/20' : 'bg-amber-50 text-amber-text border-amber-200'
+                        i.status === 'paid' ? 'bg-success-bg text-success-deep border-success/20' : 'bg-amber-soft text-amber border-amber-bright/30'
                       }`}>
                         {i.status}
                       </span>

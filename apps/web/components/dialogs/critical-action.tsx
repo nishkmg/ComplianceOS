@@ -42,7 +42,7 @@ export function CriticalActionDialog({
         </DialogHeader>
 
         <div className="bg-section-muted border border-border-subtle p-6 mb-10 rounded-sm">
-          <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-4 font-bold">Consequences of Action</h3>
+          <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-4 font-bold">Consequences of Action</h3>
           <ul className="space-y-3 font-ui text-[13px] text-dark-variant list-none p-0">
             {consequences.map((c, i) => (
               <li key={i} className="flex items-start gap-3">

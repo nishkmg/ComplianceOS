@@ -144,7 +144,7 @@ export default function NewPaymentPage() {
 
       <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber -mt-6 mb-6" />
-        <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Classification</h3>
+        <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Classification</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { value: "receipt" as const, title: "Payment Receipt", desc: "Recording funds received from a customer or client against invoices." },
@@ -262,7 +262,7 @@ export default function NewPaymentPage() {
       {parseFloat(paymentAmount || "0") > 0 && (
         <div className="bg-amber-50 border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
           <div>
-            <h4 className="font-ui text-[10px] font-bold text-amber-text uppercase tracking-widest mb-1">Allocation Required</h4>
+            <h4 className="font-ui text-[10px] font-bold text-amber uppercase tracking-widest mb-1">Allocation Required</h4>
             <p className="font-ui text-[13px] text-[12px] text-amber-800 leading-relaxed">
               This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.
             </p>

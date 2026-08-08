@@ -36,7 +36,7 @@ export default function ITRRecordPaymentPage() {
           <div className="p-8 md:p-12 relative z-10">
             {/* Section 1: Classification */}
             <div className="mb-12">
-              <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Classification</h3>
+              <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Classification</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                   { id: "100", name: "Advance Tax", code: "100" },

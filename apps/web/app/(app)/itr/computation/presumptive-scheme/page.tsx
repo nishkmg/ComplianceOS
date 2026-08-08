@@ -93,7 +93,7 @@ export default function ITRPresumptivePage() {
         {/* Right Column: Output */}
         <div className="lg:col-span-5 flex flex-col gap-6">
           <div className="bg-dark text-white p-8 rounded-md shadow-xl flex flex-col border border-stone-800">
-            <h3 className="font-ui text-lg text-lg font-bold text-amber-text mb-8">Computation Result</h3>
+            <h3 className="font-ui text-lg text-lg font-bold text-amber mb-8">Computation Result</h3>
             
             <div className="space-y-6">
               <div className="flex justify-between items-end border-b border-stone-800 pb-4">

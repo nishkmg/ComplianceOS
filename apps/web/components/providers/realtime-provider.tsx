@@ -83,7 +83,16 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       callback: fanOut,
     }));
 
-    const { cleanup } = bindTenantSubscriptions(tenantId, subs);
+    // Realtime is optional: if the Supabase legacy stack is unconfigured
+    // (no anon key / dead project), degrade to disconnected instead of
+    // crashing the whole app shell.
+    let cleanup: (() => Promise<void>) | null = null;
+    try {
+      ({ cleanup } = bindTenantSubscriptions(tenantId, subs));
+    } catch {
+      setStatus("disconnected");
+      return () => {};
+    }
     cleanupRef.current = cleanup;
 
     const statusTimer = setTimeout(() => {

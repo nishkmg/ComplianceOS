@@ -45,7 +45,7 @@ export default function ITRPaymentHistoryPage() {
         </div>
         <div className="bg-surface border border-border p-8 border-t-2 border-t-amber-500 shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Pending Liability</p>
-          <p className="font-mono text-3xl font-bold text-amber-text">₹ {formatIndianNumber(totalPending)}</p>
+          <p className="font-mono text-3xl font-bold text-amber">₹ {formatIndianNumber(totalPending)}</p>
         </div>
         <div className="bg-surface border border-border p-8 border-t-2 border-t-stone-800 shadow-sm">
           <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Challan Records</p>
@@ -85,7 +85,7 @@ export default function ITRPaymentHistoryPage() {
                   <td className="py-5 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(p.amount)}</td>
                   <td className="py-5 px-6">
                     <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-widest border rounded-md ${
-                      p.status === 'completed' ? 'bg-success-bg text-success border-success/20' : 'bg-amber-50 text-amber-text border-amber-200'
+                      p.status === 'completed' ? 'bg-success-bg text-success-deep border-success/20' : 'bg-amber-soft text-amber border-amber-bright/30'
                     }`}>
                       {p.status}
                     </span>
@@ -94,7 +94,7 @@ export default function ITRPaymentHistoryPage() {
                     {p.status === 'completed' ? (
                       <button onClick={() => showToast.success("Receipt downloaded.")} className="text-amber hover:text-primary font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer underline underline-offset-4">Download</button>
                     ) : (
-                      <button onClick={() => showToast.info("Record challan info to complete.")} className="text-amber hover:text-amber-text font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Record Info</button>
+                      <button onClick={() => showToast.info("Record challan info to complete.")} className="text-amber hover:text-amber font-bold uppercase text-[10px] tracking-widest border-none bg-transparent cursor-pointer">Record Info</button>
                     )}
                   </td>
                 </tr>

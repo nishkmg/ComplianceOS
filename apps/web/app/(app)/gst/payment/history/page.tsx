@@ -30,7 +30,7 @@ export default function PaymentHistoryPage() {
           </tr></thead><tbody className="divide-y divide-border-subtle">
             {payments.map(p => (
               <tr key={p.id} className="hover:bg-surface-muted transition-colors">
-                <td className="py-3 px-6 font-mono text-[12px] text-amber-text">{p.challan_number || "—"}</td>
+                <td className="py-3 px-6 font-mono text-[12px] text-amber">{p.challan_number || "—"}</td>
                 <td className="py-3 px-6 font-mono text-[12px] text-mid">{p.transaction_date ? new Date(p.transaction_date).toLocaleDateString("en-IN") : "—"}</td>
                 <td className="py-3 px-6 font-ui text-[13px] text-dark uppercase">{p.tax_type || "—"}</td>
                 <td className="py-3 px-6 font-ui text-[13px] text-dark">{p.bank_name || "—"}</td>

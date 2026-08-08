@@ -301,7 +301,7 @@ export default function NewJournalEntryPage() {
       {dateError && (
         <div className="bg-danger-bg border border-danger/20 px-4 py-2.5 rounded-md flex items-center gap-2">
           <Icon name="warning" size={16} className="text-danger shrink-0" />
-          <span className="font-ui text-[12px] text-danger font-medium">{dateError}</span>
+          <span className="font-ui text-[12px] text-danger-deep font-medium">{dateError}</span>
         </div>
       )}
       {discardConfirm && (
@@ -320,6 +320,7 @@ export default function NewJournalEntryPage() {
             <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Posting Date</label>
             <input
               type="date"
+              aria-label="Entry date"
               className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -330,6 +331,7 @@ export default function NewJournalEntryPage() {
             <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Voucher Type</label>
             <div className="relative">
               <select
+                aria-label="Voucher type"
                 className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 value={voucherType}
                 onChange={(e) => setVoucherType(e.target.value)}
@@ -398,6 +400,7 @@ export default function NewJournalEntryPage() {
                   <tr key={line.id} className="hover:bg-surface-muted/50 transition-colors">
                     <td className="p-0">
                       <select
+                        aria-label={`Account for line ${index + 1}`}
                         className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none appearance-none"
                         value={line.accountId}
                         onChange={(e) => updateLine(index, "accountId", e.target.value)}
@@ -513,11 +516,11 @@ export default function NewJournalEntryPage() {
         <div className="flex items-center gap-2">
           <span className="text-[10px] uppercase font-bold text-light tracking-widest mr-1">Shortcuts</span>
           <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-[9px] font-mono text-mid">⌘S</kbd>
-          <span className="text-[10px] text-lighter">Save</span>
+          <span className="text-[10px] text-light">Save</span>
           <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-[9px] font-mono text-mid">⌘↵</kbd>
-          <span className="text-[10px] text-lighter">Post</span>
+          <span className="text-[10px] text-light">Post</span>
           <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-[9px] font-mono text-mid">N</kbd>
-          <span className="text-[10px] text-lighter">New Line</span>
+          <span className="text-[10px] text-light">New Line</span>
         </div>
         <div className="flex gap-3">
           <Button

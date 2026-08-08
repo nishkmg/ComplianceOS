@@ -36,7 +36,7 @@ export function CloseFiscalYearDialog({
 
         <div className="p-8 space-y-8 text-left bg-white">
           <div>
-             <h3 className="font-ui text-[10px] text-amber-text uppercase tracking-widest font-bold mb-4">Finalization Checklist</h3>
+             <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold mb-4">Finalization Checklist</h3>
              <ul className="space-y-4 font-ui text-[13px] text-dark-variant list-none p-0">
                <li className="flex items-start gap-3">
                  <Icon name="check_circle" className="text-success text-[18px]" />

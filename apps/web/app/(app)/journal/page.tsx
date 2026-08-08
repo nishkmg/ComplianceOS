@@ -40,7 +40,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     render: (row) => (
       <Link
         href={`/journal/${row.id}`}
-        className="font-mono text-[13px] text-amber-text hover:underline no-underline"
+        className="font-mono text-[13px] text-amber hover:underline no-underline"
       >
         {row.entryNumber}
       </Link>

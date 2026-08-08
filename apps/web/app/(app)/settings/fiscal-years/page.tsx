@@ -88,9 +88,9 @@ export default function FiscalYearsPage() {
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-dark text-white p-8 shadow-sm relative overflow-hidden group">
             <div className="relative z-10 text-left">
-              <h4 className="text-amber-text font-ui text-lg font-bold mb-3">Statutory Lock</h4>
+              <h4 className="text-amber font-ui text-lg font-bold mb-3">Statutory Lock</h4>
               <p className="text-light text-sm leading-relaxed mb-6">Current policy prevents modifications to any closed fiscal periods. This ensures 100% data integrity for historical audit trails.</p>
-              <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-amber-text/80">
+              <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-amber/80">
                 <Icon name="verified_user" className="text-sm" />
                 Policy Enforced
               </div>

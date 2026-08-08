@@ -42,7 +42,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
     <div className="flex flex-col gap-12 text-left">
       {/* Section Header */}
       <div>
-        <span className="font-ui text-[11px] text-ui-xs text-amber-text uppercase tracking-widest block mb-4">Architecture</span>
+        <span className="font-ui text-[11px] text-ui-xs text-amber uppercase tracking-widest block mb-4">Architecture</span>
         <h1 className="font-ui text-display-xl text-on-surface mb-4">Configure Ledger Modules</h1>
         <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
           Select the specific functional modules required for your organization's fiscal operations. These can be adjusted post-onboarding within system settings.

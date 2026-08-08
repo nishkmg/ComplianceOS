@@ -27,10 +27,10 @@ export default function PayrollReportsPage() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-surface border border-border border-t-2 border-t-amber p-8 hover:shadow-sm transition-shadow cursor-pointer group text-left">
             <div className="flex justify-between items-start mb-6">
-              <div className="p-3 bg-surface-muted rounded text-amber-text">
+              <div className="p-3 bg-surface-muted rounded text-amber">
                 <Icon name="receipt_long" />
               </div>
-              <Icon name="open_in_new" className="text-light group-hover:text-amber-text transition-colors" />
+              <Icon name="open_in_new" className="text-light group-hover:text-amber transition-colors" />
             </div>
             <h3 className="font-ui text-lg font-bold text-dark mb-3">PF Challans</h3>
             <p className="font-ui text-[13px] text-mid leading-relaxed">Generate Provident Fund remittance files for EPFO portal upload.</p>
@@ -38,10 +38,10 @@ export default function PayrollReportsPage() {
 
           <div className="bg-surface border border-border border-t-2 border-t-amber p-8 hover:shadow-sm transition-shadow cursor-pointer group text-left">
             <div className="flex justify-between items-start mb-6">
-              <div className="p-3 bg-surface-muted rounded text-amber-text">
+              <div className="p-3 bg-surface-muted rounded text-amber">
                 <Icon name="health_and_safety" />
               </div>
-              <Icon name="open_in_new" className="text-light group-hover:text-amber-text transition-colors" />
+              <Icon name="open_in_new" className="text-light group-hover:text-amber transition-colors" />
             </div>
             <h3 className="font-ui text-lg font-bold text-dark mb-3">ESI Challans</h3>
             <p className="font-ui text-[13px] text-mid leading-relaxed">Prepare ESI contribution files with employee-wise breakup.</p>
@@ -49,10 +49,10 @@ export default function PayrollReportsPage() {
 
           <div className="bg-surface border border-border border-t-2 border-t-amber p-8 hover:shadow-sm transition-shadow cursor-pointer group text-left">
             <div className="flex justify-between items-start mb-6">
-              <div className="p-3 bg-surface-muted rounded text-amber-text">
+              <div className="p-3 bg-surface-muted rounded text-amber">
                 <Icon name="description" />
               </div>
-              <Icon name="open_in_new" className="text-light group-hover:text-amber-text transition-colors" />
+              <Icon name="open_in_new" className="text-light group-hover:text-amber transition-colors" />
             </div>
             <h3 className="font-ui text-lg font-bold text-dark mb-3">Professional Tax</h3>
             <p className="font-ui text-[13px] text-mid leading-relaxed">Compute and file professional tax returns by state jurisdiction.</p>

@@ -21,7 +21,7 @@ interface Invoice {
 
 const columns: ColumnDef<Invoice>[] = [
   { key: "invoiceNumber", header: "Invoice #", sortable: true, width: "180px",
-    render: (row) => <Link href={`/invoices/${row.id}`} className="font-mono text-[13px] text-amber-text hover:underline no-underline">{row.invoiceNumber}</Link> },
+    render: (row) => <Link href={`/invoices/${row.id}`} className="font-mono text-[13px] text-amber hover:underline no-underline">{row.invoiceNumber}</Link> },
   { key: "customerName", header: "Customer", sortable: true,
     render: (row) => <span className="font-ui text-[13px] text-dark">{row.customerName}</span> },
   { key: "date", header: "Date", sortable: true, width: "130px",

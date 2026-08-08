@@ -1,4 +1,5 @@
-import { supabaseRest } from "@/lib/supabase-rest";
+import { eq, sql } from "drizzle-orm";
+import { db, tenants, tenantModuleConfig } from "@complianceos/db";
 
 export const runtime = "nodejs";
 
@@ -14,32 +15,28 @@ function mapState(s: string): string {
   return STATE_MAP[s] || s;
 }
 
-async function mergeOnboardingData(
-  tenantId: string,
-  updates: Record<string, unknown>
-): Promise<void> {
-  const readRes = await supabaseRest(
-    `tenants?id=eq.${encodeURIComponent(tenantId)}&select=onboarding_data`,
-    { method: "GET" }
-  );
-  if (!readRes.ok) throw new Error("Failed to read tenant onboarding data");
-  const rows = Array.isArray(readRes.json) ? (readRes.json as any[]) : [];
-  const current: Record<string, unknown> =
-    (rows[0]?.onboarding_data as Record<string, unknown>) || {};
-  const merged = { ...current, ...updates };
+async function mergeOnboardingData(tenantId: string, updates: Record<string, unknown>): Promise<void> {
+  const [t] = await db
+    .select({ onboardingData: tenants.onboardingData })
+    .from(tenants)
+    .where(eq(tenants.id, tenantId))
+    .limit(1);
+  if (!t) throw new Error("Tenant not found");
+  const merged = { ...(t.onboardingData as Record<string, unknown>), ...updates };
+  await db.update(tenants).set({ onboardingData: merged }).where(eq(tenants.id, tenantId));
+}
 
-  const patchRes = await supabaseRest(
-    `tenants?id=eq.${encodeURIComponent(tenantId)}`,
-    {
-      method: "PATCH",
-      headers: { Prefer: "return=minimal" },
-      body: { onboarding_data: merged },
-    }
-  );
-  if (!patchRes.ok)
-    throw new Error(
-      `Failed to save onboarding data: ${patchRes.text.slice(0, 200)}`
-    );
+// Module activation shape the client expects: array of { module, enabled: "true"|"false" }
+function moduleActivationFromData(data: Record<string, unknown>): Array<{ module: string; enabled: string }> {
+  const raw = data.moduleActivation;
+  if (Array.isArray(raw)) return raw as Array<{ module: string; enabled: string }>;
+  if (raw && typeof raw === "object") {
+    return Object.entries(raw).map(([module, enabled]) => ({
+      module,
+      enabled: enabled ? "true" : "false",
+    }));
+  }
+  return [];
 }
 
 // ─── GET: fetch onboarding state ──────────────────────────────────────
@@ -51,44 +48,54 @@ export async function GET(req: Request) {
       return Response.json({ error: "tenantId query param required" }, { status: 400 });
     }
 
-    const res = await supabaseRest(
-      `tenants?id=eq.${encodeURIComponent(tenantId)}`,
-      { method: "GET" }
-    );
-    if (!res.ok) {
-      return Response.json({ error: "Tenant not found" }, { status: 404 });
-    }
-
-    const rows = Array.isArray(res.json) ? (res.json as any[]) : [];
-    const t = rows[0];
+    const [t] = await db
+      .select({
+        id: tenants.id,
+        name: tenants.name,
+        legalName: tenants.legalName,
+        businessType: tenants.businessType,
+        pan: tenants.pan,
+        gstin: tenants.gstin,
+        address: tenants.address,
+        state: tenants.state,
+        industry: tenants.industry,
+        dateOfIncorporation: tenants.dateOfIncorporation,
+        onboardingStatus: tenants.onboardingStatus,
+        onboardingData: tenants.onboardingData,
+      })
+      .from(tenants)
+      .where(eq(tenants.id, tenantId))
+      .limit(1);
     if (!t) {
       return Response.json({ error: "Tenant not found" }, { status: 404 });
     }
 
-    const onboardingData: Record<string, unknown> =
-      (t.onboarding_data as Record<string, unknown>) || {};
+    const onboardingData: Record<string, unknown> = (t.onboardingData as Record<string, unknown>) || {};
 
-    // Fetch active modules
-    const modRes = await supabaseRest(
-      `tenant_module_config?tenant_id=eq.${encodeURIComponent(tenantId)}&select=module,enabled`,
-      { method: "GET" }
-    );
-    const modules = modRes.ok && Array.isArray(modRes.json) ? modRes.json : [];
+    // Prefer explicit tenant_module_config rows; fall back to onboarding_data.moduleActivation
+    const moduleRows = await db
+      .select({ module: tenantModuleConfig.module, enabled: tenantModuleConfig.enabled })
+      .from(tenantModuleConfig)
+      .where(eq(tenantModuleConfig.tenantId, tenantId));
+    const modules =
+      moduleRows.length > 0
+        ? moduleRows.map((r) => ({ module: r.module, enabled: r.enabled }))
+        : moduleActivationFromData(onboardingData);
 
     return Response.json({
       tenantId: t.id,
-      onboardingStatus: t.onboarding_status || "in_progress",
+      onboardingStatus: t.onboardingStatus || "in_progress",
       currentStep: (onboardingData.current_step as number) || 1,
       businessProfile: {
         name: t.name || "",
-        legalName: t.legal_name || "",
-        businessType: t.business_type || "",
+        legalName: t.legalName || "",
+        businessType: t.businessType || "",
         pan: t.pan || "",
         gstin: t.gstin || "",
         address: t.address || "",
         state: t.state || "",
         industry: t.industry || "",
-        dateOfIncorporation: t.date_of_incorporation || "",
+        dateOfIncorporation: t.dateOfIncorporation || "",
       },
       moduleActivation: modules,
       onboardingData,
@@ -110,7 +117,6 @@ export async function POST(req: Request) {
     }
 
     const { step, tenantId, data } = body;
-
     if (typeof tenantId !== "string" || tenantId.length < 1) {
       return Response.json({ error: "tenantId is required" }, { status: 400 });
     }
@@ -118,20 +124,15 @@ export async function POST(req: Request) {
       return Response.json({ error: "step is required" }, { status: 400 });
     }
 
-    const d = data as Record<string, unknown>;
+    const d = (data as Record<string, unknown>) || {};
 
-    // Step 0: lightweight progress save (no validation, just store current_step)
     if (step === 0) {
-      await mergeOnboardingData(tenantId, { current_step: d.currentStep as number || 1 });
+      await mergeOnboardingData(tenantId, { current_step: (d.currentStep as number) || 1 });
       return Response.json({ success: true });
     }
 
     if (step < 1 || step > 6) {
       return Response.json({ error: "step must be 0-6" }, { status: 400 });
-    }
-
-    if (!data || typeof data !== "object") {
-      return Response.json({ error: "data payload is required" }, { status: 400 });
     }
 
     switch (step) {
@@ -142,69 +143,46 @@ export async function POST(req: Request) {
             { status: 400 }
           );
         }
-
-        const fields: Record<string, unknown> = {
-          name: d.name,
-          legal_name: d.legalName || d.name,
-          business_type: d.businessType,
-          pan: (d.pan as string || "").toUpperCase(),
-          gstin: d.gstin ? (d.gstin as string).toUpperCase() : null,
-          address: d.address,
-          state: mapState(d.state as string),
-          industry: d.industry,
-          date_of_incorporation: d.dateOfIncorporation || null,
-        };
-
-        const res = await supabaseRest(
-          `tenants?id=eq.${encodeURIComponent(tenantId)}`,
-          {
-            method: "PATCH",
-            headers: { Prefer: "return=minimal" },
-            body: fields,
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error(
-            `Failed to update tenant: ${res.status} ${res.text.slice(0, 200)}`
-          );
-        }
-
+        await db
+          .update(tenants)
+          .set({
+            name: String(d.name),
+            legalName: (d.legalName as string) || String(d.name),
+            businessType: sql`${String(d.businessType)}`,
+            pan: String(d.pan).toUpperCase(),
+            gstin: d.gstin ? String(d.gstin).toUpperCase() : null,
+            address: String(d.address),
+            state: sql`${mapState(String(d.state))}`,
+            industry: sql`${String(d.industry)}`,
+            dateOfIncorporation: d.dateOfIncorporation ? String(d.dateOfIncorporation) : null,
+          })
+          .where(eq(tenants.id, tenantId));
         return Response.json({ success: true, tenantId });
       }
 
       case 2: {
-        const modules: Array<{ module: string; enabled: boolean }> =
-          (d.modules as any) || (d.moduleActivation as any);
-        if (!Array.isArray(modules)) {
-          return Response.json({ error: "Module data must be an array" }, { status: 400 });
-        }
+        const modules: Array<{ module: string; enabled: boolean }> = Array.isArray(d.modules)
+          ? (d.modules as Array<{ module: string; enabled: boolean }>)
+          : Array.isArray(d.moduleActivation)
+            ? (d.moduleActivation as Array<{ module: string; enabled: boolean }>)
+            : [];
         if (modules.length === 0) {
           return Response.json({ error: "At least one module must be selected" }, { status: 400 });
         }
-
-        await supabaseRest(
-          `tenant_module_config?tenant_id=eq.${encodeURIComponent(tenantId)}`,
-          { method: "DELETE", headers: { Prefer: "return=minimal" } }
-        );
-
+        await db.delete(tenantModuleConfig).where(eq(tenantModuleConfig.tenantId, tenantId));
         for (const m of modules) {
           if (!m.module) continue;
-          const ins = await supabaseRest("tenant_module_config", {
-            method: "POST",
-            headers: { Prefer: "return=minimal" },
-            body: {
-              tenant_id: tenantId,
-              module: m.module,
-              enabled: m.enabled ? "true" : "false",
-              set_by: "manual",
-            },
+          await db.insert(tenantModuleConfig).values({
+            tenantId,
+            module: sql`${m.module}`,
+            enabled: m.enabled ? "true" : "false",
+            setBy: sql`'manual'`,
           });
-          if (!ins.ok) {
-            throw new Error(`Failed to save module ${m.module}: ${ins.status}`);
-          }
         }
-
+        // Mirror into onboarding_data for the fallback path
+        const activation: Record<string, boolean> = {};
+        for (const m of modules) activation[m.module] = !!m.enabled;
+        await mergeOnboardingData(tenantId, { moduleActivation: activation });
         return Response.json({ success: true });
       }
 
@@ -222,9 +200,7 @@ export async function POST(req: Request) {
         if (!Array.isArray(selectedIds)) {
           return Response.json({ error: "selectedIds must be an array" }, { status: 400 });
         }
-        await mergeOnboardingData(tenantId, {
-          coa_review: { reviewed: true, selectedIds },
-        });
+        await mergeOnboardingData(tenantId, { coa_review: { reviewed: true, selectedIds } });
         return Response.json({ success: true });
       }
 
@@ -243,26 +219,16 @@ export async function POST(req: Request) {
           tds_applicable: tdsApplicable ?? false,
         });
 
-        const gstRes = await supabaseRest(
-          `tenants?id=eq.${encodeURIComponent(tenantId)}`,
-          {
-            method: "PATCH",
-            headers: { Prefer: "return=minimal" },
-            body: {
-              gst_registration: gstReg || null,
-              gstin: gstin || null,
-              gst_config: {
-                itc_eligible: itcEligible ?? true,
-                tds_applicable: tdsApplicable ?? false,
-              },
+        await db
+          .update(tenants)
+          .set({
+            gstin: gstin || null,
+            gstConfig: {
+              itc_eligible: itcEligible ?? true,
+              tds_applicable: tdsApplicable ?? false,
             },
-          }
-        );
-
-        if (!gstRes.ok) {
-          throw new Error(`Failed to save GST settings: ${gstRes.text.slice(0, 200)}`);
-        }
-
+          })
+          .where(eq(tenants.id, tenantId));
         return Response.json({ success: true });
       }
 
@@ -271,25 +237,14 @@ export async function POST(req: Request) {
         if (mode !== "fresh_start" && mode !== "migration") {
           return Response.json({ error: "Invalid mode" }, { status: 400 });
         }
-
         await mergeOnboardingData(tenantId, {
           opening_balances_mode: mode,
           ...(mode === "migration" && d.balances ? { opening_balances: d.balances } : {}),
         });
-
-        const obRes = await supabaseRest(
-          `tenants?id=eq.${encodeURIComponent(tenantId)}`,
-          {
-            method: "PATCH",
-            headers: { Prefer: "return=minimal" },
-            body: { onboarding_status: "complete" },
-          }
-        );
-
-        if (!obRes.ok) {
-          throw new Error(`Failed to finalize onboarding: ${obRes.text.slice(0, 200)}`);
-        }
-
+        await db
+          .update(tenants)
+          .set({ onboardingStatus: "complete" })
+          .where(eq(tenants.id, tenantId));
         return Response.json({ success: true, redirect: "/dashboard" });
       }
 
@@ -298,9 +253,6 @@ export async function POST(req: Request) {
     }
   } catch (err: any) {
     console.error("[onboarding] error:", err.message);
-    return Response.json(
-      { error: err.message || "Onboarding step failed" },
-      { status: 500 }
-    );
+    return Response.json({ error: err.message || "Onboarding step failed" }, { status: 500 });
   }
 }

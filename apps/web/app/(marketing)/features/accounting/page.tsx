@@ -41,7 +41,7 @@ export default function AccountingPage() {
                 <div><div className="font-ui text-[10px] text-light uppercase tracking-widest font-bold mb-1">Total Credit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
                 <div><div className="font-ui text-[10px] text-light uppercase tracking-widest font-bold mb-1">Difference</div><div className="font-mono text-lg text-success font-bold">✓ ₹ 0.00</div></div>
               </div>
-              <div className="bg-success-bg text-success text-center py-2 font-ui text-[10px] uppercase font-bold tracking-widest">Voucher is balanced — Ready to Post</div>
+              <div className="bg-success-bg text-success-deep text-center py-2 font-ui text-[10px] uppercase font-bold tracking-widest">Voucher is balanced — Ready to Post</div>
             </div>
           </div>
         </section>

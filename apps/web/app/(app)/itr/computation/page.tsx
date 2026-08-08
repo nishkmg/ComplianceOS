@@ -378,7 +378,7 @@ export default function ITRComputationPage() {
           <Card className="bg-dark text-white border-stone-950 border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-white print:text-black print:border-black">
             <CardContent className="p-6">
               <p className="text-[10px] text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
-              <p className="font-mono text-2xl font-bold text-amber-text tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</p>
+              <p className="font-mono text-2xl font-bold text-amber tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</p>
             </CardContent>
           </Card>
         </section>
@@ -477,7 +477,7 @@ export default function ITRComputationPage() {
           <div className="space-y-6">
             <Card className="bg-dark text-zinc-100 overflow-hidden shadow-xl border border-stone-800 rounded-none print:bg-white print:text-black print:border-black">
               <CardHeader className="p-6 border-b border-stone-800 print:border-black">
-                <h3 className="font-ui text-lg font-bold text-amber-text mb-1 print:text-black">Tax Computation</h3>
+                <h3 className="font-ui text-lg font-bold text-amber mb-1 print:text-black">Tax Computation</h3>
                 <p className="text-[10px] text-light font-bold uppercase tracking-widest print:text-mid">
                   {regime === "old" ? "Old Tax Regime" : "New Tax Regime"} Applied
                 </p>
@@ -505,8 +505,8 @@ export default function ITRComputationPage() {
                     <span className="tabular-nums">₹ {formatIndianNumber(tax.cess)}</span>
                   </div>
                   <div className="flex justify-between items-center px-6 py-6 bg-stone-950 font-bold text-lg print:bg-surface-muted">
-                    <span className="text-xs text-amber-text uppercase tracking-widest print:text-black">Total Tax Liability</span>
-                    <span className="text-amber-text tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</span>
+                    <span className="text-xs text-amber uppercase tracking-widest print:text-black">Total Tax Liability</span>
+                    <span className="text-amber tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</span>
                   </div>
                 </div>
               </CardContent>

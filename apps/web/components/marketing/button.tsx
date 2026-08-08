@@ -8,7 +8,7 @@ export function MarketingButton({ href, variant = 'primary', children, className
     primary: `${base} bg-amber text-white px-7 py-3.5 hover:bg-amber-hover active:scale-[0.98] ${className}`,
     outline: `${base} bg-transparent text-dark border border-dark px-6 py-3.5 hover:bg-section-muted ${className}`,
     ghost: `${base} bg-transparent text-mid hover:text-dark ${className}`,
-    amber: `${base} bg-transparent text-amber-text hover:underline px-1 ${className}`,
+    amber: `${base} bg-transparent text-amber hover:underline px-1 ${className}`,
   };
 
   return (

@@ -48,7 +48,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
           aria-label="Open command palette (⌘K)"
         >
           <Icon name="search" className="text-mid" size={16} />
-          <span className="text-[13px] font-mono text-light w-36 text-left select-none">
+          <span className="text-[13px] font-mono text-sidebar-muted w-36 text-left select-none">
             Search… <kbd className="font-ui text-[11px]">⌘K</kbd>
           </span>
         </button>

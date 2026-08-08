@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 interface Employee { id: string; employee_code: string; first_name: string; last_name: string; email: string; designation: string; department: string; status: string; }
 
 const columns: ColumnDef<Employee>[] = [
-  { key: "employee_code", header: "Code", width: "120px", render: (r) => <Link href={`/employees/${r.id}`} className="font-mono text-[12px] text-amber-text hover:underline no-underline">{r.employee_code}</Link> },
+  { key: "employee_code", header: "Code", width: "120px", render: (r) => <Link href={`/employees/${r.id}`} className="font-mono text-[12px] text-amber hover:underline no-underline">{r.employee_code}</Link> },
   { key: "first_name", header: "Name", sortable: true, render: (r) => <span className="font-ui text-[13px] text-dark">{r.first_name} {r.last_name || ""}</span> },
   { key: "email", header: "Email", render: (r) => <span className="font-ui text-[12px] text-mid">{r.email || "—"}</span> },
   { key: "designation", header: "Designation", render: (r) => <span className="font-ui text-[12px] text-mid">{r.designation || "—"}</span> },

@@ -78,7 +78,7 @@ for (const v of viewports) {
       await page.goto(`${BASE}${route.path}`, { waitUntil: "load", timeout: 25000 }).catch(async () => {
         await page.goto(`${BASE}${route.path}`, { waitUntil: "load", timeout: 25000 });
       });
-      await page.waitForTimeout(800); // let client-side fetch settle
+      await page.waitForTimeout(2800); // let client-side fetch settle
       const file = join(OUT, `${route.label}-${v.name}.png`);
       await page.screenshot({ path: file, fullPage: true });
       ok.push(`${route.label}@${v.name}`);

@@ -7,6 +7,7 @@ import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { CommandPalette } from "@/components/command-palette";
 import { SessionProvider } from "next-auth/react";
 import { SkipToMainContent } from "@/components/ui/skip-link";
+import { Announcer } from "@/components/ui/announcer";
 import { NavigationLoader } from "@/components/ui/navigation-loader";
 import { AppSidebar } from "@/components/app/sidebar";
 import { AppTopBar } from "@/components/app/topbar";
@@ -38,6 +39,9 @@ function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-lightest">
       {/* A11y skip link */}
       <SkipToMainContent />
+
+      {/* Live-region announcer for async state changes */}
+      <Announcer />
 
       {/* Global command palette (⌘K) */}
       <CommandPalette isOpen={commandPaletteOpen} onClose={closeCommandPalette} />

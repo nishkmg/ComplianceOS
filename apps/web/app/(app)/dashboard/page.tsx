@@ -18,7 +18,7 @@ interface JournalEntry {
 
 const entryColumns: ColumnDef<JournalEntry>[] = [
   { key: "entry_number", header: "Entry #", sortable: true, width: "130px",
-    render: (row) => <Link href={`/journal/${row.id}`} className="font-mono text-[12px] text-amber-text hover:underline no-underline">{row.entry_number}</Link> },
+    render: (row) => <Link href={`/journal/${row.id}`} className="font-mono text-[12px] text-amber hover:underline no-underline">{row.entry_number}</Link> },
   { key: "date", header: "Date", sortable: true, width: "120px",
     render: (row) => <span className="font-mono text-[12px] text-mid">{new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</span> },
   { key: "narration", header: "Narration", render: (row) => <span className="font-ui text-[13px] text-dark">{row.narration}</span> },
