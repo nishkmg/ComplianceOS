@@ -54,7 +54,7 @@ export function Stepper({
           const groupWidth = (groupSteps.length / visible.length) * 100;
           return (
             <div key={group} className="text-center" style={{ width: `${groupWidth}%` }}>
-              <span className="font-ui text-[9px] uppercase tracking-[0.15em] text-text-light">
+              <span className="font-ui text-ui-2xs uppercase tracking-[0.15em] text-text-light">
                 {group}
               </span>
             </div>
@@ -104,10 +104,10 @@ export function Stepper({
 
       {/* Step indicator */}
       <div className="flex justify-between mt-2">
-        <span className="font-ui text-[10px] text-text-light uppercase tracking-widest">
+        <span className="font-ui text-ui-2xs text-text-light uppercase tracking-widest">
           Step {currentStep} of {visible.length}
         </span>
-        <span className="font-ui text-[10px] text-text-light uppercase tracking-widest">
+        <span className="font-ui text-ui-2xs text-text-light uppercase tracking-widest">
           {visibleCompletedCount}/{visible.length} complete
         </span>
       </div>

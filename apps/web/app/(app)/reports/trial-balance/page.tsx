@@ -113,7 +113,7 @@ export default function TrialBalancePage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+            <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
               Report · FY {fiscalYear}
             </p>
             <h1 className="font-ui text-2xl font-semibold text-dark">Trial Balance</h1>
@@ -122,7 +122,7 @@ export default function TrialBalancePage() {
         <Card className="bg-surface border border-border p-12 text-center">
           <Icon name="receipt_long" size={32} className="text-light mx-auto mb-3" />
           <p className="font-ui text-lg text-dark mb-1">No entries for FY {fiscalYear}</p>
-          <p className="font-ui text-[12px] text-mid">Post a journal entry to populate the trial balance.</p>
+          <p className="font-ui text-ui-xs text-mid">Post a journal entry to populate the trial balance.</p>
         </Card>
       </div>
     );
@@ -133,14 +133,14 @@ export default function TrialBalancePage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
             Report · FY {fiscalYear}
           </p>
           <h1 className="font-ui text-2xl font-semibold text-dark">Trial Balance</h1>
         </div>
         <div className="flex gap-3 items-center">
           <select
-            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
+            className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
           >
@@ -164,13 +164,13 @@ export default function TrialBalancePage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-[24px] text-dark print:text-black">Mehta Textiles Private Limited</h2>
-          <p className="font-ui text-[12px] text-mid mt-1 uppercase tracking-widest">Trial Balance</p>
-          <p className="font-mono text-[11px] text-light mt-0.5">As at 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
+          <h2 className="font-ui text-display-lg text-dark print:text-black">Mehta Textiles Private Limited</h2>
+          <p className="font-ui text-ui-xs text-mid mt-1 uppercase tracking-widest">Trial Balance</p>
+          <p className="font-mono text-ui-xs text-light mt-0.5">As at 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
 
         {/* Balance check */}
-        <div className={`mx-8 mt-6 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest rounded-md flex items-center gap-2 ${
+        <div className={`mx-8 mt-6 px-4 py-2 text-ui-xs font-semibold uppercase tracking-widest rounded-md flex items-center gap-2 ${
           isBalanced ? "bg-success-bg text-success-deep" : "bg-danger-bg text-danger-deep"
         } print:border print:rounded-none`}>
           <Icon name={isBalanced ? "check_circle" : "warning"} size={16} />
@@ -179,7 +179,7 @@ export default function TrialBalancePage() {
 
         {/* Zero-balance toggle */}
         <div className="flex justify-end px-8 mt-4 print:hidden">
-          <label className="flex items-center gap-2 font-ui text-[10px] text-mid cursor-pointer">
+          <label className="flex items-center gap-2 font-ui text-ui-2xs text-mid cursor-pointer">
             <input
               type="checkbox"
               checked={showZero}
@@ -191,7 +191,7 @@ export default function TrialBalancePage() {
         </div>
 
         {/* Column headers */}
-        <div className="grid grid-cols-12 gap-4 px-8 pt-6 pb-2 border-b border-dark font-ui text-[10px] text-light uppercase tracking-widest print:border-black">
+        <div className="grid grid-cols-12 gap-4 px-8 pt-6 pb-2 border-b border-dark font-ui text-ui-2xs text-light uppercase tracking-widest print:border-black">
           <div className="col-span-2">Code</div>
           <div className="col-span-5">Account Name</div>
           <div className="col-span-2 text-right">Debit (₹)</div>
@@ -210,21 +210,21 @@ export default function TrialBalancePage() {
               <div key={group.name}>
                 <div className="px-4 py-2 border-t-2 border-amber flex items-center justify-between print:border-black">
                   <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-black">{group.name}</h3>
-                  <span className="font-mono text-[11px] text-mid">
+                  <span className="font-mono text-ui-xs text-mid">
                     Dr {formatIndianNumber(groupDr)} / Cr {formatIndianNumber(groupCr)}
                   </span>
                 </div>
                 {filtered.map(item => (
                   <div
                     key={item.code}
-                    className="grid grid-cols-12 gap-4 items-center px-4 py-2.5 hover:bg-surface-muted/50 transition-colors border-b border-stone-50 print:border-stone-200"
+                    className="grid grid-cols-12 gap-4 items-center px-4 py-2.5 hover:bg-surface-muted/50 transition-colors border-b 50-border print:200-border"
                   >
-                    <div className="col-span-2 font-mono text-[11px] text-light tabular-nums">{item.code}</div>
-                    <div className="col-span-5 font-ui text-[13px] text-dark">{item.name}</div>
-                    <div className="col-span-2 text-right font-mono text-[13px] tabular-nums">
+                    <div className="col-span-2 font-mono text-ui-xs text-light tabular-nums">{item.code}</div>
+                    <div className="col-span-5 font-ui text-ui-sm text-dark">{item.name}</div>
+                    <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums">
                       {item.debit > 0 ? `₹ ${formatIndianNumber(item.debit, { currency: false })}` : ""}
                     </div>
-                    <div className="col-span-2 text-right font-mono text-[13px] tabular-nums">
+                    <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums">
                       {item.credit > 0 ? `₹ ${formatIndianNumber(item.credit, { currency: false })}` : ""}
                     </div>
                     <div className="col-span-1" />
@@ -237,21 +237,21 @@ export default function TrialBalancePage() {
 
         {/* Grand total */}
         <div className="border-t-2 border-dark mx-8 py-4 grid grid-cols-12 gap-4 items-center font-bold print:border-black">
-          <div className="col-span-7 font-ui text-[12px] uppercase tracking-widest text-dark print:text-black">Grand Total</div>
-          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
-          <div className="col-span-2 text-right font-mono text-[14px] tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
+          <div className="col-span-7 font-ui text-ui-xs uppercase tracking-widest text-dark print:text-black">Grand Total</div>
+          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
+          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
           <div className="col-span-1" />
         </div>
 
         {isBalanced && (
-          <div className="mx-8 mb-6 px-4 py-2 bg-success-bg text-success-deep font-medium text-[11px] rounded-md print:border print:rounded-none print:text-black print:bg-transparent">
+          <div className="mx-8 mb-6 px-4 py-2 bg-success-bg text-success-deep font-medium text-ui-xs rounded-md print:border print:rounded-none print:text-black print:bg-transparent">
             ✓ Total Debits match Total Credits — Trial Balance is in order
           </div>
         )}
 
         {/* Footer */}
         <div className="text-center pb-6 pt-2 border-t border-border mx-8 print:border-black">
-          <p className="font-ui text-[10px] text-light">This is a system-generated statement. E&OE.</p>
+          <p className="font-ui text-ui-2xs text-light">This is a system-generated statement. E&OE.</p>
         </div>
       </Card>
     </div>

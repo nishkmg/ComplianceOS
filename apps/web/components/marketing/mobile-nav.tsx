@@ -37,7 +37,7 @@ export function MobileNav() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="font-display text-[20px] text-white hover:text-amber transition-colors border-b border-stone-800 pb-4 flex justify-between items-center group no-underline"
+                  className="font-display text-[20px] text-white hover:text-amber transition-colors border-b focus:border-focus pb-4 flex justify-between items-center group no-underline"
                 >
                   {item.label}
                   <Icon name="arrow_forward" className="text-mid group-hover:text-amber transition-colors" />
@@ -46,7 +46,7 @@ export function MobileNav() {
             </nav>
           </div>
           <div className="flex flex-col space-y-4 w-full mt-12 max-w-sm mx-auto">
-            <Link href="/login" className="w-full py-4 text-center text-white hover:text-lighter transition-colors border border-stone-700 no-underline rounded-sm font-ui uppercase tracking-widest font-bold text-sm">
+            <Link href="/login" className="w-full py-4 text-center text-white hover:text-lighter transition-colors border focus:border-focus no-underline rounded-sm font-ui uppercase tracking-widest font-bold text-sm">
               Log in
             </Link>
             <Link href="/signup" className="w-full py-4 bg-amber text-white flex items-center justify-center hover:bg-amber-hover transition-colors no-underline rounded-sm font-ui uppercase tracking-widest font-bold text-sm">

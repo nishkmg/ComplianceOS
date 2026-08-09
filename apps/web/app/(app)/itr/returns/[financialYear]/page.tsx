@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { showToast } from "@/lib/toast";
 
 export default function ItrReturnsPage() {
   const { data: session } = useSession();
@@ -27,7 +26,7 @@ export default function ItrReturnsPage() {
   if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+    <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/itr/returns" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
         <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Returns — {params.financialYear}</h1>

@@ -34,7 +34,7 @@ export function KpiTile({ label, value, variant = 'neutral', icon, delta, subtex
   return (
     <div className="rounded-lg border border-border bg-surface p-5">
       <div className="flex items-start justify-between gap-3">
-        <p className="font-ui text-[11px] font-semibold uppercase tracking-wider text-light">{label}</p>
+        <p className="font-ui text-ui-xs font-semibold uppercase tracking-wider text-mid">{label}</p>
         {icon && (
           <span
             className={cn(
@@ -42,7 +42,7 @@ export function KpiTile({ label, value, variant = 'neutral', icon, delta, subtex
               iconColors[variant]
             )}
           >
-            <Icon name={icon} className="text-[16px]" />
+            <Icon name={icon} className="text-ui-lg" />
           </span>
         )}
       </div>
@@ -52,14 +52,14 @@ export function KpiTile({ label, value, variant = 'neutral', icon, delta, subtex
       {delta && (
         <span
           className={cn(
-            'mt-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-ui text-[11px] font-medium',
+            'mt-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-ui text-ui-xs font-medium',
             delta.value >= 0 ? 'text-success-deep bg-success-bg' : 'text-danger-deep bg-danger-bg'
           )}
         >
           {delta.value >= 0 ? '▲' : '▼'} {Math.abs(delta.value)}% {delta.label}
         </span>
       )}
-      {subtext && <p className="mt-1.5 font-ui text-xs text-light">{subtext}</p>}
+      {subtext && <p className="mt-1.5 font-ui text-xs text-mid">{subtext}</p>}
     </div>
   );
 }

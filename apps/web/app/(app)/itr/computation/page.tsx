@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/icon';
-import Link from "next/link";
+import "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -334,12 +334,12 @@ export default function ITRComputationPage() {
       {/* Sticky Header */}
       <div className="px-8 py-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 -mx-8 -mt-8 mb-8 bg-surface/50 sticky top-0 z-20 backdrop-blur-sm print:static print:bg-white print:border-black">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2 print:text-black">{ayLabel[selectedFY] ?? "AY 2027-28"} | Individual</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2 print:text-black">{ayLabel[selectedFY] ?? "AY 2027-28"} | Individual</p>
           <h1 className="font-ui text-2xl font-semibold text-dark print:text-black">ITR Computation</h1>
         </div>
         <div className="flex flex-wrap gap-3 items-center print:hidden">
           <select
-            className="bg-surface border border-border px-3 py-2 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
+            className="bg-surface border border-border px-3 py-2 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={selectedFY}
             onChange={(e) => setSelectedFY(e.target.value)}
           >
@@ -354,30 +354,30 @@ export default function ITRComputationPage() {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto space-y-8 pb-12">
+      <div className="max-w-page mx-auto space-y-8 pb-12">
         {/* Summary Bento */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="border-t-2 border-t-amber rounded-none rounded-b-xl shadow-sm print:border-black">
             <CardContent className="p-6">
-              <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
+              <p className="text-ui-2xs text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
               <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totalIncome)}</p>
             </CardContent>
           </Card>
           <Card className="border-t-2 border-t-stone-800 rounded-none rounded-b-xl shadow-sm print:border-black">
             <CardContent className="p-6">
-              <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
+              <p className="text-ui-2xs text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
               <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totalDeductions)}</p>
             </CardContent>
           </Card>
           <Card className="border-t-2 border-t-stone-800 rounded-none rounded-b-xl shadow-sm print:border-black">
             <CardContent className="p-6">
-              <p className="text-[10px] text-mid font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
+              <p className="text-ui-2xs text-mid font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
               <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(tax.taxableIncome)}</p>
             </CardContent>
           </Card>
-          <Card className="bg-dark text-white border-stone-950 border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-white print:text-black print:border-black">
+          <Card className="bg-dark text-white focus:border-focus border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-white print:text-black print:border-black">
             <CardContent className="p-6">
-              <p className="text-[10px] text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
+              <p className="text-ui-2xs text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
               <p className="font-mono text-2xl font-bold text-amber tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</p>
             </CardContent>
           </Card>
@@ -385,22 +385,22 @@ export default function ITRComputationPage() {
 
         {/* Regime Toggle */}
         <div className="flex items-center gap-4 print:hidden">
-          <span className="font-ui text-[10px] uppercase tracking-widest text-mid font-bold">Tax Regime</span>
+          <span className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold">Tax Regime</span>
           <div className="flex bg-surface-muted border border-border rounded-md p-1">
             <button
               onClick={() => setRegime("old")}
-              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-colors cursor-pointer border-none ${regime === "old" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
+              className={`px-4 py-1.5 text-ui-xs font-ui font-medium rounded-sm transition-colors cursor-pointer border-none ${regime === "old" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
             >
               Old Regime
             </button>
             <button
               onClick={() => setRegime("new")}
-              className={`px-4 py-1.5 text-[12px] font-ui font-medium rounded-sm transition-colors cursor-pointer border-none ${regime === "new" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
+              className={`px-4 py-1.5 text-ui-xs font-ui font-medium rounded-sm transition-colors cursor-pointer border-none ${regime === "new" ? "bg-surface text-dark shadow-sm" : "text-mid hover:text-dark bg-transparent"}`}
             >
               New Regime
             </button>
           </div>
-          <span className="font-ui text-[11px] text-amber font-medium">
+          <span className="font-ui text-ui-xs text-amber font-medium">
             {regime === "old" ? "Higher deductions, lower taxable income" : "Lower rates, fewer deductions"}
           </span>
         </div>
@@ -412,27 +412,27 @@ export default function ITRComputationPage() {
             {/* Income Sections */}
             <Card className="shadow-sm rounded-none border border-border print:border-black">
               <CardHeader className="px-6 py-4 bg-surface-muted border-b border-border">
-                <h3 className="font-ui text-[11px] font-bold text-dark uppercase tracking-widest">Income Details</h3>
+                <h3 className="font-ui text-ui-xs font-bold text-dark uppercase tracking-widest">Income Details</h3>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y-[0.5px] divide-border-subtle">
                   {Object.entries(incomeData).map(([key, section]) => (
                     <div key={key}>
                       <div className="flex justify-between items-center px-6 py-3 bg-surface-muted/40">
-                        <span className="font-ui text-[11px] font-bold uppercase tracking-wider text-mid">{section.label}</span>
-                        <span className="font-mono text-[13px] font-bold tabular-nums text-dark">₹ {formatIndianNumber(section.total)}</span>
+                        <span className="font-ui text-ui-xs font-bold uppercase tracking-wider text-mid">{section.label}</span>
+                        <span className="font-mono text-ui-sm font-bold tabular-nums text-dark">₹ {formatIndianNumber(section.total)}</span>
                       </div>
                       {section.items.map((item, i) => (
                         <div key={i} className="flex justify-between items-center px-6 py-3 hover:bg-surface-muted/50 transition-colors">
-                          <span className="font-ui text-[13px] text-dark pl-4">{item.label}</span>
-                          <span className="font-mono text-[13px] tabular-nums text-dark">₹ {formatIndianNumber(item.amount)}</span>
+                          <span className="font-ui text-ui-sm text-dark pl-4">{item.label}</span>
+                          <span className="font-mono text-ui-sm tabular-nums text-dark">₹ {formatIndianNumber(item.amount)}</span>
                         </div>
                       ))}
                     </div>
                   ))}
                   <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
-                    <span className="font-ui text-[11px] uppercase tracking-widest text-dark">Gross Total Income</span>
-                    <span className="font-mono text-[14px] tabular-nums text-dark">₹ {formatIndianNumber(totalIncome)}</span>
+                    <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Gross Total Income</span>
+                    <span className="font-mono text-ui-md tabular-nums text-dark">₹ {formatIndianNumber(totalIncome)}</span>
                   </div>
                 </div>
               </CardContent>
@@ -441,32 +441,32 @@ export default function ITRComputationPage() {
             {/* Deductions */}
             <Card className="shadow-sm rounded-none border border-border print:border-black">
               <CardHeader className="px-6 py-4 bg-surface-muted border-b border-border">
-                <h3 className="font-ui text-[11px] font-bold text-dark uppercase tracking-widest">Deductions under Chapter VI-A</h3>
+                <h3 className="font-ui text-ui-xs font-bold text-dark uppercase tracking-widest">Deductions under Chapter VI-A</h3>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y-[0.5px] divide-border-subtle">
                   {Object.entries(deductionData).map(([key, section]) => (
                     <div key={key}>
                       <div className="flex justify-between items-center px-6 py-3 bg-surface-muted/40">
-                        <span className="font-ui text-[11px] font-bold uppercase tracking-wider text-mid">{section.label}</span>
-                        <span className="font-mono text-[13px] font-bold tabular-nums text-dark">₹ {formatIndianNumber(section.total)}</span>
+                        <span className="font-ui text-ui-xs font-bold uppercase tracking-wider text-mid">{section.label}</span>
+                        <span className="font-mono text-ui-sm font-bold tabular-nums text-dark">₹ {formatIndianNumber(section.total)}</span>
                       </div>
                       {section.items.map((item, i) => (
                         <div key={i} className="flex justify-between items-center px-6 py-3 hover:bg-surface-muted/50 transition-colors">
-                          <span className="font-ui text-[13px] text-dark pl-4">{item.label}</span>
-                          <span className="font-mono text-[13px] tabular-nums text-danger">−₹ {formatIndianNumber(item.amount)}</span>
+                          <span className="font-ui text-ui-sm text-dark pl-4">{item.label}</span>
+                          <span className="font-mono text-ui-sm tabular-nums text-danger">−₹ {formatIndianNumber(item.amount)}</span>
                         </div>
                       ))}
                       {"limit" in section && (
-                        <div className="px-6 py-1.5 text-[10px] font-ui text-light">
+                        <div className="px-6 py-1.5 text-ui-2xs font-ui text-light">
                           Limit: ₹ {formatIndianNumber(section.limit!)} | Utilized: {Math.round((section.total / section.limit!) * 100)}%
                         </div>
                       )}
                     </div>
                   ))}
                   <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
-                    <span className="font-ui text-[11px] uppercase tracking-widest text-dark">Total Deductions</span>
-                    <span className="font-mono text-[14px] tabular-nums text-danger">−₹ {formatIndianNumber(totalDeductions)}</span>
+                    <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Total Deductions</span>
+                    <span className="font-mono text-ui-md tabular-nums text-danger">−₹ {formatIndianNumber(totalDeductions)}</span>
                   </div>
                 </div>
               </CardContent>
@@ -475,15 +475,15 @@ export default function ITRComputationPage() {
 
           {/* Right: Tax Computation */}
           <div className="space-y-6">
-            <Card className="bg-dark text-zinc-100 overflow-hidden shadow-xl border border-stone-800 rounded-none print:bg-white print:text-black print:border-black">
-              <CardHeader className="p-6 border-b border-stone-800 print:border-black">
+            <Card className="bg-dark text-sidebar-dim overflow-hidden shadow-xl border focus:border-focus rounded-none print:bg-white print:text-black print:border-black">
+              <CardHeader className="p-6 border-b focus:border-focus print:border-black">
                 <h3 className="font-ui text-lg font-bold text-amber mb-1 print:text-black">Tax Computation</h3>
-                <p className="text-[10px] text-light font-bold uppercase tracking-widest print:text-mid">
+                <p className="text-ui-2xs text-light font-bold uppercase tracking-widest print:text-mid">
                   {regime === "old" ? "Old Tax Regime" : "New Tax Regime"} Applied
                 </p>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y divide-stone-800 font-mono text-sm print:divide-black">
+                <div className="divide-y divide-lighter font-mono text-sm print:divide-black">
                   <div className="flex justify-between items-center px-6 py-4">
                     <span className="text-xs text-light uppercase tracking-wide print:text-mid">Net Taxable Income</span>
                     <span className="tabular-nums">₹ {formatIndianNumber(tax.taxableIncome)}</span>
@@ -504,7 +504,7 @@ export default function ITRComputationPage() {
                     <span className="text-xs text-light uppercase tracking-wide print:text-mid">Health & Education Cess @ 4%</span>
                     <span className="tabular-nums">₹ {formatIndianNumber(tax.cess)}</span>
                   </div>
-                  <div className="flex justify-between items-center px-6 py-6 bg-stone-950 font-bold text-lg print:bg-surface-muted">
+                  <div className="flex justify-between items-center px-6 py-6 bg-dark font-bold text-lg print:bg-surface-muted">
                     <span className="text-xs text-amber uppercase tracking-widest print:text-black">Total Tax Liability</span>
                     <span className="text-amber tabular-nums print:text-black">₹ {formatIndianNumber(tax.totalTax)}</span>
                   </div>
@@ -515,8 +515,8 @@ export default function ITRComputationPage() {
             {regime === "old" && deductionData.section80C && deductionData.section80C.total < 150000 && (
             <Card className="bg-amber-50 border border-amber/30 shadow-sm print:border-black">
               <CardContent className="p-6">
-                <h4 className="font-ui text-[10px] font-bold text-amber-900 mb-2 uppercase tracking-widest">Optimization Tip</h4>
-                <p className="font-ui text-[13px] text-amber-800 leading-relaxed">
+                <h4 className="font-ui text-ui-2xs font-bold text-amber-900 mb-2 uppercase tracking-widest">Optimization Tip</h4>
+                <p className="font-ui text-ui-sm text-amber-800 leading-relaxed">
                   You haven&apos;t fully utilized the 80C deduction limit of ₹ 1.5L. You can still save ₹ {formatIndianNumber(150000 - deductionData.section80C.total)} more under the Old Regime.
                 </p>
               </CardContent>

@@ -12,7 +12,7 @@ export default function GSTFeaturePage() {
         {/* Hero */}
         <section className="max-w-7xl mx-auto px-8 pt-16 pb-space-64">
           <div className="max-w-4xl text-left">
-            <div className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 block font-bold">GST Compliance Engine</div>
+            <div className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">GST Compliance Engine</div>
             <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
               GSTR-1, GSTR-2B, GSTR-3B — generated from your own entries. Not re-entered.
             </h1>
@@ -28,7 +28,7 @@ export default function GSTFeaturePage() {
         </section>
 
         {/* KPI Stats */}
-        <section className="max-w-[1200px] mx-auto px-8 mb-space-64">
+        <section className="max-w-page mx-auto px-8 mb-space-64">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
               { label: "GSTR Returns", value: "3" },
@@ -37,7 +37,7 @@ export default function GSTFeaturePage() {
               { label: "Tax Saved (MTD)", value: "₹ 2.4L" },
             ].map((s) => (
               <div key={s.label} className="bg-white border border-border-subtle border-t-2 border-t-amber p-6 shadow-sm text-left">
-                <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-2 font-bold">{s.label}</p>
+                <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-2 font-bold">{s.label}</p>
                 <p className="font-mono text-2xl font-bold text-dark">{s.value}</p>
               </div>
             ))}
@@ -45,7 +45,7 @@ export default function GSTFeaturePage() {
         </section>
 
         {/* Zigzag Modules */}
-        <section className="space-y-space-64 max-w-[1200px] mx-auto px-8 pb-space-64">
+        <section className="space-y-space-64 max-w-page mx-auto px-8 pb-space-64">
           {[
             { icon: "receipt", title: "Auto-Generated Returns", desc: "GSTR-1, 2B, and 3B are generated directly from your invoices and journal entries. No double data entry, no manual mapping, no transcription errors.", reversed: false },
             { icon: "difference", title: "ITC Reconciliation", desc: "Auto-match your purchase register with the GSTR-2B statement from the portal. Unmatched items are flagged instantly with drill-down to source documents.", reversed: true },
@@ -67,7 +67,7 @@ export default function GSTFeaturePage() {
 
         {/* Feature Grid */}
         <section className="bg-section-muted py-space-64">
-          <div className="max-w-[1200px] mx-auto px-8">
+          <div className="max-w-page mx-auto px-8">
             <h2 className="font-display text-marketing-xl text-dark mb-16 text-center">Everything your GST module needs.</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[

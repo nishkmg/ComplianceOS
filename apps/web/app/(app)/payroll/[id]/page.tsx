@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { formatIndianNumber } from "@/lib/format";
+import "next/link";
 
 export default function PayrollDetailPage() {
   const params = useParams(); const router = useRouter();
@@ -17,7 +15,7 @@ export default function PayrollDetailPage() {
     <div className="max-w-[1000px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
-        <div><h1 className="font-ui text-display-lg font-semibold text-dark">Payroll Run</h1><p className="font-mono text-[12px] text-mid mt-0.5">{params.id}</p></div>
+        <div><h1 className="font-ui text-display-lg font-semibold text-dark">Payroll Run</h1><p className="font-mono text-ui-xs text-mid mt-0.5">{params.id}</p></div>
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
         <p className="font-ui text-sm text-text-mid">Payroll run details will be available once the payroll module is fully implemented.</p>

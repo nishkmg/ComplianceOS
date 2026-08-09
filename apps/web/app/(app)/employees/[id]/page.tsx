@@ -20,18 +20,18 @@ export default function EmployeeDetailPage() {
     <div className="max-w-[1000px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
-        <div><h1 className="font-ui text-display-lg font-semibold text-dark">{employee.first_name} {employee.last_name || ""}</h1><p className="font-mono text-[12px] text-mid mt-0.5">{employee.employee_code} · {employee.designation || "—"}</p></div>
+        <div><h1 className="font-ui text-display-lg font-semibold text-dark">{employee.first_name} {employee.last_name || ""}</h1><p className="font-mono text-ui-xs text-mid mt-0.5">{employee.employee_code} · {employee.designation || "—"}</p></div>
         <Badge variant={employee.status === "active" ? "success" : "gray"}>{employee.status}</Badge>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6 bg-surface border border-border rounded-md p-6 shadow-sm">
-        <div><span className="font-ui text-[10px] text-light uppercase font-bold">Email</span><p className="font-ui text-[13px] text-dark mt-1">{employee.email || "—"}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase font-bold">Phone</span><p className="font-ui text-[13px] text-dark mt-1">{employee.phone || "—"}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase font-bold">Department</span><p className="font-ui text-[13px] text-dark mt-1">{employee.department || "—"}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase font-bold">PAN</span><p className="font-mono text-[13px] text-dark mt-1 uppercase">{employee.pan || "—"}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase font-bold">Bank</span><p className="font-ui text-[13px] text-dark mt-1">{employee.bank_name || "—"}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase font-bold">DOJ</span><p className="font-mono text-[13px] text-dark mt-1">{employee.date_of_joining ? new Date(employee.date_of_joining).toLocaleDateString("en-IN") : "—"}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase font-bold">Email</span><p className="font-ui text-ui-sm text-dark mt-1">{employee.email || "—"}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase font-bold">Phone</span><p className="font-ui text-ui-sm text-dark mt-1">{employee.phone || "—"}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase font-bold">Department</span><p className="font-ui text-ui-sm text-dark mt-1">{employee.department || "—"}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase font-bold">PAN</span><p className="font-mono text-ui-sm text-dark mt-1 uppercase">{employee.pan || "—"}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase font-bold">Bank</span><p className="font-ui text-ui-sm text-dark mt-1">{employee.bank_name || "—"}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase font-bold">DOJ</span><p className="font-mono text-ui-sm text-dark mt-1">{employee.date_of_joining ? new Date(employee.date_of_joining).toLocaleDateString("en-IN") : "—"}</p></div>
       </div>
-      <Link href={`/employees/${employee.id}/salary`} className="inline-flex items-center gap-2 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="payments" size={14} /> Salary Structure</Link>
+      <Link href={`/employees/${employee.id}/salary`} className="inline-flex items-center gap-2 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="payments" size={14} /> Salary Structure</Link>
     </div>
   );
 }

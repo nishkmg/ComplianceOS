@@ -59,7 +59,7 @@ export default function HomePage() {
         <header className="px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto pt-24 pb-20 md:pt-32 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="max-w-xl text-left">
-              <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 block">Made for India</span>
+              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block">Made for India</span>
               <h1 className="font-display text-marketing-hero text-dark mb-8 leading-tight font-semibold tracking-tight">
                 The accounting software that thinks in lakhs, not thousands.
               </h1>
@@ -69,13 +69,13 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-4">
                 <Link 
                   href="/signup" 
-                  className="bg-amber text-white px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1"
+                  className="bg-amber text-white px-8 py-4 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1"
                 >
                   Get Started Today <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                 </Link>
                 <Link 
                   href="/contact" 
-                  className="border border-border-subtle text-dark px-8 py-4 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1"
+                  className="border border-border-subtle text-dark px-8 py-4 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1"
                 >
                   Book a Demo
                 </Link>
@@ -95,7 +95,7 @@ export default function HomePage() {
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white border border-border-subtle p-6 hidden lg:block shadow-lg">
-                <p className="font-mono text-[18px] text-primary font-bold">₹ 1,45,00,000.00</p>
+                <p className="font-mono text-ui-xl text-primary font-bold">₹ 1,45,00,000.00</p>
                 <p className="text-ui-xs font-ui text-light uppercase tracking-tighter">Current FY Revenue</p>
               </div>
             </div>
@@ -104,8 +104,8 @@ export default function HomePage() {
 
         {/* ─── Social Proof ─── */}
         <section className="bg-section-muted py-16 border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1200px] mx-auto px-8 text-center">
-            <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber text-center mb-10">Trusted by India's leading firms &amp; CAs</p>
+          <div className="max-w-page mx-auto px-8 text-center">
+            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber text-center mb-10">Trusted by India's leading firms &amp; CAs</p>
             <div className="flex flex-wrap justify-center items-center gap-16 grayscale opacity-60 contrast-125">
               <img className="h-8" src="/images/homepage/logo1.png" alt="Trusted Brand" />
               <img className="h-8" src="/images/homepage/logo2.png" alt="Trusted Brand" />
@@ -117,9 +117,9 @@ export default function HomePage() {
         </section>
 
         {/* ─── Core Benefits ─── */}
-        <section className="py-space-128 px-8 max-w-[1200px] mx-auto">
+        <section className="py-space-128 px-8 max-w-page mx-auto">
           <div className="mb-16 text-left">
-            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">Built for precision</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Built for precision</span>
             <h2 className="font-display text-marketing-xl mt-4 max-w-2xl font-semibold leading-snug tracking-tight">Ledger-first design for the modern Indian enterprise.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -135,7 +135,7 @@ export default function HomePage() {
 
         {/* ─── Product Demo ─── */}
         <section className="bg-section-dark py-space-128 overflow-hidden text-center">
-          <div className="max-w-[1200px] mx-auto px-8">
+          <div className="max-w-page mx-auto px-8">
             <div className="mb-16">
               <h2 className="font-display text-marketing-xl text-white mb-6 font-semibold leading-snug tracking-tight">Experience the precision.</h2>
               <div className="flex justify-center gap-8 border-b border-white/10">
@@ -152,7 +152,7 @@ export default function HomePage() {
             </div>
             <div className="relative max-w-5xl mx-auto">
               <div className="shadow-2xl overflow-hidden rounded-xl border border-white/10">
-                <div className="browser-chrome bg-stone-800">
+                <div className="browser-chrome bg-dark">
                   <div className="browser-dot bg-[#FF5F56]"></div>
                   <div className="browser-dot bg-[#FFBD2E]"></div>
                   <div className="browser-dot bg-[#27C93F]"></div>
@@ -172,9 +172,9 @@ export default function HomePage() {
         </section>
 
         {/* ─── Feature Grid ─── */}
-        <section className="py-space-128 px-gutter-desktop max-w-[1200px] mx-auto text-center">
+        <section className="py-space-128 px-gutter-desktop max-w-page mx-auto text-center">
           <div className="mb-24">
-            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">Complete Control</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Complete Control</span>
             <h2 className="font-display text-marketing-xl mt-4 font-semibold leading-snug tracking-tight">Modules built for Indian scale.</h2>
           </div>
           <div className="space-y-space-96">
@@ -223,9 +223,9 @@ export default function HomePage() {
 
         {/* ─── Testimonials ─── */}
         <section className="bg-section-muted px-8 border-y-[0.5px] border-border-subtle overflow-hidden pt-32 pb-32">
-          <div className="max-w-[1200px] mx-auto text-center">
+          <div className="max-w-page mx-auto text-center">
             <div className="mb-16 text-center">
-              <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">Testimonials</span>
+              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Testimonials</span>
               <h2 className="font-display text-marketing-xl mt-4 font-semibold leading-snug tracking-tight">Loved by Founders &amp; CAs.</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
@@ -252,16 +252,16 @@ export default function HomePage() {
         <section className="py-space-128 px-8 bg-section-amber">
           <div className="max-w-[800px] mx-auto text-center border border-primary/20 p-16 bg-white shadow-xl rounded-none">
             <h2 className="font-display text-marketing-xl mb-6 font-semibold leading-snug tracking-tight">Ready to bring precision to your books?</h2>
-            <p className="text-ui-lg text-secondary mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
+            <p className="text-ui-lg text-mid mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
             <div className="flex flex-col md:flex-row justify-center gap-6">
-              <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1">
+              <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1">
                 Start Free Trial <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              <Link href="/contact" className="border border-border-subtle text-dark px-10 py-5 font-ui text-[14px] font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1">
+              <Link href="/contact" className="border border-border-subtle text-dark px-10 py-5 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1">
                 Talk to Us
               </Link>
             </div>
-            <p className="text-ui-xs font-ui text-light mt-8">No credit card required. Cancel anytime.</p>
+            <p className="text-ui-xs font-ui text-mid mt-8">No credit card required. Cancel anytime.</p>
           </div>
         </section>
       </main>

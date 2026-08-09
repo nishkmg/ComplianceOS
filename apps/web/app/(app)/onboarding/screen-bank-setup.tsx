@@ -73,13 +73,13 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
           >
             <div className="flex items-start gap-4">
               <div className={`w-5 h-5 rounded-md border flex items-center justify-center mt-1 transition-colors ${
-                connectBank ? "bg-amber border-amber" : "border-stone-300"
+                connectBank ? "bg-amber border-amber" : "focus:border-focus"
               }`}>
-                {connectBank && <Icon name="check" className="text-white text-[16px]" />}
+                {connectBank && <Icon name="check" className="text-white text-ui-lg" />}
               </div>
               <div className="flex flex-col">
                 <span className={`font-ui text-lg font-bold ${connectBank ? "text-primary" : "text-on-surface"}`}>Add Bank Account</span>
-                <span className="font-ui text-[13px] text-text-mid mt-1">
+                <span className="font-ui text-ui-sm text-text-mid mt-1">
                   Enter your bank details manually for reconciliation
                 </span>
               </div>
@@ -94,13 +94,13 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
           >
             <div className="flex items-start gap-4">
               <div className={`w-5 h-5 rounded-md border flex items-center justify-center mt-1 transition-colors ${
-                !connectBank ? "bg-amber border-amber" : "border-stone-300"
+                !connectBank ? "bg-amber border-amber" : "focus:border-focus"
               }`}>
-                {!connectBank && <Icon name="check" className="text-white text-[16px]" />}
+                {!connectBank && <Icon name="check" className="text-white text-ui-lg" />}
               </div>
               <div className="flex flex-col">
                 <span className={`font-ui text-lg font-bold ${!connectBank ? "text-primary" : "text-on-surface"}`}>Add Later</span>
-                <span className="font-ui text-[13px] text-text-mid mt-1">
+                <span className="font-ui text-ui-sm text-text-mid mt-1">
                   Skip bank setup for now — configure in Settings when ready
                 </span>
               </div>
@@ -111,7 +111,7 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
         {connectBank && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 animate-in">
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="bankName">
+              <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="bankName">
                 Bank Name
               </label>
               <input
@@ -123,11 +123,11 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="accountNumber">
+              <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="accountNumber">
                 Account Number
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
                 id="accountNumber"
                 placeholder="Enter account number"
                 {...register("accountNumber")}
@@ -135,11 +135,11 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="ifsc">
+              <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="ifsc">
                 IFSC Code
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
                 id="ifsc"
                 maxLength={11}
                 placeholder="HDFC0001234"
@@ -156,20 +156,20 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

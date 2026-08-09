@@ -125,7 +125,7 @@ export default function OnboardingPage() {
             <h1 className="font-ui text-display-lg font-bold tracking-tight text-dark">
               Onboarding
             </h1>
-            <div className="font-ui text-[11px] text-secondary uppercase tracking-widest">
+            <div className="font-ui text-ui-xs text-secondary uppercase tracking-widest">
               Step {currentStep} of {STEPS.length}
             </div>
           </div>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import "next/link";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 
@@ -7,13 +7,13 @@ export default function BlogPostPage() {
   return (
     <div className="bg-page-bg text-dark min-h-screen">
       <MarketingNav />
-      <main className="max-w-[1200px] mx-auto px-8 pt-space-128 pb-space-96">
+      <main className="max-w-page mx-auto px-8 pt-space-128 pb-space-96">
         <article className="max-w-[680px] mx-auto text-left">
           {/* Category & Date */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber font-bold">Tax Compliance</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">Tax Compliance</span>
             <span className="h-[1px] w-8 bg-border-subtle"></span>
-            <span className="font-mono text-[12px] text-light">12 October 2024</span>
+            <span className="font-mono text-ui-xs text-light">12 October 2024</span>
           </div>
 
           {/* Title */}
@@ -23,7 +23,7 @@ export default function BlogPostPage() {
 
           {/* Byline */}
           <div className="flex items-center gap-4 pb-space-48 border-b-[0.5px] border-border-subtle mb-space-48">
-            <div className="w-12 h-12 rounded-full overflow-hidden bg-stone-200">
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-lighter">
               <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="" />
             </div>
             <div>
@@ -33,7 +33,7 @@ export default function BlogPostPage() {
           </div>
 
           {/* Content */}
-          <div className="space-y-8 leading-relaxed font-serif text-[18px] text-dark">
+          <div className="space-y-8 leading-relaxed font-serif text-ui-xl text-dark">
             <p>The recent introduction of Section 43B(h) in the Income Tax Act marks a significant shift in the compliance landscape for Indian businesses dealing with Micro and Small Enterprises (MSMEs).</p>
             <p>This amendment, effective from April 1, 2023, aims to solve a perennial problem: the delayed payment cycle that stifles Micro and Small Enterprises (MSMEs).</p>
 
@@ -63,7 +63,7 @@ export default function BlogPostPage() {
               <div className="aspect-[16/10] overflow-hidden mb-6 bg-surface-muted border border-border-subtle">
                 <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
               </div>
-              <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber font-bold">GST</span>
+              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">GST</span>
               <h4 className="font-display text-lg text-dark mt-2 mb-2 group-hover:text-primary transition-colors">GSTR-1 vs GSTR-3B: Understanding Mismatches</h4>
               <p className="font-ui text-sm text-secondary">Common reasons for return mismatches and how to resolve them before notice.</p>
             </div>
@@ -71,7 +71,7 @@ export default function BlogPostPage() {
               <div className="aspect-[16/10] overflow-hidden mb-6 bg-surface-muted border border-border-subtle">
                 <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400" alt="" />
               </div>
-              <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber font-bold">Payroll</span>
+              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">Payroll</span>
               <h4 className="font-display text-lg text-dark mt-2 mb-2 group-hover:text-primary transition-colors">Auto-Calculating PF, ESI, PT and TDS</h4>
               <p className="font-ui text-sm text-secondary">How Arthvahi automates statutory payroll calculations.</p>
             </div>

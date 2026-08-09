@@ -72,7 +72,7 @@ export function AccountTree({ accounts, onRefine }: AccountTreeProps) {
           {hasChildren && (
             <button
               onClick={() => toggleExpand(node.code)}
-              className="p-1 hover:bg-gray-100 rounded"
+              className="p-1 hover:bg-surface-muted rounded"
             >
               <svg
                 className={`h-4 w-4 transition-transform ${
@@ -95,7 +95,7 @@ export function AccountTree({ accounts, onRefine }: AccountTreeProps) {
             type="checkbox"
             checked={node.isEnabled}
             onChange={() => toggleEnabled(node.code)}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded focus:border-focus"
           />
 
           <span className="font-mono text-xs text-light w-24">{node.code}</span>
@@ -104,7 +104,7 @@ export function AccountTree({ accounts, onRefine }: AccountTreeProps) {
             type="text"
             value={node.name}
             onChange={(e) => renameNode(node.code, e.target.value)}
-            className="flex-1 border-b border-transparent hover:border-gray-300 focus:border-amber-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface text-sm"
+            className="flex-1 border-b border-transparent hover:focus:border-focus focus:border-amber-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface text-sm"
           />
         </div>
 

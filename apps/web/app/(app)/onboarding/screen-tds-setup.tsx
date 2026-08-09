@@ -65,27 +65,27 @@ export function ScreenTdsSetup({ tenantId, onComplete, onBack }: ScreenTdsSetupP
         <section className="space-y-4">
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">
                 Do you deduct TDS?
               </p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-xs text-text-mid">
                 Enable if your business is required to deduct tax at source
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" {...register("tdsApplicable")} />
-              <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
+              <div className="w-10 h-6 bg-lighter peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
             </label>
           </div>
 
           {tdsApplicable && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 animate-in">
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="tan">
+                <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="tan">
                   TAN Number
                 </label>
                 <input
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-xs"
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-xs"
                   id="tan"
                   maxLength={10}
                   placeholder="ABCD12345E"
@@ -94,7 +94,7 @@ export function ScreenTdsSetup({ tenantId, onComplete, onBack }: ScreenTdsSetupP
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="deductorCategory">
+                <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="deductorCategory">
                   Deductor Category
                 </label>
                 <div className="relative">
@@ -122,20 +122,20 @@ export function ScreenTdsSetup({ tenantId, onComplete, onBack }: ScreenTdsSetupP
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

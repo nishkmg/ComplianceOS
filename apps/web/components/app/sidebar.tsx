@@ -179,7 +179,7 @@ export function AppSidebar() {
             {/* Section header */}
             {section.label && (
               <div className="px-3 pb-1">
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-sidebar-dim select-none">
+                <span className="text-ui-2xs font-bold uppercase tracking-[0.12em] text-sidebar-dim select-none">
                   {section.label}
                 </span>
               </div>
@@ -198,7 +198,7 @@ export function AppSidebar() {
                         <button
                           onClick={() => toggleGroup(item.key)}
                           className={[
-                            'w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-left',
+                            'w-full flex items-center gap-3 px-3 py-2 rounded-sm text-left',
                             'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group active:scale-[0.98]',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                             groupActive
@@ -212,7 +212,7 @@ export function AppSidebar() {
                             size={16}
                             className={groupActive ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-dark'}
                           />
-                          <span className="flex-1 text-[13px]">{item.label}</span>
+                          <span className="flex-1 text-ui-sm">{item.label}</span>
                           <Icon
                             name={isOpen ? 'expand_less' : 'expand_more'}
                             size={14}
@@ -230,7 +230,7 @@ export function AppSidebar() {
                                   key={child.href}
                                   href={child.href}
                                   className={[
-                                    'block px-2 py-1.5 rounded-[4px] text-[12px] transition-colors no-underline',
+                                    'block px-2 py-1.5 rounded-sm text-ui-xs transition-colors no-underline',
                                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                                     childActive
                                       ? 'text-amber-bright font-semibold bg-section-amber'
@@ -254,7 +254,7 @@ export function AppSidebar() {
                       key={item.href}
                       href={item.href}
                       className={[
-                        'flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px]',
+                        'flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm',
                         'border-l-[3px] transition-colors no-underline group active:scale-[0.98]',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                         active
@@ -294,14 +294,14 @@ export function AppSidebar() {
           aria-expanded={showFyPopover}
           aria-label="Switch fiscal year"
         >
-          <div className="text-[10px] text-sidebar-dim uppercase tracking-wide mb-1 select-none">
+          <div className="text-ui-2xs text-sidebar-dim uppercase tracking-wide mb-1 select-none">
             Active Fiscal Year
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[12px] text-sidebar-muted font-medium font-mono">FY {activeFy}</span>
+            <span className="text-ui-xs text-sidebar-muted font-medium font-mono">FY {activeFy}</span>
             <div className="flex items-center gap-2">
               <span className={[
-                'px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-sm',
+                'px-1.5 py-0.5 text-ui-2xs font-bold uppercase rounded-sm',
                 currentFy.status === 'open'
                   ? 'bg-success-bg text-success'
                   : 'bg-lighter text-sidebar-muted',
@@ -316,7 +316,7 @@ export function AppSidebar() {
             </div>
           </div>
           {currentFy.status === 'open' && (
-            <div className="text-[9px] text-sidebar-dim mt-0.5 font-mono">
+            <div className="text-ui-2xs text-sidebar-dim mt-0.5 font-mono">
               {currentFy.daysRemaining} days remaining
             </div>
           )}
@@ -344,12 +344,12 @@ export function AppSidebar() {
                   ].join(' ')}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`font-mono text-[13px] ${selected ? 'font-bold text-dark' : 'text-sidebar-muted'}`}>
+                    <span className={`font-mono text-ui-sm ${selected ? 'font-bold text-dark' : 'text-sidebar-muted'}`}>
                       {fy.name}
                     </span>
                     <div className="flex items-center gap-2">
                       <span className={[
-                        'text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-sm border',
+                        'text-ui-2xs uppercase font-bold px-1.5 py-0.5 rounded-sm border',
                         fy.status === 'open'
                           ? 'bg-section-amber text-amber-bright border-amber-bright/30'
                           : 'bg-lighter text-sidebar-muted border-border-subtle',
@@ -362,7 +362,7 @@ export function AppSidebar() {
                     </div>
                   </div>
                   {fy.status === 'open' && fy.daysRemaining > 0 && (
-                    <div className="text-[9px] text-sidebar-dim mt-0.5 font-mono">
+                    <div className="text-ui-2xs text-sidebar-dim mt-0.5 font-mono">
                       {fy.daysRemaining} days remaining
                     </div>
                   )}
@@ -378,12 +378,12 @@ export function AppSidebar() {
         <ThemeToggle />
         <Link
           href="/support"
-          className="flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+          className="flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
         >
           <Icon name="contact_support" size={16} />
           <span>Support</span>
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
           <Icon name="logout" size={16} />
           <span>Sign Out</span>
         </button>

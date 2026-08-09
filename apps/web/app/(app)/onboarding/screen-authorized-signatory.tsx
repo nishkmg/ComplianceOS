@@ -57,7 +57,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="fullName">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="fullName">
               Full Name
             </label>
             <input
@@ -67,12 +67,12 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("fullName")}
             />
             {errors.fullName && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.fullName.message}</p>
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">{errors.fullName.message}</p>
             )}
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="designation">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="designation">
               Designation
             </label>
             <input
@@ -82,12 +82,12 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("designation")}
             />
             {errors.designation && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.designation.message}</p>
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">{errors.designation.message}</p>
             )}
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="mobile">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="mobile">
               Mobile Number
             </label>
             <input
@@ -98,12 +98,12 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("mobile")}
             />
             {errors.mobile && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.mobile.message}</p>
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">{errors.mobile.message}</p>
             )}
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="email">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="email">
               Email Address
             </label>
             <input
@@ -114,7 +114,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">{errors.email.message}</p>
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">{errors.email.message}</p>
             )}
           </div>
         </div>
@@ -126,20 +126,20 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

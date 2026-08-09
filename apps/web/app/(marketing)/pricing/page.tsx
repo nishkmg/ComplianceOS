@@ -53,10 +53,10 @@ export default function PricingPage() {
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
 
-      <main className="max-w-[1200px] mx-auto px-8 mt-16">
+      <main className="max-w-page mx-auto px-8 mt-16">
         {/* Hero Section */}
         <section className="pt-space-128 pb-space-96 text-center">
-          <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 block">Our Plans</span>
+          <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block">Our Plans</span>
           <h1 className="font-display text-marketing-xl text-dark max-w-2xl mx-auto mb-8">Simple pricing for Indian businesses.</h1>
           <p className="text-ui-lg font-ui text-secondary max-w-xl mx-auto">Precision accounting and GST compliance designed for the unique needs of Bharat's growing enterprises.</p>
         </section>
@@ -72,7 +72,7 @@ export default function PricingPage() {
           </div>
           <div className="flex items-center space-x-2">
             <span className={`text-ui-sm font-ui text-dark ${isAnnual ? 'font-bold' : ''}`}>Annual Billing</span>
-            <span className="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Save 20%</span>
+            <span className="bg-primary-fixed text-on-primary-fixed text-ui-2xs px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Save 20%</span>
           </div>
         </div>
 
@@ -81,7 +81,7 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <div key={plan.name} className={`bg-white border border-border-subtle p-10 flex flex-col relative transition-colors transition-shadow duration-300 ${plan.popular ? 'border-t-2 border-t-primary shadow-screenshot' : 'shadow-card'}`}>
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] px-4 py-1.5 uppercase font-bold tracking-widest">Most Popular</div>
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-ui-2xs px-4 py-1.5 uppercase font-bold tracking-widest">Most Popular</div>
               )}
               <div className="mb-8 text-left">
                 <h3 className="text-ui-lg font-ui text-dark mb-2">{plan.name}</h3>
@@ -92,7 +92,7 @@ export default function PricingPage() {
                   ₹{isAnnual ? plan.price.toLocaleString('en-IN') : Math.round(plan.price * 1.25 / 12).toLocaleString('en-IN')}
                   <span className="text-ui-sm font-ui text-light">/{isAnnual ? 'yr' : 'mo'}</span>
                 </div>
-                <div className="text-[10px] uppercase text-light tracking-widest font-bold">
+                <div className="text-ui-2xs uppercase text-light tracking-widest font-bold">
                   {isAnnual ? 'Billed Annually' : 'Billed Monthly'}
                 </div>
               </div>
@@ -125,15 +125,15 @@ export default function PricingPage() {
           <div className="bg-section-amber p-16 border border-border-subtle grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="text-left">
               <h2 className="font-display text-marketing-xl mb-6">Built for Indian CA Standards.</h2>
-              <p className="text-ui-md font-ui text-secondary mb-8 leading-relaxed">Every pixel and ledger entry in Arthvahi is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
+              <p className="text-ui-md font-ui text-mid mb-8 leading-relaxed">Every pixel and ledger entry in Arthvahi is built to align with the Institute of Chartered Accountants of India (ICAI) guidelines and modern GST frameworks.</p>
               <div className="flex space-x-12">
                 <div>
-                  <div className="font-mono-lg text-mono-lg text-primary font-bold">99.9%</div>
-                  <div className="text-ui-xs font-ui uppercase tracking-widest text-light font-bold">Accuracy Rate</div>
+                  <div className="font-mono-lg text-mono-lg text-amber-hover font-bold">99.9%</div>
+                  <div className="text-ui-xs font-ui uppercase tracking-widest text-mid font-bold">Accuracy Rate</div>
                 </div>
                 <div>
-                  <div className="font-mono-lg text-mono-lg text-primary font-bold">50k+</div>
-                  <div className="text-ui-xs font-ui uppercase tracking-widest text-light font-bold">Businesses</div>
+                  <div className="font-mono-lg text-mono-lg text-amber-hover font-bold">50k+</div>
+                  <div className="text-ui-xs font-ui uppercase tracking-widest text-mid font-bold">Businesses</div>
                 </div>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function PricingPage() {
         {/* FAQ Section */}
         <section className="mb-space-128 max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4 block">Knowledge Base</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4 block">Knowledge Base</span>
             <h2 className="font-display text-marketing-xl">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-4">

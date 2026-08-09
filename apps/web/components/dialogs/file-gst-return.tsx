@@ -39,7 +39,7 @@ export function FileGstReturnDialog({
 
         <div className="p-6 space-y-6 text-left">
           <div className="space-y-2">
-            <label className="block font-ui text-[10px] text-dark-variant uppercase tracking-widest font-bold">
+            <label className="block font-ui text-ui-2xs text-dark-variant uppercase tracking-widest font-bold">
               ARN (Acknowledgement Reference Number)
             </label>
             <div className="relative">
@@ -52,11 +52,11 @@ export function FileGstReturnDialog({
               />
               <Icon name="numbers" className="absolute right-3 top-1/2 -translate-y-1/2 text-light" />
             </div>
-            <p className="font-ui text-[11px] text-light mt-1 italic">Found on your GST portal acknowledgement receipt.</p>
+            <p className="font-ui text-ui-xs text-light mt-1 italic">Found on your GST portal acknowledgement receipt.</p>
           </div>
 
           <div className="space-y-2">
-            <label className="block font-ui text-[10px] text-dark-variant uppercase tracking-widest font-bold">
+            <label className="block font-ui text-ui-2xs text-dark-variant uppercase tracking-widest font-bold">
               Filing Date
             </label>
             <div className="relative">

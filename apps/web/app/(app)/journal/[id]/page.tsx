@@ -38,8 +38,8 @@ export default function JournalEntryDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Icon name="search_off" size={48} className="text-lighter mb-4" />
-        <p className="font-ui text-[13px] text-mid">Entry not found.</p>
-        <Link href="/journal" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">Back to Journal</Link>
+        <p className="font-ui text-ui-sm text-mid">Entry not found.</p>
+        <Link href="/journal" className="mt-4 text-amber text-ui-xs font-bold uppercase tracking-wider hover:underline no-underline">Back to Journal</Link>
       </div>
     );
   }
@@ -56,7 +56,7 @@ export default function JournalEntryDetailPage() {
           <button onClick={() => router.back()} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
           <div>
             <h1 className="font-ui text-display-lg font-semibold text-dark">{entry.entryNumber}</h1>
-            <p className="text-[13px] text-secondary font-ui mt-1">{entry.fiscalYear}</p>
+            <p className="text-ui-sm text-secondary font-ui mt-1">{entry.fiscalYear}</p>
           </div>
         </div>
         <Badge variant={cfg.badgeVariant}>{cfg.badgeLabel}</Badge>
@@ -64,38 +64,38 @@ export default function JournalEntryDetailPage() {
 
       <div className={`${cfg.bannerBg} border border-border rounded-md px-5 py-3 flex items-center gap-3`}>
         <Icon name={cfg.icon} size={18} className={cfg.bannerText} />
-        <span className={`font-ui text-[12px] font-medium ${cfg.bannerText}`}>{cfg.bannerMsg}</span>
+        <span className={`font-ui text-ui-xs font-medium ${cfg.bannerText}`}>{cfg.bannerMsg}</span>
       </div>
 
       <div className="grid grid-cols-2 gap-6 bg-surface border border-border rounded-md p-6 shadow-sm">
-        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</span><p className="font-mono text-[13px] text-dark mt-1">{new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration</span><p className="font-ui text-[13px] text-dark mt-1">{entry.narration}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Date</span><p className="font-mono text-ui-sm text-dark mt-1">{new Date(entry.date).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Narration</span><p className="font-ui text-ui-sm text-dark mt-1">{entry.narration}</p></div>
       </div>
 
       <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
         <div className="h-[2px] w-full bg-amber" />
         <table className="w-full text-left border-collapse">
           <thead><tr className="bg-surface-muted border-b border-border">
-            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Account</th>
-            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Description</th>
-            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-40">Debit (₹)</th>
-            <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right w-40">Credit (₹)</th>
+            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Account</th>
+            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Description</th>
+            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right w-40">Debit (₹)</th>
+            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right w-40">Credit (₹)</th>
           </tr></thead>
           <tbody className="divide-y divide-border-subtle">
             {entry.lines.map((l, i) => {
               const acct = accountMap[l.accountId];
               return (
                 <tr key={l.id || i} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-4 px-6 font-ui text-[13px] font-medium text-dark">{acct ? `${acct.code} · ${acct.name}` : l.accountId}</td>
-                  <td className="py-4 px-6 font-ui text-[13px] text-text-mid">{l.description || "—"}</td>
-                  <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.debit || "0") > 0 ? formatIndianNumber(parseFloat(l.debit), { currency: true, decimals: 2 }) : "—"}</td>
-                  <td className="py-4 px-6 text-right font-mono text-[13px] tabular-nums">{parseFloat(l.credit || "0") > 0 ? formatIndianNumber(parseFloat(l.credit), { currency: true, decimals: 2 }) : "—"}</td>
+                  <td className="py-4 px-6 font-ui text-ui-sm font-medium text-dark">{acct ? `${acct.code} · ${acct.name}` : l.accountId}</td>
+                  <td className="py-4 px-6 font-ui text-ui-sm text-text-mid">{l.description || "—"}</td>
+                  <td className="py-4 px-6 text-right font-mono text-ui-sm tabular-nums">{parseFloat(l.debit || "0") > 0 ? formatIndianNumber(parseFloat(l.debit), { currency: true, decimals: 2 }) : "—"}</td>
+                  <td className="py-4 px-6 text-right font-mono text-ui-sm tabular-nums">{parseFloat(l.credit || "0") > 0 ? formatIndianNumber(parseFloat(l.credit), { currency: true, decimals: 2 }) : "—"}</td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot><tr className="bg-surface-muted font-bold border-t-2 border-dark">
-            <td colSpan={2} className="py-4 px-6 font-ui text-[13px] uppercase tracking-widest">Totals</td>
+            <td colSpan={2} className="py-4 px-6 font-ui text-ui-sm uppercase tracking-widest">Totals</td>
             <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</td>
             <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</td>
           </tr></tfoot>

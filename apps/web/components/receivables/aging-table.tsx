@@ -98,7 +98,7 @@ export default function AgingTable({ data }: AgingTableProps) {
   };
 
   const SortIndicator = ({ column }: { column: SortKey }) => {
-    if (sortKey !== column) return <span className="ml-1 text-gray-300">↕</span>;
+    if (sortKey !== column) return <span className="ml-1 text-mid">↕</span>;
     return <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>;
   };
 
@@ -118,7 +118,7 @@ export default function AgingTable({ data }: AgingTableProps) {
     const bgClass = colorMap[bucket];
 
     if (amount === 0) {
-      return <td className="px-4 py-3 text-right text-gray-400">—</td>;
+      return <td className="px-4 py-3 text-right text-mid">—</td>;
     }
 
     return (
@@ -217,7 +217,7 @@ export default function AgingTable({ data }: AgingTableProps) {
                   <td className="px-4 py-3">
                     <span className="font-medium text-dark">{row.customerName}</span>
                     {row.customerGstin && (
-                      <span className="ml-2 text-xs text-gray-400">{row.customerGstin}</span>
+                      <span className="ml-2 text-xs text-mid">{row.customerGstin}</span>
                     )}
                   </td>
                   <BucketCell amount={row.current} bucket="current" />

@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Icon } from '@/components/ui/icon';
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
@@ -50,11 +48,11 @@ export default function ReceivablesPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">
             Treasury
           </p>
           <h1 className="font-ui text-display-lg font-semibold text-dark leading-tight">Receivables Summary</h1>
-          <p className="font-ui text-[13px] text-secondary mt-1">
+          <p className="font-ui text-ui-sm text-secondary mt-1">
             Outstanding invoices and aging, per customer.
           </p>
         </div>
@@ -89,7 +87,7 @@ export default function ReceivablesPage() {
           {/* Aging breakdown */}
           <div className="lg:col-span-7">
             <div className="bg-surface border border-border p-6 shadow-sm rounded-md">
-              <h3 className="font-ui text-[13px] font-bold text-dark mb-4 uppercase tracking-widest">Aging Breakdown</h3>
+              <h3 className="font-ui text-ui-sm font-bold text-dark mb-4 uppercase tracking-widest">Aging Breakdown</h3>
               {totalOutstanding > 0 && (
                 <div className="mb-6 border-b border-border pb-5">
                   <Donut
@@ -104,12 +102,12 @@ export default function ReceivablesPage() {
                 {agingBuckets.map(bucket => (
                   <div key={bucket.label}>
                     <div className="flex justify-between items-end mb-2">
-                      <span className="font-ui text-[13px] font-medium text-dark">{bucket.label}</span>
+                      <span className="font-ui text-ui-sm font-medium text-dark">{bucket.label}</span>
                       <div className="text-right">
-                        <span className="font-mono text-[13px] font-bold text-dark mr-3 tabular-nums">
+                        <span className="font-mono text-ui-sm font-bold text-dark mr-3 tabular-nums">
                           {formatIndianNumber(bucket.amount, { currency: true })}
                         </span>
-                        <span className="font-ui text-[10px] text-light">{bucket.percentage}%</span>
+                        <span className="font-ui text-ui-2xs text-light">{bucket.percentage}%</span>
                       </div>
                     </div>
                     <div className="w-full bg-lighter/60 h-1.5 rounded-full overflow-hidden">
@@ -130,15 +128,15 @@ export default function ReceivablesPage() {
           <div className="lg:col-span-5">
             <div className="bg-surface border border-border shadow-sm rounded-md overflow-hidden">
               <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
-                <h3 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Top Debtors</h3>
-                <span className="text-[10px] text-light font-bold uppercase tracking-widest">FY {activeFy}</span>
+                <h3 className="font-ui text-ui-sm font-bold text-dark uppercase tracking-widest">Top Debtors</h3>
+                <span className="text-ui-2xs text-light font-bold uppercase tracking-widest">FY {activeFy}</span>
               </div>
               <div className="divide-y divide-border-subtle">
                 {topDebtors.map(d => (
                   <div key={d.name} className="px-6 py-5 flex justify-between items-center hover:bg-surface-muted/50 transition-colors">
                     <div>
-                      <p className="font-ui text-[13px] font-semibold text-dark">{d.name}</p>
-                      <span className={`inline-block px-2 py-0.5 mt-1.5 text-[9px] uppercase font-bold tracking-widest border rounded-md ${
+                      <p className="font-ui text-ui-sm font-semibold text-dark">{d.name}</p>
+                      <span className={`inline-block px-2 py-0.5 mt-1.5 text-ui-2xs uppercase font-bold tracking-widest border rounded-md ${
                         d.status === "overdue"
                           ? "bg-danger-bg text-danger-deep border-danger/20"
                           : d.status === "partial"
@@ -149,12 +147,12 @@ export default function ReceivablesPage() {
                       </span>
                     </div>
                     <div className="text-right">
-                      <p className="font-mono text-[13px] font-bold text-dark tabular-nums">
+                      <p className="font-mono text-ui-sm font-bold text-dark tabular-nums">
                         {formatIndianNumber(d.amount, { currency: true })}
                       </p>
                       <Link
                         href={`/receivables/${d.id}`}
-                        className="text-[10px] text-light hover:text-amber transition-colors no-underline font-bold uppercase tracking-widest"
+                        className="text-ui-2xs text-light hover:text-amber transition-colors no-underline font-bold uppercase tracking-widest"
                       >
                         Statement →
                       </Link>

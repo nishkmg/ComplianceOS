@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import { api } from "@/lib/api";
 // @ts-ignore
-import { PaymentAllocationInputSchema } from "@complianceos/shared";
 
 interface Invoice {
   id: string;
@@ -280,7 +279,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
                 </button>
                 <button
                   onClick={() => setAllocations([])}
-                  className="px-4 py-2 bg-gray-200 text-dark text-sm rounded hover:bg-gray-300"
+                  className="px-4 py-2 bg-lighter text-dark text-sm rounded hover:bg-lighter/70"
                 >
                   Clear Allocations
                 </button>
@@ -334,7 +333,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
                 setPaymentAmount("");
                 setReferenceNumber("");
               }}
-              className="px-6 py-2 bg-gray-200 text-dark text-sm rounded hover:bg-gray-300"
+              className="px-6 py-2 bg-lighter text-dark text-sm rounded hover:bg-lighter/70"
             >
               Reset
             </button>

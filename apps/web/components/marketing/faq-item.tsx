@@ -10,7 +10,7 @@ export function FAQItem({ question, answer }) {
         </svg>
       </summary>
       <div className="faq-answer px-3 pt-3">
-        <div className="faq-answer-inner font-ui text-[14px] text-mid leading-relaxed">
+        <div className="faq-answer-inner font-ui text-ui-md text-mid leading-relaxed">
           {answer}
         </div>
       </div>

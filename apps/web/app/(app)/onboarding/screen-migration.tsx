@@ -69,10 +69,10 @@ export function ScreenMigration({ tenantId, onComplete, onBack }: ScreenMigratio
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${source === "" ? "border-amber" : "border-stone-300"}`}>
+              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${source === "" ? "border-amber" : "focus:border-focus"}`}>
                 {source === "" && <div className="w-2 h-2 rounded-full bg-amber" />}
               </div>
-              <span className="font-ui text-[13px] font-bold text-on-surface">Start Fresh</span>
+              <span className="font-ui text-ui-sm font-bold text-on-surface">Start Fresh</span>
             </div>
           </div>
           {MIGRATION_SOURCES.map((s) => (
@@ -84,10 +84,10 @@ export function ScreenMigration({ tenantId, onComplete, onBack }: ScreenMigratio
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${source === s.value ? "border-amber" : "border-stone-300"}`}>
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${source === s.value ? "border-amber" : "focus:border-focus"}`}>
                   {source === s.value && <div className="w-2 h-2 rounded-full bg-amber" />}
                 </div>
-                <span className="font-ui text-[13px] font-bold text-on-surface">{s.label}</span>
+                <span className="font-ui text-ui-sm font-bold text-on-surface">{s.label}</span>
               </div>
             </div>
           ))}
@@ -114,10 +114,10 @@ export function ScreenMigration({ tenantId, onComplete, onBack }: ScreenMigratio
                   checked={uploadTypes.has(t.value)}
                   onChange={() => toggleUploadType(t.value)}
                 />
-                <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${uploadTypes.has(t.value) ? "bg-amber border-amber" : "border-stone-300"}`}>
-                  {uploadTypes.has(t.value) && <Icon name="check" className="text-white text-[16px]" />}
+                <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${uploadTypes.has(t.value) ? "bg-amber border-amber" : "focus:border-focus"}`}>
+                  {uploadTypes.has(t.value) && <Icon name="check" className="text-white text-ui-lg" />}
                 </div>
-                <span className="font-ui text-[13px] font-bold text-on-surface">{t.label}</span>
+                <span className="font-ui text-ui-sm font-bold text-on-surface">{t.label}</span>
               </label>
             ))}
           </div>
@@ -131,9 +131,9 @@ export function ScreenMigration({ tenantId, onComplete, onBack }: ScreenMigratio
               type="button"
               onClick={onBack}
               disabled={isSubmitting}
-              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
-              <Icon name="arrow_back" className="text-[18px]" />
+              <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
@@ -141,10 +141,10 @@ export function ScreenMigration({ tenantId, onComplete, onBack }: ScreenMigratio
         <button
           onClick={handleContinue}
           disabled={isSubmitting}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {isSubmitting ? "Saving..." : "Continue"}
-          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+          <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

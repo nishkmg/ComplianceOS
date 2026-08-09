@@ -275,7 +275,7 @@ export default function NewJournalEntryPage() {
   }, [isBalanced, addLine, handleSubmit]);
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-10 pb-40">
+    <div className="max-w-page mx-auto space-y-10 pb-40">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
@@ -287,29 +287,29 @@ export default function NewJournalEntryPage() {
           </button>
           <div>
             <h1 className="font-ui text-display-lg font-semibold text-dark">New Journal Entry</h1>
-            <p className="text-[13px] text-secondary font-ui mt-1">
+            <p className="text-ui-sm text-secondary font-ui mt-1">
               Record a new transaction in the general ledger{gstConfig.tdsApplicable ? " · TDS applicable" : ""}{gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
             </p>
           </div>
         </div>
         <div className="text-right">
-          <p className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Entry #</p>
-          <p className="font-mono text-[13px] text-dark tabular-nums">Auto-generated</p>
+          <p className="font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold">Entry #</p>
+          <p className="font-mono text-ui-sm text-dark tabular-nums">Auto-generated</p>
         </div>
       </div>
 
       {dateError && (
         <div className="bg-danger-bg border border-danger/20 px-4 py-2.5 rounded-md flex items-center gap-2">
           <Icon name="warning" size={16} className="text-danger shrink-0" />
-          <span className="font-ui text-[12px] text-danger-deep font-medium">{dateError}</span>
+          <span className="font-ui text-ui-xs text-danger-deep font-medium">{dateError}</span>
         </div>
       )}
       {discardConfirm && (
         <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
-          <span className="font-ui text-[12px] text-amber font-medium">Unsaved changes will be lost. Discard?</span>
+          <span className="font-ui text-ui-xs text-amber font-medium">Unsaved changes will be lost. Discard?</span>
           <div className="flex gap-2">
-            <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
-            <button onClick={() => { setDiscardConfirm(false); router.back(); }} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest bg-danger text-white rounded-sm cursor-pointer border-none">Discard</button>
+            <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-ui-xs font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
+            <button onClick={() => { setDiscardConfirm(false); router.back(); }} className="px-3 py-1 text-ui-xs font-ui font-bold uppercase tracking-widest bg-danger text-white rounded-sm cursor-pointer border-none">Discard</button>
           </div>
         </div>
       )}
@@ -317,22 +317,22 @@ export default function NewJournalEntryPage() {
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         <div className="md:col-span-4 space-y-6">
           <div className="space-y-1.5">
-            <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Posting Date</label>
+            <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Posting Date</label>
             <input
               type="date"
               aria-label="Entry date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               max={new Date().toISOString().split("T")[0]}
             />
           </div>
           <div className="space-y-1.5">
-            <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Voucher Type</label>
+            <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Voucher Type</label>
             <div className="relative">
               <select
                 aria-label="Voucher type"
-                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-ui-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 value={voucherType}
                 onChange={(e) => setVoucherType(e.target.value)}
               >
@@ -342,10 +342,10 @@ export default function NewJournalEntryPage() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Reference</label>
+            <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Reference</label>
             <input
               type="text"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-ui-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="Invoice #, Bill ref, etc."
               value={reference}
               onChange={(e) => setReference(e.target.value)}
@@ -354,9 +354,9 @@ export default function NewJournalEntryPage() {
           </div>
         </div>
         <div className="md:col-span-8 space-y-1.5">
-          <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration / Description</label>
+          <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Narration / Description</label>
           <textarea
-            className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
+            className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-ui-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
             placeholder="Enter detailed accounting narration for this entry…"
             rows={5}
             value={narration}
@@ -369,14 +369,14 @@ export default function NewJournalEntryPage() {
       <section className="space-y-4">
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold">Ledger Distribution</p>
-            <h2 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest mt-0.5">Line Items</h2>
+            <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold">Ledger Distribution</p>
+            <h2 className="font-ui text-ui-sm font-bold text-dark uppercase tracking-widest mt-0.5">Line Items</h2>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={addLine}
-            className="text-[10px] font-bold uppercase tracking-widest"
+            className="text-ui-2xs font-bold uppercase tracking-widest"
           >
             <Icon name="add_circle" size={14} className="mr-1.5" /> Add Line
           </Button>
@@ -388,10 +388,10 @@ export default function NewJournalEntryPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-muted border-b border-border">
-                  <th className="py-3 px-5 font-ui text-[10px] text-light uppercase tracking-widest w-[28%]">Account / Ledger</th>
-                  <th className="py-3 px-5 font-ui text-[10px] text-light uppercase tracking-widest">Description</th>
-                  <th className="py-3 px-5 font-ui text-[10px] text-light uppercase tracking-widest text-right w-[130px]">Debit (₹)</th>
-                  <th className="py-3 px-5 font-ui text-[10px] text-light uppercase tracking-widest text-right w-[130px]">Credit (₹)</th>
+                  <th className="py-3 px-5 font-ui text-ui-2xs text-light uppercase tracking-widest w-[28%]">Account / Ledger</th>
+                  <th className="py-3 px-5 font-ui text-ui-2xs text-light uppercase tracking-widest">Description</th>
+                  <th className="py-3 px-5 font-ui text-ui-2xs text-light uppercase tracking-widest text-right w-[130px]">Debit (₹)</th>
+                  <th className="py-3 px-5 font-ui text-ui-2xs text-light uppercase tracking-widest text-right w-[130px]">Credit (₹)</th>
                   <th className="py-3 px-5 w-10" />
                 </tr>
               </thead>
@@ -401,7 +401,7 @@ export default function NewJournalEntryPage() {
                     <td className="p-0">
                       <select
                         aria-label={`Account for line ${index + 1}`}
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-ui-sm text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none"
                         value={line.accountId}
                         onChange={(e) => updateLine(index, "accountId", e.target.value)}
                       >
@@ -413,7 +413,7 @@ export default function NewJournalEntryPage() {
                     </td>
                     <td className="p-0">
                       <input
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-ui-sm text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
                         placeholder="Line description…"
                         value={line.description}
                         onChange={(e) => updateLine(index, "description", e.target.value)}
@@ -422,7 +422,7 @@ export default function NewJournalEntryPage() {
                     <td className="p-0">
                       <input
                         inputMode="decimal"
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-[13px] text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-2 focus-visible:ring-focus"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-ui-sm text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-2 focus-visible:ring-focus"
                         placeholder="0.00"
                         value={line.debit}
                         onChange={(e) => updateLine(index, "debit", e.target.value)}
@@ -432,7 +432,7 @@ export default function NewJournalEntryPage() {
                     <td className="p-0">
                       <input
                         inputMode="decimal"
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-[13px] text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-ui-sm text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
                         placeholder="0.00"
                         value={line.credit}
                         onChange={(e) => updateLine(index, "credit", e.target.value)}
@@ -453,13 +453,13 @@ export default function NewJournalEntryPage() {
               </tbody>
               <tfoot>
                 <tr className="bg-surface-muted border-t-2 border-border">
-                  <td colSpan={2} className="py-3 px-5 font-ui text-[10px] uppercase tracking-widest font-bold text-mid">
+                  <td colSpan={2} className="py-3 px-5 font-ui text-ui-2xs uppercase tracking-widest font-bold text-mid">
                     Total Distribution
                   </td>
-                  <td className={`py-3 px-5 text-right font-mono text-[13px] tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
+                  <td className={`py-3 px-5 text-right font-mono text-ui-sm tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
                     {formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}
                   </td>
-                  <td className={`py-3 px-5 text-right font-mono text-[13px] tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
+                  <td className={`py-3 px-5 text-right font-mono text-ui-sm tabular-nums font-semibold ${isBalanced ? 'text-success' : 'text-dark'}`}>
                     {formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}
                   </td>
                   <td />
@@ -472,7 +472,7 @@ export default function NewJournalEntryPage() {
         {accountWarnings.map((w, i) => (
           <div key={i} className="bg-amber-50 border border-amber-200 px-4 py-2 rounded-md flex items-center gap-2">
             <Icon name="warning" size={14} className="text-amber shrink-0" />
-            <span className="font-ui text-[11px] text-amber font-medium">{w}</span>
+            <span className="font-ui text-ui-xs text-amber font-medium">{w}</span>
           </div>
         ))}
 
@@ -491,7 +491,7 @@ export default function NewJournalEntryPage() {
               size={18}
               className={isBalanced ? "text-success" : totalDebit > 0 ? "text-danger" : "text-mid"}
             />
-            <span className={`font-ui text-[12px] font-bold uppercase tracking-widest ${isBalanced ? "text-success" : totalDebit > 0 ? "text-danger" : "text-mid"}`}>
+            <span className={`font-ui text-ui-xs font-bold uppercase tracking-widest ${isBalanced ? "text-success" : totalDebit > 0 ? "text-danger" : "text-mid"}`}>
               {isBalanced
                 ? "Voucher is balanced"
                 : totalDebit > 0
@@ -501,12 +501,12 @@ export default function NewJournalEntryPage() {
           </div>
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Debit</p>
-              <p className="font-mono text-[13px] text-dark tabular-nums font-semibold">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</p>
+              <p className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Debit</p>
+              <p className="font-mono text-ui-sm text-dark tabular-nums font-semibold">{formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}</p>
             </div>
             <div className="text-right">
-              <p className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Credit</p>
-              <p className="font-mono text-[13px] text-dark tabular-nums font-semibold">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</p>
+              <p className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Credit</p>
+              <p className="font-mono text-ui-sm text-dark tabular-nums font-semibold">{formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}</p>
             </div>
           </div>
         </div>
@@ -514,20 +514,20 @@ export default function NewJournalEntryPage() {
 
       <div className="fixed bottom-0 left-0 right-0 lg:left-64 z-40 bg-surface border-t border-border px-6 py-4 flex justify-between items-center shadow-lg no-print">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase font-bold text-light tracking-widest mr-1">Shortcuts</span>
-          <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-[9px] font-mono text-mid">⌘S</kbd>
-          <span className="text-[10px] text-light">Save</span>
-          <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-[9px] font-mono text-mid">⌘↵</kbd>
-          <span className="text-[10px] text-light">Post</span>
-          <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-[9px] font-mono text-mid">N</kbd>
-          <span className="text-[10px] text-light">New Line</span>
+          <span className="text-ui-2xs uppercase font-bold text-light tracking-widest mr-1">Shortcuts</span>
+          <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-ui-2xs font-mono text-mid">⌘S</kbd>
+          <span className="text-ui-2xs text-light">Save</span>
+          <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-ui-2xs font-mono text-mid">⌘↵</kbd>
+          <span className="text-ui-2xs text-light">Post</span>
+          <kbd className="px-1.5 py-0.5 bg-surface-muted border border-border rounded-md text-ui-2xs font-mono text-mid">N</kbd>
+          <span className="text-ui-2xs text-light">New Line</span>
         </div>
         <div className="flex gap-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={handleDiscard}
-            className="text-[10px] font-bold uppercase tracking-widest"
+            className="text-ui-2xs font-bold uppercase tracking-widest"
           >
             Discard
           </Button>
@@ -536,7 +536,7 @@ export default function NewJournalEntryPage() {
             size="sm"
             onClick={() => handleSubmit('draft')}
             disabled={saving}
-            className="text-[10px] font-bold uppercase tracking-widest"
+            className="text-ui-2xs font-bold uppercase tracking-widest"
           >
             {saving ? "Saving…" : "Save Draft"}
           </Button>
@@ -544,7 +544,7 @@ export default function NewJournalEntryPage() {
             size="sm"
             onClick={() => handleSubmit('posted')}
             disabled={!isBalanced || saving || !!dateError}
-            className="text-[10px] font-bold uppercase tracking-widest"
+            className="text-ui-2xs font-bold uppercase tracking-widest"
           >
             {saving ? "Posting…" : "Post Entry →"}
           </Button>

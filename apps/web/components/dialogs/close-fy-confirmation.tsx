@@ -36,18 +36,18 @@ export function CloseFiscalYearDialog({
 
         <div className="p-8 space-y-8 text-left bg-white">
           <div>
-             <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold mb-4">Finalization Checklist</h3>
-             <ul className="space-y-4 font-ui text-[13px] text-dark-variant list-none p-0">
+             <h3 className="font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold mb-4">Finalization Checklist</h3>
+             <ul className="space-y-4 font-ui text-ui-sm text-dark-variant list-none p-0">
                <li className="flex items-start gap-3">
-                 <Icon name="check_circle" className="text-success text-[18px]" />
+                 <Icon name="check_circle" className="text-success text-ui-xl" />
                  <span>All 2,481 journal entries have been posted or cleared.</span>
                </li>
                <li className="flex items-start gap-3">
-                 <Icon name="check_circle" className="text-success text-[18px]" />
+                 <Icon name="check_circle" className="text-success text-ui-xl" />
                  <span>GSTR-1, 2B, and 3B reconciliations are finalized for all 12 months.</span>
                </li>
                <li className="flex items-start gap-3">
-                 <Icon name="check_circle" className="text-success text-[18px]" />
+                 <Icon name="check_circle" className="text-success text-ui-xl" />
                  <span>Inventory valuation (FIFO) has been computed and audited.</span>
                </li>
              </ul>

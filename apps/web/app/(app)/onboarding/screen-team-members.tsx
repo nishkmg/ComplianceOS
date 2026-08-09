@@ -114,9 +114,9 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
           <button
             type="button"
             onClick={addMember}
-            className="bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] font-bold text-on-surface hover:bg-surface-muted transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            className="bg-surface border border-border rounded-md px-4 py-3 font-ui text-ui-sm font-bold text-on-surface hover:bg-surface-muted transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Icon name="add" className="text-[18px]" />
+            <Icon name="add" className="text-ui-xl" />
             Add
           </button>
         </div>
@@ -129,19 +129,19 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-muted border-b-[0.5px] border-border">
-                  <th className="py-3 px-6 font-ui text-[11px] text-text-light uppercase tracking-widest">Name</th>
-                  <th className="py-3 px-6 font-ui text-[11px] text-text-light uppercase tracking-widest">Email</th>
-                  <th className="py-3 px-6 font-ui text-[11px] text-text-light uppercase tracking-widest">Role</th>
-                  <th className="py-3 px-6 font-ui text-[11px] text-text-light uppercase tracking-widest w-20"></th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest">Name</th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest">Email</th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest">Role</th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest w-20"></th>
                 </tr>
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle">
                 {teamMembers.map((m) => (
                   <tr key={m.email} className="hover:bg-surface-muted transition-colors">
-                    <td className="py-4 px-6 font-ui text-[13px] font-bold text-on-surface">{m.name}</td>
-                    <td className="py-4 px-6 font-ui text-[13px] text-text-mid">{m.email}</td>
+                    <td className="py-4 px-6 font-ui text-ui-sm font-bold text-on-surface">{m.name}</td>
+                    <td className="py-4 px-6 font-ui text-ui-sm text-text-mid">{m.email}</td>
                     <td className="py-4 px-6">
-                      <span className="font-ui text-[10px] uppercase tracking-widest bg-amber-50 text-amber px-2 py-1 rounded-md font-bold">
+                      <span className="font-ui text-ui-2xs uppercase tracking-widest bg-amber-50 text-amber px-2 py-1 rounded-md font-bold">
                         {TEAM_ROLES.find((r) => r.value === m.role)?.label || m.role}
                       </span>
                     </td>
@@ -151,7 +151,7 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
                         onClick={() => removeMember(m.email)}
                         className="text-text-light hover:text-danger transition-colors border-none bg-transparent cursor-pointer"
                       >
-                        <Icon name="close" className="text-[18px]" />
+                        <Icon name="close" className="text-ui-xl" />
                       </button>
                     </td>
                   </tr>
@@ -169,23 +169,23 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
               type="button"
               onClick={onBack}
               disabled={isSubmitting}
-              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
-              <Icon name="arrow_back" className="text-[18px]" />
+              <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-[11px] text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-text-light uppercase tracking-wider italic">
             You can add more team members later in Settings.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={isSubmitting}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {isSubmitting ? "Saving..." : "Continue"}
-          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+          <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
 

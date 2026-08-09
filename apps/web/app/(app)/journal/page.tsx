@@ -41,7 +41,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     render: (row) => (
       <Link
         href={`/journal/${row.id}`}
-        className="font-mono text-[13px] text-amber hover:underline no-underline"
+        className="font-mono text-ui-sm text-amber hover:underline no-underline"
       >
         {row.entryNumber}
       </Link>
@@ -53,7 +53,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     sortable: true,
     width: "130px",
     render: (row) => (
-      <span className="font-mono text-[12px] text-mid">
+      <span className="font-mono text-ui-xs text-mid">
         {new Date(row.date).toLocaleDateString("en-IN", {
           day: "2-digit",
           month: "short",
@@ -74,7 +74,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     sortable: true,
     width: "150px",
     render: (row) => (
-      <span className="font-mono text-[13px] tabular-nums">
+      <span className="font-mono text-ui-sm tabular-nums">
         {Number(row.debit) > 0 ? formatIndianNumber(Number(row.debit), { currency: true, decimals: 2 }) : "—"}
       </span>
     ),
@@ -86,7 +86,7 @@ const columns: ColumnDef<JournalEntry>[] = [
     sortable: true,
     width: "150px",
     render: (row) => (
-      <span className="font-mono text-[13px] tabular-nums">
+      <span className="font-mono text-ui-sm tabular-nums">
         {Number(row.credit) > 0 ? formatIndianNumber(Number(row.credit), { currency: true, decimals: 2 }) : "—"}
       </span>
     ),
@@ -186,7 +186,7 @@ export default function JournalPage() {
             <button
               key={s.value}
               onClick={() => setFilter(s.value)}
-              className={`px-3 py-1.5 text-[11px] font-ui text-[13px] font-medium transition-colors cursor-pointer border-none rounded-sm ${
+              className={`px-3 py-1.5 text-ui-xs font-ui text-ui-sm font-medium transition-colors cursor-pointer border-none rounded-sm ${
                 filter === s.value
                   ? "bg-surface text-dark shadow-sm"
                   : "text-mid hover:text-dark bg-transparent"
@@ -194,7 +194,7 @@ export default function JournalPage() {
             >
               {s.label}
               {s.value !== "all" && (
-                <span className="ml-1.5 text-[10px] text-light">({counts[s.value]})</span>
+                <span className="ml-1.5 text-ui-2xs text-light">({counts[s.value]})</span>
               )}
             </button>
           ))}
@@ -207,7 +207,7 @@ export default function JournalPage() {
           />
           <input
             data-search-input
-            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus placeholder:text-light"
+            className="bg-surface border border-border text-ui-xs font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus placeholder:text-light"
             placeholder="Search entries..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -234,13 +234,13 @@ export default function JournalPage() {
           footer={
             filteredEntries.length > 0 ? (
               <tr className="bg-surface-muted border-t-2 border-border">
-                <td colSpan={3} className="px-4 py-3 font-ui text-[10px] uppercase tracking-widest text-mid font-bold">
+                <td colSpan={3} className="px-4 py-3 font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold">
                   Total ({filteredEntries.length} entries)
                 </td>
-                <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                <td className="px-4 py-3 font-mono text-ui-sm text-dark tabular-nums text-right font-semibold">
                   {formatIndianNumber(totalDebit, { currency: true, decimals: 2 })}
                 </td>
-                <td className="px-4 py-3 font-mono text-[13px] text-dark tabular-nums text-right font-semibold">
+                <td className="px-4 py-3 font-mono text-ui-sm text-dark tabular-nums text-right font-semibold">
                   {formatIndianNumber(totalCredit, { currency: true, decimals: 2 })}
                 </td>
                 <td />

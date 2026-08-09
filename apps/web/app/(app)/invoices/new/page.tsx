@@ -128,26 +128,26 @@ export default function NewInvoicePage() {
           <button onClick={() => router.back()} aria-label="Back" className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
           <h1 className="font-ui text-display-lg font-semibold text-dark">New Invoice</h1>
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
           {saving ? "Creating…" : "Create Invoice"}
         </button>
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label htmlFor="invoice-customer-name" className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Customer Name</label>
+            <label htmlFor="invoice-customer-name" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer Name</label>
             <input id="invoice-customer-name" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="invoice-customer-state" className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Customer State (optional)</label>
+            <label htmlFor="invoice-customer-state" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer State (optional)</label>
             <input id="invoice-customer-state" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={customerState} onChange={e => setCustomerState(e.target.value)} placeholder="e.g. Maharashtra" />
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="invoice-date" className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</label>
+            <label htmlFor="invoice-date" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Date</label>
             <input id="invoice-date" type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={date} onChange={e => { setDate(e.target.value); setDueDate(addDays(e.target.value, 30)); }} />
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="invoice-due-date" className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Due Date</label>
+            <label htmlFor="invoice-due-date" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Due Date</label>
             <input id="invoice-due-date" type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={dueDate} onChange={e => setDueDate(e.target.value)} />
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function NewInvoicePage() {
             <input type="number" className="col-span-2 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" placeholder="GST%" value={it.gstRate} onChange={e => { const n = [...items]; n[i].gstRate = e.target.value; setItems(n); }} />
           </div>
         ))}
-        <button onClick={() => setItems([...items, { description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }])} className="text-amber text-[11px] font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>
+        <button onClick={() => setItems([...items, { description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }])} className="text-amber text-ui-xs font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>
       </div>
     </div>
   );

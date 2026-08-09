@@ -72,8 +72,10 @@
   /* ── Font sizes (existing scale, kept) ───────────────────────────── */
   --text-ui-md: 14px;
   --text-ui-sm: 13px;
+  --text-ui-2xs: 10px;
   --text-ui-xs: 12px;
   --text-ui-lg: 16px;
+  --text-ui-xl: 18px;
   --text-mono-sm: 12px;
   --text-mono-md: 14px;
   --text-mono-lg: 16px;
@@ -94,6 +96,7 @@
   --spacing-gutter-desktop: 24px;
   --spacing-gutter-wide: 32px;
   --spacing-margin-mobile: 16px;
+  --container-page: 75rem;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.625rem;

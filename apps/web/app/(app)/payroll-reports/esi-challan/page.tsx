@@ -11,12 +11,12 @@ export default function ESIChallanPage() {
     <div className="space-y-6 text-left">
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 backdrop-blur-sm -mx-8 -mt-8 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Statutory Filings</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Statutory Filings</p>
           <h1 className="font-ui text-2xl font-semibold text-dark">ESI Challan Report</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">Generate data for Employee State Insurance filings.</p>
+          <p className="text-ui-sm text-secondary font-ui mt-1">Generate data for Employee State Insurance filings.</p>
         </div>
         <button className="btn btn-primary flex items-center gap-2">
-          <Icon name="download" className="text-[18px]" /> Export
+          <Icon name="download" className="text-ui-xl" /> Export
         </button>
       </header>
       <div className="grid grid-cols-4 gap-4">
@@ -30,9 +30,9 @@ export default function ESIChallanPage() {
           <thead><tr className="bg-surface-muted border-b border-border text-xs font-bold text-light uppercase tracking-widest">
             <th className="px-4 py-3">Employee</th><th className="px-4 py-3 text-right">Days</th><th className="px-4 py-3 text-right">Gross Wages</th><th className="px-4 py-3 text-right">Emp. (0.75%)</th><th className="px-4 py-3 text-right">Empr. (3.25%)</th><th className="px-4 py-3 text-right font-bold">Total ESI</th>
           </tr></thead>
-          <tbody className="divide-y divide-stone-50 font-mono text-sm">
+          <tbody className="divide-y 50-border font-mono text-sm">
             {employees.map((e) => (
-              <tr key={e.id} className="hover:bg-surface-muted"><td className="px-4 py-3"><span className="font-ui text-[13px] font-bold">{e.name}</span><span className="text-xs text-light ml-2">{e.id}</span></td>
+              <tr key={e.id} className="hover:bg-surface-muted"><td className="px-4 py-3"><span className="font-ui text-ui-sm font-bold">{e.name}</span><span className="text-xs text-light ml-2">{e.id}</span></td>
                 <td className="px-4 py-3 text-right">{e.days}</td><td className="px-4 py-3 text-right">{e.gross.toLocaleString()}</td><td className="px-4 py-3 text-right text-mid">{e.empESI}</td><td className="px-4 py-3 text-right text-mid">{e.emprESI}</td><td className="px-4 py-3 text-right font-bold">{e.totalESI}</td></tr>
             ))}
           </tbody>

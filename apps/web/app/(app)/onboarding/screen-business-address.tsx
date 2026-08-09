@@ -62,7 +62,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
           {/* Address Line 1 */}
           <div className="flex flex-col gap-2 md:col-span-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="addressLine1">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="addressLine1">
               Address Line 1
             </label>
             <input
@@ -72,7 +72,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               {...register("addressLine1")}
             />
             {errors.addressLine1 && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
                 {errors.addressLine1.message}
               </p>
             )}
@@ -80,7 +80,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
 
           {/* Address Line 2 */}
           <div className="flex flex-col gap-2 md:col-span-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="addressLine2">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="addressLine2">
               Address Line 2
             </label>
             <input
@@ -93,7 +93,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
 
           {/* State */}
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="state">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="state">
               State
             </label>
             <div className="relative">
@@ -112,7 +112,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
 
           {/* District */}
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="district">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="district">
               District
             </label>
             <input
@@ -125,7 +125,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
 
           {/* City */}
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="city">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="city">
               City
             </label>
             <input
@@ -135,7 +135,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               {...register("city")}
             />
             {errors.city && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
                 {errors.city.message}
               </p>
             )}
@@ -143,18 +143,18 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
 
           {/* Pincode */}
           <div className="flex flex-col gap-2">
-            <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pincode">
+            <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pincode">
               Pincode
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
               id="pincode"
               maxLength={6}
               placeholder="400001"
               {...register("pincode")}
             />
             {errors.pincode && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
                 {errors.pincode.message}
               </p>
             )}
@@ -168,20 +168,20 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

@@ -47,28 +47,28 @@ export default function EmployeeSalaryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Employee Profile</p>
+        <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Employee Profile</p>
         <h1 className="font-ui text-display-lg font-semibold text-dark">Salary Structure</h1>
-        <p className="text-[13px] text-secondary font-ui mt-1">Configure employee compensation</p>
+        <p className="text-ui-sm text-secondary font-ui mt-1">Configure employee compensation</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 max-w-4xl">
         <div className="card p-5">
           <div className="flex flex-col gap-1">
-            <label className="font-ui text-[10px] uppercase tracking-wide text-light">Effective From <span className="text-danger">*</span></label>
+            <label className="font-ui text-ui-2xs uppercase tracking-wide text-light">Effective From <span className="text-danger">*</span></label>
             <input required type="date" value={effectiveFrom} onChange={(e) => setEffectiveFrom(e.target.value)} className="input-field font-ui w-48" />
           </div>
         </div>
 
         <div className="card overflow-hidden">
-          <div className="px-4 py-3 border-b border-border font-ui text-[14px] font-normal text-dark">Components</div>
+          <div className="px-4 py-3 border-b border-border font-ui text-ui-md font-normal text-dark">Components</div>
           <table className="table table-dense">
             <thead>
               <tr>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Component</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-right">Amount (₹)</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-right">% of Basic</th>
-                <th className="font-ui text-[10px] uppercase tracking-wide text-left">Actions</th>
+                <th className="font-ui text-ui-2xs uppercase tracking-wide text-left">Component</th>
+                <th className="font-ui text-ui-2xs uppercase tracking-wide text-right">Amount (₹)</th>
+                <th className="font-ui text-ui-2xs uppercase tracking-wide text-right">% of Basic</th>
+                <th className="font-ui text-ui-2xs uppercase tracking-wide text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -87,13 +87,13 @@ export default function EmployeeSalaryPage() {
                     <input type="number" step="0.01" value={comp.percentageOfBasic || ""} onChange={(e) => updateComponent(idx, "percentageOfBasic", e.target.value)} className="input-field font-mono w-full text-right" placeholder="% of Basic" />
                   </td>
                   <td className="px-4 py-3">
-                    <button type="button" onClick={() => removeComponent(idx)} className="font-ui text-[12px] text-danger hover:underline">Remove</button>
+                    <button type="button" onClick={() => removeComponent(idx)} className="font-ui text-ui-xs text-danger hover:underline">Remove</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <button type="button" onClick={addComponent} className="font-ui text-[13px] text-amber hover:underline m-3 inline-block">+ Add Component</button>
+          <button type="button" onClick={addComponent} className="font-ui text-ui-sm text-amber hover:underline m-3 inline-block">+ Add Component</button>
         </div>
 
         <div className="flex gap-3">

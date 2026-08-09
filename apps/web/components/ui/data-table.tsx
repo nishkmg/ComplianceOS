@@ -113,7 +113,7 @@ export function DataTable<T>({
                     key={col.key}
                     className={cn(
                       headerPadding,
-                      'font-ui text-[10px] text-mid uppercase tracking-widest font-bold',
+                      'font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold',
                       numeric && 'text-right',
                       col.sortable && 'cursor-pointer select-none hover:text-dark transition-colors',
                       stickyHeader && 'sticky top-0 bg-surface-muted z-10',
@@ -140,7 +140,7 @@ export function DataTable<T>({
                     <span className="inline-flex items-center gap-1">
                       {col.header}
                       {col.sortable && sortKey === col.key && (
-                        <Icon name={sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'} className="text-[14px]" />
+                        <Icon name={sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward'} className="text-ui-md" />
                       )}
                     </span>
                   </th>
@@ -196,7 +196,7 @@ export function DataTable<T>({
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-surface-muted/50">
-          <span className="font-ui text-[11px] font-medium text-mid">
+          <span className="font-ui text-ui-xs font-medium text-mid">
             {safePage * pageSize + 1}–{Math.min((safePage + 1) * pageSize, sortedData.length)} of {sortedData.length}
           </span>
           <div className="flex items-center gap-1">
@@ -206,7 +206,7 @@ export function DataTable<T>({
               aria-label="Previous page"
               className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
             >
-              <Icon name="chevron_left" className="text-[18px]" />
+              <Icon name="chevron_left" className="text-ui-xl" />
             </button>
             {Array.from({ length: Math.min(totalPages, 7) }).map((_, idx) => {
               let pageNum: number;
@@ -224,7 +224,7 @@ export function DataTable<T>({
                   key={pageNum}
                   onClick={() => setPage(pageNum)}
                   className={cn(
-                    'w-7 h-7 rounded text-[11px] font-mono font-medium transition-colors border-none cursor-pointer',
+                    'w-7 h-7 rounded text-ui-xs font-mono font-medium transition-colors border-none cursor-pointer',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2',
                     pageNum === safePage
                       ? 'bg-amber text-white'
@@ -241,7 +241,7 @@ export function DataTable<T>({
               aria-label="Next page"
               className="p-1 rounded hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-none bg-transparent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2"
             >
-              <Icon name="chevron_right" className="text-[18px]" />
+              <Icon name="chevron_right" className="text-ui-xl" />
             </button>
           </div>
         </div>

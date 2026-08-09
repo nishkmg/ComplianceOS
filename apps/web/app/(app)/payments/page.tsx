@@ -30,7 +30,7 @@ const columns: ColumnDef<Payment>[] = [
     sortable: true,
     width: "180px",
     render: (row) => (
-      <Link href={`/payments/${row.id}`} className="font-mono text-[13px] text-amber hover:underline no-underline">
+      <Link href={`/payments/${row.id}`} className="font-mono text-ui-sm text-amber hover:underline no-underline">
         {row.paymentNumber}
       </Link>
     ),
@@ -39,12 +39,12 @@ const columns: ColumnDef<Payment>[] = [
     key: "customerName",
     header: "From / To",
     sortable: true,
-    render: (row) => <span className="font-ui text-[13px] text-dark">{row.customerName}</span>,
+    render: (row) => <span className="font-ui text-ui-sm text-dark">{row.customerName}</span>,
   },
   {
     key: "paymentMethod",
     header: "Method",
-    render: (row) => <span className="font-ui text-[13px] text-[12px] text-mid capitalize">{row.paymentMethod}</span>,
+    render: (row) => <span className="font-ui text-ui-sm text-ui-xs text-mid capitalize">{row.paymentMethod}</span>,
   },
   {
     key: "amount",
@@ -52,7 +52,7 @@ const columns: ColumnDef<Payment>[] = [
     align: "right",
     sortable: true,
     width: "150px",
-    render: (row) => <span className="font-mono text-[13px] font-semibold tabular-nums">₹{Number(row.amount).toLocaleString("en-IN")}</span>,
+    render: (row) => <span className="font-mono text-ui-sm font-semibold tabular-nums">₹{Number(row.amount).toLocaleString("en-IN")}</span>,
   },
   {
     key: "status",
@@ -96,21 +96,21 @@ export default function PaymentsPage() {
   if (isLoading) return <TableSkeleton rows={5} columns={5} />;
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+    <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <div>
           <PageHeader title="Payments" />
-          <p className="text-[13px] text-secondary font-ui mt-1">FY {activeFy}</p>
+          <p className="text-ui-sm text-secondary font-ui mt-1">FY {activeFy}</p>
         </div>
         <div className="flex gap-3">
           <div className="relative">
-            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-mid text-[16px]" />
-            <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
+            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-mid text-ui-lg" />
+            <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 border border-border text-mid text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
             <Icon name="download" size={14} /> Export
           </button>
-          <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
+          <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
             <Icon name="add" size={14} /> Record Payment
           </Link>
         </div>
@@ -118,8 +118,8 @@ export default function PaymentsPage() {
 
       <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm">
         <div className="p-4 bg-surface-muted border-b border-border flex items-center justify-between">
-          <span className="font-ui text-[11px] text-text-mid">{filtered.length} payment{filtered.length !== 1 ? "s" : ""}</span>
-          <span className="font-mono text-[13px] font-bold tabular-nums">₹{totalAmount.toLocaleString("en-IN")}</span>
+          <span className="font-ui text-ui-xs text-text-mid">{filtered.length} payment{filtered.length !== 1 ? "s" : ""}</span>
+          <span className="font-mono text-ui-sm font-bold tabular-nums">₹{totalAmount.toLocaleString("en-IN")}</span>
         </div>
         {filtered.length > 0 ? (
           <DataTable columns={columns} data={filtered} keyExtractor={(r) => r.id} />

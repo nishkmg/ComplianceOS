@@ -69,7 +69,7 @@ export default function BalanceSheetPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+            <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
               Financial Report · FY {fiscalYear}
             </p>
             <h1 className="font-ui text-2xl font-semibold text-dark">Balance Sheet</h1>
@@ -78,7 +78,7 @@ export default function BalanceSheetPage() {
         <Card className="bg-surface border border-border p-12 text-center">
           <Icon name="receipt_long" size={32} className="text-light mx-auto mb-3" />
           <p className="font-ui text-lg text-dark mb-1">No entries for FY {fiscalYear}</p>
-          <p className="font-ui text-[12px] text-mid">Post journal entries to populate the balance sheet.</p>
+          <p className="font-ui text-ui-xs text-mid">Post journal entries to populate the balance sheet.</p>
         </Card>
       </div>
     );
@@ -89,14 +89,14 @@ export default function BalanceSheetPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
             Financial Report · FY {fiscalYear}
           </p>
           <h1 className="font-ui text-2xl font-semibold text-dark">Balance Sheet</h1>
         </div>
         <div className="flex gap-3 items-center">
           <select
-            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
+            className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
           >
@@ -108,7 +108,7 @@ export default function BalanceSheetPage() {
             type="date"
             value={asOfDate}
             onChange={e => setAsOfDate(e.target.value)}
-            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
+            className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
           />
           <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.open(`/api/reports/balance-sheet/pdf?fy=${fiscalYear}&asOf=${asOfDate}`, '_blank')}>
             <Icon name="download" size={14} /> Export PDF
@@ -126,9 +126,9 @@ export default function BalanceSheetPage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-[24px] text-dark mb-1 print:text-black">Mehta Textiles Private Limited</h2>
-          <p className="font-ui text-[12px] text-mid uppercase tracking-widest mb-1">Balance Sheet</p>
-          <p className="font-mono text-[11px] text-light italic">
+          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-black">Mehta Textiles Private Limited</h2>
+          <p className="font-ui text-ui-xs text-mid uppercase tracking-widest mb-1">Balance Sheet</p>
+          <p className="font-mono text-ui-xs text-light italic">
             As of {new Date(asOfDate).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
             {" · "}All amounts in ₹
           </p>
@@ -147,7 +147,7 @@ export default function BalanceSheetPage() {
                 {equityAndLiabilities.map((item, i) => (
                   <div key={`${item.label}-${i}`} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark">{item.label}</span>
-                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
+                    <span className="font-mono text-ui-sm tabular-nums">₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
                   </div>
                 ))}
               </div>
@@ -170,7 +170,7 @@ export default function BalanceSheetPage() {
                 {assetItems.map((item, i) => (
                   <div key={`${item.label}-${i}`} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark">{item.label}</span>
-                    <span className="font-mono text-[13px] tabular-nums">₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
+                    <span className="font-mono text-ui-sm tabular-nums">₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
                   </div>
                 ))}
               </div>
@@ -182,11 +182,11 @@ export default function BalanceSheetPage() {
             </div>
 
             {balanced ? (
-              <div className="px-4 py-2 bg-success-bg text-success text-[10px] uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
+              <div className="px-4 py-2 bg-success-bg text-success text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
                 <Icon name="check_circle" size={14} /> Statement is Balanced
               </div>
             ) : (
-              <div className="px-4 py-2 bg-danger-bg text-danger text-[10px] uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
+              <div className="px-4 py-2 bg-danger-bg text-danger text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
                 <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssetsVal), { currency: false })}
               </div>
             )}
@@ -195,7 +195,7 @@ export default function BalanceSheetPage() {
 
         {/* Footer */}
         <div className="text-center pb-6 pt-4 border-t border-border mx-8 print:border-black">
-          <p className="font-ui text-[10px] text-light">This is a system-generated financial statement. E&OE.</p>
+          <p className="font-ui text-ui-2xs text-light">This is a system-generated financial statement. E&OE.</p>
         </div>
       </Card>
     </div>

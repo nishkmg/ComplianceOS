@@ -178,7 +178,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           ) : (
             Object.entries(groupedCommands).map(([category, items]) => (
               <div key={category}>
-                <div className="px-5 py-2 text-[10px] uppercase tracking-wide text-light bg-surface-muted">
+                <div className="px-5 py-2 text-ui-2xs uppercase tracking-wide text-light bg-surface-muted">
                   {categoryLabels[category] || category}
                 </div>
                 {items.map(cmd => {

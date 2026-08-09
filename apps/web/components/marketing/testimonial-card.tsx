@@ -12,7 +12,7 @@ export function TestimonialCard({ quote, name, role, location }) {
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-sm bg-section-muted border border-border" aria-hidden="true" />
         <div>
-          <div className="font-ui text-[14px] font-medium text-dark">{name}</div>
+          <div className="font-ui text-ui-md font-medium text-dark">{name}</div>
           <div className="font-ui text-xs text-light">{role}</div>
           <div className="font-ui text-xs text-light">{location}</div>
         </div>

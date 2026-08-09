@@ -52,7 +52,7 @@ export function DeleteEntityDialog({
           </div>
 
           <div className="flex flex-col gap-3 mt-2">
-            <label className="font-ui text-[10px] uppercase tracking-widest text-mid font-bold" htmlFor="delete-confirmation">
+            <label className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold" htmlFor="delete-confirmation">
               To verify, type <span className="font-mono font-bold text-dark bg-surface-muted px-2 py-1 border border-border-subtle">DELETE</span> below:
             </label>
             <input 

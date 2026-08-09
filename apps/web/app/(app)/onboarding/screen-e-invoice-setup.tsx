@@ -65,16 +65,16 @@ export function ScreenEInvoiceSetup({ tenantId, onComplete, onBack }: ScreenEInv
         <section className="space-y-4">
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">
                 Do you generate e-Invoices?
               </p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-xs text-text-mid">
                 Enable if your business needs to generate IRN-registered invoices
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" {...register("eInvoiceEnabled")} />
-              <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
+              <div className="w-10 h-6 bg-lighter peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
             </label>
           </div>
 
@@ -82,7 +82,7 @@ export function ScreenEInvoiceSetup({ tenantId, onComplete, onBack }: ScreenEInv
             <div className="flex flex-col gap-8 animate-in">
               {/* IRP Provider */}
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid">
+                <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid">
                   IRP Provider
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -97,10 +97,10 @@ export function ScreenEInvoiceSetup({ tenantId, onComplete, onBack }: ScreenEInv
                     >
                       <input type="radio" value={p.value} className="sr-only" {...register("irpProvider")} />
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${watch("irpProvider") === p.value ? "border-amber" : "border-stone-300"}`}>
+                        <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${watch("irpProvider") === p.value ? "border-amber" : "focus:border-focus"}`}>
                           {watch("irpProvider") === p.value && <div className="w-1.5 h-1.5 rounded-full bg-amber" />}
                         </div>
-                        <span className="font-ui text-[12px] font-bold text-on-surface">{p.label}</span>
+                        <span className="font-ui text-ui-xs font-bold text-on-surface">{p.label}</span>
                       </div>
                     </label>
                   ))}
@@ -109,7 +109,7 @@ export function ScreenEInvoiceSetup({ tenantId, onComplete, onBack }: ScreenEInv
 
               {/* API Credentials */}
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="apiCredentials">
+                <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="apiCredentials">
                   API Credentials / Client ID
                 </label>
                 <input
@@ -118,7 +118,7 @@ export function ScreenEInvoiceSetup({ tenantId, onComplete, onBack }: ScreenEInv
                   placeholder="Enter your IRP API credentials (or skip to configure later)"
                   {...register("apiCredentials")}
                 />
-                <p className="font-ui text-[10px] text-text-light">
+                <p className="font-ui text-ui-2xs text-text-light">
                   You can configure API credentials later in Settings → E-Invoice
                 </p>
               </div>
@@ -133,20 +133,20 @@ export function ScreenEInvoiceSetup({ tenantId, onComplete, onBack }: ScreenEInv
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

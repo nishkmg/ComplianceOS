@@ -147,7 +147,7 @@ export default function InventoryDashboardPage() {
             <Link href="/inventory/stock" className="no-underline">
               <button className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-amber px-4 text-sm font-medium text-white shadow-sm transition-all duration-150 ease-smooth hover:bg-amber-hover active:scale-[0.98]">
                 Stock Ledger
-                <Icon name="arrow_forward" className="text-[16px]" />
+                <Icon name="arrow_forward" className="text-ui-lg" />
               </button>
             </Link>
           </>
@@ -184,24 +184,24 @@ export default function InventoryDashboardPage() {
           ) : reorderList.length === 0 ? (
             <div className="p-8 text-center">
               <Icon name="inventory" className="text-3xl text-lighter mx-auto mb-3" />
-              <p className="font-ui text-[13px] text-mid">No stock layers yet — they appear after the first purchase receipt.</p>
+              <p className="font-ui text-ui-sm text-mid">No stock layers yet — they appear after the first purchase receipt.</p>
             </div>
           ) : (
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-muted/50 border-b border-border">
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">SKU / Item</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Value</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">SKU / Item</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Balance</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Value</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border font-mono text-[13px]">
+              <tbody className="divide-y divide-border font-mono text-ui-sm">
                 {reorderList.map((item) => (
                   <tr key={item.sku} className="hover:bg-surface-muted transition-colors">
                     <td className="py-4 px-6 text-left">
-                      <p className="font-ui text-[13px] font-medium text-dark">{item.name}</p>
-                      <p className="font-ui text-[11px] text-light mt-0.5">{item.sku}</p>
+                      <p className="font-ui text-ui-sm font-medium text-dark">{item.name}</p>
+                      <p className="font-ui text-ui-xs text-light mt-0.5">{item.sku}</p>
                     </td>
                     <td className="py-4 px-6 text-right text-dark tabular-nums">
                       {item.available} <span className="text-light">{item.unit}</span>
@@ -210,7 +210,7 @@ export default function InventoryDashboardPage() {
                       {formatIndianNumber(item.value, { currency: true })}
                     </td>
                     <td className="py-4 px-6 text-right">
-                      <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
+                      <span className={`inline-block px-2 py-0.5 text-ui-2xs uppercase font-bold tracking-wider border rounded-md ${
                         item.status === "critical"
                           ? "bg-danger-bg text-danger-deep border-danger/20"
                           : item.status === "low"
@@ -231,7 +231,7 @@ export default function InventoryDashboardPage() {
         <div className="lg:col-span-4 bg-surface border border-border rounded-md shadow-sm p-6">
           <h3 className="font-ui text-sm font-semibold text-dark mb-6">Stock Valuation</h3>
           {valuationBars.length === 0 ? (
-            <p className="font-ui text-[13px] text-mid leading-relaxed">
+            <p className="font-ui text-ui-sm text-mid leading-relaxed">
               Valuation builds from purchase receipts. Record your first inward stock to see FIFO values here.
             </p>
           ) : (
@@ -239,8 +239,8 @@ export default function InventoryDashboardPage() {
               {valuationBars.map((bar) => (
                 <div key={bar.name}>
                   <div className="flex justify-between items-baseline mb-1.5">
-                    <span className="font-ui text-[13px] font-medium text-dark truncate pr-3">{bar.name}</span>
-                    <span className="font-mono text-[12px] text-mid tabular-nums shrink-0">
+                    <span className="font-ui text-ui-sm font-medium text-dark truncate pr-3">{bar.name}</span>
+                    <span className="font-mono text-ui-xs text-mid tabular-nums shrink-0">
                       {formatIndianNumber(bar.value, { currency: true })}
                     </span>
                   </div>

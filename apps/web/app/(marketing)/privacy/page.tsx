@@ -2,7 +2,7 @@
 import { MarketingNav } from '@/components/marketing/nav';
 import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
-import Link from 'next/link';
+import 'next/link';
 
 const sections = [
   {
@@ -75,9 +75,9 @@ export default function PrivacyPage() {
   return (
     <div className="bg-page-bg text-dark min-h-screen">
       <MarketingNav />
-      <main className="w-full max-w-[1200px] mx-auto px-gutter-desktop py-space-96">
+      <main className="w-full max-w-page mx-auto px-gutter-desktop py-space-96">
         <header className="mb-space-64">
-          <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4">Last Updated: October 24, 2024</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Last Updated: October 24, 2024</p>
           <h1 className="font-display text-marketing-xl text-dark mb-6">Privacy Policy</h1>
           <p className="font-ui text-ui-lg text-secondary max-w-2xl">This Privacy Policy describes how Arthvahi collects, uses, and shares your personal information in connection with our accounting and compliance platform.</p>
         </header>

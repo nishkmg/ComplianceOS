@@ -1,5 +1,5 @@
 import { db, invoiceView } from "@complianceos/db";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 export const runtime = "nodejs";
 

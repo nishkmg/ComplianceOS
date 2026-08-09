@@ -29,7 +29,7 @@ export default function ContactPage() {
       <main className="min-h-screen">
         {/* Hero */}
         <header className="pt-space-128 pb-space-64 px-8 max-w-[1320px] mx-auto text-left">
-          <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">Connect with us</span>
+          <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Connect with us</span>
           <h1 className="font-display text-marketing-xl text-dark mt-4">Get in touch.</h1>
           <p className="font-ui text-ui-lg text-secondary max-w-xl mt-4">Whether you're a Chartered Accountant looking for automation or a business owner scaling in India, our team of experts is ready to assist.</p>
         </header>

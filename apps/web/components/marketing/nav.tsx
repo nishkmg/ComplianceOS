@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 export function MarketingNav() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,8 +41,8 @@ export function MarketingNav() {
           <Link href="/login" className="text-mid font-medium hover:text-amber transition-colors duration-200 no-underline hidden md:block">
             Log In
           </Link>
-          <Link href="/signup" className="bg-amber text-white px-6 py-2 rounded-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-transform active:scale-95 text-sm no-underline inline-block">
-            Start Free
+          <Link href="/signup" className="no-underline">
+            <Button size="sm">Start Free</Button>
           </Link>
         </div>
       </div>

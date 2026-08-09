@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Icon } from '@/components/ui/icon';
 import { EmptyState } from "@/components/ui/empty-state";
 
 const MONTHS = [
@@ -17,7 +16,7 @@ export default function GSTMismatchesPage() {
   const [periodYear, setPeriodYear] = useState<number>(2026);
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+    <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <h1 className="font-ui text-display-lg font-semibold text-dark">2B Mismatches</h1>
         <div className="flex items-center gap-3">

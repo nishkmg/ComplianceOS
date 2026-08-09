@@ -12,7 +12,7 @@ export default function ITRFeaturePage() {
         {/* Hero */}
         <section className="max-w-7xl mx-auto px-8 pt-16 pb-space-64 text-left">
           <div className="max-w-4xl">
-            <h2 className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 block font-bold">ITR Compliance Hub</h2>
+            <h2 className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">ITR Compliance Hub</h2>
             <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
               From P&L to ITR — without re-entering a single number.
             </h1>
@@ -26,7 +26,7 @@ export default function ITRFeaturePage() {
         </section>
 
         {/* ITR Types */}
-        <section className="max-w-[1200px] mx-auto px-8 pb-space-64">
+        <section className="max-w-page mx-auto px-8 pb-space-64">
           <h2 className="font-display text-marketing-xl text-dark mb-12 text-left">ITR forms covered.</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -37,7 +37,7 @@ export default function ITRFeaturePage() {
               <div key={form.title} className={`bg-white border border-border-subtle p-8 shadow-sm relative text-left ${form.active ? 'border-t-2 border-t-amber' : ''}`}>
                 <h3 className="font-display text-lg font-bold text-dark mb-4">{form.title}</h3>
                 <p className="font-ui text-sm text-secondary leading-relaxed mb-8">{form.desc}</p>
-                {form.active && <span className="text-primary font-ui text-[10px] uppercase font-bold tracking-widest">Currently Supported</span>}
+                {form.active && <span className="text-primary font-ui text-ui-2xs uppercase font-bold tracking-widest">Currently Supported</span>}
               </div>
             ))}
           </div>
@@ -45,7 +45,7 @@ export default function ITRFeaturePage() {
 
         {/* Regime Comparison */}
         <section className="bg-section-muted py-space-64">
-          <div className="max-w-[1200px] mx-auto px-8 text-left">
+          <div className="max-w-page mx-auto px-8 text-left">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 <h2 className="font-display text-marketing-xl text-dark mb-6">Old vs New — compare using your actual books.</h2>
@@ -64,7 +64,7 @@ export default function ITRFeaturePage() {
               <div className="bg-white border border-border-subtle p-8 shadow-sm">
                 <div className="space-y-4 font-mono text-sm">
                   <div className="flex justify-between font-bold border-b border-border-subtle pb-3">
-                    <span className="uppercase tracking-widest text-[11px] font-ui">Tax Regime</span>
+                    <span className="uppercase tracking-widest text-ui-xs font-ui">Tax Regime</span>
                     <div className="flex gap-8">
                       <span className="w-20 text-right">Old</span>
                       <span className="w-20 text-right">New</span>
@@ -78,7 +78,7 @@ export default function ITRFeaturePage() {
                     </div>
                   </div>
                   <div className="flex justify-between bg-success-bg px-4 py-3 -mx-4 mt-2 font-bold">
-                    <span className="uppercase tracking-widest text-[11px] font-ui text-green-800">Savings</span>
+                    <span className="uppercase tracking-widest text-ui-xs font-ui text-green-800">Savings</span>
                     <span className="text-success">₹ 4,520 ~ 4.3%</span>
                   </div>
                 </div>

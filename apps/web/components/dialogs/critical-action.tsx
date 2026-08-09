@@ -42,11 +42,11 @@ export function CriticalActionDialog({
         </DialogHeader>
 
         <div className="bg-section-muted border border-border-subtle p-6 mb-10 rounded-sm">
-          <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-4 font-bold">Consequences of Action</h3>
-          <ul className="space-y-3 font-ui text-[13px] text-dark-variant list-none p-0">
+          <h3 className="font-ui text-ui-2xs text-amber uppercase tracking-widest mb-4 font-bold">Consequences of Action</h3>
+          <ul className="space-y-3 font-ui text-ui-sm text-dark-variant list-none p-0">
             {consequences.map((c, i) => (
               <li key={i} className="flex items-start gap-3">
-                <Icon name="remove" className="text-mid text-[18px] mt-0.5" />
+                <Icon name="remove" className="text-mid text-ui-xl mt-0.5" />
                 <span>{c}</span>
               </li>
             ))}
@@ -54,7 +54,7 @@ export function CriticalActionDialog({
         </div>
 
         <div className="mb-12">
-          <label className="block font-ui text-[10px] text-dark mb-2 uppercase tracking-widest font-bold">
+          <label className="block font-ui text-ui-2xs text-dark mb-2 uppercase tracking-widest font-bold">
             Type <span className="font-mono text-danger bg-danger-bg px-1 py-0.5">{confirmText}</span> to confirm
           </label>
           <input 

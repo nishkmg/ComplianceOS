@@ -83,23 +83,23 @@ export function ScreenFinancialYear({ tenantId, onComplete, onBack }: ScreenFina
               </p>
             </div>
           </div>
-          <p className="font-ui text-[11px] text-text-mid/70 mt-1">
+          <p className="font-ui text-ui-xs text-text-mid/70 mt-1">
             Fixed Indian fiscal year (April–March). Not configurable.
           </p>
         </div>
 
         <div className="flex items-center justify-between py-4 border-t border-border">
           <div>
-            <p className="font-ui text-[13px] font-bold text-on-surface">
+            <p className="font-ui text-ui-sm font-bold text-on-surface">
               Import Previous Year Balances?
             </p>
-            <p className="font-ui text-[11px] text-text-mid">
+            <p className="font-ui text-ui-xs text-text-mid">
               Carry forward balances from your previous accounting system
             </p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer" {...register("importPreviousYearBalances")} />
-            <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
+            <div className="w-10 h-6 bg-lighter peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
           </label>
         </div>
 
@@ -108,7 +108,7 @@ export function ScreenFinancialYear({ tenantId, onComplete, onBack }: ScreenFina
           <div className="border-b-[0.5px] border-border pb-2">
             <h2 className="font-ui text-lg font-bold text-on-surface">Books Beginning Date</h2>
           </div>
-          <p className="font-ui text-[13px] text-text-mid">
+          <p className="font-ui text-ui-sm text-text-mid">
             The date from which you start recording transactions. Usually the same as FY start, but can be later if you onboard mid-year.
           </p>
           <div className="flex flex-col gap-2 max-w-xs">
@@ -129,20 +129,20 @@ export function ScreenFinancialYear({ tenantId, onComplete, onBack }: ScreenFina
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

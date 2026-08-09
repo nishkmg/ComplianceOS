@@ -26,7 +26,7 @@ export default function NotFoundPage() {
 
         <div className="w-16 h-px bg-border-subtle mt-8"></div>
         
-        <div className="text-text-light font-mono text-[11px] mt-4 uppercase tracking-widest">
+        <div className="text-text-light font-mono text-ui-xs mt-4 uppercase tracking-widest">
           <p>Error Code: 404_NOT_FOUND</p>
           <p>Trace ID: <span className="tracking-wider text-on-surface">0x9f8b2a1c</span></p>
         </div>

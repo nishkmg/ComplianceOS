@@ -85,7 +85,7 @@ export function MobileNav() {
                 )}
               >
                 <Icon name={tab.icon} className="text-2xl" />
-                <span className="text-[9px] font-bold uppercase tracking-wider">{tab.label}</span>
+                <span className="text-ui-2xs font-bold uppercase tracking-wider">{tab.label}</span>
               </Link>
             );
             if (tab.moduleKey) {
@@ -98,7 +98,7 @@ export function MobileNav() {
             className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full no-underline text-mid transition-colors border-none bg-transparent cursor-pointer"
           >
             <Icon name="more_horiz" className="text-2xl" />
-            <span className="text-[9px] font-bold uppercase tracking-wider">More</span>
+            <span className="text-ui-2xs font-bold uppercase tracking-wider">More</span>
           </button>
         </div>
       </nav>
@@ -121,7 +121,7 @@ export function MobileNav() {
             <div className="px-3 py-2 space-y-4">
               {drawerSections.map(section => (
                 <div key={section.label}>
-                  <span className="block px-3 py-1.5 text-[10px] text-mid uppercase tracking-widest font-bold">
+                  <span className="block px-3 py-1.5 text-ui-2xs text-mid uppercase tracking-widest font-bold">
                     {section.label}
                   </span>
                   <div className="space-y-0.5">
@@ -133,7 +133,7 @@ export function MobileNav() {
                           href={item.href}
                           onClick={() => setDrawerOpen(false)}
                           className={cn(
-                            'flex items-center gap-3 px-3 py-2.5 rounded-[4px] text-sm transition-colors no-underline',
+                            'flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm transition-colors no-underline',
                             isActive
                               ? 'bg-amber text-white font-semibold'
                               : 'text-mid hover:bg-surface-muted'

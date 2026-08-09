@@ -22,25 +22,25 @@ export default function PayrollSuccessPage() {
           </div>
 
           <div className="flex flex-col gap-4 py-8 border-y-[0.5px] border-border bg-surface-muted px-6">
-            <div className="flex justify-between items-baseline border-b border-stone-100 pb-3">
-              <span className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Total Gross</span>
+            <div className="flex justify-between items-baseline border-b 100-border pb-3">
+              <span className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Total Gross</span>
               <span className="font-mono text-sm font-bold text-dark">₹ 42,50,000.00</span>
             </div>
-            <div className="flex justify-between items-baseline border-b border-stone-100 pb-3">
-              <span className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Total Deductions</span>
+            <div className="flex justify-between items-baseline border-b 100-border pb-3">
+              <span className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Total Deductions</span>
               <span className="font-mono text-sm font-bold text-danger">- ₹ 4,15,200.00</span>
             </div>
             <div className="flex justify-between items-baseline pt-2">
-              <span className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Total Net Pay</span>
+              <span className="font-ui text-ui-sm font-bold text-dark uppercase tracking-widest">Total Net Pay</span>
               <span className="font-mono text-lg font-bold text-amber">₹ 38,34,800.00</span>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Link href="/payroll" className="flex-1 bg-amber text-white py-3 px-6 font-ui text-[13px] font-bold uppercase tracking-widest transition-colors no-underline rounded-md shadow-sm text-center inline-flex items-center justify-center gap-2">
+            <Link href="/payroll" className="flex-1 bg-amber text-white py-3 px-6 font-ui text-ui-sm font-bold uppercase tracking-widest transition-colors no-underline rounded-md shadow-sm text-center inline-flex items-center justify-center gap-2">
               Back to Payroll <Icon name="arrow_forward" className="text-sm" />
             </Link>
-            <button onClick={() => router.push("/payroll/pr1")} className="flex-1 bg-transparent border border-border text-dark py-3 px-6 font-ui text-[13px] transition-colors no-underline rounded-md text-center font-bold uppercase tracking-widest cursor-pointer">
+            <button onClick={() => router.push("/payroll/pr1")} className="flex-1 bg-transparent border border-border text-dark py-3 px-6 font-ui text-ui-sm transition-colors no-underline rounded-md text-center font-bold uppercase tracking-widest cursor-pointer">
               View Payroll Detail
             </button>
           </div>

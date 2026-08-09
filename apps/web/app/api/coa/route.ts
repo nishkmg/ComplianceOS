@@ -1,5 +1,5 @@
 import { db, accounts } from "@complianceos/db";
-import { asc, desc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 export const runtime = "nodejs";
 

@@ -10,7 +10,7 @@ export default function CookiesPage() {
       <main className="w-full min-h-screen pt-space-96 pb-space-128">
         <article className="max-w-[800px] mx-auto px-gutter-desktop">
           <header className="mb-space-64 text-center">
-            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber block mb-4">Legal Information</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber block mb-4">Legal Information</span>
             <h1 className="font-display text-marketing-xl text-dark mb-6">Cookie Policy</h1>
             <p className="font-ui text-ui-lg text-secondary max-w-2xl mx-auto">Last updated: October 15, 2024. This policy explains how Arthvahi uses cookies and similar technologies to recognize you when you visit our website.</p>
           </header>
@@ -54,8 +54,8 @@ export default function CookiesPage() {
             {/* Contact */}
             <section className="bg-section-amber border border-border-subtle p-10">
               <h2 className="font-display text-marketing-xl text-dark mb-4">Contact Us</h2>
-              <p className="font-ui text-ui-md text-secondary mb-6">If you have any questions about our use of cookies or other technologies, please email us at privacy@arthvahi.in.</p>
-              <a href="mailto:privacy@arthvahi.in" className="inline-flex items-center gap-2 text-primary font-ui hover:text-amber transition-colors group no-underline">
+              <p className="font-ui text-ui-md text-mid mb-6">If you have any questions about our use of cookies or other technologies, please email us at privacy@arthvahi.in.</p>
+              <a href="mailto:privacy@arthvahi.in" className="inline-flex items-center gap-2 text-amber-hover font-ui hover:text-amber transition-colors group no-underline">
                 Contact Privacy Team
                 <Icon name="arrow_forward" className="ml-2 group-hover:translate-x-1 transition-transform" />
               </a>

@@ -58,13 +58,13 @@ export function ThemeToggle() {
       onClick={cycle}
       aria-label={label}
       title={label}
-      className="flex w-full items-center gap-3 px-3 py-2 rounded-[4px] text-[13px] text-sidebar-muted hover:text-dark hover:bg-lighter/40 transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+      className="flex w-full items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-muted hover:text-dark hover:bg-lighter/40 transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
     >
       <Icon name={theme === "dark" ? "dark_mode" : theme === "light" ? "light_mode" : "brightness_auto"} className="text-lg" />
       <span className="flex-1 text-left">
         {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
       </span>
-      <span className="text-[10px] uppercase tracking-wider text-sidebar-muted/80">Theme</span>
+      <span className="text-ui-2xs uppercase tracking-wider text-sidebar-muted/80">Theme</span>
     </button>
   );
 }

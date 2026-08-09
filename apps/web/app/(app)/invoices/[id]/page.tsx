@@ -36,14 +36,14 @@ export default function InvoiceDetailPage() {
         <Badge variant={inv.status === "posted" ? "success" : "amber"}>{inv.status}</Badge>
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm grid grid-cols-2 gap-6">
-        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Customer</span><p className="font-ui text-[13px] text-dark mt-1">{inv.customerName}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</span><p className="font-mono text-[13px] text-dark mt-1">{new Date(inv.date).toLocaleDateString("en-IN")}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Due Date</span><p className="font-mono text-[13px] text-dark mt-1">{new Date(inv.dueDate).toLocaleDateString("en-IN")}</p></div>
-        <div><span className="font-ui text-[10px] text-light uppercase tracking-widest font-bold">Total</span><p className="font-mono text-lg font-bold text-dark mt-1">{formatIndianNumber(Number(inv.grandTotal), { currency: true })}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer</span><p className="font-ui text-ui-sm text-dark mt-1">{inv.customerName}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Date</span><p className="font-mono text-ui-sm text-dark mt-1">{new Date(inv.date).toLocaleDateString("en-IN")}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Due Date</span><p className="font-mono text-ui-sm text-dark mt-1">{new Date(inv.dueDate).toLocaleDateString("en-IN")}</p></div>
+        <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Total</span><p className="font-mono text-lg font-bold text-dark mt-1">{formatIndianNumber(Number(inv.grandTotal), { currency: true })}</p></div>
       </div>
       <div className="flex gap-3">
-        <Link href={`/invoices/${inv.id}/edit`} className="px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">Edit</Link>
-        <Link href={`/invoices/${inv.id}/pdf`} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted rounded-md no-underline">View PDF</Link>
+        <Link href={`/invoices/${inv.id}/edit`} className="px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">Edit</Link>
+        <Link href={`/invoices/${inv.id}/pdf`} className="px-4 py-2 border border-border text-mid text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface-muted rounded-md no-underline">View PDF</Link>
       </div>
     </div>
   );

@@ -39,13 +39,13 @@ export default function InventoryExpiryPage() {
     <div className="space-y-6 text-left">
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 -mx-8 -mt-8 mb-8">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports</p>
           <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Expiry Report</h1>
         </div>
         <div className="flex items-center gap-4">
           <select className="border border-border rounded-md py-1.5 px-3 text-xs bg-surface-muted" value={dayFilter} onChange={(e) => setDayFilter(e.target.value)}><option value="30">30 Days</option><option value="60">60 Days</option></select>
           <button onClick={handleExportCSV} className="btn btn-primary flex items-center gap-2">
-            <Icon name="download" className="text-[18px]" /> Export CSV
+            <Icon name="download" className="text-ui-xl" /> Export CSV
           </button>
         </div>
       </header>
@@ -54,7 +54,7 @@ export default function InventoryExpiryPage() {
           <thead><tr className="bg-surface-muted border-b border-border text-xs uppercase tracking-widest text-light font-bold">
             <th className="px-6 py-4">SKU</th><th className="px-6 py-4">Product</th><th className="px-6 py-4">Batch/Lot</th><th className="px-6 py-4 text-right">Qty</th><th className="px-6 py-4">Expiry Date</th><th className="px-6 py-4 text-right">Days Left</th><th className="px-6 py-4">Status</th>
           </tr></thead>
-          <tbody className="divide-y divide-stone-50 font-mono text-sm">
+          <tbody className="divide-y 50-border font-mono text-sm">
             {filtered.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-16 text-center">
@@ -64,13 +64,13 @@ export default function InventoryExpiryPage() {
               ) : filtered.map((p) => (
               <tr key={p.sku} className="hover:bg-surface-muted">
                 <td className="px-6 py-4 text-primary font-medium">{p.sku}</td>
-                <td className="px-6 py-4 font-ui text-[13px] font-bold text-dark">{p.name}</td>
+                <td className="px-6 py-4 font-ui text-ui-sm font-bold text-dark">{p.name}</td>
                 <td className="px-6 py-4 text-mid">{p.batch}</td>
                 <td className="px-6 py-4 text-right">{p.qty} {p.unit}</td>
                 <td className="px-6 py-4 text-mid">{p.expiry}</td>
                 <td className={`px-6 py-4 text-right font-bold ${p.days < 30 ? 'text-danger' : 'text-amber'}`}>{p.days}d</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-block px-2 py-0.5 text-[9px] font-bold uppercase rounded-md border ${p.status === 'critical' ? 'bg-danger-bg text-danger border-danger/20' : 'bg-amber-soft text-amber border-amber-bright/30'}`}>
+                  <span className={`inline-block px-2 py-0.5 text-ui-2xs font-bold uppercase rounded-md border ${p.status === 'critical' ? 'bg-danger-bg text-danger border-danger/20' : 'bg-amber-soft text-amber border-amber-bright/30'}`}>
                     {p.status === 'critical' ? 'Critical' : 'Expiring'}
                   </span>
                 </td>

@@ -10,14 +10,14 @@ export default function ItrReturnsListPage() {
   const openFys = fiscalYears.filter(fy => fy.status === "open");
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+    <div className="max-w-page mx-auto space-y-8 pb-40">
       <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Returns</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {fiscalYears.map(fy => (
           <Link key={fy.year} href={`/itr/returns/${fy.year}`} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
             <Icon name="description" className="text-3xl text-amber mb-4" />
             <h3 className="font-ui text-lg font-bold text-dark">{fy.name}</h3>
-            <p className="font-ui text-[13px] text-text-mid mt-1">{fy.status === "open" ? `${fy.daysRemaining} days remaining` : "Closed"}</p>
+            <p className="font-ui text-ui-sm text-text-mid mt-1">{fy.status === "open" ? `${fy.daysRemaining} days remaining` : "Closed"}</p>
           </Link>
         ))}
       </div>

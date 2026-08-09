@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
 import { useSession } from "next-auth/react";
 import { PageHeader } from "@/components/ui/page-header";
@@ -23,17 +22,17 @@ export default function SupportPage() {
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <PageHeader title="Support" />
-      <p className="font-ui text-[13px] text-text-mid">Need help? Send us a message and we'll get back to you.</p>
+      <p className="font-ui text-ui-sm text-text-mid">Need help? Send us a message and we'll get back to you.</p>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="space-y-1.5">
-          <label className="font-ui text-[10px] text-light uppercase font-bold">Subject</label>
+          <label className="font-ui text-ui-2xs text-light uppercase font-bold">Subject</label>
           <input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={subject} onChange={e => setSubject(e.target.value)} placeholder="Brief description of your issue" />
         </div>
         <div className="space-y-1.5">
-          <label className="font-ui text-[10px] text-light uppercase font-bold">Message</label>
+          <label className="font-ui text-ui-2xs text-light uppercase font-bold">Message</label>
           <textarea rows={6} className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber resize-none" value={message} onChange={e => setMessage(e.target.value)} placeholder="Describe your issue in detail…" />
         </div>
-        <button onClick={handleSubmit} disabled={sending} className="w-full py-3 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{sending ? "Sending…" : "Send Message"}</button>
+        <button onClick={handleSubmit} disabled={sending} className="w-full py-3 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{sending ? "Sending…" : "Send Message"}</button>
       </div>
     </div>
   );

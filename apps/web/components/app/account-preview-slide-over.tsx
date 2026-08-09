@@ -27,9 +27,9 @@ export function AccountPreviewSlideOver({
         {/* Header */}
         <header className="px-8 py-6 border-b border-border-subtle flex justify-between items-start bg-section-muted">
           <div className="text-left">
-            <span className="font-ui text-[10px] text-amber uppercase tracking-widest font-bold mb-1 block">Account Quick View</span>
+            <span className="font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold mb-1 block">Account Quick View</span>
             <h2 className="font-display text-lg font-bold text-dark">{account.name}</h2>
-            <p className="font-mono text-[11px] text-light uppercase tracking-wider mt-1">{account.code} · {account.kind}</p>
+            <p className="font-mono text-ui-xs text-light uppercase tracking-wider mt-1">{account.code} · {account.kind}</p>
           </div>
           <button onClick={onClose} className="text-light hover:text-dark transition-colors cursor-pointer border-none bg-transparent">
             <Icon name="close" className="text-2xl" />
@@ -41,28 +41,28 @@ export function AccountPreviewSlideOver({
           {/* Quick Metrics */}
           <section className="grid grid-cols-2 gap-6">
             <div className="p-6 bg-section-muted border border-border-subtle rounded-sm">
-              <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-3">Current Balance</p>
+              <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-3">Current Balance</p>
               <p className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(account.balance || 0)}</p>
             </div>
             <div className="p-6 bg-section-muted border border-border-subtle rounded-sm">
-              <p className="font-ui text-[10px] text-light uppercase tracking-widest mb-3">Pending Vouchers</p>
+              <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-3">Pending Vouchers</p>
               <p className="font-mono text-xl font-bold text-dark">04</p>
             </div>
           </section>
 
           {/* Recent Activity */}
           <section>
-            <h3 className="font-ui font-bold text-dark uppercase tracking-wider text-[11px] text-light mb-6">Recent Ledger Entries</h3>
+            <h3 className="font-ui font-bold text-dark uppercase tracking-wider text-ui-xs text-light mb-6">Recent Ledger Entries</h3>
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex justify-between items-center py-4 border-b border-stone-50 hover:bg-section-muted transition-colors cursor-pointer group">
+                <div key={i} className="flex justify-between items-center py-4 border-b 50-border hover:bg-section-muted transition-colors cursor-pointer group">
                   <div>
                     <p className="font-ui font-bold text-dark text-sm">JV-24-00{12 + i}</p>
-                    <p className="text-[11px] text-light mt-1">Payment received · 12 Oct 23</p>
+                    <p className="text-ui-xs text-light mt-1">Payment received · 12 Oct 23</p>
                   </div>
                   <div className="text-right">
                     <p className="font-mono text-sm font-bold text-dark">₹ {formatIndianNumber(45000 * i)}</p>
-                    <span className="font-ui text-[9px] uppercase font-bold text-success">Cleared</span>
+                    <span className="font-ui text-ui-2xs uppercase font-bold text-success">Cleared</span>
                   </div>
                 </div>
               ))}
@@ -71,14 +71,14 @@ export function AccountPreviewSlideOver({
 
           {/* Statutory Mapping */}
           <section className="bg-section-amber border border-amber/30 p-6 rounded-sm">
-             <h4 className="font-ui font-bold text-amber-900 mb-4 uppercase tracking-widest text-[10px]">Statutory Mapping</h4>
+             <h4 className="font-ui font-bold text-amber-900 mb-4 uppercase tracking-widest text-ui-2xs">Statutory Mapping</h4>
              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-[10px] text-amber-800 uppercase mb-1">GST Treatment</p>
+                  <p className="text-ui-2xs text-amber-800 uppercase mb-1">GST Treatment</p>
                   <p className="font-ui text-sm text-dark">Taxable Inward</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-amber-800 uppercase mb-1">Schedule III</p>
+                  <p className="text-ui-2xs text-amber-800 uppercase mb-1">Schedule III</p>
                   <p className="font-ui text-sm text-dark">Other Assets</p>
                 </div>
              </div>

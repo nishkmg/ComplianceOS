@@ -21,7 +21,7 @@ export default function SecurityPage() {
         <div className="max-w-6xl mx-auto space-y-space-96">
           {/* Hero */}
           <section className="text-center flex flex-col items-center gap-6">
-            <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber border-b-[0.5px] border-border-subtle pb-2">Platform Security</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber border-b-[0.5px] border-border-subtle pb-2">Platform Security</span>
             <h1 className="font-marketing-hero text-marketing-hero text-dark max-w-3xl leading-tight mt-6">
               Institutional-Grade Protection for Indian Enterprises.
             </h1>
@@ -46,7 +46,7 @@ export default function SecurityPage() {
           {/* CTA */}
           <section className="bg-section-amber border border-border-subtle p-16 text-center">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Want to review our full security posture?</h2>
-            <p className="font-ui text-ui-md text-secondary max-w-xl mx-auto mb-8">We provide detailed security documentation for enterprise prospects. Contact our security team for a full review.</p>
+            <p className="font-ui text-ui-md text-mid max-w-xl mx-auto mb-8">We provide detailed security documentation for enterprise prospects. Contact our security team for a full review.</p>
             <Link href="/contact" className="bg-amber text-white px-10 py-4 font-ui text-ui-sm font-bold inline-flex items-center gap-2 group hover:bg-amber-hover transition-colors no-underline">
               Request Security Whitepaper
               <span className="group-hover:translate-x-1 transition-transform">→</span>

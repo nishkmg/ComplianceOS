@@ -77,9 +77,9 @@ export default function ITRSelfAssessmentPage() {
     <div className="space-y-0 text-left">
       {/* Page Header */}
       <div className="mb-12">
-        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">{ayLabels[activeFy] ?? "2027-28"} · FY {activeFy}</p>
+        <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">{ayLabels[activeFy] ?? "2027-28"} · FY {activeFy}</p>
         <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Self-Assessment Tax</h1>
-        <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">Review your total tax liability, apply available credits, and determine the final self-assessment tax due before filing.</p>
+        <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">Review your total tax liability, apply available credits, and determine the final self-assessment tax due before filing.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -92,52 +92,52 @@ export default function ITRSelfAssessmentPage() {
             <div className="p-8">
               <div className="space-y-4">
                 {/* Income breakdown */}
-                <div className="flex justify-between items-center py-3 border-b border-stone-50">
-                  <div className="font-ui text-[13px] text-dark">Gross Total Income</div>
+                <div className="flex justify-between items-center py-3 border-b 50-border">
+                  <div className="font-ui text-ui-sm text-dark">Gross Total Income</div>
                   <div className="font-mono text-sm text-dark font-bold">₹ {formatIndianNumber(breakdown.grossIncome)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                <div className="flex justify-between items-center py-3 border-b 50-border pl-4">
                   <div>
                     <Icon name="remove" className="text-light mr-2 text-sm inline" />
-                    <span className="font-ui text-[13px] text-mid">Less: Total Deductions</span>
+                    <span className="font-ui text-ui-sm text-mid">Less: Total Deductions</span>
                   </div>
                   <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.deductions)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50 bg-surface-muted/40 px-4 -mx-4">
-                  <div className="font-ui text-[13px] font-bold text-dark">Net Taxable Income</div>
+                <div className="flex justify-between items-center py-3 border-b 50-border bg-surface-muted/40 px-4 -mx-4">
+                  <div className="font-ui text-ui-sm font-bold text-dark">Net Taxable Income</div>
                   <div className="font-mono text-sm font-bold text-dark">₹ {formatIndianNumber(breakdown.taxableIncome)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50">
-                  <div className="font-ui text-[13px] text-dark-variant">Tax on Total Income (as per slab)</div>
+                <div className="flex justify-between items-center py-3 border-b 50-border">
+                  <div className="font-ui text-ui-sm text-dark-variant">Tax on Total Income (as per slab)</div>
                   <div className="font-mono text-sm text-dark font-bold">₹ {formatIndianNumber(breakdown.taxOnIncome)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50">
-                  <div className="font-ui text-[13px] text-dark-variant">Health & Education Cess @ 4%</div>
+                <div className="flex justify-between items-center py-3 border-b 50-border">
+                  <div className="font-ui text-ui-sm text-dark-variant">Health & Education Cess @ 4%</div>
                   <div className="font-mono text-sm text-dark font-bold">₹ {formatIndianNumber(breakdown.cess)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50 bg-surface-muted/40 px-4 -mx-4">
-                  <div className="font-ui text-[13px] font-bold text-dark">Total Tax Liability</div>
+                <div className="flex justify-between items-center py-3 border-b 50-border bg-surface-muted/40 px-4 -mx-4">
+                  <div className="font-ui text-ui-sm font-bold text-dark">Total Tax Liability</div>
                   <div className="font-mono text-sm font-bold text-dark">₹ {formatIndianNumber(breakdown.totalTaxLiability)}</div>
                 </div>
                 {/* Credits */}
-                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                <div className="flex justify-between items-center py-3 border-b 50-border pl-4">
                   <div className="flex items-center">
                     <Icon name="remove" className="text-light mr-2 text-sm" />
-                    <span className="font-ui text-[13px] text-mid">Less: TDS Credit Claimed</span>
+                    <span className="font-ui text-ui-sm text-mid">Less: TDS Credit Claimed</span>
                   </div>
                   <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.tdsCredit)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                <div className="flex justify-between items-center py-3 border-b 50-border pl-4">
                   <div className="flex items-center">
                     <Icon name="remove" className="text-light mr-2 text-sm" />
-                    <span className="font-ui text-[13px] text-mid">Less: TCS Credit Claimed</span>
+                    <span className="font-ui text-ui-sm text-mid">Less: TCS Credit Claimed</span>
                   </div>
                   <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.tcsCredit)}</div>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-stone-50 pl-4">
+                <div className="flex justify-between items-center py-3 border-b 50-border pl-4">
                   <div className="flex items-center">
                     <Icon name="remove" className="text-light mr-2 text-sm" />
-                    <span className="font-ui text-[13px] text-mid">Less: Advance Tax Paid</span>
+                    <span className="font-ui text-ui-sm text-mid">Less: Advance Tax Paid</span>
                   </div>
                   <div className="font-mono text-sm text-mid">- ₹ {formatIndianNumber(breakdown.advanceTaxPaid)}</div>
                 </div>
@@ -150,8 +150,8 @@ export default function ITRSelfAssessmentPage() {
           </div>
 
           <div className="flex justify-end space-x-4 pt-4">
-            <button onClick={handleRecalculate} className="px-6 py-3 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Recalculate</button>
-            <button onClick={handlePayNow} className="group px-6 py-3 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest flex items-center hover:bg-amber-hover transition-colors border-none cursor-pointer rounded-md shadow-sm">
+            <button onClick={handleRecalculate} className="px-6 py-3 border border-border text-dark font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">Recalculate</button>
+            <button onClick={handlePayNow} className="group px-6 py-3 bg-amber text-white font-ui text-ui-sm font-bold uppercase tracking-widest flex items-center hover:bg-amber-hover transition-colors border-none cursor-pointer rounded-md shadow-sm">
               Pay Tax Now
               <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
             </button>
@@ -165,7 +165,7 @@ export default function ITRSelfAssessmentPage() {
               <Icon name="info" className="text-amber mt-1" />
               <div>
                 <h4 className="font-ui text-sm font-medium font-bold text-dark mb-2">Payment Required</h4>
-                <p className="font-ui text-[13px] text-dark-variant leading-relaxed">
+                <p className="font-ui text-ui-sm text-dark-variant leading-relaxed">
                   You must pay the Self-Assessment Tax of <span className="font-mono font-bold">₹{formatIndianNumber(breakdown.selfAssessmentDue)}</span> before filing your ITR. Ensure payment is made under Minor Head 300.
                 </p>
               </div>
@@ -173,24 +173,24 @@ export default function ITRSelfAssessmentPage() {
           </div>
 
           <div className="bg-surface border border-border p-6 rounded-md">
-            <h4 className="font-ui text-[10px] text-light uppercase tracking-widest mb-4 font-bold">Recent Challans</h4>
+            <h4 className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-4 font-bold">Recent Challans</h4>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-ui text-[13px] font-bold text-dark">Advance Tax (Inst. 3)</div>
-                  <div className="font-ui text-[11px] text-[11px] text-light mt-1">15 Dec 2023</div>
+                  <div className="font-ui text-ui-sm font-bold text-dark">Advance Tax (Inst. 3)</div>
+                  <div className="font-ui text-ui-xs text-ui-xs text-light mt-1">15 Dec 2023</div>
                 </div>
                 <div className="font-mono text-sm text-mid">₹ 1,00,000</div>
               </div>
-              <div className="flex items-center justify-between pt-4 border-t border-stone-50">
+              <div className="flex items-center justify-between pt-4 border-t 50-border">
                 <div>
-                  <div className="font-ui text-[13px] font-bold text-dark">Advance Tax (Inst. 2)</div>
-                  <div className="font-ui text-[11px] text-[11px] text-light mt-1">15 Sep 2023</div>
+                  <div className="font-ui text-ui-sm font-bold text-dark">Advance Tax (Inst. 2)</div>
+                  <div className="font-ui text-ui-xs text-ui-xs text-light mt-1">15 Sep 2023</div>
                 </div>
                 <div className="font-mono text-sm text-mid">₹ 1,00,000</div>
               </div>
             </div>
-            <button onClick={handleViewAllPayments} className="mt-6 w-full py-2.5 border border-border text-mid font-ui text-[13px] font-bold uppercase tracking-widest hover:text-dark transition-colors bg-transparent rounded-md cursor-pointer">View All Tax Payments</button>
+            <button onClick={handleViewAllPayments} className="mt-6 w-full py-2.5 border border-border text-mid font-ui text-ui-sm font-bold uppercase tracking-widest hover:text-dark transition-colors bg-transparent rounded-md cursor-pointer">View All Tax Payments</button>
           </div>
         </div>
       </div>

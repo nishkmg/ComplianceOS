@@ -38,7 +38,7 @@ export default function CustomerSummaryCard({
   return (
     <Link
       href={`/receivables/${encodeURIComponent(customerName)}`}
-      className="block bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 border border-gray-100"
+      className="block bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 border 100-border"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -53,7 +53,7 @@ export default function CustomerSummaryCard({
             <AgingBadge amount={aging90Plus} label="90+" />
           </div>
           {lastPaymentDate && lastPaymentAmount && (
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-mid mt-2">
               Last payment: {formatINR(lastPaymentAmount)} on{" "}
               {new Date(lastPaymentDate).toLocaleDateString("en-IN", {
                 day: "2-digit",

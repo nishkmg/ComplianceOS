@@ -2,7 +2,7 @@
 import { MarketingNav } from '@/components/marketing/nav';
 import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
-import Link from 'next/link';
+import 'next/link';
 
 const team = [
   { 
@@ -39,9 +39,9 @@ export default function AboutPage() {
       
       <main className="flex flex-col pt-16">
         {/* Hero Section */}
-        <section className="pt-space-128 pb-space-96 px-gutter-desktop max-w-[1200px] mx-auto w-full">
+        <section className="pt-space-128 pb-space-96 px-gutter-desktop max-w-page mx-auto w-full">
           <div className="max-w-4xl">
-            <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 border-l-2 border-amber-text pl-4">Our Origin</p>
+            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 border-l-2 border-amber-text pl-4">Our Origin</p>
             <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
               We built the accounting software we wish existed when we started our businesses.
             </h1>
@@ -52,13 +52,13 @@ export default function AboutPage() {
         </section>
 
         {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-[1200px] mx-auto"></div>
+        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
 
         {/* The Problem Section */}
-        <section className="py-space-96 px-gutter-desktop max-w-[1200px] mx-auto w-full">
+        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
             <div className="col-span-1 md:col-span-5 order-2 md:order-1 text-left">
-              <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4 text-left">The Problem</p>
+              <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4 text-left">The Problem</p>
               <h2 className="font-display text-marketing-xl text-dark mb-6 text-left">Global tools ignore local realities.</h2>
               <div className="space-y-6 font-ui text-ui-md text-secondary text-left">
                 <p>Most accounting platforms treat Indian compliance as an afterthought—a secondary module bolted onto a Western framework. This leads to convoluted workflows, manual GST reconciliations, and constant anxiety over audit trails.</p>
@@ -80,12 +80,12 @@ export default function AboutPage() {
         </section>
 
         {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-[1200px] mx-auto"></div>
+        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
 
         {/* The Team Section */}
-        <section className="py-space-96 px-gutter-desktop max-w-[1200px] mx-auto w-full">
+        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full">
           <div className="mb-16 text-left">
-            <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4">The Team</p>
+            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">The Team</p>
             <h2 className="font-display text-marketing-xl text-dark">Built by CAs, for CAs.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -110,13 +110,13 @@ export default function AboutPage() {
         </section>
 
         {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-[1200px] mx-auto"></div>
+        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
 
         {/* Why We Built It This Way */}
-        <section className="py-space-96 px-gutter-desktop max-w-[1200px] mx-auto w-full bg-section-muted">
+        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full bg-section-muted">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="text-left">
-              <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4">Editorial Ledger</p>
+              <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Editorial Ledger</p>
               <h2 className="font-display text-marketing-xl text-dark mb-6">A design philosophy rooted in print.</h2>
               <p className="font-ui text-ui-md text-secondary mb-6 leading-relaxed">
                 We deliberately eschewed the vibrant, bubbly aesthetic of modern SaaS. Accounting is a serious discipline requiring deep focus. 
@@ -143,12 +143,12 @@ export default function AboutPage() {
         </section>
 
         {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-[1200px] mx-auto"></div>
+        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
 
         {/* What We Believe */}
-        <section className="py-space-96 px-gutter-desktop max-w-[1200px] mx-auto w-full mb-space-64">
+        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full mb-space-64">
           <div className="text-center mb-16 max-w-2xl mx-auto">
-            <p className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-4">Our Core Tenets</p>
+            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Our Core Tenets</p>
             <h2 className="font-display text-marketing-xl text-dark">What we believe</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">

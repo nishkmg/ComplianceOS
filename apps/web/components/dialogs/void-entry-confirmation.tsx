@@ -37,11 +37,11 @@ export function VoidEntryDialog({
 
         <div className="bg-danger-bg text-red-800 p-4 mb-6 border border-red-100 flex gap-3 text-left">
           <Icon name="warning" className="text-danger shrink-0" />
-          <p className="font-ui text-[13px] leading-relaxed">This action cannot be undone. Voiding this entry will reverse its financial impact across all associated ledgers.</p>
+          <p className="font-ui text-ui-sm leading-relaxed">This action cannot be undone. Voiding this entry will reverse its financial impact across all associated ledgers.</p>
         </div>
 
         <div className="mb-6 text-left">
-          <label className="block font-ui text-[10px] text-dark uppercase tracking-widest mb-2 font-bold" htmlFor="reason">Reason for Voiding</label>
+          <label className="block font-ui text-ui-2xs text-dark uppercase tracking-widest mb-2 font-bold" htmlFor="reason">Reason for Voiding</label>
           <textarea 
             className="w-full bg-section-muted border border-border-subtle font-ui text-sm p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none resize-none placeholder:text-light" 
             id="reason" 
@@ -62,7 +62,7 @@ export function VoidEntryDialog({
             className="bg-red-600 text-white font-ui text-sm px-6 py-2 border border-red-600 hover:bg-red-700 transition-colors flex items-center gap-2 group cursor-pointer disabled:opacity-30"
           >
             Confirm Void
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform" />
           </button>
         </DialogFooter>
       </DialogContent>

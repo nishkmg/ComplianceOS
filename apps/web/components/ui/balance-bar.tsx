@@ -34,19 +34,19 @@ export function BalanceBar({
         {/* Balance Summary */}
         <div className="flex items-center gap-6">
           <div>
-            <div className="font-ui text-[11px] font-medium uppercase tracking-widest text-mid mb-1">Total Debit</div>
+            <div className="font-ui text-ui-xs font-medium uppercase tracking-widest text-mid mb-1">Total Debit</div>
             <div className="font-mono text-lg font-semibold text-dark text-right">
               {formatIndianNumber(debitNum, { currency: true, decimals: 2 })}
             </div>
           </div>
           <div>
-            <div className="font-ui text-[11px] font-medium uppercase tracking-widest text-mid mb-1">Total Credit</div>
+            <div className="font-ui text-ui-xs font-medium uppercase tracking-widest text-mid mb-1">Total Credit</div>
             <div className="font-mono text-lg font-semibold text-dark text-right">
               {formatIndianNumber(creditNum, { currency: true, decimals: 2 })}
             </div>
           </div>
           <div>
-            <div className="font-ui text-[11px] font-medium uppercase tracking-widest text-mid mb-1">Difference</div>
+            <div className="font-ui text-ui-xs font-medium uppercase tracking-widest text-mid mb-1">Difference</div>
             <div
               className={`font-mono text-lg font-semibold text-right ${
                 balanced
@@ -64,9 +64,9 @@ export function BalanceBar({
         {/* Status Indicator */}
         <div className="flex items-center gap-2">
           {balanced ? (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-success/10 text-success border border-success/20">Ready to Post</span>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-ui-xs font-bold uppercase tracking-wider bg-success/10 text-success border border-success/20">Ready to Post</span>
           ) : (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-surface-muted text-mid border border-border">Entry must balance</span>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-ui-xs font-bold uppercase tracking-wider bg-surface-muted text-mid border border-border">Entry must balance</span>
           )}
         </div>
       </div>

@@ -82,14 +82,14 @@ export function ScreenBusinessStructure({ tenantId, onComplete, onBack }: Screen
               <div className="flex items-center gap-3">
                 <div
                   className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                    selectedType === t.value ? "border-amber" : "border-stone-300"
+                    selectedType === t.value ? "border-amber" : "focus:border-focus"
                   }`}
                 >
                   {selectedType === t.value && (
                     <div className="w-2 h-2 rounded-full bg-amber" />
                   )}
                 </div>
-                <h3 className="font-ui text-[13px] font-bold text-on-surface">
+                <h3 className="font-ui text-ui-sm font-bold text-on-surface">
                   {t.label}
                 </h3>
               </div>
@@ -98,7 +98,7 @@ export function ScreenBusinessStructure({ tenantId, onComplete, onBack }: Screen
         </div>
 
         {errors.businessType && (
-          <p className="text-danger text-[10px] uppercase font-bold tracking-wider">
+          <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider">
             {errors.businessType.message}
           </p>
         )}
@@ -106,7 +106,7 @@ export function ScreenBusinessStructure({ tenantId, onComplete, onBack }: Screen
         {/* Skip Logic Info */}
         {(selectedType === "sole_proprietorship" || selectedType === "huf") && (
           <div className="bg-amber-50 border border-amber/30 rounded-md p-4">
-            <p className="font-ui text-[12px] text-text-mid">
+            <p className="font-ui text-ui-xs text-text-mid">
               <Icon name="info" className="inline text-amber mr-1" />
               Sole proprietorship and HUF entities have simplified compliance. Some
               steps will be skipped automatically.
@@ -121,22 +121,22 @@ export function ScreenBusinessStructure({ tenantId, onComplete, onBack }: Screen
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
             <Icon
               name="arrow_forward"
-              className="text-[18px] group-hover:translate-x-1 transition-transform duration-200"
+              className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200"
             />
           </button>
         </div>

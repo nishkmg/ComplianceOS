@@ -44,7 +44,7 @@ export default function SignupPage() {
         {/* Brand Header */}
         <header className="mb-8">
           <h1 className="font-display text-2xl font-semibold text-dark">Arthvahi</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1">Establish your firm's foundational ledger.</p>
+          <p className="text-ui-sm text-secondary font-ui mt-1">Establish your firm's foundational ledger.</p>
         </header>
 
         {/* Centered Card */}
@@ -61,7 +61,7 @@ export default function SignupPage() {
             <div className="text-left">
               <label className="block font-ui text-ui-sm text-dark mb-2 font-medium" htmlFor="business_name">Registered Business Name</label>
               <input 
-                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
+                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-ui-md text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
                 id="business_name" 
                 name="business_name" 
                 placeholder="As per MCA/GST records" 
@@ -76,7 +76,7 @@ export default function SignupPage() {
             <div className="text-left">
               <label className="block font-ui text-ui-sm text-dark mb-2 font-medium" htmlFor="email">Primary Contact Email</label>
               <input 
-                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
+                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-ui-md text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
                 id="email" 
                 name="email" 
                 placeholder="admin@yourfirm.in" 
@@ -92,7 +92,7 @@ export default function SignupPage() {
               <label className="block font-ui text-ui-sm text-dark mb-2 font-medium" htmlFor="password">Secure Password</label>
               <div className="relative">
                 <input 
-                  className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
+                  className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-ui-md text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
                   id="password" 
                   name="password" 
                   placeholder="••••••••" 
@@ -112,12 +112,12 @@ export default function SignupPage() {
             </div>
 
             {error && (
-              <p className="text-danger text-[12px] text-center" role="alert">{error}</p>
+              <p className="text-danger text-ui-xs text-center" role="alert">{error}</p>
             )}
 
             {/* Action Button */}
             <div className="pt-4">
-              <button className="group w-full flex items-center justify-center gap-2 bg-amber rounded-md border-none px-6 py-3 font-ui font-medium text-[16px] text-white hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" type="submit" disabled={submitting}>
+              <button className="group w-full flex items-center justify-center gap-2 bg-amber rounded-md border-none px-6 py-3 font-ui font-medium text-ui-lg text-white hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" type="submit" disabled={submitting}>
                 {submitting ? (
                   <>
                     <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -126,7 +126,7 @@ export default function SignupPage() {
                 ) : (
                   <>
                     Continue to Firm Details
-                    <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-300" />
+                    <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-300" />
                   </>
                 )}
               </button>

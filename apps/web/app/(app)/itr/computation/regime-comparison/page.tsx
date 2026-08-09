@@ -25,15 +25,15 @@ export default function ITRRegimeComparisonPage() {
       {/* Header Section */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">FY {activeFy}</p>
+        <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">FY {activeFy}</p>
         <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Regime Comparison</h1>
-        <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">A detailed analysis of tax liability under the Old and New tax regimes based on current inputs.</p>
+        <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">A detailed analysis of tax liability under the Old and New tax regimes based on current inputs.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => window.print()} className="border border-zinc-200 text-dark py-2 px-4 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-surface shadow-sm">
+          <button onClick={() => window.print()} className="border 200-border text-dark py-2 px-4 rounded-md font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-surface shadow-sm">
             <Icon name="print" className="text-sm" /> Print Analysis
           </button>
-          <button onClick={() => showToast.success("Regime selected and applied to computation.")} className="bg-amber text-white py-2 px-6 rounded-md font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors flex items-center gap-2 cursor-pointer border-none shadow-sm">
+          <button onClick={() => showToast.success("Regime selected and applied to computation.")} className="bg-amber text-white py-2 px-6 rounded-md font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors flex items-center gap-2 cursor-pointer border-none shadow-sm">
             Select Regime
           </button>
         </div>
@@ -44,7 +44,7 @@ export default function ITRRegimeComparisonPage() {
         <Icon name="check_circle" className="text-success text-3xl" />
         <div>
           <h3 className="font-ui text-lg text-lg font-bold text-dark mb-1">New Regime Recommended</h3>
-          <p className="font-ui text-[13px] text-mid">Opting for the New Regime saves <span className="font-mono text-dark font-bold text-base">₹ {formatIndianNumber(2421120 - 2324400)}</span> in total tax liability for the current assessment year.</p>
+          <p className="font-ui text-ui-sm text-mid">Opting for the New Regime saves <span className="font-mono text-dark font-bold text-base">₹ {formatIndianNumber(2421120 - 2324400)}</span> in total tax liability for the current assessment year.</p>
         </div>
       </div>
 
@@ -55,17 +55,17 @@ export default function ITRRegimeComparisonPage() {
           <div className="p-6 border-b-[0.5px] border-border bg-surface-muted">
             <h3 className="font-ui text-lg text-lg font-bold text-mid uppercase tracking-widest text-xs">Old Tax Regime</h3>
           </div>
-          <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
+          <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
             {comparisonData.map((row, i) => (
               <div key={i} className="flex justify-between items-center p-6 hover:bg-surface-muted transition-colors">
-                <span className="font-ui text-[13px] text-mid text-xs uppercase tracking-wider">{row.label}</span>
+                <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
                 <span className="text-dark">₹ {formatIndianNumber(row.old)}</span>
               </div>
             ))}
           </div>
-          <div className="p-8 bg-surface-muted border-t-2 border-stone-800">
+          <div className="p-8 bg-surface-muted border-t-2 focus:border-focus">
             <div className="flex justify-between items-center">
-              <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-xs text-mid">Final Liability</span>
+              <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-mid">Final Liability</span>
               <span className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(2421120)}</span>
             </div>
           </div>
@@ -77,20 +77,20 @@ export default function ITRRegimeComparisonPage() {
           <div className="p-6 border-b-[0.5px] border-amber/20 bg-amber-50">
             <div className="flex justify-between items-center">
               <h3 className="font-ui text-lg text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
-              <span className="bg-primary text-white px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest">Recommended</span>
+              <span className="bg-primary text-white px-2 py-0.5 rounded-md text-ui-2xs font-bold uppercase tracking-widest">Recommended</span>
             </div>
           </div>
-          <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
+          <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
             {comparisonData.map((row, i) => (
               <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-50/50 transition-colors">
-                <span className="font-ui text-[13px] text-mid text-xs uppercase tracking-wider">{row.label}</span>
+                <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
                 <span className={row.new === 0 ? "text-light opacity-50" : "text-dark"}>₹ {formatIndianNumber(row.new)}</span>
               </div>
             ))}
           </div>
           <div className="p-8 bg-amber-50 border-t-2 border-primary">
             <div className="flex justify-between items-center">
-              <span className="font-ui text-[13px] font-bold uppercase tracking-widest text-xs text-primary">Final Liability</span>
+              <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-primary">Final Liability</span>
               <span className="font-mono text-xl font-bold text-primary">₹ {formatIndianNumber(2277600)}</span>
             </div>
           </div>

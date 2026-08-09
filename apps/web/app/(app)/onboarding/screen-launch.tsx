@@ -61,8 +61,8 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
               { label: "Compliance Ready", icon: "verified" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-2">
-                <Icon name="check" className="text-success text-[16px]" />
-                <span className="font-ui text-[12px] text-text-mid">{item.label}</span>
+                <Icon name="check" className="text-success text-ui-lg" />
+                <span className="font-ui text-ui-xs text-text-mid">{item.label}</span>
               </div>
             ))}
           </div>
@@ -80,8 +80,8 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
             className="group p-8 border-[0.5px] border-border rounded-md transition-colors cursor-pointer bg-surface hover:bg-amber-50 hover:border-amber hover:shadow-sm"
           >
             <Icon name="receipt_long" className="text-3xl text-amber mb-4" />
-            <h3 className="font-ui text-[13px] font-bold text-on-surface mb-2">Create First Invoice</h3>
-            <p className="font-ui text-[11px] text-text-mid leading-relaxed">
+            <h3 className="font-ui text-ui-sm font-bold text-on-surface mb-2">Create First Invoice</h3>
+            <p className="font-ui text-ui-xs text-text-mid leading-relaxed">
               Generate a compliant tax invoice for your first customer
             </p>
           </div>
@@ -91,8 +91,8 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
             className="group p-8 border-[0.5px] border-border rounded-md transition-colors cursor-pointer bg-surface hover:bg-amber-50 hover:border-amber hover:shadow-sm"
           >
             <Icon name="payment" className="text-3xl text-amber mb-4" />
-            <h3 className="font-ui text-[13px] font-bold text-on-surface mb-2">Record an Expense</h3>
-            <p className="font-ui text-[11px] text-text-mid leading-relaxed">
+            <h3 className="font-ui text-ui-sm font-bold text-on-surface mb-2">Record an Expense</h3>
+            <p className="font-ui text-ui-xs text-text-mid leading-relaxed">
               Track a business expense with GST input credit
             </p>
           </div>
@@ -102,8 +102,8 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
             className="group p-8 border-[0.5px] border-border rounded-md transition-colors cursor-pointer bg-surface hover:bg-amber-50 hover:border-amber hover:shadow-sm"
           >
             <Icon name="account_balance" className="text-3xl text-amber mb-4" />
-            <h3 className="font-ui text-[13px] font-bold text-on-surface mb-2">Connect Bank</h3>
-            <p className="font-ui text-[11px] text-text-mid leading-relaxed">
+            <h3 className="font-ui text-ui-sm font-bold text-on-surface mb-2">Connect Bank</h3>
+            <p className="font-ui text-ui-xs text-text-mid leading-relaxed">
               Set up bank reconciliation for automatic matching
             </p>
           </div>
@@ -117,9 +117,9 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
               type="button"
               onClick={onBack}
               disabled={isSubmitting}
-              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
-              <Icon name="arrow_back" className="text-[18px]" />
+              <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
@@ -127,10 +127,10 @@ export function ScreenLaunch({ tenantId, onComplete, onBack }: ScreenLaunchProps
         <button
           onClick={handleLaunch}
           disabled={isSubmitting}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {isSubmitting ? "Launching..." : "Launch Dashboard"}
-          <Icon name="rocket_launch" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+          <Icon name="rocket_launch" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

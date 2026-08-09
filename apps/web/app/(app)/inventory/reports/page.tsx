@@ -59,17 +59,17 @@ export default function InventoryReportsPage() {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8 mt-0 mb-8">
         <div className="text-left">
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports · FY {activeFy}</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports · FY {activeFy}</p>
           <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Valuation</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Comprehensive breakdown of current stock levels, calculated asset values, and recent movement metrics across all registered warehouses.</p>
+          <p className="text-ui-sm text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Comprehensive breakdown of current stock levels, calculated asset values, and recent movement metrics across all registered warehouses.</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={() => window.print()} className="btn btn-secondary flex items-center gap-2">
-            <Icon name="print" className="text-[18px]" />
+            <Icon name="print" className="text-ui-xl" />
             Print Report
           </button>
           <button onClick={handleExportCSV} className="btn btn-primary flex items-center gap-2">
-            <Icon name="download" className="text-[18px]" />
+            <Icon name="download" className="text-ui-xl" />
             Export CSV
           </button>
         </div>
@@ -78,10 +78,10 @@ export default function InventoryReportsPage() {
       {/* Report Controls */}
       <div className="bg-surface border border-border p-6 shadow-sm border-t-2 border-t-amber flex flex-col lg:flex-row gap-6 items-end">
         <div className="w-full lg:w-1/3 text-left">
-          <label className="block font-ui text-[10px] uppercase tracking-widest text-amber mb-2 font-bold">Report Type</label>
+          <label className="block font-ui text-ui-2xs uppercase tracking-widest text-amber mb-2 font-bold">Report Type</label>
           <div className="relative">
             <select 
-              className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface appearance-none"
+              className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface appearance-none"
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
             >
@@ -93,10 +93,10 @@ export default function InventoryReportsPage() {
           </div>
         </div>
         <div className="w-full lg:w-1/4 text-left">
-          <label className="block font-ui text-[10px] uppercase tracking-widest text-mid mb-2 font-bold">As of Date</label>
+          <label className="block font-ui text-ui-2xs uppercase tracking-widest text-mid mb-2 font-bold">As of Date</label>
           <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="date" value={asOfDate} onChange={(e) => setAsOfDate(e.target.value)} />
         </div>
-        <button onClick={() => showToast.success(`Analysis complete for ${reportType} report as of ${asOfDate}.`)} className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
+        <button onClick={() => showToast.success(`Analysis complete for ${reportType} report as of ${asOfDate}.`)} className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
           Run Analysis
         </button>
       </div>
@@ -106,7 +106,7 @@ export default function InventoryReportsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="bg-surface-muted border-b-[0.5px] border-border text-light font-ui text-[10px] uppercase tracking-widest">
+              <tr className="bg-surface-muted border-b-[0.5px] border-border text-light font-ui text-ui-2xs uppercase tracking-widest">
                 <th className="py-4 px-6">SKU</th>
                 <th className="py-4 px-6">Product Name</th>
                 <th className="py-4 px-6">Category</th>
@@ -115,12 +115,12 @@ export default function InventoryReportsPage() {
                 <th className="py-4 px-6 text-right">Inventory Value (₹)</th>
               </tr>
             </thead>
-            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
+            <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
               {reportData.map((row) => (
                 <tr key={row.sku} className="hover:bg-surface-muted/30 transition-colors">
                   <td className="py-4 px-6 font-medium text-amber">{row.sku}</td>
-                  <td className="py-4 px-6 font-ui text-[13px] font-bold text-dark">{row.name}</td>
-                  <td className="py-4 px-6 font-ui text-[13px] text-mid">{row.category}</td>
+                  <td className="py-4 px-6 font-ui text-ui-sm font-bold text-dark">{row.name}</td>
+                  <td className="py-4 px-6 font-ui text-ui-sm text-mid">{row.category}</td>
                   <td className="py-4 px-6 text-right text-dark">{row.qty.toLocaleString('en-IN')}</td>
                   <td className="py-4 px-6 text-right text-mid">{row.cost.toLocaleString('en-IN')}</td>
                   <td className="py-4 px-6 text-right font-bold text-dark">{formatIndianNumber(row.value)}</td>
@@ -129,7 +129,7 @@ export default function InventoryReportsPage() {
             </tbody>
             <tfoot>
               <tr className="bg-dark text-white font-bold border-t-2 border-amber">
-                <td colSpan={3} className="py-5 px-6 font-ui text-[13px] uppercase tracking-widest text-xs">Consolidated Value</td>
+                <td colSpan={3} className="py-5 px-6 font-ui text-ui-sm uppercase tracking-widest text-xs">Consolidated Value</td>
                 <td className="py-5 px-6 text-right font-mono text-lg" colSpan={3}>
                   ₹ {formatIndianNumber(reportData.reduce((s, r) => s + r.value, 0), { currency: false })}
                 </td>

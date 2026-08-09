@@ -108,7 +108,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
         {/* Role Selection */}
         <section className="space-y-4">
-          <label className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid">
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid">
             Your Role
           </label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -130,18 +130,18 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
                 <div className="flex items-center gap-3 mb-2">
                   <div
                     className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                      selectedRole === r.value ? "border-amber" : "border-stone-300"
+                      selectedRole === r.value ? "border-amber" : "focus:border-focus"
                     }`}
                   >
                     {selectedRole === r.value && (
                       <div className="w-2 h-2 rounded-full bg-amber" />
                     )}
                   </div>
-                  <h3 className="font-ui text-[13px] font-bold text-on-surface">
+                  <h3 className="font-ui text-ui-sm font-bold text-on-surface">
                     {r.label}
                   </h3>
                 </div>
-                <p className="font-ui text-[11px] text-text-mid leading-relaxed">
+                <p className="font-ui text-ui-xs text-text-mid leading-relaxed">
                   {r.desc}
                 </p>
               </label>
@@ -153,15 +153,15 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">
                 Auto-fill from Documents
               </p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-xs text-text-mid">
                 Upload GST Certificate, PAN Card, or Incorporation Certificate to auto-fill details
               </p>
             </div>
-            <label className="bg-surface border border-border rounded-md px-4 py-2 font-ui text-[12px] font-bold text-on-surface hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer">
-              <Icon name="upload_file" className="text-[16px]" />
+            <label className="bg-surface border border-border rounded-md px-4 py-2 font-ui text-ui-xs font-bold text-on-surface hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer">
+              <Icon name="upload_file" className="text-ui-lg" />
               {extracting ? "Extracting..." : "Upload Document"}
               <input
                 ref={fileInputRef}
@@ -176,11 +176,11 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
 
           {extractedData && (
             <div className="bg-success-subtle border border-success/20 rounded-md p-4">
-              <p className="font-ui text-[12px] font-bold text-success mb-2">
+              <p className="font-ui text-ui-xs font-bold text-success mb-2">
                 <Icon name="check_circle" className="inline mr-1" />
                 Document Extracted
               </p>
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-success">
+              <div className="grid grid-cols-2 gap-2 text-ui-xs text-success">
                 {extractedData.legalName && <p>Legal Name: {extractedData.legalName}</p>}
                 {extractedData.gstin && <p>GSTIN: {extractedData.gstin}</p>}
                 {extractedData.pan && <p>PAN: {extractedData.pan}</p>}
@@ -194,7 +194,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
           <div className="flex flex-col gap-2">
             <label
-              className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+              className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
               htmlFor="businessName"
             >
               Business Name
@@ -206,7 +206,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
               {...register("businessName")}
             />
             {errors.businessName && (
-              <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
                 {errors.businessName.message}
               </p>
             )}
@@ -215,7 +215,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
           {/* Industry */}
           <div className="flex flex-col gap-2">
             <label
-              className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+              className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
               htmlFor="industry"
             >
               Industry
@@ -242,7 +242,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
           {/* Number of Employees */}
           <div className="flex flex-col gap-2">
             <label
-              className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+              className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
               htmlFor="numberOfEmployees"
             >
               Number of Employees
@@ -270,7 +270,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
           {/* Current Tool */}
           <div className="flex flex-col gap-2">
             <label
-              className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+              className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
               htmlFor="currentTool"
             >
               Current Accounting Tool
@@ -298,14 +298,14 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
 
         <div className="flex justify-end items-center mt-6 pt-8 border-t border-border">
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
             <Icon
               name="arrow_forward"
-              className="text-[18px] group-hover:translate-x-1 transition-transform duration-200"
+              className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200"
             />
           </button>
         </div>

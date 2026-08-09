@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
-import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 
@@ -55,8 +54,8 @@ export default function CustomerDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Icon name="search_off" size={48} className="text-lighter mb-4" />
-        <p className="font-ui text-[13px] text-mid">Customer not found.</p>
-        <Link href="/receivables" className="mt-4 text-amber text-[12px] font-bold uppercase tracking-wider hover:underline no-underline">Back to Receivables</Link>
+        <p className="font-ui text-ui-sm text-mid">Customer not found.</p>
+        <Link href="/receivables" className="mt-4 text-amber text-ui-xs font-bold uppercase tracking-wider hover:underline no-underline">Back to Receivables</Link>
       </div>
     );
   }
@@ -64,7 +63,7 @@ export default function CustomerDetailPage() {
   return (
     <div className="space-y-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-[10px] text-light uppercase tracking-widest" aria-label="Breadcrumb">
+      <nav className="flex items-center gap-2 text-ui-2xs text-light uppercase tracking-widest" aria-label="Breadcrumb">
         <Link href="/receivables" className="hover:text-dark transition-colors no-underline">Receivables</Link>
         <Icon name="chevron_right" size={14} className="text-lighter" />
         <span className="text-mid font-medium">{customer.name}</span>
@@ -77,12 +76,12 @@ export default function CustomerDetailPage() {
       <h1 className="font-ui text-display-lg font-semibold text-dark tracking-tight">{customer.name}</h1>
       <Badge variant="success">Active</Badge>
     </div>
-    <p className="font-ui text-[13px] text-secondary">
+    <p className="font-ui text-ui-sm text-secondary">
             {customer.gstin} · {customer.email} · {customer.age} open invoices
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
             <Icon name="add" size={14} /> Record Payment
           </button>
         </div>
@@ -91,19 +90,19 @@ export default function CustomerDetailPage() {
       {/* KPI strip */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-border-subtle">
-          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Total Invoiced (LTD)</p>
+          <p className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-2 font-bold">Total Invoiced (LTD)</p>
           <p className="font-mono text-xl text-dark tabular-nums font-bold">
             {formatIndianNumber(customer.totalInvoiced, { currency: true })}
           </p>
         </div>
         <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-amber">
-          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Outstanding</p>
+          <p className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-2 font-bold">Outstanding</p>
           <p className="font-mono text-xl text-amber tabular-nums font-bold">
             {formatIndianNumber(customer.outstanding, { currency: true })}
           </p>
         </div>
         <div className="bg-surface border border-border p-6 shadow-sm rounded-md border-t-4 border-t-danger">
-          <p className="font-ui text-[10px] text-mid uppercase tracking-widest mb-2 font-bold">Overdue</p>
+          <p className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-2 font-bold">Overdue</p>
           <p className="font-mono text-xl text-danger tabular-nums font-bold">
             {formatIndianNumber(customer.overdue, { currency: true })}
           </p>
@@ -116,7 +115,7 @@ export default function CustomerDetailPage() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-3 px-1 font-ui text-[13px] text-[12px] font-bold uppercase tracking-widest border-b-2 border-none bg-transparent cursor-pointer transition-colors ${
+            className={`pb-3 px-1 font-ui text-ui-sm text-ui-xs font-bold uppercase tracking-widest border-b-2 border-none bg-transparent cursor-pointer transition-colors ${
               activeTab === tab
                 ? "border-amber text-amber"
                 : "border-transparent text-mid hover:text-dark"
@@ -130,12 +129,12 @@ export default function CustomerDetailPage() {
       {/* Tab content */}
       {activeTab === "Payments" && (
         <div className="bg-surface border border-border p-8 rounded-md text-center">
-          <p className="font-ui text-[13px] text-mid">Payment history for this customer will appear here.</p>
+          <p className="font-ui text-ui-sm text-mid">Payment history for this customer will appear here.</p>
         </div>
       )}
       {activeTab === "Ledger History" && (
         <div className="bg-surface border border-border p-8 rounded-md text-center">
-          <p className="font-ui text-[13px] text-mid">Ledger entries for this customer will appear here.</p>
+          <p className="font-ui text-ui-sm text-mid">Ledger entries for this customer will appear here.</p>
         </div>
       )}
 
@@ -146,33 +145,33 @@ export default function CustomerDetailPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-muted border-b border-border">
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Invoice #</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Date</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Due Date</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Amount (₹)</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance (₹)</th>
-                <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
+                <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Invoice #</th>
+                <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Date</th>
+                <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Due Date</th>
+                <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Amount (₹)</th>
+                <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Balance (₹)</th>
+                <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-subtle">
               {invoices.length === 0 ? (
-                <tr><td colSpan={6} className="py-12 text-center font-ui text-[13px] text-mid">No invoices found for this customer.</td></tr>
+                <tr><td colSpan={6} className="py-12 text-center font-ui text-ui-sm text-mid">No invoices found for this customer.</td></tr>
               ) : invoices.map(inv => (
                 <tr key={inv.id} className="hover:bg-surface-muted/50 transition-colors">
                   <td className="py-4 px-6">
                     <Link
                       href={`/invoices/${inv.id}`}
-                      className="font-mono text-[13px] text-amber font-medium hover:underline no-underline"
+                      className="font-mono text-ui-sm text-amber font-medium hover:underline no-underline"
                     >
                       {inv.number}
                     </Link>
                   </td>
-                  <td className="py-4 px-6 font-mono text-[12px] text-mid">{inv.date}</td>
-                  <td className="py-4 px-6 font-mono text-[12px] text-mid">{inv.dueDate}</td>
-                  <td className="py-4 px-6 font-mono text-[13px] text-dark tabular-nums text-right">
+                  <td className="py-4 px-6 font-mono text-ui-xs text-mid">{inv.date}</td>
+                  <td className="py-4 px-6 font-mono text-ui-xs text-mid">{inv.dueDate}</td>
+                  <td className="py-4 px-6 font-mono text-ui-sm text-dark tabular-nums text-right">
                     {formatIndianNumber(inv.amount)}
                   </td>
-                  <td className="py-4 px-6 font-mono text-[13px] tabular-nums text-right font-semibold">
+                  <td className="py-4 px-6 font-mono text-ui-sm tabular-nums text-right font-semibold">
                     {inv.balance > 0 ? (
                       <span className="text-danger">{formatIndianNumber(inv.balance)}</span>
                     ) : (
@@ -180,7 +179,7 @@ export default function CustomerDetailPage() {
                     )}
                   </td>
                   <td className="py-4 px-6">
-                    <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider border rounded-md ${
+                    <span className={`inline-block px-2 py-0.5 text-ui-2xs uppercase font-bold tracking-wider border rounded-md ${
                       inv.status === "paid" || inv.status === "draft"
                         ? "bg-surface-muted text-mid border-border"
                         : inv.balance > 0

@@ -15,7 +15,7 @@ export function LanguageToggle() {
     <button
       onClick={() => setLang(l => (l === 'en' ? 'hi' : 'en'))}
       aria-label={lang === 'en' ? 'Switch to Hindi' : 'Switch to English'}
-      className="flex items-center gap-3 px-4 py-2 text-[13px] text-mid hover:bg-lighter rounded-[4px] transition-colors border-none bg-transparent cursor-pointer w-full"
+      className="flex items-center gap-3 px-4 py-2 text-ui-sm text-mid hover:bg-lighter rounded-sm transition-colors border-none bg-transparent cursor-pointer w-full"
     >
       <Icon name="translate" className="text-lg" />
       <span>{lang === 'en' ? 'हिन्दी' : 'English'}</span>

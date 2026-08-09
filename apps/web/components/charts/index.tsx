@@ -166,11 +166,11 @@ export function Donut({
         <ul className="mt-2 space-y-1.5">
           {data.map((d, i) => (
             <li key={d.label} className="flex items-center justify-between gap-3">
-              <span className="flex items-center gap-2 font-ui text-[12px] text-mid">
+              <span className="flex items-center gap-2 font-ui text-ui-xs text-mid">
                 <span className="h-2 w-2 rounded-full" style={{ background: colors[i % colors.length] }} />
                 {d.label}
               </span>
-              <span className="font-mono text-[12px] text-dark tabular-nums">
+              <span className="font-mono text-ui-xs text-dark tabular-nums">
                 {formatIndianNumber(d.value, { currency: true })} · {total > 0 ? Math.round((d.value / total) * 100) : 0}%
               </span>
             </li>

@@ -21,14 +21,14 @@ interface JournalEntry {
 
 const entryColumns: ColumnDef<JournalEntry>[] = [
   { key: "entry_number", header: "Entry #", sortable: true, width: "130px",
-    render: (row) => <Link href={`/journal/${row.id}`} className="font-mono text-[12px] text-amber hover:underline no-underline">{row.entry_number}</Link> },
+    render: (row) => <Link href={`/journal/${row.id}`} className="font-mono text-ui-xs text-amber hover:underline no-underline">{row.entry_number}</Link> },
   { key: "date", header: "Date", sortable: true, width: "120px",
-    render: (row) => <span className="font-mono text-[12px] text-mid">{new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</span> },
-  { key: "narration", header: "Narration", render: (row) => <span className="font-ui text-[13px] text-dark">{row.narration}</span> },
+    render: (row) => <span className="font-mono text-ui-xs text-mid">{new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</span> },
+  { key: "narration", header: "Narration", render: (row) => <span className="font-ui text-ui-sm text-dark">{row.narration}</span> },
   { key: "debit", header: "Debit", align: "right", width: "120px",
-    render: (row) => <span className="font-mono text-[13px] tabular-nums">{row.debit > 0 ? formatIndianNumber(row.debit, { currency: true }) : "—"}</span> },
+    render: (row) => <span className="font-mono text-ui-sm tabular-nums">{row.debit > 0 ? formatIndianNumber(row.debit, { currency: true }) : "—"}</span> },
   { key: "credit", header: "Credit", align: "right", width: "120px",
-    render: (row) => <span className="font-mono text-[13px] tabular-nums">{row.credit > 0 ? formatIndianNumber(row.credit, { currency: true }) : "—"}</span> },
+    render: (row) => <span className="font-mono text-ui-sm tabular-nums">{row.credit > 0 ? formatIndianNumber(row.credit, { currency: true }) : "—"}</span> },
   { key: "status", header: "Status", align: "center", width: "90px",
     render: (row) => <Badge variant={row.status === "posted" ? "success" : "amber"}>{row.status}</Badge> },
 ];
@@ -90,7 +90,7 @@ export default function DashboardPage() {
         actions={
           <Link href="/journal/new" className="no-underline">
             <Button size="sm">
-              <Icon name="add" className="text-[16px]" />
+              <Icon name="add" className="text-ui-lg" />
               Add Entry
             </Button>
           </Link>
@@ -111,8 +111,8 @@ export default function DashboardPage() {
       {monthlyTrend.length > 1 && (
         <div className="bg-surface border border-border rounded-md shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Movement — Debits vs Credits</h3>
-            <span className="font-ui text-[11px] text-light">FY {activeFy} · journal entries by month</span>
+            <h3 className="font-ui text-ui-sm font-bold text-dark uppercase tracking-widest">Movement — Debits vs Credits</h3>
+            <span className="font-ui text-ui-xs text-light">FY {activeFy} · journal entries by month</span>
           </div>
           <TrendArea
             data={monthlyTrend}
@@ -131,22 +131,22 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">GST Compliance</p>
+            <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">GST Compliance</p>
             <h3 className="font-ui text-lg font-semibold text-dark">File GSTR-3B</h3>
-            <p className="font-ui text-[12px] text-mid mt-1">Period: {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
+            <p className="font-ui text-ui-xs text-mid mt-1">Period: {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
           </div>
-          <Link href="/gst/returns" className="bg-amber text-white px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
-            <Icon name="download" className="text-[14px]" /> File Now
+          <Link href="/gst/returns" className="bg-amber text-white px-4 py-2 font-ui text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
+            <Icon name="download" className="text-ui-md" /> File Now
           </Link>
         </div>
         <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-1">Income Tax</p>
+            <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">Income Tax</p>
             <h3 className="font-ui text-lg font-semibold text-dark">Generate ITR</h3>
-            <p className="font-ui text-[12px] text-mid mt-1">AY: {`${Number(activeFy.split('-')[0]) + 1}-${activeFy.split('-')[1]}`}</p>
+            <p className="font-ui text-ui-xs text-mid mt-1">AY: {`${Number(activeFy.split('-')[0]) + 1}-${activeFy.split('-')[1]}`}</p>
           </div>
-          <Link href="/itr/returns" className="bg-amber text-white px-4 py-2 font-ui text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
-            <Icon name="description" className="text-[14px]" /> Generate
+          <Link href="/itr/returns" className="bg-amber text-white px-4 py-2 font-ui text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
+            <Icon name="description" className="text-ui-md" /> Generate
           </Link>
         </div>
       </div>
@@ -154,8 +154,8 @@ export default function DashboardPage() {
       <div className="bg-surface border border-border rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber" />
         <div className="px-6 py-4 bg-surface-muted border-b border-border flex items-center justify-between">
-          <h2 className="font-ui text-[11px] text-dark font-bold uppercase tracking-widest">Recent Journal Entries</h2>
-          <Link href="/journal" className="text-amber text-[10px] font-bold uppercase tracking-widest hover:underline no-underline">View All</Link>
+          <h2 className="font-ui text-ui-xs text-dark font-bold uppercase tracking-widest">Recent Journal Entries</h2>
+          <Link href="/journal" className="text-amber text-ui-2xs font-bold uppercase tracking-widest hover:underline no-underline">View All</Link>
         </div>
         {loading ? (
           <div className="p-6"><TableSkeleton rows={5} columns={5} /></div>

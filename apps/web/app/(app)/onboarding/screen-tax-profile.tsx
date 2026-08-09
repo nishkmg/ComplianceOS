@@ -67,20 +67,20 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
         {/* PAN */}
         <div className="flex flex-col gap-2">
           <label
-            className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+            className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
             htmlFor="pan"
           >
             Permanent Account Number (PAN)
           </label>
           <input
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-xs"
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-xs"
             id="pan"
             maxLength={10}
             placeholder="ABCDE1234F"
             {...register("pan")}
           />
           {errors.pan && (
-            <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+            <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
               {errors.pan.message}
             </p>
           )}
@@ -90,10 +90,10 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
         <section className="space-y-4">
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">
                 GST Registered?
               </p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-xs text-text-mid">
                 Is your business registered under GST?
               </p>
             </div>
@@ -102,7 +102,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
               type="button"
               onClick={() => setValue("gstRegistered", !gstRegistered)}
               className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${
-                gstRegistered ? "bg-amber" : "bg-stone-200"
+                gstRegistered ? "bg-amber" : "bg-lighter"
               }`}
             >
               <div
@@ -117,20 +117,20 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
           {gstRegistered && (
             <div className="flex flex-col gap-2">
               <label
-                className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+                className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
                 htmlFor="gstin"
               >
                 GST Identification Number (GSTIN)
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
                 id="gstin"
                 maxLength={15}
                 placeholder="22AAAAA0000A1Z5"
                 {...register("gstin")}
               />
               {errors.gstin && (
-                <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+                <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
                   {errors.gstin.message}
                 </p>
               )}
@@ -142,10 +142,10 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
         <section className="space-y-4">
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">
                 TAN Available?
               </p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-xs text-text-mid">
                 Do you have a Tax Deduction Account Number?
               </p>
             </div>
@@ -154,7 +154,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
               type="button"
               onClick={() => setValue("tanAvailable", !tanAvailable)}
               className={`w-10 h-6 rounded-full transition-colors relative border-none cursor-pointer ${
-                tanAvailable ? "bg-amber" : "bg-stone-200"
+                tanAvailable ? "bg-amber" : "bg-lighter"
               }`}
             >
               <div
@@ -168,20 +168,20 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
           {tanAvailable && (
             <div className="flex flex-col gap-2">
               <label
-                className="font-ui text-[11px] text-ui-xs uppercase tracking-widest text-text-mid"
+                className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid"
                 htmlFor="tan"
               >
                 TAN Number
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
                 id="tan"
                 maxLength={10}
                 placeholder="ABCD12345E"
                 {...register("tan")}
               />
               {errors.tan && (
-                <p className="text-danger text-[10px] uppercase font-bold tracking-wider mt-1">
+                <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">
                   {errors.tan.message}
                 </p>
               )}
@@ -196,22 +196,22 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
             <Icon
               name="arrow_forward"
-              className="text-[18px] group-hover:translate-x-1 transition-transform duration-200"
+              className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200"
             />
           </button>
         </div>

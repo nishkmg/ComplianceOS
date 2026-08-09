@@ -73,12 +73,12 @@ export function ScreenGstSetup({ tenantId, onComplete, onBack }: ScreenGstSetupP
             }`}>
               <input type="radio" value="monthly" className="sr-only" {...register("gstFilingFrequency")} />
               <div className="flex items-center gap-3">
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${watch("gstFilingFrequency") === "monthly" ? "border-amber" : "border-stone-300"}`}>
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${watch("gstFilingFrequency") === "monthly" ? "border-amber" : "focus:border-focus"}`}>
                   {watch("gstFilingFrequency") === "monthly" && <div className="w-2 h-2 rounded-full bg-amber" />}
                 </div>
                 <div>
-                  <h3 className="font-ui text-[13px] font-bold text-on-surface">Monthly</h3>
-                  <p className="font-ui text-[11px] text-text-mid">GSTR-1 and GSTR-3B filed monthly</p>
+                  <h3 className="font-ui text-ui-sm font-bold text-on-surface">Monthly</h3>
+                  <p className="font-ui text-ui-xs text-text-mid">GSTR-1 and GSTR-3B filed monthly</p>
                 </div>
               </div>
             </label>
@@ -87,12 +87,12 @@ export function ScreenGstSetup({ tenantId, onComplete, onBack }: ScreenGstSetupP
             }`}>
               <input type="radio" value="quarterly" className="sr-only" {...register("gstFilingFrequency")} />
               <div className="flex items-center gap-3">
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${watch("gstFilingFrequency") === "quarterly" ? "border-amber" : "border-stone-300"}`}>
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${watch("gstFilingFrequency") === "quarterly" ? "border-amber" : "focus:border-focus"}`}>
                   {watch("gstFilingFrequency") === "quarterly" && <div className="w-2 h-2 rounded-full bg-amber" />}
                 </div>
                 <div>
-                  <h3 className="font-ui text-[13px] font-bold text-on-surface">Quarterly</h3>
-                  <p className="font-ui text-[11px] text-text-mid">QRMP scheme — quarterly filing</p>
+                  <h3 className="font-ui text-ui-sm font-bold text-on-surface">Quarterly</h3>
+                  <p className="font-ui text-ui-xs text-text-mid">QRMP scheme — quarterly filing</p>
                 </div>
               </div>
             </label>
@@ -103,20 +103,20 @@ export function ScreenGstSetup({ tenantId, onComplete, onBack }: ScreenGstSetupP
         <section className="space-y-4">
           <div className="flex items-center justify-between py-2 border-t border-border">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">Composition Scheme?</p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">Composition Scheme?</p>
+              <p className="font-ui text-ui-xs text-text-mid">
                 Simplified scheme for small businesses (turnover up to ₹1.5 Cr)
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" {...register("compositionScheme")} />
-              <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
+              <div className="w-10 h-6 bg-lighter peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
             </label>
           </div>
 
           {compositionScheme && (
             <div className="bg-amber-50 border border-amber/30 rounded-md p-4">
-              <p className="font-ui text-[12px] text-text-mid">
+              <p className="font-ui text-ui-xs text-text-mid">
                 <Icon name="info" className="inline text-amber mr-1" />
                 Composition scheme businesses cannot claim Input Tax Credit (ITC) and cannot collect tax from customers.
               </p>
@@ -128,14 +128,14 @@ export function ScreenGstSetup({ tenantId, onComplete, onBack }: ScreenGstSetupP
         <section className="space-y-4">
           <div className="flex items-center justify-between py-2 border-t border-border">
             <div>
-              <p className="font-ui text-[13px] font-bold text-on-surface">Enable GST Reconciliation</p>
-              <p className="font-ui text-[11px] text-text-mid">
+              <p className="font-ui text-ui-sm font-bold text-on-surface">Enable GST Reconciliation</p>
+              <p className="font-ui text-ui-xs text-text-mid">
                 Auto-match purchase invoices with GSTR-2B data
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" {...register("enableGstReconciliation")} />
-              <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
+              <div className="w-10 h-6 bg-lighter peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
             </label>
           </div>
         </section>
@@ -147,20 +147,20 @@ export function ScreenGstSetup({ tenantId, onComplete, onBack }: ScreenGstSetupP
                 type="button"
                 onClick={onBack}
                 disabled={isSubmitting}
-                className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+                className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
               >
-                <Icon name="arrow_back" className="text-[18px]" />
+                <Icon name="arrow_back" className="text-ui-xl" />
                 Back
               </button>
             )}
           </div>
           <button
-            className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+            className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Continue"}
-            <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+            <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
       </form>

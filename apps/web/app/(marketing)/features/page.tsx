@@ -66,7 +66,7 @@ export default function FeaturesPage() {
           {modules.map((m) => (
             <article key={m.name} className={`flex flex-col items-center gap-gutter-wide ${m.reverse ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
               <div className={`flex-1 space-y-6 ${m.reverse ? 'md:pl-12' : 'md:pr-12'} text-left`}>
-                <div className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber">{m.id}</div>
+                <div className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">{m.id}</div>
                 <h3 className="font-display text-marketing-xl text-dark">{m.name}</h3>
                 <p className="font-ui text-ui-md text-secondary leading-relaxed">
                   {m.desc}

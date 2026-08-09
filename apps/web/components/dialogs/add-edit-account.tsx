@@ -35,14 +35,14 @@ export function AddAccountDialog({
         <DialogHeader className="px-8 py-6 border-b-[0.5px] border-border-subtle flex flex-row items-center justify-between bg-section-muted">
           <div className="text-left">
             <DialogTitle className="font-display text-lg font-normal text-dark">Add Account</DialogTitle>
-            <p className="font-ui text-[13px] text-mid mt-1">Configure a new entry in the Chart of Accounts.</p>
+            <p className="font-ui text-ui-sm text-mid mt-1">Configure a new entry in the Chart of Accounts.</p>
           </div>
         </DialogHeader>
 
         <div className="px-8 py-8 flex flex-col gap-6 max-h-[70vh] overflow-y-auto text-left">
           <div className="grid grid-cols-2 gap-6">
             <div className="col-span-2">
-              <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Name</label>
+              <label className="block font-ui text-ui-2xs text-dark mb-2 tracking-widest uppercase font-bold">Account Name</label>
               <input 
                 className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none transition-colors" 
                 placeholder="e.g. ICICI Corporate Account"
@@ -52,7 +52,7 @@ export function AddAccountDialog({
             </div>
             
             <div>
-              <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Code</label>
+              <label className="block font-ui text-ui-2xs text-dark mb-2 tracking-widest uppercase font-bold">Account Code</label>
               <input 
                 className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none" 
                 placeholder="1000"
@@ -62,7 +62,7 @@ export function AddAccountDialog({
             </div>
 
             <div>
-              <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Parent Account</label>
+              <label className="block font-ui text-ui-2xs text-dark mb-2 tracking-widest uppercase font-bold">Parent Account</label>
               <div className="relative">
                 <select 
                   className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none"
@@ -81,13 +81,13 @@ export function AddAccountDialog({
           </div>
 
           <div>
-            <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Type</label>
+            <label className="block font-ui text-ui-2xs text-dark mb-2 tracking-widest uppercase font-bold">Account Type</label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {['asset', 'liability', 'equity', 'revenue'].map((t) => (
                 <label key={t} className={`flex flex-col p-4 border rounded-sm cursor-pointer transition-colors ${formData.type === t ? 'bg-section-amber border-amber' : 'bg-white border-border-subtle hover:bg-section-muted'}`}>
                   <input type="radio" className="sr-only" name="type" checked={formData.type === t} onChange={() => setFormData({ ...formData, type: t })} />
                   <span className="font-ui font-bold text-dark capitalize">{t}</span>
-                  <span className="font-ui text-[10px] text-light">{t === 'asset' || t === 'expense' ? 'Debit normal' : 'Credit normal'}</span>
+                  <span className="font-ui text-ui-2xs text-mid">{t === 'asset' || t === 'expense' ? 'Debit normal' : 'Credit normal'}</span>
                 </label>
               ))}
             </div>
@@ -97,12 +97,12 @@ export function AddAccountDialog({
             <Icon name="warning" className="text-amber mt-0.5" />
             <div>
               <p className="font-ui text-sm font-bold text-dark">Account Type Immutability</p>
-              <p className="font-ui text-[12px] text-mid mt-1">Once transactions are posted to this account, its fundamental type cannot be altered to maintain ledger integrity.</p>
+              <p className="font-ui text-ui-xs text-mid mt-1">Once transactions are posted to this account, its fundamental type cannot be altered to maintain ledger integrity.</p>
             </div>
           </div>
 
           <div>
-            <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Description (Optional)</label>
+            <label className="block font-ui text-ui-2xs text-dark mb-2 tracking-widest uppercase font-bold">Description (Optional)</label>
             <textarea 
               className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none resize-none" 
               placeholder="Provide context for this ledger..." 

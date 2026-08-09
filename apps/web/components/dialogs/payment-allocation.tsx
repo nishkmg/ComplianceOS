@@ -45,15 +45,15 @@ export function PaymentAllocationDialog({
 
         <div className="px-8 py-4 bg-section-amber border-b border-border-subtle flex justify-between items-center text-left">
           <div className="flex flex-col">
-            <span className="font-ui text-[10px] text-amber uppercase tracking-widest mb-1 font-bold">Total to Allocate</span>
+            <span className="font-ui text-ui-2xs text-amber uppercase tracking-widest mb-1 font-bold">Total to Allocate</span>
             <span className="font-mono text-lg text-dark font-bold">₹ {formatIndianNumber(totalAmount)}</span>
           </div>
           <div className="flex items-center gap-4">
-            <Icon name="arrow_right_alt" className="text-light" />
+            <Icon name="arrow_right_alt" className="text-mid" />
           </div>
           <div className="flex flex-col text-right">
-            <span className="font-ui text-[10px] text-mid uppercase tracking-widest mb-1 font-bold">Unallocated Balance</span>
-            <span className={`font-mono text-lg font-bold ${unallocated > 0 ? 'text-primary' : 'text-success'}`}>₹ {formatIndianNumber(unallocated)}</span>
+            <span className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-1 font-bold">Unallocated Balance</span>
+            <span className={`font-mono text-lg font-bold ${unallocated > 0 ? 'text-amber-hover' : 'text-success'}`}>₹ {formatIndianNumber(unallocated)}</span>
           </div>
         </div>
 
@@ -68,10 +68,10 @@ export function PaymentAllocationDialog({
 
           <div className="grid grid-cols-12 gap-4 pb-3 border-b border-border-subtle mb-4">
             <div className="col-span-1"></div>
-            <div className="col-span-2 font-ui text-[10px] text-light uppercase tracking-widest font-bold">Date</div>
-            <div className="col-span-3 font-ui text-[10px] text-light uppercase tracking-widest font-bold">Invoice #</div>
-            <div className="col-span-3 font-ui text-[10px] text-light uppercase tracking-widest font-bold text-right">Open Balance</div>
-            <div className="col-span-3 font-ui text-[10px] text-light uppercase tracking-widest font-bold text-right">Payment</div>
+            <div className="col-span-2 font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Date</div>
+            <div className="col-span-3 font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Invoice #</div>
+            <div className="col-span-3 font-ui text-ui-2xs text-light uppercase tracking-widest font-bold text-right">Open Balance</div>
+            <div className="col-span-3 font-ui text-ui-2xs text-light uppercase tracking-widest font-bold text-right">Payment</div>
           </div>
 
           <div className="space-y-1">
@@ -94,14 +94,14 @@ export function PaymentAllocationDialog({
                     }}
                   />
                 </div>
-                <div className="col-span-2 font-mono text-[12px] text-mid">{inv.date}</div>
+                <div className="col-span-2 font-mono text-ui-xs text-mid">{inv.date}</div>
                 <div className="col-span-3 font-ui text-sm text-dark font-medium">{inv.number}</div>
-                <div className="col-span-3 font-mono text-[13px] text-mid text-right">₹ {formatIndianNumber(inv.balance)}</div>
+                <div className="col-span-3 font-mono text-ui-sm text-mid text-right">₹ {formatIndianNumber(inv.balance)}</div>
                 <div className="col-span-3 flex justify-end">
                   <div className="relative w-full max-w-[140px]">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[12px] text-light">₹</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-ui-xs text-light">₹</span>
                     <input 
-                      className="w-full bg-white border border-border rounded-sm py-2 pl-8 pr-3 font-mono text-[13px] text-right text-dark focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
+                      className="w-full bg-white border border-border rounded-sm py-2 pl-8 pr-3 font-mono text-ui-sm text-right text-dark focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
                       type="number"
                       value={allocations[inv.id] || ''}
                       onChange={(e) => {

@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { useSession } from "next-auth/react";
 
 const forms = [
   { id: "gstr1", name: "GSTR-1", desc: "Outward supply details — auto-filed from invoices", status: "draft" as const },
@@ -19,7 +17,7 @@ export default function PeriodPage() {
   const [fy, month] = period?.split("-") || ["", ""];
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+    <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/gst/returns" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
         <h1 className="font-ui text-display-lg font-semibold text-dark">Period: {month}/{fy}</h1>
@@ -31,7 +29,7 @@ export default function PeriodPage() {
               <h3 className="font-ui text-lg font-bold text-dark">{f.name}</h3>
               <Badge variant={f.status === "draft" ? "amber" : f.status === "ready" ? "success" : "gray"}>{f.status}</Badge>
             </div>
-            <p className="font-ui text-[13px] text-text-mid">{f.desc}</p>
+            <p className="font-ui text-ui-sm text-text-mid">{f.desc}</p>
           </Link>
         ))}
       </div>

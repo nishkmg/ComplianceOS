@@ -11,7 +11,7 @@ export default function GstPaymentPage() {
         <Link href="/gst/payment/history" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="history" className="text-3xl text-amber mb-4" />
           <h3 className="font-ui text-lg font-bold text-dark mb-2">Payment History</h3>
-          <p className="font-ui text-[13px] text-text-mid">View all challan payments made to the GST portal.</p>
+          <p className="font-ui text-ui-sm text-text-mid">View all challan payments made to the GST portal.</p>
         </Link>
       </div>
     </div>

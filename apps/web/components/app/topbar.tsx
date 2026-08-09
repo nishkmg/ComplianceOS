@@ -48,15 +48,15 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
           aria-label="Open command palette (⌘K)"
         >
           <Icon name="search" className="text-mid" size={16} />
-          <span className="text-[13px] font-mono text-sidebar-muted w-36 text-left select-none">
-            Search… <kbd className="font-ui text-[11px]">⌘K</kbd>
+          <span className="text-ui-sm font-mono text-sidebar-muted w-36 text-left select-none">
+            Search… <kbd className="font-ui text-ui-xs">⌘K</kbd>
           </span>
         </button>
 
         {/* Notifications */}
         <button
           aria-label="Notifications"
-          className="text-sidebar-muted hover:text-dark transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70 rounded-[4px] hover:bg-lighter/40"
+          className="text-sidebar-muted hover:text-dark transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70 rounded-sm hover:bg-lighter/40"
         >
           <Icon name="notifications" size={18} />
         </button>
@@ -82,9 +82,9 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
             <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-border-subtle shadow-xl z-50 flex flex-col rounded-sm overflow-hidden text-left">
               {/* Identity */}
               <div className="p-4 border-b-[0.5px] border-border-subtle bg-section-muted">
-                <p className="text-[13px] font-bold text-dark">{userName}</p>
+                <p className="text-ui-sm font-bold text-dark">{userName}</p>
                 {userEmail && (
-                  <p className="text-[10px] text-mid mt-0.5">{userEmail}</p>
+                  <p className="text-ui-2xs text-mid mt-0.5">{userEmail}</p>
                 )}
               </div>
 
@@ -96,7 +96,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
                   className="flex items-center gap-3 px-4 py-2 hover:bg-section-amber text-mid hover:text-amber no-underline transition-colors"
                 >
                   <Icon name="person" size={16} />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">Profile Settings</span>
+                  <span className="text-ui-xs font-bold uppercase tracking-widest">Profile Settings</span>
                 </Link>
                 <Link
                   href="/settings/users"
@@ -104,7 +104,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
                   className="flex items-center gap-3 px-4 py-2 hover:bg-section-amber text-mid hover:text-amber no-underline transition-colors"
                 >
                   <Icon name="group" size={16} />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">User Management</span>
+                  <span className="text-ui-xs font-bold uppercase tracking-widest">User Management</span>
                 </Link>
               </nav>
 
@@ -112,7 +112,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
               <div className="border-t-[0.5px] border-border-subtle p-2">
                 <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-danger-bg text-danger rounded-sm border-none bg-transparent cursor-pointer transition-colors">
                   <Icon name="logout" size={16} />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">Sign Out</span>
+                  <span className="text-ui-xs font-bold uppercase tracking-widest">Sign Out</span>
                 </button>
               </div>
             </div>

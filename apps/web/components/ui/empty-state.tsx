@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 
@@ -20,7 +19,7 @@ export function EmptyState({ title, description, action, icon = "inbox" }: Empty
       </div>
       <h3 className="font-ui text-base font-semibold text-dark">{title}</h3>
       {description && (
-        <p className="mt-1.5 max-w-md font-ui text-[13px] leading-relaxed text-mid">{description}</p>
+        <p className="mt-1.5 max-w-md font-ui text-ui-sm leading-relaxed text-mid">{description}</p>
       )}
       {action && (
         <Button onClick={action.onClick} className="mt-6">

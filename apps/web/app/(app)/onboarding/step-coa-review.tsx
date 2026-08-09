@@ -233,20 +233,20 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
     <div key={node.id} className="flex flex-col">
       <div className={`flex items-center gap-4 py-3 px-6 hover:bg-surface-muted transition-colors border-b-[0.5px] border-border ${node.level === 0 ? 'bg-surface-muted font-bold' : ''}`}>
         <div 
-          className={`w-5 h-5 rounded-md border flex items-center justify-center cursor-pointer transition-colors ${selectedIds.has(node.id) ? 'bg-amber border-amber' : 'border-stone-300'}`}
+          className={`w-5 h-5 rounded-md border flex items-center justify-center cursor-pointer transition-colors ${selectedIds.has(node.id) ? 'bg-amber border-amber' : 'focus:border-focus'}`}
           onClick={() => {
             const next = new Set(selectedIds);
             selectedIds.has(node.id) ? next.delete(node.id) : next.add(node.id);
             setSelectedIds(next);
           }}
         >
-          {selectedIds.has(node.id) && <Icon name="check" className="text-white text-[16px]" />}
+          {selectedIds.has(node.id) && <Icon name="check" className="text-white text-ui-lg" />}
         </div>
         <div className="flex-1 flex items-center gap-3" style={{ paddingLeft: `${node.level * 24}px` }}>
-          <span className="font-mono text-[12px] text-text-light">{node.code}</span>
-          <span className="font-ui text-[13px] text-on-surface">{node.name}</span>
+          <span className="font-mono text-ui-xs text-text-light">{node.code}</span>
+          <span className="font-ui text-ui-sm text-on-surface">{node.name}</span>
         </div>
-        <span className="font-ui text-[10px] uppercase tracking-widest text-text-light">{node.type}</span>
+        <span className="font-ui text-ui-2xs uppercase tracking-widest text-text-light">{node.type}</span>
       </div>
       {node.children?.map(renderNode)}
     </div>
@@ -291,23 +291,23 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
-              <Icon name="arrow_back" className="text-[18px]" />
+              <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
             Physical physical-ledger accuracy guaranteed through hierarchical enforcement.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Finalizing..." : "Confirm Structure"}
-          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+          <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

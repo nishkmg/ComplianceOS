@@ -108,7 +108,7 @@ export default function NewPaymentPage() {
           </button>
           <div>
             <h1 className="font-ui text-display-lg font-semibold text-dark">Record Transaction</h1>
-            <p className="font-ui text-[11px] text-secondary mt-0.5">
+            <p className="font-ui text-ui-xs text-secondary mt-0.5">
               Record incoming or outgoing payments. FY {activeFy}
               {gstConfig.tdsApplicable ? " · TDS applicable" : ""}
               {gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
@@ -118,14 +118,14 @@ export default function NewPaymentPage() {
         <div className="flex gap-3">
           <button
             onClick={handleDiscard}
-            className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md"
+            className="px-4 py-2 border border-border text-mid text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md"
           >
             Discard
           </button>
           <button
             onClick={handleRecord}
             disabled={saving || !paymentAmount}
-            className="px-5 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-5 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? "Saving…" : "Commit to Ledger"}
           </button>
@@ -134,17 +134,17 @@ export default function NewPaymentPage() {
 
       {discardConfirm && (
         <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
-          <span className="font-ui text-[12px] text-amber font-medium">Unsaved changes will be lost. Discard?</span>
+          <span className="font-ui text-ui-xs text-amber font-medium">Unsaved changes will be lost. Discard?</span>
           <div className="flex gap-2">
-            <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
-            <button onClick={() => { setDiscardConfirm(false); router.back(); }} className="px-3 py-1 text-[11px] font-ui font-bold uppercase tracking-widest bg-danger text-white rounded-sm cursor-pointer border-none">Discard</button>
+            <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-ui-xs font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
+            <button onClick={() => { setDiscardConfirm(false); router.back(); }} className="px-3 py-1 text-ui-xs font-ui font-bold uppercase tracking-widest bg-danger text-white rounded-sm cursor-pointer border-none">Discard</button>
           </div>
         </div>
       )}
 
       <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
         <div className="h-[2px] w-full bg-amber -mt-6 mb-6" />
-        <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Classification</h3>
+        <h3 className="font-ui text-ui-2xs text-amber uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Classification</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { value: "receipt" as const, title: "Payment Receipt", desc: "Recording funds received from a customer or client against invoices." },
@@ -160,26 +160,26 @@ export default function NewPaymentPage() {
               }`}
             >
               <div className="flex items-start justify-between mb-2">
-                <span className="font-ui text-[13px] font-bold text-dark">{opt.title}</span>
+                <span className="font-ui text-ui-sm font-bold text-dark">{opt.title}</span>
                 <Icon
                   name={type === opt.value ? "radio_button_checked" : "radio_button_unchecked"}
                   size={18}
                   className={type === opt.value ? "text-amber shrink-0" : "text-lighter shrink-0"}
                 />
               </div>
-              <p className="font-ui text-[11px] text-[11px] text-mid leading-relaxed">{opt.desc}</p>
+              <p className="font-ui text-ui-xs text-ui-xs text-mid leading-relaxed">{opt.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
       <div className="bg-surface border border-border p-6 rounded-md shadow-sm">
-        <h3 className="font-ui text-[10px] text-mid uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Voucher Details</h3>
+        <h3 className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Voucher Details</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <div className="space-y-1">
-            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Entity / Party Name</label>
+            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Entity / Party Name</label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-[13px] font-ui text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-ui-sm font-ui text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="Search customer or vendor..."
               value={customerName}
               onChange={e => setCustomerName(e.target.value)}
@@ -187,18 +187,18 @@ export default function NewPaymentPage() {
             />
           </div>
           <div className="space-y-1">
-            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Payment Date</label>
+            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Date</label>
             <input
               type="date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={paymentDate}
               onChange={e => setPaymentDate(e.target.value)}
             />
           </div>
           <div className="space-y-1">
-            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Payment Mode</label>
+            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Mode</label>
             <select
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-[13px] font-ui text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-ui-sm font-ui text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={paymentMethod}
               onChange={e => setPaymentMethod(e.target.value)}
             >
@@ -208,9 +208,9 @@ export default function NewPaymentPage() {
             </select>
           </div>
           <div className="space-y-1">
-            <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Reference / UTR</label>
+            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Reference / UTR</label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="T241024…"
               value={referenceNumber}
               onChange={e => setReferenceNumber(e.target.value)}
@@ -218,7 +218,7 @@ export default function NewPaymentPage() {
             />
           </div>
           <div className="md:col-span-2 space-y-1">
-            <label className="block font-ui text-[10px] text-amber uppercase tracking-widest font-bold">Amount Transacted (₹)</label>
+            <label className="block font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold">Amount Transacted (₹)</label>
             <input
               type="number"
               min="0"
@@ -233,10 +233,10 @@ export default function NewPaymentPage() {
 
         {gstConfig.tdsApplicable && (
           <div className="bg-surface border border-border rounded-md p-6 space-y-4">
-            <h3 className="font-ui text-[10px] font-bold text-dark uppercase tracking-widest">TDS Deduction</h3>
+            <h3 className="font-ui text-ui-2xs font-bold text-dark uppercase tracking-widest">TDS Deduction</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1">
-                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">TDS Amount (₹)</label>
+                <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">TDS Amount (₹)</label>
                 <input
                   type="number"
                   min="0"
@@ -247,14 +247,14 @@ export default function NewPaymentPage() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">TDS Rate (%)</label>
+                <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">TDS Rate (%)</label>
                 <div className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-mid">
                   {type === "payment" ? "2.00" : "N/A"}
                 </div>
               </div>
             </div>
             {type === "receipt" && (
-              <p className="font-ui text-[11px] text-text-mid italic">TDS deduction typically applies on payments made, not receipts.</p>
+              <p className="font-ui text-ui-xs text-text-mid italic">TDS deduction typically applies on payments made, not receipts.</p>
             )}
           </div>
         )}
@@ -262,12 +262,12 @@ export default function NewPaymentPage() {
       {parseFloat(paymentAmount || "0") > 0 && (
         <div className="bg-amber-50 border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
           <div>
-            <h4 className="font-ui text-[10px] font-bold text-amber uppercase tracking-widest mb-1">Allocation Required</h4>
-            <p className="font-ui text-[13px] text-[12px] text-amber-800 leading-relaxed">
+            <h4 className="font-ui text-ui-2xs font-bold text-amber uppercase tracking-widest mb-1">Allocation Required</h4>
+            <p className="font-ui text-ui-sm text-ui-xs text-amber-800 leading-relaxed">
               This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.
             </p>
           </div>
-          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber-600 text-amber-700 text-[10px] font-bold uppercase tracking-widest hover:bg-surface transition-colors cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
+          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber-600 text-amber-700 text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface transition-colors cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
             Open Allocation Wizard
           </button>
         </div>

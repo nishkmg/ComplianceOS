@@ -26,7 +26,7 @@ export default function ScanInvoicePage() {
           <p className="font-ui text-sm text-mid">{file ? file.name : "Click to upload an invoice or receipt"}</p>
           <input ref={inputRef} type="file" accept="image/*,.pdf" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
         </div>
-        <button onClick={handleScan} disabled={!file || scanning} className="w-full py-3 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{scanning ? "Scanning…" : "Scan Document"}</button>
+        <button onClick={handleScan} disabled={!file || scanning} className="w-full py-3 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{scanning ? "Scanning…" : "Scan Document"}</button>
       </div>
     </div>
   );

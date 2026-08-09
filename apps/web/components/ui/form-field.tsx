@@ -47,7 +47,7 @@ export function FormField({
       </div>
 
       {helpText && !error && (
-        <p id={helpId} className="font-ui text-[11px] text-mid">
+        <p id={helpId} className="font-ui text-ui-xs text-mid">
           {helpText}
         </p>
       )}
@@ -56,9 +56,9 @@ export function FormField({
         <p
           id={errorId}
           role="alert"
-          className="font-ui text-[11px] text-danger flex items-center gap-1"
+          className="font-ui text-ui-xs text-danger flex items-center gap-1"
         >
-          <Icon name="error" className="text-[14px]" />
+          <Icon name="error" className="text-ui-md" />
           {error}
         </p>
       )}

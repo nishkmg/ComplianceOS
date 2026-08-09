@@ -51,7 +51,7 @@ export default function LoginPage() {
           {/* Header */}
           <header className="mb-8">
             <h1 className="font-display text-2xl font-semibold text-dark">Arthvahi</h1>
-            <p className="text-[13px] text-secondary font-ui mt-1">Secure access to your fiscal ledger.</p>
+            <p className="text-ui-sm text-secondary font-ui mt-1">Secure access to your fiscal ledger.</p>
           </header>
 
           {/* Form */}
@@ -60,7 +60,7 @@ export default function LoginPage() {
             <div className="space-y-2 text-left">
               <label className="block font-ui text-ui-xs text-dark uppercase tracking-widest font-medium" htmlFor="email">Email Address</label>
               <input 
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors" 
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-dark placeholder:text-light focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors" 
                 id="email" 
                 name="email" 
                 placeholder="accountant@firm.in" 
@@ -80,7 +80,7 @@ export default function LoginPage() {
               </div>
               <div className="relative">
                 <input 
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors pr-10" 
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-dark placeholder:text-light focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors pr-10" 
                   id="password" 
                   name="password" 
                   placeholder="••••••••••••" 
@@ -94,6 +94,7 @@ export default function LoginPage() {
                 <button 
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-secondary hover:text-dark border-none bg-transparent cursor-pointer"
                   disabled={submitting}
                 >
@@ -103,12 +104,12 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-danger text-[12px] text-center" role="alert">{error}</p>
+              <p className="text-danger text-ui-xs text-center" role="alert">{error}</p>
             )}
 
             {/* Submit Button */}
             <button 
-              className="w-full mt-4 bg-amber text-white font-ui font-medium text-[16px] rounded-md py-4 px-6 flex justify-center items-center group transition-all duration-300 hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] cursor-pointer border-none shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" 
+              className="w-full mt-4 bg-amber text-white font-ui font-medium text-ui-lg rounded-md py-4 px-6 flex justify-center items-center group transition-all duration-300 hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] cursor-pointer border-none shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" 
               type="submit"
               disabled={submitting}
             >
@@ -120,7 +121,7 @@ export default function LoginPage() {
               ) : (
                 <>
                   Access Account
-                  <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300 ease-in-out font-mono text-[18px]">→</span>
+                  <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300 ease-in-out font-mono text-ui-xl">→</span>
                 </>
               )}
             </button>

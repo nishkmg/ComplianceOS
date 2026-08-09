@@ -91,15 +91,15 @@ export default function ITRAdvanceTaxPage() {
       {/* Header Section */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-        <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Tax Compliance Calendar</p>
+        <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Tax Compliance Calendar</p>
         <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Advance Tax Tracking</h1>
-        <p className="font-ui text-[13px] text-secondary max-w-2xl leading-relaxed">Ensure timely payment of advance tax instalments to avoid penal interest under Section 234B and 234C.</p>
+        <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">Ensure timely payment of advance tax instalments to avoid penal interest under Section 234B and 234C.</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={handleExportLedger} className="px-5 py-2 border border-border text-dark font-ui text-[13px] rounded-md hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-surface shadow-sm uppercase font-bold tracking-widest">
-            <Icon name="download" className="text-[18px]" /> Export Ledger
+          <button onClick={handleExportLedger} className="px-5 py-2 border border-border text-dark font-ui text-ui-sm rounded-md hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-surface shadow-sm uppercase font-bold tracking-widest">
+            <Icon name="download" className="text-ui-xl" /> Export Ledger
           </button>
-          <button onClick={() => { setRecordForm({ installmentId: pendingInstalments[0]?.id ?? 3, amount: "", date: "" }); setErrors({}); setShowRecordModal(true); }} className="bg-amber text-white px-8 py-2.5 rounded-md font-ui text-[13px] hover:bg-amber-hover transition-colors cursor-pointer border-none shadow-sm uppercase font-bold tracking-widest">
+          <button onClick={() => { setRecordForm({ installmentId: pendingInstalments[0]?.id ?? 3, amount: "", date: "" }); setErrors({}); setShowRecordModal(true); }} className="bg-amber text-white px-8 py-2.5 rounded-md font-ui text-ui-sm hover:bg-amber-hover transition-colors cursor-pointer border-none shadow-sm uppercase font-bold tracking-widest">
             Record Payment
           </button>
         </div>
@@ -110,8 +110,8 @@ export default function ITRAdvanceTaxPage() {
         <div className="bg-surface border border-border p-4 rounded-md flex items-center gap-4">
           <div className="flex-1">
             <div className="flex justify-between items-center mb-2">
-              <span className="font-ui text-[10px] uppercase tracking-widest text-light font-bold">Payment Progress</span>
-              <span className="font-mono text-[12px] font-bold text-dark">{completionPercent}%</span>
+              <span className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Payment Progress</span>
+              <span className="font-mono text-ui-xs font-bold text-dark">{completionPercent}%</span>
             </div>
             <div className="w-full bg-surface-muted rounded-full h-2.5">
               <div className="bg-amber h-2.5 rounded-full transition-[width]" style={{ width: `${completionPercent}%` }} />
@@ -119,12 +119,12 @@ export default function ITRAdvanceTaxPage() {
           </div>
           <div className="text-right flex gap-6">
             <div>
-              <span className="font-ui text-[10px] uppercase text-light block">Paid</span>
-              <span className="font-mono text-[14px] font-bold text-success">₹ {formatIndianNumber(totalPaid)}</span>
+              <span className="font-ui text-ui-2xs uppercase text-light block">Paid</span>
+              <span className="font-mono text-ui-md font-bold text-success">₹ {formatIndianNumber(totalPaid)}</span>
             </div>
             <div>
-              <span className="font-ui text-[10px] uppercase text-light block">Pending</span>
-              <span className="font-mono text-[14px] font-bold text-danger">₹ {formatIndianNumber(totalPending)}</span>
+              <span className="font-ui text-ui-2xs uppercase text-light block">Pending</span>
+              <span className="font-mono text-ui-md font-bold text-danger">₹ {formatIndianNumber(totalPending)}</span>
             </div>
           </div>
         </div>
@@ -132,13 +132,13 @@ export default function ITRAdvanceTaxPage() {
 
       <div className="max-w-6xl mx-auto space-y-10">
         {/* Liability Summary */}
-        <section className="bg-dark text-white p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl border border-stone-950">
+        <section className="bg-dark text-white p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl border focus:border-focus">
           <div className="text-left flex-1">
             <h3 className="text-amber font-ui text-lg font-bold mb-2">Projected Annual Liability</h3>
-            <p className="text-light font-ui text-[13px] leading-relaxed">Based on your current fiscal P&L data and estimated non-business income for FY {activeFy}.</p>
+            <p className="text-light font-ui text-ui-sm leading-relaxed">Based on your current fiscal P&L data and estimated non-business income for FY {activeFy}.</p>
           </div>
           <div className="text-right">
-            <p className="text-light font-ui text-[10px] uppercase tracking-[0.2em] mb-2">Estimated Net Tax</p>
+            <p className="text-light font-ui text-ui-2xs uppercase tracking-[0.2em] mb-2">Estimated Net Tax</p>
             <p className="font-mono text-4xl font-bold text-white">₹ {formatIndianNumber(grandTotal)}.00</p>
           </div>
         </section>
@@ -146,35 +146,35 @@ export default function ITRAdvanceTaxPage() {
         {/* Instalment Table */}
         <div className="bg-surface border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="px-6 py-4 bg-surface-muted border-b border-border">
-            <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Instalment Schedule</h3>
+            <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-ui-xs text-light">Instalment Schedule</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-muted border-b-[0.5px] border-border">
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Instalment</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Due Date</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Target</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Amount (₹)</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
-                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Date Paid</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Instalment</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Due Date</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Target</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Amount (₹)</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Status</th>
+                  <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Date Paid</th>
                 </tr>
               </thead>
-              <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
+              <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
                 {instalments.map((i) => (
                   <tr key={i.id} className="hover:bg-surface-muted/30 transition-colors">
-                    <td className="py-5 px-6 font-ui text-[13px] font-bold text-dark">{i.label}</td>
+                    <td className="py-5 px-6 font-ui text-ui-sm font-bold text-dark">{i.label}</td>
                     <td className="py-5 px-6 text-mid">{i.dueDate}</td>
                     <td className="py-5 px-6 text-mid">{i.percentage}</td>
                     <td className="py-5 px-6 text-right font-bold text-dark">{formatIndianNumber(i.amount)}</td>
                     <td className="py-5 px-6">
-                      <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
+                      <span className={`inline-block px-2 py-0.5 text-ui-2xs uppercase font-bold tracking-wider border rounded-md ${
                         i.status === 'paid' ? 'bg-success-bg text-success-deep border-success/20' : 'bg-amber-soft text-amber border-amber-bright/30'
                       }`}>
                         {i.status}
                       </span>
                     </td>
-                    <td className="py-5 px-6 text-right text-light">{i.datePaid}</td>
+                    <td className="py-5 px-6 text-right text-mid">{i.datePaid}</td>
                   </tr>
                 ))}
               </tbody>
@@ -193,9 +193,9 @@ export default function ITRAdvanceTaxPage() {
             </div>
             <div className="space-y-5">
               <div>
-                <label className="font-ui text-[10px] uppercase tracking-widest text-light font-bold block mb-1.5">Instalment</label>
+                <label className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold block mb-1.5">Instalment</label>
                 <select
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   value={recordForm.installmentId}
                   onChange={e => setRecordForm(prev => ({ ...prev, installmentId: Number(e.target.value) }))}
                 >
@@ -205,29 +205,29 @@ export default function ITRAdvanceTaxPage() {
                 </select>
               </div>
               <div>
-                <label className="font-ui text-[10px] uppercase tracking-widest text-light font-bold block mb-1.5">Amount (₹)</label>
+                <label className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold block mb-1.5">Amount (₹)</label>
                 <input
                   type="number"
-                  className={`w-full bg-surface border ${errors.amount ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-[13px] text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface`}
+                  className={`w-full bg-surface border ${errors.amount ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-ui-sm text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface`}
                   placeholder="Enter amount"
                   value={recordForm.amount}
                   onChange={e => setRecordForm(prev => ({ ...prev, amount: e.target.value }))}
                 />
-                {errors.amount && <p className="font-ui text-[11px] text-danger mt-1">{errors.amount}</p>}
+                {errors.amount && <p className="font-ui text-ui-xs text-danger mt-1">{errors.amount}</p>}
               </div>
               <div>
-                <label className="font-ui text-[10px] uppercase tracking-widest text-light font-bold block mb-1.5">Payment Date</label>
+                <label className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold block mb-1.5">Payment Date</label>
                 <input
                   type="date"
-                  className={`w-full bg-surface border ${errors.date ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-[13px] text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface`}
+                  className={`w-full bg-surface border ${errors.date ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-ui-sm text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface`}
                   value={recordForm.date}
                   onChange={e => setRecordForm(prev => ({ ...prev, date: e.target.value }))}
                 />
-                {errors.date && <p className="font-ui text-[11px] text-danger mt-1">{errors.date}</p>}
+                {errors.date && <p className="font-ui text-ui-xs text-danger mt-1">{errors.date}</p>}
               </div>
               <div className="flex gap-3 pt-2">
-                <button onClick={() => setShowRecordModal(false)} className="flex-1 px-4 py-2.5 border border-border text-dark font-ui text-[13px] font-bold uppercase tracking-widest rounded-md bg-transparent cursor-pointer hover:bg-surface-muted transition-colors">Cancel</button>
-                <button onClick={handleRecordPayment} className="flex-1 px-4 py-2.5 bg-amber text-white font-ui text-[13px] font-bold uppercase tracking-widest rounded-md border-none cursor-pointer hover:bg-amber-hover transition-colors shadow-sm">Record Payment</button>
+                <button onClick={() => setShowRecordModal(false)} className="flex-1 px-4 py-2.5 border border-border text-dark font-ui text-ui-sm font-bold uppercase tracking-widest rounded-md bg-transparent cursor-pointer hover:bg-surface-muted transition-colors">Cancel</button>
+                <button onClick={handleRecordPayment} className="flex-1 px-4 py-2.5 bg-amber text-white font-ui text-ui-sm font-bold uppercase tracking-widest rounded-md border-none cursor-pointer hover:bg-amber-hover transition-colors shadow-sm">Record Payment</button>
               </div>
             </div>
           </div>

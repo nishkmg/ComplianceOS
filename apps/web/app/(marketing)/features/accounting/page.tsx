@@ -10,9 +10,9 @@ export default function AccountingPage() {
       <MarketingNav />
       <main className="pt-32 pb-24">
         {/* Hero */}
-        <section className="max-w-[1200px] mx-auto px-8 pt-16 pb-space-64">
+        <section className="max-w-page mx-auto px-8 pt-16 pb-space-64">
           <div className="max-w-4xl text-left">
-            <div className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber mb-6 block font-bold">General Ledger Engine</div>
+            <div className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">General Ledger Engine</div>
             <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
               Double-entry accounting that enforces what your CA has always asked for.
             </h1>
@@ -28,27 +28,27 @@ export default function AccountingPage() {
         </section>
 
         {/* Balance Constraint Demo */}
-        <section className="max-w-[1200px] mx-auto px-8 py-space-64">
+        <section className="max-w-page mx-auto px-8 py-space-64">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-48 items-center">
             <div className="text-left order-2 lg:order-1">
-              <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-amber block font-bold">The Balance Constraint</span>
+              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber block font-bold">The Balance Constraint</span>
               <h2 className="font-display text-marketing-xl text-dark mt-4 mb-6">Entries must balance before they post.</h2>
               <p className="font-ui text-ui-md text-secondary leading-relaxed">Unlike spreadsheets, Arthvahi prevents unbalanced journal entries at the UI level. You cannot post until debits equal credits — no exceptions, no manual checks.</p>
             </div>
             <div className="order-1 lg:order-2 bg-white border border-border-subtle p-8 shadow-sm">
               <div className="flex items-center justify-center gap-8 mb-4">
-                <div><div className="font-ui text-[10px] text-light uppercase tracking-widest font-bold mb-1">Total Debit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
-                <div><div className="font-ui text-[10px] text-light uppercase tracking-widest font-bold mb-1">Total Credit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
-                <div><div className="font-ui text-[10px] text-light uppercase tracking-widest font-bold mb-1">Difference</div><div className="font-mono text-lg text-success font-bold">✓ ₹ 0.00</div></div>
+                <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Total Debit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
+                <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Total Credit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
+                <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Difference</div><div className="font-mono text-lg text-success font-bold">✓ ₹ 0.00</div></div>
               </div>
-              <div className="bg-success-bg text-success-deep text-center py-2 font-ui text-[10px] uppercase font-bold tracking-widest">Voucher is balanced — Ready to Post</div>
+              <div className="bg-success-bg text-success-deep text-center py-2 font-ui text-ui-2xs uppercase font-bold tracking-widest">Voucher is balanced — Ready to Post</div>
             </div>
           </div>
         </section>
 
         {/* Key Feature Modules */}
         <section className="bg-section-muted py-space-64">
-          <div className="max-w-[1200px] mx-auto px-8 text-left">
+          <div className="max-w-page mx-auto px-8 text-left">
             <h2 className="font-display text-marketing-xl text-dark mb-16 text-center">Three pillars of ledger-first accounting.</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[

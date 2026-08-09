@@ -91,19 +91,19 @@ export default function PaymentAllocation({
 
   if (!customerName) {
     return (
-      <div className="p-6 text-center text-gray-400 border-2 border-dashed rounded-lg">
+      <div className="p-6 text-center text-mid border-2 border-dashed rounded-lg">
         Select a customer to allocate payment
       </div>
     );
   }
 
   if (loading) {
-    return <div className="p-6 text-center text-gray-400">Loading invoices...</div>;
+    return <div className="p-6 text-center text-mid">Loading invoices...</div>;
   }
 
   if (invoices.length === 0) {
     return (
-      <div className="p-6 text-center text-gray-400 border-2 border-dashed rounded-lg">
+      <div className="p-6 text-center text-mid border-2 border-dashed rounded-lg">
         No outstanding invoices for {customerName}
       </div>
     );
@@ -116,7 +116,7 @@ export default function PaymentAllocation({
         <button
           type="button"
           onClick={autoAllocate}
-          className="px-3 py-1 text-xs bg-slate-100 hover:bg-zinc-200 text-slate-700 rounded border"
+          className="px-3 py-1 text-xs bg-surface-muted hover:bg-lighter/60 text-mid rounded border"
         >
           Auto-allocate (FIFO)
         </button>

@@ -58,7 +58,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
     <div className="flex flex-col gap-12 text-left">
       {/* Section Header */}
       <div>
-        <span className="font-ui text-[11px] text-ui-xs text-amber uppercase tracking-widest block mb-4">Fiscal Policy</span>
+        <span className="font-ui text-ui-xs text-ui-xs text-amber uppercase tracking-widest block mb-4">Fiscal Policy</span>
         <h1 className="font-ui text-display-xl text-on-surface mb-4">Fiscal Configuration</h1>
         <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
           Establish the foundational tax parameters for your ledger. These settings dictate automated compliance checks and filing schedules.
@@ -81,7 +81,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                 </p>
               </div>
             </div>
-            <p className="font-ui text-[11px] text-text-mid/70 mt-1">
+            <p className="font-ui text-ui-xs text-text-mid/70 mt-1">
               Fixed Indian fiscal year (April–March) per Income Tax Act. Not configurable.
             </p>
           </div>
@@ -102,12 +102,12 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                 }`}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${formData.gstRegistration === t.id ? 'border-amber' : 'border-stone-300'}`}>
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${formData.gstRegistration === t.id ? 'border-amber' : 'focus:border-focus'}`}>
                     {formData.gstRegistration === t.id && <div className="w-2 h-2 rounded-full bg-amber" />}
                   </div>
-                  <h3 className="font-ui text-[13px] font-bold text-on-surface">{t.name}</h3>
+                  <h3 className="font-ui text-ui-sm font-bold text-on-surface">{t.name}</h3>
                 </div>
-                <p className="font-ui text-[11px] text-[11px] text-text-mid leading-relaxed">{t.desc}</p>
+                <p className="font-ui text-ui-xs text-ui-xs text-text-mid leading-relaxed">{t.desc}</p>
               </div>
             ))}
           </div>
@@ -118,7 +118,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
           <section className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="gstin" className="font-ui text-[13px] text-on-surface">GST Identification Number</Label>
+                <Label htmlFor="gstin" className="font-ui text-ui-sm text-on-surface">GST Identification Number</Label>
                 <input
                   id="gstin"
                   type="text"
@@ -133,13 +133,13 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
               <div className="flex flex-col justify-center gap-4">
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <p className="font-ui text-[13px] font-bold text-on-surface">ITC Eligible</p>
-                    <p className="font-ui text-[11px] text-[11px] text-text-mid">Can claim Input Tax Credit on purchases</p>
+                    <p className="font-ui text-ui-sm font-bold text-on-surface">ITC Eligible</p>
+                    <p className="font-ui text-ui-xs text-ui-xs text-text-mid">Can claim Input Tax Credit on purchases</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => !saving && setFormData({ ...formData, itcEligible: !formData.itcEligible })}
-                    className={`w-10 h-6 rounded-full transition-colors relative border-none ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${formData.itcEligible ? "bg-amber" : "bg-stone-200"}`}
+                    className={`w-10 h-6 rounded-full transition-colors relative border-none ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${formData.itcEligible ? "bg-amber" : "bg-lighter"}`}
                   >
                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-surface transition-transform ${formData.itcEligible ? "left-5" : "left-1"}`} />
                   </button>
@@ -151,13 +151,13 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
 
         <section className="flex items-center justify-between py-4 border-t border-border">
           <div>
-            <p className="font-ui text-[13px] font-bold text-on-surface">TDS Compliance</p>
-            <p className="font-ui text-[11px] text-[11px] text-text-mid">Enable automated TDS deduction modules</p>
+            <p className="font-ui text-ui-sm font-bold text-on-surface">TDS Compliance</p>
+            <p className="font-ui text-ui-xs text-ui-xs text-text-mid">Enable automated TDS deduction modules</p>
           </div>
           <button
             type="button"
             onClick={() => !saving && setFormData({ ...formData, tdsApplicable: !formData.tdsApplicable })}
-            className={`w-10 h-6 rounded-full transition-colors relative border-none ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${formData.tdsApplicable ? "bg-amber" : "bg-stone-200"}`}
+            className={`w-10 h-6 rounded-full transition-colors relative border-none ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${formData.tdsApplicable ? "bg-amber" : "bg-lighter"}`}
           >
             <div className={`absolute top-1 w-4 h-4 rounded-full bg-surface transition-transform ${formData.tdsApplicable ? "left-5" : "left-1"}`} />
           </button>
@@ -171,23 +171,23 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="font-ui text-[13px] text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
-              <Icon name="arrow_back" className="text-[18px]" />
+              <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-[11px] text-[11px] text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
             These settings can be amended later in the tax settings panel.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="bg-amber text-white font-ui text-[13px] text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Validating..." : "Finalize Config"}
-          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform duration-200" />
+          <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

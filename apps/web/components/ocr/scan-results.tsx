@@ -292,7 +292,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                     <th className="px-3 py-2 text-right text-mid font-medium w-20">GST %</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y 100-border">
                   {lineItems.map((item, i) => (
                     <tr key={i}>
                       <td className="px-3 py-2">

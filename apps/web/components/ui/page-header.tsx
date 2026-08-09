@@ -20,7 +20,7 @@ export function PageHeader({ title, description, eyebrow, actions, className }: 
     <div className={cn("flex flex-col gap-4 md:flex-row md:items-end md:justify-between", className)}>
       <div className="min-w-0">
         {eyebrow && (
-          <p className="mb-1.5 font-ui text-[11px] font-semibold uppercase tracking-wider text-amber">
+          <p className="mb-1.5 font-ui text-ui-xs font-semibold uppercase tracking-wider text-amber">
             {eyebrow}
           </p>
         )}
@@ -28,7 +28,7 @@ export function PageHeader({ title, description, eyebrow, actions, className }: 
           {title}
         </h1>
         {description && (
-          <p className="mt-1.5 max-w-2xl font-ui text-[13px] leading-relaxed text-mid">
+          <p className="mt-1.5 max-w-2xl font-ui text-ui-sm leading-relaxed text-mid">
             {description}
           </p>
         )}

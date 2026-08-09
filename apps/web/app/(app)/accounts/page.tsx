@@ -17,10 +17,10 @@ interface Account {
 }
 
 const columns: ColumnDef<Account>[] = [
-  { key: "code", header: "Code", width: "120px", render: (row) => <span className="font-mono text-[12px] text-mid">{row.code}</span> },
-  { key: "name", header: "Account Name", sortable: true, render: (row) => <Link href={`/accounts/${row.id}`} className="font-ui text-[13px] text-amber hover:underline no-underline">{row.name}</Link> },
-  { key: "kind", header: "Kind", width: "120px", render: (row) => <span className="font-ui text-[12px] text-mid">{row.kind}</span> },
-  { key: "isLeaf", header: "Leaf", width: "80px", render: (row) => <span className={`text-[11px] font-bold uppercase ${row.isLeaf ? "text-success" : "text-mid"}`}>{row.isLeaf ? "Yes" : "No"}</span> },
+  { key: "code", header: "Code", width: "120px", render: (row) => <span className="font-mono text-ui-xs text-mid">{row.code}</span> },
+  { key: "name", header: "Account Name", sortable: true, render: (row) => <Link href={`/accounts/${row.id}`} className="font-ui text-ui-sm text-amber hover:underline no-underline">{row.name}</Link> },
+  { key: "kind", header: "Kind", width: "120px", render: (row) => <span className="font-ui text-ui-xs text-mid">{row.kind}</span> },
+  { key: "isLeaf", header: "Leaf", width: "80px", render: (row) => <span className={`text-ui-xs font-bold uppercase ${row.isLeaf ? "text-success" : "text-mid"}`}>{row.isLeaf ? "Yes" : "No"}</span> },
 ];
 
 export default function AccountsPage() {
@@ -29,10 +29,10 @@ export default function AccountsPage() {
 
   if (isLoading) return <TableSkeleton rows={8} columns={4} />;
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
+    <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <div><h1 className="font-ui text-display-lg font-semibold text-dark">Accounts</h1></div>
-        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
+        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
           <Icon name="add" size={14} /> New Account
         </Link>
       </div>
