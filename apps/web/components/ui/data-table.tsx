@@ -23,6 +23,7 @@ interface DataTableProps<T> {
   emptyState?: ReactNode;
   onRowClick?: (row: T) => void;
   stickyHeader?: boolean;
+  stickyFirstCol?: boolean;
   dense?: boolean;
   className?: string;
   footer?: ReactNode;
@@ -37,6 +38,7 @@ export function DataTable<T>({
   emptyState,
   onRowClick,
   stickyHeader = true,
+  stickyFirstCol = false,
   dense = false,
   className,
   footer,
@@ -104,7 +106,7 @@ export function DataTable<T>({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-surface-muted border-b border-border">
-              {columns.map(col => {
+              {columns.map((col, colIndex) => {
                 const numeric = col.align === 'right';
                 return (
                   <th
@@ -115,10 +117,20 @@ export function DataTable<T>({
                       numeric && 'text-right',
                       col.sortable && 'cursor-pointer select-none hover:text-dark transition-colors',
                       stickyHeader && 'sticky top-0 bg-surface-muted z-10',
+                      colIndex === 0 && stickyFirstCol && 'sticky left-0 z-[15]',
                       col.width
                     )}
                     style={col.width ? { width: col.width } : undefined}
                     onClick={() => col.sortable && handleSort(col.key)}
+                    onKeyDown={(e) => {
+                      if (!col.sortable) return;
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleSort(col.key);
+                      }
+                    }}
+                    tabIndex={col.sortable ? 0 : undefined}
+                    role={col.sortable ? "button" : undefined}
                     aria-sort={
                       sortKey === col.key
                         ? sortDir === 'asc' ? 'ascending' : 'descending'
@@ -144,13 +156,15 @@ export function DataTable<T>({
                   key={rowKey}
                   className={cn(
                     'transition-colors',
-                    onRowClick ? 'cursor-pointer hover:bg-surface-muted' : 'hover:bg-surface-muted/50'
+                    onRowClick
+                      ? 'cursor-pointer hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus'
+                      : 'hover:bg-surface-muted/50'
                   )}
                   onClick={() => onRowClick?.(row)}
                   tabIndex={onRowClick ? 0 : undefined}
-                  onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter') onRowClick(row); } : undefined}
+                  onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRowClick(row); } } : undefined}
                 >
-                  {columns.map(col => {
+                  {columns.map((col, colIndex) => {
                     const rawValue = (row as Record<string, unknown>)[col.key];
                     const numeric = col.align === 'right';
                     return (
@@ -160,7 +174,8 @@ export function DataTable<T>({
                           cellPadding,
                           numeric ? 'font-mono text-right tabular-nums' : 'font-ui text-sm',
                           'text-dark',
-                          col.cellClassName
+                          col.cellClassName,
+                          colIndex === 0 && stickyFirstCol && 'sticky left-0 bg-surface z-[5]'
                         )}
                       >
                         {col.render ? col.render(row, i) : (rawValue as ReactNode) ?? '-'}

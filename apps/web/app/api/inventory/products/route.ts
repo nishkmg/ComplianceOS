@@ -1,5 +1,5 @@
 import { db, products } from "@complianceos/db";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 export const runtime = "nodejs";
 
@@ -12,8 +12,6 @@ export async function GET(req: Request) {
     return Response.json({ products: rows });
   } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
-
-
 
 export async function POST(req: Request) {
   try {

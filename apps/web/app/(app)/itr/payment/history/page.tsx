@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
+import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
@@ -31,9 +32,11 @@ export default function ITRPaymentHistoryPage() {
           <button onClick={() => window.print()} className="px-5 py-2.5 border border-border text-dark font-ui text-[13px] rounded-md hover:bg-surface-muted transition-colors flex items-center gap-2 cursor-pointer bg-transparent uppercase font-bold tracking-widest shadow-sm">
             <Icon name="print" className="text-[18px]" /> Print History
           </button>
-          <button onClick={() => showToast.success("New challan form opened.")} className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] hover:bg-amber-hover transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
-            <Icon name="add" className="text-[18px]" /> New Challan
-          </button>
+          <Link href="/itr/payment/recording" className="no-underline">
+            <button className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-[13px] hover:bg-amber-hover transition-colors flex items-center gap-2 border-none shadow-sm font-bold uppercase tracking-widest cursor-pointer">
+              <Icon name="add" className="text-[18px]" /> New Challan
+            </button>
+          </Link>
         </div>
       </div>
 

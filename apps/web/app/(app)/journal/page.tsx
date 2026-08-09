@@ -11,6 +11,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface JournalEntry {
   id: string;
@@ -164,10 +165,7 @@ export default function JournalPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">
-            General Ledger
-          </p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Journal Entries</h1>
+          <PageHeader eyebrow="General Ledger" title="Journal Entries" />
         </div>
         <div className="flex gap-3">
           <button className="btn-secondary" onClick={handleExportCSV}>

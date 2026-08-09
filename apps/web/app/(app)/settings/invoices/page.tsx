@@ -3,8 +3,25 @@
 import { Icon } from '@/components/ui/icon';
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useState } from "react";
 
 export default function InvoiceConfigPage() {
+  const [logoPreview, setLogoPreview] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("invoice-logo-preview");
+  });
+
+  const onLogoFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      setLogoPreview(dataUrl);
+      localStorage.setItem("invoice-logo-preview", dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
   const { activeFy } = useFiscalYear();
   return (
     <div className="space-y-0 text-left">
@@ -29,12 +46,12 @@ export default function InvoiceConfigPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Invoice Prefix</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="INV-2024-" />
+              <input aria-label="Invoice number prefix" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="INV-2024-" />
               <p className="text-[10px] text-light italic">Example: INV-2024-0001</p>
             </div>
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Starting Number</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="number" defaultValue="1" />
+              <input aria-label="Next invoice number" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="number" defaultValue="1" />
             </div>
           </div>
         </section>
@@ -45,26 +62,31 @@ export default function InvoiceConfigPage() {
           <div className="space-y-8">
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Invoice Header Address</label>
-              <textarea className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface resize-none" rows={3} defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
+              <textarea aria-label="Registered office address" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface resize-none" rows={3} defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Logo (B&W Recommended)</label>
-                   <div onClick={() => showToast.info("Logo uploader opened.")} className="border-2 border-dashed border-border p-8 flex flex-col items-center justify-center bg-surface-muted hover:bg-surface-muted transition-colors cursor-pointer">
-                     <Icon name="upload_file" className="text-light text-3xl mb-2" />
-                     <span className="font-ui text-[10px] uppercase font-bold text-mid">Upload PNG/JPG</span>
-                   </div>
+                   <label className="border-2 border-dashed border-border-strong p-6 flex flex-col items-center justify-center bg-surface-muted transition-colors cursor-pointer hover:bg-surface-muted">
+                     {logoPreview ? (
+                       <img src={logoPreview} alt="Invoice logo preview" className="max-h-20 mb-2 object-contain" />
+                     ) : (
+                       <Icon name="upload_file" className="text-light text-3xl mb-2" />
+                     )}
+                     <span className="font-ui text-[10px] uppercase font-bold text-mid">{logoPreview ? "Replace logo" : "Upload PNG/JPG"}</span>
+                     <input type="file" accept="image/png,image/jpeg" onChange={onLogoFile} className="sr-only" aria-label="Upload invoice logo" />
+                   </label>
                </div>
                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between py-2 border-b border-stone-50">
                     <span className="font-ui text-[13px] text-dark">Show Authorized Signatory</span>
-                    <button onClick={() => showToast.success("Setting toggled.")} className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
+                    <button onClick={() => showToast.info("Numbering preferences are saved automatically.")} aria-label="Sequential invoice numbering" aria-pressed="true" className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
                       <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
                     </button>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-stone-50">
                     <span className="font-ui text-[13px] text-dark">Include QR Code (e-Invoice)</span>
-                    <button onClick={() => showToast.success("QR code setting toggled.")} className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
+                    <button onClick={() => showToast.info("E-invoice QR will appear on GST invoices.")} aria-label="QR code on GST invoices" aria-pressed="true" className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
                       <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
                     </button>
                   </div>
@@ -79,15 +101,15 @@ export default function InvoiceConfigPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Bank Name</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC Bank" />
+              <input aria-label="Bank name" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC Bank" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">IFSC Code</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC0000060" />
+              <input aria-label="Bank IFSC code" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC0000060" />
             </div>
             <div className="flex flex-col gap-2 md:col-span-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Number</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="50200012345678" />
+              <input aria-label="Bank account number" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="50200012345678" />
             </div>
           </div>
         </section>

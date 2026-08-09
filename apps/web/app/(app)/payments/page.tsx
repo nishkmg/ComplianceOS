@@ -11,6 +11,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface Payment {
   id: string;
@@ -98,7 +99,7 @@ export default function PaymentsPage() {
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-ui text-display-lg font-semibold text-dark">Payments</h1>
+          <PageHeader title="Payments" />
           <p className="text-[13px] text-secondary font-ui mt-1">FY {activeFy}</p>
         </div>
         <div className="flex gap-3">

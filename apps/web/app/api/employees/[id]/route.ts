@@ -1,5 +1,5 @@
 import { db, employees } from "@complianceos/db";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -31,5 +31,4 @@ export async function GET(req: Request) {
     });
   } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
-
 

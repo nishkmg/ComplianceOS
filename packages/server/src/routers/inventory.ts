@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
-const { stockMovements, inventoryConfig, inventoryLayers, inventoryValuation } = _db;
+const { stockMovements, inventoryConfig, inventoryLayers, inventoryValuation, products } = _db;
 import { createPurchaseReceipt } from "../commands/create-purchase-receipt";
 import { createSalesDelivery } from "../commands/create-sales-delivery";
 import { adjustInventory } from "../commands/adjust-inventory";
@@ -16,17 +16,27 @@ export const inventoryRouter = router({
         .select({
           totalValue: sql<string>`COALESCE(SUM(total_value), 0)`,
           productCount: sql<number>`COUNT(DISTINCT product_id)`,
-          outOfStock: sql<number>`COUNT(*) FILTER (WHERE quantity_on_hand = 0)`,
+          outOfStock: sql<number>`COUNT(*) FILTER (WHERE quantity_on_hand <= 0)`,
+          lowStock: sql<number>`COUNT(*) FILTER (WHERE quantity_on_hand > 0 AND quantity_on_hand < 10)`,
         })
         .from(inventoryValuation)
         .where(eq(inventoryValuation.tenantId, tenantId));
 
+      // HSN compliance: products with a mapped HSN code
+      const [hsn] = await ctx.db
+        .select({
+          mapped: sql<number>`COUNT(*) FILTER (WHERE hsn_code IS NOT NULL AND hsn_code <> '')`,
+          total: sql<number>`COUNT(*)`,
+        })
+        .from(products)
+        .where(eq(products.tenantId, tenantId));
+
       return {
         totalValue: agg?.totalValue ?? "0",
         productCount: agg?.productCount ?? 0,
-        lowStock: Math.max(0, Math.round((agg?.productCount ?? 0) * 0.15)),
+        lowStock: agg?.lowStock ?? 0,
         outOfStock: agg?.outOfStock ?? 0,
-        hsnCompliance: 100,
+        hsnCompliance: hsn?.total ? Math.round(((hsn.mapped ?? 0) / hsn.total) * 100) : 0,
       };
     }),
 

@@ -54,7 +54,7 @@ export default function ReceivablesPage() {
           </p>
           <h1 className="font-ui text-display-lg font-semibold text-dark leading-tight">Receivables Summary</h1>
           <p className="font-ui text-[13px] text-secondary mt-1">
-            A comprehensive view of outstanding invoices, aging buckets, and customer balances.
+            Outstanding invoices and aging, per customer.
           </p>
         </div>
       </div>

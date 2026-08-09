@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface GstReturn {
   id: string; return_number: string; return_type: string; tax_period_month: string;
@@ -29,7 +30,7 @@ export default function GstReturnsPage() {
   if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-light animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">GST Returns</h1>
+      <PageHeader title="GST Returns" />
       {returns.length === 0 ? <EmptyState icon="gavel" title="No returns yet" description="GST returns will appear here once created." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">

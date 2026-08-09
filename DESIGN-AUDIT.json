@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T09:39:24.337Z",
+  "generatedAt": "2026-08-09T10:25:30.593Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,11 +206,11 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 1638,
-      "rawPaletteUtilities": 124,
+      "arbitraryValues": 1627,
+      "rawPaletteUtilities": 115,
       "hexLiterals": 25,
       "unpairedOutlineNone": 0,
-      "focusVisible": 175,
+      "focusVisible": 178,
       "darkClasses": 2,
       "distinctRadii": 10
     },
@@ -219,7 +219,7 @@
       "loadingFiles": 1,
       "pagesWithLoading": 22,
       "pagesWithErrorHandling": 5,
-      "pagesWithEmptyState": 28,
+      "pagesWithEmptyState": 29,
       "ariaLiveAnnouncers": 7,
       "clientPages": 83,
       "serverPages": 14

@@ -1,5 +1,5 @@
 import { db, gstReturns } from "@complianceos/db";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
@@ -14,5 +14,4 @@ export async function GET(req: Request) {
     return Response.json({ returns: rows });
   } catch (err: any) { return Response.json({ error: err.message }, { status: 500 }); }
 }
-
 

@@ -1,55 +1,158 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
-import { Icon } from '@/components/ui/icon';
+import { Icon } from "@/components/ui/icon";
 import { KPISkeleton, TableSkeleton } from "@/components/ui/skeleton";
-import { showToast } from "@/lib/toast";
+import { PageHeader } from "@/components/ui/page-header";
+import { KpiTile } from "@/components/ui/kpi-tile";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useSession } from "next-auth/react";
 import { api } from "@/lib/api";
 
-const lowStock = [
-  { sku: "RM-002", name: "Steel Rods 12mm", available: 200, unit: "pcs", warehouse: "Main Depot", status: "low" },
-  { sku: "FG-002", name: "Finished Widget B", available: 50, unit: "pcs", warehouse: "Unit 2", status: "critical" },
-  { sku: "RM-089", name: "Polyester Resin", available: 120, unit: "kg", warehouse: "Main Depot", status: "low" },
-];
+interface StockLayer {
+  id: string;
+  product_id: string;
+  quantity: string;
+  remaining_quantity: string;
+  unit_cost: string;
+  total_value: string;
+  receipt_date: string;
+}
+
+interface Product {
+  id: string;
+  sku: string;
+  name: string;
+  unit_of_measure: string | null;
+}
 
 export default function InventoryDashboardPage() {
   const { activeFy } = useFiscalYear();
-  const { data, isLoading } = api.inventory.summary.useQuery(
-    undefined,
-    { staleTime: 0, refetchInterval: 30_000 },
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const { data, isLoading } = api.inventory.summary.useQuery(undefined, {
+    staleTime: 0,
+    refetchInterval: 30_000,
+  });
+  const [layers, setLayers] = useState<StockLayer[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [stockLoading, setStockLoading] = useState(true);
+
+  useEffect(() => {
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const [stockRes, productRes] = await Promise.all([
+          fetch(`/api/inventory/stock?tenantId=${encodeURIComponent(tenantId)}`),
+          fetch(`/api/inventory/products?tenantId=${encodeURIComponent(tenantId)}`),
+        ]);
+        if (stockRes.ok) setLayers(((await stockRes.json()).stock || []) as StockLayer[]);
+        if (productRes.ok) setProducts(((await productRes.json()).products || []) as Product[]);
+      } catch {
+      } finally {
+        setStockLoading(false);
+      }
+    })();
+  }, [tenantId]);
+
+  const productById = useMemo(() => new Map(products.map((p) => [p.id, p])), [products]);
+
+  // Reorder list: layers sorted by remaining quantity ascending, top 6
+  const reorderList = useMemo(
+    () =>
+      [...layers]
+        .sort((a, b) => parseFloat(a.remaining_quantity) - parseFloat(b.remaining_quantity))
+        .slice(0, 6)
+        .map((l) => {
+          const product = productById.get(l.product_id);
+          const qty = parseFloat(l.remaining_quantity);
+          return {
+            sku: product?.sku ?? "—",
+            name: product?.name ?? "Unknown product",
+            available: qty,
+            unit: product?.unit_of_measure ?? "nos",
+            value: parseFloat(l.total_value),
+            status: qty <= 0 ? ("critical" as const) : qty < 10 ? ("low" as const) : ("ok" as const),
+          };
+        }),
+    [layers, productById]
   );
+
+  // Valuation bars: per-product summed layer value
+  const valuationBars = useMemo(() => {
+    const byProduct = new Map<string, { name: string; value: number }>();
+    for (const l of layers) {
+      const product = productById.get(l.product_id);
+      const key = l.product_id;
+      const cur = byProduct.get(key) ?? { name: product?.name ?? "Unknown", value: 0 };
+      cur.value += parseFloat(l.total_value);
+      byProduct.set(key, cur);
+    }
+    const total = [...byProduct.values()].reduce((s, b) => s + b.value, 0);
+    return [...byProduct.values()]
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6)
+      .map((b) => ({ ...b, pct: total > 0 ? Math.round((b.value / total) * 100) : 0 }));
+  }, [layers, productById]);
 
   const kpiTiles = useMemo(() => {
     if (!data) return [];
     return [
-      { label: "Inventory Value", value: formatIndianNumber(parseFloat(data.totalValue), { currency: false }), delta: `${data.productCount} products tracked`, variant: "neutral" as const, icon: "account_balance_wallet" as const },
-      { label: "Low Stock Alerts", value: String(data.lowStock), delta: "Items below reorder threshold", variant: "amber" as const, icon: "warning" as const },
-      { label: "Out of Stock", value: String(data.outOfStock).padStart(2, "0"), delta: "Procurement pending", variant: "danger" as const, icon: "error" as const },
-      { label: "HSN Compliance", value: `${data.hsnCompliance}%`, delta: "All SKUs mapped", variant: "success" as const, icon: "verified" as const },
+      {
+        label: "Inventory Value",
+        value: formatIndianNumber(parseFloat(data.totalValue), { currency: true }),
+        delta: { value: data.productCount, label: "products tracked" },
+        variant: "neutral" as const,
+        icon: "account_balance_wallet" as const,
+      },
+      {
+        label: "Low Stock Alerts",
+        value: String(data.lowStock),
+        delta: { value: 0, label: "below reorder threshold" },
+        variant: "amber" as const,
+        icon: "warning" as const,
+      },
+      {
+        label: "Out of Stock",
+        value: String(data.outOfStock),
+        delta: { value: 0, label: "procurement pending" },
+        variant: "danger" as const,
+        icon: "error" as const,
+      },
+      {
+        label: "HSN Compliance",
+        value: `${data.hsnCompliance}%`,
+        delta: { value: 0, label: "SKUs with HSN codes" },
+        variant: "success" as const,
+        icon: "verified" as const,
+      },
     ];
   }, [data]);
 
   return (
     <div className="space-y-8 text-left">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-        <div>
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Operations Control · FY {activeFy}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Overview</h1>
-          <p className="text-[13px] text-secondary font-ui mt-1 max-w-lg">Strategic assessment of working capital locked in commodities and finished goods across all entities.</p>
-        </div>
-        <div className="flex gap-3">
-          <Link href="/inventory/products" className="btn btn-secondary no-underline">
-            Manage Products
-          </Link>
-          <button onClick={() => showToast.success("Stock adjustment initiated")} className="btn btn-primary flex items-center gap-2">
-            Stock Adjustment <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={`Operations Control · FY ${activeFy}`}
+        title="Inventory Overview"
+        description="Stock position and valuation across products and warehouses (FIFO)."
+        actions={
+          <>
+            <Link href="/inventory/products" className="no-underline">
+              <button className="inline-flex h-10 items-center justify-center rounded-md border border-border-strong bg-surface px-4 text-sm font-medium text-dark shadow-sm transition-all duration-150 ease-smooth hover:border-amber hover:text-amber active:scale-[0.98]">
+                Manage Products
+              </button>
+            </Link>
+            <Link href="/inventory/stock" className="no-underline">
+              <button className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-amber px-4 text-sm font-medium text-white shadow-sm transition-all duration-150 ease-smooth hover:bg-amber-hover active:scale-[0.98]">
+                Stock Ledger
+                <Icon name="arrow_forward" className="text-[16px]" />
+              </button>
+            </Link>
+          </>
+        }
+      />
 
       {/* KPI Grid */}
       {isLoading ? (
@@ -62,126 +165,92 @@ export default function InventoryDashboardPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {kpiTiles.map((tile) => (
-            <div key={tile.label} className={`bg-surface border border-border border-t-2 p-6 shadow-sm hover:shadow-md transition-shadow ${
-              tile.variant === 'amber' ? 'border-t-amber' :
-              tile.variant === 'danger' ? 'border-t-red-600' :
-              tile.variant === 'success' ? 'border-t-green-600' :
-              'border-t-stone-800'
-            }`}>
-              <div className="flex justify-between items-start mb-4">
-                <span className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">{tile.label}</span>
-                <Icon name={tile.icon} className={`${
-                  tile.variant === 'amber' ? 'text-amber' :
-                  tile.variant === 'danger' ? 'text-danger' :
-                  tile.variant === 'success' ? 'text-success' :
-                  'text-light'
-                }`} />
-              </div>
-              <div className={`font-mono text-2xl font-bold mb-2 ${tile.variant === 'amber' ? 'text-amber' : 'text-dark'}`}>
-                {tile.variant !== 'success' && tile.label.includes('Value') ? '₹ ' : ''}{tile.value}
-              </div>
-              <p className="text-[10px] font-mono text-light flex items-center gap-1">
-                <Icon name="info" className="text-sm" />
-                {tile.delta}
-              </p>
-            </div>
+            <KpiTile key={tile.label} {...tile} />
           ))}
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-8 space-y-8">
-          {/* Distribution Chart Placeholder */}
-          <div className="bg-surface border border-border p-8 shadow-sm h-[400px] flex flex-col">
-            <h3 className="font-ui text-lg font-bold text-dark mb-6">Stock Valuation Distribution</h3>
-            <div className="flex-1 bg-surface-muted border border-dashed border-border flex items-center justify-center relative overflow-hidden">
-               <div className="text-center">
-                 <div className="w-48 h-48 rounded-full border-[12px] border-amber border-r-transparent border-b-stone-200 rotate-45 mb-4 mx-auto"></div>
-                 <p className="font-ui text-[10px] text-light uppercase tracking-widest">Weighted Value by Category</p>
-               </div>
-            </div>
+        {/* Reorder list */}
+        <div className="lg:col-span-8 bg-surface border border-border shadow-sm overflow-hidden rounded-md">
+          <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-surface-muted">
+            <h3 className="font-ui text-sm font-semibold text-dark">Reorder List</h3>
+            <Link href="/inventory/stock" className="text-ui-xs text-amber font-bold uppercase tracking-widest no-underline hover:underline">
+              View Full Ledger
+            </Link>
           </div>
-
-          {/* Low Stock Table */}
-          <div className="bg-surface border border-border shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b-[0.5px] border-border flex justify-between items-center bg-surface-muted">
-              <h3 className="font-ui text-sm font-medium font-bold text-dark">Critical Reorder List</h3>
-              <Link href="/inventory/stock" className="text-ui-xs text-primary font-bold uppercase tracking-widest no-underline hover:underline">View Full Ledger</Link>
+          {stockLoading ? (
+            <TableSkeleton rows={5} columns={4} />
+          ) : reorderList.length === 0 ? (
+            <div className="p-8 text-center">
+              <Icon name="inventory" className="text-3xl text-lighter mx-auto mb-3" />
+              <p className="font-ui text-[13px] text-mid">No stock layers yet — they appear after the first purchase receipt.</p>
             </div>
-            {isLoading ? (
-              <TableSkeleton rows={5} columns={4} />
-            ) : (
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-surface-muted/50 border-b-[0.5px] border-border">
-                    <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">SKU / Item</th>
-                    <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance</th>
-                    <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Warehouse</th>
-                    <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-muted/50 border-b border-border">
+                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">SKU / Item</th>
+                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Balance</th>
+                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest text-right">Value</th>
+                  <th className="py-3 px-6 font-ui text-[10px] text-light uppercase tracking-widest">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border font-mono text-[13px]">
+                {reorderList.map((item) => (
+                  <tr key={item.sku} className="hover:bg-surface-muted transition-colors">
+                    <td className="py-4 px-6 text-left">
+                      <p className="font-ui text-[13px] font-medium text-dark">{item.name}</p>
+                      <p className="font-ui text-[11px] text-light mt-0.5">{item.sku}</p>
+                    </td>
+                    <td className="py-4 px-6 text-right text-dark tabular-nums">
+                      {item.available} <span className="text-light">{item.unit}</span>
+                    </td>
+                    <td className="py-4 px-6 text-right text-dark tabular-nums">
+                      {formatIndianNumber(item.value, { currency: true })}
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
+                        item.status === "critical"
+                          ? "bg-danger-bg text-danger-deep border-danger/20"
+                          : item.status === "low"
+                            ? "bg-amber-soft text-amber-hover border-amber-bright/30"
+                            : "bg-surface-muted text-mid border-border"
+                      }`}>
+                        {item.status}
+                      </span>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-[13px]">
-                  {lowStock.map((item) => (
-                    <tr key={item.sku} className="hover:bg-surface-muted transition-colors">
-                      <td className="py-4 px-6 text-left">
-                        <div className="font-ui text-[13px] font-bold text-dark">{item.name}</div>
-                        <div className="text-[11px] text-light mt-0.5">{item.sku}</div>
-                      </td>
-                      <td className="py-4 px-6 text-right font-bold text-dark">{item.available} {item.unit}</td>
-                      <td className="py-4 px-6 font-ui text-[13px] text-mid">{item.warehouse}</td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-block px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border rounded-md ${
-                          item.status === 'critical' ? 'bg-danger-bg text-danger-deep border-danger/20' : 'bg-amber-soft text-amber-hover border-amber-bright/30'
-                        }`}>
-                          {item.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
-        {/* Sidebar */}
-        <div className="lg:col-span-4 space-y-8">
-          <div className="bg-dark p-8 border-l-4 border-l-amber text-left shadow-sm">
-            <h3 className="text-white font-ui text-[10px] uppercase tracking-widest font-bold mb-6 opacity-60">Inventory Actions</h3>
-            <div className="flex flex-col gap-4">
-              <button onClick={() => showToast.success("Inward stock form opened.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Icon name="inventory" className="text-amber" />
-                  <span className="font-ui text-[13px]">Inward Stock</span>
+        {/* Valuation by product — real bars (replaced the placeholder donut) */}
+        <div className="lg:col-span-4 bg-surface border border-border rounded-md shadow-sm p-6">
+          <h3 className="font-ui text-sm font-semibold text-dark mb-6">Stock Valuation</h3>
+          {valuationBars.length === 0 ? (
+            <p className="font-ui text-[13px] text-mid leading-relaxed">
+              Valuation builds from purchase receipts. Record your first inward stock to see FIFO values here.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {valuationBars.map((bar) => (
+                <div key={bar.name}>
+                  <div className="flex justify-between items-baseline mb-1.5">
+                    <span className="font-ui text-[13px] font-medium text-dark truncate pr-3">{bar.name}</span>
+                    <span className="font-mono text-[12px] text-mid tabular-nums shrink-0">
+                      {formatIndianNumber(bar.value, { currency: true })}
+                    </span>
+                  </div>
+                  <div className="w-full bg-lighter/60 h-1.5 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-bright rounded-full" style={{ width: `${bar.pct}%` }} />
+                  </div>
                 </div>
-                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity text-mid" />
-              </button>
-              <button onClick={() => showToast.success("Dispatch order form opened.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Icon name="local_shipping" className="text-amber" />
-                  <span className="font-ui text-[13px]">Dispatch Order</span>
-                </div>
-                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity text-mid" />
-              </button>
-              <button onClick={() => showToast.success("Valuation report generated.")} className="bg-zinc-800 border border-mid text-zinc-100 p-4 flex items-center justify-between hover:bg-zinc-700 transition-colors group cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Icon name="assessment" className="text-amber" />
-                  <span className="font-ui text-[13px]">Valuation Report</span>
-                </div>
-                <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity text-mid" />
-              </button>
+              ))}
             </div>
-          </div>
-
-          <div className="bg-amber-50 border border-amber/30 p-8 shadow-sm text-left relative overflow-hidden group">
-            <div className="relative z-10">
-              <Icon name="analytics" className="text-amber mb-4" />
-              <h4 className="font-ui text-lg font-bold text-dark mb-2">Dead Stock Analysis</h4>
-              <p className="font-ui text-[13px] text-mid leading-relaxed">System has identified items worth ₹ 2.4L that haven't moved in 180 days. Consider liquidation or write-down.</p>
-            </div>
-            <Icon name="inventory_2" className="absolute -right-8 -bottom-8 text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform" />
-          </div>
+          )}
         </div>
       </div>
     </div>

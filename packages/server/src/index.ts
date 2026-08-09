@@ -16,6 +16,8 @@ export { createInvoice } from "./commands/create-invoice";
 export { createPayrollRun } from "./commands/create-payroll-run";
 export { createJournalEntry } from "./commands/create-journal-entry";
 export { postJournalEntry } from "./commands/post-journal-entry";
+export { closeFiscalYear } from "./commands/close-fiscal-year";
+export { createFiscalYear } from "./commands/create-fiscal-year";
 export { recordPayment } from "./commands/record-payment";
 export { createAccount } from "./commands/create-account";
 export { createProduct } from "./commands/create-product";

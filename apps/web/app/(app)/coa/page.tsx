@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface Account { id: string; code: string; name: string; kind: string; sub_type: string; is_leaf: boolean; is_active: boolean; }
 
@@ -29,7 +30,7 @@ export default function CoAPage() {
   return (
     <div className="max-w-[1200px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <h1 className="font-ui text-display-lg font-semibold text-dark">Chart of Accounts</h1>
+        <PageHeader title="Chart of Accounts" />
         <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> New Account</Link>
       </div>
       {accounts.length === 0 ? <EmptyState icon="account_tree" title="No accounts" description="Create your first account." /> : (

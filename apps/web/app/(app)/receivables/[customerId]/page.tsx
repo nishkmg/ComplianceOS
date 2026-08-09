@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -82,9 +82,6 @@ export default function CustomerDetailPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => showToast.success("Edit mode opened.")} className="px-4 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md flex items-center gap-1.5">
-            <Icon name="edit" size={14} /> Edit Details
-          </button>
           <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
             <Icon name="add" size={14} /> Record Payment
           </button>

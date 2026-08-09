@@ -4,29 +4,128 @@ import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { CloseFiscalYearDialog } from "@/components/dialogs/close-fy-confirmation";
+import { PageHeader } from "@/components/ui/page-header";
 
-const fiscalYears = [
-  { id: "1", name: "FY 2024-25", period: "01 Apr 2024 - 31 Mar 2025", status: "closed", entries: 12483, lastActivity: "24 Oct 2024" },
-  { id: "2", name: "FY 2023-24", period: "01 Apr 2023 - 31 Mar 2024", status: "closed", entries: 45120, lastActivity: "15 Apr 2024" },
-  { id: "3", name: "FY 2022-23", period: "01 Apr 2022 - 31 Mar 2023", status: "archived", entries: 38902, lastActivity: "10 Apr 2023" },
-];
+const fmtDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+
+interface FiscalYearRow {
+  id: string;
+  name: string;
+  period: string;
+  status: string;
+  daysRemaining: number;
+}
 
 export default function FiscalYearsPage() {
   const { activeFy } = useFiscalYear();
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+  const actorId = (session?.user as Record<string, unknown> | undefined)?.id as string | null;
+  const [closeFy, setCloseFy] = useState<{ id: string; year: string } | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [fiscalYears, setFiscalYears] = useState<FiscalYearRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [createForm, setCreateForm] = useState({ year: "", startDate: "", endDate: "" });
+
+  useEffect(() => {
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const r = await fetch(`/api/fiscal-years?tenantId=${encodeURIComponent(tenantId)}`);
+        if (r.ok) {
+          const data = await r.json();
+          setFiscalYears(
+            (data.fiscalYears || []).map((fy: any) => ({
+              id: fy.id,
+              name: `FY ${fy.year}`,
+              period: `${fmtDate(fy.startDate)} - ${fmtDate(fy.endDate)}`,
+              status: fy.status,
+              daysRemaining: fy.daysRemaining,
+            }))
+          );
+        }
+      } catch {
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [tenantId]);
+
+  const confirmCloseFy = async () => {
+    if (!closeFy || !tenantId || !actorId) return;
+    setBusy(true);
+    try {
+      const r = await fetch(`/api/fiscal-years/${closeFy.id}/close`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tenantId, actorId }),
+      });
+      if (r.ok) {
+        showToast.success(`FY ${closeFy.year} closed.`);
+        setCloseFy(null);
+        window.location.reload();
+      } else {
+        showToast.error("Failed to close fiscal year.");
+      }
+    } catch {
+      showToast.error("Failed to close fiscal year.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const confirmCreateFy = async () => {
+    if (!tenantId || !actorId) return;
+    if (!createForm.year || !createForm.startDate || !createForm.endDate) {
+      showToast.error("Year, start and end dates are required.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const r = await fetch("/api/fiscal-years", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tenantId, actorId, ...createForm }),
+      });
+      if (r.ok) {
+        showToast.success(`FY ${createForm.year} created.`);
+        setCreateOpen(false);
+        window.location.reload();
+      } else {
+        showToast.error("Failed to create fiscal year.");
+      }
+    } catch {
+      showToast.error("Failed to create fiscal year.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="space-y-10 text-left">
       {/* Page Header */}
       <header className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div className="text-left">
-          <p className="font-ui text-[10px] uppercase tracking-widest text-amber font-bold mb-2">Settings · FY {activeFy} / Fiscal Years</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Fiscal Years</h1>
+          <PageHeader eyebrow={`Settings · FY ${activeFy}`} title="Fiscal Years" />
           <p className="text-[13px] text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Manage accounting periods, statutory boundaries, and ledger lifecycle constraints for your organization.</p>
         </div>
         <div className="flex gap-3 shrink-0">
-          <button onClick={() => showToast.success("Year-end closure initiated.")} className="btn-secondary">
+          <button
+            onClick={() => {
+              const open = fiscalYears.find((f) => f.status === "open");
+              if (open) setCloseFy({ id: open.id, year: open.name.replace("FY ", "") });
+            }}
+            disabled={busy}
+            className="btn-secondary"
+          >
             Close FY
           </button>
-          <button onClick={() => showToast.success("New fiscal year created.")} className="btn-primary flex items-center gap-2 group">
+          <button onClick={() => setCreateOpen(true)} className="btn-primary flex items-center gap-2 group">
             Create FY <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
           </button>
         </div>
@@ -42,9 +141,6 @@ export default function FiscalYearsPage() {
                 <h3 className="font-ui text-lg font-bold text-dark">Ledger Periods</h3>
                 <p className="font-ui text-[10px] text-light uppercase tracking-widest mt-1">Indian Financial Calendar</p>
               </div>
-              <button onClick={() => showToast.info("Year filter opened.")} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
-                <Icon name="filter_list" />
-              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
@@ -61,12 +157,12 @@ export default function FiscalYearsPage() {
                     <tr key={fy.id} className="hover:bg-surface-muted/30 transition-colors">
                       <td className="py-5 px-6">
                         <Link href={`/settings/fiscal-years/${fy.id}`} className="font-bold text-dark hover:text-primary no-underline transition-colors">{fy.name}</Link>
-                        <p className="text-[10px] text-light mt-0.5">{fy.entries.toLocaleString()} Entries</p>
+                        <p className="text-[10px] text-light mt-0.5">{fy.daysRemaining} days remaining</p>
                       </td>
                       <td className="py-5 px-6 font-mono text-[12px] text-mid">{fy.period}</td>
                       <td className="py-5 px-6">
                         <span className={`inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-widest border rounded-md ${
-                          fy.status === 'open' ? 'bg-success-bg text-success border-success/20' :
+                          fy.status === 'open' ? 'bg-success-bg text-success-deep border-success/20' :
                           fy.status === 'closed' ? 'bg-surface-muted text-mid border-zinc-200' :
                           'bg-surface-muted text-light border-stone-100'
                         }`}>
@@ -88,9 +184,9 @@ export default function FiscalYearsPage() {
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-dark text-white p-8 shadow-sm relative overflow-hidden group">
             <div className="relative z-10 text-left">
-              <h4 className="text-amber font-ui text-lg font-bold mb-3">Statutory Lock</h4>
-              <p className="text-light text-sm leading-relaxed mb-6">Current policy prevents modifications to any closed fiscal periods. This ensures 100% data integrity for historical audit trails.</p>
-              <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-amber/80">
+              <h4 className="text-amber-bright font-ui text-lg font-bold mb-3">Statutory Lock</h4>
+              <p className="text-sidebar-muted text-sm leading-relaxed mb-6">Current policy prevents modifications to any closed fiscal periods. This ensures 100% data integrity for historical audit trails.</p>
+              <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-amber-bright">
                 <Icon name="verified_user" className="text-sm" />
                 Policy Enforced
               </div>
@@ -104,6 +200,44 @@ export default function FiscalYearsPage() {
           </div>
         </div>
       </div>
+
+      {/* Close FY dialog */}
+      <CloseFiscalYearDialog
+        isOpen={closeFy !== null}
+        onClose={() => setCloseFy(null)}
+        fiscalYear={closeFy?.year ?? ""}
+        onConfirm={confirmCloseFy}
+      />
+
+      {/* Create FY dialog */}
+      {createOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setCreateOpen(false)}>
+          <div className="w-full max-w-md rounded-lg border border-border bg-surface p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-ui text-base font-semibold text-dark">Create Fiscal Year</h3>
+            <p className="mt-1 font-ui text-[13px] text-mid">New year starts 01 April by default; adjust dates if needed.</p>
+            <div className="mt-5 space-y-4">
+              <div>
+                <label htmlFor="fy-year" className="mb-1.5 block font-ui text-[12px] font-medium text-dark">Year (e.g. 2027-28)</label>
+                <input id="fy-year" value={createForm.year} onChange={(e) => setCreateForm({ ...createForm, year: e.target.value })} placeholder="2027-28" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="fy-start" className="mb-1.5 block font-ui text-[12px] font-medium text-dark">Start date</label>
+                  <input id="fy-start" type="date" value={createForm.startDate} onChange={(e) => setCreateForm({ ...createForm, startDate: e.target.value })} className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+                </div>
+                <div>
+                  <label htmlFor="fy-end" className="mb-1.5 block font-ui text-[12px] font-medium text-dark">End date</label>
+                  <input id="fy-end" type="date" value={createForm.endDate} onChange={(e) => setCreateForm({ ...createForm, endDate: e.target.value })} className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end gap-2">
+              <button onClick={() => setCreateOpen(false)} className="btn-secondary">Cancel</button>
+              <button onClick={confirmCreateFy} disabled={busy} className="btn-primary">Create FY</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
