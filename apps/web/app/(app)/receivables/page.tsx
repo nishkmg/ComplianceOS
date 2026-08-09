@@ -8,6 +8,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { KpiTile } from "@/components/ui/kpi-tile";
+import { Donut } from "@/components/charts";
 
 export default function ReceivablesPage() {
   const { activeFy } = useFiscalYear();
@@ -88,7 +89,17 @@ export default function ReceivablesPage() {
           {/* Aging breakdown */}
           <div className="lg:col-span-7">
             <div className="bg-surface border border-border p-6 shadow-sm rounded-md">
-              <h3 className="font-ui text-[13px] font-bold text-dark mb-6 uppercase tracking-widest">Aging Breakdown</h3>
+              <h3 className="font-ui text-[13px] font-bold text-dark mb-4 uppercase tracking-widest">Aging Breakdown</h3>
+              {totalOutstanding > 0 && (
+                <div className="mb-6 border-b border-border pb-5">
+                  <Donut
+                    caption="Receivables aging buckets"
+                    data={agingBuckets.map((b) => ({ label: b.label, value: b.amount }))}
+                    colors={["var(--color-success)", "var(--color-amber)", "var(--color-amber-bright)", "var(--color-danger)"]}
+                    height={190}
+                  />
+                </div>
+              )}
               <div className="space-y-5">
                 {agingBuckets.map(bucket => (
                   <div key={bucket.label}>

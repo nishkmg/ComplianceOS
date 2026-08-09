@@ -5,6 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { KpiTile } from "@/components/ui/kpi-tile";
 import { PageHeader } from "@/components/ui/page-header";
+import { TrendArea } from "@/components/charts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
@@ -37,6 +38,7 @@ export default function DashboardPage() {
   const { data: session } = useSession();
   const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [allEntries, setAllEntries] = useState<JournalEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function DashboardPage() {
         if (r.ok) {
           const data = await r.json();
           setEntries((data.entries || []).slice(0, 8));
+          setAllEntries(data.entries || []);
           setTotals(data.totals || { debit: 0, credit: 0 });
         }
       } catch {} finally { setLoading(false); }
@@ -56,6 +59,22 @@ export default function DashboardPage() {
   const [totals, setTotals] = useState({ debit: 0, credit: 0 });
   const totalDebit = totals.debit;
   const totalCredit = totals.credit;
+  const monthlyTrend = useMemo(() => {
+    const months = new Map<string, { debit: number; credit: number }>();
+    for (const e of allEntries) {
+      const key = new Date(e.date).toLocaleDateString("en-IN", { month: "short" });
+      const cur = months.get(key) ?? { debit: 0, credit: 0 };
+      cur.debit += e.debit;
+      cur.credit += e.credit;
+      months.set(key, cur);
+    }
+    return [...months.entries()].map(([label, v]) => ({
+      label,
+      debit: Math.round(v.debit),
+      credit: Math.round(v.credit),
+    }));
+  }, [allEntries]);
+
   const postedCount = useMemo(() => entries.filter(e => e.status === "posted").length, [entries]);
   const draftCount = useMemo(() => entries.filter(e => e.status === "draft").length, [entries]);
 
@@ -86,6 +105,25 @@ export default function DashboardPage() {
           <KpiTile label="Total Credits" value={formatIndianNumber(totalCredit, { currency: true })} icon="arrow_downward" />
           <KpiTile label="Posted" value={String(postedCount)} subtext="entries" icon="check_circle" />
           <KpiTile label="Drafts" value={String(draftCount)} subtext="entries" icon="clock" />
+        </div>
+      )}
+
+      {monthlyTrend.length > 1 && (
+        <div className="bg-surface border border-border rounded-md shadow-sm p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="font-ui text-[13px] font-bold text-dark uppercase tracking-widest">Movement — Debits vs Credits</h3>
+            <span className="font-ui text-[11px] text-light">FY {activeFy} · journal entries by month</span>
+          </div>
+          <TrendArea
+            data={monthlyTrend}
+            xKey="label"
+            series={[
+              { key: "debit", name: "Debits", color: "var(--color-amber)" },
+              { key: "credit", name: "Credits", color: "var(--color-mid)" },
+            ]}
+            caption="Monthly debit and credit totals"
+            height={200}
+          />
         </div>
       )}
 
