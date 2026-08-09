@@ -66,7 +66,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               Address Line 1
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="addressLine1"
               placeholder="Building name, floor, unit"
               {...register("addressLine1")}
@@ -84,7 +84,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               Address Line 2
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="addressLine2"
               placeholder="Street, locality"
               {...register("addressLine2")}
@@ -98,7 +98,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
             </label>
             <div className="relative">
               <select
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 id="state"
                 {...register("state")}
               >
@@ -116,7 +116,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               District
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="district"
               placeholder="e.g. Mumbai Suburban"
               {...register("district")}
@@ -129,7 +129,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               City
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="city"
               placeholder="e.g. Mumbai"
               {...register("city")}
@@ -147,7 +147,7 @@ export function ScreenBusinessAddress({ tenantId, onComplete, onBack }: ScreenBu
               Pincode
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
               id="pincode"
               maxLength={6}
               placeholder="400001"

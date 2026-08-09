@@ -59,7 +59,7 @@ export function CriticalActionDialog({
           </label>
           <input 
             autoComplete="off" 
-            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-lg text-dark uppercase tracking-widest focus:border-red-600 outline-none" 
+            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-lg text-dark uppercase tracking-widest focus:border-red-600 outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
             placeholder={`Type ${confirmText} here...`}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value.toUpperCase())}

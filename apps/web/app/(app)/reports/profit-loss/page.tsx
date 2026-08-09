@@ -96,7 +96,7 @@ export default function ProfitLossPage() {
         </div>
         <div className="flex gap-3 items-center">
           <select
-            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
+            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
           >

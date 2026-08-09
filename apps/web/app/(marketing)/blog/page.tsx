@@ -47,7 +47,7 @@ export default function BlogIndexPage() {
               <p className="text-ui-sm text-secondary mt-1">Get our weekly newsletter straight to your inbox.</p>
             </div>
             <div className="flex gap-2">
-              <input className="border border-border-subtle bg-white px-4 py-3 font-ui text-ui-sm w-full md:w-80 focus:outline-none focus:border-primary" placeholder="professional@firm.com" type="email" />
+              <input className="border border-border-subtle bg-white px-4 py-3 font-ui text-ui-sm w-full md:w-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" placeholder="professional@firm.com" type="email" />
               <button className="bg-on-surface text-white px-8 py-3 font-ui uppercase tracking-widest whitespace-nowrap hover:bg-amber-hover transition-colors cursor-pointer border-none">Subscribe</button>
             </div>
           </div>

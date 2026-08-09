@@ -73,7 +73,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
             Permanent Account Number (PAN)
           </label>
           <input
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-xs"
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-xs"
             id="pan"
             maxLength={10}
             placeholder="ABCDE1234F"
@@ -123,7 +123,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
                 GST Identification Number (GSTIN)
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
                 id="gstin"
                 maxLength={15}
                 placeholder="22AAAAA0000A1Z5"
@@ -174,7 +174,7 @@ export function ScreenTaxProfile({ tenantId, onComplete, onBack }: ScreenTaxProf
                 TAN Number
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-sm"
                 id="tan"
                 maxLength={10}
                 placeholder="ABCD12345E"

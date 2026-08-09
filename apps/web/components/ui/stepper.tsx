@@ -93,7 +93,7 @@ export function Stepper({
                 "flex-1 rounded-sm transition-[width] duration-500",
                 isActive ? "bg-amber" : "bg-border-subtle",
                 isClickable
-                  ? "cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-amber focus:ring-offset-1"
+                  ? "cursor-pointer hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-amber focus:ring-offset-1"
                   : "cursor-default"
               )}
               aria-label={`Step ${step.number}: ${step.title}${isCompleted ? " (completed)" : ""}`}

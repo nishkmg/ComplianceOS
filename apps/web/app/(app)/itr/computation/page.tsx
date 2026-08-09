@@ -339,7 +339,7 @@ export default function ITRComputationPage() {
         </div>
         <div className="flex flex-wrap gap-3 items-center print:hidden">
           <select
-            className="bg-surface border border-border px-3 py-2 text-[12px] font-ui outline-none rounded-md"
+            className="bg-surface border border-border px-3 py-2 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={selectedFY}
             onChange={(e) => setSelectedFY(e.target.value)}
           >

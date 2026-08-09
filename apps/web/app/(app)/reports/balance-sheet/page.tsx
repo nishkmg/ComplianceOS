@@ -96,7 +96,7 @@ export default function BalanceSheetPage() {
         </div>
         <div className="flex gap-3 items-center">
           <select
-            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
+            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
           >
@@ -108,7 +108,7 @@ export default function BalanceSheetPage() {
             type="date"
             value={asOfDate}
             onChange={e => setAsOfDate(e.target.value)}
-            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none rounded-md"
+            className="bg-surface border border-border px-3 py-1.5 text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
           />
           <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.open(`/api/reports/balance-sheet/pdf?fy=${fiscalYear}&asOf=${asOfDate}`, '_blank')}>
             <Icon name="download" size={14} /> Export PDF

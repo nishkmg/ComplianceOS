@@ -50,7 +50,7 @@ export default function NewEmployeePage() {
       {/* Page Header */}
       <header className="sticky top-0 z-30 bg-surface/90 backdrop-blur-md border-b-[0.5px] border-border px-8 py-4 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
+          <button onClick={() => router.back()} aria-label="Back" className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
             <Icon name="arrow_back" />
           </button>
           <div>
@@ -76,28 +76,28 @@ export default function NewEmployeePage() {
               <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Personal Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Employee Code *</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" value={formData.employeeCode} onChange={e => setFormData({...formData, employeeCode: e.target.value})} required placeholder="EMP-2024-XXX" />
+                  <label htmlFor="emp-code" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Employee Code *</label>
+                  <input id="emp-code" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.employeeCode} onChange={e => setFormData({...formData, employeeCode: e.target.value})} required placeholder="EMP-2024-XXX" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">First Name *</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} required />
+                  <label htmlFor="emp-first-name" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">First Name *</label>
+                  <input id="emp-first-name" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} required />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Last Name</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
+                  <label htmlFor="emp-last-name" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Last Name</label>
+                  <input id="emp-last-name" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Email Address</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="employee@firm.in" />
+                  <label htmlFor="emp-email" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Email Address</label>
+                  <input id="emp-email" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="employee@firm.in" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Phone No.</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                  <label htmlFor="emp-phone" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Phone No.</label>
+                  <input id="emp-phone" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Date of Joining *</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" type="date" value={formData.dateOfJoining} onChange={e => setFormData({...formData, dateOfJoining: e.target.value})} required />
+                  <label htmlFor="emp-doj" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Date of Joining *</label>
+                  <input id="emp-doj" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="date" value={formData.dateOfJoining} onChange={e => setFormData({...formData, dateOfJoining: e.target.value})} required />
                 </div>
               </div>
             </section>
@@ -107,16 +107,16 @@ export default function NewEmployeePage() {
               <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Statutory Identifiers</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">PAN Number *</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm uppercase outline-none focus:border-primary" value={formData.pan} onChange={e => setFormData({...formData, pan: e.target.value.toUpperCase()})} maxLength={10} placeholder="ABCDE1234F" required />
+                  <label htmlFor="emp-pan" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">PAN Number *</label>
+                  <input id="emp-pan" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm uppercase outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.pan} onChange={e => setFormData({...formData, pan: e.target.value.toUpperCase()})} maxLength={10} placeholder="ABCDE1234F" required />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">UAN Number</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm outline-none focus:border-primary" value={formData.uan} onChange={e => setFormData({...formData, uan: e.target.value})} placeholder="1000987654321" />
+                  <label htmlFor="emp-uan" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">UAN Number</label>
+                  <input id="emp-uan" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.uan} onChange={e => setFormData({...formData, uan: e.target.value})} placeholder="1000987654321" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Entity / Company</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" value={formData.entityName} onChange={e => setFormData({...formData, entityName: e.target.value})} placeholder="Main entity" />
+                  <label htmlFor="emp-entity" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Entity / Company</label>
+                  <input id="emp-entity" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.entityName} onChange={e => setFormData({...formData, entityName: e.target.value})} placeholder="Main entity" />
                 </div>
               </div>
             </section>
@@ -126,12 +126,12 @@ export default function NewEmployeePage() {
               <h3 className="font-ui text-[10px] text-amber uppercase tracking-widest mb-6 border-b-[0.5px] border-border pb-2 font-bold">Employment Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Designation</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" value={formData.designation} onChange={e => setFormData({...formData, designation: e.target.value})} placeholder="Senior Analyst" />
+                  <label htmlFor="emp-designation" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Designation</label>
+                  <input id="emp-designation" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.designation} onChange={e => setFormData({...formData, designation: e.target.value})} placeholder="Senior Analyst" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Department</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus:border-primary" value={formData.department} onChange={e => setFormData({...formData, department: e.target.value})} placeholder="Compliance" />
+                  <label htmlFor="emp-department" className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Department</label>
+                  <input id="emp-department" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" value={formData.department} onChange={e => setFormData({...formData, department: e.target.value})} placeholder="Compliance" />
                 </div>
               </div>
             </section>

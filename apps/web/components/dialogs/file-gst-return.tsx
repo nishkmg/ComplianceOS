@@ -44,7 +44,7 @@ export function FileGstReturnDialog({
             </label>
             <div className="relative">
               <input
-                className="w-full bg-section-muted border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark placeholder:text-light outline-none focus:border-amber transition-shadow"
+                className="w-full bg-section-muted border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark placeholder:text-light outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-shadow"
                 placeholder="Enter 15-digit ARN"
                 value={arn}
                 onChange={(e) => setArn(e.target.value.toUpperCase())}
@@ -61,7 +61,7 @@ export function FileGstReturnDialog({
             </label>
             <div className="relative">
               <input
-                className="w-full bg-section-muted border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark outline-none focus:border-amber transition-shadow"
+                className="w-full bg-section-muted border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-shadow"
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}

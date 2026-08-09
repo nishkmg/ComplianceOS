@@ -53,7 +53,7 @@ export default function EditInvoicePage() {
         <h1 className="font-ui text-display-lg font-semibold text-dark">Edit Invoice</h1>
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
-        <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Customer Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} /></div>
+        <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Customer Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} /></div>
         <button onClick={handleSave} disabled={modify.isPending} className="w-full py-3 bg-amber text-white text-[10px] font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
           {modify.isPending ? "Saving…" : "Save"}
         </button>

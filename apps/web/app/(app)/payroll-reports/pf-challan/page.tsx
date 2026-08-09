@@ -26,7 +26,7 @@ export default function PFChallanPage() {
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
             <Icon name="calendar_month" className="text-light text-[18px] mr-2" />
-            <select className="bg-transparent border-none text-sm font-medium outline-none cursor-pointer">
+            <select className="bg-transparent border-none text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface cursor-pointer">
               <option>October 2024</option>
               <option>September 2024</option>
             </select>
@@ -64,7 +64,7 @@ export default function PFChallanPage() {
             <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-[11px] text-light">Employee Contribution Ledger</h3>
             <div className="relative">
               <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-light text-[18px]" />
-              <input className="h-8 pl-9 pr-3 py-1 text-sm border border-border rounded-md focus:border-primary w-64 bg-surface outline-none" placeholder="Search UAN or Name..." />
+              <input className="h-8 pl-9 pr-3 py-1 text-sm border border-border rounded-md focus:border-primary w-64 bg-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="Search UAN or Name..." />
             </div>
           </div>
           <div className="overflow-x-auto">

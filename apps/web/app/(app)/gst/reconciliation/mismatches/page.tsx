@@ -21,10 +21,10 @@ export default function GSTMismatchesPage() {
       <div className="flex items-center justify-between">
         <h1 className="font-ui text-display-lg font-semibold text-dark">2B Mismatches</h1>
         <div className="flex items-center gap-3">
-          <select className="border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus:border-amber" value={periodMonth} onChange={e => setPeriodMonth(Number(e.target.value))}>
+          <select className="border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={periodMonth} onChange={e => setPeriodMonth(Number(e.target.value))}>
             {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
           </select>
-          <select className="border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus:border-amber" value={periodYear} onChange={e => setPeriodYear(Number(e.target.value))}>
+          <select className="border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={periodYear} onChange={e => setPeriodYear(Number(e.target.value))}>
             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>

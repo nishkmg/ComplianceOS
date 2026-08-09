@@ -87,13 +87,13 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
       <section className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <input
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
             placeholder="Name"
             value={newMember.name}
             onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
           />
           <input
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
             placeholder="Email"
             type="email"
             value={newMember.email}
@@ -101,7 +101,7 @@ export function ScreenTeamMembers({ tenantId, onComplete, onBack }: ScreenTeamMe
           />
           <div className="relative">
             <select
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={newMember.role}
               onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
             >

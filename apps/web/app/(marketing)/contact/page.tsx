@@ -49,16 +49,16 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="flex flex-col gap-2 text-left">
                       <label className="text-ui-xs font-ui text-secondary uppercase">Full Name</label>
-                      <input name="name" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none" placeholder="Arjun Mehta" type="text" required />
+                      <input name="name" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none focus-visible:ring-2 focus-visible:ring-focus" placeholder="Arjun Mehta" type="text" required />
                     </div>
                     <div className="flex flex-col gap-2 text-left">
                       <label className="text-ui-xs font-ui text-secondary uppercase">Email Address</label>
-                      <input name="email" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none" placeholder="arjun@taxsolutions.in" type="email" required />
+                      <input name="email" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none focus-visible:ring-2 focus-visible:ring-focus" placeholder="arjun@taxsolutions.in" type="email" required />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 text-left">
                     <label className="text-ui-xs font-ui text-secondary uppercase">Business Type</label>
-                    <select name="businessType" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none appearance-none">
+                    <select name="businessType" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none">
                       <option disabled selected value="">Select category</option>
                       <option value="ca">Chartered Accountant / Firm</option>
                       <option value="startup">Startup / SME</option>
@@ -68,7 +68,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex flex-col gap-2 text-left">
                     <label className="text-ui-xs font-ui text-secondary uppercase">Message</label>
-                    <textarea name="message" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none resize-none" placeholder="How can we help your compliance journey?" rows={4} required></textarea>
+                    <textarea name="message" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none focus-visible:ring-2 focus-visible:ring-focus resize-none" placeholder="How can we help your compliance journey?" rows={4} required></textarea>
                   </div>
                   {error && <p className="text-sm text-error">{error}</p>}
                   <div className="pt-4">

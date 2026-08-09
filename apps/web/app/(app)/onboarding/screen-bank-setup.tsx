@@ -115,7 +115,7 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
                 Bank Name
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
                 id="bankName"
                 placeholder="e.g. HDFC Bank"
                 {...register("bankName")}
@@ -127,7 +127,7 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
                 Account Number
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
                 id="accountNumber"
                 placeholder="Enter account number"
                 {...register("accountNumber")}
@@ -139,7 +139,7 @@ export function ScreenBankSetup({ tenantId, onComplete, onBack }: ScreenBankSetu
                 IFSC Code
               </label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal max-w-[200px]"
                 id="ifsc"
                 maxLength={11}
                 placeholder="HDFC0001234"

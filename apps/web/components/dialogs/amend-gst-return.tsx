@@ -62,7 +62,7 @@ export function AmendGstReturnDialog({
               </div>
             </div>
             <textarea 
-              className="w-full p-4 font-mono text-sm text-dark bg-transparent border-none focus:ring-0 resize-y outline-none block" 
+              className="w-full p-4 font-mono text-sm text-dark bg-transparent border-none focus:ring-0 resize-y outline-none focus-visible:ring-2 focus-visible:ring-focus block" 
               rows={14} 
               spellCheck="false"
               value={jsonData}

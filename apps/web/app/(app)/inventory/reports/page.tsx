@@ -81,7 +81,7 @@ export default function InventoryReportsPage() {
           <label className="block font-ui text-[10px] uppercase tracking-widest text-amber mb-2 font-bold">Report Type</label>
           <div className="relative">
             <select 
-              className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none appearance-none"
+              className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface appearance-none"
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
             >
@@ -94,7 +94,7 @@ export default function InventoryReportsPage() {
         </div>
         <div className="w-full lg:w-1/4 text-left">
           <label className="block font-ui text-[10px] uppercase tracking-widest text-mid mb-2 font-bold">As of Date</label>
-          <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" type="date" value={asOfDate} onChange={(e) => setAsOfDate(e.target.value)} />
+          <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="date" value={asOfDate} onChange={(e) => setAsOfDate(e.target.value)} />
         </div>
         <button onClick={() => showToast.success(`Analysis complete for ${reportType} report as of ${asOfDate}.`)} className="lg:ml-auto px-8 py-3 bg-dark text-white font-ui text-[13px] font-bold uppercase tracking-widest hover:bg-black transition-colors rounded-md border-none cursor-pointer shadow-sm">
           Run Analysis

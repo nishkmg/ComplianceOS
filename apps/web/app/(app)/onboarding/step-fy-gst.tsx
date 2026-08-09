@@ -123,7 +123,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                   id="gstin"
                   type="text"
                   placeholder="22AAAAA0000A1Z5"
-                  className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm uppercase focus:outline-none focus:border-amber disabled:opacity-50"
+                  className="w-full bg-surface border border-border rounded-md py-3 px-4 font-mono text-sm uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber disabled:opacity-50"
                   value={formData.gstin}
                   onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
                   maxLength={15}

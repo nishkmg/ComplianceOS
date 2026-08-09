@@ -57,7 +57,7 @@ export function DeleteEntityDialog({
             </label>
             <input 
               autoComplete="off" 
-              className="w-full bg-white border border-border-subtle font-mono text-sm text-dark px-4 py-3 outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-colors rounded-sm" 
+              className="w-full bg-white border border-border-subtle font-mono text-sm text-dark px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-colors rounded-sm" 
               id="delete-confirmation" 
               placeholder="Type here..." 
               value={input}

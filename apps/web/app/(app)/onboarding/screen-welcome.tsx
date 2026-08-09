@@ -200,7 +200,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
               Business Name
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="businessName"
               placeholder="e.g. Acme Technologies"
               {...register("businessName")}
@@ -222,7 +222,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
             </label>
             <div className="relative">
               <select
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 id="industry"
                 {...register("industry")}
               >
@@ -249,7 +249,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
             </label>
             <div className="relative">
               <select
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 id="numberOfEmployees"
                 {...register("numberOfEmployees")}
               >
@@ -277,7 +277,7 @@ export function ScreenWelcome({ tenantId, onComplete }: ScreenWelcomeProps) {
             </label>
             <div className="relative">
               <select
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 id="currentTool"
                 {...register("currentTool")}
               >

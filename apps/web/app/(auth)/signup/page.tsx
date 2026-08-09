@@ -61,7 +61,7 @@ export default function SignupPage() {
             <div className="text-left">
               <label className="block font-ui text-ui-sm text-dark mb-2 font-medium" htmlFor="business_name">Registered Business Name</label>
               <input 
-                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none transition-colors" 
+                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
                 id="business_name" 
                 name="business_name" 
                 placeholder="As per MCA/GST records" 
@@ -76,7 +76,7 @@ export default function SignupPage() {
             <div className="text-left">
               <label className="block font-ui text-ui-sm text-dark mb-2 font-medium" htmlFor="email">Primary Contact Email</label>
               <input 
-                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none transition-colors" 
+                className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
                 id="email" 
                 name="email" 
                 placeholder="admin@yourfirm.in" 
@@ -92,7 +92,7 @@ export default function SignupPage() {
               <label className="block font-ui text-ui-sm text-dark mb-2 font-medium" htmlFor="password">Secure Password</label>
               <div className="relative">
                 <input 
-                  className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none transition-colors" 
+                  className="block w-full border border-border bg-surface rounded-md shadow-sm px-3 py-2 font-mono text-[14px] text-dark placeholder:text-light focus:border-amber focus:ring-1 focus:ring-amber focus:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors" 
                   id="password" 
                   name="password" 
                   placeholder="••••••••" 

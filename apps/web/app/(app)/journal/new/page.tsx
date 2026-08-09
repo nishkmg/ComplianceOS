@@ -321,7 +321,7 @@ export default function NewJournalEntryPage() {
             <input
               type="date"
               aria-label="Entry date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               max={new Date().toISOString().split("T")[0]}
@@ -332,7 +332,7 @@ export default function NewJournalEntryPage() {
             <div className="relative">
               <select
                 aria-label="Voucher type"
-                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                 value={voucherType}
                 onChange={(e) => setVoucherType(e.target.value)}
               >
@@ -345,7 +345,7 @@ export default function NewJournalEntryPage() {
             <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Reference</label>
             <input
               type="text"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="Invoice #, Bill ref, etc."
               value={reference}
               onChange={(e) => setReference(e.target.value)}
@@ -356,7 +356,7 @@ export default function NewJournalEntryPage() {
         <div className="md:col-span-8 space-y-1.5">
           <label className="block font-ui text-[10px] text-light uppercase tracking-widest font-bold">Narration / Description</label>
           <textarea
-            className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
+            className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-[13px] text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
             placeholder="Enter detailed accounting narration for this entry…"
             rows={5}
             value={narration}
@@ -401,7 +401,7 @@ export default function NewJournalEntryPage() {
                     <td className="p-0">
                       <select
                         aria-label={`Account for line ${index + 1}`}
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none appearance-none"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none"
                         value={line.accountId}
                         onChange={(e) => updateLine(index, "accountId", e.target.value)}
                       >
@@ -413,7 +413,7 @@ export default function NewJournalEntryPage() {
                     </td>
                     <td className="p-0">
                       <input
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-[13px] text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
                         placeholder="Line description…"
                         value={line.description}
                         onChange={(e) => updateLine(index, "description", e.target.value)}
@@ -422,7 +422,7 @@ export default function NewJournalEntryPage() {
                     <td className="p-0">
                       <input
                         inputMode="decimal"
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-[13px] text-right text-dark focus:ring-1 focus:ring-amber outline-none"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-[13px] text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-2 focus-visible:ring-focus"
                         placeholder="0.00"
                         value={line.debit}
                         onChange={(e) => updateLine(index, "debit", e.target.value)}
@@ -432,7 +432,7 @@ export default function NewJournalEntryPage() {
                     <td className="p-0">
                       <input
                         inputMode="decimal"
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-[13px] text-right text-dark focus:ring-1 focus:ring-amber outline-none"
+                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-[13px] text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
                         placeholder="0.00"
                         value={line.credit}
                         onChange={(e) => updateLine(index, "credit", e.target.value)}

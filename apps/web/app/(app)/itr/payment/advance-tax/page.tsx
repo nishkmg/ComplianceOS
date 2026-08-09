@@ -195,7 +195,7 @@ export default function ITRAdvanceTaxPage() {
               <div>
                 <label className="font-ui text-[10px] uppercase tracking-widest text-light font-bold block mb-1.5">Instalment</label>
                 <select
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark outline-none"
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   value={recordForm.installmentId}
                   onChange={e => setRecordForm(prev => ({ ...prev, installmentId: Number(e.target.value) }))}
                 >
@@ -208,7 +208,7 @@ export default function ITRAdvanceTaxPage() {
                 <label className="font-ui text-[10px] uppercase tracking-widest text-light font-bold block mb-1.5">Amount (₹)</label>
                 <input
                   type="number"
-                  className={`w-full bg-surface border ${errors.amount ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-[13px] text-dark outline-none`}
+                  className={`w-full bg-surface border ${errors.amount ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-[13px] text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface`}
                   placeholder="Enter amount"
                   value={recordForm.amount}
                   onChange={e => setRecordForm(prev => ({ ...prev, amount: e.target.value }))}
@@ -219,7 +219,7 @@ export default function ITRAdvanceTaxPage() {
                 <label className="font-ui text-[10px] uppercase tracking-widest text-light font-bold block mb-1.5">Payment Date</label>
                 <input
                   type="date"
-                  className={`w-full bg-surface border ${errors.date ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-[13px] text-dark outline-none`}
+                  className={`w-full bg-surface border ${errors.date ? 'border-danger' : 'border-border'} rounded-md px-4 py-3 font-mono text-[13px] text-dark outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface`}
                   value={recordForm.date}
                   onChange={e => setRecordForm(prev => ({ ...prev, date: e.target.value }))}
                 />

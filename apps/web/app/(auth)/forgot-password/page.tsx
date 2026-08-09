@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
             <div className="space-y-2 text-left">
               <label className="font-ui text-ui-xs text-dark uppercase tracking-widest font-medium" htmlFor="email">Email</label>
               <input
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] outline-none focus:border-amber focus:ring-1 focus:ring-amber"
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber"
                 id="email"
                 type="email"
                 required

@@ -142,7 +142,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
                     <td className="py-4 px-6">
                       <input 
                         type="number" 
-                        className="w-full bg-surface-muted border-[0.5px] border-border p-2 text-right outline-none focus:border-amber transition-colors rounded-md"
+                        className="w-full bg-surface-muted border-[0.5px] border-border p-2 text-right outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors rounded-md"
                         placeholder="0.00"
                         value={balances[a.id]?.debit || ""}
                         onChange={(e) => {
@@ -154,7 +154,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
                     <td className="py-4 px-6">
                       <input 
                         type="number" 
-                        className="w-full bg-surface-muted border-[0.5px] border-border p-2 text-right outline-none focus:border-amber transition-colors rounded-md"
+                        className="w-full bg-surface-muted border-[0.5px] border-border p-2 text-right outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors rounded-md"
                         placeholder="0.00"
                         value={balances[a.id]?.credit || ""}
                         onChange={(e) => {

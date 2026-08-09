@@ -90,7 +90,7 @@ export default function PLScheduleIIIPage() {
             <h1 className="font-ui text-2xl font-semibold text-dark">Profit & Loss</h1>
           </div>
             <div className="flex gap-3">
-              <select className="border-[0.5px] border-border px-4 py-2 text-ui-sm outline-none bg-surface" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
+              <select className="border-[0.5px] border-border px-4 py-2 text-ui-sm outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface bg-surface" value={fiscalYear} onChange={(e) => setFiscalYear(e.target.value)}>
                 <option>2026-27</option>
                 <option>2025-26</option>
               </select>

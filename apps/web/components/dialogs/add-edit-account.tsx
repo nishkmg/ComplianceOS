@@ -44,7 +44,7 @@ export function AddAccountDialog({
             <div className="col-span-2">
               <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Name</label>
               <input 
-                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus:border-amber outline-none transition-colors" 
+                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none transition-colors" 
                 placeholder="e.g. ICICI Corporate Account"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -54,7 +54,7 @@ export function AddAccountDialog({
             <div>
               <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Account Code</label>
               <input 
-                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark focus:outline-none focus:border-amber outline-none" 
+                className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none" 
                 placeholder="1000"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -65,7 +65,7 @@ export function AddAccountDialog({
               <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Parent Account</label>
               <div className="relative">
                 <select 
-                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus:border-amber outline-none"
+                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none"
                   value={formData.parentId}
                   onChange={(e) => setFormData({ ...formData, parentId: e.target.value })}
                 >
@@ -104,7 +104,7 @@ export function AddAccountDialog({
           <div>
             <label className="block font-ui text-[10px] text-dark mb-2 tracking-widest uppercase font-bold">Description (Optional)</label>
             <textarea 
-              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus:border-amber outline-none resize-none" 
+              className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none resize-none" 
               placeholder="Provide context for this ledger..." 
               rows={3}
               value={formData.description}

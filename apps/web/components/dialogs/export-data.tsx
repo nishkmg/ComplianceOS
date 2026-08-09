@@ -41,7 +41,7 @@ export function ExportDataDialog({
             <div className="grid grid-cols-2 gap-4">
               <div className="relative">
                 <select 
-                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus:border-amber outline-none"
+                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none"
                   value={fiscalYear}
                   onChange={(e) => setFiscalYear(e.target.value)}
                 >

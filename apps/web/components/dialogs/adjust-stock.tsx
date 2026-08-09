@@ -63,7 +63,7 @@ export function AdjustStockDialog({
                 <div className="relative flex items-center border border-border bg-white focus-within:border-amber h-12 rounded-sm">
                   <Icon name="calculate" className="text-light pl-4 pr-2 text-[20px]" />
                   <input 
-                    className="w-full bg-transparent border-none p-0 font-mono text-sm text-dark focus:ring-0 outline-none" 
+                    className="w-full bg-transparent border-none p-0 font-mono text-sm text-dark focus:ring-0 outline-none focus-visible:ring-2 focus-visible:ring-focus" 
                     type="number" 
                     placeholder="0.00"
                     value={formData.quantity}
@@ -75,7 +75,7 @@ export function AdjustStockDialog({
                 <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold mb-2">Warehouse</label>
                 <div className="relative h-12">
                   <select 
-                    className="w-full h-full bg-white border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none"
+                    className="w-full h-full bg-white border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                     value={formData.warehouse}
                     onChange={(e) => setFormData({ ...formData, warehouse: e.target.value })}
                   >
@@ -91,7 +91,7 @@ export function AdjustStockDialog({
               <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold mb-2">Reason Code</label>
               <div className="relative h-12">
                 <select 
-                  className="w-full h-full bg-white border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none"
+                  className="w-full h-full bg-white border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                 >

@@ -43,7 +43,7 @@ export function VoidEntryDialog({
         <div className="mb-6 text-left">
           <label className="block font-ui text-[10px] text-dark uppercase tracking-widest mb-2 font-bold" htmlFor="reason">Reason for Voiding</label>
           <textarea 
-            className="w-full bg-section-muted border border-border-subtle font-ui text-sm p-3 focus:outline-none focus:border-amber outline-none resize-none placeholder:text-light" 
+            className="w-full bg-section-muted border border-border-subtle font-ui text-sm p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none resize-none placeholder:text-light" 
             id="reason" 
 // @ts-ignore
             minLength={10} 

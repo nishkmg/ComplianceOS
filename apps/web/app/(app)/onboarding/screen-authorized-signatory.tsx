@@ -61,7 +61,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               Full Name
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="fullName"
               placeholder="As per PAN"
               {...register("fullName")}
@@ -76,7 +76,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               Designation
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="designation"
               placeholder="e.g. Director, Partner, Proprietor"
               {...register("designation")}
@@ -91,7 +91,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               Mobile Number
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="mobile"
               placeholder="9876543210"
               maxLength={10}
@@ -107,7 +107,7 @@ export function ScreenAuthorizedSignatory({ tenantId, onComplete, onBack }: Scre
               Email Address
             </label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light"
               id="email"
               type="email"
               placeholder="signatory@company.com"

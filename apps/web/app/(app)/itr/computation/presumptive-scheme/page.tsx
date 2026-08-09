@@ -63,7 +63,7 @@ export default function ITRPresumptivePage() {
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-mid">₹</span>
                   <input 
-                    className="w-full bg-surface-muted border border-border rounded-md py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
+                    className="w-full bg-surface-muted border border-border rounded-md py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
                     type="number" 
                     value={turnover}
                     onChange={(e) => setTurnover(parseFloat(e.target.value) || 0)}
@@ -77,7 +77,7 @@ export default function ITRPresumptivePage() {
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-mid">₹</span>
                     <input 
-                      className="w-full bg-surface-muted border border-border rounded-md py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none" 
+                      className="w-full bg-surface-muted border border-border rounded-md py-3 pl-10 pr-4 font-mono text-sm focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
                       type="number" 
                       value={digitalTurnover}
                       onChange={(e) => setDigitalTurnover(parseFloat(e.target.value) || 0)}

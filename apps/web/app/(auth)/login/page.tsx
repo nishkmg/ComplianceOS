@@ -60,7 +60,7 @@ export default function LoginPage() {
             <div className="space-y-2 text-left">
               <label className="block font-ui text-ui-xs text-dark uppercase tracking-widest font-medium" htmlFor="email">Email Address</label>
               <input 
-                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors" 
+                className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors" 
                 id="email" 
                 name="email" 
                 placeholder="accountant@firm.in" 
@@ -76,11 +76,11 @@ export default function LoginPage() {
             <div className="space-y-2 text-left">
               <div className="flex justify-between items-end">
                 <label className="block font-ui text-ui-xs text-dark uppercase tracking-widest font-medium" htmlFor="password">Password</label>
-                <Link className="font-ui text-ui-xs text-amber hover:text-amber-hover transition-colors focus:outline-none focus:underline underline-offset-4 no-underline" href="/forgot-password">Forgot Password?</Link>
+                <Link className="font-ui text-ui-xs text-amber hover:text-amber-hover transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:underline underline-offset-4 no-underline" href="/forgot-password">Forgot Password?</Link>
               </div>
               <div className="relative">
                 <input 
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors pr-10" 
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-[14px] text-dark placeholder:text-light focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber shadow-sm transition-colors pr-10" 
                   id="password" 
                   name="password" 
                   placeholder="••••••••••••" 

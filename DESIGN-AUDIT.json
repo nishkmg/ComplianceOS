@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T18:09:17.348Z",
+  "generatedAt": "2026-08-09T09:39:24.337Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,11 +206,11 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 1643,
+      "arbitraryValues": 1638,
       "rawPaletteUtilities": 124,
       "hexLiterals": 25,
-      "unpairedOutlineNone": 200,
-      "focusVisible": 89,
+      "unpairedOutlineNone": 0,
+      "focusVisible": 175,
       "darkClasses": 2,
       "distinctRadii": 10
     },
@@ -232,7 +232,7 @@
   "verdicts": {
     "contrastBodyTextAA": true,
     "noRawPalette": false,
-    "noUnpairedOutlineNone": false,
+    "noUnpairedOutlineNone": true,
     "routeLoadingStates": false,
     "asyncAnnounced": true,
     "fontPipeline": true

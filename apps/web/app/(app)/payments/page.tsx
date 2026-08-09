@@ -104,7 +104,7 @@ export default function PaymentsPage() {
         <div className="flex gap-3">
           <div className="relative">
             <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-mid text-[16px]" />
-            <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-[12px] font-ui outline-none focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-[12px] font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 border border-border text-mid text-[10px] font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
             <Icon name="download" size={14} /> Export

@@ -197,7 +197,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
               type="text"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="Customer or company name"
             />
           </div>
@@ -209,7 +209,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
               type="text"
               value={customerGstin}
               onChange={(e) => setCustomerGstin(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. 27AAAA0000A1ZA"
             />
           </div>
@@ -221,7 +221,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
               type="text"
               value={customerState}
               onChange={(e) => setCustomerState(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. IN-MH"
             />
           </div>
@@ -233,7 +233,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
               type="email"
               value={customerEmail}
               onChange={(e) => setCustomerEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="customer@example.com"
             />
           </div>
@@ -245,7 +245,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -256,7 +256,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -304,7 +304,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, description: e.target.value } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-1 focus:ring-blue-500"
                         />
                       </td>
                       <td className="px-3 py-2">
@@ -316,7 +316,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, quantity: Number(e.target.value) } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-1 focus:ring-blue-500"
                           min="1"
                         />
                       </td>
@@ -329,7 +329,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, unitPrice: Number(e.target.value) } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-1 focus:ring-blue-500"
                           step="0.01"
                           min="0"
                         />
@@ -346,7 +346,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
                               items.map((x, j) => j === i ? { ...x, gstRate: Number(e.target.value) } : x)
                             )
                           }
-                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1 border border-border-subtle rounded text-sm text-right focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-1 focus:ring-blue-500"
                           min="0"
                           max="100"
                         />
@@ -365,7 +365,7 @@ export function ScanResults({ scan, onInvoiceCreated }: ScanResultsProps) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             placeholder="Optional notes for the invoice"
           />
         </div>

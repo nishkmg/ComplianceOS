@@ -102,8 +102,17 @@ const filesWith = (re) => new Set(all.filter(([, c]) => re.test(c)).map(([f]) =>
 
 const arbitraryValues = count(/\[[0-9]+(?:\.[0-9]+)?(?:px|rem|vh|vw|%|ch|em)\]/g);
 const rawPalette = count(/\b(?:bg|text|border|ring|from|to|via|divide|outline)-(?:zinc|slate|gray|neutral|stone)-\d{2,3}\b/g);
-const outlineNone = count(/\boutline-none\b/g);
-const focusVisible = count(/\bfocus-visible:/g);
+// outline-none is only a violation when the same className lacks a
+// focus-visible alternative (the paired pattern — outline-none +
+// focus-visible:ring-* — is the sanctioned focus treatment)
+let outlineNone = 0;
+let focusVisible = 0;
+for (const [, c] of all) {
+  for (const m of c.matchAll(/className=\{?([`"'])([^`"'\n]*?outline-none[^`"'\n]*?)\1\}?/g)) {
+    if (/\bfocus-visible:/.test(m[2])) focusVisible++;
+    else outlineNone++;
+  }
+}
 const hexLiterals = count(/#[0-9a-fA-F]{3,8}\b/g);
 const darkClasses = count(/\bdark:/g);
 const radii = new Set();

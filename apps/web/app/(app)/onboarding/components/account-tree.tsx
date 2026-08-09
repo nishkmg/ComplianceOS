@@ -104,7 +104,7 @@ export function AccountTree({ accounts, onRefine }: AccountTreeProps) {
             type="text"
             value={node.name}
             onChange={(e) => renameNode(node.code, e.target.value)}
-            className="flex-1 border-b border-transparent hover:border-gray-300 focus:border-amber-500 focus:outline-none text-sm"
+            className="flex-1 border-b border-transparent hover:border-gray-300 focus:border-amber-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface text-sm"
           />
         </div>
 

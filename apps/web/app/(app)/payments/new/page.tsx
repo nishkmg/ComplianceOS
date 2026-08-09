@@ -179,7 +179,7 @@ export default function NewPaymentPage() {
           <div className="space-y-1">
             <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Entity / Party Name</label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-[13px] font-ui text-[13px] focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-[13px] font-ui text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="Search customer or vendor..."
               value={customerName}
               onChange={e => setCustomerName(e.target.value)}
@@ -190,7 +190,7 @@ export default function NewPaymentPage() {
             <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Payment Date</label>
             <input
               type="date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={paymentDate}
               onChange={e => setPaymentDate(e.target.value)}
             />
@@ -198,7 +198,7 @@ export default function NewPaymentPage() {
           <div className="space-y-1">
             <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Payment Mode</label>
             <select
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-[13px] font-ui text-[13px] focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-[13px] font-ui text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={paymentMethod}
               onChange={e => setPaymentMethod(e.target.value)}
             >
@@ -210,7 +210,7 @@ export default function NewPaymentPage() {
           <div className="space-y-1">
             <label className="block font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Reference / UTR</label>
             <input
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] uppercase focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-[13px] uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="T241024…"
               value={referenceNumber}
               onChange={e => setReferenceNumber(e.target.value)}
@@ -222,7 +222,7 @@ export default function NewPaymentPage() {
             <input
               type="number"
               min="0"
-              className="w-full bg-surface border border-amber rounded-md px-4 py-3.5 font-mono text-xl font-bold text-dark focus:ring-1 focus:ring-amber outline-none"
+              className="w-full bg-surface border border-amber rounded-md px-4 py-3.5 font-mono text-xl font-bold text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
               placeholder="0.00"
               value={paymentAmount}
               onChange={e => setPaymentAmount(e.target.value)}
@@ -240,7 +240,7 @@ export default function NewPaymentPage() {
                 <input
                   type="number"
                   min="0"
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm focus:ring-1 focus:ring-amber outline-none"
+                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
                   placeholder="0.00"
                   value={tdsAmount}
                   onChange={e => setTdsAmount(e.target.value)}

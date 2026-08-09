@@ -209,7 +209,7 @@ export default function JournalPage() {
           />
           <input
             data-search-input
-            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none placeholder:text-light"
+            className="bg-surface border border-border text-[12px] font-ui px-8 py-1.5 w-56 rounded-md focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus placeholder:text-light"
             placeholder="Search entries..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}

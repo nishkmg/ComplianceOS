@@ -99,7 +99,7 @@ export function ScreenFinancialYear({ tenantId, onComplete, onBack }: ScreenFina
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer" {...register("importPreviousYearBalances")} />
-            <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
+            <div className="w-10 h-6 bg-stone-200 peer-focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:bg-amber"></div>
           </label>
         </div>
 
@@ -114,7 +114,7 @@ export function ScreenFinancialYear({ tenantId, onComplete, onBack }: ScreenFina
           <div className="flex flex-col gap-2 max-w-xs">
             <input
               type="date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               {...register("booksBeginningDate")}
             />
           </div>

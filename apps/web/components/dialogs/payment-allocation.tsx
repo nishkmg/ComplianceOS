@@ -101,7 +101,7 @@ export function PaymentAllocationDialog({
                   <div className="relative w-full max-w-[140px]">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[12px] text-light">₹</span>
                     <input 
-                      className="w-full bg-white border border-border rounded-sm py-2 pl-8 pr-3 font-mono text-[13px] text-right text-dark focus:border-amber outline-none" 
+                      className="w-full bg-white border border-border rounded-sm py-2 pl-8 pr-3 font-mono text-[13px] text-right text-dark focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
                       type="number"
                       value={allocations[inv.id] || ''}
                       onChange={(e) => {

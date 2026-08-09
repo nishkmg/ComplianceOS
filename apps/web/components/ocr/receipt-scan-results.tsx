@@ -170,7 +170,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
               type="text"
               value={vendorName}
               onChange={(e) => setVendorName(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="Vendor or business name"
             />
           </div>
@@ -182,7 +182,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
               type="text"
               value={vendorGstin}
               onChange={(e) => setVendorGstin(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. 27AAAA0000A1ZA"
             />
           </div>
@@ -194,7 +194,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -205,7 +205,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
               type="number"
               value={total}
               onChange={(e) => setTotal(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
               placeholder="0.00"
               step="0.01"
               min="0"
@@ -221,7 +221,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
             <select
               value={expenseCategory}
               onChange={(e) => setExpenseCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select category</option>
               {EXPENSE_CATEGORIES.map((cat) => (
@@ -236,7 +236,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
             <select
               value={expenseAccountId}
               onChange={(e) => setExpenseAccountId(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select account</option>
               {expenseAccounts.map((a) => (
@@ -251,7 +251,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
             <select
               value={payableAccountId}
               onChange={(e) => setPayableAccountId(e.target.value)}
-              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select account</option>
               {payableAccounts.map((a) => (
@@ -267,7 +267,7 @@ export function ReceiptScanResults({ scan, onExpenseCreated }: ReceiptScanResult
             value={narration}
             onChange={(e) => setNarration(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-border-subtle rounded text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-2 focus:ring-blue-500"
             placeholder="Optional description for the journal entry"
           />
         </div>

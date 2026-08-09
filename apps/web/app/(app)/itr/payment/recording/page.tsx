@@ -62,19 +62,19 @@ export default function ITRRecordPaymentPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">BSR Code (7 Digits)</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" placeholder="0000000" maxLength={7} />
+                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="0000000" maxLength={7} />
                </div>
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Challan Serial Number</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" placeholder="00000" maxLength={5} />
+                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="00000" maxLength={5} />
                </div>
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Date of Deposit</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none" type="date" />
+                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="date" />
                </div>
                <div className="flex flex-col gap-2">
                   <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Total Amount Paid (₹)</label>
-                  <input className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-lg font-bold text-dark focus:border-primary outline-none" placeholder="0.00" type="number" />
+                  <input className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-lg font-bold text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="0.00" type="number" />
                </div>
             </div>
           </div>

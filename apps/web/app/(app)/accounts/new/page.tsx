@@ -51,19 +51,19 @@ export default function NewAccountPage() {
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Code</label><input className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus:border-amber" value={code} onChange={e => setCode(e.target.value)} /></div>
-          <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={name} onChange={e => setName(e.target.value)} /></div>
+          <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Code</label><input className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={code} onChange={e => setCode(e.target.value)} /></div>
+          <div className="space-y-1.5"><label className="font-ui text-[10px] text-light uppercase font-bold">Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={name} onChange={e => setName(e.target.value)} /></div>
         </div>
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1.5">
             <label className="font-ui text-[10px] text-light uppercase font-bold">Kind</label>
-            <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={kind} onChange={e => { setKind(e.target.value); setSubType(ACCOUNT_SUB_TYPES[e.target.value]?.[0] || ""); }}>
+            <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={kind} onChange={e => { setKind(e.target.value); setSubType(ACCOUNT_SUB_TYPES[e.target.value]?.[0] || ""); }}>
               {ACCOUNT_KINDS.map(k => <option key={k} value={k}>{k}</option>)}
             </select>
           </div>
           <div className="space-y-1.5">
             <label className="font-ui text-[10px] text-light uppercase font-bold">Sub Type</label>
-            <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus:border-amber" value={subType} onChange={e => setSubType(e.target.value)}>
+            <select className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={subType} onChange={e => setSubType(e.target.value)}>
               {(ACCOUNT_SUB_TYPES[kind] || []).map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>

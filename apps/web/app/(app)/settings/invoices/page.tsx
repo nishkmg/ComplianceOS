@@ -29,12 +29,12 @@ export default function InvoiceConfigPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Invoice Prefix</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" defaultValue="INV-2024-" />
+              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="INV-2024-" />
               <p className="text-[10px] text-light italic">Example: INV-2024-0001</p>
             </div>
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Starting Number</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" type="number" defaultValue="1" />
+              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="number" defaultValue="1" />
             </div>
           </div>
         </section>
@@ -45,7 +45,7 @@ export default function InvoiceConfigPage() {
           <div className="space-y-8">
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Invoice Header Address</label>
-              <textarea className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none resize-none" rows={3} defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
+              <textarea className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface resize-none" rows={3} defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <div className="flex flex-col gap-2">
@@ -79,15 +79,15 @@ export default function InvoiceConfigPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Bank Name</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none" defaultValue="HDFC Bank" />
+              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-[13px] text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC Bank" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">IFSC Code</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" defaultValue="HDFC0000060" />
+              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC0000060" />
             </div>
             <div className="flex flex-col gap-2 md:col-span-2">
               <label className="font-ui text-[10px] text-mid uppercase tracking-widest font-bold">Account Number</label>
-              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none" defaultValue="50200012345678" />
+              <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="50200012345678" />
             </div>
           </div>
         </section>
