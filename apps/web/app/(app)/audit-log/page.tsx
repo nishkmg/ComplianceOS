@@ -1,26 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Icon } from '@/components/ui/icon';
-import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
-
-interface AuditEntry { id: string; event_type: string; aggregate_type: string; aggregate_id: string; payload: any; created_at: string; }
+import { api } from "@/lib/api";
 
 export default function AuditLogPage() {
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const [entries, setEntries] = useState<AuditEntry[]>([]); const [loading, setLoading] = useState(true);
+  const { data, isLoading } = api.auditLog.list.useQuery({ limit: 100 }, { staleTime: 15_000 });
+  const entries = data ?? [];
 
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try { const r = await fetch(`/api/audit-log?tenantId=${encodeURIComponent(tenantId)}`); if (r.ok) setEntries((await r.json()).entries || []); } catch {} finally { setLoading(false); }
-    })();
-  }, [tenantId]);
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <PageHeader title="Audit Log" />
@@ -36,10 +27,12 @@ export default function AuditLogPage() {
             <tbody className="divide-y divide-border-subtle">
               {entries.map(e => (
                 <tr key={e.id} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-3 px-6 font-mono text-ui-xs text-amber">{e.event_type?.replace(/_/g, ' ')}</td>
-                  <td className="py-3 px-6 font-ui text-ui-xs text-dark">{e.aggregate_type}</td>
-                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.aggregate_id?.substring(0, 8)}…</td>
-                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.created_at ? new Date(e.created_at).toLocaleString("en-IN") : "—"}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-amber">
+                    <Link href={`/audit-log/${e.id}`} className="hover:underline no-underline text-inherit">{e.eventType?.replace(/_/g, " ")}</Link>
+                  </td>
+                  <td className="py-3 px-6 font-ui text-ui-xs text-dark">{e.aggregateType}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.aggregateId?.substring(0, 8)}…</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.createdAt ? new Date(e.createdAt).toLocaleString("en-IN") : "—"}</td>
                 </tr>
               ))}
             </tbody>

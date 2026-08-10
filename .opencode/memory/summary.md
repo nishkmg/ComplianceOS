@@ -85,3 +85,14 @@ session-2026-06-14T12-10-50-939Z-compaction46.md
 - A11y sweep extended 22→57 app routes; fixed violations: unlabeled inputs/selects (aria-label/htmlFor across accounts/new, payments/new, inventory/products/new, itr/payment/recording, receipts/scan, mismatches selects, my month pickers), icon-only back buttons (aria-label="Go back" across 18 pages), nested-interactive (Button>Link in itr/computation), color-contrast on dark cards (text-light→text-white, h3 amber→amber-bright). Chromium sweep: 9/9 green. Playwright config testIgnore for ._* junk.
 - Local e2e recipe: next start on :3100 needs AUTH_URL=http://localhost:3100 + AUTH_TRUST_HOST=true + DATABASE_URL to complianceos_dev (demo login); run sweep with --project=chromium only.
 - Gates: typecheck clean, design-audit clean, server tests 481/481, build green, a11y sweep green.
+
+## 2026-08-10 (session 3) — remaining-pages pass: fake success killed, tRPC convergence, dead code removed
+
+- /support → honest contact panel (mailto, no fake "sent" toast).
+- Onboarding: verified step-* wizard is LIVE (page.tsx imports it; submitStep is a real POST — onboarding was never fake). Deleted 14 orphaned screen-*.tsx files (0 references).
+- Wired fake-success pages: employees/new → employees.create; employees/[id]/salary → salaryStructure.create; settings/invoices → invoiceConfig.get/save (kills localStorage logo hack); itr/payment/recording → itrPayment.paySelfAssessmentTax with real challan form.
+- OCR truth: invoices/scan + receipts/scan → /api/upload → ocrScan.upload → poll get → createInvoiceFromScan/createExpenseFromScan (account selectors from accounts.list). Removed fake prefilled extraction + stock Google receipt image.
+- Stub details wired: itr/returns/[fy] (itrReturns.list) + [returnId] (itrReturns.get + real file mutation with ack number; removed dead /finalize + fake PAN); audit-log/[id] (new auditLog router list/get with payload viewer).
+- tRPC CONVERGENCE: migrated all remaining fetch('/api/*') pages (audit-log, coa, dashboard, employees, employees/[id], gst/ledger/{cash,itc,liability}, gst/payment/history, gst/returns, payroll, reports/ledger, settings/fiscal-years + [id], inventory, use-fiscal-year hook). Deleted superseded API routes (accounts, coa, employees, fiscal-years, gst/ledger, gst/payments, gst/returns index, inventory/*, invoices, journal/entries, payments, payroll/runs) + dead components/ocr/. Kept: auth, contact, health, */pdf, trpc, upload, uploads, onboarding (working-feature exception — documented).
+- page-audit.mjs: added fakeSuccess detector (0 pages). Remaining 12 unwired app routes are all hubs/empties/terminals.
+- Gates: typecheck clean, 482 server tests, build green, a11y sweep 9/9.

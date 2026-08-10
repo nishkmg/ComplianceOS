@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Icon } from "@/components/ui/icon";
-import { useSession } from "next-auth/react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { api } from "@/lib/api";
 
-interface LedgerEntry { id: string; transaction_type: string; tax_type: string; amount: string; balance: string; transaction_date: string; challan_number: string; narration: string; }
+interface CashEntry {
+  id: string; ledgerType: "cash"; transactionType: string | null; taxType: string | null;
+  amount: number; balance: number; transactionDate: string | null; challanNumber: string | null; referenceNumber: string | null;
+}
 
 export default function CashLedgerPage() {
-  const { data: session } = useSession(); const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const [entries, setEntries] = useState<LedgerEntry[]>([]); const [loading, setLoading] = useState(true);
-  useEffect(() => { if (!tenantId) return; (async () => { try { const r = await fetch(`/api/gst/ledger?tenantId=${encodeURIComponent(tenantId)}&type=cash`); if (r.ok) setEntries((await r.json()).entries || []); } catch {} finally { setLoading(false); } })(); }, [tenantId]);
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+  const { data, isLoading } = api.gstLedger.ledgerTransactions.useQuery({ type: "cash" }, { staleTime: 15_000 });
+  const entries = (data ?? []) as CashEntry[];
+
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <h1 className="font-ui text-display-lg font-semibold text-dark">Cash Ledger</h1>
@@ -24,15 +27,17 @@ export default function CashLedgerPage() {
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Tax Type</th>
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Amount</th>
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Balance</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Reference</th>
             </tr></thead>
             <tbody className="divide-y divide-border-subtle">
               {entries.map(e => (
                 <tr key={e.id} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.transaction_date ? new Date(e.transaction_date).toLocaleDateString("en-IN") : "—"}</td>
-                  <td className="py-3 px-6 font-ui text-ui-sm text-dark capitalize">{e.transaction_type?.replace(/_/g, ' ')}</td>
-                  <td className="py-3 px-6 font-mono text-ui-xs text-mid uppercase">{e.tax_type}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.transactionDate ? new Date(e.transactionDate).toLocaleDateString("en-IN") : "—"}</td>
+                  <td className="py-3 px-6 font-ui text-ui-sm text-dark capitalize">{e.transactionType?.replace(/_/g, " ")}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid uppercase">{e.taxType || "—"}</td>
                   <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(e.amount || 0).toLocaleString("en-IN")}</td>
                   <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(e.balance || 0).toLocaleString("en-IN")}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.challanNumber || e.referenceNumber || "—"}</td>
                 </tr>
               ))}
             </tbody>

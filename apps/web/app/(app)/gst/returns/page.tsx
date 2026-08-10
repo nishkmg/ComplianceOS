@@ -1,33 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
-import { useSession } from "next-auth/react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
-
-interface GstReturn {
-  id: string; return_number: string; return_type: string; tax_period_month: string;
-  tax_period_year: string; status: string; due_date: string; total_tax_payable: string;
-}
+import { api } from "@/lib/api";
 
 const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default function GstReturnsPage() {
-  const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const [returns, setReturns] = useState<GstReturn[]>([]); const [loading, setLoading] = useState(true);
+  const { data, isLoading } = api.gstReturns.list.useQuery(undefined, { staleTime: 15_000 });
+  const returns = data ?? [];
 
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try { const r = await fetch(`/api/gst/returns?tenantId=${encodeURIComponent(tenantId)}`); if (r.ok) setReturns((await r.json()).returns || []); } catch {} finally { setLoading(false); }
-    })();
-  }, [tenantId]);
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-light animate-spin text-3xl" /></div>;
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-light animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <PageHeader title="GST Returns" />
@@ -44,10 +31,10 @@ export default function GstReturnsPage() {
             <tbody className="divide-y divide-border-subtle">
               {returns.map(r => (
                 <tr key={r.id} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-3 px-6 font-mono text-ui-xs text-amber"><Link href={`/gst/returns/${r.tax_period_year}-${r.tax_period_month}`} className="hover:underline no-underline text-inherit">{r.return_number}</Link></td>
-                  <td className="py-3 px-6 font-ui text-ui-sm text-dark">{monthNames[parseInt(r.tax_period_month)] || r.tax_period_month} {r.tax_period_year}</td>
-                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{r.due_date ? new Date(r.due_date).toLocaleDateString("en-IN") : "—"}</td>
-                  <td className="py-3 px-6 font-mono text-ui-sm tabular-nums text-right">₹{Number(r.total_tax_payable || 0).toLocaleString("en-IN")}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-amber"><Link href={`/gst/returns/${r.taxPeriodYear}-${r.taxPeriodMonth}`} className="hover:underline no-underline text-inherit">{r.returnNumber}</Link></td>
+                  <td className="py-3 px-6 font-ui text-ui-sm text-dark">{monthNames[parseInt(r.taxPeriodMonth)] || r.taxPeriodMonth} {r.taxPeriodYear}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{r.dueDate ? new Date(r.dueDate).toLocaleDateString("en-IN") : "—"}</td>
+                  <td className="py-3 px-6 font-mono text-ui-sm tabular-nums text-right">₹{Number(r.totalTaxPayable || 0).toLocaleString("en-IN")}</td>
                   <td className="py-3 px-6"><Badge variant={r.status === "filed" ? "success" : r.status === "draft" ? "amber" : "gray"}>{r.status}</Badge></td>
                 </tr>
               ))}

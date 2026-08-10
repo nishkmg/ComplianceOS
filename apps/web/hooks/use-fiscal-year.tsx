@@ -2,12 +2,13 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
+import { api } from "@/lib/api";
 
 interface FiscalYear {
   id: string;
   name: string;
   year: string;
-  status: 'open' | 'closed';
+  status: 'open' | 'closed' | 'pending_close';
   daysRemaining: number;
 }
 
@@ -33,23 +34,24 @@ export function FiscalYearProvider({ children }: { children: ReactNode }) {
   const [fiscalYears, setFiscalYears] = useState<FiscalYear[]>(FALLBACK_YEARS);
   const [activeFy, setActiveFy] = useState('2026-27');
 
-  // Fetch real fiscal years from API
+  // Fetch real fiscal years via tRPC
+  const fyQuery = api.fiscalYears.list.useQuery(undefined, { staleTime: 60_000 });
   useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/fiscal-years?tenantId=${encodeURIComponent(tenantId)}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.fiscalYears?.length > 0) {
-            setFiscalYears(data.fiscalYears);
-          }
-        }
-      } catch {
-        // Fall through to hardcoded fallback
-      }
-    })();
-  }, [tenantId]);
+    const rows = fyQuery.data;
+    if (rows && rows.length > 0) {
+      setFiscalYears(
+        rows.map((fy) => ({
+          id: fy.id,
+          name: `FY ${fy.year}`,
+          year: fy.year,
+          status: fy.status,
+          daysRemaining: fy.endDate
+            ? Math.max(0, Math.ceil((new Date(fy.endDate).getTime() - Date.now()) / 86400000))
+            : 0,
+        }))
+      );
+    }
+  }, [fyQuery.data]);
 
   // Restore active FY from localStorage
   useEffect(() => {

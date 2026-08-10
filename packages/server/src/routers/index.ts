@@ -26,6 +26,7 @@ import { itrReturnsRouter } from "./itr-returns";
 import { itrComputationRouter } from "./itr-computation";
 import { itrPaymentRouter } from "./itr-payment";
 import { tenantConfigRouter } from "./tenant-config";
+import { auditLogRouter } from "./audit-log";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -55,6 +56,7 @@ export const appRouter = router({
   itrComputation: itrComputationRouter,
   itrPayment: itrPaymentRouter,
   tenantConfig: tenantConfigRouter,
+  auditLog: auditLogRouter,
 });
 
 export type AppRouter = typeof appRouter;

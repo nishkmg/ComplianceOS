@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
+import { api } from "@/lib/api";
 
 export default function NewEmployeePage() {
   const router = useRouter();
@@ -33,16 +34,36 @@ export default function NewEmployeePage() {
     return Object.keys(errs).length === 0;
   };
 
+  const createEmployee = api.employees.create.useMutation({
+    onSuccess: () => {
+      showToast.success("Employee record created successfully");
+      router.push("/employees");
+    },
+    onError: (e) => {
+      showToast.error(e.message);
+      setSaving(false);
+      savingRef.current = false;
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (savingRef.current) return;
     if (!validate()) return;
     savingRef.current = true;
     setSaving(true);
-    setTimeout(() => {
-      showToast.success("Employee record created successfully");
-      router.push("/employees");
-    }, 400);
+    createEmployee.mutate({
+      employeeCode: formData.employeeCode,
+      firstName: formData.firstName,
+      lastName: formData.lastName || undefined,
+      email: formData.email || undefined,
+      phone: formData.phone || undefined,
+      pan: formData.pan,
+      uan: formData.uan || undefined,
+      dateOfJoining: formData.dateOfJoining,
+      designation: formData.designation || undefined,
+      department: formData.department || undefined,
+    });
   };
 
   return (

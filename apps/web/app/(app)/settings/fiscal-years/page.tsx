@@ -5,9 +5,10 @@ import Link from "next/link";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CloseFiscalYearDialog } from "@/components/dialogs/close-fy-confirmation";
 import { PageHeader } from "@/components/ui/page-header";
+import { api } from "@/lib/api";
 
 const fmtDate = (d: string) =>
   new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
@@ -28,82 +29,58 @@ export default function FiscalYearsPage() {
   const [closeFy, setCloseFy] = useState<{ id: string; year: string } | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [fiscalYears, setFiscalYears] = useState<FiscalYearRow[]>([]);
-  const [loading, setLoading] = useState(true);
   const [createForm, setCreateForm] = useState({ year: "", startDate: "", endDate: "" });
 
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const r = await fetch(`/api/fiscal-years?tenantId=${encodeURIComponent(tenantId)}`);
-        if (r.ok) {
-          const data = await r.json();
-          setFiscalYears(
-            (data.fiscalYears || []).map((fy: any) => ({
-              id: fy.id,
-              name: `FY ${fy.year}`,
-              period: `${fmtDate(fy.startDate)} - ${fmtDate(fy.endDate)}`,
-              status: fy.status,
-              daysRemaining: fy.daysRemaining,
-            }))
-          );
-        }
-      } catch {
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [tenantId]);
+  const utils = api.useUtils();
+  const fiscalYearsQuery = api.fiscalYears.list.useQuery(undefined, { staleTime: 15_000 });
+  const fiscalYears: FiscalYearRow[] = (fiscalYearsQuery.data ?? []).map((fy: any) => ({
+    id: fy.id,
+    name: `FY ${fy.year}`,
+    period: `${fmtDate(fy.startDate)} - ${fmtDate(fy.endDate)}`,
+    status: fy.status,
+    daysRemaining: fy.endDate ? Math.max(0, Math.ceil((new Date(fy.endDate).getTime() - Date.now()) / 86400000)) : 0,
+  }));
+  const loading = fiscalYearsQuery.isLoading;
 
   const confirmCloseFy = async () => {
-    if (!closeFy || !tenantId || !actorId) return;
+    if (!closeFy) return;
     setBusy(true);
-    try {
-      const r = await fetch(`/api/fiscal-years/${closeFy.id}/close`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tenantId, actorId }),
-      });
-      if (r.ok) {
-        showToast.success(`FY ${closeFy.year} closed.`);
-        setCloseFy(null);
-        window.location.reload();
-      } else {
-        showToast.error("Failed to close fiscal year.");
-      }
-    } catch {
-      showToast.error("Failed to close fiscal year.");
-    } finally {
-      setBusy(false);
-    }
+    closeFyMutation.mutate({ id: closeFy.id });
   };
 
+  const closeFyMutation = api.fiscalYears.close.useMutation({
+    onSuccess: () => {
+      showToast.success(`FY ${closeFy?.year ?? ""} closed.`);
+      setCloseFy(null);
+      setBusy(false);
+      void utils.fiscalYears.list.invalidate();
+    },
+    onError: (e) => {
+      showToast.error(e.message);
+      setBusy(false);
+    },
+  });
+
+  const createFyMutation = api.fiscalYears.create.useMutation({
+    onSuccess: () => {
+      showToast.success(`FY ${createForm.year} created.`);
+      setCreateOpen(false);
+      setBusy(false);
+      void utils.fiscalYears.list.invalidate();
+    },
+    onError: (e) => {
+      showToast.error(e.message);
+      setBusy(false);
+    },
+  });
+
   const confirmCreateFy = async () => {
-    if (!tenantId || !actorId) return;
     if (!createForm.year || !createForm.startDate || !createForm.endDate) {
       showToast.error("Year, start and end dates are required.");
       return;
     }
     setBusy(true);
-    try {
-      const r = await fetch("/api/fiscal-years", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tenantId, actorId, ...createForm }),
-      });
-      if (r.ok) {
-        showToast.success(`FY ${createForm.year} created.`);
-        setCreateOpen(false);
-        window.location.reload();
-      } else {
-        showToast.error("Failed to create fiscal year.");
-      }
-    } catch {
-      showToast.error("Failed to create fiscal year.");
-    } finally {
-      setBusy(false);
-    }
+    createFyMutation.mutate({ year: createForm.year, startDate: createForm.startDate, endDate: createForm.endDate });
   };
 
   return (

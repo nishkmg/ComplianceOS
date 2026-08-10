@@ -36,26 +36,26 @@ export default function InventoryDashboardPage() {
     staleTime: 0,
     refetchInterval: 30_000,
   });
-  const [layers, setLayers] = useState<StockLayer[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [stockLoading, setStockLoading] = useState(true);
+  const layersQuery = api.inventory.layers.useQuery(undefined, { staleTime: 15_000 });
+  const productsQuery = api.products.list.useQuery({}, { staleTime: 15_000 });
+  const stockLoading = layersQuery.isLoading || productsQuery.isLoading;
 
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const [stockRes, productRes] = await Promise.all([
-          fetch(`/api/inventory/stock?tenantId=${encodeURIComponent(tenantId)}`),
-          fetch(`/api/inventory/products?tenantId=${encodeURIComponent(tenantId)}`),
-        ]);
-        if (stockRes.ok) setLayers(((await stockRes.json()).stock || []) as StockLayer[]);
-        if (productRes.ok) setProducts(((await productRes.json()).products || []) as Product[]);
-      } catch {
-      } finally {
-        setStockLoading(false);
-      }
-    })();
-  }, [tenantId]);
+  // tRPC returns camelCase rows; keep the page's snake_case interface via mapping
+  const layers: StockLayer[] = (layersQuery.data ?? []).map((l: any) => ({
+    id: l.id,
+    product_id: l.productId,
+    quantity: String(l.quantity ?? 0),
+    remaining_quantity: String(l.remainingQuantity ?? 0),
+    unit_cost: String(l.unitCost ?? 0),
+    total_value: String(l.totalValue ?? 0),
+    receipt_date: l.receiptDate ?? "",
+  }));
+  const products: Product[] = ((productsQuery.data?.products ?? []) as any[]).map((pr: any) => ({
+    id: pr.id,
+    sku: pr.sku ?? "",
+    name: pr.name ?? "",
+    unit_of_measure: pr.unitOfMeasure ?? null,
+  }));
 
   const productById = useMemo(() => new Map(products.map((p) => [p.id, p])), [products]);
 

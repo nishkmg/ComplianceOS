@@ -75,6 +75,10 @@ for (const f of pages) {
   const fake = (s.match(moneyLit) || []).filter((x) => !x.includes("className"));
   // inline arrays of objects that look like mock rows
   const mockArrays = [...s.matchAll(/const (\w+)\s*(?::[^=]+)?=\s*\[\s*\{[\s\S]{0,600}?\}\s*\]/g)].map((m) => m[1]).filter((n) => /mock|sample|dummy|demo/i.test(n));
+  // fake success: success toast with no network call in the same file
+  const successToasts = (s.match(/showToast\.success\(/g) || []).length;
+  const hasNetwork = /fetch\(|\.useMutation|\.useQuery|mutate\(/.test(s);
+  const fakeSuccess = successToasts > 0 && !hasNetwork;
   const placeholder = /fully implemented|coming soon|not yet available|will be available|expiryMockData|placeholder|TODO|FIXME/i.test(s);
   rows.push({
     route: r,
@@ -83,6 +87,7 @@ for (const f of pages) {
     wired: hasData,
     fakeCount: fake.length,
     mockArrays: mockArrays,
+    fakeSuccess,
     placeholder,
     pageHeader: /PageHeader/.test(s) || /<PageHeader/.test(s),
     h1: /<h1/.test(s),
@@ -104,15 +109,16 @@ const counts = {
   notInNav: rows.filter((r) => !r.inNav).length,
   noLoading: rows.filter((r) => !r.loading).length,
   noError: rows.filter((r) => !r.error).length,
+  fakeSuccess: rows.filter((r) => r.fakeSuccess).length,
 };
 
 writeFileSync(outJson, JSON.stringify({ generatedAt: new Date().toISOString().slice(0, 10), counts, rows }, null, 2));
 
 let md = `# PAGE-AUDIT — app route truth ledger\n\nGenerated: ${new Date().toISOString().slice(0, 10)} — re-run: \`node scripts/page-audit.mjs\`\n\n## Totals\n\n| metric | count |\n|---|---|\n`;
 md += Object.entries(counts).map(([k, v]) => `| ${k} | ${v} |`).join("\n");
-md += `\n\n## Routes\n\n| route | loc | data | wired | fake# | mockArr | placeholder | PageHeader | banned# | nav | a11y | loading | error |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
+md += `\n\n## Routes\n\n| route | loc | data | wired | fake# | mockArr | fakeSuccess | placeholder | PageHeader | banned# | nav | a11y | loading | error |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
 for (const r of [...rows].sort((a, b) => a.route.localeCompare(b.route))) {
-  md += `| ${r.route} | ${r.loc} | ${r.data} | ${r.wired ? "Y" : ""} | ${r.fakeCount} | ${r.mockArrays.join("/")} | ${r.placeholder ? "Y" : ""} | ${r.pageHeader ? "Y" : ""} | ${r.bannedColors} | ${r.inNav ? "Y" : ""} | ${r.inA11y ? "Y" : ""} | ${r.loading ? "Y" : ""} | ${r.error ? "Y" : ""} |\n`;
+  md += `| ${r.route} | ${r.loc} | ${r.data} | ${r.wired ? "Y" : ""} | ${r.fakeCount} | ${r.mockArrays.join("/")} | ${r.fakeSuccess ? "Y" : ""} | ${r.placeholder ? "Y" : ""} | ${r.pageHeader ? "Y" : ""} | ${r.bannedColors} | ${r.inNav ? "Y" : ""} | ${r.inA11y ? "Y" : ""} | ${r.loading ? "Y" : ""} | ${r.error ? "Y" : ""} |\n`;
 }
 writeFileSync(outMd, md);
 

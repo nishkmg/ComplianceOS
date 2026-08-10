@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
 import Link from "next/link";
 import { KpiTile } from "@/components/ui/kpi-tile";
@@ -14,21 +14,22 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
 interface JournalEntry {
-  id: string; entry_number: string; date: string; narration: string; debit: number; credit: number; status: "draft" | "posted" | "voided";
+  id: string; entryNumber: string; date: string; narration: string; debit: string; credit: string; status: "draft" | "posted" | "voided";
 }
 
 const entryColumns: ColumnDef<JournalEntry>[] = [
-  { key: "entry_number", header: "Entry #", sortable: true, width: "130px",
-    render: (row) => <Link href={`/journal/${row.id}`} className="font-mono text-ui-xs text-amber hover:underline no-underline">{row.entry_number}</Link> },
+  { key: "entryNumber", header: "Entry #", sortable: true, width: "130px",
+    render: (row) => <Link href={`/journal/${row.id}`} className="font-mono text-ui-xs text-amber hover:underline no-underline">{row.entryNumber}</Link> },
   { key: "date", header: "Date", sortable: true, width: "120px",
     render: (row) => <span className="font-mono text-ui-xs text-mid">{new Date(row.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</span> },
   { key: "narration", header: "Narration", render: (row) => <span className="font-ui text-ui-sm text-dark">{row.narration}</span> },
   { key: "debit", header: "Debit", align: "right", width: "120px",
-    render: (row) => <span className="font-mono text-ui-sm tabular-nums">{row.debit > 0 ? formatIndianNumber(row.debit, { currency: true }) : "—"}</span> },
+    render: (row) => <span className="font-mono text-ui-sm tabular-nums">{Number(row.debit) > 0 ? formatIndianNumber(row.debit, { currency: true }) : "—"}</span> },
   { key: "credit", header: "Credit", align: "right", width: "120px",
-    render: (row) => <span className="font-mono text-ui-sm tabular-nums">{row.credit > 0 ? formatIndianNumber(row.credit, { currency: true }) : "—"}</span> },
+    render: (row) => <span className="font-mono text-ui-sm tabular-nums">{Number(row.credit) > 0 ? formatIndianNumber(row.credit, { currency: true }) : "—"}</span> },
   { key: "status", header: "Status", align: "center", width: "90px",
     render: (row) => <Badge variant={row.status === "posted" ? "success" : "amber"}>{row.status}</Badge> },
 ];
@@ -36,36 +37,24 @@ const entryColumns: ColumnDef<JournalEntry>[] = [
 export default function DashboardPage() {
   const { activeFy } = useFiscalYear();
   const { data: session } = useSession();
-  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [allEntries, setAllEntries] = useState<JournalEntry[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!tenantId) return;
-    (async () => {
-      try {
-        const r = await fetch(`/api/journal/entries?tenantId=${encodeURIComponent(tenantId)}&fiscalYear=${encodeURIComponent(activeFy)}`);
-        if (r.ok) {
-          const data = await r.json();
-          setEntries((data.entries || []).slice(0, 8));
-          setAllEntries(data.entries || []);
-          setTotals(data.totals || { debit: 0, credit: 0 });
-        }
-      } catch {} finally { setLoading(false); }
-    })();
-  }, [tenantId, activeFy]);
+  const { data, isLoading } = api.journalEntries.list.useQuery(
+    { fiscalYear: activeFy, limit: 500 },
+    { staleTime: 15_000 },
+  );
+  const allEntries = (data ?? []) as JournalEntry[];
+  const entries = allEntries.slice(0, 8);
+  const loading = isLoading;
 
-  const [totals, setTotals] = useState({ debit: 0, credit: 0 });
-  const totalDebit = totals.debit;
-  const totalCredit = totals.credit;
+  const totalDebit = useMemo(() => allEntries.reduce((s, e) => s + Number(e.debit || 0), 0), [allEntries]);
+  const totalCredit = useMemo(() => allEntries.reduce((s, e) => s + Number(e.credit || 0), 0), [allEntries]);
   const monthlyTrend = useMemo(() => {
     const months = new Map<string, { debit: number; credit: number }>();
     for (const e of allEntries) {
       const key = new Date(e.date).toLocaleDateString("en-IN", { month: "short" });
       const cur = months.get(key) ?? { debit: 0, credit: 0 };
-      cur.debit += e.debit;
-      cur.credit += e.credit;
+      cur.debit += Number(e.debit || 0);
+      cur.credit += Number(e.credit || 0);
       months.set(key, cur);
     }
     return [...months.entries()].map(([label, v]) => ({

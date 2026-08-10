@@ -1,14 +1,44 @@
 "use client";
 
-import { Icon } from '@/components/ui/icon';
+import { useEffect, useState } from "react";
+import { Icon } from "@/components/ui/icon";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
-import { useState } from "react";
+import { api } from "@/lib/api";
 
 export default function InvoiceConfigPage() {
-  const [logoPreview, setLogoPreview] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    return localStorage.getItem("invoice-logo-preview");
+  const { activeFy } = useFiscalYear();
+  const utils = api.useUtils();
+
+  const [prefix, setPrefix] = useState("");
+  const [companyAddress, setCompanyAddress] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [bankIfsc, setBankIfsc] = useState("");
+  const [bankAccount, setBankAccount] = useState("");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
+  const config = api.invoiceConfig.get.useQuery(undefined, { staleTime: 15_000 });
+
+  useEffect(() => {
+    if (!config.data) return;
+    const c = config.data;
+    const bd = (c.bankDetails ?? {}) as { bankName?: string; ifsc?: string; accountNumber?: string };
+    setPrefix(c.prefix ?? "");
+    setCompanyAddress(c.companyAddress ?? "");
+    setBankName(bd.bankName ?? "");
+    setBankIfsc(bd.ifsc ?? "");
+    setBankAccount(bd.accountNumber ?? "");
+    setLogoUrl(c.logoUrl ?? null);
+    setLogoPreview(c.logoUrl ?? null);
+  }, [config.data]);
+
+  const save = api.invoiceConfig.save.useMutation({
+    onSuccess: () => {
+      showToast.success("Invoice settings saved.");
+      void utils.invoiceConfig.get.invalidate();
+    },
+    onError: (e) => showToast.error(e.message),
   });
 
   const onLogoFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,11 +48,24 @@ export default function InvoiceConfigPage() {
     reader.onload = () => {
       const dataUrl = String(reader.result);
       setLogoPreview(dataUrl);
-      localStorage.setItem("invoice-logo-preview", dataUrl);
+      setLogoUrl(dataUrl);
     };
     reader.readAsDataURL(file);
   };
-  const { activeFy } = useFiscalYear();
+
+  const handleSave = () => {
+    save.mutate({
+      prefix: prefix.trim() || "INV",
+      companyAddress: companyAddress.trim() || undefined,
+      logoUrl: logoUrl ?? undefined,
+      bankDetails: {
+        bankName: bankName.trim() || undefined,
+        ifsc: bankIfsc.trim() || undefined,
+        accountNumber: bankAccount.trim() || undefined,
+      },
+    });
+  };
+
   return (
     <div className="space-y-0 text-left">
       {/* Sticky Header */}
@@ -33,8 +76,8 @@ export default function InvoiceConfigPage() {
           <p className="text-ui-sm text-secondary font-ui mt-1">Define document prefixes, statutory disclosures, and bank account mappings.</p>
         </div>
         <div className="flex gap-4">
-          <button onClick={() => showToast.success("Invoice settings saved.")} className="btn-primary">
-            Save Changes
+          <button onClick={handleSave} disabled={save.isPending || config.isLoading} className="btn-primary disabled:opacity-50">
+            {save.isPending ? "Saving…" : "Save Changes"}
           </button>
         </div>
       </header>
@@ -45,13 +88,9 @@ export default function InvoiceConfigPage() {
           <h3 className="font-ui text-lg font-bold text-dark mb-6">Naming & Sequence</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Invoice Prefix</label>
-              <input aria-label="Invoice number prefix" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="INV-2024-" />
-              <p className="text-ui-2xs text-light italic">Example: INV-2024-0001</p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Starting Number</label>
-              <input aria-label="Next invoice number" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="number" defaultValue="1" />
+              <label htmlFor="invoice-prefix" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Invoice Prefix</label>
+              <input id="invoice-prefix" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" value={prefix} onChange={(e) => setPrefix(e.target.value)} placeholder="INV" />
+              <p className="text-ui-2xs text-light italic">Example: INV-0001. The running number is generated by the server.</p>
             </div>
           </div>
         </section>
@@ -61,36 +100,23 @@ export default function InvoiceConfigPage() {
           <h3 className="font-ui text-lg font-bold text-dark mb-6">Statutory & Branding</h3>
           <div className="space-y-8">
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Invoice Header Address</label>
-              <textarea aria-label="Registered office address" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface resize-none" rows={3} defaultValue="14th Floor, Maker Chambers VI, Nariman Point, Mumbai - 400021"></textarea>
+              <label htmlFor="invoice-address" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Invoice Header Address</label>
+              <textarea id="invoice-address" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface resize-none" rows={3} value={companyAddress} onChange={(e) => setCompanyAddress(e.target.value)} placeholder="Registered office address" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="flex flex-col gap-2">
-                  <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Logo (B&W Recommended)</label>
-                   <label className="border-2 border-dashed border-border-strong p-6 flex flex-col items-center justify-center bg-surface-muted transition-colors cursor-pointer hover:bg-surface-muted">
-                     {logoPreview ? (
-                       <img src={logoPreview} alt="Invoice logo preview" className="max-h-20 mb-2 object-contain" />
-                     ) : (
-                       <Icon name="upload_file" className="text-light text-3xl mb-2" />
-                     )}
-                     <span className="font-ui text-ui-2xs uppercase font-bold text-mid">{logoPreview ? "Replace logo" : "Upload PNG/JPG"}</span>
-                     <input type="file" accept="image/png,image/jpeg" onChange={onLogoFile} className="sr-only" aria-label="Upload invoice logo" />
-                   </label>
-               </div>
-               <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between py-2 border-b 50-border">
-                    <span className="font-ui text-ui-sm text-dark">Show Authorized Signatory</span>
-                    <button onClick={() => showToast.info("Numbering preferences are saved automatically.")} aria-label="Sequential invoice numbering" aria-pressed="true" className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
-                      <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between py-2 border-b 50-border">
-                    <span className="font-ui text-ui-sm text-dark">Include QR Code (e-Invoice)</span>
-                    <button onClick={() => showToast.info("E-invoice QR will appear on GST invoices.")} aria-label="QR code on GST invoices" aria-pressed="true" className="w-10 h-6 rounded-full bg-amber relative border-none cursor-pointer">
-                      <div className="absolute top-1 right-1 w-4 h-4 bg-surface rounded-full"></div>
-                    </button>
-                  </div>
-               </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Logo (B&W Recommended)</label>
+                <label className="border-2 border-dashed border-border-strong p-6 flex flex-col items-center justify-center bg-surface-muted transition-colors cursor-pointer hover:bg-surface-muted">
+                  {logoPreview ? (
+                    <img src={logoPreview} alt="Invoice logo preview" className="max-h-20 mb-2 object-contain" />
+                  ) : (
+                    <Icon name="upload_file" className="text-light text-3xl mb-2" />
+                  )}
+                  <span className="font-ui text-ui-2xs uppercase font-bold text-mid">{logoPreview ? "Replace logo" : "Upload PNG/JPG"}</span>
+                  <input type="file" accept="image/png,image/jpeg" onChange={onLogoFile} className="sr-only" aria-label="Upload invoice logo" />
+                </label>
+                <p className="text-ui-2xs text-light italic">Stored with the tenant config; used in the invoice PDF header.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -100,16 +126,16 @@ export default function InvoiceConfigPage() {
           <h3 className="font-ui text-lg font-bold text-dark mb-6">Payment & Bank Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Bank Name</label>
-              <input aria-label="Bank name" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC Bank" />
+              <label htmlFor="bank-name" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Bank Name</label>
+              <input id="bank-name" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" value={bankName} onChange={(e) => setBankName(e.target.value)} />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">IFSC Code</label>
-              <input aria-label="Bank IFSC code" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="HDFC0000060" />
+              <label htmlFor="bank-ifsc" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">IFSC Code</label>
+              <input id="bank-ifsc" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" value={bankIfsc} onChange={(e) => setBankIfsc(e.target.value)} />
             </div>
             <div className="flex flex-col gap-2 md:col-span-2">
-              <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Account Number</label>
-              <input aria-label="Bank account number" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" defaultValue="50200012345678" />
+              <label htmlFor="bank-account" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Account Number</label>
+              <input id="bank-account" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" value={bankAccount} onChange={(e) => setBankAccount(e.target.value)} />
             </div>
           </div>
         </section>

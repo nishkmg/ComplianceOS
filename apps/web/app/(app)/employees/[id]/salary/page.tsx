@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { showToast } from "@/lib/toast";
+import { api } from "@/lib/api";
 
 export default function EmployeeSalaryPage() {
   const params = useParams();
@@ -15,14 +16,31 @@ export default function EmployeeSalaryPage() {
   ]);
   const [effectiveFrom, setEffectiveFrom] = useState(new Date().toISOString().split("T")[0]);
 
+  const createStructure = api.salaryStructure.create.useMutation({
+    onSuccess: () => {
+      showToast.success("Salary structure saved.");
+      router.push(`/employees/${employeeId}`);
+    },
+    onError: (e) => {
+      showToast.error(e.message);
+      setSaving(false);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (saving) return;
+    const validComponents = components.filter((c) => c.componentCode);
+    if (validComponents.length === 0) {
+      showToast.error("Add at least one salary component.");
+      return;
+    }
     setSaving(true);
-    setTimeout(() => {
-      showToast.success("Salary structure saved.");
-      router.push(`/employees/${employeeId}`);
-    }, 400);
+    createStructure.mutate({
+      employeeId,
+      effectiveFrom,
+      components: validComponents,
+    });
   };
 
   const addComponent = () => { setComponents([...components, { componentCode: "", amount: "" }]); };

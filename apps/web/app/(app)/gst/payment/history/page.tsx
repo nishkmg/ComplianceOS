@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
-import { useSession } from "next-auth/react";
 import { EmptyState } from "@/components/ui/empty-state";
-
-interface Payment { id: string; challan_number: string; amount: string; transaction_date: string; tax_type: string; bank_name: string; }
+import { api } from "@/lib/api";
 
 export default function PaymentHistoryPage() {
-  const { data: session } = useSession(); const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const [payments, setPayments] = useState<Payment[]>([]); const [loading, setLoading] = useState(true);
-  useEffect(() => { if (!tenantId) return; (async () => { try { const r = await fetch(`/api/gst/payments?tenantId=${encodeURIComponent(tenantId)}`); if (r.ok) setPayments((await r.json()).payments || []); } catch {} finally { setLoading(false); } })(); }, [tenantId]);
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+  const { data, isLoading } = api.gstPayment.paymentHistory.useQuery(undefined, { staleTime: 15_000 });
+  const payments = data ?? [];
+
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
@@ -30,10 +28,10 @@ export default function PaymentHistoryPage() {
           </tr></thead><tbody className="divide-y divide-border-subtle">
             {payments.map(p => (
               <tr key={p.id} className="hover:bg-surface-muted transition-colors">
-                <td className="py-3 px-6 font-mono text-ui-xs text-amber">{p.challan_number || "—"}</td>
-                <td className="py-3 px-6 font-mono text-ui-xs text-mid">{p.transaction_date ? new Date(p.transaction_date).toLocaleDateString("en-IN") : "—"}</td>
-                <td className="py-3 px-6 font-ui text-ui-sm text-dark uppercase">{p.tax_type || "—"}</td>
-                <td className="py-3 px-6 font-ui text-ui-sm text-dark">{p.bank_name || "—"}</td>
+                <td className="py-3 px-6 font-mono text-ui-xs text-amber">{p.challanNumber || "—"}</td>
+                <td className="py-3 px-6 font-mono text-ui-xs text-mid">{p.challanDate || p.transactionDate ? new Date(p.challanDate ?? p.transactionDate).toLocaleDateString("en-IN") : "—"}</td>
+                <td className="py-3 px-6 font-ui text-ui-sm text-dark uppercase">{p.taxType || "—"}</td>
+                <td className="py-3 px-6 font-ui text-ui-sm text-dark">{p.bankName || "—"}</td>
                 <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(p.amount || 0).toLocaleString("en-IN")}</td>
               </tr>
             ))}

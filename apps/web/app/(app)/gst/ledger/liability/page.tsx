@@ -1,33 +1,48 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Icon } from "@/components/ui/icon";
-import { useSession } from "next-auth/react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { api } from "@/lib/api";
+
+interface LiabilityEntry {
+  id: string; ledgerType: "liability"; taxType: string | null; liabilityType: string | null;
+  openingBalance: number; taxPayable: number; taxPaid: number; closingBalance: number;
+  taxPeriodMonth: string | null; taxPeriodYear: string | null;
+}
 
 export default function LiabilityLedgerPage() {
-  const { data: session } = useSession(); const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
-  const [entries, setEntries] = useState<any[]>([]); const [loading, setLoading] = useState(true);
-  useEffect(() => { if (!tenantId) return; (async () => { try { const r = await fetch(`/api/gst/ledger?tenantId=${encodeURIComponent(tenantId)}&type=cash`); if (r.ok) setEntries((await r.json()).entries?.filter((e: any) => e.tax_type === "gst") || []); } catch {} finally { setLoading(false); } })(); }, [tenantId]);
-  if (loading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+  const { data, isLoading } = api.gstLedger.ledgerTransactions.useQuery({ type: "liability" }, { staleTime: 15_000 });
+  const entries = (data ?? []) as LiabilityEntry[];
+
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
+
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <h1 className="font-ui text-display-lg font-semibold text-dark">Liability Ledger</h1>
-      {entries.length === 0 ? <EmptyState icon="account_balance" title="No liability entries" description="Liability entries will appear here once returns are filed." /> : (
+      {entries.length === 0 ? <EmptyState icon="receipt" title="No entries" description="Output GST liability and set-off entries appear here." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
-          <table className="w-full text-left border-collapse"><thead><tr className="bg-surface-muted border-b border-border">
-            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Date</th>
-            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Description</th>
-            <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Amount</th>
-          </tr></thead><tbody className="divide-y divide-border-subtle">
-            {entries.map((e: any) => (
-              <tr key={e.id} className="hover:bg-surface-muted transition-colors">
-                <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.transaction_date ? new Date(e.transaction_date).toLocaleDateString("en-IN") : "—"}</td>
-                <td className="py-3 px-6 font-ui text-ui-sm text-dark">{e.narration || e.transaction_type}</td>
-                <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(e.amount || 0).toLocaleString("en-IN")}</td>
-              </tr>
-            ))}
-          </tbody></table>
+          <table className="w-full text-left border-collapse">
+            <thead><tr className="bg-surface-muted border-b border-border">
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Period</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Tax Type</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Liability</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Payable</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Paid</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest text-right">Closing</th>
+            </tr></thead>
+            <tbody className="divide-y divide-border-subtle">
+              {entries.map(e => (
+                <tr key={e.id} className="hover:bg-surface-muted transition-colors">
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.taxPeriodMonth}/{e.taxPeriodYear}</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid uppercase">{e.taxType || "—"}</td>
+                  <td className="py-3 px-6 font-ui text-ui-sm text-dark capitalize">{e.liabilityType?.replace(/_/g, " ") || "—"}</td>
+                  <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(e.taxPayable || 0).toLocaleString("en-IN")}</td>
+                  <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(e.taxPaid || 0).toLocaleString("en-IN")}</td>
+                  <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">₹{Number(e.closingBalance || 0).toLocaleString("en-IN")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
