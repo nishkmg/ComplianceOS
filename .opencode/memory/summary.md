@@ -96,3 +96,10 @@ session-2026-06-14T12-10-50-939Z-compaction46.md
 - tRPC CONVERGENCE: migrated all remaining fetch('/api/*') pages (audit-log, coa, dashboard, employees, employees/[id], gst/ledger/{cash,itc,liability}, gst/payment/history, gst/returns, payroll, reports/ledger, settings/fiscal-years + [id], inventory, use-fiscal-year hook). Deleted superseded API routes (accounts, coa, employees, fiscal-years, gst/ledger, gst/payments, gst/returns index, inventory/*, invoices, journal/entries, payments, payroll/runs) + dead components/ocr/. Kept: auth, contact, health, */pdf, trpc, upload, uploads, onboarding (working-feature exception — documented).
 - page-audit.mjs: added fakeSuccess detector (0 pages). Remaining 12 unwired app routes are all hubs/empties/terminals.
 - Gates: typecheck clean, 482 server tests, build green, a11y sweep 9/9.
+
+## 2026-08-10 (session 4) — pluggable OCR: LLM extractor behind env flag (Option B)
+
+- New `packages/server/src/services/ocr-engine.ts`: `processScan(fileUrl, scanType)` dispatches on `resolveOcrProvider()` — `OCR_PROVIDER=llm` + `OCR_LLM_API_KEY` → OpenAI-compatible vision call (strict JSON schema, image_url data URL via driver-aware `readFileContent` — works with local AND supabase storage); otherwise Tesseract + regex parser. PDFs: OCR locally then LLM structures the text (vision APIs reject PDFs). Malformed JSON → error → router marks scan failed. Numbers coerced (₹/commas stripped), dates ISO-sliced.
+- ocr-scan router rewired to `processScan` with shared DB update per scanType; ParsedInvoice gained `vendorGstin` (regex parser now extracts GSTIN from text too — column existed, parser never filled it).
+- Tests: `src/services/ocr-engine.test.ts` (11 tests, mocked fetch + mocked tesseract — offline): provider resolution incl. key-missing fallback, image_url payload shape, PDF→text path, markdown-fenced JSON recovery, malformed JSON, non-ok status, ₹-string number coercion. Fixtures write to `UPLOAD_DIR/tenant/` (readFileContent appends the tenant segment).
+- Env added to .env.example (OCR_PROVIDER/OCR_LLM_API_KEY/OCR_LLM_BASE_URL/OCR_LLM_MODEL). Gates: typecheck, 493 server tests, web build green.

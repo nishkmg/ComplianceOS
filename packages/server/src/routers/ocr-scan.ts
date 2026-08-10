@@ -4,8 +4,7 @@ import { eq, and, desc } from "drizzle-orm";
 import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { ocrScanResults } = _db;
-import { processImageOcr } from "../services/ocr-processor";
-import { parseInvoiceTextResult, parseReceiptTextResult } from "../services/ocr-parser";
+import { processScan, type ExtractedScan } from "../services/ocr-engine";
 import { createInvoice } from "../commands/create-invoice";
 import { createExpenseFromReceipt } from "../commands/create-expense-from-receipt";
 
@@ -33,31 +32,32 @@ export const ocrScanRouter = router({
         status: "processing",
       }).returning();
 
-      // Fire-and-forget OCR processing
-      processImageOcr(fileUrl)
-        .then(({ rawText, confidence }) => {
-          if (scanType === "receipt") {
-            const parsed = parseReceiptTextResult(rawText, confidence);
+      // Fire-and-forget OCR processing (provider: tesseract | llm, see ocr-engine)
+      processScan(fileUrl, scanType)
+        .then((extracted) => {
+          const parsed = extracted.parsed;
+          if (scanType === "receipt" && parsed.type === "receipt") {
             return ctx.db.update(ocrScanResults)
               .set({
-                rawText,
+                rawText: extracted.rawText,
                 parsedVendorName: parsed.vendorName,
                 parsedVendorAddress: parsed.vendorAddress,
                 parsedVendorGstin: parsed.vendorGstin,
                 parsedInvoiceDate: parsed.receiptDate,
                 parsedTotal: parsed.total ? String(parsed.total) : null,
                 parsedExpenseCategory: parsed.expenseCategory,
-                confidenceScore: String(confidence),
+                confidenceScore: String(extracted.confidence),
                 status: "completed",
                 updatedAt: new Date(),
               })
               .where(eq(ocrScanResults.id, result.id));
-          } else {
-            const parsed = parseInvoiceTextResult(rawText, confidence);
+          }
+          if (scanType === "invoice" && parsed.type === "invoice") {
             return ctx.db.update(ocrScanResults)
               .set({
-                rawText,
+                rawText: extracted.rawText,
                 parsedVendorName: parsed.vendorName,
+                parsedVendorGstin: parsed.vendorGstin,
                 parsedInvoiceNumber: parsed.invoiceNumber,
                 parsedInvoiceDate: parsed.invoiceDate,
                 parsedDueDate: parsed.dueDate,
@@ -67,12 +67,16 @@ export const ocrScanRouter = router({
                 parsedIgstTotal: parsed.igstTotal ? String(parsed.igstTotal) : null,
                 parsedTotal: parsed.total ? String(parsed.total) : null,
                 parsedLineItems: JSON.stringify(parsed.lineItems),
-                confidenceScore: String(confidence),
+                confidenceScore: String(extracted.confidence),
                 status: "completed",
                 updatedAt: new Date(),
               })
               .where(eq(ocrScanResults.id, result.id));
           }
+          // Parser returned a shape mismatch — treat as failed
+          return ctx.db.update(ocrScanResults)
+            .set({ status: "failed", updatedAt: new Date() })
+            .where(eq(ocrScanResults.id, result.id));
         })
         .catch(() => {
           return ctx.db.update(ocrScanResults)

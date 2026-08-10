@@ -14,6 +14,7 @@ export interface ParsedLineItem {
 export interface ParsedInvoice {
   type: "invoice";
   vendorName: string | null;
+  vendorGstin: string | null;
   invoiceNumber: string | null;
   invoiceDate: string | null;
   dueDate: string | null;
@@ -114,6 +115,13 @@ function parseInvoiceText(rawText: string, confidence: number): ParsedInvoice {
     }
   }
 
+  // Vendor GSTIN
+  let vendorGstin: string | null = null;
+  for (const line of lines) {
+    const m = line.match(GSTIN_REGEX);
+    if (m) { vendorGstin = m[0]; break; }
+  }
+
   // Invoice number
   let invoiceNumber: string | null = null;
   for (const line of lines) {
@@ -200,6 +208,7 @@ function parseInvoiceText(rawText: string, confidence: number): ParsedInvoice {
   return {
     type: "invoice",
     vendorName,
+    vendorGstin,
     invoiceNumber,
     invoiceDate,
     dueDate: null,
