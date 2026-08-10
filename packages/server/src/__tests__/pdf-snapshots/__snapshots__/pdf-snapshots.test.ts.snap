@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GSTR-1 PDF snapshot > renders with sample return data and matches hash > gstr1-pdf 1`] = `"50ea3a975d4a38c0857b09869b548bcc03041316668ca087d188f01108fde189"`;
+exports[`GSTR-1 PDF snapshot > renders with sample return data and matches hash > gstr1-pdf 1`] = `"a012f0f5d9d9123c20a124169ea4da710fdd61e699768e115ebe039851973040"`;
 
-exports[`GSTR-3B PDF snapshot > renders with sample return data and matches hash > gstr3b-pdf 1`] = `"c7483a6733587e727190c86832a5fc28e7f26ea4e9f5b51b7cc0af3e1b97428f"`;
+exports[`GSTR-3B PDF snapshot > renders with sample return data and matches hash > gstr3b-pdf 1`] = `"c013d88b262823da9a9471d23c61cb189aea317c7885b90b52bdad8af31f6065"`;
 
-exports[`ITR-3 PDF snapshot > renders with sample taxpayer data and matches hash > itr3-pdf 1`] = `"1e86be6193618722d0e9318c5f3486a410c477aa01cb9a9d58b96a635a3b72cd"`;
+exports[`ITR-3 PDF snapshot > renders with sample taxpayer data and matches hash > itr3-pdf 1`] = `"7d0fe40ed7716b4597cfd8b861ec81bda16dd09d48d5502596bc92d0b50379fe"`;
 
-exports[`Invoice PDF snapshot > renders with sample data and matches hash > invoice-pdf 1`] = `"de2508c42d4bf4e0cd6551859e8ce002a61d51e56c866349fed97446dcb7d83e"`;
+exports[`Invoice PDF snapshot > renders with sample data and matches hash > invoice-pdf 1`] = `"4f388b105b18f05f14e85ff2444b314bf9b7d590127af5bb7fe876ce95b041a2"`;

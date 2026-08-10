@@ -13,23 +13,34 @@ type PDFStyle = any;
 
 // ---------------------------------------------------------------------------
 // Font registration
-// When bundling fonts, download Inter TTF and NotoSansDevanagari TTF to the
-// assets/fonts directory and register with Font.register({ family: "Inter",
-// src: "/path/to/Inter-Regular.ttf" }).
-//
-// For now, Helvetica is used with a note to swap when custom fonts are bundled.
-//
-// Register placeholder families so components can reference them without error.
+// Inter + NotoSansDevanagari TTFs are bundled in assets/fonts and registered
+// from their local paths so PDF rendering is deterministic and offline-safe.
+// @react-pdf/renderer 4.x cannot render the built-in Helvetica standard font
+// (text runs are silently dropped), so a real font file is required.
+// CDN registration is kept as a fallback for deployments that lack the assets.
 // ---------------------------------------------------------------------------
 
-try {
-  Font.registerHyphenationCallback(() => []);
-} catch {
-  // ignore — already registered or unavailable
+import path from "node:path";
+import fs from "node:fs";
+
+const FONT_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../assets/fonts");
+
+function localFontSrc(file: string): string | null {
+  const full = path.join(FONT_DIR, file);
+  try {
+    return fs.existsSync(full) ? full : null;
+  } catch {
+    return null;
+  }
 }
+
+// NOTE: do NOT disable hyphenation via registerHyphenationCallback(() => []) —
+// @react-pdf/renderer 4.x silently drops every text run when the callback
+// returns an empty array (all rendered PDFs come out blank).
 
 const REGISTERED_FONTS = {
   inter: false,
+  interBold: false,
   notoSansDevanagari: false,
 } as { [family: string]: boolean };
 
@@ -42,19 +53,29 @@ function tryRegisterFont(family: string, src: string): boolean {
   }
 }
 
-// Attempt to load Inter from a well-known CDN path; swallows errors silently
-// so rendering still works with Helvetica fallback.
-REGISTERED_FONTS.inter = tryRegisterFont(
-  "Inter",
-  "https://fonts.cdnfonts.com/s/19795/Inter_18pt-Regular.woff",
-);
-REGISTERED_FONTS.notoSansDevanagari = tryRegisterFont(
-  "NotoSansDevanagari",
-  "https://fonts.cdnfonts.com/s/32775/NotoSansDevanagari-Regular.woff",
-);
+// Prefer bundled TTFs (deterministic, offline-safe); fall back to CDN paths.
+const interSrc = localFontSrc("Inter-Regular.ttf")
+  ?? "https://fonts.cdnfonts.com/s/19795/Inter_18pt-Regular.woff";
+const interBoldSrc = localFontSrc("Inter-Bold.ttf")
+  ?? "https://fonts.cdnfonts.com/s/19795/Inter_18pt-Bold.woff";
+const notoSrc = localFontSrc("NotoSansDevanagari-Regular.ttf")
+  ?? "https://fonts.cdnfonts.com/s/32775/NotoSansDevanagari-Regular.woff";
+
+// Inter-Italic is referenced by some styles; route it to the regular file when
+// the italic file is absent rather than dropping to the non-rendering Helvetica.
+const interItalicSrc = localFontSrc("Inter-Italic.ttf") ?? interSrc;
+
+REGISTERED_FONTS.inter = tryRegisterFont("Inter", interSrc);
+REGISTERED_FONTS.interBold = tryRegisterFont("Inter-Bold", interBoldSrc);
+tryRegisterFont("Inter-Italic", interItalicSrc);
+REGISTERED_FONTS.notoSansDevanagari = tryRegisterFont("NotoSansDevanagari", notoSrc);
 
 export const BODY_FONT = REGISTERED_FONTS.inter ? "Inter" : "Helvetica";
-export const BOLD_FONT = BODY_FONT === "Inter" ? "Inter" : "Helvetica-Bold";
+export const BOLD_FONT = REGISTERED_FONTS.interBold
+  ? "Inter-Bold"
+  : BODY_FONT === "Inter"
+    ? "Inter"
+    : "Helvetica-Bold";
 export const HINDI_FONT = REGISTERED_FONTS.notoSansDevanagari ? "NotoSansDevanagari" : "Helvetica";
 
 // ---------------------------------------------------------------------------

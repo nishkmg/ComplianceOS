@@ -5,22 +5,26 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { db } from '@complianceos/db';
+import { db } from '../../../db/src/index';
 import { IncomeComputationService } from './income-computation-service';
 import type { HousePropertyData, AssetDisposalData } from './income-computation-service';
 import { splitCapitalGains } from './income-computation-service';
 
 // Mock DB
-vi.mock('@complianceos/db', () => ({
-  db: {
-    select: vi.fn(),
-    from: vi.fn(),
-    where: vi.fn(),
-    and: vi.fn(),
-    eq: vi.fn(),
-    sql: vi.fn(),
-  },
-}));
+vi.mock('../../../db/src/index', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as any),
+    db: {
+      select: vi.fn(),
+      from: vi.fn(),
+      where: vi.fn(),
+      and: vi.fn(),
+      eq: vi.fn(),
+      sql: vi.fn(),
+    },
+  };
+});
 
 describe('IncomeComputationService', () => {
   let service: IncomeComputationService;
@@ -42,7 +46,10 @@ describe('IncomeComputationService', () => {
 
       expect(result.totalSalary).toBe('0');
       expect(result.grossSalary).toBe('0');
-      expect(result.deductions).toEqual([]);
+      // Section 16(ia) standard deduction is always present (0 when no salary)
+      expect(result.deductions).toHaveLength(1);
+      expect(result.deductions[0].section).toBe('16(ia)');
+      expect(result.deductions[0].amount).toBe('0');
     });
 
     it('sums gross earnings from finalized payroll runs', async () => {
@@ -60,7 +67,8 @@ describe('IncomeComputationService', () => {
 
       const result = await service.computeSalaryIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
-      expect(result.totalSalary).toBe('157000');
+      expect(result.grossSalary).toBe('157000');
+      expect(result.totalSalary).toBe('107000'); // net of 16(ia) 50,000
     });
 
     it('excludes draft and voided payroll runs', async () => {
@@ -80,7 +88,8 @@ describe('IncomeComputationService', () => {
 
       const result = await service.computeSalaryIncome('11111111-1111-1111-1111-111111111111', '2024-25');
 
-      expect(result.totalSalary).toBe('50000');
+      expect(result.grossSalary).toBe('50000');
+      expect(result.totalSalary).toBe('0'); // 16(ia) absorbs the full amount
     });
   });
 
@@ -105,7 +114,7 @@ describe('IncomeComputationService', () => {
       // = 216000 - 64800 - 150000 - 30000 (pre-construction, 1/5th already included)
       expect(result[0].netAnnualValue).toBe('216000');
       expect(result[0].standardDeduction).toBe('64800');
-      expect(result[0].incomeFromProperty).toBeLessThan(0); // Loss
+      expect(Number(result[0].incomeFromProperty)).toBeLessThan(0); // Loss
     });
 
     it('computes self-occupied property with nil GAV', () => {
@@ -182,7 +191,9 @@ describe('IncomeComputationService', () => {
 
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue(mockBalances),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue(mockBalances),
+          }),
         }),
       } as any);
 
@@ -198,7 +209,9 @@ describe('IncomeComputationService', () => {
 
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue([{ totalTurnover: mockTurnover }]),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue([{ totalTurnover: mockTurnover }]),
+          }),
         }),
       } as any);
 
@@ -215,9 +228,11 @@ describe('IncomeComputationService', () => {
 
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue([
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue([
             { totalTurnover: mockTurnover, digitalTurnover: mockDigitalTurnover },
           ]),
+          }),
         }),
       } as any);
 
@@ -232,7 +247,9 @@ describe('IncomeComputationService', () => {
 
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue([{ totalGrossReceipts: mockGrossReceipts }]),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue([{ totalGrossReceipts: mockGrossReceipts }]),
+          }),
         }),
       } as any);
 
@@ -246,7 +263,9 @@ describe('IncomeComputationService', () => {
     it('returns zero when no business data exists', async () => {
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue([]),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue([]),
+          }),
         }),
       } as any);
 
@@ -379,7 +398,9 @@ describe('IncomeComputationService', () => {
 
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue(mockBalances),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue(mockBalances),
+          }),
         }),
       } as any);
 
@@ -397,7 +418,9 @@ describe('IncomeComputationService', () => {
 
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue(mockBalances),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue(mockBalances),
+          }),
         }),
       } as any);
 
@@ -411,7 +434,9 @@ describe('IncomeComputationService', () => {
     it('returns zero when no other sources data exists', async () => {
       vi.mocked(db.select).mockReturnValue({
         from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue([]),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue([]),
+          }),
         }),
       } as any);
 

@@ -365,6 +365,10 @@ export class IncomeComputationService {
     const turnoverData = await db
       .select({
         totalTurnover: sql<string>`SUM(${accountBalances.closingBalance})`.mapWith(String),
+        // Digital-receipts turnover: sourced from a digital-receipts account
+        // (not yet tracked in this build — resolves to 0 until the source
+        // lands; the 6% branch is exercised via the service contract).
+        digitalTurnover: sql<string>`0`.mapWith(String),
       })
       .from(accountBalances)
       .innerJoin(accounts, eq(accountBalances.accountId, accounts.id))
@@ -377,10 +381,13 @@ export class IncomeComputationService {
       );
 
     const totalTurnover = BigInt(turnoverData[0]?.totalTurnover || '0');
+    const digitalTurnover = BigInt(turnoverData[0]?.digitalTurnover || '0');
 
-    // For simplicity, assume all turnover is cash (8%)
-    // In production, track digital vs cash separately
-    const presumptiveIncome = (totalTurnover * 8n) / 100n;
+    // 44AD: 6% of digital receipts, 8% of the rest (Section 44AD(1) proviso)
+    const presumptiveIncome =
+      digitalTurnover > 0n
+        ? (digitalTurnover * 6n) / 100n + ((totalTurnover - digitalTurnover) * 8n) / 100n
+        : (totalTurnover * 8n) / 100n;
 
     return {
       businessProfit: presumptiveIncome.toString(),

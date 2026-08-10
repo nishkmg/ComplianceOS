@@ -1,16 +1,19 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 import { createHash } from "node:crypto";
+import { inflateSync } from "node:zlib";
 
-// ── Prevent remote font fetches in test ─────────────────────────────────────
-// pdf-engine.tsx tries to register Inter from CDN. When renderToBuffer fetches
-// it, the CDN URL returns 404. Force fallback to built-in Helvetica.
+// ── Fonts in tests ─────────────────────────────────────────────────────────
+// pdf-engine.tsx registers bundled TTFs from assets/fonts (local paths only;
+// no CDN fetches happen when the files exist). register passes through so the
+// real font pipeline runs; renderToBuffer stays offline because local sources
+// are used first.
 vi.mock("@react-pdf/renderer", async (importOriginal) => {
   const actual: any = await importOriginal();
   return {
     ...actual,
     Font: {
       ...actual.Font,
-      register: vi.fn(() => { throw new Error("mock"); }),
+      register: vi.fn((...args: unknown[]) => actual.Font.register(...args)),
     },
   };
 });
@@ -50,6 +53,95 @@ function hashBuffer(buf: Buffer): string {
   return createHash("sha256").update(buf).digest("hex");
 }
 
+// ── PDF text extraction ─────────────────────────────────────────────────────
+// PDFKit embeds font subsets with nondeterministic glyph ids and object
+// ordering, so hashing raw PDF bytes is unstable. Instead, extract the text
+// content (decompress content streams, decode glyph ids through the ToUnicode
+// CMaps, honoring per-run font switches) and hash THAT: it is deterministic
+// and is a stronger regression signal (a blank PDF hashes to the empty string
+// and fails loudly).
+function pdfTextDigest(buf: Buffer): string {
+  const data = buf.toString("latin1");
+  const objRe = /(\d+) 0 obj\s*<<([\s\S]*?)>>\s*(?:stream\r?\n([\s\S]*?)endstream|endobj)/g;
+
+  const heads = new Map<number, { head: string; body: Buffer | null }>();
+  for (const m of data.matchAll(objRe)) {
+    heads.set(Number(m[1]), {
+      head: m[2],
+      body: m[3] ? Buffer.from(m[3], "latin1") : null,
+    });
+  }
+
+  // F-name -> font object number (page resource dict)
+  const fmap = new Map<string, number>();
+  for (const [, { head }] of heads) {
+    if (head.includes("/Font <<")) {
+      for (const fm of head.matchAll(/\/F(\d+)\s+(\d+) 0 R/g)) {
+        fmap.set(`F${fm[1]}`, Number(fm[2]));
+      }
+    }
+  }
+
+  // font object -> ToUnicode stream object
+  const tuOf = new Map<number, number>();
+  for (const [num, { head }] of heads) {
+    if (head.includes("/Type /Font")) {
+      const m = head.match(/\/ToUnicode (\d+) 0 R/);
+      if (m) tuOf.set(num, Number(m[1]));
+    }
+  }
+
+  // ToUnicode CMaps: glyph id -> unicode char
+  const cmaps = new Map<number, Map<number, string>>();
+  for (const [num, { head, body }] of heads) {
+    if (!body || !head.includes("/Filter /FlateDecode")) continue;
+    let dec: Buffer;
+    try {
+      dec = inflateSync(body);
+    } catch {
+      continue;
+    }
+    if (!dec.includes("beginbfchar") && !dec.includes("beginbfrange")) continue;
+    const cm = new Map<number, string>();
+    for (const c of dec.toString("latin1").matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>/g)) {
+      const hex = c[2].length % 4 === 0 ? c[2] : c[2].padStart(c[2].length + (4 - (c[2].length % 4)), "0");
+      cm.set(Number.parseInt(c[1], 16), Buffer.from(hex, "hex").toString("utf16le"));
+    }
+    cmaps.set(num, cm);
+  }
+
+  // Walk content streams, decode text runs per active font
+  const out: string[] = [];
+  for (const [, { head, body }] of heads) {
+    if (!body || !head.includes("/Filter /FlateDecode")) continue;
+    let dec: Buffer;
+    try {
+      dec = inflateSync(body);
+    } catch {
+      continue;
+    }
+    if (!dec.includes("TJ") && !dec.includes("Tj")) continue;
+    let active: string | null = null;
+    for (const m of dec.toString("latin1").matchAll(/\/(F\d+)\s+[\d.]+\s+Tf|\[([^\]]*)\]\s*TJ|\(([^)]*)\)\s*Tj/g)) {
+      if (m[1]) {
+        active = m[1];
+      } else if (m[2]) {
+        const fontObj = active ? fmap.get(active) : undefined;
+        const cm = (fontObj !== undefined && tuOf.has(fontObj) && cmaps.get(tuOf.get(fontObj)!)) || new Map<number, string>();
+        for (const tok of m[2].matchAll(/<([0-9a-fA-F]+)>/g)) {
+          const h = tok[1].length % 4 === 0 ? tok[1] : tok[1].padStart(tok[1].length + (4 - (tok[1].length % 4)), "0");
+          for (let i = 0; i + 4 <= h.length; i += 4) {
+            out.push(cm.get(Number.parseInt(h.slice(i, i + 4), 16)) ?? "?");
+          }
+        }
+      } else if (m[3]) {
+        out.push(m[3]);
+      }
+    }
+  }
+  return hashBuffer(Buffer.from(out.join(""), "utf8"));
+}
+
 // ── Freeze time for deterministic PDF output ─────────────────────────────────
 // PDFKit embeds /CreationDate in output; Footer also renders generatedAt.
 beforeAll(() => {
@@ -59,6 +151,10 @@ beforeAll(() => {
 afterAll(() => {
   vi.useRealTimers();
 });
+
+// NOTE: hashes are taken over the EXTRACTED TEXT (see pdfTextDigest), which is
+// stable across pdfkit's nondeterministic font-subset embedding, so no
+// Math.random / crypto mocks are needed.
 
 // ── Sample Data ─────────────────────────────────────────────────────────────
 
@@ -287,7 +383,7 @@ describe("Invoice PDF snapshot", () => {
     const result = await generateInvoicePdf(sampleInvoice, sampleConfig);
     expect(result.buffer).toBeInstanceOf(Buffer);
     expect(result.buffer.length).toBeGreaterThan(0);
-    const h = hashBuffer(result.buffer);
+    const h = pdfTextDigest(result.buffer);
     expect(h).toMatchSnapshot("invoice-pdf");
   });
 });
@@ -297,7 +393,7 @@ describe("GSTR-1 PDF snapshot", () => {
     const buf = await renderGstr1Pdf(sampleGstReturn, sampleHsnSummary, sampleCompanyInfo);
     expect(buf).toBeInstanceOf(Buffer);
     expect(buf.length).toBeGreaterThan(0);
-    const h = hashBuffer(buf);
+    const h = pdfTextDigest(buf);
     expect(h).toMatchSnapshot("gstr1-pdf");
   });
 });
@@ -307,7 +403,7 @@ describe("GSTR-3B PDF snapshot", () => {
     const buf = await renderGstr3bPdf(sampleGstr3b, sampleCompanyInfo);
     expect(buf).toBeInstanceOf(Buffer);
     expect(buf.length).toBeGreaterThan(0);
-    const h = hashBuffer(buf);
+    const h = pdfTextDigest(buf);
     expect(h).toMatchSnapshot("gstr3b-pdf");
   });
 });
@@ -321,7 +417,7 @@ describe("ITR-3 PDF snapshot", () => {
     );
     expect(result.buffer).toBeInstanceOf(Buffer);
     expect(result.buffer.length).toBeGreaterThan(0);
-    const h = hashBuffer(result.buffer);
+    const h = pdfTextDigest(result.buffer);
     expect(h).toMatchSnapshot("itr3-pdf");
   });
 });

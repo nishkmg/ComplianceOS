@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { db, tenants, users, userTenants } from "../../../db/src/index";
+import { db, tenants, users, userTenants, salaryComponents, accounts, payrollConfig } from "../../../db/src/index";
 import { eq, and } from "drizzle-orm";
 import { createEmployee } from "../commands/create-employee";
 import { createSalaryStructure } from "../commands/create-salary-structure";
@@ -13,6 +13,7 @@ async function createTestTenant() {
   const userId = randomUUID();
 
   await db.insert(tenants).values({
+    id: tenantId,
     name: `Test Tenant ${tenantId.slice(0, 8)}`,
     pan: `AAAPT${tenantId.slice(0, 5).toUpperCase()}P`,
     address: "Test Address",
@@ -28,6 +29,61 @@ async function createTestTenant() {
     userId,
     tenantId,
     role: "owner",
+  });
+
+  // Salary components the createSalaryStructure command validates against
+  const components: Array<{ code: string; type: string }> = [
+    { code: "BASIC", type: "earning" },
+    { code: "HRA", type: "earning" },
+    { code: "SPECIAL_ALLOWANCE", type: "earning" },
+    { code: "TRANSPORT_ALLOWANCE", type: "earning" },
+    { code: "MEDICAL_ALLOWANCE", type: "earning" },
+    { code: "PF_EE", type: "statutory" },
+    { code: "PF_ER", type: "statutory" },
+    { code: "ESI_EE", type: "statutory" },
+    { code: "ESI_ER", type: "statutory" },
+    { code: "TDS", type: "statutory" },
+    { code: "PROFESSIONAL_TAX", type: "statutory" },
+  ];
+  for (const c of components) {
+    await db.insert(salaryComponents).values({
+      tenantId,
+      componentCode: c.code,
+      componentName: c.code.replace(/_/g, " "),
+      componentType: c.type as never,
+    });
+  }
+
+  // Payroll config: expense + statutory/employee payable accounts (finalizePayroll requirement)
+  const acc = async (code: string, name: string, kind: string, subType: string) => {
+    const row = await db
+      .insert(accounts)
+      .values({
+        tenantId,
+        code,
+        name,
+        kind: kind as never,
+        subType: subType as never,
+        isSystem: true,
+      })
+      .returning({ id: accounts.id });
+    return row[0].id;
+  };
+  const salaryExpenseAccountId = await acc("PAY-SAL", "Salary Expense", "Expense", "DirectExpense");
+  const pfPayableAccountId = await acc("PAY-PF", "PF Payable", "Liability", "CurrentLiability");
+  const esiPayableAccountId = await acc("PAY-ESI", "ESI Payable", "Liability", "CurrentLiability");
+  const tdsPayableAccountId = await acc("PAY-TDS", "TDS Payable", "Liability", "CurrentLiability");
+  const ptPayableAccountId = await acc("PAY-PT", "PT Payable", "Liability", "CurrentLiability");
+  const employeePayableAccountId = await acc("PAY-EMP", "Employee Payable", "Liability", "CurrentLiability");
+
+  await db.insert(payrollConfig).values({
+    tenantId,
+    salaryExpenseAccountId,
+    pfPayableAccountId,
+    esiPayableAccountId,
+    tdsPayableAccountId,
+    ptPayableAccountId,
+    employeePayableAccountId,
   });
 
   return { tenantId, userId };
@@ -90,7 +146,7 @@ describe("Payroll Integration Flow", () => {
     // Step 3: Process payroll for April 2024
     const processResult = await processPayroll(db, tenantId, actorId, {
       employeeId: employeeResult.employeeId,
-      month: "4",
+      month: "04",
       year: "2024",
       paymentDate: "2024-05-01",
     });
@@ -106,7 +162,7 @@ describe("Payroll Integration Flow", () => {
     const payslipResult = await generatePayslip(db, tenantId, actorId, processResult.payrollRunId);
 
     expect(payslipResult.payslipId).toBeDefined();
-    expect(payslipResult.pdfUrl).toContain("payslip-EMP001-4-2024.pdf");
+    expect(payslipResult.pdfUrl).toContain("payslip-EMP001-04-2024.pdf");
   });
 
   it("should calculate statutory deductions correctly", async () => {
@@ -142,7 +198,7 @@ describe("Payroll Integration Flow", () => {
 
     const processResult = await processPayroll(db, tenantId, actorId, {
       employeeId: employeeResult.employeeId,
-      month: "4",
+      month: "04",
       year: "2024",
       paymentDate: "2024-05-01",
     });

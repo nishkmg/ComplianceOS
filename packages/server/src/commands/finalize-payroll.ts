@@ -64,6 +64,8 @@ export async function finalizePayroll(
 
   const date = payrollRun.paymentDate ?? new Date().toISOString().split("T")[0];
 
+  // Employer PF/ESI contributions are an additional cost on top of employee gross
+  const employerShare = pfEr + esiEr;
   const lines: Array<{
     accountId: string;
     debit: string;
@@ -72,7 +74,7 @@ export async function finalizePayroll(
   }> = [
     {
       accountId: salaryExpenseAccountId,
-      debit: String(grossEarnings),
+      debit: String(grossEarnings + employerShare),
       credit: "0",
       description: `Salary expense for ${employeeName}`,
     },

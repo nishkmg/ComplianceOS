@@ -52,7 +52,7 @@ export async function createPayrollRun(
   let payrollNumber = validated.payrollNumber;
   if (!payrollNumber) {
     const maxResult = await db.select({
-      maxNum: sql`MAX(CAST(SUBSTRING(payroll_number FROM 'PAY-[0-9]{4}-[0-9]{2}-([0-9]+)$' AS INTEGER))`,
+      maxNum: sql`MAX(CAST(SUBSTRING(payroll_number FROM 'PAY-[0-9]{4}-[0-9]{2}-([0-9]+)$') AS INTEGER))`,
     })
       .from(payrollRuns)
       .where(eq(payrollRuns.tenantId, tenantId));

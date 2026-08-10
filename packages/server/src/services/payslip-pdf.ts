@@ -13,8 +13,24 @@ interface PayslipData {
 }
 
 export async function generatePayslipPDF(data: PayslipData): Promise<Buffer> {
+  // Fall back to a system Chrome when puppeteer's bundled browser is absent
+  // (CI installs its own; local dev machines may not have downloaded one).
+  const candidates = [
+    process.env.PUPPETEER_EXECUTABLE_PATH,
+    process.env.CHROME_PATH,
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+  ].filter(Boolean) as string[];
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: candidates.find((p) => {
+      try {
+        return require("fs").existsSync(p);
+      } catch {
+        return false;
+      }
+    }),
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
