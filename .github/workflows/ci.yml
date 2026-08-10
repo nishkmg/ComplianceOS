@@ -120,6 +120,108 @@ jobs:
           REDIS_URL: redis://localhost:6379
         run: pnpm test
 
+  design-audit:
+    name: Design Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run design-system audit (contrast both themes, tokens, focus, loading states)
+        run: node scripts/design-audit.mjs
+
+  e2e-a11y:
+    name: E2E Accessibility Sweep
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: complianceos_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run database migrations
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/complianceos_test
+        run: pnpm db:migrate
+
+      - name: Seed demo user (pool stays open after seeding — timeout is intentional)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/complianceos_test
+          REDIS_URL: redis://localhost:6379
+          SEED_DEMO: 'true'
+          ALLOW_SEED: '1'
+        run: timeout 90 pnpm --filter @complianceos/db db:seed:demo || true
+
+      - name: Build web
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/complianceos_test
+          REDIS_URL: redis://localhost:6379
+        run: pnpm --filter @complianceos/web build
+
+      - name: Install Playwright chromium
+        run: pnpm --filter @complianceos/web exec playwright install --with-deps chromium
+
+      - name: Run accessibility sweep (axe, zero critical/serious)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/complianceos_test
+          REDIS_URL: redis://localhost:6379
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: ci-test-secret
+          AUTH_TRUST_HOST: 'true'
+          BASE_URL: http://localhost:3000
+          PLAYWRIGHT_SERVER_COMMAND: pnpm --filter @complianceos/web exec next start -p 3000
+          CI: 'true'
+        run: pnpm --filter @complianceos/web exec playwright test e2e/a11y.spec.ts --project=chromium
+
   build:
     name: Build
     runs-on: ubuntu-latest

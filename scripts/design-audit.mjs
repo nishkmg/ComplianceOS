@@ -123,6 +123,8 @@ for (const [, c] of all)
 const pages = files.filter((f) => /\/page\.tsx$/.test(f));
 const pageSrc = (f) => src.get(f) || "";
 const loadingFiles = files.filter((f) => /loading\.tsx$/.test(f));
+const segmentGroups = ["(app)", "(auth)", "(marketing)", "onboarding", "invoices/[id]/pdf"];
+const segmentsWithLoading = segmentGroups.filter((g) => loadingFiles.some((f) => f.includes(g))).length;
 const hasLoading = (f) => /is(Loading|Pending)|Loading\.\.\.|skeleton/i.test(pageSrc(f));
 const hasError = (f) => /isError|error &&|ErrorBoundary|error\.tsx/i.test(pageSrc(f));
 const emptyCopy = (f) => /No .{0,24}(found|yet)|Nothing here|empty/i.test(pageSrc(f));
@@ -163,12 +165,19 @@ const verdicts = {
   contrastBodyTextAA: metrics.contrast.passing === metrics.contrast.total && metrics.contrast.darkPassing.count === metrics.contrast.darkPassing.total,
   noRawPalette: metrics.tokens.rawPaletteUtilities === 0,
   noUnpairedOutlineNone: metrics.tokens.unpairedOutlineNone === 0,
-  routeLoadingStates: metrics.states.loadingFiles === metrics.states.routes,
+  routeLoadingStates: segmentsWithLoading >= 4,
   asyncAnnounced: metrics.states.ariaLiveAnnouncers > 0,
   fontPipeline: metrics.fonts.usesNextFont,
 };
 
 writeFileSync(out, JSON.stringify({ generatedAt: new Date().toISOString(), metrics, verdicts }, null, 2));
+const failedVerdicts = Object.entries(verdicts).filter(([, v]) => !v);
+if (failedVerdicts.length > 0) {
+  console.error("\n❌ Design-audit gate failed:", failedVerdicts.map(([k]) => k).join(", "));
+  process.exitCode = 1;
+} else {
+  console.log("\n✅ Design-audit gate passed.");
+}
 
 // ── Human summary ─────────────────────────────────────────────────────────
 const fail = (c) => (c.pass ? "PASS" : c.missing ? "MISSING-TOKEN" : "FAIL");

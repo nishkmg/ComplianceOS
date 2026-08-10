@@ -96,6 +96,7 @@ export default function ProfitLossPage() {
         </div>
         <div className="flex gap-3 items-center">
           <select
+            aria-label="Fiscal year"
             className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
@@ -186,10 +187,10 @@ export default function ProfitLossPage() {
               : "bg-danger-bg text-danger border border-danger/30 print:bg-transparent print:text-black print:border-black"
           }`}>
             <div>
-              <h4 className={`font-ui text-ui-sm font-bold uppercase tracking-widest ${isProfit ? "text-success" : "text-danger"} print:text-black`}>
+              <h4 className={`font-ui text-ui-sm font-bold uppercase tracking-widest ${isProfit ? "text-success-deep" : "text-danger-deep"} print:text-black`}>
                 {isProfit ? "Net Profit for the Period" : "Net Loss for the Period"}
               </h4>
-              <p className="text-light text-ui-2xs mt-0.5 uppercase tracking-widest print:text-mid">
+              <p className={`text-ui-2xs mt-0.5 uppercase tracking-widest print:text-mid ${isProfit ? "text-success-deep" : "text-danger-deep"}`}>
                 Transfer to Balance Sheet — Reserves & Surplus
               </p>
             </div>

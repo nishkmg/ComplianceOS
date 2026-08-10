@@ -84,6 +84,9 @@ ops/monitoring  alerting-rules.yml; ecosystem.config.cjs = PM2 (web + projector)
 - TS strict; verify with `pnpm typecheck` (turbo) before claiming a change complete.
 - Design conventions live in **`DESIGN.md`** (tokens, typography, primary `#D97706`) — UI changes should respect it; audit feedback in `IMPECCABLE-AUDIT.md`.
 - Final commit per task, with the design polish convention `fix(ui): P<N> …` matching the audit phases.
+- **Verification gates are scripted**: `scripts/design-audit.mjs` (contrast both themes, tokens, focus, loading; fails CI on ❌) + `apps/web/e2e/a11y.spec.ts` (axe sweep over 31 routes, zero critical/serious; CI job `e2e-a11y`). `DESIGN.md` is the enforceable canon; `IMPECCABLE-AUDIT.md` is superseded.
+- **Local docker containers have `--restart unless-stopped`** — complianceos-pg (5433) + complianceos-redis (6380) were exiting silently; `docker update --restart unless-stopped` applied. If 5433 is down, `docker start complianceos-pg complianceos-redis`.
+- **Playwright**: local runs use `PLAYWRIGHT_EXECUTABLE` (Chrome for Testing build) + `BASE_URL` (prod server on :3100); the config's webServer respects both. CI installs its own chromium. The a11y sweep's app test has a 180s timeout (21 routes).
 
 ## Self-healing / self-learning / self-improving (encode in every agent)
 

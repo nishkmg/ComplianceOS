@@ -140,7 +140,7 @@ export default function TrialBalancePage() {
         </div>
         <div className="flex gap-3 items-center">
           <select
-            className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
+            aria-label="Fiscal year" className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
           >

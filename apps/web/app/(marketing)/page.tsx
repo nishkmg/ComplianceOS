@@ -143,7 +143,7 @@ export default function HomePage() {
                   <button 
                     key={tab} 
                     onClick={() => setDemoTab(tab)}
-                    className={`pb-4 text-ui-sm font-ui transition-colors cursor-pointer border-none bg-transparent ${demoTab === tab ? 'text-white border-b-2 border-amber px-4' : 'text-secondary px-4 hover:text-lighter'}`}
+                    className={`pb-4 text-ui-sm font-ui transition-colors cursor-pointer border-none bg-transparent ${demoTab === tab ? 'text-white border-b-2 border-amber px-4' : 'text-sidebar-muted px-4 hover:text-lighter'}`}
                   >
                     {tab}
                   </button>
@@ -236,7 +236,7 @@ export default function HomePage() {
                     "{t.quote}"
                   </p>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-none bg-amber/10 flex items-center justify-center text-amber font-bold text-lg font-display">{t.author.split(' ').map(n => n[0]).join('')}</div>
+                    <div className="w-12 h-12 rounded-none bg-amber/10 flex items-center justify-center text-amber-hover font-bold text-lg font-display">{t.author.split(' ').map(n => n[0]).join('')}</div>
                     <div>
                       <p className="font-bold font-ui text-ui-sm">{t.author}</p>
                       <p className="text-ui-xs font-ui text-light uppercase tracking-tighter">{t.role}</p>

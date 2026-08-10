@@ -34,7 +34,7 @@ export default function LedgerReportPage() {
       <h1 className="font-ui text-display-lg font-semibold text-dark">Ledger Report</h1>
       <div className="space-y-1.5">
         <label className="font-ui text-ui-2xs text-light uppercase font-bold">Account</label>
-        <select className="w-full max-w-md border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={selectedAccount} onChange={e => setSelectedAccount(e.target.value)}>
+        <select aria-label="Account" className="w-full max-w-md border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={selectedAccount} onChange={e => setSelectedAccount(e.target.value)}>
           <option value="">Select an account…</option>
           {accounts.map((a: any) => <option key={a.id} value={a.id}>{a.code} — {a.name}</option>)}
         </select>

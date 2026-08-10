@@ -11,6 +11,10 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Local override for machines without the exact browser build
+    ...(process.env.PLAYWRIGHT_EXECUTABLE
+      ? { launchOptions: { executablePath: process.env.PLAYWRIGHT_EXECUTABLE } }
+      : {}),
   },
   projects: [
     {
@@ -31,9 +35,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:3000',
+    command: process.env.PLAYWRIGHT_SERVER_COMMAND || 'pnpm dev',
+    url: process.env.BASE_URL || 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,
+    timeout: 180000,
   },
 });

@@ -96,7 +96,7 @@ export default function BalanceSheetPage() {
         </div>
         <div className="flex gap-3 items-center">
           <select
-            className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
+            aria-label="Fiscal year" className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
           >
@@ -105,6 +105,7 @@ export default function BalanceSheetPage() {
             <option value="2024-25">FY 2024-25</option>
           </select>
           <input
+            aria-label="Fiscal year"
             type="date"
             value={asOfDate}
             onChange={e => setAsOfDate(e.target.value)}
@@ -186,7 +187,7 @@ export default function BalanceSheetPage() {
                 <Icon name="check_circle" size={14} /> Statement is Balanced
               </div>
             ) : (
-              <div className="px-4 py-2 bg-danger-bg text-danger text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
+              <div className="px-4 py-2 bg-danger-bg text-danger-deep text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
                 <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssetsVal), { currency: false })}
               </div>
             )}

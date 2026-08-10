@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T11:13:34.533Z",
+  "generatedAt": "2026-08-10T04:57:50.493Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,7 +206,7 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 311,
+      "arbitraryValues": 312,
       "rawPaletteUtilities": 0,
       "hexLiterals": 25,
       "unpairedOutlineNone": 0,
@@ -216,7 +216,7 @@
     },
     "states": {
       "routes": 97,
-      "loadingFiles": 1,
+      "loadingFiles": 4,
       "pagesWithLoading": 22,
       "pagesWithErrorHandling": 5,
       "pagesWithEmptyState": 28,
@@ -233,7 +233,7 @@
     "contrastBodyTextAA": true,
     "noRawPalette": true,
     "noUnpairedOutlineNone": true,
-    "routeLoadingStates": false,
+    "routeLoadingStates": true,
     "asyncAnnounced": true,
     "fontPipeline": true
   }
