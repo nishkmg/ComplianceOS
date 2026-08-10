@@ -44,9 +44,9 @@ const EnvSchema = z.object({
     .transform((v) => v === true || v === "true"),
 
   CI: z
-    .union([z.boolean(), z.enum(["true", "false"])])
+    .union([z.boolean(), z.enum(["true", "false", "1", "0"])])
     .optional()
-    .transform((v) => v === true || v === "true"),
+    .transform((v) => v === true || v === "true" || v === "1"),
   BASE_URL: z.string().url().optional(),
   PORT: z.coerce.number().int().positive().optional(),
 
