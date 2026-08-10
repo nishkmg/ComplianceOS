@@ -1,18 +1,35 @@
 "use client";
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { useSession } from "next-auth/react";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function ProfitLossPage() {
+  const [companyName, setCompanyName] = useState("Your Business");
+  const { data: session } = useSession();
+  const tenantId = (session?.user as Record<string, unknown> | undefined)?.tenantId as string | null;
+
+  useEffect(() => {
+    if (!tenantId) return;
+    (async () => {
+      try {
+        const r = await fetch(`/api/onboarding?tenantId=${encodeURIComponent(tenantId)}`);
+        if (r.ok) {
+          const d = await r.json();
+          if (d.businessProfile?.name) setCompanyName(d.businessProfile.name);
+        }
+      } catch {}
+    })();
+  }, [tenantId]);
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
 
   const utils = api.useUtils();
@@ -120,7 +137,7 @@ export default function ProfitLossPage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark print:text-black">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark print:text-black">{companyName}</h2>
           <p className="font-ui text-ui-xs text-mid mt-1 uppercase tracking-widest">Statement of Profit and Loss</p>
           <p className="font-mono text-ui-xs text-light mt-0.5 italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>

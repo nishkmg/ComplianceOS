@@ -1,7 +1,7 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { journalEntries } = _db;
+const { journalEntries, journalEntryLines } = _db;
 import { appendEvent } from "../lib/event-store";
 
 export async function postJournalEntry(
@@ -33,9 +33,26 @@ export async function postJournalEntry(
       throw new Error("Concurrent modification: entry status changed");
     }
 
+    // Totals + fiscal year on the event — fy-summary projector reads them
+    const [entryRow] = await tx
+      .select({ fiscalYear: journalEntries.fiscalYear })
+      .from(journalEntries)
+      .where(eq(journalEntries.id, entryId))
+      .limit(1);
+    const [totals] = await tx
+      .select({
+        debit: sql<string>`COALESCE(SUM(${journalEntryLines.debit}), 0)`,
+        credit: sql<string>`COALESCE(SUM(${journalEntryLines.credit}), 0)`,
+      })
+      .from(journalEntryLines)
+      .where(eq(journalEntryLines.journalEntryId, entryId));
+
     await appendEvent(tx, tenantId, "journal_entry", entryId, "journal_entry_posted", {
       entryId,
       postedAt: new Date().toISOString(),
+      fiscalYear: entryRow?.fiscalYear ?? null,
+      totalDebit: String(totals?.debit ?? "0"),
+      totalCredit: String(totals?.credit ?? "0"),
     }, actorId);
   });
 }

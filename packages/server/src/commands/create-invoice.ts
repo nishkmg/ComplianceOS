@@ -4,7 +4,7 @@ import * as _db from "../../../db/src/index";
 const { invoices, invoiceLines, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
-const { CreateInvoiceInputSchema, getCurrentFiscalYear, stateCodeToGstPrefix } = _shared;
+const { CreateInvoiceInputSchema, getCurrentFiscalYear, getStateName } = _shared;
 import { getNextInvoiceNumber } from "../services/invoice-number";
 
 type CreateInvoiceInput = {
@@ -87,7 +87,10 @@ export async function createInvoice(
     if (!tenant?.stateCode) {
       throw new Error("Tenant state code not configured. Update tenant config before creating invoices.");
     }
-    const tenantState = stateCodeToGstPrefix(tenant.stateCode);
+    // compare customerState (a state NAME, e.g. "Maharashtra") against the
+    // tenant state NAME — the old GST-prefix comparison ("IN-27" vs name)
+    // made every sale inter-state (IGST).
+    const tenantState = (getStateName(tenant.stateCode) ?? "").toLowerCase();
     lineCalculations = lines.map((line: { quantity: string | number; unitPrice: string | number; gstRate: string | number; discountPercent?: string | number; accountId: string; description: string }) => {
       const qty = Number(line.quantity);
       const unitPrice = Number(line.unitPrice);
@@ -102,7 +105,7 @@ export async function createInvoice(
       let sgstAmount = "0";
       let igstAmount = "0";
 
-      if (validated.customerState === tenantState) {
+      if (String(validated.customerState).toLowerCase() === tenantState) {
         cgstAmount = String((amount * gstRate / 200).toFixed(2));
         sgstAmount = String((amount * gstRate / 200).toFixed(2));
       } else {

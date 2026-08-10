@@ -131,6 +131,7 @@ async function processProjector(projector: Projector, tenantId: string): Promise
         payload: eventRow.payload,
         sequence: BigInt(eventRow.sequence),
         actorId: eventRow.actor_id,
+        createdBy: eventRow.actor_id,
         createdAt: new Date(eventRow.created_at),
       };
 

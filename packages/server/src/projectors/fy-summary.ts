@@ -48,13 +48,14 @@ export const fySummaryProjector: Projector = {
           totalAssets = v;
           break;
         case "Liability":
-          totalLiabilities = v;
+          // credit-normal account: closing_balance = debit - credit is negative
+          totalLiabilities = -v;
           break;
         case "Equity":
-          totalEquity = v;
+          totalEquity = -v;
           break;
         case "Revenue":
-          totalRevenue = v;
+          totalRevenue = -v;
           break;
         case "Expense":
           totalExpenses = v;

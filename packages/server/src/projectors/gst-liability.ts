@@ -49,13 +49,28 @@ async function upsertLiability(
     gstLiabilityLedger.taxPeriodYear,
   ];
 
+  // Replay-idempotency: delete the row we just (re)created so a replayed
+  // event replaces rather than accumulates. Per-event delete+insert.
+  await db.delete(gstLiabilityLedger).where(
+    and(
+      eq(gstLiabilityLedger.tenantId, args.tenantId),
+      eq(gstLiabilityLedger.taxType, args.taxType as "igst" | "cgst" | "sgst" | "cess"),
+      eq(gstLiabilityLedger.liabilityType, args.liabilityType),
+      eq(gstLiabilityLedger.taxPeriodMonth, args.periodMonth),
+      eq(gstLiabilityLedger.taxPeriodYear, args.periodYear),
+    ),
+  );
   await db.insert(gstLiabilityLedger).values({
     tenantId: args.tenantId,
-    taxType: args.taxType as any,
+    taxType: args.taxType,
     liabilityType: args.liabilityType,
+    openingBalance: "0",
     taxPayable: String(args.taxPayable),
+    taxPaid: "0",
     interestPayable: String(args.interestPayable),
+    interestPaid: "0",
     penaltyPayable: String(args.penaltyPayable),
+    penaltyPaid: "0",
     taxPeriodMonth: args.periodMonth,
     taxPeriodYear: args.periodYear,
     fiscalYear: args.fiscalYear,
@@ -64,14 +79,6 @@ async function upsertLiability(
     sourceDocumentNumber: args.sourceDocumentNumber,
     narration: args.narration,
     createdBy: args.createdBy,
-  }).onConflictDoUpdate({
-    target,
-    set: {
-      taxPayable: sql`${gstLiabilityLedger.taxPayable} + ${args.taxPayable}`,
-      interestPayable: sql`${gstLiabilityLedger.interestPayable} + ${args.interestPayable}`,
-      penaltyPayable: sql`${gstLiabilityLedger.penaltyPayable} + ${args.penaltyPayable}`,
-      updatedAt: new Date(),
-    },
   });
 }
 
@@ -83,7 +90,8 @@ export const gstLiabilityProjector: Projector = {
     const tenantId = event.tenantId;
 
     if (event.eventType === "invoice_posted" || event.eventType === "invoice_voided") {
-      const invoiceData = payload.invoice;
+      // flat enriched payload (post-invoice snapshot) or legacy nested shape
+      const invoiceData = payload.invoice ?? payload;
       if (!invoiceData) return;
 
       const periodMonth = String(new Date(invoiceData.date).getMonth() + 1).padStart(2, "0");

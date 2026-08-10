@@ -37,32 +37,36 @@ export const accountBalanceProjector: Projector = {
     const fiscalYear = entry.fiscalYear;
     const period = String(entry.date).substring(0, 7);
 
+    // Recompute-per-event: delete the affected (account, period) rows then
+    // insert plain values. The old additive upsert double-counted on event
+    // replay (projectors must be replay-idempotent).
+    const perAccount = new Map<string, { debit: number; credit: number }>();
     for (const line of lines) {
       const deltaDebit = parseFloat(String(line.debit || "0")) * sign;
       const deltaCredit = parseFloat(String(line.credit || "0")) * sign;
-
+      const cur = perAccount.get(line.accountId) ?? { debit: 0, credit: 0 };
+      cur.debit += deltaDebit;
+      cur.credit += deltaCredit;
+      perAccount.set(line.accountId, cur);
+    }
+    for (const [accountId, agg] of perAccount) {
+      await (db as any).delete(accountBalances).where(
+        and(
+          eq(accountBalances.tenantId, event.tenantId),
+          eq(accountBalances.accountId, accountId),
+          eq(accountBalances.fiscalYear, fiscalYear),
+          eq(accountBalances.period, period),
+        ),
+      );
       await (db as any).insert(accountBalances).values({
         tenantId: event.tenantId,
-        accountId: line.accountId,
+        accountId,
         fiscalYear,
         period,
         openingBalance: "0",
-        debitTotal: String(deltaDebit),
-        creditTotal: String(deltaCredit),
-        closingBalance: String(deltaDebit - deltaCredit),
-      }).onConflictDoUpdate({
-        target: [
-          accountBalances.tenantId,
-          accountBalances.accountId,
-          accountBalances.fiscalYear,
-          accountBalances.period,
-        ],
-        set: {
-          debitTotal: sql`${accountBalances.debitTotal} + ${deltaDebit}`,
-          creditTotal: sql`${accountBalances.creditTotal} + ${deltaCredit}`,
-          closingBalance: sql`${accountBalances.closingBalance} + ${deltaDebit - deltaCredit}`,
-          updatedAt: new Date(),
-        },
+        debitTotal: String(agg.debit),
+        creditTotal: String(agg.credit),
+        closingBalance: String(agg.debit - agg.credit),
       });
     }
   },

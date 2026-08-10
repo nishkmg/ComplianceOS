@@ -1,8 +1,9 @@
 import { eq, and } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
-const { invoices, invoiceLines, accounts, journalEntries, journalEntryLines } = _db;
+const { invoices, invoiceLines, accounts, journalEntries, journalEntryLines, tenants } = _db;
 import { createJournalEntry } from "./create-journal-entry";
+import { postJournalEntry } from "./post-journal-entry";
 import { appendEvent } from "../lib/event-store";
 
 export async function postInvoice(
@@ -133,15 +134,28 @@ export async function postInvoice(
     lines: jeLines,
   });
 
+  // Post the invoice's journal entry (account balances + fy-summary derive
+  // from journal_entry_posted; a draft JE would never reach them)
+  await postJournalEntry(db, tenantId, jeResult.entryId, actorId);
+
   // Update invoice status to sent
   await db.update(invoices)
     .set({ status: "sent", updatedAt: new Date() })
     .where(eq(invoices.id, invoiceId));
 
   // Append event
-  // Snapshot the invoice on the event — projectors (receivables, invoice-view)
-  // rely on these fields; a thin { invoiceId, journalEntryId, postedAt }
-  // payload made cross-aggregate projections impossible.
+  // Supplier state (tenant) — GST liability projector needs it to branch
+  // CGST+SGST vs IGST.
+  const [tenantRow] = await db
+    .select({ stateCode: tenants.stateCode })
+    .from(tenants)
+    .where(eq(tenants.id, tenantId))
+    .limit(1);
+  const supplierState = tenantRow?.stateCode ?? "";
+
+  // Snapshot the invoice on the event — projectors (receivables, invoice-view,
+  // gst-liability) rely on these fields; a thin { invoiceId, journalEntryId,
+  // postedAt } payload made cross-aggregate projections impossible.
   await appendEvent(db, tenantId, "invoice", invoiceId, "invoice_posted", {
     invoiceId,
     journalEntryId: jeResult.entryId,
@@ -153,6 +167,7 @@ export async function postInvoice(
     customerGstin: invoice[0].customerGstin ?? null,
     customerEmail: invoice[0].customerEmail ?? null,
     customerState: invoice[0].customerState ?? null,
+    supplierState,
     status: "sent",
     subtotal: String(invoice[0].subtotal),
     cgstTotal: String(invoice[0].cgstTotal),
@@ -161,6 +176,11 @@ export async function postInvoice(
     discountTotal: String(invoice[0].discountTotal),
     grandTotal: String(invoice[0].grandTotal),
     fiscalYear: invoice[0].fiscalYear,
+    lines: lines.map((l) => ({
+      igstAmount: String(l.igstAmount ?? "0"),
+      cgstAmount: String(l.cgstAmount ?? "0"),
+      sgstAmount: String(l.sgstAmount ?? "0"),
+    })),
   }, actorId);
 
   return { invoiceId, journalEntryId: jeResult.entryId };
