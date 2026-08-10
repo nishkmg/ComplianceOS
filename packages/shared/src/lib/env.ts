@@ -7,10 +7,13 @@ const EnvSchema = z.object({
   REDIS_URL: z.string().url(),
 
   NEXTAUTH_SECRET: z.string().min(16),
-  NEXTAUTH_URL: z.string().url(),
+  // NextAuth v5 derives the base URL from the request when unset (Vercel)
+  NEXTAUTH_URL: z.string().url().optional(),
+  AUTH_URL: z.string().url().optional(),
 
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  // Legacy Supabase config — only required when STORAGE_DRIVER=supabase
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 
   MAIL_HOST: z.string().min(1).optional(),
   MAIL_PORT: z.coerce.number().int().positive().optional(),
