@@ -97,17 +97,17 @@ export default function FiscalYearDetailPage() {
             <p className="font-ui text-sm text-mid leading-relaxed mb-6">
               Initiating the closure of a fiscal year locks all ledgers and prevents further modifications to the accounting period. This process is mandatory for generating final statutory reports.
             </p>
-            <div className="bg-amber-50 border border-amber/30 p-6 rounded-md">
-              <p className="font-ui text-ui-sm text-amber-900 font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+            <div className="bg-amber-soft border border-amber/30 p-6 rounded-md">
+              <p className="font-ui text-ui-sm text-amber font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
                 <Icon name="info" className="text-sm" />
                 Closure Requirements
               </p>
               <ul className="space-y-2 list-none p-0">
-                <li className="flex items-center gap-2 font-ui text-ui-sm text-amber-800">
+                <li className="flex items-center gap-2 font-ui text-ui-sm text-amber">
                   <span className="w-1 h-1 bg-amber-bright rounded-full"></span>
                   All draft journal entries must be posted or deleted
                 </li>
-                <li className="flex items-center gap-2 font-ui text-ui-sm text-amber-800">
+                <li className="flex items-center gap-2 font-ui text-ui-sm text-amber">
                   <span className="w-1 h-1 bg-amber-bright rounded-full"></span>
                   GST reconciliation for all periods must be complete
                 </li>

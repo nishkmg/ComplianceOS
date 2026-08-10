@@ -86,7 +86,7 @@ export default function FeaturesPage() {
                   </Link>
                 </div>
               </div>
-              <div className="flex-1 w-full bg-white border border-border-subtle border-t-2 border-t-primary p-2 shadow-sm rounded-sm">
+              <div className="flex-1 w-full bg-surface border border-border-subtle border-t-2 border-t-primary p-2 shadow-sm rounded-sm">
                 <div className="aspect-[4/3] w-full bg-section-muted relative overflow-hidden rounded-sm border border-border-subtle/50">
                   <img src={m.image} alt={m.name} className="object-cover w-full h-full opacity-90" />
                 </div>

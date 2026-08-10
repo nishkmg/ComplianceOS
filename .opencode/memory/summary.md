@@ -103,3 +103,11 @@ session-2026-06-14T12-10-50-939Z-compaction46.md
 - ocr-scan router rewired to `processScan` with shared DB update per scanType; ParsedInvoice gained `vendorGstin` (regex parser now extracts GSTIN from text too — column existed, parser never filled it).
 - Tests: `src/services/ocr-engine.test.ts` (11 tests, mocked fetch + mocked tesseract — offline): provider resolution incl. key-missing fallback, image_url payload shape, PDF→text path, markdown-fenced JSON recovery, malformed JSON, non-ok status, ₹-string number coercion. Fixtures write to `UPLOAD_DIR/tenant/` (readFileContent appends the tenant segment).
 - Env added to .env.example (OCR_PROVIDER/OCR_LLM_API_KEY/OCR_LLM_BASE_URL/OCR_LLM_MODEL). Gates: typecheck, 493 server tests, web build green.
+
+## 2026-08-10 (session 5) — marketing token compliance: bannedColors 31→0 (all routes)
+
+- bg-white → bg-surface across 13 marketing page files (30 spots; --color-surface IS #FFFFFF so pixel-identical in light, fixes dark-mode white-cards-on-dark-bg since data-theme applies globally).
+- text-green-800 → text-success (features/itr "Savings" label).
+- Traffic-light mockup dots (homepage, 9×) → new decorative tokens --color-traffic-red/yellow/green in tokens.css @theme → bg-traffic-* utilities.
+- Swept leftover raw amber shades (bg-amber-50→bg-amber-soft, text-amber-700/800/900→text-amber, border-amber-200→border-amber-bright/30, border-amber-600→border-amber) across 13 app pages incl. onboarding steps.
+- page-audit bannedColors = 0 (was 31 at session start). Gates: typecheck, design-audit 0 errors, build, a11y 9/9.

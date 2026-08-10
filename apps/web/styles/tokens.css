@@ -22,6 +22,11 @@
   --color-amber-bright: #D97706;
   --color-amber-soft: rgba(217, 119, 6, 0.08);
 
+  /* Browser-mockup traffic lights (marketing hero) */
+  --color-traffic-red: #FF5F56;
+  --color-traffic-yellow: #FFBD2E;
+  --color-traffic-green: #27C93F;
+
   /* ── Semantic states ─────────────────────────────────────────────── */
   --color-success: #047857;
   --color-success-deep: #065F46;

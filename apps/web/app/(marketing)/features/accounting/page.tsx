@@ -35,7 +35,7 @@ export default function AccountingPage() {
               <h2 className="font-display text-marketing-xl text-dark mt-4 mb-6">Entries must balance before they post.</h2>
               <p className="font-ui text-ui-md text-secondary leading-relaxed">Unlike spreadsheets, Arthvahi prevents unbalanced journal entries at the UI level. You cannot post until debits equal credits — no exceptions, no manual checks.</p>
             </div>
-            <div className="order-1 lg:order-2 bg-white border border-border-subtle p-8 shadow-sm">
+            <div className="order-1 lg:order-2 bg-surface border border-border-subtle p-8 shadow-sm">
               <div className="flex items-center justify-center gap-8 mb-4">
                 <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Total Debit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
                 <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Total Credit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
@@ -56,7 +56,7 @@ export default function AccountingPage() {
                 { icon: "receipt_long", title: "Journal Entry Engine", desc: "Auto-generated entry numbers, fiscal year sequencing, and arrow-key navigation for high-speed data entry." },
                 { icon: "analytics", title: "Financial Reports", desc: "Schedule III P&L and Balance Sheet. Typeset for print, not for a software screenshot." },
               ].map((m) => (
-                <div key={m.title} className="bg-white border border-border-subtle p-8 shadow-sm border-t-2 border-t-amber text-left">
+                <div key={m.title} className="bg-surface border border-border-subtle p-8 shadow-sm border-t-2 border-t-amber text-left">
                   <Icon name={m.icon} className="text-amber text-3xl mb-6 block" />
                   <h3 className="font-display text-lg font-bold text-dark mb-4">{m.title}</h3>
                   <p className="font-ui text-sm text-secondary leading-relaxed">{m.desc}</p>

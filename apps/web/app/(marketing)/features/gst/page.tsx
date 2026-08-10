@@ -36,7 +36,7 @@ export default function GSTFeaturePage() {
               { label: "E-way Bills Generated", value: "1,200+" },
               { label: "Tax Saved (MTD)", value: "₹ 2.4L" },
             ].map((s) => (
-              <div key={s.label} className="bg-white border border-border-subtle border-t-2 border-t-amber p-6 shadow-sm text-left">
+              <div key={s.label} className="bg-surface border border-border-subtle border-t-2 border-t-amber p-6 shadow-sm text-left">
                 <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-2 font-bold">{s.label}</p>
                 <p className="font-mono text-2xl font-bold text-dark">{s.value}</p>
               </div>
@@ -57,7 +57,7 @@ export default function GSTFeaturePage() {
                 <p className="font-ui text-ui-md text-secondary leading-relaxed">{m.desc}</p>
               </div>
               <div className={`bg-section-muted border border-border-subtle p-8 ${m.reversed ? 'lg:order-1' : ''}`}>
-                <div className="aspect-[4/3] bg-white border border-border-subtle flex items-center justify-center">
+                <div className="aspect-[4/3] bg-surface border border-border-subtle flex items-center justify-center">
                   <Icon name={m.icon} className="text-6xl text-light/30" />
                 </div>
               </div>
@@ -75,7 +75,7 @@ export default function GSTFeaturePage() {
                 { icon: "auto_fix_high", title: "Auto-filing Ready", desc: "Generate exact JSON payloads for the GST portal. No format conversions needed before upload." },
                 { icon: "summarize", title: "3B with Drill-down", desc: "Every line in your GSTR-3B can be traced back to the source invoice or journal entry." },
               ].map((f) => (
-                <div key={f.title} className="bg-white border border-border-subtle p-8 shadow-sm border-t-2 border-t-amber text-left">
+                <div key={f.title} className="bg-surface border border-border-subtle p-8 shadow-sm border-t-2 border-t-amber text-left">
                   <Icon name={f.icon} className="text-amber text-3xl mb-4 block" />
                   <h3 className="font-ui font-bold text-dark mb-3">{f.title}</h3>
                   <p className="font-ui text-sm text-secondary leading-relaxed">{f.desc}</p>

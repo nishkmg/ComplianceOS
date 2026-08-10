@@ -87,7 +87,7 @@ export default function ITRRecordPaymentPage() {
                 type="button"
                 onClick={() => setType(item.id)}
                 aria-pressed={type === item.id}
-                className={`relative p-4 border rounded-md transition-colors cursor-pointer text-left ${type === item.id ? "border-amber bg-amber-50 ring-1 ring-amber" : "border-border bg-surface hover:bg-surface-muted"}`}
+                className={`relative p-4 border rounded-md transition-colors cursor-pointer text-left ${type === item.id ? "border-amber bg-amber-soft ring-1 ring-amber" : "border-border bg-surface hover:bg-surface-muted"}`}
               >
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-ui text-ui-sm font-bold text-dark">{item.name}</span>

@@ -21,7 +21,7 @@ export default function BlogIndexPage() {
       <main className="max-w-[1320px] mx-auto px-8">
         {/* Featured Post */}
         <section className="pt-space-128 pb-space-96">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 bg-white overflow-hidden border border-border-subtle">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 bg-surface overflow-hidden border border-border-subtle">
             <div className="relative h-[400px] md:h-auto overflow-hidden">
               <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800" alt="" />
             </div>
@@ -47,7 +47,7 @@ export default function BlogIndexPage() {
               <p className="text-ui-sm text-secondary mt-1">Get our weekly newsletter straight to your inbox.</p>
             </div>
             <div className="flex gap-2">
-              <input className="border border-border-subtle bg-white px-4 py-3 font-ui text-ui-sm w-full md:w-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" placeholder="professional@firm.com" type="email" />
+              <input className="border border-border-subtle bg-surface px-4 py-3 font-ui text-ui-sm w-full md:w-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" placeholder="professional@firm.com" type="email" />
               <button className="bg-on-surface text-white px-8 py-3 font-ui uppercase tracking-widest whitespace-nowrap hover:bg-amber-hover transition-colors cursor-pointer border-none">Subscribe</button>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function BlogIndexPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16">
             {posts.slice(1).map((post) => (
               <article key={post.slug} className="group text-left">
-                <div className="aspect-[16/10] overflow-hidden mb-6 bg-white border border-border-subtle">
+                <div className="aspect-[16/10] overflow-hidden mb-6 bg-surface border border-border-subtle">
                   <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-[filter,transform] duration-500" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
                 </div>
                 <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">{post.category}</span>

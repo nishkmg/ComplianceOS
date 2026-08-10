@@ -38,7 +38,7 @@ export default function ContactPage() {
         <section className="pb-space-128 px-8 max-w-[1320px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-wide">
             {/* Left: Form */}
-            <div className="lg:col-span-7 bg-white p-12 border border-border-subtle border-t-2 border-t-amber">
+            <div className="lg:col-span-7 bg-surface p-12 border border-border-subtle border-t-2 border-t-amber">
               {submitted ? (
                 <div className="flex items-center gap-3 p-4 bg-surface-container-low border border-amber/20">
                   <Icon name="check_circle" className="text-primary" />

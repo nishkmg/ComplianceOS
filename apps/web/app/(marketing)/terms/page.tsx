@@ -16,7 +16,7 @@ export default function TermsPage() {
         </header>
 
         {/* TOC */}
-        <nav className="bg-white border border-border-subtle p-8 mb-space-96 relative shadow-sm text-left">
+        <nav className="bg-surface border border-border-subtle p-8 mb-space-96 relative shadow-sm text-left">
           <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
           <h2 className="font-mono-lg text-mono-lg mb-4 text-dark uppercase tracking-wide">Table of Contents</h2>
           <ul className="space-y-3 font-ui text-ui-md list-none p-0">

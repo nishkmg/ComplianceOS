@@ -133,7 +133,7 @@ export default function NewPaymentPage() {
       </div>
 
       {discardConfirm && (
-        <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
+        <div className="bg-amber-soft border border-amber-bright/30 px-4 py-3 rounded-md flex items-center justify-between">
           <span className="font-ui text-ui-xs text-amber font-medium">Unsaved changes will be lost. Discard?</span>
           <div className="flex gap-2">
             <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-ui-xs font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
@@ -155,7 +155,7 @@ export default function NewPaymentPage() {
               onClick={() => setType(opt.value)}
               className={`relative p-5 border rounded-md cursor-pointer transition-colors transition-shadow ${
                 type === opt.value
-                  ? "border-amber bg-amber-50 ring-1 ring-amber"
+                  ? "border-amber bg-amber-soft ring-1 ring-amber"
                   : "border-border bg-surface hover:bg-surface-muted"
               }`}
             >
@@ -262,14 +262,14 @@ export default function NewPaymentPage() {
         )}
 
       {parseFloat(paymentAmount || "0") > 0 && (
-        <div className="bg-amber-50 border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
+        <div className="bg-amber-soft border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
           <div>
             <h4 className="font-ui text-ui-2xs font-bold text-amber uppercase tracking-widest mb-1">Allocation Required</h4>
-            <p className="font-ui text-ui-sm text-ui-xs text-amber-800 leading-relaxed">
+            <p className="font-ui text-ui-sm text-ui-xs text-amber leading-relaxed">
               This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.
             </p>
           </div>
-          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber-600 text-amber-700 text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface transition-colors cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
+          <button onClick={() => showToast.info("Allocation wizard will open once invoices are selected.")} className="px-6 py-2.5 border border-amber text-amber text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface transition-colors cursor-pointer bg-transparent rounded-md whitespace-nowrap shrink-0">
             Open Allocation Wizard
           </button>
         </div>

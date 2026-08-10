@@ -56,7 +56,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
             key={mod.id}
             onClick={() => toggleModule(mod.id)}
             className={`group border-[0.5px] border-border p-6 flex flex-col relative transition-colors transition-shadow duration-300 cursor-pointer ${
-              enabledModules.has(mod.id) ? "bg-amber-50 border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
+              enabledModules.has(mod.id) ? "bg-amber-soft border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
             }`}
           >
             {enabledModules.has(mod.id) && <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>}

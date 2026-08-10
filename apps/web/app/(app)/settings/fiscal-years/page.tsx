@@ -171,7 +171,7 @@ export default function FiscalYearsPage() {
             <Icon name="lock" className="absolute -right-8 -bottom-8 text-[120px] opacity-5 transform group-hover:rotate-12 transition-transform" />
           </div>
 
-          <div className="bg-amber-50 border border-amber/30 p-8 shadow-sm text-left">
+          <div className="bg-amber-soft border border-amber/30 p-8 shadow-sm text-left">
             <h4 className="font-ui text-sm font-medium font-bold text-dark mb-4 uppercase tracking-widest text-ui-2xs">Data Retention</h4>
             <p className="text-ui-sm text-sm text-mid leading-relaxed">Arthvahi retains ledger data for up to 8 years as per IT Act requirements. Archived years can be exported as read-only CSV at any time.</p>
           </div>

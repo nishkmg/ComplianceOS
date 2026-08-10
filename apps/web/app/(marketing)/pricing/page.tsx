@@ -68,7 +68,7 @@ export default function PricingPage() {
             className="w-14 h-7 bg-outline-variant rounded-full p-1 cursor-pointer flex items-center transition-colors"
             onClick={() => setIsAnnual(!isAnnual)}
           >
-            <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${isAnnual ? 'translate-x-7' : 'translate-x-0'}`}></div>
+            <div className={`w-5 h-5 bg-surface rounded-full shadow-sm transition-transform duration-200 ${isAnnual ? 'translate-x-7' : 'translate-x-0'}`}></div>
           </div>
           <div className="flex items-center space-x-2">
             <span className={`text-ui-sm font-ui text-dark ${isAnnual ? 'font-bold' : ''}`}>Annual Billing</span>
@@ -79,7 +79,7 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-space-128 items-stretch">
           {plans.map((plan) => (
-            <div key={plan.name} className={`bg-white border border-border-subtle p-10 flex flex-col relative transition-colors transition-shadow duration-300 ${plan.popular ? 'border-t-2 border-t-primary shadow-screenshot' : 'shadow-card'}`}>
+            <div key={plan.name} className={`bg-surface border border-border-subtle p-10 flex flex-col relative transition-colors transition-shadow duration-300 ${plan.popular ? 'border-t-2 border-t-primary shadow-screenshot' : 'shadow-card'}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-ui-2xs px-4 py-1.5 uppercase font-bold tracking-widest">Most Popular</div>
               )}
@@ -141,7 +141,7 @@ export default function PricingPage() {
               <img 
                 src="/images/pricing/report.jpg" 
                 alt="Trial Balance Report" 
-                className="shadow-screenshot bg-white border border-border-subtle w-full h-auto" 
+                className="shadow-screenshot bg-surface border border-border-subtle w-full h-auto" 
               />
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function PricingPage() {
           </div>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <details key={faq.q} className="group bg-white border border-border-subtle" open={i === 0}>
+              <details key={faq.q} className="group bg-surface border border-border-subtle" open={i === 0}>
                 <summary className="flex justify-between items-center p-6 cursor-pointer select-none text-left">
                   <span className="font-ui text-ui-lg font-semibold">{faq.q}</span>
                   <Icon name="expand_more" className="transition-transform group-open:rotate-180" />

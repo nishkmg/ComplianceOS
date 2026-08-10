@@ -90,7 +90,7 @@ export default function AboutPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {team.map((member) => (
-              <div key={member.name} className="group border border-border-subtle bg-white flex flex-col h-full hover:shadow-sm transition-shadow duration-300">
+              <div key={member.name} className="group border border-border-subtle bg-surface flex flex-col h-full hover:shadow-sm transition-shadow duration-300">
                 <div className="border-t-2 border-amber w-full"></div>
                 <div className="aspect-square w-full overflow-hidden border-b-[0.5px] border-border-subtle bg-surface-variant">
                   <img 
@@ -132,7 +132,7 @@ export default function AboutPage() {
                 { icon: 'contrast', title: 'Tonal Restraint', desc: 'Using contrast, not color, to establish hierarchy.' },
                 { icon: 'gavel', title: 'Authoritative Focus', desc: 'Amber accents direct attention to critical actions.', accent: true },
               ].map((item) => (
-                <div key={item.title} className={`border border-border-subtle bg-white p-6 flex flex-col justify-center text-left ${item.accent ? 'border-t-2 border-t-amber' : ''}`}>
+                <div key={item.title} className={`border border-border-subtle bg-surface p-6 flex flex-col justify-center text-left ${item.accent ? 'border-t-2 border-t-amber' : ''}`}>
                   <Icon name={item.icon} className="text-amber text-3xl mb-4" />
                   <h4 className="font-mono text-mono-md text-dark mb-2">{item.title}</h4>
                   <p className="font-ui text-ui-sm text-light">{item.desc}</p>

@@ -34,7 +34,7 @@ export default function ITRFeaturePage() {
               { title: "ITR-4", desc: "Presumptive taxation under Sections 44AD, 44ADA, and 44AE. Simplified computation.", active: false },
               { title: "ITR-6", desc: "Companies — direct integration with your balance sheet and P&L.", active: false },
             ].map((form) => (
-              <div key={form.title} className={`bg-white border border-border-subtle p-8 shadow-sm relative text-left ${form.active ? 'border-t-2 border-t-amber' : ''}`}>
+              <div key={form.title} className={`bg-surface border border-border-subtle p-8 shadow-sm relative text-left ${form.active ? 'border-t-2 border-t-amber' : ''}`}>
                 <h3 className="font-display text-lg font-bold text-dark mb-4">{form.title}</h3>
                 <p className="font-ui text-sm text-secondary leading-relaxed mb-8">{form.desc}</p>
                 {form.active && <span className="text-primary font-ui text-ui-2xs uppercase font-bold tracking-widest">Currently Supported</span>}
@@ -61,7 +61,7 @@ export default function ITRFeaturePage() {
                   ))}
                 </ul>
               </div>
-              <div className="bg-white border border-border-subtle p-8 shadow-sm">
+              <div className="bg-surface border border-border-subtle p-8 shadow-sm">
                 <div className="space-y-4 font-mono text-sm">
                   <div className="flex justify-between font-bold border-b border-border-subtle pb-3">
                     <span className="uppercase tracking-widest text-ui-xs font-ui">Tax Regime</span>
@@ -78,7 +78,7 @@ export default function ITRFeaturePage() {
                     </div>
                   </div>
                   <div className="flex justify-between bg-success-bg px-4 py-3 -mx-4 mt-2 font-bold">
-                    <span className="uppercase tracking-widest text-ui-xs font-ui text-green-800">Savings</span>
+                    <span className="uppercase tracking-widest text-ui-xs font-ui text-success">Savings</span>
                     <span className="text-success">₹ 4,520 ~ 4.3%</span>
                   </div>
                 </div>

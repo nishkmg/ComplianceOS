@@ -40,11 +40,11 @@ export default function CookiesPage() {
                 We use first and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our Websites to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our Online Properties.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                <div className="bg-white border border-border-subtle p-8 border-t-2 border-t-amber">
+                <div className="bg-surface border border-border-subtle p-8 border-t-2 border-t-amber">
                   <h3 className="font-ui text-ui-lg text-dark mb-3">Essential Cookies</h3>
                   <p className="font-ui text-ui-sm text-secondary">These cookies are strictly necessary to provide you with services available through our Websites and to use some of its features, such as access to secure areas.</p>
                 </div>
-                <div className="bg-white border border-border-subtle p-8 border-t-2 border-t-amber">
+                <div className="bg-surface border border-border-subtle p-8 border-t-2 border-t-amber">
                   <h3 className="font-ui text-ui-lg text-dark mb-3">Performance Cookies</h3>
                   <p className="font-ui text-ui-sm text-secondary">These cookies are used to enhance the performance and functionality of our Websites but are non-essential to their use.</p>
                 </div>

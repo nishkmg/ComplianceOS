@@ -24,7 +24,7 @@ export default function InvoicingPage() {
             </div>
           </div>
           {/* Flow Diagram */}
-          <div className="mt-space-96 relative p-12 bg-white border border-border-subtle shadow-sm text-center">
+          <div className="mt-space-96 relative p-12 bg-surface border border-border-subtle shadow-sm text-center">
             <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-6 relative z-10">
               {[
                 { icon: "description", title: "Invoice Created", desc: "GST, HSN & PAN verified" },
@@ -65,7 +65,7 @@ export default function InvoicingPage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-white border border-border-subtle p-8 shadow-sm rounded-sm">
+            <div className="bg-surface border border-border-subtle p-8 shadow-sm rounded-sm">
               <div className="border-b border-border-subtle pb-4 mb-4 flex justify-between">
                 <div>
                   <div className="font-display text-lg font-bold mb-1">Mehta Textiles</div>

@@ -55,7 +55,7 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
             key={t.id}
             onClick={() => setSelectedTemplate(t.id)}
             className={`group border-[0.5px] border-border p-8 flex flex-col relative transition-colors transition-shadow duration-300 cursor-pointer ${
-              selectedTemplate === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
+              selectedTemplate === t.id ? "bg-amber-soft border-amber shadow-sm" : "bg-surface hover:bg-surface-muted"
             }`}
           >
             {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>}

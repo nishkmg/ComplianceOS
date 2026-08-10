@@ -16,7 +16,7 @@ interface Account { id: string; code: string; name: string; }
 
 const statusConfig: Record<string, { bannerBg: string; bannerText: string; icon: "check_circle" | "clock" | "cancel"; bannerMsg: string; badgeVariant: "success" | "amber" | "gray"; badgeLabel: string }> = {
   posted: { bannerBg: "bg-success-bg", bannerText: "text-success", icon: "check_circle", bannerMsg: "This voucher has been posted to the General Ledger", badgeVariant: "success", badgeLabel: "Cleared" },
-  draft: { bannerBg: "bg-amber-50", bannerText: "text-amber", icon: "clock", bannerMsg: "This voucher is in draft state", badgeVariant: "amber", badgeLabel: "Draft" },
+  draft: { bannerBg: "bg-amber-soft", bannerText: "text-amber", icon: "clock", bannerMsg: "This voucher is in draft state", badgeVariant: "amber", badgeLabel: "Draft" },
   voided: { bannerBg: "bg-surface-muted", bannerText: "text-mid", icon: "cancel", bannerMsg: "This voucher has been voided", badgeVariant: "gray", badgeLabel: "Voided" },
 };
 

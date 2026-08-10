@@ -54,7 +54,7 @@ export default function ITRPresumptivePage() {
                       key={key}
                       type="button"
                       onClick={() => setSection(key)}
-                      className={`relative flex flex-col p-4 border rounded-md cursor-pointer transition-colors text-left ${section === key ? "border-amber bg-amber-50" : "border-border hover:bg-surface-muted"}`}
+                      className={`relative flex flex-col p-4 border rounded-md cursor-pointer transition-colors text-left ${section === key ? "border-amber bg-amber-soft" : "border-border hover:bg-surface-muted"}`}
                     >
                       <span className="font-ui text-dark font-bold">{sectionMeta[key].label}</span>
                       <span className="font-ui text-ui-2xs text-mid mt-1 uppercase">{sectionMeta[key].sub}</span>

@@ -33,7 +33,7 @@ export default function SecurityPage() {
           {/* Features Grid */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-gutter-wide">
             {features.map((f) => (
-              <div key={f.title} className="bg-white border border-border-subtle border-t-2 border-t-amber p-10 flex flex-col gap-6 hover:shadow-sm transition-shadow duration-300 text-left">
+              <div key={f.title} className="bg-surface border border-border-subtle border-t-2 border-t-amber p-10 flex flex-col gap-6 hover:shadow-sm transition-shadow duration-300 text-left">
                 <div className="flex items-center gap-4">
                   <Icon name={f.icon} className="text-amber text-3xl" />
                   <h3 className="font-display text-marketing-xl text-dark">{f.title}</h3>

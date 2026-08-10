@@ -305,7 +305,7 @@ export default function NewJournalEntryPage() {
         </div>
       )}
       {discardConfirm && (
-        <div className="bg-amber-50 border border-amber-200 px-4 py-3 rounded-md flex items-center justify-between">
+        <div className="bg-amber-soft border border-amber-bright/30 px-4 py-3 rounded-md flex items-center justify-between">
           <span className="font-ui text-ui-xs text-amber font-medium">Unsaved changes will be lost. Discard?</span>
           <div className="flex gap-2">
             <button onClick={() => setDiscardConfirm(false)} className="px-3 py-1 text-ui-xs font-ui font-bold uppercase tracking-widest border border-border rounded-sm bg-surface cursor-pointer">Keep Editing</button>
@@ -470,7 +470,7 @@ export default function NewJournalEntryPage() {
         </div>
 
         {accountWarnings.map((w, i) => (
-          <div key={i} className="bg-amber-50 border border-amber-200 px-4 py-2 rounded-md flex items-center gap-2">
+          <div key={i} className="bg-amber-soft border border-amber-bright/30 px-4 py-2 rounded-md flex items-center gap-2">
             <Icon name="warning" size={14} className="text-amber shrink-0" />
             <span className="font-ui text-ui-xs text-amber font-medium">{w}</span>
           </div>

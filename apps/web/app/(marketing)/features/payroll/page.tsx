@@ -46,7 +46,7 @@ export default function PayrollPage() {
                 ))}
               </ul>
             </div>
-            <div className="lg:col-span-7 bg-white border border-border-subtle p-8 shadow-sm">
+            <div className="lg:col-span-7 bg-surface border border-border-subtle p-8 shadow-sm">
               <div className="space-y-4 font-mono text-sm">
                 <div className="flex justify-between py-2 border-b 50-border">
                   <span className="font-ui text-secondary">Basic Salary</span>
@@ -85,7 +85,7 @@ export default function PayrollPage() {
               <h2 className="font-display text-marketing-xl text-dark mb-4">A payslip that speaks human.</h2>
               <p className="font-ui text-ui-md text-secondary max-w-2xl mx-auto leading-relaxed">Reduce payroll queries by 60% with detailed tax breakups and investment declarations baked right into the slip.</p>
             </div>
-            <div className="bg-white border border-border-subtle p-12 max-w-4xl mx-auto shadow-sm">
+            <div className="bg-surface border border-border-subtle p-12 max-w-4xl mx-auto shadow-sm">
               <div className="flex justify-between items-start pb-8 mb-8 border-b border-border-subtle">
                 <div>
                   <span className="font-display text-lg font-bold block">Arthvahi</span>

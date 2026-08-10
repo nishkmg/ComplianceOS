@@ -154,7 +154,7 @@ export default function ITRRegimeComparisonPage() {
             {/* New Regime Card */}
             <div className={`bg-surface border shadow-lg flex flex-col relative overflow-hidden ${c.recommended === "new" ? "border-amber" : "border-border"}`}>
               <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
-              <div className={`p-6 border-b-[0.5px] ${c.recommended === "new" ? "border-amber/20 bg-amber-50" : "border-border bg-surface-muted"}`}>
+              <div className={`p-6 border-b-[0.5px] ${c.recommended === "new" ? "border-amber/20 bg-amber-soft" : "border-border bg-surface-muted"}`}>
                 <div className="flex justify-between items-center">
                   <h3 className="font-ui text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
                   {c.recommended === "new" && (
@@ -164,13 +164,13 @@ export default function ITRRegimeComparisonPage() {
               </div>
               <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
                 {rows.map((row, i) => (
-                  <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-50/50 transition-colors">
+                  <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-soft/50 transition-colors">
                     <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
                     <span className={row.new === 0 ? "text-light opacity-50" : "text-dark"}>₹ {formatIndianNumber(row.new)}</span>
                   </div>
                 ))}
               </div>
-              <div className="p-8 bg-amber-50 border-t-2 border-primary">
+              <div className="p-8 bg-amber-soft border-t-2 border-primary">
                 <div className="flex justify-between items-center">
                   <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-primary">Final Liability</span>
                   <span className="font-mono text-xl font-bold text-primary">₹ {formatIndianNumber(c.newRegime.total)}</span>

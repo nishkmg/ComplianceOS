@@ -71,7 +71,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
           <div className="border-b-[0.5px] border-border pb-2">
             <h2 className="font-ui text-lg font-bold text-on-surface">Fiscal Year Period</h2>
           </div>
-          <div className="bg-amber-50 border border-amber/30 rounded-md p-6 flex flex-col gap-2">
+          <div className="bg-amber-soft border border-amber/30 rounded-md p-6 flex flex-col gap-2">
             <div className="flex items-center gap-3">
               <Icon name="calendar_month" className="text-amber text-2xl" />
               <div>
@@ -98,7 +98,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                 key={t.id}
                 onClick={() => !saving && setFormData({ ...formData, gstRegistration: t.id })}
                 className={`p-6 border-[0.5px] rounded-md transition-all ${saving ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${
-                  formData.gstRegistration === t.id ? "bg-amber-50 border-amber shadow-sm" : "bg-surface border-border hover:bg-surface-muted"
+                  formData.gstRegistration === t.id ? "bg-amber-soft border-amber shadow-sm" : "bg-surface border-border hover:bg-surface-muted"
                 }`}
               >
                 <div className="flex items-center gap-3 mb-3">

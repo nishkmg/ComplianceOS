@@ -90,7 +90,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
         {/* Mode 1: Fresh Start */}
         <div 
           onClick={() => setMode("fresh_start")}
-          className={`p-8 border-b-[0.5px] border-border transition-colors cursor-pointer ${mode === 'fresh_start' ? 'bg-amber-50' : 'bg-surface hover:bg-surface-muted'}`}
+          className={`p-8 border-b-[0.5px] border-border transition-colors cursor-pointer ${mode === 'fresh_start' ? 'bg-amber-soft' : 'bg-surface hover:bg-surface-muted'}`}
         >
           <div className="flex items-start gap-4">
             <div className={`w-5 h-5 rounded-md border flex items-center justify-center mt-1 transition-colors ${mode === 'fresh_start' ? 'bg-amber border-amber' : 'focus:border-focus'}`}>
@@ -106,7 +106,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
         {/* Mode 2: Migration */}
         <div 
           onClick={() => setMode("migration")}
-          className={`p-8 transition-colors cursor-pointer ${mode === 'migration' ? 'bg-amber-50' : 'bg-surface hover:bg-surface-muted'}`}
+          className={`p-8 transition-colors cursor-pointer ${mode === 'migration' ? 'bg-amber-soft' : 'bg-surface hover:bg-surface-muted'}`}
         >
           <div className="flex items-start gap-4">
             <div className={`w-5 h-5 rounded-md border flex items-center justify-center mt-1 transition-colors ${mode === 'migration' ? 'bg-amber border-amber' : 'focus:border-focus'}`}>

@@ -85,7 +85,7 @@ export default function TeamSalaryPreviewPage() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 border border-border bg-surface rounded-md overflow-hidden shadow-sm mb-8">
             <div className="p-6 border-r border-border"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Runs</div><div className="font-mono text-xl font-bold text-dark">{rows.length}</div></div>
-            <div className="p-6 border-r border-border bg-amber-50"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Gross</div><div className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(totals.gross)}</div></div>
+            <div className="p-6 border-r border-border bg-amber-soft"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Gross</div><div className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(totals.gross)}</div></div>
             <div className="p-6 border-r border-border"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Deductions</div><div className="font-mono text-xl font-bold text-mid">₹ {formatIndianNumber(totals.deductions)}</div></div>
             <div className="p-6 bg-surface-muted border-t-2 border-t-amber"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Net Payable</div><div className="font-mono text-xl font-bold text-primary">₹ {formatIndianNumber(totals.net)}</div></div>
           </div>
