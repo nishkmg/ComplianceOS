@@ -53,7 +53,7 @@ export const payrollReportsRouter = router({
         ));
 
       if (!liability) {
-        return { pfEeTotal: "0", pfErTotal: "0", epsTotal: "0", total: "0" };
+        return { pfEeTotal: "0", pfErTotal: "0", epsTotal: "0", total: "0", payableByDate: null, paid: null };
       }
 
       return {
@@ -84,7 +84,7 @@ export const payrollReportsRouter = router({
         ));
 
       if (!liability) {
-        return { esiEeTotal: "0", esiErTotal: "0", total: "0" };
+        return { esiEeTotal: "0", esiErTotal: "0", total: "0", payableByDate: null, paid: null };
       }
 
       return {

@@ -23,7 +23,7 @@ export default function AccountDetailPage() {
   return (
     <div className="max-w-[1000px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
-        <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer"><Icon name="arrow_back" size={20} /></button>
+        <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
         <div><h1 className="font-ui text-display-lg font-semibold text-dark">{acc.name}</h1><p className="font-mono text-ui-xs text-mid mt-0.5">{acc.code} · {acc.kind}</p></div>
       </div>
       <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">

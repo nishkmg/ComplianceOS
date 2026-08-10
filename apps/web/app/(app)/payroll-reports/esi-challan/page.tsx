@@ -1,43 +1,87 @@
 "use client";
-import { Icon } from '@/components/ui/icon';
 
-const employees = [
-  { id: "EMP-001", name: "Rahul Sharma", days: 28, gross: 45000, empESI: 338, emprESI: 1463, totalESI: 1801 },
-  { id: "EMP-002", name: "Priya Singh", days: 28, gross: 35000, empESI: 263, emprESI: 1138, totalESI: 1401 },
-];
+import { useState } from "react";
+import { Icon } from "@/components/ui/icon";
+import { formatIndianNumber } from "@/lib/format";
+import { api } from "@/lib/api";
+import { EmptyState } from "@/components/ui/empty-state";
+
+const now = new Date();
+const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
 export default function ESIChallanPage() {
+  const [period, setPeriod] = useState(DEFAULT_MONTH);
+  const [month, year] = period.split("-");
+
+  const challan = api.payrollReports.esiChallan.useQuery(
+    { month, year },
+    { staleTime: 15_000 },
+  );
+
+  const d = challan.data;
+  const esiEe = Number(d?.esiEeTotal ?? "0");
+  const esiEr = Number(d?.esiErTotal ?? "0");
+  const total = Number(d?.total ?? "0");
+  const hasData = total > 0;
+
   return (
     <div className="space-y-6 text-left">
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 backdrop-blur-sm -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Statutory Filings</p>
           <h1 className="font-ui text-2xl font-semibold text-dark">ESI Challan Report</h1>
-          <p className="text-ui-sm text-secondary font-ui mt-1">Generate data for Employee State Insurance filings.</p>
+          <p className="text-ui-sm text-secondary font-ui mt-1">ESI contribution totals for monthly filing.</p>
         </div>
-        <button className="btn btn-primary flex items-center gap-2">
-          <Icon name="download" className="text-ui-xl" /> Export
-        </button>
+        <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
+          <Icon name="calendar_month" className="text-light text-ui-xl mr-2" />
+          <input
+            aria-label="Report period"
+            type="month"
+            className="bg-transparent border-none text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-focus cursor-pointer"
+            value={period}
+            onChange={(e) => setPeriod(e.target.value)}
+          />
+        </div>
       </header>
-      <div className="grid grid-cols-4 gap-4">
-        <div className="bg-surface p-5 border border-border shadow-sm"><p className="text-xs font-bold text-mid uppercase mb-1">Total Employees</p><p className="text-2xl font-mono font-bold text-dark">142</p></div>
-        <div className="bg-surface p-5 border border-border shadow-sm"><p className="text-xs font-bold text-mid uppercase mb-1">Gross Wages</p><p className="text-2xl font-mono font-bold text-dark">₹42,50,000</p></div>
-        <div className="bg-surface p-5 border border-border shadow-sm"><p className="text-xs font-bold text-mid uppercase mb-1">Employee Contrib</p><p className="text-2xl font-mono font-bold text-dark">₹31,875</p></div>
-        <div className="bg-surface p-5 border border-border border-l-4 border-l-amber shadow-sm"><p className="text-xs font-bold text-amber uppercase mb-1">Total Payable</p><p className="text-2xl font-mono font-bold text-dark">₹1,70,000</p></div>
-      </div>
-      <div className="bg-surface border border-border shadow-sm overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead><tr className="bg-surface-muted border-b border-border text-xs font-bold text-light uppercase tracking-widest">
-            <th className="px-4 py-3">Employee</th><th className="px-4 py-3 text-right">Days</th><th className="px-4 py-3 text-right">Gross Wages</th><th className="px-4 py-3 text-right">Emp. (0.75%)</th><th className="px-4 py-3 text-right">Empr. (3.25%)</th><th className="px-4 py-3 text-right font-bold">Total ESI</th>
-          </tr></thead>
-          <tbody className="divide-y 50-border font-mono text-sm">
-            {employees.map((e) => (
-              <tr key={e.id} className="hover:bg-surface-muted"><td className="px-4 py-3"><span className="font-ui text-ui-sm font-bold">{e.name}</span><span className="text-xs text-light ml-2">{e.id}</span></td>
-                <td className="px-4 py-3 text-right">{e.days}</td><td className="px-4 py-3 text-right">{e.gross.toLocaleString()}</td><td className="px-4 py-3 text-right text-mid">{e.empESI}</td><td className="px-4 py-3 text-right text-mid">{e.emprESI}</td><td className="px-4 py-3 text-right font-bold">{e.totalESI}</td></tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+      {challan.isLoading ? (
+        <div className="flex items-center justify-center py-24">
+          <Icon name="hourglass" className="text-lighter animate-spin text-3xl" />
+        </div>
+      ) : !hasData ? (
+        <EmptyState
+          icon="health_and_safety"
+          title={`No ESI liability for ${month}/${year}`}
+          description="Statutory liabilities are recorded when a payroll run is finalized for the period."
+        />
+      ) : (
+        <>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-surface p-5 border border-border shadow-sm">
+              <p className="text-xs font-bold text-mid uppercase mb-1">Employee Contribution (0.75%)</p>
+              <p className="text-2xl font-mono font-bold text-dark">₹ {formatIndianNumber(esiEe)}</p>
+            </div>
+            <div className="bg-surface p-5 border border-border shadow-sm">
+              <p className="text-xs font-bold text-mid uppercase mb-1">Employer Contribution (3.25%)</p>
+              <p className="text-2xl font-mono font-bold text-dark">₹ {formatIndianNumber(esiEr)}</p>
+            </div>
+            <div className="bg-surface p-5 border border-border border-l-4 border-l-amber shadow-sm">
+              <p className="text-xs font-bold text-amber uppercase mb-1">Total Payable</p>
+              <p className="text-2xl font-mono font-bold text-dark">₹ {formatIndianNumber(total)}</p>
+            </div>
+            <div className="bg-surface p-5 border border-border shadow-sm">
+              <p className="text-xs font-bold text-mid uppercase mb-1">Status</p>
+              <p className="text-lg font-mono font-bold mt-1">{d?.paid ? "Paid" : "Pending"}</p>
+            </div>
+          </div>
+          <div className="bg-surface border border-border p-6 shadow-sm flex items-start gap-3">
+            <Icon name="info" className="text-amber" />
+            <p className="font-ui text-ui-sm text-mid leading-relaxed">
+              Payable by {d?.payableByDate ?? "—"}. Employee-wise ESI contribution breakup is generated with the payroll run summary.
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

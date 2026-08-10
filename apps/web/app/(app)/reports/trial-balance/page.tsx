@@ -164,7 +164,7 @@ export default function TrialBalancePage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark print:text-black">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark print:text-dark">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-ui-xs text-mid mt-1 uppercase tracking-widest">Trial Balance</p>
           <p className="font-mono text-ui-xs text-light mt-0.5">As at 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
@@ -209,7 +209,7 @@ export default function TrialBalancePage() {
             return (
               <div key={group.name}>
                 <div className="px-4 py-2 border-t-2 border-amber flex items-center justify-between print:border-black">
-                  <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-black">{group.name}</h3>
+                  <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-dark">{group.name}</h3>
                   <span className="font-mono text-ui-xs text-mid">
                     Dr {formatIndianNumber(groupDr)} / Cr {formatIndianNumber(groupCr)}
                   </span>
@@ -237,14 +237,14 @@ export default function TrialBalancePage() {
 
         {/* Grand total */}
         <div className="border-t-2 border-dark mx-8 py-4 grid grid-cols-12 gap-4 items-center font-bold print:border-black">
-          <div className="col-span-7 font-ui text-ui-xs uppercase tracking-widest text-dark print:text-black">Grand Total</div>
-          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
-          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-black">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
+          <div className="col-span-7 font-ui text-ui-xs uppercase tracking-widest text-dark print:text-dark">Grand Total</div>
+          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
+          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
           <div className="col-span-1" />
         </div>
 
         {isBalanced && (
-          <div className="mx-8 mb-6 px-4 py-2 bg-success-bg text-success-deep font-medium text-ui-xs rounded-md print:border print:rounded-none print:text-black print:bg-transparent">
+          <div className="mx-8 mb-6 px-4 py-2 bg-success-bg text-success-deep font-medium text-ui-xs rounded-md print:border print:rounded-none print:text-dark print:bg-transparent">
             ✓ Total Debits match Total Credits — Trial Balance is in order
           </div>
         )}

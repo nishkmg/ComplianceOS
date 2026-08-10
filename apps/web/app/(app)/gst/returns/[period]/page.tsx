@@ -24,7 +24,7 @@ export default function PeriodPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {forms.map(f => (
-          <Link key={f.id} href={`/gst/returns/${period}/${f.id}`} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
+          <Link key={f.id} href={`/gst/returns/${period}/${f.id}`} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline" aria-label="Go back">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-ui text-lg font-bold text-dark">{f.name}</h3>
               <Badge variant={f.status === "draft" ? "amber" : f.status === "ready" ? "success" : "gray"}>{f.status}</Badge>

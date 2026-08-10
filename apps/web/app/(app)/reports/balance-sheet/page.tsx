@@ -127,7 +127,7 @@ export default function BalanceSheetPage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-black">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-dark">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-ui-xs text-mid uppercase tracking-widest mb-1">Balance Sheet</p>
           <p className="font-mono text-ui-xs text-light italic">
             As of {new Date(asOfDate).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
@@ -141,7 +141,7 @@ export default function BalanceSheetPage() {
           <div className="space-y-8">
             <div>
               <div className="px-4 py-2 border-t-2 border-amber mb-4 print:border-black">
-                <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-black">Equity & Liabilities</h3>
+                <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-dark">Equity & Liabilities</h3>
               </div>
 
               <div className="divide-y-[0.5px] divide-border-subtle">
@@ -155,8 +155,8 @@ export default function BalanceSheetPage() {
             </div>
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
-              <span className="uppercase tracking-widest text-xs print:text-black">Total Equity & Liabilities</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalEqLiab, { currency: false })}</span>
+              <span className="uppercase tracking-widest text-xs print:text-dark">Total Equity & Liabilities</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-dark">₹ {formatIndianNumber(totalEqLiab, { currency: false })}</span>
             </div>
           </div>
 
@@ -164,7 +164,7 @@ export default function BalanceSheetPage() {
           <div className="space-y-8">
             <div>
               <div className="px-4 py-2 border-t-2 border-amber mb-4 print:border-black">
-                <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-black">Assets</h3>
+                <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-dark">Assets</h3>
               </div>
 
               <div className="divide-y-[0.5px] divide-border-subtle">
@@ -178,16 +178,16 @@ export default function BalanceSheetPage() {
             </div>
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
-              <span className="uppercase tracking-widest text-xs print:text-black">Total Assets</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-black">₹ {formatIndianNumber(totalAssetsVal, { currency: false })}</span>
+              <span className="uppercase tracking-widest text-xs print:text-dark">Total Assets</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-dark">₹ {formatIndianNumber(totalAssetsVal, { currency: false })}</span>
             </div>
 
             {balanced ? (
-              <div className="px-4 py-2 bg-success-bg text-success text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
+              <div className="px-4 py-2 bg-success-bg text-success text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-dark print:border print:rounded-none">
                 <Icon name="check_circle" size={14} /> Statement is Balanced
               </div>
             ) : (
-              <div className="px-4 py-2 bg-danger-bg text-danger-deep text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-black print:border print:rounded-none">
+              <div className="px-4 py-2 bg-danger-bg text-danger-deep text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-dark print:border print:rounded-none">
                 <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssetsVal), { currency: false })}
               </div>
             )}

@@ -29,6 +29,10 @@ export interface ProfitAndLoss {
   format: "schedule_iii" | "proprietorship";
   revenue: PLLine[];
   expenses: PLLine[];
+  operatingRevenue: PLLine[];
+  otherIncome: PLLine[];
+  directExpenses: PLLine[];
+  indirectExpenses: PLLine[];
   totalRevenue: string;
   totalExpenses: string;
   netProfit: string;

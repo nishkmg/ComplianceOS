@@ -44,7 +44,7 @@ export default function GstReturnsPage() {
             <tbody className="divide-y divide-border-subtle">
               {returns.map(r => (
                 <tr key={r.id} className="hover:bg-surface-muted transition-colors">
-                  <td className="py-3 px-6 font-mono text-ui-xs text-amber"><Link href={`/gst/returns/${r.tax_period_year}/${r.return_type}`} className="hover:underline no-underline text-inherit">{r.return_number}</Link></td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-amber"><Link href={`/gst/returns/${r.tax_period_year}-${r.tax_period_month}`} className="hover:underline no-underline text-inherit">{r.return_number}</Link></td>
                   <td className="py-3 px-6 font-ui text-ui-sm text-dark">{monthNames[parseInt(r.tax_period_month)] || r.tax_period_month} {r.tax_period_year}</td>
                   <td className="py-3 px-6 font-mono text-ui-xs text-mid">{r.due_date ? new Date(r.due_date).toLocaleDateString("en-IN") : "—"}</td>
                   <td className="py-3 px-6 font-mono text-ui-sm tabular-nums text-right">₹{Number(r.total_tax_payable || 0).toLocaleString("en-IN")}</td>

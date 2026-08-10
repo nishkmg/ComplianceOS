@@ -17,21 +17,57 @@ const APP_ROUTES = [
   '/invoices/new',
   '/receivables',
   '/inventory',
+  '/inventory/products',
+  '/inventory/products/new',
+  '/inventory/reports',
+  '/inventory/stock',
   '/gst/returns',
+  '/gst/ledger',
+  '/gst/ledger/cash',
+  '/gst/ledger/itc',
+  '/gst/ledger/liability',
+  '/gst/payment',
+  '/gst/payment/history',
+  '/gst/reconciliation',
+  '/gst/reconciliation/mismatches',
   '/itr/returns',
+  '/itr/computation',
+  '/itr/computation/presumptive-scheme',
+  '/itr/computation/regime-comparison',
+  '/itr/payment',
+  '/itr/payment/advance-tax',
   '/itr/payment/history',
+  '/itr/payment/self-assessment',
   '/payroll',
+  '/payroll/process',
+  '/payroll/team-salary-preview',
+  '/payroll-reports',
+  '/payroll-reports/pf-challan',
+  '/payroll-reports/esi-challan',
+  '/payroll-reports/form-16',
+  '/my-payslips',
   '/reports/profit-loss',
   '/reports/trial-balance',
   '/reports/balance-sheet',
+  '/reports/cash-flow',
+  '/reports/ledger',
   '/settings/fiscal-years',
   '/settings/invoices',
   '/coa',
+  '/accounts',
+  '/accounts/new',
   '/payments',
+  '/payments/new',
   '/employees',
   '/employees/new',
   '/support',
   '/audit-log',
+  '/access-denied',
+  '/onboarding',
+  '/receipts/scan',
+  '/invoices/scan',
+  '/payroll/success',
+  '/itr/payment/recording',
 ];
 
 const PUBLIC_ROUTES = ['/login', '/signup', '/', '/pricing', '/features', '/privacy', '/terms', '/security'];
@@ -51,7 +87,7 @@ test.describe('Accessibility compliance — app routes (authenticated)', () => {
   test.use({ storageState: undefined });
 
   test('demo session sweep has no critical or serious violations', async ({ page }) => {
-    test.setTimeout(180_000);
+    test.setTimeout(300_000);
     await page.goto('/login');
     await page.locator('input[type=email], input#email, input[name=email]').first().waitFor({ timeout: 30000 });
     await page.locator('input[type=email], input#email, input[name=email]').first().fill('demo@complianceos.test');

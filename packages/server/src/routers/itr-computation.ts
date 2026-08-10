@@ -33,6 +33,7 @@ export const itrComputationRouter = router({
           },
           otherSources: "0",
           grossTotal: "0",
+          lastComputedAt: null,
         };
       }
 

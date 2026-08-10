@@ -61,20 +61,20 @@ export default function ITRRecordPaymentPage() {
             {/* Section 2: Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                <div className="flex flex-col gap-2">
-                  <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">BSR Code (7 Digits)</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="0000000" maxLength={7} />
+                  <label htmlFor="challan-bsr" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">BSR Code (7 Digits)</label>
+                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" id="challan-bsr" placeholder="0000000" maxLength={7} />
                </div>
                <div className="flex flex-col gap-2">
-                  <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Challan Serial Number</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="00000" maxLength={5} />
+                  <label htmlFor="challan-serial" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Challan Serial Number</label>
+                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-mono text-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" id="challan-serial" placeholder="00000" maxLength={5} />
                </div>
                <div className="flex flex-col gap-2">
-                  <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Date of Deposit</label>
-                  <input className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="date" />
+                  <label htmlFor="challan-date" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Date of Deposit</label>
+                  <input id="challan-date" className="w-full bg-surface-muted border border-border rounded-md px-4 py-3 font-ui text-ui-sm text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" type="date" />
                </div>
                <div className="flex flex-col gap-2">
-                  <label className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Total Amount Paid (₹)</label>
-                  <input className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-lg font-bold text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="0.00" type="number" />
+                  <label htmlFor="challan-amount" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Total Amount Paid (₹)</label>
+                  <input id="challan-amount" className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-lg font-bold text-dark focus:border-primary outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="0.00" type="number" />
                </div>
             </div>
           </div>

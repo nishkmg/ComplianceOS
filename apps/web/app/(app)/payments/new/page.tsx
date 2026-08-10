@@ -177,8 +177,8 @@ export default function NewPaymentPage() {
         <h3 className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-5 border-b border-border pb-2 font-bold">Voucher Details</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <div className="space-y-1">
-            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Entity / Party Name</label>
-            <input
+            <label htmlFor="payment-party" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Entity / Party Name</label>
+            <input id="payment-party"
               className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-ui-sm font-ui text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="Search customer or vendor..."
               value={customerName}
@@ -187,8 +187,9 @@ export default function NewPaymentPage() {
             />
           </div>
           <div className="space-y-1">
-            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Date</label>
+            <label htmlFor="payment-date" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Date</label>
             <input
+              id="payment-date"
               type="date"
               className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={paymentDate}
@@ -196,8 +197,8 @@ export default function NewPaymentPage() {
             />
           </div>
           <div className="space-y-1">
-            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Mode</label>
-            <select
+            <label htmlFor="payment-mode" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Mode</label>
+            <select id="payment-mode"
               className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-ui-sm font-ui text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={paymentMethod}
               onChange={e => setPaymentMethod(e.target.value)}
@@ -208,8 +209,8 @@ export default function NewPaymentPage() {
             </select>
           </div>
           <div className="space-y-1">
-            <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Reference / UTR</label>
-            <input
+            <label htmlFor="payment-ref" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Reference / UTR</label>
+            <input id="payment-ref"
               className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="T241024…"
               value={referenceNumber}
@@ -218,8 +219,9 @@ export default function NewPaymentPage() {
             />
           </div>
           <div className="md:col-span-2 space-y-1">
-            <label className="block font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold">Amount Transacted (₹)</label>
+            <label htmlFor="payment-amount" className="block font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold">Amount Transacted (₹)</label>
             <input
+              id="payment-amount"
               type="number"
               min="0"
               className="w-full bg-surface border border-amber rounded-md px-4 py-3.5 font-mono text-xl font-bold text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"

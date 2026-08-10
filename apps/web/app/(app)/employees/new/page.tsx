@@ -50,7 +50,7 @@ export default function NewEmployeePage() {
       {/* Page Header */}
       <header className="sticky top-0 z-30 bg-surface/90 backdrop-blur-md border-b-[0.5px] border-border px-8 py-4 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} aria-label="Back" className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
+          <button onClick={() => router.back()} aria-label="Go back" className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer" >
             <Icon name="arrow_back" />
           </button>
           <div>
@@ -59,7 +59,7 @@ export default function NewEmployeePage() {
           </div>
         </div>
         <div className="flex gap-4">
-          <button onClick={() => router.back()} className="btn btn-secondary">Discard</button>
+          <button onClick={() => router.back()} className="btn btn-secondary" aria-label="Go back">Discard</button>
           <button onClick={handleSubmit} disabled={saving} className="btn btn-primary">
             {saving ? "Creating..." : "Create Employee"}
           </button>

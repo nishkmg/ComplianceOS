@@ -113,6 +113,7 @@ export default function CashFlowPage() {
         </div>
         <div className="flex gap-3 items-center">
           <select
+            aria-label="Fiscal year"
             className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
             value={fiscalYear}
             onChange={e => setFiscalYear(e.target.value)}
@@ -136,7 +137,7 @@ export default function CashFlowPage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-black">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-dark">Mehta Textiles Private Limited</h2>
           <p className="font-ui text-ui-xs text-mid uppercase tracking-widest mb-1">Cash Flow Statement</p>
           <p className="font-mono text-ui-xs text-light italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
@@ -145,7 +146,7 @@ export default function CashFlowPage() {
         <div className="grid grid-cols-12 gap-4 px-8 pt-6 pb-2 border-b border-dark font-ui text-ui-2xs text-light uppercase tracking-widest print:border-black">
           <div className="col-span-8">Particulars</div>
           <div className="col-span-2 text-right">Current Period (₹)</div>
-          <div className="col-span-2 text-right text-light/60">Previous Period (₹)</div>
+          <div className="col-span-2 text-right text-mid">Previous Period (₹)</div>
         </div>
 
         {/* Sections */}
@@ -153,7 +154,7 @@ export default function CashFlowPage() {
           {sections.map(section => (
             <div key={section.title}>
               <div className="px-4 py-2 border-t-2 border-amber mb-0 print:border-black">
-                <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-black">{section.title}</h3>
+                <h3 className="font-ui text-display-sm text-dark uppercase tracking-wider print:text-dark">{section.title}</h3>
               </div>
               <div className="divide-y-[0.5px] divide-border-subtle">
                 {section.items.map((item, i) => (
@@ -164,7 +165,7 @@ export default function CashFlowPage() {
                     <div className="col-span-8 font-ui text-ui-sm text-dark pl-4">{item.label}</div>
                     <div className={`col-span-2 text-right font-mono text-ui-sm tabular-nums ${
                       parseFloat(item.amount) < 0 ? 'text-danger' : 'text-dark'
-                    } print:text-black`}>
+                    } print:text-dark`}>
                       {parseFloat(item.amount) < 0
                         ? `(${formatIndianNumber(Math.abs(parseFloat(item.amount)))})`
                         : formatIndianNumber(parseFloat(item.amount))}
@@ -175,12 +176,12 @@ export default function CashFlowPage() {
                   </div>
                 ))}
                 <div className="grid grid-cols-12 gap-4 items-center py-3 bg-surface-muted font-semibold border-t border-border">
-                  <div className="col-span-8 font-ui text-ui-xs uppercase tracking-wider text-dark print:text-black">
+                  <div className="col-span-8 font-ui text-ui-xs uppercase tracking-wider text-dark print:text-dark">
                     Net Cash from {section.title.split(" from ").pop()}
                   </div>
                   <div className={`col-span-2 text-right font-mono text-ui-sm tabular-nums ${
                     parseFloat(section.total) < 0 ? 'text-danger' : 'text-dark'
-                  } print:text-black`}>
+                  } print:text-dark`}>
                     {parseFloat(section.total) < 0
                       ? `(${formatIndianNumber(Math.abs(parseFloat(section.total)))})`
                       : formatIndianNumber(parseFloat(section.total))}
@@ -195,12 +196,12 @@ export default function CashFlowPage() {
         {/* Consolidation */}
         <div className="mx-8 mb-8 space-y-4">
           <div className="grid grid-cols-12 gap-4 items-center py-3 border-t-2 border-dark print:border-black">
-            <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest font-bold text-dark print:text-black">
+            <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest font-bold text-dark print:text-dark">
               Net Increase / (Decrease) in Cash & Cash Equivalents
             </div>
             <div className={`col-span-2 text-right font-mono text-ui-md tabular-nums font-bold ${
               netChange < 0 ? 'text-danger' : 'text-dark'
-            } print:text-black`}>
+            } print:text-dark`}>
               {netChange < 0
                 ? `(${formatIndianNumber(Math.abs(netChange))})`
                 : formatIndianNumber(netChange)}
@@ -209,18 +210,18 @@ export default function CashFlowPage() {
           </div>
 
           <div className="grid grid-cols-12 gap-4 items-center py-3 border-t border-border print:border-black">
-            <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest text-mid print:text-black">Cash & Cash Equivalents at Beginning of Period</div>
-            <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark print:text-black">{formatIndianNumber(openingCash)}</div>
+            <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest text-mid print:text-dark">Cash & Cash Equivalents at Beginning of Period</div>
+            <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark print:text-dark">{formatIndianNumber(openingCash)}</div>
             <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-light">{formatIndianNumber(Math.round(openingCash * 0.92))}</div>
           </div>
 
           <div className="bg-surface-muted px-6 py-5 flex justify-between items-center border-t-2 border-dark rounded-md print:bg-transparent print:border-black print:rounded-none">
             <div>
-              <span className="font-ui text-ui-sm font-bold text-dark uppercase tracking-widest print:text-black">
+              <span className="font-ui text-ui-sm font-bold text-dark uppercase tracking-widest print:text-dark">
                 Cash & Cash Equivalents at End of Period
               </span>
             </div>
-            <span className="font-mono text-2xl font-bold text-dark tabular-nums print:text-black">
+            <span className="font-mono text-2xl font-bold text-dark tabular-nums print:text-dark">
               {formatIndianNumber(closingCash)}
             </span>
           </div>

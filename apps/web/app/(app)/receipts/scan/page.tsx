@@ -43,10 +43,10 @@ export default function ScanReceiptPage() {
               {/* Toolbar */}
               <div className="h-12 border-b-[0.5px] border-border bg-surface-muted flex items-center justify-between px-4">
                 <div className="flex items-center gap-3 text-text-mid">
-                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_in" className="text-[20px]" /></button>
-                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_out" className="text-[20px]" /></button>
+                  <button aria-label="Zoom in" className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_in" className="text-[20px]" /></button>
+                  <button aria-label="Zoom out" className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="zoom_out" className="text-[20px]" /></button>
                   <div className="w-[1px] h-4 bg-border-subtle mx-1"></div>
-                  <button className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="rotate_right" className="text-[20px]" /></button>
+                  <button aria-label="Rotate document" className="hover:text-on-surface cursor-pointer border-none bg-transparent"><Icon name="rotate_right" className="text-[20px]" /></button>
                 </div>
                 <span className="font-mono text-ui-xs text-text-light">HDFC_TRANSFER_VOUCHER.pdf</span>
               </div>
@@ -65,7 +65,7 @@ export default function ScanReceiptPage() {
                   <div className="relative max-w-full max-h-full shadow-screenshot bg-surface p-4">
                     <img alt="Payment receipt" className="max-w-full h-auto object-contain opacity-90 sepia-[.1]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_-z1xA_jSWfC0icM1u3GBFq6GMgC35jYumiSRCMSvawozqQlAZSG4jklpkAC8fozvlDQArtmuq93ezOMM6RwqYYLxnMUkCAQLtXYYuQa5NVfPnD5rIEPcqfovUkRQ9_cDo4AcqMhAzLhkXq1rX0pNbEBj-RXfJQn0WjDQMWLsQ4UFK6D_JcF7s5a921KJxlXG7VeK6Ue-oD65u_NJw3cT-DHeCzlNwWYELe28FYmt01Uzjs4cCgFkITF2kfERB_cL2LJ60uWNE9g" />
                     {/* Bounding Boxes */}
-                    <div className="absolute border-[1.5px] border-blue-400 bg-blue-400/10 top-[20%] left-[10%] w-[40%] h-[5%] cursor-pointer hover:bg-blue-400/20 transition-colors"></div>
+                    <div className="absolute border-[1.5px] border-amber-bright bg-amber-bright/10 top-[20%] left-[10%] w-[40%] h-[5%] cursor-pointer hover:bg-amber-bright/20 transition-colors"></div>
                     <div className="absolute border-[1.5px] border-amber bg-amber/10 top-[35%] left-[60%] w-[25%] h-[6%] cursor-pointer hover:bg-amber/20 transition-colors"></div>
                   </div>
                 )}
@@ -85,38 +85,38 @@ export default function ScanReceiptPage() {
             
             <div className="p-6 flex flex-col gap-6 flex-1 overflow-y-auto">
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label htmlFor="scan-payer" className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Payer Name
                   <span className="w-2 h-2 rounded-full bg-success"></span>
                 </label>
-                <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="text" defaultValue="Tech Solutions India Pvt Ltd" />
+                <input id="scan-payer" aria-label="Payer name" className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="text" defaultValue="Tech Solutions India Pvt Ltd" />
               </div>
 
               <div className="flex flex-col gap-2">
                 <label className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Amount (INR)
-                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                  <span className="w-2 h-2 rounded-full bg-amber-bright"></span>
                 </label>
-                <input className="w-full border-[1px] border-amber-400 bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-1 focus:ring-amber-400" type="text" defaultValue="45,200.00" />
+                <input id="scan-amount" aria-label="Amount" className="w-full border-[1px] border-amber-bright bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus:ring-1 focus:ring-amber-bright" type="text" defaultValue="45,200.00" />
                 <span className="font-ui text-ui-2xs text-amber flex items-center gap-1">
                   <Icon name="warning" className="text-ui-md" /> Verify amount extracted
                 </span>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label htmlFor="scan-date" className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   Transaction Date
                   <span className="w-2 h-2 rounded-full bg-success"></span>
                 </label>
-                <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="text" defaultValue="24-Oct-2023" />
+                <input id="scan-date" aria-label="Transaction date" className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="text" defaultValue="24-Oct-2023" />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+                <label htmlFor="scan-ref" className="font-ui text-ui-2xs text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
                   UTR / Ref Number
                   <span className="w-2 h-2 rounded-full bg-success"></span>
                 </label>
-                <input className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="text" defaultValue="HDFCR529482710" />
+                <input id="scan-ref" aria-label="UTR / reference number" className="w-full border-[0.5px] border-border bg-surface-muted px-3 py-2 font-mono text-ui-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" type="text" defaultValue="HDFCR529482710" />
               </div>
             </div>
 

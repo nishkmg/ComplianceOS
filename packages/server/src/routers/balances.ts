@@ -105,6 +105,7 @@ export const balancesRouter = router({
           accountId: accountBalances.accountId,
           name: accounts.name,
           kind: accounts.kind,
+          subType: accounts.subType,
           debitTotal: sql<string>`SUM(${accountBalances.debitTotal})::text`,
           creditTotal: sql<string>`SUM(${accountBalances.creditTotal})::text`,
         })
@@ -117,10 +118,14 @@ export const balancesRouter = router({
             inArray(accounts.kind, ["Revenue", "Expense"]),
           ),
         )
-        .groupBy(accountBalances.accountId, accounts.name, accounts.kind);
+        .groupBy(accountBalances.accountId, accounts.name, accounts.kind, accounts.subType);
 
       const revenue: { label: string; amount: string }[] = [];
       const expenses: { label: string; amount: string }[] = [];
+      const operatingRevenue: { label: string; amount: string }[] = [];
+      const otherIncome: { label: string; amount: string }[] = [];
+      const directExpenses: { label: string; amount: string }[] = [];
+      const indirectExpenses: { label: string; amount: string }[] = [];
       let totalRevenue = 0;
       let totalExpenses = 0;
 
@@ -129,10 +134,20 @@ export const balancesRouter = router({
           const amount = toNum(r.creditTotal) - toNum(r.debitTotal);
           totalRevenue += amount;
           revenue.push({ label: r.name, amount: amount.toFixed(2) });
+          if (r.subType === "OperatingRevenue") {
+            operatingRevenue.push({ label: r.name, amount: amount.toFixed(2) });
+          } else {
+            otherIncome.push({ label: r.name, amount: amount.toFixed(2) });
+          }
         } else if (r.kind === "Expense") {
           const amount = toNum(r.debitTotal) - toNum(r.creditTotal);
           totalExpenses += amount;
           expenses.push({ label: r.name, amount: amount.toFixed(2) });
+          if (r.subType === "DirectExpense") {
+            directExpenses.push({ label: r.name, amount: amount.toFixed(2) });
+          } else {
+            indirectExpenses.push({ label: r.name, amount: amount.toFixed(2) });
+          }
         }
       }
 
@@ -145,6 +160,10 @@ export const balancesRouter = router({
         format: "schedule_iii",
         revenue: revenue.map((r) => ({ label: r.label, amount: r.amount })),
         expenses: expenses.map((e) => ({ label: e.label, amount: e.amount })),
+        operatingRevenue: operatingRevenue.map((r) => ({ label: r.label, amount: r.amount })),
+        otherIncome: otherIncome.map((r) => ({ label: r.label, amount: r.amount })),
+        directExpenses: directExpenses.map((e) => ({ label: e.label, amount: e.amount })),
+        indirectExpenses: indirectExpenses.map((e) => ({ label: e.label, amount: e.amount })),
         totalRevenue: totalRevenue.toFixed(2),
         totalExpenses: totalExpenses.toFixed(2),
         netProfit: netProfit.toFixed(2),

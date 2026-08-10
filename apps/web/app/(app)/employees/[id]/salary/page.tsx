@@ -100,7 +100,7 @@ export default function EmployeeSalaryPage() {
           <button type="submit" disabled={saving} className="filter-tab active disabled:opacity-50">
             {saving ? "Saving..." : "Save Salary Structure"}
           </button>
-          <button type="button" onClick={() => router.back()} className="filter-tab">Cancel</button>
+          <button type="button" onClick={() => router.back()} className="filter-tab" aria-label="Go back">Cancel</button>
         </div>
       </form>
     </div>

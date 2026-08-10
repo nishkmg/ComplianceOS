@@ -1,17 +1,32 @@
 "use client";
 
-import { Icon } from '@/components/ui/icon';
-import "next/link";
+import { useState } from "react";
+import { Icon } from "@/components/ui/icon";
+import { formatIndianNumber } from "@/lib/format";
+import { api } from "@/lib/api";
+import { EmptyState } from "@/components/ui/empty-state";
 
-const employees = [
-  { name: "Rahul Sharma", code: "EMP-001", uan: "100987654321", basicWages: 45000, pf: 1800, eps: 1250, epf: 550, total: 3600 },
-  { name: "Priya Singh", code: "EMP-002", uan: "100987654322", basicWages: 35000, pf: 1800, eps: 1250, epf: 550, total: 3600 },
-];
+const now = new Date();
+const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
 export default function PFChallanPage() {
+  const [period, setPeriod] = useState(DEFAULT_MONTH);
+  const [month, year] = period.split("-");
+
+  const challan = api.payrollReports.pfChallan.useQuery(
+    { month, year },
+    { staleTime: 15_000 },
+  );
+
+  const d = challan.data;
+  const pfEe = Number(d?.pfEeTotal ?? "0");
+  const pfEr = Number(d?.pfErTotal ?? "0");
+  const eps = Number(d?.epsTotal ?? "0");
+  const total = Number(d?.total ?? "0");
+  const hasData = total > 0;
+
   return (
     <div className="space-y-0 text-left">
-      {/* Header */}
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 backdrop-blur-sm -mx-8 -mt-8 mb-8">
         <div>
           <div className="flex items-center gap-2 text-ui-2xs font-bold text-amber uppercase tracking-widest mb-2">
@@ -24,94 +39,58 @@ export default function PFChallanPage() {
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
             <Icon name="calendar_month" className="text-light text-ui-xl mr-2" />
-            <select className="bg-transparent border-none text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface cursor-pointer">
-              <option>October 2024</option>
-              <option>September 2024</option>
-            </select>
+            <input
+              aria-label="Report period"
+              type="month"
+              className="bg-transparent border-none text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-focus cursor-pointer"
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+            />
           </div>
-          <button className="btn btn-primary flex items-center gap-2">
-            <Icon name="download" className="text-ui-xl" /> Export ECR
-          </button>
         </div>
       </header>
 
       <div className="space-y-6 pb-12">
-        {/* Summary Cards */}
-        <div className="grid grid-cols-4 gap-4">
-          <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
-            <h3 className="text-xs font-bold text-mid uppercase tracking-wider relative z-10">Total Employees</h3>
-            <p className="font-mono text-2xl font-bold text-dark relative z-10 mt-2">142</p>
+        {challan.isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <Icon name="hourglass" className="text-lighter animate-spin text-3xl" />
           </div>
-          <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
-            <h3 className="text-xs font-bold text-mid uppercase tracking-wider relative z-10">Total Basic Wages</h3>
-            <p className="font-mono text-2xl font-bold text-dark relative z-10 mt-2">₹42,50,000</p>
-          </div>
-          <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
-            <h3 className="text-xs font-bold text-mid uppercase tracking-wider relative z-10">Total Contribution</h3>
-            <p className="font-mono text-2xl font-bold text-dark relative z-10 mt-2">₹10,20,000</p>
-          </div>
-          <div className="bg-dark border focus:border-focus p-5 rounded-md shadow-sm text-left">
-            <h3 className="text-xs font-bold text-light uppercase tracking-wider">Total Payable</h3>
-            <p className="font-mono text-2xl font-bold text-amber mt-2">₹10,41,250</p>
-          </div>
-        </div>
+        ) : !hasData ? (
+          <EmptyState
+            icon="receipt_long"
+            title={`No PF liability for ${month}/${year}`}
+            description="Statutory liabilities are recorded when a payroll run is finalized for the period."
+          />
+        ) : (
+          <>
+            {/* Summary Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
+                <h3 className="text-xs font-bold text-mid uppercase tracking-wider">PF Employee (12%)</h3>
+                <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(pfEe)}</p>
+              </div>
+              <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
+                <h3 className="text-xs font-bold text-mid uppercase tracking-wider">PF Employer (12%)</h3>
+                <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(pfEr)}</p>
+              </div>
+              <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
+                <h3 className="text-xs font-bold text-mid uppercase tracking-wider">EPS (8.33%)</h3>
+                <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(eps)}</p>
+              </div>
+              <div className="bg-dark border focus:border-focus p-5 rounded-md shadow-sm text-left">
+                <h3 className="text-xs font-bold text-light uppercase tracking-wider">Total Payable</h3>
+                <p className="font-mono text-2xl font-bold text-amber mt-2">₹ {formatIndianNumber(total)}</p>
+              </div>
+            </div>
 
-        {/* Data Table */}
-        <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden flex flex-col">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-muted">
-            <h3 className="font-ui text-sm font-medium font-bold text-dark uppercase tracking-wider text-ui-xs text-light">Employee Contribution Ledger</h3>
-            <div className="relative">
-              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-light text-ui-xl" />
-              <input className="h-8 pl-9 pr-3 py-1 text-sm border border-border rounded-md focus:border-primary w-64 bg-surface outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" placeholder="Search UAN or Name..." />
+            <div className="bg-surface border border-border p-6 shadow-sm flex items-start gap-3">
+              <Icon name="info" className="text-amber" />
+              <p className="font-ui text-ui-sm text-mid leading-relaxed">
+                {d?.paid ? "Marked as paid" : "Pending remittance"} · payable by {d?.payableByDate ?? "—"}. Employee-wise ECR (E-CR) file generation for EPFO upload is a separate export, not yet available.
+              </p>
             </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-border bg-surface-muted text-ui-xs uppercase tracking-wider text-mid font-bold">
-                  <th className="px-6 py-3">Employee Details</th>
-                  <th className="px-4 py-3 text-right">Basic Wages</th>
-                  <th className="px-4 py-3 text-right">PF (12%)</th>
-                  <th className="px-4 py-3 text-right">EPS (8.33%)</th>
-                  <th className="px-4 py-3 text-right">EPF (3.67%)</th>
-                  <th className="px-6 py-3 text-right font-bold text-amber">Total (₹)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y 50-border font-mono text-sm">
-                {employees.map((e, i) => (
-                  <tr key={i} className="hover:bg-surface-muted/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="font-ui text-ui-sm font-bold text-dark">{e.name}</div>
-                      <div className="text-xs text-text-mt-1"><span className="text-light">{e.code}</span> <span className="text-lighter mx-2">|</span> <span className="text-light">UAN: {e.uan}</span></div>
-                    </td>
-                    <td className="px-4 py-4 text-right font-bold text-dark">{e.basicWages.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right text-mid">{e.pf.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right text-mid">{e.eps.toLocaleString()}</td>
-                    <td className="px-4 py-4 text-right text-mid">{e.epf.toLocaleString()}</td>
-                    <td className="px-6 py-4 text-right font-bold text-amber">{e.total.toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="bg-surface-muted border-t-2 border-border font-bold">
-                  <td className="px-6 py-4 font-ui text-ui-sm uppercase tracking-widest text-xs">Total</td>
-                  <td className="px-4 py-4 text-right">80,000</td>
-                  <td className="px-4 py-4 text-right">3,600</td>
-                  <td className="px-4 py-4 text-right">2,500</td>
-                  <td className="px-4 py-4 text-right">1,100</td>
-                  <td className="px-6 py-4 text-right font-bold text-amber">7,200</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <div className="flex items-center justify-between px-6 py-3 border-t border-border text-sm text-mid bg-surface">
-            <span>Showing 1 to {employees.length} of 142 entries</span>
-            <div className="flex items-center gap-1">
-              <button className="p-1 rounded hover:bg-surface-muted disabled:opacity-50 border-none bg-transparent cursor-pointer"><Icon name="chevron_left" className="text-[20px]" /></button>
-              <button className="p-1 rounded hover:bg-surface-muted border-none bg-transparent cursor-pointer"><Icon name="chevron_right" className="text-[20px]" /></button>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

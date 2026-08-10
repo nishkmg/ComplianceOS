@@ -97,7 +97,7 @@ export default function ITRReturnDetailPage() {
                 </div>
                 <div className="flex justify-between font-ui text-ui-sm opacity-60">
                    <span>Advance Tax Paid</span>
-                   <span className="font-mono text-green-400">₹ 5,55,525</span>
+                   <span className="font-mono text-success">₹ 5,55,525</span>
                 </div>
                 <div className="flex justify-between font-ui text-ui-sm text-lg pt-6 mt-4 border-t focus:border-focus font-bold">
                    <span className="text-amber">Net Tax Payable</span>
