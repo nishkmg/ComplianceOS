@@ -111,3 +111,11 @@ session-2026-06-14T12-10-50-939Z-compaction46.md
 - Traffic-light mockup dots (homepage, 9×) → new decorative tokens --color-traffic-red/yellow/green in tokens.css @theme → bg-traffic-* utilities.
 - Swept leftover raw amber shades (bg-amber-50→bg-amber-soft, text-amber-700/800/900→text-amber, border-amber-200→border-amber-bright/30, border-amber-600→border-amber) across 13 app pages incl. onboarding steps.
 - page-audit bannedColors = 0 (was 31 at session start). Gates: typecheck, design-audit 0 errors, build, a11y 9/9.
+
+## 2026-08-10 (session 6) — functional gaps: GST payment entry, advances UI, itr/payment links, realtime de-supabase
+
+- /gst/payment: full PMT-06 flow wired — period picker → createChallan (liability breakdown preview) → payment mode/bank/CIN → payGst (base64 challan payload persists cash ledger + liability + event). History + ledger invalidated on success.
+- /itr/payment hub: 3 cards are now Links (advance-tax / self-assessment / history).
+- Employee detail: advances section — list (advances.list by employee), create form (amount/installments/auto monthly deduction/date/first-deduction month), cancel with confirm.
+- Realtime: provider rewritten as 15s polling bus (synthetic UPDATE per subscribed table → trpc invalidations); lib/supabase-realtime.ts + lib/supabase-rest.ts deleted; /api/health checks local DB (was pinging dead Supabase REST — lying health check); ITR PDF route JSON+summary switched from sbGet to drizzle (itrReturns/itrReturnLines); @supabase/realtime-js dep removed (pnpm install).
+- Gates: typecheck, 493 server tests, build, a11y 9/9 green.

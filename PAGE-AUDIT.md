@@ -7,8 +7,8 @@ Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
 | metric | count |
 |---|---|
 | total | 97 |
-| unwired | 30 |
-| fabricated | 23 |
+| unwired | 29 |
+| fabricated | 25 |
 | noPageHeader | 86 |
 | bannedColors | 0 |
 | notSwept | 31 |
@@ -37,7 +37,7 @@ Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
 | /cookies | 70 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /dashboard | 160 | trpc:journalEntries.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /employees | 41 | trpc:employees.list | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
-| /employees/[id] | 39 | trpc:employees.get | Y | 0 |  |  |  |  | 0 |  |  |  |  |
+| /employees/[id] | 192 | trpc:employees.get,advances.list,advances.create,advances.cancel | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
 | /employees/[id]/salary | 127 | trpc:salaryStructure.create | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
 | /employees/new | 165 | trpc:employees.create | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
 | /features | 103 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
@@ -51,7 +51,7 @@ Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
 | /gst/ledger/cash | 50 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/ledger/itc | 51 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/ledger/liability | 51 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
-| /gst/payment | 20 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
+| /gst/payment | 209 | trpc:gstPayment.createChallan,gstPayment.payGst | Y | 0 |  |  | Y |  | 0 | Y | Y |  |  |
 | /gst/payment/history | 44 | trpc:gstPayment.paymentHistory | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/reconciliation | 20 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /gst/reconciliation/mismatches | 101 | trpc:gstReconciliation.mismatches | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
@@ -75,7 +75,7 @@ Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
 | /itr/computation | 314 | trpc:itrComputation.getIncomeBreakdown,itrReturns.list,itrComputation.getTaxComputation,itrComputation.computeIncome,itrComputation.computeTax | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /itr/computation/presumptive-scheme | 144 | trpc:itrComputation.recommendScheme | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /itr/computation/regime-comparison | 186 | trpc:itrComputation.getIncomeBreakdown,itrReturns.list,itrComputation.getRegimeComparison,itrComputation.computeTax | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
-| /itr/payment | 24 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
+| /itr/payment | 30 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /itr/payment/advance-tax | 270 | trpc:itrPayment.getAdvanceTaxLedger,itrPayment.payAdvanceTax | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
 | /itr/payment/history | 84 | trpc:itrPayment.getPaymentHistory | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /itr/payment/recording | 141 | trpc:itrPayment.paySelfAssessmentTax | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |

@@ -15,7 +15,7 @@ import type { ITCBalance, Liability, TaxType } from '../services/gst-ledger-serv
 import { GSTTaxType } from '@complianceos/shared';
 
 // Mock the database
-vi.mock('@complianceos/db', async (importOriginal) => {
+vi.mock('../../../db/src/index', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...(actual as any),

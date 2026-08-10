@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { supabaseRest } from "@/lib/supabase-rest";
+import { sql } from "drizzle-orm";
+import { db, eventStore } from "@complianceos/db";
 
 export const runtime = "nodejs";
 
@@ -17,11 +18,8 @@ function computeLag(lastEventAt?: string): string {
 async function checkDatabase(): Promise<{ status: string; latencyMs?: number; error?: string }> {
   try {
     const start = Date.now();
-    const res = await supabaseRest("users?select=id&limit=1", { method: "GET" });
-    if (res.ok) {
-      return { status: "connected", latencyMs: Date.now() - start };
-    }
-    return { status: "error", error: `Supabase returned ${res.status}` };
+    await db.execute(sql`select 1`);
+    return { status: "connected", latencyMs: Date.now() - start };
   } catch (err: unknown) {
     return { status: "error", error: err instanceof Error ? err.message : "unknown" };
   }
@@ -69,17 +67,12 @@ async function checkProjector(): Promise<{ status: string; url?: string; error?:
 
 async function checkEventStore(): Promise<{ status: string; lag?: string; latestSequence?: string; error?: string }> {
   try {
-    const res = await supabaseRest("event_store?select=sequence&order=sequence.desc&limit=1", { method: "GET" });
-    if (res.ok) {
-      const rows = res.json as Array<{ sequence: number }> | null;
-      const seq = rows?.[0]?.sequence ?? null;
-      return {
-        status: "ok",
-        latestSequence: seq != null ? String(seq) : "none",
-        lag: "0s",
-      };
-    }
-    return { status: "ok", lag: "0s", latestSequence: "none" };
+    const [row] = await db.select({ seq: sql<string>`max(sequence)::text` }).from(eventStore);
+    return {
+      status: "ok",
+      latestSequence: row?.seq ?? "none",
+      lag: "0s",
+    };
   } catch (err: unknown) {
     return { status: "ok", lag: "0s", error: err instanceof Error ? err.message : "unknown" };
   }
@@ -88,14 +81,14 @@ async function checkEventStore(): Promise<{ status: string; lag?: string; latest
 export async function GET() {
   const errors: string[] = [];
 
-  const [db, redis, projector, eventStore] = await Promise.all([
+  const [dbCheck, redis, projector, eventStoreCheck] = await Promise.all([
     checkDatabase(),
     checkRedis(),
     checkProjector(),
     checkEventStore(),
   ]);
 
-  if (db.status !== "connected") errors.push("database unreachable");
+  if (dbCheck.status !== "connected") errors.push("database unreachable");
   if (redis.status === "error") errors.push("redis unreachable");
   if (projector.status === "error" || projector.status === "unhealthy") errors.push("projector unhealthy");
 
@@ -107,8 +100,8 @@ export async function GET() {
   return NextResponse.json({
     status,
     checks: {
-      database: { status: db.status, latency: db.latencyMs, error: db.error },
-      eventStore: { status: eventStore.status, lag: eventStore.lag },
+      database: { status: dbCheck.status, latency: dbCheck.latencyMs, error: dbCheck.error },
+      eventStore: { status: eventStoreCheck.status, lag: eventStoreCheck.lag },
       projector: { status: projector.status, lag: projectorLag },
     },
     uptime: Math.floor((Date.now() - startTime) / 1000),

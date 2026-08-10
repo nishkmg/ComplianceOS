@@ -42,11 +42,18 @@ function createMockDb(results: any[][] = []): {
   return {
     db: {
       insert: vi.fn((tbl: any) => ({
-        values: vi.fn((vals: any) => ({
-          onConflictDoUpdate: vi.fn((conf: any) => {
-            inserts.push({ table: tbl, values: vals, conf });
-          }),
-        })),
+        values: vi.fn((vals: any) => {
+          inserts.push({ table: tbl, values: vals });
+          // thenable so `await db.insert(...).values(...)` settles
+          return {
+            onConflictDoUpdate: vi.fn(),
+            then: vi.fn((r: any) => Promise.resolve({}).then(r)),
+            catch: vi.fn(),
+          };
+        }),
+      })),
+      delete: vi.fn(() => ({
+        where: vi.fn(() => Promise.resolve()),
       })),
       select: vi.fn(() => ({ from: vi.fn(() => q()) })),
       update: vi.fn(() => ({

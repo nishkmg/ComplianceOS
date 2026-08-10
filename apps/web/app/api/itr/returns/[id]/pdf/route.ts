@@ -1,5 +1,7 @@
 import { getDb } from "@/lib/db";
 import { streamPdf } from "@/lib/pdf-stream";
+import { eq, and } from "drizzle-orm";
+import { itrReturns, itrReturnLines } from "@complianceos/db";
 export const runtime = "nodejs";
 
 type ItrFormType = "ITR-1" | "ITR-2" | "ITR-3" | "ITR-4" | "ITR-5" | "ITR-6" | "ITR-7";
@@ -28,20 +30,13 @@ export async function GET(req: Request) {
     }
 
     if (format === "json") {
-      const { supabaseRest } = await import("@/lib/supabase-rest");
-      const res = await supabaseRest(
-        `itr_returns?id=eq.${encodeURIComponent(id)}&tenant_id=eq.${encodeURIComponent(tenantId)}`,
-        { method: "GET" },
+      const db = getDb();
+      const [itrReturn] = await db.select().from(itrReturns).where(
+        and(eq(itrReturns.id, id), eq(itrReturns.tenantId, tenantId)),
       );
-      const rows = Array.isArray(res.json) ? res.json : [];
-      const itrReturn = rows[0] || null;
       if (!itrReturn) return Response.json({ error: "Not found" }, { status: 404 });
 
-      const linesRes = await supabaseRest(
-        `itr_return_lines?return_id=eq.${encodeURIComponent(id)}&order=schedule_code.asc`,
-        { method: "GET" },
-      );
-      const lines = Array.isArray(linesRes.json) ? linesRes.json : [];
+      const lines = await db.select().from(itrReturnLines).where(eq(itrReturnLines.returnId, id));
 
       return Response.json({ return: { ...itrReturn, lines } });
     }
@@ -49,24 +44,20 @@ export async function GET(req: Request) {
     const { generateItrPdf } = await import("@complianceos/server");
     const db = getDb();
 
-    const { supabaseRest } = await import("@/lib/supabase-rest");
-    const retRes = await supabaseRest(
-      `itr_returns?id=eq.${encodeURIComponent(id)}&tenant_id=eq.${encodeURIComponent(tenantId)}`,
-      { method: "GET" },
+    const [itrReturn] = await db.select().from(itrReturns).where(
+      and(eq(itrReturns.id, id), eq(itrReturns.tenantId, tenantId)),
     );
-    const rows = Array.isArray(retRes.json) ? retRes.json : [];
-    if (!rows.length) return Response.json({ error: "ITR return not found" }, { status: 404 });
+    if (!itrReturn) return Response.json({ error: "ITR return not found" }, { status: 404 });
 
-    const itrReturn = rows[0];
-    const formType: ItrFormType | null = MAP_RETURN_TYPE_TO_FORM_TYPE[itrReturn.return_type?.toLowerCase() ?? ""] ?? null;
-    if (!formType) return Response.json({ error: `Unknown return type: ${itrReturn.return_type}` }, { status: 400 });
+    const formType: ItrFormType | null = MAP_RETURN_TYPE_TO_FORM_TYPE[itrReturn.returnType?.toLowerCase() ?? ""] ?? null;
+    if (!formType) return Response.json({ error: `Unknown return type: ${itrReturn.returnType}` }, { status: 400 });
 
     const result = await generateItrPdf(db, tenantId, {
       returnId: id,
       formType,
     });
 
-    const filename = `${itrReturn.return_type?.toUpperCase() || "ITR"}_${itrReturn.assessment_year || "AY"}_${id.slice(0, 8)}.pdf`;
+    const filename = `${itrReturn.returnType?.toUpperCase() || "ITR"}_${itrReturn.assessmentYear || "AY"}_${id.slice(0, 8)}.pdf`;
     return streamPdf(result.signedUrl, filename);
   } catch (err: any) {
     return Response.json({ error: err.message }, { status: 500 });

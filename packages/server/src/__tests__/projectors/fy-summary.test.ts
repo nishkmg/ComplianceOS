@@ -40,11 +40,18 @@ function createMockDb(results: any[][] = []): {
   return {
     db: {
       insert: vi.fn((tbl: any) => ({
-        values: vi.fn((vals: any) => ({
-          onConflictDoUpdate: vi.fn((conf: any) => {
-            inserts.push({ table: tbl, values: vals, conf });
-          }),
-        })),
+        values: vi.fn((vals: any) => {
+          inserts.push({ table: tbl, values: vals });
+          // thenable so `await db.insert(...).values(...)` settles
+          return {
+            onConflictDoUpdate: vi.fn(),
+            then: vi.fn((r: any) => Promise.resolve({}).then(r)),
+            catch: vi.fn(),
+          };
+        }),
+      })),
+      delete: vi.fn(() => ({
+        where: vi.fn(() => Promise.resolve()),
       })),
       select: vi.fn(() => ({ from: vi.fn(() => q()) })),
       update: vi.fn(() => ({
@@ -64,11 +71,11 @@ describe("fy-summary projector", () => {
     const { db, inserts } = createMockDb([
       // groupBy result: kind totals
       [
-        { kind: "Revenue", total: "50000" },
+        { kind: "Revenue", total: "-50000" },
         { kind: "Expense", total: "30000" },
         { kind: "Asset", total: "200000" },
-        { kind: "Liability", total: "100000" },
-        { kind: "Equity", total: "50000" },
+        { kind: "Liability", total: "-100000" },
+        { kind: "Equity", total: "-50000" },
       ],
     ]);
 
@@ -100,7 +107,7 @@ describe("fy-summary projector", () => {
 
     // FY 2025-26
     pushResult([
-      { kind: "Revenue", total: "40000" },
+      { kind: "Revenue", total: "-40000" },
       { kind: "Expense", total: "25000" },
     ]);
     await fySummaryProjector.process(db, {
@@ -115,7 +122,7 @@ describe("fy-summary projector", () => {
 
     // FY 2026-27
     pushResult([
-      { kind: "Revenue", total: "60000" },
+      { kind: "Revenue", total: "-60000" },
       { kind: "Expense", total: "35000" },
     ]);
     await fySummaryProjector.process(db, {

@@ -11,15 +11,31 @@ import {
   type ReactNode,
 } from "react";
 import { useSession } from "next-auth/react";
-import {
-  REALTIME_TABLES,
-  bindTenantSubscriptions,
-  type RealtimeCallback,
-  type RealtimeEvent,
-  type RealtimePayload,
-} from "@/lib/supabase-realtime";
+
+/**
+ * Realtime-lite: polling-based refresh bus.
+ *
+ * The legacy Supabase realtime stack is dead (project moved off Supabase), so
+ * instead of websocket channels this provider polls on an interval and emits a
+ * synthetic change event per subscribed table. Consumers (report pages) use
+ * the events to invalidate their tRPC queries, which refetch fresh data —
+ * identical behavior to true realtime for dashboard-scale refresh needs.
+ */
 
 type ConnectionStatus = "idle" | "connecting" | "connected" | "disconnected" | "error";
+
+type RealtimeEvent = "INSERT" | "UPDATE" | "DELETE";
+
+type RealtimePayload<T = Record<string, unknown>> = {
+  eventType: RealtimeEvent;
+  new: T;
+  old: T;
+  schema: string;
+  table: string;
+  commit_timestamp: string;
+};
+
+type RealtimeCallback<T = Record<string, unknown>> = (payload: RealtimePayload<T>) => void;
 
 type RealtimeContextValue = {
   status: ConnectionStatus;
@@ -43,6 +59,8 @@ type Listener = {
   callback: RealtimeCallback;
 };
 
+const POLL_INTERVAL_MS = 15_000;
+
 export function RealtimeProvider({ children }: { children: ReactNode }) {
   const { data: session, status: sessionStatus } = useSession();
   const tenantId =
@@ -52,7 +70,6 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ConnectionStatus>("idle");
   const listenersRef = useRef<Map<number, Listener>>(new Map());
   const nextIdRef = useRef(1);
-  const cleanupRef = useRef<(() => Promise<void>) | null>(null);
 
   const fanOut = useCallback((payload: RealtimePayload) => {
     const listeners = listenersRef.current.values();
@@ -74,38 +91,28 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    let cancelled = false;
-    setStatus("connecting");
-
-    const subs = REALTIME_TABLES.map((table) => ({
-      event: "*" as RealtimeEvent | "*",
-      table,
-      callback: fanOut,
-    }));
-
-    // Realtime is optional: if the Supabase legacy stack is unconfigured
-    // (no anon key / dead project), degrade to disconnected instead of
-    // crashing the whole app shell.
-    let cleanup: (() => Promise<void>) | null = null;
-    try {
-      ({ cleanup } = bindTenantSubscriptions(tenantId, subs));
-    } catch {
-      setStatus("disconnected");
-      return () => {};
-    }
-    cleanupRef.current = cleanup;
-
-    const statusTimer = setTimeout(() => {
-      if (!cancelled) setStatus((prev) => (prev === "connecting" ? "connected" : prev));
-    }, 1500);
-
     setStatus("connected");
 
+    // Poll: emit a synthetic change per subscribed table so listeners refetch.
+    const timer = setInterval(() => {
+      const tables = new Set<string>();
+      for (const l of listenersRef.current.values()) {
+        if (l.table) tables.add(l.table);
+      }
+      for (const table of tables) {
+        fanOut({
+          eventType: "UPDATE",
+          new: {},
+          old: {},
+          schema: "public",
+          table,
+          commit_timestamp: new Date().toISOString(),
+        });
+      }
+    }, POLL_INTERVAL_MS);
+
     return () => {
-      cancelled = true;
-      clearTimeout(statusTimer);
-      void cleanupRef.current?.();
-      cleanupRef.current = null;
+      clearInterval(timer);
       setStatus("disconnected");
     };
   }, [tenantId, sessionStatus, fanOut]);
