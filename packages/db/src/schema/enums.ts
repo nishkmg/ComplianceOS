@@ -50,7 +50,7 @@ export const tagEnum = pgEnum("tag", [
 export const reconciliationAccountEnum = pgEnum("reconciliation_account", ["bank", "none"]);
 
 export const referenceTypeEnum = pgEnum("reference_type", [
-  "invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "credit_note", "manual",
+  "invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "credit_note", "purchase_bill", "manual",
 ]);
 
 export const jeStatusEnum = pgEnum("je_status", ["draft", "posted", "voided"]);
@@ -58,7 +58,7 @@ export const jeStatusEnum = pgEnum("je_status", ["draft", "posted", "voided"]);
 export const aggregateTypeEnum = pgEnum("aggregate_type", [
   "journal_entry", "account", "fiscal_year", "invoice", "credit_note", "payment",
   "payroll_run", "salary_structure", "employee_advance",
-  "gst_challan", "gst_payment", "gst_return", "itr_return",
+  "gst_challan", "gst_payment", "gst_return", "itr_return", "purchase_bill",
 ]);
 
 export const eventTypeEnum = pgEnum("event_type", [
@@ -78,6 +78,7 @@ export const eventTypeEnum = pgEnum("event_type", [
   "advance_given", "advance_recovered",
   "gst_challan_created", "gst_payment_made", "itc_reconciled", "itc_utilized",
   "purchase_posted", "purchase_voided", "itc_reversed", "gst_refund_claimed", "gstr3b_generated",
+  "purchase_bill_created", "purchase_bill_paid",
   "income_computed", "tax_computed", "itr_generated",
 ]);
 

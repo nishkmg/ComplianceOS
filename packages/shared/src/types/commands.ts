@@ -4,7 +4,7 @@ import { narration, amountString, description } from "../validation/helpers";
 export const CreateJournalEntryInputSchema = z.object({
   date: z.string().date(),
   narration: narration(),
-  referenceType: z.enum(["invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "credit_note", "manual"]).default("manual"),
+  referenceType: z.enum(["invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "credit_note", "purchase_bill", "manual"]).default("manual"),
   referenceId: z.string().uuid().optional(),
   lines: z.array(z.object({
     accountId: z.string().uuid(),

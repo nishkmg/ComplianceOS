@@ -229,6 +229,27 @@
       "when": 1786440524318,
       "tag": "0030_reference_type_credit_note",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1786441992025,
+      "tag": "0031_purchase_bills",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1786442232628,
+      "tag": "0032_aggregate_type_purchase_bill",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1786442796152,
+      "tag": "0033_event_type_purchase_bill",
+      "breakpoints": true
     }
   ]
 }

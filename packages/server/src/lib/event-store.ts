@@ -17,7 +17,7 @@ export type DbOrTx = Database | Tx;
 export async function appendEvent(
   db: DbOrTx,
   tenantId: string,
-  aggregateType: "journal_entry" | "account" | "fiscal_year" | "invoice" | "credit_note" | "payment" | "payroll_run" | "salary_structure" | "employee_advance" | "gst_challan" | "gst_payment" | "gst_return" | "itr_return",
+  aggregateType: "journal_entry" | "account" | "fiscal_year" | "invoice" | "credit_note" | "payment" | "payroll_run" | "salary_structure" | "employee_advance" | "gst_challan" | "gst_payment" | "gst_return" | "itr_return" | "purchase_bill",
   aggregateId: string,
   eventType: string,
   payload: Record<string, unknown>,

@@ -32,6 +32,7 @@ import { authRouter } from "./auth";
 import { creditNotesRouter } from "./credit-notes";
 import { einvoiceRouter } from "./einvoice";
 import { hsnMasterRouter } from "./hsn-master";
+import { payablesRouter } from "./payables";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -67,6 +68,7 @@ export const appRouter = router({
   creditNotes: creditNotesRouter,
   einvoice: einvoiceRouter,
   hsnMaster: hsnMasterRouter,
+  payables: payablesRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -6,15 +6,15 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 
 | metric | count |
 |---|---|
-| total | 108 |
+| total | 111 |
 | unwired | 31 |
-| fabricated | 31 |
+| fabricated | 32 |
 | noPageHeader | 88 |
 | bannedColors | 0 |
-| notSwept | 42 |
-| notInNav | 74 |
-| noLoading | 105 |
-| noError | 105 |
+| notSwept | 45 |
+| notInNav | 77 |
+| noLoading | 108 |
+| noError | 108 |
 | fakeSuccess | 0 |
 
 ## Routes
@@ -96,6 +96,9 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /login | 147 | none |  | 0 |  |  | Y |  | 0 | Y | Y |  |  |
 | /my-payslips | 52 | trpc:payslips.listMyPayslips | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /onboarding | 207 | fetch:/api/onboarding | Y | 0 |  |  |  |  | 0 |  | Y | Y |  |
+| /payables | 119 | trpc:payables.aging,payables.list | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /payables/[id] | 194 | trpc:payables.get,accounts.list,payables.pay | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /payables/new | 190 | trpc:payables.vendorAccounts,accounts.list,payables.create | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /payments | 133 | trpc:payments.list | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /payments/new | 280 | trpc:payments.record | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
 | /payroll | 39 | trpc:payroll.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
