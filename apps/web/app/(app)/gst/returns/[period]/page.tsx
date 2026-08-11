@@ -9,6 +9,7 @@ const forms = [
   { id: "gstr1", name: "GSTR-1", desc: "Outward supply details — auto-filed from invoices", status: "draft" as const },
   { id: "gstr2b", name: "GSTR-2B", desc: "Inward supply auto-drafted from counterparty filings", status: "ready" as const },
   { id: "gstr3b", name: "GSTR-3B", desc: "Monthly summary return — payment computation", status: "pending" as const },
+  { id: "gstr9", name: "GSTR-9", desc: "Annual return — schedules + PDF", status: "ready" as const },
 ];
 
 export default function PeriodPage() {

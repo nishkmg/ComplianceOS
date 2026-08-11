@@ -30,6 +30,8 @@ import { auditLogRouter } from "./audit-log";
 import { teamRouter } from "./team";
 import { authRouter } from "./auth";
 import { creditNotesRouter } from "./credit-notes";
+import { einvoiceRouter } from "./einvoice";
+import { hsnMasterRouter } from "./hsn-master";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -63,6 +65,8 @@ export const appRouter = router({
   team: teamRouter,
   auth: authRouter,
   creditNotes: creditNotesRouter,
+  einvoice: einvoiceRouter,
+  hsnMaster: hsnMasterRouter,
 });
 
 export type AppRouter = typeof appRouter;

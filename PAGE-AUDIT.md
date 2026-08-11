@@ -6,15 +6,15 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 
 | metric | count |
 |---|---|
-| total | 104 |
+| total | 108 |
 | unwired | 31 |
-| fabricated | 28 |
-| noPageHeader | 87 |
+| fabricated | 31 |
+| noPageHeader | 88 |
 | bannedColors | 0 |
-| notSwept | 38 |
-| notInNav | 70 |
-| noLoading | 101 |
-| noError | 101 |
+| notSwept | 42 |
+| notInNav | 74 |
+| noLoading | 105 |
+| noError | 105 |
 | fakeSuccess | 0 |
 
 ## Routes
@@ -36,7 +36,7 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /contact/success | 25 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /cookies | 70 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /credit-notes | 79 | trpc:creditNotes.list | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
-| /credit-notes/[id] | 136 | trpc:creditNotes.get | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /credit-notes/[id] | 138 | trpc:creditNotes.get | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
 | /credit-notes/new | 272 | trpc:accounts.list,invoices.list,creditNotes.create | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /dashboard | 160 | trpc:journalEntries.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /employees | 41 | trpc:employees.list | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
@@ -50,6 +50,7 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /features/itr | 105 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /features/payroll | 156 | none |  | 4 |  |  |  |  | 0 |  |  |  |  |
 | /forgot-password | 94 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
+| /gst/hsn-master | 139 | trpc:hsnMaster.list,hsnMaster.create,hsnMaster.deactivate | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /gst/ledger | 28 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /gst/ledger/cash | 50 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/ledger/itc | 51 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
@@ -59,18 +60,21 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /gst/reconciliation | 20 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /gst/reconciliation/mismatches | 101 | trpc:gstReconciliation.mismatches | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/returns | 48 | trpc:gstReturns.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
-| /gst/returns/[period] | 39 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
+| /gst/returns/[period] | 40 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /gst/returns/[period]/gstr1 | 95 | trpc:gstReturns.list | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /gst/returns/[period]/gstr2b | 95 | trpc:gstReturns.list | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /gst/returns/[period]/gstr3b | 95 | trpc:gstReturns.list | Y | 0 |  |  |  |  | 0 |  |  |  |  |
+| /gst/returns/[period]/gstr9 | 87 | trpc:gstReturns.list | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /inventory | 259 | trpc:inventory.summary,inventory.layers,products.list | Y | 0 |  |  | Y | Y | 0 | Y | Y |  | Y |
+| /inventory/movements | 74 | trpc:inventory.movements | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /inventory/operations | 154 | trpc:products.list,inventory.purchaseReceipt,inventory.salesDelivery,inventory.adjustStock | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /inventory/products | 48 | trpc:products.list | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /inventory/products/new | 72 | trpc:products.create | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /inventory/reports | 199 | trpc:stockReports.valuationReport,inventory.movements | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /inventory/reports/expiry | 24 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /inventory/stock | 44 | trpc:inventory.layers | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /invoices | 56 | trpc:invoices.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
-| /invoices/[id] | 51 | trpc:invoices.get | Y | 0 |  |  |  |  | 0 |  |  |  |  |
+| /invoices/[id] | 157 | trpc:invoices.get,einvoice.generateIrn,einvoice.generateEwb | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
 | /invoices/[id]/edit | 64 | trpc:invoices.get,invoices.modify | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /invoices/[id]/pdf | 107 | trpc:invoices.get,invoices.getPdfSignedUrl,invoices.generatePdf | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /invoices/new | 168 | trpc:invoices.create | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |

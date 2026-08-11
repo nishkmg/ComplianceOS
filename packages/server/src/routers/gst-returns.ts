@@ -5,7 +5,7 @@ import { generateGSTR2B } from "../commands/generate-gstr2b";
 import { generateGSTR3B } from "../commands/generate-gstr3b";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { gstReturns, gstReturnLines } = _db;
+const { gstReturns, gstReturnLines, gstr9Schedules } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
 const { GSTReturnStatus } = _shared;
@@ -15,7 +15,7 @@ export const gstReturnsRouter = router({
     .input(z.object({
       periodMonth: z.number().min(1).max(12).optional(),
       periodYear: z.number().min(2000).optional(),
-      returnType: z.enum(["gstr1", "gstr2b", "gstr3b"]).optional(),
+      returnType: z.enum(["gstr1", "gstr2b", "gstr3b", "gstr9"]).optional(),
       status: z.enum(["draft", "generated", "filed", "amended"]).optional(),
     }).optional())
     .query(async ({ ctx, input }) => {
@@ -292,5 +292,16 @@ export const gstReturnsRouter = router({
       return {
         amendedReturnId: amendedReturn.id,
       };
+    }),
+
+  gstr9Schedules: protectedProcedure
+    .input(z.object({ returnId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const { tenantId } = ctx.session!.user;
+      return ctx.db
+        .select()
+        .from(gstr9Schedules)
+        .where(and(eq(gstr9Schedules.returnId, input.returnId), eq(gstr9Schedules.tenantId, tenantId)))
+        .orderBy(gstr9Schedules.scheduleCode);
     }),
 });
