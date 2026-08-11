@@ -116,15 +116,7 @@ export default function JournalPage() {
   const { data, isLoading, isError } = api.journalEntries.list.useQuery({ fiscalYear: activeFy, limit: 500 });
   const entries = (data ?? []) as JournalEntry[];
 
-  if (isError) {
-    return (
-      <ErrorState
-        title="Could not load Journal"
-        description="The server did not respond. Retry or go back."
-        onRetry={() => window.location.reload()}
-      />
-    );
-  }
+
 
   const filteredEntries = useMemo(
     () =>
@@ -172,6 +164,15 @@ export default function JournalPage() {
     showToast.success(`Exported ${filteredEntries.length} entries.`);
   }, [filteredEntries, activeFy]);
 
+  if (isError) {
+    return (
+      <ErrorState
+        title="Could not load Journal"
+        description="The server did not respond. Retry or go back."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">

@@ -10,6 +10,8 @@ export default function MyPayslipsPage() {
   const slips = api.payslips.listMyPayslips.useQuery(undefined, { staleTime: 15_000 });
   const isError = slips.isError;
 
+
+
   if (isError) {
     return (
       <ErrorState
@@ -19,7 +21,6 @@ export default function MyPayslipsPage() {
       />
     );
   }
-
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <PageHeader title="My Payslips" />

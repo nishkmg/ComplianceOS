@@ -38,6 +38,9 @@ export default function InvoicesPage() {
   const { data, isLoading, isError } = api.invoices.list.useQuery({ page: 1, pageSize: 50 });
   const invoices = (data?.invoices ?? []) as Invoice[];
 
+
+
+  if (isLoading) return <TableSkeleton rows={5} columns={5} />;
   if (isError) {
     return (
       <ErrorState
@@ -47,8 +50,6 @@ export default function InvoicesPage() {
       />
     );
   }
-
-  if (isLoading) return <TableSkeleton rows={5} columns={5} />;
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">

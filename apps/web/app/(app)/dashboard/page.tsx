@@ -44,15 +44,7 @@ export default function DashboardPage() {
     { staleTime: 15_000 },
   );
 
-  if (isError) {
-    return (
-      <ErrorState
-        title="Could not load Dashboard"
-        description="The server did not respond. Retry or go back."
-        onRetry={() => window.location.reload()}
-      />
-    );
-  }
+
   const allEntries = (data ?? []) as JournalEntry[];
   const entries = allEntries.slice(0, 8);
   const loading = isLoading;
@@ -82,6 +74,15 @@ export default function DashboardPage() {
   const today = new Date();
   const greeting = today.getHours() < 12 ? "Good morning" : today.getHours() < 18 ? "Good afternoon" : "Good evening";
 
+  if (isError) {
+    return (
+      <ErrorState
+        title="Could not load Dashboard"
+        description="The server did not respond. Retry or go back."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
   return (
     <div className="space-y-8">
       <PageHeader
