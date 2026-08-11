@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@trpc/server": "^11.17.0",
+    "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.2",
     "nodemailer": "^7.0.0",
     "postgres": "^3.4.9",
@@ -32,9 +33,9 @@
     "@types/node": "^25.6.0",
     "@types/nodemailer": "^6.4.0",
     "@types/react": "^19.0.0",
+    "@types/tesseract.js": "^2.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@types/tesseract.js": "^2.0.0",
     "typescript": "^5.7.0",
     "vitest": "^1.6.1"
   }

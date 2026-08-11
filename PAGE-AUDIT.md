@@ -1,20 +1,20 @@
 # PAGE-AUDIT — app route truth ledger
 
-Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
+Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 
 ## Totals
 
 | metric | count |
 |---|---|
-| total | 97 |
-| unwired | 29 |
-| fabricated | 25 |
-| noPageHeader | 86 |
+| total | 101 |
+| unwired | 31 |
+| fabricated | 27 |
+| noPageHeader | 87 |
 | bannedColors | 0 |
-| notSwept | 31 |
-| notInNav | 64 |
-| noLoading | 95 |
-| noError | 94 |
+| notSwept | 35 |
+| notInNav | 67 |
+| noLoading | 98 |
+| noError | 98 |
 | fakeSuccess | 0 |
 
 ## Routes
@@ -46,7 +46,7 @@ Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
 | /features/invoicing | 120 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /features/itr | 105 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /features/payroll | 156 | none |  | 4 |  |  |  |  | 0 |  |  |  |  |
-| /forgot-password | 63 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
+| /forgot-password | 94 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /gst/ledger | 28 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /gst/ledger/cash | 50 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/ledger/itc | 51 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
@@ -111,10 +111,14 @@ Generated: 2026-08-10 — re-run: `node scripts/page-audit.mjs`
 | /reports/pl | 6 | none |  | 0 |  |  |  |  | 0 | Y |  |  |  |
 | /reports/profit-loss | 264 | trpc:balances.pAndL | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /reports/trial-balance | 260 | trpc:balances.trialBalance | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
+| /reset-password | 113 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /security | 61 | none |  | 0 |  |  |  |  | 0 |  | Y |  |  |
+| /settings | 73 | none |  | 0 |  |  |  | Y | 0 | Y |  | Y |  |
+| /settings/company | 189 | trpc:tenantConfig.get,tenantConfig.listStates,tenantConfig.update | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /settings/fiscal-years | 221 | trpc:fiscalYears.list,fiscalYears.close,fiscalYears.create | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /settings/fiscal-years/[id] | 137 | trpc:fiscalYears.get,fiscalYears.close | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /settings/invoices | 146 | trpc:invoiceConfig.get,invoiceConfig.save | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
+| /settings/users | 216 | trpc:team.list,team.invite,team.updateRole,team.remove | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /signup | 148 | fetch:/api/auth/register | Y | 0 |  |  | Y |  | 0 | Y | Y |  |  |
 | /support | 43 | none |  | 0 |  |  | Y | Y | 0 | Y | Y |  | Y |
 | /terms | 83 | none |  | 0 |  |  |  |  | 0 |  | Y |  |  |

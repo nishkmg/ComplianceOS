@@ -25,12 +25,21 @@ const FINANCIAL_FILES = ROUTER_FILES.filter((f) => {
   return FINANCIAL_ROUTERS.includes(base);
 });
 
+// Password-reset routes are the deliberate exception to the protected-only
+// rule: requestPasswordReset/resetPassword must be reachable BEFORE a session
+// exists. Both procedures are input-validated and leak nothing —
+// requestPasswordReset never confirms account existence, and resetPassword
+// consumes a one-time token.
+const PUBLIC_ROUTER_FILES = ["auth"];
+
 // ── Part A: Router authorization sweep ───────────────────────────────────────
 
 describe("Router authorization sweep", () => {
   it("every router file imports protectedProcedure", () => {
     const missing: string[] = [];
     for (const file of ROUTER_FILES) {
+      const base = file.replace(/\.(ts|tsx)$/, "");
+      if (PUBLIC_ROUTER_FILES.includes(base)) continue;
       const content = readFileSync(join(ROUTERS_DIR, file), "utf-8");
       if (!content.includes("protectedProcedure")) {
         missing.push(file);
@@ -42,6 +51,8 @@ describe("Router authorization sweep", () => {
   it("no router file imports publicProcedure", () => {
     const offenders: string[] = [];
     for (const file of ROUTER_FILES) {
+      const base = file.replace(/\.(ts|tsx)$/, "");
+      if (PUBLIC_ROUTER_FILES.includes(base)) continue;
       const content = readFileSync(join(ROUTERS_DIR, file), "utf-8");
       if (content.includes("publicProcedure")) {
         offenders.push(file);
@@ -133,6 +144,8 @@ describe("Auth contract enforcement", () => {
 
   it("no publicProcedure references in any router", () => {
     for (const file of ROUTER_FILES) {
+      const base = file.replace(/\.(ts|tsx)$/, "");
+      if (PUBLIC_ROUTER_FILES.includes(base)) continue;
       const content = readFileSync(join(ROUTERS_DIR, file), "utf-8");
       expect(content).not.toMatch(/publicProcedure/);
     }

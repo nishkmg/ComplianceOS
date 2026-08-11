@@ -32,3 +32,4 @@ export * from "./itr-projections";
 export * from "./onboarding-audit";
 export * from "./hsn-master";
 export * from "./gstr9-schedules";
+export * from "./password-reset";

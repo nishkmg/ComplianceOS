@@ -42,3 +42,7 @@ export type { EfilingAdapter } from "./services/efiling/adapter";
 // E-way-bill
 export { generateEwayBill, cancelEwayBill, extendValidity } from "./services/eway-bill";
 export type { EwbPartA, EwbPartB, EwbResponse } from "./services/eway-bill";
+
+// Password reset / team invite helpers (REST auth routes use these)
+export { createPasswordResetToken, consumePasswordResetToken, appBaseUrl } from "./lib/password-reset";
+export { EmailQueueService } from "./services/email-queue";
