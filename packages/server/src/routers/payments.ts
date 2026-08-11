@@ -20,7 +20,7 @@ const RecordPaymentInputSchema = z.object({
   amount: z.number().positive(),
   paymentMethod: z.enum(['cash', 'bank', 'online', 'cheque']),
   referenceNumber: z.string().optional(),
-  allocations: z.array(PaymentAllocationInputSchema).min(1),
+  allocations: z.array(PaymentAllocationInputSchema).optional().default([]),
   notes: z.string().optional(),
 });
 
@@ -139,7 +139,7 @@ export const paymentsRouter = router({
     .input(
       z.object({
         paymentId: z.string().uuid(),
-        allocations: z.array(PaymentAllocationInputSchema).min(1),
+        allocations: z.array(PaymentAllocationInputSchema).optional().default([]),
       }),
     )
     .mutation(async ({ ctx, input }) => {

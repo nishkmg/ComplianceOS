@@ -78,7 +78,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
       {/* Section Header */}
       <div>
         <h1 className="font-ui text-display-xl text-on-surface mb-3">Opening Balances</h1>
-        <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
+        <p className="font-ui text-sm font-medium text-ui-md text-mid max-w-2xl leading-relaxed">
           Establish the initial financial state for this entity. You may begin with a clean slate or carry forward balances from a previous period.
         </p>
       </div>
@@ -98,7 +98,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
             </div>
             <div className="flex flex-col">
               <span className={`font-ui text-lg font-bold ${mode === 'fresh_start' ? 'text-primary' : 'text-on-surface'}`}>Fresh Start</span>
-              <span className="font-ui text-ui-sm text-ui-sm text-text-mid mt-1">Initialize all ledgers with ₹ 0.00 balances. Recommended for new registrations.</span>
+              <span className="font-ui text-ui-sm text-ui-sm text-mid mt-1">Initialize all ledgers with ₹ 0.00 balances. Recommended for new registrations.</span>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
             </div>
             <div className="flex flex-col">
               <span className={`font-ui text-lg font-bold ${mode === 'migration' ? 'text-primary' : 'text-on-surface'}`}>Balance Migration</span>
-              <span className="font-ui text-ui-sm text-ui-sm text-text-mid mt-1">Carry forward balances from your previous software or spreadsheet.</span>
+              <span className="font-ui text-ui-sm text-ui-sm text-mid mt-1">Carry forward balances from your previous software or spreadsheet.</span>
             </div>
           </div>
         </div>
@@ -126,9 +126,9 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-muted border-b-[0.5px] border-border">
-                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest">Account / Ledger</th>
-                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest text-right w-40">Debit (₹)</th>
-                  <th className="py-3 px-6 font-ui text-ui-xs text-text-light uppercase tracking-widest text-right w-40">Credit (₹)</th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-light uppercase tracking-widest">Account / Ledger</th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-light uppercase tracking-widest text-right w-40">Debit (₹)</th>
+                  <th className="py-3 px-6 font-ui text-ui-xs text-light uppercase tracking-widest text-right w-40">Credit (₹)</th>
                 </tr>
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
@@ -136,7 +136,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
                   <tr key={a.id} className="hover:bg-surface-muted transition-colors">
                     <td className="py-4 px-6">
                       <div className="font-ui text-ui-sm font-bold text-on-surface">{a.name}</div>
-                      <div className="text-ui-xs text-text-light">{a.code} · {a.kind}</div>
+                      <div className="text-ui-xs text-light">{a.code} · {a.kind}</div>
                     </td>
                     <td className="py-4 px-6">
                       <input 
@@ -194,20 +194,20 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
               type="button"
               onClick={onBack}
               disabled={saving || (mode === "migration" && totals.diff > 0.01)}
-              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
               <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-light uppercase tracking-wider italic">
             Opening balances set here will form the Q1 starting position for FY 2024-25.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={saving || (mode === "migration" && totals.diff > 0.01)}
-          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
           <Icon name="rocket_launch" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

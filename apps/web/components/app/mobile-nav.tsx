@@ -71,7 +71,7 @@ export function MobileNav() {
   return (
     <>
       {/* Bottom Tab Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-border-subtle lg:hidden no-print">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border-subtle lg:hidden no-print">
         <div className="flex items-center justify-around h-16">
           {primaryTabs.map(tab => {
             const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/');
@@ -107,8 +107,8 @@ export function MobileNav() {
       {drawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[70vh] overflow-y-auto shadow-lg">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle sticky top-0 bg-white z-10">
+          <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl max-h-[70vh] overflow-y-auto shadow-lg">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle sticky top-0 bg-surface z-10">
               <span className="font-ui font-bold text-dark">Navigation</span>
               <button
                 onClick={() => setDrawerOpen(false)}
@@ -135,7 +135,7 @@ export function MobileNav() {
                           className={cn(
                             'flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm transition-colors no-underline',
                             isActive
-                              ? 'bg-amber text-white font-semibold'
+                              ? 'bg-amber text-white dark:text-amber-ink font-semibold'
                               : 'text-mid hover:bg-surface-muted'
                           )}
                         >

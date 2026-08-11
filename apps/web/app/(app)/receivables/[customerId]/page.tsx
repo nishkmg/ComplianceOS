@@ -81,7 +81,7 @@ export default function CustomerDetailPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
             <Icon name="add" size={14} /> Record Payment
           </button>
         </div>

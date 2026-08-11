@@ -74,9 +74,9 @@ export default function BillDetailPage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/payables" className="btn-secondary no-underline">← All bills</Link>
+          <Link href="/payables" className="btn btn-secondary no-underline">← All bills</Link>
           {bill.status !== "paid" && (
-            <button onClick={() => setPayOpen(true)} className="btn-primary">Record Payment</button>
+            <button onClick={() => setPayOpen(true)} className="btn btn-primary">Record Payment</button>
           )}
         </div>
       </header>
@@ -114,7 +114,7 @@ export default function BillDetailPage() {
             </div>
           </div>
 
-          <div className="bg-dark text-white p-8 shadow-sm relative overflow-hidden">
+          <div className="bg-sidebar text-white p-8 shadow-sm relative overflow-hidden">
             <div className="relative z-10 text-left">
               <h4 className="text-amber-bright font-ui text-lg font-bold mb-3">Ledger Effect</h4>
               <p className="text-sidebar-muted text-sm leading-relaxed">
@@ -182,8 +182,8 @@ export default function BillDetailPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setPayOpen(false)} className="btn-secondary">Cancel</button>
-              <button onClick={confirmPay} disabled={busy} className="btn-primary">Record Payment</button>
+              <button onClick={() => setPayOpen(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={confirmPay} disabled={busy} className="btn btn-primary">Record Payment</button>
             </div>
           </div>
         </div>

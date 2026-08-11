@@ -44,7 +44,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
       <div>
         <span className="font-ui text-ui-xs text-ui-xs text-amber uppercase tracking-widest block mb-4">Architecture</span>
         <h1 className="font-ui text-display-xl text-on-surface mb-4">Configure Ledger Modules</h1>
-        <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
+        <p className="font-ui text-sm font-medium text-ui-md text-mid max-w-2xl leading-relaxed">
           Select the specific functional modules required for your organization's fiscal operations. These can be adjusted post-onboarding within system settings.
         </p>
       </div>
@@ -65,7 +65,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
               {mod.required && <span className="font-ui text-ui-xs text-ui-2xs uppercase tracking-widest bg-surface-muted text-light px-2 py-0.5 rounded-md">Required</span>}
             </div>
             <h3 className="font-ui text-lg font-bold text-on-surface mb-2">{mod.name}</h3>
-            <p className="font-ui text-ui-sm text-ui-sm text-text-mid flex-1 leading-relaxed">
+            <p className="font-ui text-ui-sm text-ui-sm text-mid flex-1 leading-relaxed">
               {mod.desc}
             </p>
           </div>
@@ -79,20 +79,20 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
               <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-light uppercase tracking-wider italic">
             Accounting module is always active as the system core.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Saving..." : "Establish Framework"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

@@ -1,5 +1,6 @@
 import { eq, sql } from "drizzle-orm";
-import { db, tenants, tenantModuleConfig } from "@complianceos/db";
+import { getToken } from "next-auth/jwt";
+import { db, tenants, userTenants, tenantModuleConfig } from "@complianceos/db";
 
 export const runtime = "nodejs";
 
@@ -40,6 +41,19 @@ function moduleActivationFromData(data: Record<string, unknown>): Array<{ module
 }
 
 // ─── GET: fetch onboarding state ──────────────────────────────────────
+async function requireMembership(req: Request, tenantId: string | null): Promise<{ userId: string; tenantId: string }> {
+  const token = await getToken({ req });
+  if (!token?.sub) throw new Error("Unauthorized");
+  if (!tenantId) throw new Error("tenantId is required");
+  const [membership] = await db
+    .select({ userId: userTenants.userId })
+    .from(userTenants)
+    .where(sql`${userTenants.userId} = ${token.sub}::uuid AND ${userTenants.tenantId} = ${tenantId}::uuid`)
+    .limit(1);
+  if (!membership) throw new Error("Unauthorized");
+  return { userId: token.sub, tenantId };
+}
+
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -122,6 +136,11 @@ export async function POST(req: Request) {
     }
     if (typeof step !== "number") {
       return Response.json({ error: "step is required" }, { status: 400 });
+    }
+    try {
+      await requireMembership(req, tenantId);
+    } catch {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const d = (data as Record<string, unknown>) || {};

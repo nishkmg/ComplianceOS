@@ -141,7 +141,7 @@ export function FormErrorSummary({
  */
 export function OfflineBanner() {
   return (
-    <div className="bg-amber text-white text-sm font-ui py-2 px-4 text-center">
+    <div className="bg-amber text-white dark:text-amber-ink text-sm font-ui py-2 px-4 text-center">
       You appear to be offline. Changes will not be saved until you reconnect.
     </div>
   );

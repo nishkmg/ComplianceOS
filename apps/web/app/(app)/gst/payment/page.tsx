@@ -78,7 +78,7 @@ export default function GstPaymentPage() {
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <h1 className="font-ui text-display-lg font-semibold text-dark">GST Payment</h1>
-        <Link href="/gst/payment/history" className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">
+        <Link href="/gst/payment/history" className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">
           <Icon name="history" className="text-ui-md" /> Payment History
         </Link>
       </div>
@@ -200,7 +200,7 @@ export default function GstPaymentPage() {
         <Link href="/gst/payment/history" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="history" className="text-3xl text-amber mb-4" />
           <h3 className="font-ui text-lg font-bold text-dark mb-2">Payment History</h3>
-          <p className="font-ui text-ui-sm text-text-mid">View all challan payments made to the GST portal.</p>
+          <p className="font-ui text-ui-sm text-mid">View all challan payments made to the GST portal.</p>
         </Link>
       )}
     </div>

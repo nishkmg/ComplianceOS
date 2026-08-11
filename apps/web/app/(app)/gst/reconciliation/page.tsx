@@ -11,7 +11,7 @@ export default function GstReconciliationPage() {
         <Link href="/gst/reconciliation/mismatches" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="compare_arrows" className="text-3xl text-amber mb-4" />
           <h3 className="font-ui text-lg font-bold text-dark mb-2">2B Mismatches</h3>
-          <p className="font-ui text-ui-sm text-text-mid">Compare booked purchases with GSTR-2B auto-drafted data.</p>
+          <p className="font-ui text-ui-sm text-mid">Compare booked purchases with GSTR-2B auto-drafted data.</p>
         </Link>
       </div>
     </div>

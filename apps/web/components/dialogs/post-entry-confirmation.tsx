@@ -67,7 +67,7 @@ export function PostEntryDialog({
           </button>
           <button 
             onClick={onConfirm}
-            className="px-6 py-2.5 bg-amber text-white font-bold uppercase tracking-widest text-sm rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
+            className="px-6 py-2.5 bg-amber text-white dark:text-amber-ink font-bold uppercase tracking-widest text-sm rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
           >
             Post Entry
           </button>

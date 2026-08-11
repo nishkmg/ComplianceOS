@@ -140,7 +140,7 @@ export default function ITRAdvanceTaxPage() {
 
           <div className="max-w-6xl mx-auto space-y-10">
             {/* Liability Summary */}
-            <section className="bg-dark text-white p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl border focus:border-focus">
+            <section className="bg-sidebar text-white p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl border focus:border-focus">
               <div className="text-left flex-1">
                 <h3 className="text-amber font-ui text-lg font-bold mb-2">Projected Annual Liability</h3>
                 <p className="text-light font-ui text-ui-sm leading-relaxed">Total advance tax payable across instalments for AY {assessmentYear}.</p>
@@ -256,7 +256,7 @@ export default function ITRAdvanceTaxPage() {
               </div>
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setShowRecordModal(false)} className="flex-1 px-4 py-2.5 border border-border text-dark font-ui text-ui-sm font-bold uppercase tracking-widest rounded-md bg-transparent cursor-pointer hover:bg-surface-muted transition-colors">Cancel</button>
-                <button onClick={handleRecordPayment} disabled={payAdvanceTax.isPending} className="flex-1 px-4 py-2.5 bg-amber text-white font-ui text-ui-sm font-bold uppercase tracking-widest rounded-md border-none cursor-pointer hover:bg-amber-hover transition-colors shadow-sm disabled:opacity-50">
+                <button onClick={handleRecordPayment} disabled={payAdvanceTax.isPending} className="flex-1 px-4 py-2.5 bg-amber text-white dark:text-amber-ink font-ui text-ui-sm font-bold uppercase tracking-widest rounded-md border-none cursor-pointer hover:bg-amber-hover transition-colors shadow-sm disabled:opacity-50">
                   {payAdvanceTax.isPending ? "Recording…" : "Record Payment"}
                 </button>
               </div>

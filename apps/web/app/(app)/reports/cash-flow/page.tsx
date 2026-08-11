@@ -15,6 +15,7 @@ import { useRealtimeSubscription } from "@/components/providers/realtime-provide
 interface CfSection { title: string; items: { label: string; amount: string }[]; total: string }
 
 export default function CashFlowPage() {
+  const { data: company } = api.tenantConfig.get.useQuery(undefined, { staleTime: 60_000 });
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
 
   const utils = api.useUtils();
@@ -47,8 +48,7 @@ export default function CashFlowPage() {
   ];
 
   const netChange = parseFloat(data?.netCashFlow || "0");
-  const openingCash = 0;
-  const closingCash = openingCash + netChange;
+  const closingCash = netChange;
 
   if (error) {
     return (
@@ -137,7 +137,7 @@ export default function CashFlowPage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-dark">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-dark">{company?.name ?? "—"}</h2>
           <p className="font-ui text-ui-xs text-mid uppercase tracking-widest mb-1">Cash Flow Statement</p>
           <p className="font-mono text-ui-xs text-light italic">For the year ended 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>
@@ -171,7 +171,7 @@ export default function CashFlowPage() {
                         : formatIndianNumber(parseFloat(item.amount))}
                     </div>
                     <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-light">
-                      {formatIndianNumber(Math.abs(Math.round(parseFloat(item.amount) * 0.85)))}
+                      {formatIndianNumber(Math.abs(parseFloat(item.amount)))}
                     </div>
                   </div>
                 ))}
@@ -211,8 +211,8 @@ export default function CashFlowPage() {
 
           <div className="grid grid-cols-12 gap-4 items-center py-3 border-t border-border print:border-black">
             <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest text-mid print:text-dark">Cash & Cash Equivalents at Beginning of Period</div>
-            <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark print:text-dark">{formatIndianNumber(openingCash)}</div>
-            <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-light">{formatIndianNumber(Math.round(openingCash * 0.92))}</div>
+            <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark print:text-dark">{formatIndianNumber(0)}</div>
+            <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-light">{formatIndianNumber(0)}</div>
           </div>
 
           <div className="bg-surface-muted px-6 py-5 flex justify-between items-center border-t-2 border-dark rounded-md print:bg-transparent print:border-black print:rounded-none">

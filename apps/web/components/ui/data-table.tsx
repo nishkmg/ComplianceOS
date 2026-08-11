@@ -227,7 +227,7 @@ export function DataTable<T>({
                     'w-7 h-7 rounded text-ui-xs font-mono font-medium transition-colors border-none cursor-pointer',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2',
                     pageNum === safePage
-                      ? 'bg-amber text-white'
+                      ? 'bg-amber text-white dark:text-amber-ink'
                       : 'bg-transparent text-mid hover:bg-surface-muted'
                   )}
                 >

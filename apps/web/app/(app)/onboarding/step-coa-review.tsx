@@ -243,10 +243,10 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
           {selectedIds.has(node.id) && <Icon name="check" className="text-white text-ui-lg" />}
         </div>
         <div className="flex-1 flex items-center gap-3" style={{ paddingLeft: `${node.level * 24}px` }}>
-          <span className="font-mono text-ui-xs text-text-light">{node.code}</span>
+          <span className="font-mono text-ui-xs text-light">{node.code}</span>
           <span className="font-ui text-ui-sm text-on-surface">{node.name}</span>
         </div>
-        <span className="font-ui text-ui-2xs uppercase tracking-widest text-text-light">{node.type}</span>
+        <span className="font-ui text-ui-2xs uppercase tracking-widest text-light">{node.type}</span>
       </div>
       {node.children?.map(renderNode)}
     </div>
@@ -257,7 +257,7 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
       {/* Section Header */}
       <div>
         <h1 className="font-ui text-display-xl text-on-surface mb-6">Review & Customize Ledger</h1>
-        <p className="font-ui text-ui-lg text-text-mid max-w-3xl leading-relaxed">
+        <p className="font-ui text-ui-lg text-mid max-w-3xl leading-relaxed">
           The following chart of accounts has been generated based on your template. De-select any ledgers you do not require, or add new sub-ledgers later.
         </p>
       </div>
@@ -266,12 +266,12 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
         <div className="h-[2px] w-full bg-amber"></div>
         <div className="overflow-y-auto max-h-[500px] border-b-[0.5px] border-border">
           {loadingTree ? (
-            <div className="flex items-center justify-center py-12 text-text-mid font-ui text-sm">Loading ledger structure...</div>
+            <div className="flex items-center justify-center py-12 text-mid font-ui text-sm">Loading ledger structure...</div>
           ) : (
             currentTree.map(renderNode)
           )}
         </div>
-        <div className="p-4 bg-surface-muted flex justify-between items-center text-ui-xs text-text-light uppercase tracking-widest">
+        <div className="p-4 bg-surface-muted flex justify-between items-center text-ui-xs text-light uppercase tracking-widest">
           <span>{selectedIds.size} Ledgers Selected</span>
           <button
             onClick={() => {
@@ -291,20 +291,20 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
               <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-light uppercase tracking-wider italic">
             Physical physical-ledger accuracy guaranteed through hierarchical enforcement.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Finalizing..." : "Confirm Structure"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { Icon } from '@/components/ui/icon';
 
 interface AppTopBarProps {
@@ -63,7 +63,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
 
         {/* User avatar */}
         <button
-          className="h-8 w-8 rounded-full border border-border-subtle cursor-pointer active:opacity-70 overflow-hidden bg-amber text-white flex items-center justify-center font-bold text-xs border-none"
+          className="h-8 w-8 rounded-full border border-border-subtle cursor-pointer active:opacity-70 overflow-hidden bg-amber text-white dark:text-amber-ink flex items-center justify-center font-bold text-xs border-none"
           onClick={() => setShowUserMenu(prev => !prev)}
           aria-label="User menu"
           aria-expanded={showUserMenu}
@@ -79,7 +79,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
               className="fixed inset-0 z-40"
               onClick={() => setShowUserMenu(false)}
             />
-            <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-border-subtle shadow-xl z-50 flex flex-col rounded-sm overflow-hidden text-left">
+            <div className="absolute top-full right-0 mt-2 w-64 bg-surface border border-border-subtle shadow-xl z-50 flex flex-col rounded-sm overflow-hidden text-left">
               {/* Identity */}
               <div className="p-4 border-b-[0.5px] border-border-subtle bg-section-muted">
                 <p className="text-ui-sm font-bold text-dark">{userName}</p>
@@ -110,7 +110,10 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
 
               {/* Sign out */}
               <div className="border-t-[0.5px] border-border-subtle p-2">
-                <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-danger-bg text-danger rounded-sm border-none bg-transparent cursor-pointer transition-colors">
+                <button
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-danger-bg text-danger rounded-sm border-none bg-transparent cursor-pointer transition-colors"
+                >
                   <Icon name="logout" size={16} />
                   <span className="text-ui-xs font-bold uppercase tracking-widest">Sign Out</span>
                 </button>

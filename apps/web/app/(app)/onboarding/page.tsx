@@ -104,7 +104,7 @@ export default function OnboardingPage() {
   if (!mounted || status === "loading" || !session) {
     return (
       <div className="bg-page-bg text-on-surface antialiased min-h-screen flex items-center justify-center">
-        <div className="font-ui text-text-mid text-sm">Loading...</div>
+        <div className="font-ui text-mid text-sm">Loading...</div>
       </div>
     );
   }
@@ -112,7 +112,7 @@ export default function OnboardingPage() {
   if (!tenantId) {
     return (
       <div className="bg-page-bg text-on-surface antialiased min-h-screen pt-12 flex items-center justify-center">
-        <div className="font-ui text-text-mid text-sm">No tenant found. Please contact support.</div>
+        <div className="font-ui text-mid text-sm">No tenant found. Please contact support.</div>
       </div>
     );
   }

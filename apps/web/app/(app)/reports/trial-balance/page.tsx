@@ -34,6 +34,7 @@ const KIND_TO_GROUP: Record<string, string> = {
 const GROUP_ORDER = ["Assets", "Liabilities", "Equity", "Income", "Expenses"];
 
 export default function TrialBalancePage() {
+  const { data: company } = api.tenantConfig.get.useQuery(undefined, { staleTime: 60_000 });
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const [showZero, setShowZero] = useState(false);
 
@@ -148,9 +149,6 @@ export default function TrialBalancePage() {
             <option>2025-26</option>
             <option>2024-25</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.open(`/api/reports/trial-balance/pdf?fy=${fiscalYear}`, '_blank')}>
-            <Icon name="download" size={14} /> Export PDF
-          </Button>
           <Link
             href="/audit-log?report=trial-balance"
             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 no-underline"
@@ -164,7 +162,7 @@ export default function TrialBalancePage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark print:text-dark">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark print:text-dark">{company?.name ?? "—"}</h2>
           <p className="font-ui text-ui-xs text-mid mt-1 uppercase tracking-widest">Trial Balance</p>
           <p className="font-mono text-ui-xs text-light mt-0.5">As at 31 March {parseInt(fiscalYear.split('-')[1]) + 2000} · FY {fiscalYear}</p>
         </div>

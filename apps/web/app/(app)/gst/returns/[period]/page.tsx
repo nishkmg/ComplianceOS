@@ -30,7 +30,7 @@ export default function PeriodPage() {
               <h3 className="font-ui text-lg font-bold text-dark">{f.name}</h3>
               <Badge variant={f.status === "draft" ? "amber" : f.status === "ready" ? "success" : "gray"}>{f.status}</Badge>
             </div>
-            <p className="font-ui text-ui-sm text-text-mid">{f.desc}</p>
+            <p className="font-ui text-ui-sm text-mid">{f.desc}</p>
           </Link>
         ))}
       </div>

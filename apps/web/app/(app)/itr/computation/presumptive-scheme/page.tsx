@@ -86,7 +86,7 @@ export default function ITRPresumptivePage() {
 
         {/* Right Column: Output */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-dark text-white p-8 rounded-md shadow-xl flex flex-col border focus:border-focus">
+          <div className="bg-sidebar text-white p-8 rounded-md shadow-xl flex flex-col border focus:border-focus">
             <h3 className="font-ui text-lg font-bold text-amber-bright mb-8">Computation Result</h3>
 
             {recommendation.isLoading ? (
@@ -117,7 +117,7 @@ export default function ITRPresumptivePage() {
             <div className="mt-auto pt-12">
               <Link
                 href="/itr/computation"
-                className="w-full bg-amber text-white py-4 font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md border-none flex items-center justify-center gap-2 no-underline"
+                className="w-full bg-amber text-white dark:text-amber-ink py-4 font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md border-none flex items-center justify-center gap-2 no-underline"
               >
                 Back to Computation
                 <Icon name="arrow_forward" />

@@ -107,8 +107,8 @@ export default function NewCreditNotePage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/credit-notes" className="btn-secondary no-underline">Cancel</Link>
-          <button onClick={submit} disabled={busy} className="btn-primary">Create Credit Note</button>
+          <Link href="/credit-notes" className="btn btn-secondary no-underline">Cancel</Link>
+          <button onClick={submit} disabled={busy} className="btn btn-primary">Create Credit Note</button>
         </div>
       </header>
 

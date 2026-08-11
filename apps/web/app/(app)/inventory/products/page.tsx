@@ -16,7 +16,7 @@ export default function ProductsPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <h1 className="font-ui text-display-lg font-semibold text-dark">Products</h1>
-        <Link href="/inventory/products/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> New Product</Link>
+        <Link href="/inventory/products/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> New Product</Link>
       </div>
       {products.length === 0 ? <EmptyState icon="inventory_2" title="No products" description="Add your first product." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">

@@ -124,7 +124,7 @@ export default function DashboardPage() {
             <h3 className="font-ui text-lg font-semibold text-dark">File GSTR-3B</h3>
             <p className="font-ui text-ui-xs text-mid mt-1">Period: {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
           </div>
-          <Link href="/gst/returns" className="bg-amber text-white px-4 py-2 font-ui text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
+          <Link href="/gst/returns" className="bg-amber text-white dark:text-amber-ink px-4 py-2 font-ui text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
             <Icon name="download" className="text-ui-md" /> File Now
           </Link>
         </div>
@@ -134,7 +134,7 @@ export default function DashboardPage() {
             <h3 className="font-ui text-lg font-semibold text-dark">Generate ITR</h3>
             <p className="font-ui text-ui-xs text-mid mt-1">AY: {`${Number(activeFy.split('-')[0]) + 1}-${activeFy.split('-')[1]}`}</p>
           </div>
-          <Link href="/itr/returns" className="bg-amber text-white px-4 py-2 font-ui text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
+          <Link href="/itr/returns" className="bg-amber text-white dark:text-amber-ink px-4 py-2 font-ui text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm flex items-center gap-1.5 shadow-sm">
             <Icon name="description" className="text-ui-md" /> Generate
           </Link>
         </div>

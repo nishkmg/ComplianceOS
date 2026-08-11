@@ -50,7 +50,7 @@ function ResetPasswordForm() {
               </p>
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white no-underline hover:bg-amber-bright transition-colors"
+                className="inline-flex items-center justify-center rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white no-underline hover:bg-amber-hover transition-colors"
               >
                 Sign in →
               </Link>
@@ -91,7 +91,7 @@ function ResetPasswordForm() {
               <button
                 onClick={submit}
                 disabled={busy}
-                className="mt-6 w-full rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-bright transition-colors disabled:opacity-60"
+                className="mt-6 w-full rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-hover transition-colors disabled:opacity-60"
               >
                 {busy ? "Saving…" : "Set password"}
               </button>

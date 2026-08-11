@@ -11,17 +11,17 @@ export default function ItrPaymentPage() {
         <Link href="/itr/payment/advance-tax" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="account_balance" className="text-3xl text-amber mb-4" />
           <h3 className="font-ui text-lg font-bold text-dark">Advance Tax</h3>
-          <p className="font-ui text-ui-sm text-text-mid mt-1">Quarterly advance tax payment tracking.</p>
+          <p className="font-ui text-ui-sm text-mid mt-1">Quarterly advance tax payment tracking.</p>
         </Link>
         <Link href="/itr/payment/self-assessment" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="receipt" className="text-3xl text-amber mb-4" />
           <h3 className="font-ui text-lg font-bold text-dark">Self Assessment Tax</h3>
-          <p className="font-ui text-ui-sm text-text-mid mt-1">Self assessment tax payment for filed returns.</p>
+          <p className="font-ui text-ui-sm text-mid mt-1">Self assessment tax payment for filed returns.</p>
         </Link>
         <Link href="/itr/payment/history" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="history" className="text-3xl text-amber mb-4" />
           <h3 className="font-ui text-lg font-bold text-dark">Payment History</h3>
-          <p className="font-ui text-ui-sm text-text-mid mt-1">All advance and self-assessment payments recorded.</p>
+          <p className="font-ui text-ui-sm text-mid mt-1">All advance and self-assessment payments recorded.</p>
         </Link>
       </div>
     </div>

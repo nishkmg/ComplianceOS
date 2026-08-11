@@ -109,7 +109,7 @@ export function AdjustStockDialog({
           <button onClick={onClose} className="font-ui text-xs font-bold uppercase tracking-widest text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={() => onConfirm(formData)}
-            className="bg-amber text-white font-ui text-xs font-bold uppercase tracking-widest px-8 py-3 rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
+            className="bg-amber text-white dark:text-amber-ink font-ui text-xs font-bold uppercase tracking-widest px-8 py-3 rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
           >
             Apply Adjustment
           </button>

@@ -42,7 +42,7 @@ export default function Gstr3bPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href={`/gst/returns/${period}`} className="text-mid hover:text-dark" aria-label="Go back"><Icon name="arrow_back" size={20} /></Link>
-        <div><h1 className="font-ui text-display-lg font-semibold text-dark">GSTR-3B</h1><p className="font-ui text-ui-sm text-text-mid mt-1">Monthly Summary Return — {month}/{fy}</p></div>
+        <div><h1 className="font-ui text-display-lg font-semibold text-dark">GSTR-3B</h1><p className="font-ui text-ui-sm text-mid mt-1">Monthly Summary Return — {month}/{fy}</p></div>
       </div>
 
       {returns.isLoading ? (
@@ -61,11 +61,11 @@ export default function Gstr3bPage() {
           <div className="flex items-center justify-between bg-surface border border-border rounded-md px-6 py-4 shadow-sm">
             <div>
               <p className="font-mono text-ui-xs text-amber">{ret.returnNumber}</p>
-              <p className="font-ui text-ui-sm text-text-mid mt-1">Status: <span className="font-bold text-dark">{ret.status}</span> · Due {ret.dueDate}</p>
+              <p className="font-ui text-ui-sm text-mid mt-1">Status: <span className="font-bold text-dark">{ret.status}</span> · Due {ret.dueDate}</p>
             </div>
             <div className="flex items-center gap-3">
               {(ret.status === "generated" || ret.status === "filed") && (
-                <Link href={`/api/gst/returns/${ret.id}/pdf`} target="_blank" className="btn btn-secondary flex items-center gap-2">
+                <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr3b`} target="_blank" className="btn btn-secondary flex items-center gap-2">
                   <Icon name="download" className="text-ui-xl" /> PDF
                 </Link>
               )}
@@ -82,7 +82,7 @@ export default function Gstr3bPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {totals.map(([label, value]) => (
               <div key={label} className="bg-surface border border-border rounded-md p-6 shadow-sm">
-                <p className="font-ui text-ui-2xs uppercase tracking-widest text-text-mid font-bold mb-2">{label}</p>
+                <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">{label}</p>
                 <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(value)}</p>
               </div>
             ))}

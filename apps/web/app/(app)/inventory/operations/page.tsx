@@ -85,7 +85,7 @@ export default function InventoryOperationsPage() {
             <button
               onClick={() => { if (!receive.productId || !receive.quantity || !receive.unitCost) { showToast.error("Product, quantity and unit cost required."); return; } setBusy(true); receiveMutation.mutate({ productId: receive.productId, quantity: Number(receive.quantity), unitCost: Number(receive.unitCost), batchNumber: receive.batchNumber || undefined, receiptDate: receive.receiptDate, narration: receive.narration || undefined }); }}
               disabled={busy}
-              className="btn-primary w-full"
+              className="btn btn-primary w-full"
             >Receive Stock</button>
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function InventoryOperationsPage() {
             <button
               onClick={() => { if (!deliver.productId || !deliver.quantity) { showToast.error("Product and quantity required."); return; } setBusy(true); deliverMutation.mutate({ productId: deliver.productId, quantity: Number(deliver.quantity), narration: deliver.narration || undefined }); }}
               disabled={busy}
-              className="btn-primary w-full"
+              className="btn btn-primary w-full"
             >Deliver Stock</button>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function InventoryOperationsPage() {
             <button
               onClick={() => { if (!adjust.productId || !adjust.quantity || Number(adjust.quantity) === 0) { showToast.error("Product and a non-zero quantity required."); return; } setBusy(true); adjustMutation.mutate({ productId: adjust.productId, quantity: Number(adjust.quantity), reason: adjust.reason as any, narration: adjust.narration || undefined }); }}
               disabled={busy}
-              className="btn-primary w-full"
+              className="btn btn-primary w-full"
             >Apply Adjustment</button>
           </div>
         </div>

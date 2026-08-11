@@ -128,7 +128,7 @@ export default function NewInvoicePage() {
           <button onClick={() => router.back()} aria-label="Go back" className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" ><Icon name="arrow_back" size={20} /></button>
           <h1 className="font-ui text-display-lg font-semibold text-dark">New Invoice</h1>
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
           {saving ? "Creating…" : "Create Invoice"}
         </button>
       </div>

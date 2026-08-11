@@ -1,6 +1,7 @@
 // packages/server/src/routers/team.ts
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
+import type { Database } from "../../../db/src/index";
 import { eq, and, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { users, userTenants, tenants } = _db;
@@ -8,6 +9,20 @@ import { EmailQueueService } from "../services/email-queue";
 import { createPasswordResetToken, appBaseUrl } from "../lib/password-reset";
 
 const RoleSchema = z.enum(["owner", "accountant", "manager", "employee"]);
+
+/** Owner-only guard: invite/role changes are ownership decisions. */
+async function assertOwner(ctx: {
+  db: Database;
+  tenantId: string;
+  session: { user: { id: string } } | null;
+}): Promise<void> {
+  const [me] = await ctx.db
+    .select({ role: userTenants.role })
+    .from(userTenants)
+    .where(and(eq(userTenants.userId, ctx.session!.user.id), eq(userTenants.tenantId, ctx.tenantId)))
+    .limit(1);
+  if (me?.role !== "owner") throw new Error("Only owners can manage team membership");
+}
 
 export const teamRouter = router({
   /** Members of the current tenant with their role + invite state. */
@@ -35,6 +50,7 @@ export const teamRouter = router({
   invite: protectedProcedure
     .input(z.object({ email: z.string().email(), role: RoleSchema }))
     .mutation(async ({ ctx, input }) => {
+      await assertOwner(ctx);
       const email = input.email.toLowerCase();
 
       let [user] = await ctx.db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -85,6 +101,22 @@ export const teamRouter = router({
   updateRole: protectedProcedure
     .input(z.object({ userId: z.string().uuid(), role: RoleSchema }))
     .mutation(async ({ ctx, input }) => {
+      await assertOwner(ctx);
+      if (input.userId === ctx.session!.user.id) {
+        throw new Error("You cannot change your own role");
+      }
+      const owners = await ctx.db
+        .select({ id: userTenants.id })
+        .from(userTenants)
+        .where(and(eq(userTenants.tenantId, ctx.tenantId), eq(userTenants.role, "owner")));
+      const [target] = await ctx.db
+        .select({ role: userTenants.role })
+        .from(userTenants)
+        .where(and(eq(userTenants.userId, input.userId), eq(userTenants.tenantId, ctx.tenantId)))
+        .limit(1);
+      if (target?.role === "owner" && owners.length <= 1) {
+        throw new Error("Cannot demote the last owner");
+      }
       await ctx.db
         .update(userTenants)
         .set({ role: input.role })

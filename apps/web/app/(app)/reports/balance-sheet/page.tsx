@@ -13,6 +13,7 @@ import { useRealtimeSubscription } from "@/components/providers/realtime-provide
 // ─── Page Component ───────────────────────────────────────────────────────────
 
 export default function BalanceSheetPage() {
+  const { data: company } = api.tenantConfig.get.useQuery(undefined, { staleTime: 60_000 });
   const { activeFy: fiscalYear, setActiveFy: setFiscalYear } = useFiscalYear();
   const fyEndDate = `${parseInt(fiscalYear.split('-')[1]) + 2000}-03-31`;
   const [asOfDate, setAsOfDate] = useState(fyEndDate);
@@ -111,9 +112,6 @@ export default function BalanceSheetPage() {
             onChange={e => setAsOfDate(e.target.value)}
             className="bg-surface border border-border px-3 py-1.5 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
           />
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.open(`/api/reports/balance-sheet/pdf?fy=${fiscalYear}&asOf=${asOfDate}`, '_blank')}>
-            <Icon name="download" size={14} /> Export PDF
-          </Button>
           <Link
             href="/audit-log?report=balance-sheet"
             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber/40 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-dark shadow-sm hover:bg-surface-muted hover:text-amber hover:border-amber h-9 px-3 no-underline"
@@ -127,7 +125,7 @@ export default function BalanceSheetPage() {
       <Card className="bg-surface border border-border shadow-sm rounded-md max-w-[1100px] mx-auto print:shadow-none print:border-black">
         {/* Report header */}
         <div className="text-center pt-8 pb-6 px-8 border-b border-border print:border-black">
-          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-dark">Mehta Textiles Private Limited</h2>
+          <h2 className="font-ui text-display-lg text-dark mb-1 print:text-dark">{company?.name ?? "—"}</h2>
           <p className="font-ui text-ui-xs text-mid uppercase tracking-widest mb-1">Balance Sheet</p>
           <p className="font-mono text-ui-xs text-light italic">
             As of {new Date(asOfDate).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}

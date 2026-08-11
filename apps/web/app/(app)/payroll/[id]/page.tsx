@@ -54,15 +54,15 @@ export default function PayrollDetailPage() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
-          <p className="font-ui text-ui-2xs uppercase tracking-widest text-text-mid font-bold mb-2">Status</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Status</p>
           <p className="font-ui text-lg font-bold text-dark capitalize">{run.status}</p>
         </div>
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
-          <p className="font-ui text-ui-2xs uppercase tracking-widest text-text-mid font-bold mb-2">Gross Earnings</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Gross Earnings</p>
           <p className="font-mono text-lg font-bold text-dark tabular-nums">₹ {formatIndianNumber(run.grossEarnings)}</p>
         </div>
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
-          <p className="font-ui text-ui-2xs uppercase tracking-widest text-text-mid font-bold mb-2">Gross Deductions</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Gross Deductions</p>
           <p className="font-mono text-lg font-bold text-danger tabular-nums">₹ {formatIndianNumber(run.grossDeductions)}</p>
         </div>
         <div className="bg-dark border focus:border-focus rounded-md p-6 shadow-lg">

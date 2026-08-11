@@ -117,7 +117,7 @@ export function AddAccountDialog({
           <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={() => onConfirm(formData)}
-            className="bg-amber text-white font-ui text-sm px-8 py-3 rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
+            className="bg-amber text-white dark:text-amber-ink font-ui text-sm px-8 py-3 rounded-sm hover:bg-amber-hover transition-colors shadow-sm border-none cursor-pointer"
           >
             Create Ledger
           </button>

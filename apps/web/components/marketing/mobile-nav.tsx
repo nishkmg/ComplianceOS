@@ -49,7 +49,7 @@ export function MobileNav() {
             <Link href="/login" className="w-full py-4 text-center text-white hover:text-lighter transition-colors border focus:border-focus no-underline rounded-sm font-ui uppercase tracking-widest font-bold text-sm">
               Log in
             </Link>
-            <Link href="/signup" className="w-full py-4 bg-amber text-white flex items-center justify-center hover:bg-amber-hover transition-colors no-underline rounded-sm font-ui uppercase tracking-widest font-bold text-sm">
+            <Link href="/signup" className="w-full py-4 bg-amber text-white dark:text-amber-ink flex items-center justify-center hover:bg-amber-hover transition-colors no-underline rounded-sm font-ui uppercase tracking-widest font-bold text-sm">
               Start free <span className="ml-2">→</span>
             </Link>
           </div>

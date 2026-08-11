@@ -24,7 +24,7 @@ export default function CreditNotesPage() {
             description="Documented reversals against issued invoices — posted to the ledger with a reversing journal entry."
           />
         </div>
-        <Link href="/credit-notes/new" className="btn-primary flex items-center gap-2 group no-underline">
+        <Link href="/credit-notes/new" className="btn btn-primary flex items-center gap-2 group no-underline">
           New Credit Note <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
         </Link>
       </header>

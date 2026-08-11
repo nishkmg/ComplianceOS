@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { ThemeToggle } from '@/components/app/theme-toggle';
@@ -273,7 +274,7 @@ export function AppSidebar() {
                         'border-l-[3px] transition-colors no-underline group active:scale-[0.98]',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                         active
-                          ? 'border-amber bg-white text-dark font-semibold shadow-sm'
+                          ? 'border-amber text-white font-semibold'
                           : 'border-transparent text-sidebar-muted hover:text-dark hover:bg-lighter/40',
                       ].join(' ')}
                     >
@@ -339,7 +340,7 @@ export function AppSidebar() {
 
         {/* FY picker popover */}
         {showFyPopover && (
-          <div className="absolute bottom-full left-2 right-2 mb-1 bg-white rounded-sm shadow-lg border border-border-subtle overflow-hidden z-50">
+          <div className="absolute bottom-full left-2 right-2 mb-1 bg-surface rounded-sm shadow-lg border border-border-subtle overflow-hidden z-50">
               {fiscalYears.map(fy => {
               const selected = activeFy === fy.year;
               return (
@@ -398,7 +399,10 @@ export function AppSidebar() {
           <Icon name="contact_support" size={16} />
           <span>Support</span>
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-danger hover:bg-danger-bg transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+        >
           <Icon name="logout" size={16} />
           <span>Sign Out</span>
         </button>

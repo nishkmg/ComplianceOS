@@ -43,7 +43,7 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
       {/* Section Header */}
       <div>
         <h1 className="font-ui text-display-xl text-on-surface mb-6">Select CoA Template</h1>
-        <p className="font-ui text-ui-lg text-text-mid max-w-3xl leading-relaxed">
+        <p className="font-ui text-ui-lg text-mid max-w-3xl leading-relaxed">
           Choose a baseline structure tailored to your business operations. These templates are strictly aligned with standard Indian accounting practices and statutory compliance requirements.
         </p>
       </div>
@@ -61,10 +61,10 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
             {selectedTemplate === t.id && <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>}
             <div className="flex justify-between items-start mb-6">
               <Icon name={t.icon} className={`text-3xl ${selectedTemplate === t.id ? "text-amber" : "text-mid"}`} />
-              {t.recommended && <span className="font-ui text-ui-xs text-ui-2xs uppercase tracking-widest bg-dark text-white px-2 py-0.5 rounded-md">Recommended</span>}
+              {t.recommended && <span className="font-ui text-ui-xs text-ui-2xs uppercase tracking-widest bg-sidebar text-white px-2 py-0.5 rounded-md">Recommended</span>}
             </div>
             <h3 className="font-ui text-lg text-lg font-bold text-on-surface mb-3">{t.name}</h3>
-            <p className="font-ui text-ui-sm text-ui-sm text-text-mid leading-relaxed flex-1">
+            <p className="font-ui text-ui-sm text-ui-sm text-mid leading-relaxed flex-1">
               {t.desc}
             </p>
             {selectedTemplate === t.id && (
@@ -84,20 +84,20 @@ export function StepCoaTemplate({ tenantId, onComplete, onBack }: StepCoaTemplat
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
               <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-light uppercase tracking-wider italic">
             You can modify, merge, or add individual ledgers after this step.
           </p>
         </div>
         <button
           onClick={handleSelect}
           disabled={saving}
-          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Generating Ledgers..." : "Initialise Ledgers"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

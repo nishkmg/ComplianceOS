@@ -68,7 +68,7 @@ export default function NewAccountPage() {
             </select>
           </div>
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{saving ? "Creating…" : "Create Account"}</button>
+        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{saving ? "Creating…" : "Create Account"}</button>
       </div>
     </div>
   );

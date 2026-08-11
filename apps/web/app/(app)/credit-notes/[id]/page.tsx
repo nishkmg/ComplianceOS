@@ -41,7 +41,7 @@ export default function CreditNoteDetailPage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/credit-notes" className="btn-secondary no-underline">← All credit notes</Link>
+          <Link href="/credit-notes" className="btn btn-secondary no-underline">← All credit notes</Link>
         </div>
       </header>
 
@@ -95,7 +95,7 @@ export default function CreditNoteDetailPage() {
             </dl>
           </div>
 
-          <div className="bg-dark text-white p-8 shadow-sm relative overflow-hidden">
+          <div className="bg-sidebar text-white p-8 shadow-sm relative overflow-hidden">
             <div className="relative z-10 text-left">
               <h4 className="text-amber-bright font-ui text-lg font-bold mb-3">Ledger Effect</h4>
               <p className="text-sidebar-muted text-sm leading-relaxed">

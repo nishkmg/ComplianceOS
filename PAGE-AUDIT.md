@@ -74,7 +74,7 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /inventory/reports/expiry | 24 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /inventory/stock | 44 | trpc:inventory.layers | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /invoices | 56 | trpc:invoices.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
-| /invoices/[id] | 157 | trpc:invoices.get,einvoice.generateIrn,einvoice.generateEwb | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
+| /invoices/[id] | 192 | trpc:invoices.get,einvoice.generateIrn,invoices.post,invoices.void,einvoice.generateEwb | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
 | /invoices/[id]/edit | 64 | trpc:invoices.get,invoices.modify | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /invoices/[id]/pdf | 107 | trpc:invoices.get,invoices.getPdfSignedUrl,invoices.generatePdf | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /invoices/new | 168 | trpc:invoices.create | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
@@ -99,7 +99,7 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /payables | 119 | trpc:payables.aging,payables.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /payables/[id] | 194 | trpc:payables.get,accounts.list,payables.pay | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
 | /payables/new | 190 | trpc:payables.vendorAccounts,accounts.list,payables.create | Y | 0 |  |  | Y | Y | 0 |  | Y |  |  |
-| /payments | 133 | trpc:payments.list | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
+| /payments | 131 | trpc:payments.list | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /payments/new | 280 | trpc:payments.record | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
 | /payroll | 39 | trpc:payroll.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /payroll-reports | 80 | trpc:payrollReports.dashboard | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
@@ -115,12 +115,12 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /receipts/scan | 169 | trpc:accounts.list,ocrScan.get,ocrScan.createExpenseFromScan | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /receivables | 170 | trpc:receivables.aging,receivables.summary | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /receivables/[customerId] | 202 | trpc:receivables.customer | Y | 0 |  |  |  |  | 0 |  |  |  |  |
-| /reports/balance-sheet | 205 | trpc:balances.balanceSheet | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
-| /reports/cash-flow | 238 | trpc:balances.cashFlow | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
+| /reports/balance-sheet | 203 | trpc:tenantConfig.get,balances.balanceSheet | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
+| /reports/cash-flow | 238 | trpc:tenantConfig.get,balances.cashFlow | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /reports/ledger | 61 | trpc:accounts.list,balances.ledger | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /reports/pl | 6 | none |  | 0 |  |  |  |  | 0 | Y |  |  |  |
 | /reports/profit-loss | 264 | trpc:balances.pAndL | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
-| /reports/trial-balance | 260 | trpc:balances.trialBalance | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
+| /reports/trial-balance | 258 | trpc:tenantConfig.get,balances.trialBalance | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /reset-password | 113 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /security | 61 | none |  | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /settings | 73 | none |  | 0 |  |  |  | Y | 0 | Y | Y | Y |  |

@@ -47,7 +47,7 @@ export default function SecurityPage() {
           <section className="bg-section-amber border border-border-subtle p-16 text-center">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Want to review our full security posture?</h2>
             <p className="font-ui text-ui-md text-mid max-w-xl mx-auto mb-8">We provide detailed security documentation for enterprise prospects. Contact our security team for a full review.</p>
-            <Link href="/contact" className="bg-amber text-white px-10 py-4 font-ui text-ui-sm font-bold inline-flex items-center gap-2 group hover:bg-amber-hover transition-colors no-underline">
+            <Link href="/contact" className="bg-amber text-white dark:text-amber-ink px-10 py-4 font-ui text-ui-sm font-bold inline-flex items-center gap-2 group hover:bg-amber-hover transition-colors no-underline">
               Request Security Whitepaper
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>

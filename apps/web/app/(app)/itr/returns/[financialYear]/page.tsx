@@ -47,11 +47,11 @@ export default function ItrReturnsPage() {
         <>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
-              <p className="font-ui text-ui-2xs uppercase tracking-widest text-text-mid font-bold mb-2">Total Income</p>
+              <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Total Income</p>
               <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totals.income)}</p>
             </div>
             <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
-              <p className="font-ui text-ui-2xs uppercase tracking-widest text-text-mid font-bold mb-2">Total Tax Payable</p>
+              <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Total Tax Payable</p>
               <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totals.tax)}</p>
             </div>
           </div>

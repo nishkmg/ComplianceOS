@@ -62,7 +62,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
       {/* Section Header */}
       <div>
         <h1 className="font-ui text-display-xl text-on-surface mb-3">Business Profile</h1>
-        <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
+        <p className="font-ui text-sm font-medium text-ui-md text-mid max-w-2xl leading-relaxed">
           Establish your organizational identity. This information ensures your ledgers and regulatory filings are accurately attributed under Indian corporate framework.
         </p>
       </div>
@@ -70,9 +70,9 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
         {/* Business Name */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="name">Operating Name</label>
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid" htmlFor="name">Operating Name</label>
           <input 
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light" 
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light" 
             id="name" 
             placeholder="e.g. Acme Technologies" 
             {...register("name")}
@@ -82,12 +82,12 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
 
         {/* Legal Name */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="legalName">
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid flex items-center gap-1" htmlFor="legalName">
             Individual / Legal Name
-            <Icon name="info" className="text-ui-md text-text-light cursor-help" />
+            <Icon name="info" className="text-ui-md text-light cursor-help" />
           </label>
           <input 
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light" 
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light" 
             id="legalName" 
             placeholder="Leave blank to use operating name" 
             {...register("legalName")}
@@ -96,7 +96,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
 
         {/* Business Type */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="businessType">Entity Type</label>
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid" htmlFor="businessType">Entity Type</label>
           <div className="relative">
             <select 
               className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors" 
@@ -107,16 +107,16 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
               <option disabled value="">Select structure...</option>
               {BUSINESS_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-mid pointer-events-none" />
           </div>
-          <p className="font-ui text-ui-xs text-ui-xs text-text-mid/70 leading-relaxed">
+          <p className="font-ui text-ui-xs text-ui-xs text-mid/70 leading-relaxed">
             Select <strong>Sole Proprietorship</strong> if you are an individual freelancer, consultant, or professional without a registered business entity.
           </p>
         </div>
 
         {/* Industry */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="industry">Primary Sector</label>
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid" htmlFor="industry">Primary Sector</label>
           <div className="relative">
             <select 
               className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors" 
@@ -127,15 +127,15 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
               <option disabled value="">Select industry...</option>
               {INDUSTRIES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-mid pointer-events-none" />
           </div>
         </div>
 
         {/* PAN Number */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="pan">Permanent Account Number (PAN)</label>
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid" htmlFor="pan">Permanent Account Number (PAN)</label>
           <input 
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light placeholder:normal-case placeholder:tracking-normal" 
             id="pan" 
             maxLength={10} 
             placeholder="ABCDE1234F" 
@@ -146,12 +146,12 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
 
         {/* GSTIN */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid flex items-center gap-1" htmlFor="gstin">
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid flex items-center gap-1" htmlFor="gstin">
             GST Identification Number
-            <Icon name="info" className="text-ui-md text-text-light cursor-help" />
+            <Icon name="info" className="text-ui-md text-light cursor-help" />
           </label>
           <input 
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-text-light placeholder:normal-case placeholder:tracking-normal" 
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-ui-md text-on-surface uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors placeholder:text-light placeholder:normal-case placeholder:tracking-normal" 
             id="gstin" 
             maxLength={15} 
             placeholder="22AAAAA0000A1Z5" 
@@ -161,7 +161,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
 
         {/* State */}
         <div className="flex flex-col gap-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="state">State of Registration</label>
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid" htmlFor="state">State of Registration</label>
           <div className="relative">
             <select 
               className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors" 
@@ -172,15 +172,15 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
               <option disabled value="">Select state...</option>
               {STATES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
-            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-text-mid pointer-events-none" />
+            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-mid pointer-events-none" />
           </div>
         </div>
 
         {/* Address */}
         <div className="flex flex-col gap-2 md:col-span-2">
-          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-text-mid" htmlFor="address">Registered Office Address</label>
+          <label className="font-ui text-ui-xs text-ui-xs uppercase tracking-widest text-mid" htmlFor="address">Registered Office Address</label>
           <textarea 
-            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none placeholder:text-text-light" 
+            className="w-full bg-surface border border-border rounded-md px-4 py-3 font-ui text-sm font-medium text-ui-md text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none placeholder:text-light" 
             id="address" 
             placeholder="Enter complete building name, street, and PIN code..." 
             rows={3}
@@ -191,10 +191,10 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
 
         {/* Footer Actions */}
         <div className="md:col-span-2 flex justify-between items-center mt-6 pt-8 border-t border-border">
-          <button className="font-ui text-ui-sm text-ui-sm text-text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
+          <button className="font-ui text-ui-sm text-ui-sm text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
             Save as Draft
           </button>
-          <button className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50" type="submit" disabled={isSubmitting}>
+          <button className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Establishing Profile..." : "Continue to Setup"}
             <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>

@@ -678,8 +678,8 @@
     },
     {
       "route": "/invoices/[id]",
-      "loc": 157,
-      "data": "trpc:invoices.get,einvoice.generateIrn,einvoice.generateEwb",
+      "loc": 192,
+      "data": "trpc:invoices.get,einvoice.generateIrn,invoices.post,invoices.void,einvoice.generateEwb",
       "wired": true,
       "fakeCount": 0,
       "mockArrays": [],
@@ -1103,7 +1103,7 @@
     },
     {
       "route": "/payments",
-      "loc": 133,
+      "loc": 131,
       "data": "trpc:payments.list",
       "wired": true,
       "fakeCount": 0,
@@ -1324,8 +1324,8 @@
     },
     {
       "route": "/reports/balance-sheet",
-      "loc": 205,
-      "data": "trpc:balances.balanceSheet",
+      "loc": 203,
+      "data": "trpc:tenantConfig.get,balances.balanceSheet",
       "wired": true,
       "fakeCount": 0,
       "mockArrays": [],
@@ -1342,7 +1342,7 @@
     {
       "route": "/reports/cash-flow",
       "loc": 238,
-      "data": "trpc:balances.cashFlow",
+      "data": "trpc:tenantConfig.get,balances.cashFlow",
       "wired": true,
       "fakeCount": 0,
       "mockArrays": [],
@@ -1409,8 +1409,8 @@
     },
     {
       "route": "/reports/trial-balance",
-      "loc": 260,
-      "data": "trpc:balances.trialBalance",
+      "loc": 258,
+      "data": "trpc:tenantConfig.get,balances.trialBalance",
       "wired": true,
       "fakeCount": 0,
       "mockArrays": [],

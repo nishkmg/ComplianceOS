@@ -40,7 +40,7 @@ export default function HsnMasterPage() {
             description="Shared GSTN-style harmonized code catalog used by products, invoices and GSTR-1 HSN summaries."
           />
         </div>
-        <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-2 group">
+        <button onClick={() => setAddOpen(true)} className="btn btn-primary flex items-center gap-2 group">
           Add HSN Code <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
         </button>
       </header>
@@ -127,8 +127,8 @@ export default function HsnMasterPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setAddOpen(false)} className="btn-secondary">Cancel</button>
-              <button onClick={submit} disabled={busy} className="btn-primary">Add Code</button>
+              <button onClick={() => setAddOpen(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={submit} disabled={busy} className="btn btn-primary">Add Code</button>
             </div>
           </div>
         </div>

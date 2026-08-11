@@ -35,7 +35,7 @@ export default function PayablesPage() {
             description="Vendor bills with due dates, aging and payment allocation — the mirror of receivables."
           />
         </div>
-        <Link href="/payables/new" className="btn-primary flex items-center gap-2 group no-underline">
+        <Link href="/payables/new" className="btn btn-primary flex items-center gap-2 group no-underline">
           New Bill <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
         </Link>
       </header>

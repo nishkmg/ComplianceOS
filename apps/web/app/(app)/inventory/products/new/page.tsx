@@ -64,7 +64,7 @@ export default function NewProductPage() {
           <div className="space-y-1.5"><label htmlFor="product-purchase-rate" className="font-ui text-ui-2xs text-light uppercase font-bold">Purchase Rate (₹)</label><input id="product-purchase-rate" type="number" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={purchaseRate} onChange={e => setPurchaseRate(e.target.value)} /></div>
           <div className="space-y-1.5"><label htmlFor="product-sales-rate" className="font-ui text-ui-2xs text-light uppercase font-bold">Sales Rate (₹)</label><input id="product-sales-rate" type="number" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={salesRate} onChange={e => setSalesRate(e.target.value)} /></div>
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{saving ? "Creating…" : "Create Product"}</button>
+        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{saving ? "Creating…" : "Create Product"}</button>
       </div>
     </div>
   );

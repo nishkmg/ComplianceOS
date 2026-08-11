@@ -23,6 +23,8 @@ const PROTECTED_PATHS = [
   "/audit-log",
   "/coa",
   "/receipts",
+  "/credit-notes",
+  "/payables",
   "/support",
 ];
 

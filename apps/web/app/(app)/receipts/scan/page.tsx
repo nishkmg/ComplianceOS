@@ -102,7 +102,7 @@ export default function ReceiptScanPage() {
             <p className="font-ui text-sm text-mid">{file ? file.name : "Click to upload a receipt"}</p>
             <input ref={inputRef} type="file" accept="image/*,.pdf" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </div>
-          <button onClick={handleScan} disabled={!file || uploading} className="w-full py-3 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+          <button onClick={handleScan} disabled={!file || uploading} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
             {uploading ? "Uploading…" : "Scan Receipt"}
           </button>
         </div>

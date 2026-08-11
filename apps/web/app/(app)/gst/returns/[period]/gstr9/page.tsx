@@ -30,7 +30,7 @@ export default function Gstr9Page() {
       <div className="flex items-center justify-between">
         <h2 className="font-ui text-lg font-bold text-dark">GSTR-9 · Annual Return</h2>
         {ret && (
-          <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className="btn-secondary flex items-center gap-2 no-underline">
+          <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className="btn btn-secondary flex items-center gap-2 no-underline">
             <Icon name="download" className="text-ui-xl" /> PDF
           </Link>
         )}

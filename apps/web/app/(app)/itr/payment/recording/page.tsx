@@ -63,13 +63,13 @@ export default function ITRRecordPaymentPage() {
             <span>Tax Payments</span>
           </p>
           <h1 className="font-ui text-display-lg font-semibold text-dark">Record ITR Payment</h1>
-          <p className="font-ui text-ui-sm text-text-mid mt-1">AY {assessmentYear} — enter the challan details from your bank payment.</p>
+          <p className="font-ui text-ui-sm text-mid mt-1">AY {assessmentYear} — enter the challan details from your bank payment.</p>
         </div>
         <div className="flex items-center gap-4">
           <button
             onClick={handleCommit}
             disabled={commit.isPending}
-            className="bg-amber text-white px-6 py-2.5 rounded-md font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm disabled:opacity-50"
+            className="bg-amber text-white dark:text-amber-ink px-6 py-2.5 rounded-md font-ui text-ui-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none cursor-pointer shadow-sm disabled:opacity-50"
           >
             {commit.isPending ? "Committing…" : "Commit to Ledger"}
           </button>

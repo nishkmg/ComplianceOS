@@ -182,7 +182,7 @@ export default function ITRComputationPage() {
                   <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(regime === "old" ? taxableIncomeOld : taxableIncomeNew)}</p>
                 </CardContent>
               </Card>
-              <Card className="bg-dark text-white focus:border-focus border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-surface print:text-dark print:border-black">
+              <Card className="bg-sidebar text-white focus:border-focus border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-surface print:text-dark print:border-black">
                 <CardContent className="p-6">
                   <p className="text-ui-2xs text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
                   <p className="font-mono text-2xl font-bold text-amber tabular-nums print:text-dark">₹ {formatIndianNumber(netTax)}</p>

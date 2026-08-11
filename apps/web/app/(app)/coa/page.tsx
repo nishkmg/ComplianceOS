@@ -23,7 +23,7 @@ export default function CoAPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <PageHeader title="Chart of Accounts" />
-        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> New Account</Link>
+        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> New Account</Link>
       </div>
       {accounts.length === 0 ? <EmptyState icon="account_tree" title="No accounts" description="Create your first account." /> : (
         <div className="space-y-8">

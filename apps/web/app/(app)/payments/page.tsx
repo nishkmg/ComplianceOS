@@ -30,9 +30,7 @@ const columns: ColumnDef<Payment>[] = [
     sortable: true,
     width: "180px",
     render: (row) => (
-      <Link href={`/payments/${row.id}`} className="font-mono text-ui-sm text-amber hover:underline no-underline">
-        {row.paymentNumber}
-      </Link>
+      <span className="font-mono text-ui-sm text-dark">{row.paymentNumber}</span>
     ),
   },
   {

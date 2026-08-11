@@ -168,12 +168,12 @@ export default function JournalPage() {
           <PageHeader eyebrow="General Ledger" title="Journal Entries" />
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary" onClick={handleExportCSV}>
+          <button className="btn btn-secondary" onClick={handleExportCSV}>
             <Icon name="download" size={14} className="mr-1.5 inline" />Export CSV
           </button>
           <Link
             href="/journal/new"
-            className="btn-primary no-underline inline-flex items-center gap-1"
+            className="btn btn-primary no-underline inline-flex items-center gap-1"
           >
             Add Entry <Icon name="add" size={14} />
           </Link>

@@ -76,7 +76,7 @@ export default function InvoiceConfigPage() {
           <p className="text-ui-sm text-secondary font-ui mt-1">Define document prefixes, statutory disclosures, and bank account mappings.</p>
         </div>
         <div className="flex gap-4">
-          <button onClick={handleSave} disabled={save.isPending || config.isLoading} className="btn-primary disabled:opacity-50">
+          <button onClick={handleSave} disabled={save.isPending || config.isLoading} className="btn btn-primary disabled:opacity-50">
             {save.isPending ? "Saving…" : "Save Changes"}
           </button>
         </div>

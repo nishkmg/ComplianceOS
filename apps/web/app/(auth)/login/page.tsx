@@ -109,7 +109,7 @@ export default function LoginPage() {
 
             {/* Submit Button */}
             <button 
-              className="w-full mt-4 bg-amber text-white font-ui font-medium text-ui-lg rounded-md py-4 px-6 flex justify-center items-center group transition-all duration-300 hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] cursor-pointer border-none shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" 
+              className="w-full mt-4 bg-amber text-white dark:text-amber-ink font-ui font-medium text-ui-lg rounded-md py-4 px-6 flex justify-center items-center group transition-all duration-300 hover:bg-amber-hover hover:shadow-md hover:-translate-y-[1px] cursor-pointer border-none shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0" 
               type="submit"
               disabled={submitting}
             >

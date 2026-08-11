@@ -60,7 +60,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
       <div>
         <span className="font-ui text-ui-xs text-ui-xs text-amber uppercase tracking-widest block mb-4">Fiscal Policy</span>
         <h1 className="font-ui text-display-xl text-on-surface mb-4">Fiscal Configuration</h1>
-        <p className="font-ui text-sm font-medium text-ui-md text-text-mid max-w-2xl leading-relaxed">
+        <p className="font-ui text-sm font-medium text-ui-md text-mid max-w-2xl leading-relaxed">
           Establish the foundational tax parameters for your ledger. These settings dictate automated compliance checks and filing schedules.
         </p>
       </div>
@@ -76,12 +76,12 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
               <Icon name="calendar_month" className="text-amber text-2xl" />
               <div>
                 <p className="font-ui text-lg font-bold text-on-surface">{fy.label}</p>
-                <p className="font-ui text-sm text-text-mid">
+                <p className="font-ui text-sm text-mid">
                   {formatDate(fy.start)} → {formatDate(fy.end)}
                 </p>
               </div>
             </div>
-            <p className="font-ui text-ui-xs text-text-mid/70 mt-1">
+            <p className="font-ui text-ui-xs text-mid/70 mt-1">
               Fixed Indian fiscal year (April–March) per Income Tax Act. Not configurable.
             </p>
           </div>
@@ -107,7 +107,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                   </div>
                   <h3 className="font-ui text-ui-sm font-bold text-on-surface">{t.name}</h3>
                 </div>
-                <p className="font-ui text-ui-xs text-ui-xs text-text-mid leading-relaxed">{t.desc}</p>
+                <p className="font-ui text-ui-xs text-ui-xs text-mid leading-relaxed">{t.desc}</p>
               </div>
             ))}
           </div>
@@ -134,7 +134,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                 <div className="flex items-center justify-between py-2">
                   <div>
                     <p className="font-ui text-ui-sm font-bold text-on-surface">ITC Eligible</p>
-                    <p className="font-ui text-ui-xs text-ui-xs text-text-mid">Can claim Input Tax Credit on purchases</p>
+                    <p className="font-ui text-ui-xs text-ui-xs text-mid">Can claim Input Tax Credit on purchases</p>
                   </div>
                   <button
                     type="button"
@@ -152,7 +152,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
         <section className="flex items-center justify-between py-4 border-t border-border">
           <div>
             <p className="font-ui text-ui-sm font-bold text-on-surface">TDS Compliance</p>
-            <p className="font-ui text-ui-xs text-ui-xs text-text-mid">Enable automated TDS deduction modules</p>
+            <p className="font-ui text-ui-xs text-ui-xs text-mid">Enable automated TDS deduction modules</p>
           </div>
           <button
             type="button"
@@ -171,20 +171,20 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="font-ui text-ui-sm text-text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+              className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
             >
               <Icon name="arrow_back" className="text-ui-xl" />
               Back
             </button>
           )}
-          <p className="font-ui text-ui-xs text-ui-xs text-text-light uppercase tracking-wider italic">
+          <p className="font-ui text-ui-xs text-ui-xs text-light uppercase tracking-wider italic">
             These settings can be amended later in the tax settings panel.
           </p>
         </div>
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="bg-amber text-white font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
         >
           {saving ? "Validating..." : "Finalize Config"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

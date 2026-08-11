@@ -158,7 +158,7 @@ export default function ITRRegimeComparisonPage() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-ui text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
                   {c.recommended === "new" && (
-                    <span className="bg-primary text-white px-2 py-0.5 rounded-md text-ui-2xs font-bold uppercase tracking-widest">Recommended</span>
+                    <span className="bg-primary text-white dark:text-amber-ink px-2 py-0.5 rounded-md text-ui-2xs font-bold uppercase tracking-widest">Recommended</span>
                   )}
                 </div>
               </div>

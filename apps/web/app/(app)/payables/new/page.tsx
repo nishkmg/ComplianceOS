@@ -90,8 +90,8 @@ export default function NewBillPage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/payables" className="btn-secondary no-underline">Cancel</Link>
-          <button onClick={submit} disabled={busy} className="btn-primary">Record Bill</button>
+          <Link href="/payables" className="btn btn-secondary no-underline">Cancel</Link>
+          <button onClick={submit} disabled={busy} className="btn btn-primary">Record Bill</button>
         </div>
       </header>
 

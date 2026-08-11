@@ -72,7 +72,7 @@ export default function ContactPage() {
                   </div>
                   {error && <p className="text-sm text-error">{error}</p>}
                   <div className="pt-4">
-                    <button className="w-full bg-amber text-white py-4 font-ui text-ui-md font-bold hover:shadow-card transition-shadow flex items-center justify-center gap-2 group cursor-pointer border-none" type="submit">
+                    <button className="w-full bg-amber text-white dark:text-amber-ink py-4 font-ui text-ui-md font-bold hover:shadow-card transition-shadow flex items-center justify-center gap-2 group cursor-pointer border-none" type="submit">
                       Send Message
                       <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </button>

@@ -17,7 +17,7 @@ export default function ItrReturnsListPage() {
           <Link key={fy.year} href={`/itr/returns/${fy.year}`} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
             <Icon name="description" className="text-3xl text-amber mb-4" />
             <h3 className="font-ui text-lg font-bold text-dark">{fy.name}</h3>
-            <p className="font-ui text-ui-sm text-text-mid mt-1">{fy.status === "open" ? `${fy.daysRemaining} days remaining` : "Closed"}</p>
+            <p className="font-ui text-ui-sm text-mid mt-1">{fy.status === "open" ? `${fy.daysRemaining} days remaining` : "Closed"}</p>
           </Link>
         ))}
       </div>

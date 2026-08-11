@@ -20,7 +20,7 @@ export default function GSTFeaturePage() {
               Stop manually reconciling spreadsheets. Our engine maps your daily accounting entries directly to Indian GST return formats, highlighting ITC mismatches before you file.
             </p>
             <div className="flex gap-6">
-              <Link href="/signup" className="bg-amber text-white px-8 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm">
+              <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-8 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm">
                 Start Free <span className="inline-block ml-2">→</span>
               </Link>
             </div>
@@ -90,7 +90,7 @@ export default function GSTFeaturePage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Start generating compliant returns today.</h2>
             <p className="font-ui text-ui-md text-secondary mb-10">No GST data entry. No CSV exports. No portal re-entry.</p>
-            <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-10 py-5 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
               Start Free <span className="inline-block">→</span>
             </Link>
           </div>

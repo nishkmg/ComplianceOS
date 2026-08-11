@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return "";
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return process.env.NEXTAUTH_URL ?? process.env.AUTH_URL ?? "";
 }
 
 export function TRPCProvider({ children }: { children: React.ReactNode }) {

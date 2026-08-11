@@ -18,7 +18,7 @@ export default function InvoicingPage() {
             </h1>
             <p className="font-ui text-ui-lg text-secondary max-w-[600px] mb-12 leading-relaxed">Every invoice created is instantly reconciled against your GST ledger and bank statements. Precision at the point of transaction.</p>
             <div className="flex flex-wrap gap-4">
-              <Link href="/signup" className="bg-amber text-white px-8 py-4 font-ui font-bold group flex items-center no-underline rounded-sm shadow-sm uppercase tracking-widest text-sm">
+              <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-8 py-4 font-ui font-bold group flex items-center no-underline rounded-sm shadow-sm uppercase tracking-widest text-sm">
                 Get Started <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
             </div>
@@ -107,7 +107,7 @@ export default function InvoicingPage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Start invoicing the right way.</h2>
             <p className="font-ui text-ui-md text-mid mb-10">GST-compliant, automatically posted, and ready to send in one click.</p>
-            <Link href="/signup" className="bg-amber text-white px-10 py-5 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-10 py-5 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
               Start Free <span>→</span>
             </Link>
           </div>

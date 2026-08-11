@@ -86,7 +86,7 @@ export default function TeamSettingsPage() {
             description="Invite teammates, assign roles and control access to this workspace."
           />
         </div>
-        <button onClick={() => setInviteOpen(true)} className="btn-primary flex items-center gap-2 group">
+        <button onClick={() => setInviteOpen(true)} className="btn btn-primary flex items-center gap-2 group">
           Invite Member <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
         </button>
       </header>
@@ -118,7 +118,7 @@ export default function TeamSettingsPage() {
                 <tr key={m.userId} className="hover:bg-surface-muted/30 transition-colors">
                   <td className="py-5 px-6">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-amber text-white flex items-center justify-center font-bold text-xs shrink-0">
+                      <div className="h-8 w-8 rounded-full bg-amber text-white dark:text-amber-ink flex items-center justify-center font-bold text-xs shrink-0">
                         {(m.name ?? m.email).slice(0, 2).toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -204,8 +204,8 @@ export default function TeamSettingsPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setInviteOpen(false)} className="btn-secondary">Cancel</button>
-              <button onClick={confirmInvite} disabled={busy} className="btn-primary">Send Invite</button>
+              <button onClick={() => setInviteOpen(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={confirmInvite} disabled={busy} className="btn btn-primary">Send Invite</button>
             </div>
           </div>
         </div>

@@ -84,7 +84,7 @@ export function AmendGstReturnDialog({
           <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={handleUpdate}
-            className="bg-amber text-white px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-amber-hover transition-colors border-none shadow-sm cursor-pointer flex items-center gap-2"
+            className="bg-amber text-white dark:text-amber-ink px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-amber-hover transition-colors border-none shadow-sm cursor-pointer flex items-center gap-2"
           >
             Update Return <Icon name="arrow_forward" className="text-sm" />
           </button>

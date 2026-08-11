@@ -124,6 +124,13 @@ body {
   box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-amber-hover);
 }
 
+/* Dark theme: amber flips to #F59E0B where white text fails 2.0:1 — ink text */
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .btn-primary:active {
+  color: var(--color-amber-ink);
+}
+
 .btn-primary {
   background-color: var(--color-amber);
   color: white;

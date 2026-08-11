@@ -103,7 +103,7 @@ export default function ITRSelfAssessmentPage() {
 
         {/* Right: Record Payment */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-dark text-white p-8 rounded-md shadow-xl border focus:border-focus">
+          <div className="bg-sidebar text-white p-8 rounded-md shadow-xl border focus:border-focus">
             <h3 className="font-ui text-lg font-bold text-amber-bright mb-6">Record Self-Assessment Payment</h3>
             <div className="space-y-4">
               <div>

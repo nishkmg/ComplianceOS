@@ -37,7 +37,7 @@ export default function PayrollSuccessPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Link href="/payroll" className="flex-1 bg-amber text-white py-3 px-6 font-ui text-ui-sm font-bold uppercase tracking-widest transition-colors no-underline rounded-md shadow-sm text-center inline-flex items-center justify-center gap-2">
+            <Link href="/payroll" className="flex-1 bg-amber text-white dark:text-amber-ink py-3 px-6 font-ui text-ui-sm font-bold uppercase tracking-widest transition-colors no-underline rounded-md shadow-sm text-center inline-flex items-center justify-center gap-2">
               Back to Payroll <Icon name="arrow_forward" className="text-sm" />
             </Link>
             <button onClick={() => router.push("/payroll/pr1")} className="flex-1 bg-transparent border border-border text-dark py-3 px-6 font-ui text-ui-sm transition-colors no-underline rounded-md text-center font-bold uppercase tracking-widest cursor-pointer">

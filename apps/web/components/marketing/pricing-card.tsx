@@ -38,7 +38,7 @@ export function PricingCard({ name, price, period, features, cta, href, featured
         href={href}
         className={`block text-center w-full py-3 px-4 font-ui text-ui-md font-medium rounded-sm transition-colors no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber ${
           featured
-            ? 'bg-amber text-white hover:bg-amber-hover'
+            ? 'bg-amber text-white dark:text-amber-ink hover:bg-amber-hover'
             : 'bg-transparent text-dark border border-dark hover:bg-section-muted'
         }`}
       >

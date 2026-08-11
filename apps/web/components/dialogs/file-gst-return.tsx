@@ -80,7 +80,7 @@ export function FileGstReturnDialog({
           </button>
           <button
             onClick={() => onConfirm(arn, date)}
-            className="bg-amber text-white font-ui text-sm px-6 py-3 flex items-center gap-2 rounded-sm hover:bg-amber-hover transition-opacity shadow-sm group border-none cursor-pointer"
+            className="bg-amber text-white dark:text-amber-ink font-ui text-sm px-6 py-3 flex items-center gap-2 rounded-sm hover:bg-amber-hover transition-opacity shadow-sm group border-none cursor-pointer"
           >
             <span>Commit to Ledger</span>
             <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />

@@ -87,7 +87,7 @@ export default function JournalEntryDetailPage() {
               return (
                 <tr key={l.id || i} className="hover:bg-surface-muted transition-colors">
                   <td className="py-4 px-6 font-ui text-ui-sm font-medium text-dark">{acct ? `${acct.code} · ${acct.name}` : l.accountId}</td>
-                  <td className="py-4 px-6 font-ui text-ui-sm text-text-mid">{l.description || "—"}</td>
+                  <td className="py-4 px-6 font-ui text-ui-sm text-mid">{l.description || "—"}</td>
                   <td className="py-4 px-6 text-right font-mono text-ui-sm tabular-nums">{parseFloat(l.debit || "0") > 0 ? formatIndianNumber(parseFloat(l.debit), { currency: true, decimals: 2 }) : "—"}</td>
                   <td className="py-4 px-6 text-right font-mono text-ui-sm tabular-nums">{parseFloat(l.credit || "0") > 0 ? formatIndianNumber(parseFloat(l.credit), { currency: true, decimals: 2 }) : "—"}</td>
                 </tr>

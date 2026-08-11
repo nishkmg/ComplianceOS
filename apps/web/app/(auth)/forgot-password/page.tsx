@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
             </p>
             <Link
               href="/login"
-              className="inline-flex items-center justify-center rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white no-underline hover:bg-amber-bright transition-colors"
+              className="inline-flex items-center justify-center rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white no-underline hover:bg-amber-hover transition-colors"
             >
               Back to sign in →
             </Link>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-bright transition-colors disabled:opacity-60"
+              className="w-full rounded-md bg-amber px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-hover transition-colors disabled:opacity-60"
             >
               {busy ? "Sending…" : "Send reset link"}
             </button>

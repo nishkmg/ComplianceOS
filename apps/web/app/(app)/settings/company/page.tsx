@@ -65,7 +65,7 @@ export default function CompanySettingsPage() {
             description="Legal identity used on invoices, GST returns, challans and payslips."
           />
         </div>
-        <button onClick={save} disabled={busy || isLoading} className="btn-primary flex items-center gap-2">
+        <button onClick={save} disabled={busy || isLoading} className="btn btn-primary flex items-center gap-2">
           Save Changes
         </button>
       </header>
@@ -104,7 +104,7 @@ export default function CompanySettingsPage() {
               </dl>
             </div>
 
-            <div className="bg-dark text-white p-8 shadow-sm relative overflow-hidden">
+            <div className="bg-sidebar text-white p-8 shadow-sm relative overflow-hidden">
               <div className="relative z-10 text-left">
                 <h4 className="text-amber-bright font-ui text-lg font-bold mb-3">Statutory Identity</h4>
                 <p className="text-sidebar-muted text-sm leading-relaxed">

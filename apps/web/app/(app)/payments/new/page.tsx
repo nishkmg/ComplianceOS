@@ -125,7 +125,7 @@ export default function NewPaymentPage() {
           <button
             onClick={handleRecord}
             disabled={saving || !paymentAmount}
-            className="px-5 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-5 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? "Saving…" : "Commit to Ledger"}
           </button>
@@ -256,7 +256,7 @@ export default function NewPaymentPage() {
               </div>
             </div>
             {type === "receipt" && (
-              <p className="font-ui text-ui-xs text-text-mid italic">TDS deduction typically applies on payments made, not receipts.</p>
+              <p className="font-ui text-ui-xs text-mid italic">TDS deduction typically applies on payments made, not receipts.</p>
             )}
           </div>
         )}

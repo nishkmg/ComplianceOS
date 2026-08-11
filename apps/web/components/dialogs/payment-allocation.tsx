@@ -128,7 +128,7 @@ export function PaymentAllocationDialog({
             </button>
             <button 
               onClick={() => onConfirm(allocations)}
-              className="px-6 py-2 bg-amber text-white font-ui text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-amber-hover transition-colors group border-none cursor-pointer shadow-sm"
+              className="px-6 py-2 bg-amber text-white dark:text-amber-ink font-ui text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-amber-hover transition-colors group border-none cursor-pointer shadow-sm"
             >
               Save Allocation
               <Icon name="arrow_forward" className="text-sm group-hover:translate-x-1 transition-transform" />

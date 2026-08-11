@@ -98,11 +98,11 @@ export default function FiscalYearsPage() {
               if (open) setCloseFy({ id: open.id, year: open.name.replace("FY ", "") });
             }}
             disabled={busy}
-            className="btn-secondary"
+            className="btn btn-secondary"
           >
             Close FY
           </button>
-          <button onClick={() => setCreateOpen(true)} className="btn-primary flex items-center gap-2 group">
+          <button onClick={() => setCreateOpen(true)} className="btn btn-primary flex items-center gap-2 group">
             Create FY <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
           </button>
         </div>
@@ -159,7 +159,7 @@ export default function FiscalYearsPage() {
 
         {/* Sidebar Info */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-dark text-white p-8 shadow-sm relative overflow-hidden group">
+          <div className="bg-sidebar text-white p-8 shadow-sm relative overflow-hidden group">
             <div className="relative z-10 text-left">
               <h4 className="text-amber-bright font-ui text-lg font-bold mb-3">Statutory Lock</h4>
               <p className="text-sidebar-muted text-sm leading-relaxed mb-6">Current policy prevents modifications to any closed fiscal periods. This ensures 100% data integrity for historical audit trails.</p>
@@ -209,8 +209,8 @@ export default function FiscalYearsPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setCreateOpen(false)} className="btn-secondary">Cancel</button>
-              <button onClick={confirmCreateFy} disabled={busy} className="btn-primary">Create FY</button>
+              <button onClick={() => setCreateOpen(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={confirmCreateFy} disabled={busy} className="btn btn-primary">Create FY</button>
             </div>
           </div>
         </div>

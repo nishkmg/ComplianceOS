@@ -39,6 +39,16 @@ export default function InvoiceDetailPage() {
     onError: (e) => { showToast.error(e.message); setBusy(false); },
   });
 
+  const postMutation = api.invoices.post.useMutation({
+    onSuccess: () => { showToast.success("Invoice posted to ledger."); void utils.invoices.get.invalidate(); void utils.invoices.list.invalidate(); setBusy(false); },
+    onError: (e) => { showToast.error(e.message); setBusy(false); },
+  });
+
+  const voidMutation = api.invoices.void.useMutation({
+    onSuccess: () => { showToast.success("Invoice voided."); void utils.invoices.get.invalidate(); void utils.invoices.list.invalidate(); setBusy(false); },
+    onError: (e) => { showToast.error(e.message); setBusy(false); },
+  });
+
   const ewbMutation = api.einvoice.generateEwb.useMutation({
     onSuccess: () => { showToast.success("E-way bill generated (sandbox)."); setEwbOpen(false); void utils.invoices.get.invalidate(); setBusy(false); },
     onError: (e) => { showToast.error(e.message); setBusy(false); },
@@ -124,8 +134,33 @@ export default function InvoiceDetailPage() {
       </div>
 
       <div className="flex gap-3">
-        <Link href={`/invoices/${inv.id}/edit`} className="px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">Edit</Link>
-        <Link href={`/invoices/${inv.id}/pdf`} className="px-4 py-2 border border-border text-mid text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface-muted rounded-md no-underline">View PDF</Link>
+        {inv.status === "draft" && (
+          <>
+            <button
+              onClick={() => { setBusy(true); postMutation.mutate({ id: inv.id }); }}
+              disabled={busy}
+              className="btn btn-primary"
+            >
+              Post to Ledger
+            </button>
+            <Link href={`/invoices/${inv.id}/edit`} className="btn btn-secondary no-underline">Edit</Link>
+          </>
+        )}
+        {inv.status !== "draft" && inv.status !== "voided" && (
+          <button
+            onClick={() => {
+              const reason = window.prompt("Reason for voiding this invoice?");
+              if (reason === null) return;
+              setBusy(true);
+              voidMutation.mutate({ id: inv.id, reason: reason || "Voided by user" });
+            }}
+            disabled={busy}
+            className="btn btn-ghost text-danger"
+          >
+            Void Invoice
+          </button>
+        )}
+        <Link href={`/invoices/${inv.id}/pdf`} className="btn btn-secondary no-underline">View PDF</Link>
       </div>
 
       {/* EWB dialog */}
@@ -145,8 +180,8 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setEwbOpen(false)} className="btn-secondary">Cancel</button>
-              <button onClick={confirmEwb} disabled={busy} className="btn-primary">Generate</button>
+              <button onClick={() => setEwbOpen(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={confirmEwb} disabled={busy} className="btn btn-primary">Generate</button>
             </div>
           </div>
         </div>
