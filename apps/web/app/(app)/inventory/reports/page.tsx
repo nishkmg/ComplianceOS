@@ -180,7 +180,7 @@ export default function InventoryReportsPage() {
                   <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
                     {movementRows.map((m) => (
                       <tr key={m.id} className="hover:bg-surface-muted/30 transition-colors">
-                        <td className="py-4 px-6 text-amber font-medium">{String(m.productId).slice(0, 8)}</td>
+                        <td className="py-4 px-6 text-amber font-medium">{m.productName ?? m.productId?.slice(0, 8)}</td>
                         <td className="py-4 px-6 font-ui text-ui-sm font-bold text-dark">{m.movementType ?? "—"}</td>
                         <td className="py-4 px-6 text-right text-dark tabular-nums">{Number(m.quantity ?? 0)}</td>
                         <td className="py-4 px-6 text-right text-mid">{formatIndianNumber(Number(m.unitCost ?? 0))}</td>

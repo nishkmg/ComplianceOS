@@ -71,6 +71,14 @@ export async function consumeFifoLayers(
     .where(and(...whereConditions))
     .orderBy(inventoryLayers.receiptDate);
   
+  // Pre-validate availability BEFORE any write — partial consumption on a
+  // shortage must never persist (was: layers updated in the loop, then the
+  // "Insufficient stock" throw left them silently decremented).
+  const available = layers.reduce((sum, l) => sum + parseFloat(l.remainingQuantity), 0);
+  if (available < quantityToConsume) {
+    throw new Error(`Insufficient stock: only ${available} units available, requested ${quantityToConsume}`);
+  }
+  
   let remaining = quantityToConsume;
   const consumedLayers: FifoConsumption["layers"] = [];
   let totalCost = 0;

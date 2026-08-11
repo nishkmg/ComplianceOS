@@ -46,26 +46,28 @@ export async function createSalesDelivery(
   const year = new Date().getFullYear();
   const fy = year >= 4 ? `${year}-${String(year + 1).slice(-2)}` : `${year - 1}-${String(year).slice(-2)}`;
   
-  await createJournalEntry(db, tenantId, actorId, fy, {
-    date: new Date().toISOString().split("T")[0],
-    narration: validated.narration ?? `COGS: ${validated.quantity} units @ avg ₹${consumption.averageCost.toFixed(2)}`,
-    referenceType: "inventory",
-    referenceId: movement.id,
-    lines: [
-      {
-        accountId: input.cogsAccountId,
-        debit: String(consumption.totalCost),
-        credit: "0",
-        description: `COGS: ${validated.quantity} units`,
-      },
-      {
-        accountId: input.inventoryAssetAccountId,
-        debit: "0",
-        credit: String(consumption.totalCost),
-        description: `Inventory out: ${validated.quantity} units`,
-      },
-    ],
-  });
+  if (input.cogsAccountId && input.inventoryAssetAccountId) {
+    await createJournalEntry(db, tenantId, actorId, fy, {
+      date: new Date().toISOString().split("T")[0],
+      narration: validated.narration ?? `COGS: ${validated.quantity} units @ avg ₹${consumption.averageCost.toFixed(2)}`,
+      referenceType: "inventory",
+      referenceId: movement.id,
+      lines: [
+        {
+          accountId: input.cogsAccountId,
+          debit: String(consumption.totalCost),
+          credit: "0",
+          description: `COGS: ${validated.quantity} units`,
+        },
+        {
+          accountId: input.inventoryAssetAccountId,
+          debit: "0",
+          credit: String(consumption.totalCost),
+          description: `Inventory out: ${validated.quantity} units`,
+        },
+      ],
+    });
+  }
   
   return {
     movementId: movement.id,

@@ -22,7 +22,7 @@ export async function generateGSTR1(
     and(
       eq(gstReturns.tenantId, tenantId),
       eq(gstReturns.returnType, "gstr1"),
-      eq(gstReturns.taxPeriodMonth, String(validated.periodMonth)),
+      eq(gstReturns.taxPeriodMonth, String(validated.periodMonth).padStart(2, "0")),
       eq(gstReturns.taxPeriodYear, String(validated.periodYear)),
     ),
   ).limit(1);
@@ -52,7 +52,7 @@ export async function generateGSTR1(
       tenantId,
       returnNumber: `GSTR1-${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}`,
       returnType: "gstr1",
-      taxPeriodMonth: String(validated.periodMonth),
+      taxPeriodMonth: String(validated.periodMonth).padStart(2, "0"),
       taxPeriodYear: String(validated.periodYear),
       fiscalYear: `${validated.periodYear}-${String(validated.periodYear + 1).slice(-2)}`,
       status: "generated",
@@ -207,7 +207,7 @@ export async function generateGSTR1(
       tenantId,
       returnNumber: `GSTR1-${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}`,
       returnType: "gstr1",
-      taxPeriodMonth: String(validated.periodMonth),
+      taxPeriodMonth: String(validated.periodMonth).padStart(2, "0"),
       taxPeriodYear: String(validated.periodYear),
       fiscalYear: `${validated.periodYear}-${String(validated.periodYear + 1).slice(-2)}`,
       status: "generated",

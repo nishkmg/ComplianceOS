@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, isNotNull } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { advanceTaxLedger, selfAssessmentLedger } = _db;
 import { appendEvent } from "../lib/event-store";
@@ -111,7 +111,7 @@ export const itrPaymentRouter = router({
           and(
             eq(advanceTaxLedger.tenantId, ctx.tenantId),
             eq(advanceTaxLedger.assessmentYear, input.assessmentYear),
-            eq(advanceTaxLedger.paidDate, sql`IS NOT NULL`),
+            isNotNull(advanceTaxLedger.paidDate),
           ),
         )
         .orderBy(desc(advanceTaxLedger.paidDate));
@@ -121,7 +121,7 @@ export const itrPaymentRouter = router({
           and(
             eq(selfAssessmentLedger.tenantId, ctx.tenantId),
             eq(selfAssessmentLedger.assessmentYear, input.assessmentYear),
-            eq(selfAssessmentLedger.paidDate, sql`IS NOT NULL`),
+            isNotNull(selfAssessmentLedger.paidDate),
           ),
         )
         .orderBy(desc(selfAssessmentLedger.paidDate));

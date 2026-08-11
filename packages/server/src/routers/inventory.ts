@@ -127,8 +127,24 @@ export const inventoryRouter = router({
       }
       
       const rows = await ctx.db
-        .select()
+        .select({
+          id: stockMovements.id,
+          tenantId: stockMovements.tenantId,
+          productId: stockMovements.productId,
+          productName: products.name,
+          warehouseId: stockMovements.warehouseId,
+          movementType: stockMovements.movementType,
+          quantity: stockMovements.quantity,
+          unitCost: stockMovements.unitCost,
+          totalValue: stockMovements.totalValue,
+          narration: stockMovements.narration,
+          referenceType: stockMovements.referenceType,
+          referenceId: stockMovements.referenceId,
+          createdAt: stockMovements.createdAt,
+          createdById: stockMovements.createdById,
+        })
         .from(stockMovements)
+        .innerJoin(products, eq(products.id, stockMovements.productId))
         .where(and(...conditions))
         .orderBy(desc(stockMovements.createdAt))
         .limit(pageSize)
@@ -141,8 +157,22 @@ export const inventoryRouter = router({
     .query(async ({ ctx }) => {
       const { tenantId } = ctx.session!.user;
       return ctx.db
-        .select()
+        .select({
+          id: inventoryLayers.id,
+          tenantId: inventoryLayers.tenantId,
+          productId: inventoryLayers.productId,
+          productName: products.name,
+          warehouseId: inventoryLayers.warehouseId,
+          batchNumber: inventoryLayers.batchNumber,
+          receiptDate: inventoryLayers.receiptDate,
+          quantity: inventoryLayers.quantity,
+          remainingQuantity: inventoryLayers.remainingQuantity,
+          unitCost: inventoryLayers.unitCost,
+          totalValue: inventoryLayers.totalValue,
+          createdAt: inventoryLayers.createdAt,
+        })
         .from(inventoryLayers)
+        .innerJoin(products, eq(products.id, inventoryLayers.productId))
         .where(eq(inventoryLayers.tenantId, tenantId))
         .orderBy(desc(inventoryLayers.receiptDate));
     }),

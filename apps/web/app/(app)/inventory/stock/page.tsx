@@ -6,7 +6,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
 
-interface StockItem { id: string; productId: string; quantity: string; remainingQuantity: string; unitCost: string; totalValue: string; receiptDate: string; }
+interface StockItem { id: string; productId: string; productName?: string | null; quantity: string; remainingQuantity: string; unitCost: string; totalValue: string; receiptDate: string; }
 
 export default function StockPage() {
   const { data, isLoading } = api.inventory.layers.useQuery();
@@ -28,7 +28,7 @@ export default function StockPage() {
           </tr></thead><tbody className="divide-y divide-border-subtle">
             {stock.map(s => (
               <tr key={s.id} className="hover:bg-surface-muted transition-colors">
-                <td className="py-3 px-6 font-mono text-ui-xs text-mid">{s.productId?.substring(0, 8)}</td>
+                <td className="py-3 px-6 font-mono text-ui-xs text-mid">{s.productName ?? s.productId?.substring(0, 8)}</td>
                 <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">{Number(s.quantity || 0).toLocaleString("en-IN")}</td>
                 <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">{Number(s.remainingQuantity || 0).toLocaleString("en-IN")}</td>
                 <td className="py-3 px-6 text-right font-mono text-ui-sm tabular-nums">{formatIndianNumber(Number(s.unitCost || 0), { currency: true })}</td>

@@ -56,7 +56,7 @@ async function upsertLiability(
       eq(gstLiabilityLedger.tenantId, args.tenantId),
       eq(gstLiabilityLedger.taxType, args.taxType as "igst" | "cgst" | "sgst" | "cess"),
       eq(gstLiabilityLedger.liabilityType, args.liabilityType),
-      eq(gstLiabilityLedger.taxPeriodMonth, args.periodMonth),
+      eq(gstLiabilityLedger.taxPeriodMonth, String(args.periodMonth).padStart(2, "0")),
       eq(gstLiabilityLedger.taxPeriodYear, args.periodYear),
     ),
   );
@@ -71,7 +71,7 @@ async function upsertLiability(
     interestPaid: "0",
     penaltyPayable: String(args.penaltyPayable),
     penaltyPaid: "0",
-    taxPeriodMonth: args.periodMonth,
+    taxPeriodMonth: String(args.periodMonth).padStart(2, "0"),
     taxPeriodYear: args.periodYear,
     fiscalYear: args.fiscalYear,
     sourceDocumentId: args.sourceDocumentId,

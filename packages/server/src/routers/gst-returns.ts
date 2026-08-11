@@ -22,7 +22,7 @@ export const gstReturnsRouter = router({
       const conditions = [eq(gstReturns.tenantId, ctx.tenantId)];
       
       if (input?.periodMonth) {
-        conditions.push(eq(gstReturns.taxPeriodMonth, String(input.periodMonth)));
+        conditions.push(eq(gstReturns.taxPeriodMonth, String(input.periodMonth).padStart(2, "0")));
       }
       if (input?.periodYear) {
         conditions.push(eq(gstReturns.taxPeriodYear, String(input.periodYear)));

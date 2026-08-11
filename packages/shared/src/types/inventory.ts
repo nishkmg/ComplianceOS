@@ -45,8 +45,8 @@ export const CreateSalesDeliveryInputSchema = z.object({
   quantity: z.number().positive(),
   warehouseId: z.string().uuid().optional(),
   narration: z.string().optional(),
-  cogsAccountId: z.string().uuid(),
-  inventoryAssetAccountId: z.string().uuid(),
+  cogsAccountId: z.string().uuid().optional(),
+  inventoryAssetAccountId: z.string().uuid().optional(),
 });
 
 export type InventoryLayer = z.infer<typeof InventoryLayerSchema>;

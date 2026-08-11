@@ -44,7 +44,7 @@ export default function InventoryMovementsPage() {
               {(rows as any[]).map((m) => (
                 <tr key={m.id} className="hover:bg-surface-muted/30 transition-colors">
                   <td className="py-5 px-6 font-mono text-ui-xs text-mid">{fmtDate(m.createdAt ?? m.movementDate ?? "")}</td>
-                  <td className="py-5 px-6 font-medium text-dark">{m.productName ?? m.productId?.slice(0, 8)}</td>
+                  <td className="py-5 px-6 font-medium text-dark">{m.productName ?? "—"}</td>
                   <td className="py-5 px-6">
                     <span className={`inline-block px-2 py-0.5 text-ui-2xs uppercase font-bold tracking-widest border rounded-md ${
                       (m.type ?? m.movementType ?? "").toLowerCase().includes("in") || (m.type ?? "") === "purchase"

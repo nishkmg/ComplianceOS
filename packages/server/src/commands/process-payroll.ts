@@ -89,6 +89,7 @@ export async function processPayroll(
   let grossDeductions = 0;
   let pfEe = 0;
   let pfEr = 0;
+  let eps = 0;
   let esiEe = 0;
   let esiEr = 0;
   let tdsDeducted = 0;
@@ -103,6 +104,8 @@ export async function processPayroll(
     description?: string;
   }> = [];
 
+  const STATUTORY_CODES = new Set(["PF_EE", "ESI_EE", "TDS", "PROFESSIONAL_TAX"]);
+
   const basicComponent = salaryStructure.find(s => s.componentCode === "BASIC");
   const basicAmount = basicComponent?.amount ? parseFloat(basicComponent.amount) : 0;
 
@@ -116,7 +119,9 @@ export async function processPayroll(
 
     if (comp.componentType === "earning") {
       grossEarnings += amount;
-    } else if (comp.componentType === "deduction") {
+    } else if (comp.componentType === "deduction" && !STATUTORY_CODES.has(comp.componentCode)) {
+      // Statutory deductions (PF_EE/ESI_EE/TDS/PROFESSIONAL_TAX) are computed
+      // from calculators below — counting them here double-deducts.
       grossDeductions += amount;
     }
 
@@ -137,6 +142,7 @@ export async function processPayroll(
     });
     pfEe = pfResult.ee;
     pfEr = pfResult.er;
+    eps = pfResult.eps ?? 0;
 
     const esiResult = calculateESIWithConfig(grossEarnings, {
       esiErPercentage: config.esiErPercentage ?? "3.25",
@@ -219,6 +225,7 @@ export async function processPayroll(
     grossDeductions: String(grossDeductions),
     netPay: String(netPay),
     pfEe: String(pfEe),
+    eps: String(eps),
     pfEr: String(pfEr),
     esiEe: String(esiEe),
     esiEr: String(esiEr),
@@ -275,6 +282,7 @@ export async function processPayroll(
       grossDeductions: String(grossDeductions),
       netPay: String(netPay),
       pfEe: String(pfEe),
+      eps: String(eps),
       pfEr: String(pfEr),
       esiEe: String(esiEe),
       esiEr: String(esiEr),

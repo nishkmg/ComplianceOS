@@ -14,7 +14,7 @@ export async function adjustInventory(
     warehouseId?: string;
     reason: "damage" | "loss" | "gain" | "correction";
     narration?: string;
-    adjustmentAccountId: string;
+    adjustmentAccountId?: string;
   },
 ): Promise<{ movementId: string; totalValue: number }> {
   const { productId, quantity, warehouseId, reason, narration, adjustmentAccountId } = input;
@@ -35,6 +35,11 @@ export async function adjustInventory(
       .from(inventoryLayers)
       .where(and(...whereConditions))
       .orderBy(inventoryLayers.receiptDate);
+
+    const available = layers.reduce((sum, l) => sum + parseFloat(l.remainingQuantity), 0);
+    if (available < Math.abs(quantity)) {
+      throw new Error(`Insufficient stock: only ${available} units available, requested ${Math.abs(quantity)}`);
+    }
 
     let remaining = Math.abs(quantity);
 
@@ -132,20 +137,22 @@ export async function adjustInventory(
     ? `${year}-${String(year + 1).slice(-2)}`
     : `${year - 1}-${String(year).slice(-2)}`;
 
-  await createJournalEntry(db, tenantId, actorId, fy, {
-    date,
-    narration: narration ?? `Inventory ${reason}: ${Math.abs(quantity)} units @ ₹${(totalValue / Math.abs(quantity)).toFixed(2)}`,
-    referenceType: "inventory",
-    referenceId: movement.id,
-    lines: [
-      {
-        accountId: adjustmentAccountId,
-        debit: quantity > 0 ? String(totalValue) : "0",
-        credit: quantity < 0 ? String(totalValue) : "0",
-        description: `Inventory ${reason}: ${Math.abs(quantity)} units`,
-      },
-    ],
-  });
+  if (adjustmentAccountId) {
+    await createJournalEntry(db, tenantId, actorId, fy, {
+      date,
+      narration: narration ?? `Inventory ${reason}: ${Math.abs(quantity)} units @ ₹${(totalValue / Math.abs(quantity)).toFixed(2)}`,
+      referenceType: "inventory",
+      referenceId: movement.id,
+      lines: [
+        {
+          accountId: adjustmentAccountId,
+          debit: quantity > 0 ? String(totalValue) : "0",
+          credit: quantity < 0 ? String(totalValue) : "0",
+          description: `Inventory ${reason}: ${Math.abs(quantity)} units`,
+        },
+      ],
+    });
+  }
 
   return { movementId: movement.id, totalValue };
 }

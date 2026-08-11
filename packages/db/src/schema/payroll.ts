@@ -24,6 +24,7 @@ export const payrollRuns = pgTable("payroll_runs", {
   grossDeductions: numeric("gross_deductions", { precision: 18, scale: 2 }).notNull().default("0"),
   netPay: numeric("net_pay", { precision: 18, scale: 2 }).notNull().default("0"),
   pfEe: numeric("pf_ee", { precision: 18, scale: 2 }).default("0"),
+  eps: numeric("eps", { precision: 18, scale: 2 }).default("0"),
   pfEr: numeric("pf_er", { precision: 18, scale: 2 }).default("0"),
   esiEe: numeric("esi_ee", { precision: 18, scale: 2 }).default("0"),
   esiEr: numeric("esi_er", { precision: 18, scale: 2 }).default("0"),
