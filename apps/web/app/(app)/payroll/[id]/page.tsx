@@ -18,6 +18,14 @@ export default function PayrollDetailPage() {
   const runQuery = api.payroll.get.useQuery(runId, { staleTime: 15_000 });
   const payslips = api.payslips.list.useQuery({ payrollRunId: runId }, { enabled: !!runId, staleTime: 15_000 });
 
+  const generatePayslip = api.payslips.generate.useMutation({
+    onSuccess: () => {
+      showToast.success("Payslip generated.");
+      void utils.payslips.list.invalidate();
+    },
+    onError: (e) => showToast.error(e.message),
+  });
+
   const finalizeRun = api.payroll.finalize.useMutation({
     onSuccess: () => {
       showToast.success("Payroll run finalized — journal entry created.");
@@ -96,11 +104,21 @@ export default function PayrollDetailPage() {
         </div>
       </div>
 
-      {payslip?.pdfUrl && (
-        <a href={payslip.pdfUrl} target="_blank" rel="noreferrer" className="btn btn-secondary inline-flex items-center gap-2">
-          <Icon name="download" className="text-ui-xl" /> Download Payslip
-        </a>
-      )}
+      <div className="flex gap-3">
+        {payslip?.pdfUrl ? (
+          <a href={payslip.pdfUrl} target="_blank" rel="noreferrer" className="btn btn-secondary inline-flex items-center gap-2">
+            <Icon name="download" className="text-ui-xl" /> Download Payslip
+          </a>
+        ) : (
+          <button
+            onClick={() => generatePayslip.mutate(runId)}
+            disabled={generatePayslip.isPending}
+            className="btn btn-primary"
+          >
+            Generate Payslip
+          </button>
+        )}
+      </div>
     </div>
   );
 }

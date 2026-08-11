@@ -1,4 +1,4 @@
-import { eq, and, sql, desc } from "drizzle-orm";
+import { eq, and, sql, desc, ne, lte } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { payrollRuns, payrollLines, employees, employeeSalaryStructures, salaryComponents, payrollAdvances, payrollConfig } = _db;
@@ -31,7 +31,8 @@ export async function processPayroll(
         eq(payrollRuns.tenantId, tenantId),
         eq(payrollRuns.employeeId, validated.employeeId),
         eq(payrollRuns.month, validated.month),
-        eq(payrollRuns.year, validated.year)
+        eq(payrollRuns.year, validated.year),
+        ne(payrollRuns.status, "voided")
       )
     );
 
@@ -102,6 +103,7 @@ export async function processPayroll(
     componentType: string;
     amount: number;
     description?: string;
+    advanceId?: string;
   }> = [];
 
   const STATUTORY_CODES = new Set(["PF_EE", "ESI_EE", "TDS", "PROFESSIONAL_TAX"]);
@@ -171,7 +173,8 @@ export async function processPayroll(
         eq(payrollAdvances.tenantId, tenantId),
         eq(payrollAdvances.employeeId, validated.employeeId),
         eq(payrollAdvances.status, "active"),
-        sql`${payrollAdvances.remainingBalance} > 0`
+        sql`${payrollAdvances.remainingBalance} > 0`,
+        lte(payrollAdvances.monthReference, `${validated.year}-${validated.month}`)
       )
     );
 
@@ -188,6 +191,7 @@ export async function processPayroll(
       componentType: "advance",
       amount: deductAmount,
       description: `Recovery ${(advance.deductedInstallments ?? 0) + 1}/${advance.installments}`,
+      advanceId: advance.id,
     });
   }
 
@@ -245,6 +249,7 @@ export async function processPayroll(
       componentType: line.componentType,
       amount: String(line.amount),
       description: line.description ?? null,
+      advanceId: line.advanceId ?? null,
     });
   }
 

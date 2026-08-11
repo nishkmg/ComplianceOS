@@ -58,6 +58,7 @@ export const payrollLines = pgTable("payroll_lines", {
   componentType: text("component_type").notNull(),
   amount: numeric("amount", { precision: 18, scale: 2 }).notNull(),
   description: text("description"),
+  advanceId: uuid("advance_id"),
 }, (table) => [
   index("payroll_lines_payroll_run_id_idx").on(table.payrollRunId),
 ]);

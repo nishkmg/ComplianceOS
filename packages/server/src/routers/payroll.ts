@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ne } from "drizzle-orm";
 import { router, protectedProcedure } from "../trpc";
 import { processPayroll } from "../commands/process-payroll";
 import { finalizePayroll } from "../commands/finalize-payroll";
@@ -115,7 +116,8 @@ export const payrollRouter = router({
         .where(and(
           eq(payrollRuns.tenantId, ctx.tenantId),
           eq(payrollRuns.month, monthStr),
-          eq(payrollRuns.year, yearStr)
+          eq(payrollRuns.year, yearStr),
+          ne(payrollRuns.status, "voided")
         ));
 
       const processedIds = processedEmployeeIds.map(r => r.employeeId);

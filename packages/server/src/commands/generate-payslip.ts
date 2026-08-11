@@ -189,7 +189,7 @@ export async function generatePayslip(
     payrollRunId,
     employeeId: payrollRun.employeeId,
     pdfUrl,
-    isDistributed: false,
+    isDistributed: true,
   }).returning();
 
   await appendEvent(
