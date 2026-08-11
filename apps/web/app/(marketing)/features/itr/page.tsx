@@ -19,7 +19,7 @@ export default function ITRFeaturePage() {
             <p className="font-ui text-ui-lg text-secondary max-w-2xl mb-10 leading-relaxed">
               Your tax computation is automatically derived from your closed books. Old vs new regime comparison built in, not bolted on.
             </p>
-            <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-8 py-4 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="btn btn-primary px-8 py-4 no-underline inline-flex items-center gap-2">
               Start Free <span className="inline-block ml-2">→</span>
             </Link>
           </div>
@@ -92,7 +92,7 @@ export default function ITRFeaturePage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-display text-marketing-xl text-dark mb-6">File with confidence this year.</h2>
             <p className="font-ui text-ui-md text-secondary mb-10">From P&L to ITR — zero re-entry. No double data entry, no audit anxiety.</p>
-            <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-10 py-5 font-ui text-sm font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="btn btn-primary px-10 py-5 no-underline">
               Start Free <span className="inline-block">→</span>
             </Link>
           </div>

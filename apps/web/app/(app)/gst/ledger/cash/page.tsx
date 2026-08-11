@@ -3,6 +3,7 @@
 import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface CashEntry {
   id: string; ledgerType: "cash"; transactionType: string | null; taxType: string | null;
@@ -17,7 +18,7 @@ export default function CashLedgerPage() {
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">Cash Ledger</h1>
+      <PageHeader title="Cash Ledger" />
       {entries.length === 0 ? <EmptyState icon="account_balance" title="No entries" description="Cash ledger entries appear here once GST payments are made." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">

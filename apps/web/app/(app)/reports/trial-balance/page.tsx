@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface TbItem {
   code: string;
@@ -83,7 +84,7 @@ export default function TrialBalancePage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Trial Balance</h1>
+        <PageHeader title="Trial Balance" />
         <Card className="bg-surface border border-border p-8 text-center">
           <p className="text-danger font-medium mb-4">Failed to load trial balance</p>
           <Button onClick={() => utils.balances.trialBalance.invalidate()}>Retry</Button>
@@ -95,7 +96,7 @@ export default function TrialBalancePage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Trial Balance</h1>
+        <PageHeader title="Trial Balance" />
         <Card className="bg-surface border border-border p-8">
           <div className="space-y-3 animate-pulse">
             <div className="h-6 bg-surface-muted rounded w-1/3" />
@@ -117,7 +118,7 @@ export default function TrialBalancePage() {
             <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
               Report · FY {fiscalYear}
             </p>
-            <h1 className="font-ui text-2xl font-semibold text-dark">Trial Balance</h1>
+            <PageHeader title="Trial Balance" />
           </div>
         </div>
         <Card className="bg-surface border border-border p-12 text-center">
@@ -137,7 +138,7 @@ export default function TrialBalancePage() {
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
             Report · FY {fiscalYear}
           </p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Trial Balance</h1>
+          <PageHeader title="Trial Balance" />
         </div>
         <div className="flex gap-3 items-center">
           <select
@@ -236,8 +237,8 @@ export default function TrialBalancePage() {
         {/* Grand total */}
         <div className="border-t-2 border-dark mx-8 py-4 grid grid-cols-12 gap-4 items-center font-bold print:border-black">
           <div className="col-span-7 font-ui text-ui-xs uppercase tracking-widest text-dark print:text-dark">Grand Total</div>
-          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">₹ {formatIndianNumber(totalDebit, { currency: false })}</div>
-          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">₹ {formatIndianNumber(totalCredit, { currency: false })}</div>
+          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">{formatIndianNumber(totalDebit, { currency: false })}</div>
+          <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">{formatIndianNumber(totalCredit, { currency: false })}</div>
           <div className="col-span-1" />
         </div>
 

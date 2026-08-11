@@ -3,6 +3,7 @@
 import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface ItcEntry {
   id: string; ledgerType: "itc"; taxType: string | null;
@@ -18,7 +19,7 @@ export default function ItcLedgerPage() {
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">ITC Ledger</h1>
+      <PageHeader title="ITC Ledger" />
       {entries.length === 0 ? <EmptyState icon="assignment" title="No entries" description="Input tax credit entries appear here as returns are processed." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">

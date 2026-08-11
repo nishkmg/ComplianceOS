@@ -92,7 +92,7 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
         <button
           onClick={handleContinue}
           disabled={saving}
-          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
         >
           {saving ? "Saving..." : "Establish Framework"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

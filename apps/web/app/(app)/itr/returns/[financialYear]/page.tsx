@@ -7,6 +7,7 @@ import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const typeLabels: Record<string, string> = {
   itr3: "ITR-3",
@@ -34,7 +35,7 @@ export default function ItrReturnsPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/itr/returns" aria-label="Go back" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
-        <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Returns — {financialYear}</h1>
+        <PageHeader title="ITR Returns — {financialYear}" />
       </div>
 
       {returns.isLoading ? (
@@ -48,11 +49,11 @@ export default function ItrReturnsPage() {
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
               <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Total Income</p>
-              <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totals.income)}</p>
+              <p className="font-mono text-2xl font-bold text-dark tabular-nums">{formatIndianNumber(totals.income)}</p>
             </div>
             <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
               <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Total Tax Payable</p>
-              <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totals.tax)}</p>
+              <p className="font-mono text-2xl font-bold text-dark tabular-nums">{formatIndianNumber(totals.tax)}</p>
             </div>
           </div>
 

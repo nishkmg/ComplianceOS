@@ -42,7 +42,7 @@ export function AccountPreviewSlideOver({
           <section className="grid grid-cols-2 gap-6">
             <div className="p-6 bg-section-muted border border-border-subtle rounded-sm">
               <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-3">Current Balance</p>
-              <p className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(account.balance || 0)}</p>
+              <p className="font-mono text-xl font-bold text-dark">{formatIndianNumber(account.balance || 0)}</p>
             </div>
             <div className="p-6 bg-section-muted border border-border-subtle rounded-sm">
               <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mb-3">Pending Vouchers</p>
@@ -61,7 +61,7 @@ export function AccountPreviewSlideOver({
                     <p className="text-ui-xs text-light mt-1">Payment received · 12 Oct 23</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono text-sm font-bold text-dark">₹ {formatIndianNumber(45000 * i)}</p>
+                    <p className="font-mono text-sm font-bold text-dark">{formatIndianNumber(45000 * i)}</p>
                     <span className="font-ui text-ui-2xs uppercase font-bold text-success">Cleared</span>
                   </div>
                 </div>

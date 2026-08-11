@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface LedgerRow { id: string; date: string; description: string; debit: string; credit: string; }
 
@@ -22,7 +23,7 @@ export default function LedgerReportPage() {
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">Ledger Report</h1>
+      <PageHeader title="Ledger Report" />
       <div className="space-y-1.5">
         <label className="font-ui text-ui-2xs text-light uppercase font-bold" htmlFor="ledger-account">Account</label>
         <select id="ledger-account" aria-label="Account" className="w-full max-w-md border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={selectedAccount} onChange={(e) => setSelectedAccount(e.target.value)}>

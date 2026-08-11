@@ -7,6 +7,7 @@ import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function NewPaymentPage() {
   const { activeFy } = useFiscalYear();
@@ -107,7 +108,7 @@ export default function NewPaymentPage() {
             <Icon name="arrow_back" size={20} />
           </button>
           <div>
-            <h1 className="font-ui text-display-lg font-semibold text-dark">Record Transaction</h1>
+            <PageHeader title="Record Transaction" />
             <p className="font-ui text-ui-xs text-secondary mt-0.5">
               Record incoming or outgoing payments. FY {activeFy}
               {gstConfig.tdsApplicable ? " · TDS applicable" : ""}
@@ -118,14 +119,14 @@ export default function NewPaymentPage() {
         <div className="flex gap-3">
           <button
             onClick={handleDiscard}
-            className="px-4 py-2 border border-border text-mid text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md"
+            className="px-4 py-2 btn btn-secondary"
           >
             Discard
           </button>
           <button
             onClick={handleRecord}
             disabled={saving || !paymentAmount}
-            className="px-5 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-5 py-2 btn btn-primary disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? "Saving…" : "Commit to Ledger"}
           </button>

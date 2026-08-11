@@ -46,14 +46,14 @@ export function PaymentAllocationDialog({
         <div className="px-8 py-4 bg-section-amber border-b border-border-subtle flex justify-between items-center text-left">
           <div className="flex flex-col">
             <span className="font-ui text-ui-2xs text-amber uppercase tracking-widest mb-1 font-bold">Total to Allocate</span>
-            <span className="font-mono text-lg text-dark font-bold">₹ {formatIndianNumber(totalAmount)}</span>
+            <span className="font-mono text-lg text-dark font-bold">{formatIndianNumber(totalAmount)}</span>
           </div>
           <div className="flex items-center gap-4">
             <Icon name="arrow_right_alt" className="text-mid" />
           </div>
           <div className="flex flex-col text-right">
             <span className="font-ui text-ui-2xs text-mid uppercase tracking-widest mb-1 font-bold">Unallocated Balance</span>
-            <span className={`font-mono text-lg font-bold ${unallocated > 0 ? 'text-amber-hover' : 'text-success'}`}>₹ {formatIndianNumber(unallocated)}</span>
+            <span className={`font-mono text-lg font-bold ${unallocated > 0 ? 'text-amber-hover' : 'text-success'}`}>{formatIndianNumber(unallocated)}</span>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ export function PaymentAllocationDialog({
                 </div>
                 <div className="col-span-2 font-mono text-ui-xs text-mid">{inv.date}</div>
                 <div className="col-span-3 font-ui text-sm text-dark font-medium">{inv.number}</div>
-                <div className="col-span-3 font-mono text-ui-sm text-mid text-right">₹ {formatIndianNumber(inv.balance)}</div>
+                <div className="col-span-3 font-mono text-ui-sm text-mid text-right">{formatIndianNumber(inv.balance)}</div>
                 <div className="col-span-3 flex justify-end">
                   <div className="relative w-full max-w-[140px]">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-ui-xs text-light">₹</span>

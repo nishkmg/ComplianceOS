@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function Form16Page() {
   return (
@@ -12,7 +13,7 @@ export default function Form16Page() {
           <div className="flex items-center gap-2 text-ui-2xs font-bold text-amber uppercase tracking-widest mb-2">
             <Icon name="description" className="text-sm" /> Form 16 Data Export
           </div>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Employee Tax Report</h1>
+          <PageHeader title="Employee Tax Report" />
           <p className="text-ui-sm text-secondary font-ui mt-1">Under Section 203 of the Income-tax Act, 1961</p>
         </div>
       </header>

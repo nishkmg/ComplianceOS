@@ -7,6 +7,7 @@ import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 type ReportType = "valuation" | "movement" | "expiry";
 
@@ -71,7 +72,7 @@ export default function InventoryReportsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8 mt-0 mb-8">
         <div className="text-left">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports · FY {activeFy}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Reports</h1>
+          <PageHeader title="Inventory Reports" />
           <p className="text-ui-sm text-secondary font-ui mt-1 max-w-2xl leading-relaxed">{reportMeta[reportType].desc}</p>
         </div>
         <div className="flex items-center gap-3">
@@ -132,7 +133,7 @@ export default function InventoryReportsPage() {
             <>
               <div className="px-6 py-4 bg-surface-muted border-b border-border flex justify-between items-center">
                 <h3 className="font-ui text-ui-xs font-bold text-dark uppercase tracking-widest">Valuation Summary</h3>
-                <span className="font-mono text-ui-sm font-bold text-dark">Total Value: ₹ {formatIndianNumber(totalValue)}</span>
+                <span className="font-mono text-ui-sm font-bold text-dark">Total Value: {formatIndianNumber(totalValue)}</span>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[900px]">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 const quickActions = [
   { href: "/payroll-reports/pf-challan", icon: "receipt_long", label: "PF Challans", desc: "Provident Fund remittance summary for EPFO." },
@@ -24,7 +25,7 @@ export default function PayrollReportsPage() {
       <header className="bg-surface border-b-[0.5px] border-border px-8 py-6 sticky top-0 z-30 flex justify-between items-end -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Module Overview</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Payroll Reports</h1>
+          <PageHeader title="Payroll Reports" />
           <p className="font-ui text-ui-sm text-secondary mt-1">Statutory filings generated from finalized payroll runs.</p>
         </div>
       </header>
@@ -38,15 +39,15 @@ export default function PayrollReportsPage() {
           </div>
           <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
             <h3 className="text-ui-2xs font-bold text-mid uppercase tracking-wider">PF (EE+ER)</h3>
-            <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(pf)}</p>
+            <p className="font-mono text-2xl font-bold text-dark mt-2">{formatIndianNumber(pf)}</p>
           </div>
           <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
             <h3 className="text-ui-2xs font-bold text-mid uppercase tracking-wider">ESI (EE+ER)</h3>
-            <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(esi)}</p>
+            <p className="font-mono text-2xl font-bold text-dark mt-2">{formatIndianNumber(esi)}</p>
           </div>
           <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
             <h3 className="text-ui-2xs font-bold text-mid uppercase tracking-wider">TDS Deducted</h3>
-            <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(tds)}</p>
+            <p className="font-mono text-2xl font-bold text-dark mt-2">{formatIndianNumber(tds)}</p>
           </div>
         </section>
 

@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
+import { PageHeader } from "@/components/ui/page-header";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -39,7 +40,7 @@ export default function BalanceSheetPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Balance Sheet</h1>
+        <PageHeader title="Balance Sheet" />
         <Card className="bg-surface border border-border p-8 text-center">
           <p className="text-danger font-medium mb-4">Failed to load balance sheet</p>
           <Button onClick={() => utils.balances.balanceSheet.invalidate()}>Retry</Button>
@@ -51,7 +52,7 @@ export default function BalanceSheetPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Balance Sheet</h1>
+        <PageHeader title="Balance Sheet" />
         <Card className="bg-surface border border-border p-8">
           <div className="space-y-3 animate-pulse">
             <div className="h-6 bg-surface-muted rounded w-1/3" />
@@ -73,7 +74,7 @@ export default function BalanceSheetPage() {
             <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
               Financial Report · FY {fiscalYear}
             </p>
-            <h1 className="font-ui text-2xl font-semibold text-dark">Balance Sheet</h1>
+            <PageHeader title="Balance Sheet" />
           </div>
         </div>
         <Card className="bg-surface border border-border p-12 text-center">
@@ -93,7 +94,7 @@ export default function BalanceSheetPage() {
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
             Financial Report · FY {fiscalYear}
           </p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Balance Sheet</h1>
+          <PageHeader title="Balance Sheet" />
         </div>
         <div className="flex gap-3 items-center">
           <select
@@ -146,7 +147,7 @@ export default function BalanceSheetPage() {
                 {equityAndLiabilities.map((item, i) => (
                   <div key={`${item.label}-${i}`} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark">{item.label}</span>
-                    <span className="font-mono text-ui-sm tabular-nums">₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
+                    <span className="font-mono text-ui-sm tabular-nums">{formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
                   </div>
                 ))}
               </div>
@@ -154,7 +155,7 @@ export default function BalanceSheetPage() {
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
               <span className="uppercase tracking-widest text-xs print:text-dark">Total Equity & Liabilities</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-dark">₹ {formatIndianNumber(totalEqLiab, { currency: false })}</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-dark">{formatIndianNumber(totalEqLiab, { currency: false })}</span>
             </div>
           </div>
 
@@ -169,7 +170,7 @@ export default function BalanceSheetPage() {
                 {assetItems.map((item, i) => (
                   <div key={`${item.label}-${i}`} className="flex justify-between items-center px-4 py-2 hover:bg-surface-muted/50 transition-colors text-ui-sm">
                     <span className="text-dark">{item.label}</span>
-                    <span className="font-mono text-ui-sm tabular-nums">₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
+                    <span className="font-mono text-ui-sm tabular-nums">{formatIndianNumber(parseFloat(item.amount), { currency: false })}</span>
                   </div>
                 ))}
               </div>
@@ -177,7 +178,7 @@ export default function BalanceSheetPage() {
 
             <div className="border-t-2 border-dark pt-4 px-4 flex justify-between items-center font-bold bg-surface-muted py-3 rounded-md print:bg-transparent print:border-black print:rounded-none">
               <span className="uppercase tracking-widest text-xs print:text-dark">Total Assets</span>
-              <span className="font-mono text-[15px] tabular-nums print:text-dark">₹ {formatIndianNumber(totalAssetsVal, { currency: false })}</span>
+              <span className="font-mono text-[15px] tabular-nums print:text-dark">{formatIndianNumber(totalAssetsVal, { currency: false })}</span>
             </div>
 
             {balanced ? (
@@ -186,7 +187,7 @@ export default function BalanceSheetPage() {
               </div>
             ) : (
               <div className="px-4 py-2 bg-danger-bg text-danger-deep text-ui-2xs uppercase font-bold tracking-widest text-center rounded-md flex items-center justify-center gap-1.5 print:bg-transparent print:text-dark print:border print:rounded-none">
-                <Icon name="warning" size={14} /> Out of Balance by ₹ {formatIndianNumber(Math.abs(totalEqLiab - totalAssetsVal), { currency: false })}
+                <Icon name="warning" size={14} /> Out of Balance by {formatIndianNumber(Math.abs(totalEqLiab - totalAssetsVal), { currency: false })}
               </div>
             )}
           </div>

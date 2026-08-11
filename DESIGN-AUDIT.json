@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T14:00:32.634Z",
+  "generatedAt": "2026-08-11T14:10:01.916Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -211,7 +211,7 @@
       "hexLiterals": 16,
       "unpairedOutlineNone": 0,
       "focusVisible": 165,
-      "darkClasses": 73,
+      "darkClasses": 37,
       "distinctRadii": 9
     },
     "states": {

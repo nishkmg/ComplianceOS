@@ -51,7 +51,7 @@ export function PostEntryDialog({
             </div>
             <div className="flex justify-between items-center pt-1">
               <span className="text-ui-2xs font-bold text-dark uppercase tracking-widest">Total Amount</span>
-              <span className="text-lg font-bold text-amber">₹ {formatIndianNumber(entry.amount)}</span>
+              <span className="text-lg font-bold text-amber">{formatIndianNumber(entry.amount)}</span>
             </div>
           </div>
 

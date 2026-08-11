@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -73,7 +74,7 @@ export default function CustomerDetailPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-      <h1 className="font-ui text-display-lg font-semibold text-dark tracking-tight">{customer.name}</h1>
+      <PageHeader title={customer.name} />
       <Badge variant="success">Active</Badge>
     </div>
     <p className="font-ui text-ui-sm text-secondary">
@@ -81,7 +82,7 @@ export default function CustomerDetailPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors border-none rounded-md shadow-sm cursor-pointer flex items-center gap-1.5">
+          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 btn btn-primary">
             <Icon name="add" size={14} /> Record Payment
           </button>
         </div>

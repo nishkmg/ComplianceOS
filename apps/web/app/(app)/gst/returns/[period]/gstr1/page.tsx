@@ -8,6 +8,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function Gstr1Page() {
   const params = useParams();
@@ -42,7 +43,7 @@ export default function Gstr1Page() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href={`/gst/returns/${period}`} className="text-mid hover:text-dark" aria-label="Go back"><Icon name="arrow_back" size={20} /></Link>
-        <div><h1 className="font-ui text-display-lg font-semibold text-dark">GSTR-1</h1><p className="font-ui text-ui-sm text-mid mt-1">Outward Supply Details — {month}/{fy}</p></div>
+        <div><PageHeader title="GSTR-1" /><p className="font-ui text-ui-sm text-mid mt-1">Outward Supply Details — {month}/{fy}</p></div>
       </div>
 
       {returns.isLoading ? (
@@ -83,7 +84,7 @@ export default function Gstr1Page() {
             {totals.map(([label, value]) => (
               <div key={label} className="bg-surface border border-border rounded-md p-6 shadow-sm">
                 <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">{label}</p>
-                <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(value)}</p>
+                <p className="font-mono text-2xl font-bold text-dark tabular-nums">{formatIndianNumber(value)}</p>
               </div>
             ))}
           </div>

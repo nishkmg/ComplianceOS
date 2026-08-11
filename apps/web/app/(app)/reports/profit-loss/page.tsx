@@ -10,6 +10,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useSession } from "next-auth/react";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
+import { PageHeader } from "@/components/ui/page-header";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -57,7 +58,7 @@ export default function ProfitLossPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+        <PageHeader title="Profit & Loss Account" />
         <Card className="bg-surface border border-border p-8 text-center">
           <p className="text-danger font-medium mb-4">Failed to load profit & loss</p>
           <Button onClick={() => utils.balances.pAndL.invalidate()}>Retry</Button>
@@ -69,7 +70,7 @@ export default function ProfitLossPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+        <PageHeader title="Profit & Loss Account" />
         <Card className="bg-surface border border-border p-8">
           <div className="space-y-3 animate-pulse">
             <div className="h-6 bg-surface-muted rounded w-1/3" />
@@ -91,7 +92,7 @@ export default function ProfitLossPage() {
             <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
               Financial Performance · FY {fiscalYear}
             </p>
-            <h1 className="font-ui text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+            <PageHeader title="Profit & Loss Account" />
             <p className="font-ui text-ui-sm text-secondary mt-1">Schedule III — Section 129 of Companies Act, 2013</p>
           </div>
         </div>
@@ -112,7 +113,7 @@ export default function ProfitLossPage() {
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
             Financial Performance · FY {fiscalYear}
           </p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Profit & Loss Account</h1>
+          <PageHeader title="Profit & Loss Account" />
           <p className="font-ui text-ui-sm text-secondary mt-1">Schedule III — Section 129 of Companies Act, 2013</p>
         </div>
         <div className="flex gap-3 items-center">
@@ -158,7 +159,7 @@ export default function ProfitLossPage() {
                   <div className="col-span-8 font-ui text-ui-sm text-dark">{item.label}</div>
                   <div className="col-span-2" />
                   <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}
+                    {formatIndianNumber(parseFloat(item.amount), { currency: false })}
                   </div>
                 </div>
               ))}
@@ -177,7 +178,7 @@ export default function ProfitLossPage() {
                     <div className="col-span-8 font-ui text-ui-sm text-dark">{item.label}</div>
                     <div className="col-span-2" />
                     <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark font-medium">
-                      ₹ {formatIndianNumber(parseFloat(item.amount), { currency: false })}
+                      {formatIndianNumber(parseFloat(item.amount), { currency: false })}
                     </div>
                   </div>
                 ))}
@@ -190,7 +191,7 @@ export default function ProfitLossPage() {
             <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest text-dark print:text-dark">III. Total Revenue (I + II)</div>
             <div className="col-span-2" />
             <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">
-              ₹ {formatIndianNumber(totalRevenue, { currency: false })}
+              {formatIndianNumber(totalRevenue, { currency: false })}
             </div>
           </div>
 
@@ -205,7 +206,7 @@ export default function ProfitLossPage() {
                   <div className="col-span-8 font-ui text-ui-sm text-dark">{item.label}</div>
                   <div className="col-span-2" />
                   <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(Math.abs(parseFloat(item.amount)), { currency: false })}
+                    {formatIndianNumber(Math.abs(parseFloat(item.amount)), { currency: false })}
                   </div>
                 </div>
               ))}
@@ -219,7 +220,7 @@ export default function ProfitLossPage() {
                   <div className="col-span-8 font-ui text-ui-sm text-dark">{item.label}</div>
                   <div className="col-span-2" />
                   <div className="col-span-2 text-right font-mono text-ui-sm tabular-nums text-dark font-medium">
-                    ₹ {formatIndianNumber(Math.abs(parseFloat(item.amount)), { currency: false })}
+                    {formatIndianNumber(Math.abs(parseFloat(item.amount)), { currency: false })}
                   </div>
                 </div>
               ))}
@@ -227,7 +228,7 @@ export default function ProfitLossPage() {
                 <div className="col-span-8 font-ui text-ui-xs uppercase tracking-widest text-dark print:text-dark">Total Expenses</div>
                 <div className="col-span-2" />
                 <div className="col-span-2 text-right font-mono text-ui-md tabular-nums text-dark print:text-dark">
-                  ₹ {formatIndianNumber(totalExpenses, { currency: false })}
+                  {formatIndianNumber(totalExpenses, { currency: false })}
                 </div>
               </div>
             </div>
@@ -248,7 +249,7 @@ export default function ProfitLossPage() {
               </p>
             </div>
             <p className={`font-mono text-2xl font-bold tabular-nums ${isProfit ? "text-success" : "text-danger"} print:text-dark`}>
-              ₹ {formatIndianNumber(Math.abs(netProfit), { currency: false })}
+              {formatIndianNumber(Math.abs(netProfit), { currency: false })}
             </p>
           </div>
         </CardContent>

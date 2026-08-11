@@ -105,7 +105,7 @@ export default function PaymentsPage() {
             <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-mid text-ui-lg" />
             <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 border border-border text-mid text-ui-2xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors cursor-pointer bg-transparent rounded-md">
+          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 btn btn-secondary">
             <Icon name="download" size={14} /> Export
           </button>
           <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">

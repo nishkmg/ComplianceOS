@@ -9,6 +9,7 @@ import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ITRReturnDetailPage() {
   const params = useParams();
@@ -51,7 +52,7 @@ export default function ITRReturnDetailPage() {
             <Icon name="chevron_right" className="text-ui-md" />
             <span className="text-dark font-bold">ITR Detail</span>
           </div>
-          <h1 className="font-ui text-display-lg font-semibold text-dark">Financial Year {fy}</h1>
+          <PageHeader title="Financial Year {fy}" />
           <p className="font-ui text-ui-sm text-secondary mt-1">Assessment Year: {ay} · {data.returnType?.toUpperCase() ?? "ITR"}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -71,19 +72,19 @@ export default function ITRReturnDetailPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-right">
             <div>
               <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold">Total Income</p>
-              <p className="font-mono text-ui-md font-bold text-dark tabular-nums mt-1">₹ {formatIndianNumber(data.totalIncome ?? "0")}</p>
+              <p className="font-mono text-ui-md font-bold text-dark tabular-nums mt-1">{formatIndianNumber(data.totalIncome ?? "0")}</p>
             </div>
             <div>
               <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold">Deductions</p>
-              <p className="font-mono text-ui-md font-bold text-dark tabular-nums mt-1">₹ {formatIndianNumber(data.totalDeductions ?? "0")}</p>
+              <p className="font-mono text-ui-md font-bold text-dark tabular-nums mt-1">{formatIndianNumber(data.totalDeductions ?? "0")}</p>
             </div>
             <div>
               <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold">Tax Payable</p>
-              <p className="font-mono text-ui-md font-bold text-danger tabular-nums mt-1">₹ {formatIndianNumber(data.taxPayable ?? "0")}</p>
+              <p className="font-mono text-ui-md font-bold text-danger tabular-nums mt-1">{formatIndianNumber(data.taxPayable ?? "0")}</p>
             </div>
             <div>
               <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold">Balance</p>
-              <p className="font-mono text-ui-md font-bold text-dark tabular-nums mt-1">₹ {formatIndianNumber(data.balancePayable ?? "0")}</p>
+              <p className="font-mono text-ui-md font-bold text-dark tabular-nums mt-1">{formatIndianNumber(data.balancePayable ?? "0")}</p>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { KpiTile } from "@/components/ui/kpi-tile";
 import { Donut } from "@/components/charts";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ReceivablesPage() {
   const { activeFy } = useFiscalYear();
@@ -51,7 +52,7 @@ export default function ReceivablesPage() {
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">
             Treasury
           </p>
-          <h1 className="font-ui text-display-lg font-semibold text-dark leading-tight">Receivables Summary</h1>
+          <PageHeader title="Receivables Summary" />
           <p className="font-ui text-ui-sm text-secondary mt-1">
             Outstanding invoices and aging, per customer.
           </p>

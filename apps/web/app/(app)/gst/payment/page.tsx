@@ -8,6 +8,7 @@ import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface ChallanDetail {
   taxType: string;
@@ -77,8 +78,8 @@ export default function GstPaymentPage() {
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <h1 className="font-ui text-display-lg font-semibold text-dark">GST Payment</h1>
-        <Link href="/gst/payment/history" className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline">
+        <PageHeader title="GST Payment" />
+        <Link href="/gst/payment/history" className="inline-flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline">
           <Icon name="history" className="text-ui-md" /> Payment History
         </Link>
       </div>
@@ -122,7 +123,7 @@ export default function GstPaymentPage() {
                 <h3 className="font-ui text-ui-xs font-bold text-dark uppercase tracking-widest">2 · Challan Preview</h3>
                 <p className="font-mono text-ui-2xs text-mid mt-1">{challan.challanNumber} · {challan.challanDate} · FY {challan.fiscalYear}</p>
               </div>
-              <p className="font-mono text-ui-md font-bold text-dark">₹ {formatIndianNumber(challan.totalAmount)}</p>
+              <p className="font-mono text-ui-md font-bold text-dark">{formatIndianNumber(challan.totalAmount)}</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">

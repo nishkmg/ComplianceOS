@@ -6,6 +6,7 @@ import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface ParsedReceipt {
   vendorName: string | null;
@@ -90,7 +91,7 @@ export default function ReceiptScanPage() {
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Receipts</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Scan Receipt</h1>
+          <PageHeader title="Scan Receipt" />
           <p className="text-ui-sm text-secondary font-ui mt-1">Upload a payment receipt; the extracted fields create an expense entry.</p>
         </div>
       </header>
@@ -102,7 +103,7 @@ export default function ReceiptScanPage() {
             <p className="font-ui text-sm text-mid">{file ? file.name : "Click to upload a receipt"}</p>
             <input ref={inputRef} type="file" accept="image/*,.pdf" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </div>
-          <button onClick={handleScan} disabled={!file || uploading} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+          <button onClick={handleScan} disabled={!file || uploading} className="w-full py-3 btn btn-primary disabled:opacity-50">
             {uploading ? "Uploading…" : "Scan Receipt"}
           </button>
         </div>

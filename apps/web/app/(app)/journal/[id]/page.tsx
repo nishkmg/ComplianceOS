@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface Line { id: string; accountId: string; debit: string; credit: string; description: string | null; }
 interface Entry { id: string; entryNumber: string; date: string; narration: string; fiscalYear: string; status: "draft" | "posted" | "voided"; lines: Line[]; }
@@ -55,7 +56,7 @@ export default function JournalEntryDetailPage() {
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer" aria-label="Go back" ><Icon name="arrow_back" size={20} /></button>
           <div>
-            <h1 className="font-ui text-display-lg font-semibold text-dark">{entry.entryNumber}</h1>
+            <PageHeader title={entry.entryNumber} />
             <p className="text-ui-sm text-secondary font-ui mt-1">{entry.fiscalYear}</p>
           </div>
         </div>

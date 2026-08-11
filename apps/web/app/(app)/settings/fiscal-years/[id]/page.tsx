@@ -7,6 +7,7 @@ import Link from "next/link";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const fmtDate = (d: string) =>
   new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
@@ -57,7 +58,7 @@ export default function FiscalYearDetailPage() {
         <div className="text-left">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Fiscal Year Detail</p>
           <div className="flex items-center gap-4 mb-3">
-            <h1 className="font-ui text-display-lg font-semibold text-dark tracking-tight">FY {fy.year}</h1>
+            <PageHeader title="FY {fy.year}" />
             <span className={`font-ui text-ui-2xs uppercase tracking-widest px-3 py-1 rounded-md font-bold ${isClosed ? "bg-surface-muted text-mid" : "bg-success-bg text-success-deep"}`}>{fy.status}</span>
           </div>
           <p className="text-ui-sm text-secondary font-ui mt-1">Reporting period: {fmtDate(fy.startDate)} — {fmtDate(fy.endDate)}</p>

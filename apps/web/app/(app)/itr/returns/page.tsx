@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ItrReturnsListPage() {
   const { fiscalYears } = useFiscalYear();
@@ -11,7 +12,7 @@ export default function ItrReturnsListPage() {
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">ITR Returns</h1>
+      <PageHeader title="ITR Returns" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {fiscalYears.map(fy => (
           <Link key={fy.year} href={`/itr/returns/${fy.year}`} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">

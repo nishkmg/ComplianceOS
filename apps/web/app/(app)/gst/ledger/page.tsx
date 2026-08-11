@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { PageHeader } from "@/components/ui/page-header";
 
 const sections = [
   { href: "/gst/ledger/cash", label: "Cash Ledger", desc: "View GST challan payments and cash balance", icon: "account_balance" },
@@ -12,7 +13,7 @@ const sections = [
 export default function GstLedgerPage() {
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">GST Ledgers</h1>
+      <PageHeader title="GST Ledgers" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {sections.map(s => (
           <Link key={s.href} href={s.href} className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">

@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -29,7 +30,7 @@ export default function ESIChallanPage() {
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 backdrop-blur-sm -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Statutory Filings</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">ESI Challan Report</h1>
+          <PageHeader title="ESI Challan Report" />
           <p className="text-ui-sm text-secondary font-ui mt-1">ESI contribution totals for monthly filing.</p>
         </div>
         <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
@@ -59,15 +60,15 @@ export default function ESIChallanPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-surface p-5 border border-border shadow-sm">
               <p className="text-xs font-bold text-mid uppercase mb-1">Employee Contribution (0.75%)</p>
-              <p className="text-2xl font-mono font-bold text-dark">₹ {formatIndianNumber(esiEe)}</p>
+              <p className="text-2xl font-mono font-bold text-dark">{formatIndianNumber(esiEe)}</p>
             </div>
             <div className="bg-surface p-5 border border-border shadow-sm">
               <p className="text-xs font-bold text-mid uppercase mb-1">Employer Contribution (3.25%)</p>
-              <p className="text-2xl font-mono font-bold text-dark">₹ {formatIndianNumber(esiEr)}</p>
+              <p className="text-2xl font-mono font-bold text-dark">{formatIndianNumber(esiEr)}</p>
             </div>
             <div className="bg-surface p-5 border border-border border-l-4 border-l-amber shadow-sm">
               <p className="text-xs font-bold text-amber uppercase mb-1">Total Payable</p>
-              <p className="text-2xl font-mono font-bold text-dark">₹ {formatIndianNumber(total)}</p>
+              <p className="text-2xl font-mono font-bold text-dark">{formatIndianNumber(total)}</p>
             </div>
             <div className="bg-surface p-5 border border-border shadow-sm">
               <p className="text-xs font-bold text-mid uppercase mb-1">Status</p>

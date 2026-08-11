@@ -8,6 +8,7 @@ import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -45,7 +46,7 @@ export default function ProcessPayrollPage() {
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
         <div className="flex-1">
-          <h1 className="font-ui text-display-lg font-semibold text-dark">Process Payroll</h1>
+          <PageHeader title="Process Payroll" />
           <p className="font-ui text-ui-sm text-mid mt-1">Run payroll per employee for the selected period, then finalize to post the salary journal.</p>
         </div>
         <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
@@ -111,7 +112,7 @@ export default function ProcessPayrollPage() {
                   <div key={run.id} className="flex items-center justify-between px-6 py-4">
                     <div>
                       <p className="font-mono text-ui-xs text-amber">{run.payrollNumber}</p>
-                      <p className="font-ui text-ui-sm text-dark mt-0.5">{run.employeeName} · Net ₹ {formatIndianNumber(run.netPay)}</p>
+                      <p className="font-ui text-ui-sm text-dark mt-0.5">{run.employeeName} · Net {formatIndianNumber(run.netPay)}</p>
                       <p className="font-ui text-ui-2xs text-mid capitalize">{run.status}</p>
                     </div>
                     {run.status === "calculated" && (

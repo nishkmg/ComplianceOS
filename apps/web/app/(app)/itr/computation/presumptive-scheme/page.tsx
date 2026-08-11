@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 const sectionMeta = {
   "44ad": { businessType: "trading", label: "Section 44AD", sub: "Eligible Business", hint: "6% deemed income on turnover ≤ ₹3 crore" },
@@ -33,7 +34,7 @@ export default function ITRPresumptivePage() {
           <Icon name="calculate" className="text-ui-md" />
           Tax Calculation Engine
         </p>
-        <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Presumptive Taxation Model</h1>
+        <PageHeader title="Presumptive Taxation Model" />
         <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">
           Evaluate deemed income under sections 44AD (Business) and 44ADA (Profession). Eligibility and presumptive income are computed from your inputs.
         </p>
@@ -97,7 +98,7 @@ export default function ITRPresumptivePage() {
               <div className="space-y-6">
                 <div className="flex justify-between items-end border-b focus:border-focus pb-4">
                   <span className="font-ui text-ui-sm text-white">Presumptive Income</span>
-                  <span className="font-mono text-2xl font-bold text-white">₹ {formatIndianNumber(presumptiveIncome)}</span>
+                  <span className="font-mono text-2xl font-bold text-white">{formatIndianNumber(presumptiveIncome)}</span>
                 </div>
 
                 <div className="flex justify-between items-center text-white">

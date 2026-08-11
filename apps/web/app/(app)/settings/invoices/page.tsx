@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function InvoiceConfigPage() {
   const { activeFy } = useFiscalYear();
@@ -72,7 +73,7 @@ export default function InvoiceConfigPage() {
       <header className="sticky top-0 z-30 bg-page-bg/90 backdrop-blur-md border-b-[0.5px] border-border px-8 py-8 flex justify-between items-end -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-ui-2xs text-amber uppercase tracking-widest mb-2 font-bold">Workspace Configuration · FY {activeFy}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark leading-tight">Invoice Settings</h1>
+          <PageHeader title="Invoice Settings" />
           <p className="text-ui-sm text-secondary font-ui mt-1">Define document prefixes, statutory disclosures, and bank account mappings.</p>
         </div>
         <div className="flex gap-4">

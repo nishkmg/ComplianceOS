@@ -9,6 +9,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { assessmentYearFromFinancialYear } from "@/lib/assessment-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const installmentLabels: Record<number, string> = {
   1: "1st Instalment",
@@ -30,7 +31,7 @@ export default function ITRAdvanceTaxPage() {
 
   const payAdvanceTax = api.itrPayment.payAdvanceTax.useMutation({
     onSuccess: (d) => {
-      showToast.success(`Payment of ₹${formatIndianNumber(d.paidAmount)} recorded for instalment ${d.installmentId.slice(0, 8)}.`);
+      showToast.success(`Payment of {formatIndianNumber(d.paidAmount)} recorded for instalment ${d.installmentId.slice(0, 8)}.`);
       setShowRecordModal(false);
       setRecordForm({ installmentNumber: 1, amount: "", challanNumber: "", date: "" });
       setErrors({});
@@ -87,7 +88,7 @@ export default function ITRAdvanceTaxPage() {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Tax Compliance Calendar · AY {assessmentYear}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Advance Tax Tracking</h1>
+          <PageHeader title="Advance Tax Tracking" />
           <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">Ensure timely payment of advance tax instalments to avoid penal interest under Section 234B and 234C.</p>
         </div>
         <div className="flex gap-3">
@@ -128,11 +129,11 @@ export default function ITRAdvanceTaxPage() {
               <div className="text-right flex gap-6">
                 <div>
                   <span className="font-ui text-ui-2xs uppercase text-light block">Paid</span>
-                  <span className="font-mono text-ui-md font-bold text-success">₹ {formatIndianNumber(totalPaid)}</span>
+                  <span className="font-mono text-ui-md font-bold text-success">{formatIndianNumber(totalPaid)}</span>
                 </div>
                 <div>
                   <span className="font-ui text-ui-2xs uppercase text-light block">Balance</span>
-                  <span className="font-mono text-ui-md font-bold text-danger">₹ {formatIndianNumber(totalBalance)}</span>
+                  <span className="font-mono text-ui-md font-bold text-danger">{formatIndianNumber(totalBalance)}</span>
                 </div>
               </div>
             </div>
@@ -147,7 +148,7 @@ export default function ITRAdvanceTaxPage() {
               </div>
               <div className="text-right">
                 <p className="text-light font-ui text-ui-2xs uppercase tracking-[0.2em] mb-2">Estimated Net Tax</p>
-                <p className="font-mono text-4xl font-bold text-white">₹ {formatIndianNumber(totalPayable)}</p>
+                <p className="font-mono text-4xl font-bold text-white">{formatIndianNumber(totalPayable)}</p>
               </div>
             </section>
 

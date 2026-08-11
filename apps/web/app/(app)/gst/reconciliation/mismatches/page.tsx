@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const MONTHS = [
   { value: 1, label: "January" }, { value: 2, label: "February" }, { value: 3, label: "March" },
@@ -42,7 +43,7 @@ export default function GSTMismatchesPage() {
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <h1 className="font-ui text-display-lg font-semibold text-dark">2B Mismatches</h1>
+        <PageHeader title="2B Mismatches" />
         <div className="flex items-center gap-3">
           <select aria-label="Period month" className="border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={periodMonth} onChange={(e) => setPeriodMonth(Number(e.target.value))}>
             {MONTHS.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}

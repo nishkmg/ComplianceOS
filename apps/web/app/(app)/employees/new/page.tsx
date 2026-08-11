@@ -5,6 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function NewEmployeePage() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function NewEmployeePage() {
           </button>
           <div>
             <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">HR Management</p>
-            <h1 className="font-ui text-display-lg font-semibold text-dark">Statutory Register</h1>
+            <PageHeader title="Statutory Register" />
           </div>
         </div>
         <div className="flex gap-4">

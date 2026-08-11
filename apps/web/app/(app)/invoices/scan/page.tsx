@@ -6,6 +6,7 @@ import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface Parsed {
   vendorName: string | null;
@@ -97,7 +98,7 @@ export default function ScanInvoicePage() {
 
   return (
     <div className="max-w-[600px] mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">Scan Invoice</h1>
+      <PageHeader title="Scan Invoice" />
 
       {!scanId ? (
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
@@ -106,7 +107,7 @@ export default function ScanInvoicePage() {
             <p className="font-ui text-sm text-mid">{file ? file.name : "Click to upload an invoice or receipt"}</p>
             <input ref={inputRef} type="file" accept="image/*,.pdf" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </div>
-          <button onClick={handleScan} disabled={!file || uploading} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+          <button onClick={handleScan} disabled={!file || uploading} className="w-full py-3 btn btn-primary disabled:opacity-50">
             {uploading ? "Uploading…" : "Scan Document"}
           </button>
         </div>

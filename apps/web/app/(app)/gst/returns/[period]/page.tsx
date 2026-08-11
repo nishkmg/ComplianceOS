@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
 
 const forms = [
   { id: "gstr1", name: "GSTR-1", desc: "Outward supply details — auto-filed from invoices", status: "draft" as const },
@@ -21,7 +22,7 @@ export default function PeriodPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/gst/returns" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
-        <h1 className="font-ui text-display-lg font-semibold text-dark">Period: {month}/{fy}</h1>
+        <PageHeader title="Period: {month}/{fy}" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {forms.map(f => (

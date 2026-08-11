@@ -30,7 +30,7 @@ export default function SupportPage() {
           <label htmlFor="support-message" className="font-ui text-ui-2xs text-light uppercase font-bold">Message</label>
           <textarea id="support-message" rows={6} className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber resize-none" value={message} onChange={e => setMessage(e.target.value)} placeholder="Describe your issue in detail…" />
         </div>
-        <button onClick={handleSubmit} disabled={!subject.trim() || !message.trim()} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-40">
+        <button onClick={handleSubmit} disabled={!subject.trim() || !message.trim()} className="w-full py-3 btn btn-primary disabled:opacity-40">
           Compose in Email Client
         </button>
         <p className="font-ui text-ui-2xs text-light">

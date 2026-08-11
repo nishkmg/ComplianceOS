@@ -26,7 +26,7 @@ export default function PayrollPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <PageHeader title="Payroll" />
-        <Link href="/payroll/process" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="add" size={14} /> Process Payroll</Link>
+        <Link href="/payroll/process" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline"><Icon name="add" size={14} /> Process Payroll</Link>
       </div>
       {isLoading ? <TableSkeleton rows={6} /> : runs.length === 0 ? (
         <EmptyState icon="payments" title="No payroll runs" description="Process payroll to create runs." />

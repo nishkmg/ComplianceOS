@@ -9,6 +9,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { assessmentYearFromFinancialYear } from "@/lib/assessment-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ITRSelfAssessmentPage() {
   const { activeFy } = useFiscalYear();
@@ -22,7 +23,7 @@ export default function ITRSelfAssessmentPage() {
 
   const paySelfAssessmentTax = api.itrPayment.paySelfAssessmentTax.useMutation({
     onSuccess: (d) => {
-      showToast.success(`Self-assessment tax of ₹${formatIndianNumber(d.paidAmount)} recorded (challan ${d.challanNumber}).`);
+      showToast.success(`Self-assessment tax of {formatIndianNumber(d.paidAmount)} recorded (challan ${d.challanNumber}).`);
       setForm({ amount: "", challanNumber: "", date: "" });
       setErrors({});
       void utils.itrPayment.getSelfAssessmentDetails.invalidate();
@@ -69,7 +70,7 @@ export default function ITRSelfAssessmentPage() {
       {/* Page Header */}
       <div className="mb-12">
         <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">AY {assessmentYear} · FY {activeFy}</p>
-        <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Self-Assessment Tax</h1>
+        <PageHeader title="Self-Assessment Tax" />
         <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">Review your total tax liability, apply available credits, and record the final self-assessment tax payment before filing.</p>
       </div>
 
@@ -89,12 +90,12 @@ export default function ITRSelfAssessmentPage() {
                 {rows.map((row) => (
                   <div key={row.label} className="flex justify-between items-center px-6 py-4">
                     <span className="font-ui text-ui-xs uppercase tracking-wider text-mid">{row.label}</span>
-                    <span className="text-dark tabular-nums">₹ {formatIndianNumber(row.value)}</span>
+                    <span className="text-dark tabular-nums">{formatIndianNumber(row.value)}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center px-6 py-5 bg-surface-muted font-bold">
                   <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Balance Payable</span>
-                  <span className="text-danger tabular-nums">₹ {formatIndianNumber(balancePayable)}</span>
+                  <span className="text-danger tabular-nums">{formatIndianNumber(balancePayable)}</span>
                 </div>
               </div>
             )}

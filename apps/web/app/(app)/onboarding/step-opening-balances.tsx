@@ -168,8 +168,8 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
               <tfoot>
                 <tr className="bg-surface-muted font-bold border-t-2 border-on-surface">
                   <td className="py-4 px-6 font-ui text-ui-sm uppercase tracking-widest">Totals</td>
-                  <td className="py-4 px-6 text-right font-mono text-sm">₹ {formatIndianNumber(totals.dr)}</td>
-                  <td className="py-4 px-6 text-right font-mono text-sm">₹ {formatIndianNumber(totals.cr)}</td>
+                  <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(totals.dr)}</td>
+                  <td className="py-4 px-6 text-right font-mono text-sm">{formatIndianNumber(totals.cr)}</td>
                 </tr>
               </tfoot>
             </table>
@@ -207,7 +207,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
         <button
           onClick={handleContinue}
           disabled={saving || (mode === "migration" && totals.diff > 0.01)}
-          className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50"
+          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
         >
           {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
           <Icon name="rocket_launch" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />

@@ -10,6 +10,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const now = new Date();
 const CURRENT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -58,7 +59,7 @@ export default function EmployeeDetailPage() {
     <div className="max-w-[1000px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
-        <div><h1 className="font-ui text-display-lg font-semibold text-dark">{e.firstName} {e.lastName || ""}</h1><p className="font-mono text-ui-xs text-mid mt-0.5">{e.employeeCode} · {e.designation || "—"}</p></div>
+        <div><PageHeader title={`${e.firstName} ${e.lastName || ""}`} /><p className="font-mono text-ui-xs text-mid mt-0.5">{e.employeeCode} · {e.designation || "—"}</p></div>
         <Badge variant={e.status === "active" ? "success" : "gray"}>{e.status}</Badge>
       </div>
 
@@ -72,7 +73,7 @@ export default function EmployeeDetailPage() {
       </div>
 
       <div className="flex gap-3">
-        <Link href={`/employees/${e.id}/salary`} className="inline-flex items-center gap-2 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md shadow-sm no-underline"><Icon name="payments" size={14} /> Salary Structure</Link>
+        <Link href={`/employees/${e.id}/salary`} className="inline-flex items-center gap-2 px-4 py-2 btn btn-primary no-underline"><Icon name="payments" size={14} /> Salary Structure</Link>
         <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowAdvanceForm(!showAdvanceForm)}>
           <Icon name="add" className="text-ui-md" /> {showAdvanceForm ? "Close" : "New Advance"}
         </Button>
@@ -93,7 +94,7 @@ export default function EmployeeDetailPage() {
             </div>
             <div className="flex flex-col gap-2">
               <span className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Monthly Deduction</span>
-              <p className="font-mono text-ui-sm font-bold text-dark pt-2">₹ {formatIndianNumber(monthlyDeduction)}</p>
+              <p className="font-mono text-ui-sm font-bold text-dark pt-2">{formatIndianNumber(monthlyDeduction)}</p>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="adv-date" className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Advance Date</label>

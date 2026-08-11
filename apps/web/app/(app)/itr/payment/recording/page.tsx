@@ -7,6 +7,7 @@ import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { assessmentYearFromFinancialYear } from "@/lib/assessment-year";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 const PAYMENT_TYPES = [
   { id: "100", name: "Advance Tax", code: "100" },
@@ -62,7 +63,7 @@ export default function ITRRecordPaymentPage() {
             <Icon name="chevron_right" className="text-ui-md" />
             <span>Tax Payments</span>
           </p>
-          <h1 className="font-ui text-display-lg font-semibold text-dark">Record ITR Payment</h1>
+          <PageHeader title="Record ITR Payment" />
           <p className="font-ui text-ui-sm text-mid mt-1">AY {assessmentYear} — enter the challan details from your bank payment.</p>
         </div>
         <div className="flex items-center gap-4">

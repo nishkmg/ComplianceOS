@@ -4,6 +4,7 @@ import { Icon } from '@/components/ui/icon';
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface StockItem { id: string; productId: string; quantity: string; remainingQuantity: string; unitCost: string; totalValue: string; receiptDate: string; }
 
@@ -14,7 +15,7 @@ export default function StockPage() {
   if (isLoading) return <div className="flex items-center justify-center py-20"><Icon name="hourglass" className="text-lighter animate-spin text-3xl" /></div>;
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">Stock</h1>
+      <PageHeader title="Stock" />
       {stock.length === 0 ? <EmptyState icon="inventory_2" title="No stock" description="Stock layers will appear here once inventory movements are recorded." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse"><thead><tr className="bg-surface-muted border-b border-border">

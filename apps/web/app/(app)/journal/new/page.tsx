@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 const VOUCHER_TYPES = ["Journal Entry", "Receipt Voucher", "Payment Voucher", "Contra Voucher"] as const;
 
@@ -286,7 +287,7 @@ export default function NewJournalEntryPage() {
             <Icon name="arrow_back" size={20} />
           </button>
           <div>
-            <h1 className="font-ui text-display-lg font-semibold text-dark">New Journal Entry</h1>
+            <PageHeader title="New Journal Entry" />
             <p className="text-ui-sm text-secondary font-ui mt-1">
               Record a new transaction in the general ledger{gstConfig.tdsApplicable ? " · TDS applicable" : ""}{gstConfig.gstRegistration === "none" ? " · GST not registered" : ""}
             </p>

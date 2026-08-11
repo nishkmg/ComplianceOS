@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Icon } from '@/components/ui/icon';
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function PayrollSuccessPage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function PayrollSuccessPage() {
           <div className="flex flex-col items-center text-center gap-4">
             <Icon name="check_circle" className="text-[56px] text-amber" />
             <div className="space-y-3">
-              <h1 className="font-ui text-display-lg font-semibold text-dark">Payroll Processed</h1>
+              <PageHeader title="Payroll Processed" />
               <p className="font-ui text-sm font-medium text-ui-md text-mid max-w-md mx-auto leading-relaxed">
                 Salaries for October 2024 have been calculated. Payslips are now available for employee download.
               </p>

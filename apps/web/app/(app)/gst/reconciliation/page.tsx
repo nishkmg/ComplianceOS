@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function GstReconciliationPage() {
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">GST Reconciliation</h1>
+      <PageHeader title="GST Reconciliation" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link href="/gst/reconciliation/mismatches" className="block bg-surface border border-border rounded-md p-6 shadow-sm hover:shadow-md transition-shadow no-underline">
           <Icon name="compare_arrows" className="text-3xl text-amber mb-4" />

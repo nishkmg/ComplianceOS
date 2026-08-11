@@ -6,6 +6,7 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface Account {
   id: string;
@@ -31,8 +32,8 @@ export default function AccountsPage() {
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
-        <div><h1 className="font-ui text-display-lg font-semibold text-dark">Accounts</h1></div>
-        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
+        <div><PageHeader title="Accounts" /></div>
+        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline">
           <Icon name="add" size={14} /> New Account
         </Link>
       </div>

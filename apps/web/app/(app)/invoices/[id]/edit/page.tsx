@@ -5,6 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function EditInvoicePage() {
   const params = useParams(); const router = useRouter();
@@ -50,11 +51,11 @@ export default function EditInvoicePage() {
     <div className="max-w-[600px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
-        <h1 className="font-ui text-display-lg font-semibold text-dark">Edit Invoice</h1>
+        <PageHeader title="Edit Invoice" />
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="space-y-1.5"><label className="font-ui text-ui-2xs text-light uppercase font-bold">Customer Name</label><input className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} /></div>
-        <button onClick={handleSave} disabled={modify.isPending} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+        <button onClick={handleSave} disabled={modify.isPending} className="w-full py-3 btn btn-primary disabled:opacity-50">
           {modify.isPending ? "Saving…" : "Save"}
         </button>
       </div>

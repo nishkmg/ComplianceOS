@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function EmployeeSalaryPage() {
   const params = useParams();
@@ -66,7 +67,7 @@ export default function EmployeeSalaryPage() {
     <div className="space-y-6">
       <div>
         <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Employee Profile</p>
-        <h1 className="font-ui text-display-lg font-semibold text-dark">Salary Structure</h1>
+        <PageHeader title="Salary Structure" />
         <p className="text-ui-sm text-secondary font-ui mt-1">Configure employee compensation</p>
       </div>
 

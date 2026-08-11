@@ -3,6 +3,7 @@
 import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface LiabilityEntry {
   id: string; ledgerType: "liability"; taxType: string | null; liabilityType: string | null;
@@ -18,7 +19,7 @@ export default function LiabilityLedgerPage() {
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">Liability Ledger</h1>
+      <PageHeader title="Liability Ledger" />
       {entries.length === 0 ? <EmptyState icon="receipt" title="No entries" description="Output GST liability and set-off entries appear here." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">

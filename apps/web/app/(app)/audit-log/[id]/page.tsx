@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function AuditEntryPage() {
   const params = useParams();
@@ -32,7 +33,7 @@ export default function AuditEntryPage() {
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
         <div>
-          <h1 className="font-ui text-display-lg font-semibold text-dark">{e.eventType?.replace(/_/g, " ")}</h1>
+          <PageHeader title={e.eventType?.replace(/_/g, " ")} />
           <p className="font-mono text-ui-xs text-mid mt-0.5">{e.id}</p>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -55,7 +56,7 @@ export default function TeamSalaryPreviewPage() {
       <div className="flex justify-between items-end gap-4 border-b border-border pb-6 mb-8">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Payroll Management · FY {activeFy}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Salary Preview</h1>
+          <PageHeader title="Salary Preview" />
           <p className="text-ui-sm text-secondary font-ui mt-1">Review payroll runs for the selected period before final authorization.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -85,9 +86,9 @@ export default function TeamSalaryPreviewPage() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 border border-border bg-surface rounded-md overflow-hidden shadow-sm mb-8">
             <div className="p-6 border-r border-border"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Runs</div><div className="font-mono text-xl font-bold text-dark">{rows.length}</div></div>
-            <div className="p-6 border-r border-border bg-amber-soft"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Gross</div><div className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(totals.gross)}</div></div>
-            <div className="p-6 border-r border-border"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Deductions</div><div className="font-mono text-xl font-bold text-mid">₹ {formatIndianNumber(totals.deductions)}</div></div>
-            <div className="p-6 bg-surface-muted border-t-2 border-t-amber"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Net Payable</div><div className="font-mono text-xl font-bold text-primary">₹ {formatIndianNumber(totals.net)}</div></div>
+            <div className="p-6 border-r border-border bg-amber-soft"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Gross</div><div className="font-mono text-xl font-bold text-dark">{formatIndianNumber(totals.gross)}</div></div>
+            <div className="p-6 border-r border-border"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Total Deductions</div><div className="font-mono text-xl font-bold text-mid">{formatIndianNumber(totals.deductions)}</div></div>
+            <div className="p-6 bg-surface-muted border-t-2 border-t-amber"><div className="font-ui text-ui-2xs text-light mb-1 font-bold uppercase">Net Payable</div><div className="font-mono text-xl font-bold text-primary">{formatIndianNumber(totals.net)}</div></div>
           </div>
 
           <div className="bg-surface border border-border shadow-sm overflow-hidden">
@@ -107,8 +108,8 @@ export default function TeamSalaryPreviewPage() {
                     <tr key={r.id} className="hover:bg-surface-muted/30 transition-colors">
                       <td className="px-6 py-4 font-mono text-ui-xs text-amber">{r.payrollNumber}</td>
                       <td className="px-4 py-4 font-ui text-ui-sm font-bold text-dark">{r.employeeName}</td>
-                      <td className="px-4 py-4 text-right text-dark tabular-nums">₹ {formatIndianNumber(r.grossEarnings)}</td>
-                      <td className="px-4 py-4 text-right font-bold text-dark tabular-nums">₹ {formatIndianNumber(r.netPay)}</td>
+                      <td className="px-4 py-4 text-right text-dark tabular-nums">{formatIndianNumber(r.grossEarnings)}</td>
+                      <td className="px-4 py-4 text-right font-bold text-dark tabular-nums">{formatIndianNumber(r.netPay)}</td>
                       <td className="px-4 py-4">
                         <span className={`inline-block px-2 py-0.5 text-ui-2xs font-bold uppercase tracking-wider border rounded-md ${r.status === "finalized" ? "bg-success-bg text-success-deep border-success/20" : r.status === "calculated" ? "bg-amber-soft text-amber border-amber-bright/30" : "bg-surface-muted text-mid border-border"}`}>
                           {r.status}

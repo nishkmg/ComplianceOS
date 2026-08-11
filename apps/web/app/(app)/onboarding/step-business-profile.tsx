@@ -194,7 +194,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
           <button className="font-ui text-ui-sm text-ui-sm text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
             Save as Draft
           </button>
-          <button className="bg-amber text-white dark:text-amber-ink font-ui text-ui-sm text-ui-sm py-3 px-8 rounded-md hover:bg-amber-hover transition-colors flex items-center gap-2 group shadow-sm border-none cursor-pointer disabled:opacity-50" type="submit" disabled={isSubmitting}>
+          <button className="btn btn-primary py-3 px-8 group disabled:opacity-50" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Establishing Profile..." : "Continue to Setup"}
             <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
           </button>

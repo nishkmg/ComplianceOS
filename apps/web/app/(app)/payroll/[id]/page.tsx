@@ -7,6 +7,7 @@ import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function PayrollDetailPage() {
   const params = useParams();
@@ -42,7 +43,7 @@ export default function PayrollDetailPage() {
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
         <div className="flex-1">
-          <h1 className="font-ui text-display-lg font-semibold text-dark">Payroll Run</h1>
+          <PageHeader title="Payroll Run" />
           <p className="font-mono text-ui-xs text-mid mt-0.5">{run.payrollNumber} · {run.month}/{run.year}</p>
         </div>
         {run.status === "calculated" && (
@@ -59,15 +60,15 @@ export default function PayrollDetailPage() {
         </div>
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Gross Earnings</p>
-          <p className="font-mono text-lg font-bold text-dark tabular-nums">₹ {formatIndianNumber(run.grossEarnings)}</p>
+          <p className="font-mono text-lg font-bold text-dark tabular-nums">{formatIndianNumber(run.grossEarnings)}</p>
         </div>
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Gross Deductions</p>
-          <p className="font-mono text-lg font-bold text-danger tabular-nums">₹ {formatIndianNumber(run.grossDeductions)}</p>
+          <p className="font-mono text-lg font-bold text-danger tabular-nums">{formatIndianNumber(run.grossDeductions)}</p>
         </div>
         <div className="bg-dark border focus:border-focus rounded-md p-6 shadow-lg">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold mb-2">Net Pay</p>
-          <p className="font-mono text-lg font-bold text-amber tabular-nums">₹ {formatIndianNumber(run.netPay)}</p>
+          <p className="font-mono text-lg font-bold text-amber tabular-nums">{formatIndianNumber(run.netPay)}</p>
         </div>
       </div>
 

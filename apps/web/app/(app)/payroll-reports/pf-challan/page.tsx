@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -34,7 +35,7 @@ export default function PFChallanPage() {
             <Icon name="chevron_right" className="text-ui-xs" />
             <span>Statutory Filings</span>
           </div>
-          <h1 className="font-ui text-2xl font-semibold text-dark">PF Challan Report</h1>
+          <PageHeader title="PF Challan Report" />
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
@@ -67,19 +68,19 @@ export default function PFChallanPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
                 <h3 className="text-xs font-bold text-mid uppercase tracking-wider">PF Employee (12%)</h3>
-                <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(pfEe)}</p>
+                <p className="font-mono text-2xl font-bold text-dark mt-2">{formatIndianNumber(pfEe)}</p>
               </div>
               <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
                 <h3 className="text-xs font-bold text-mid uppercase tracking-wider">PF Employer (12%)</h3>
-                <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(pfEr)}</p>
+                <p className="font-mono text-2xl font-bold text-dark mt-2">{formatIndianNumber(pfEr)}</p>
               </div>
               <div className="bg-surface border border-border p-5 rounded-md shadow-sm text-left">
                 <h3 className="text-xs font-bold text-mid uppercase tracking-wider">EPS (8.33%)</h3>
-                <p className="font-mono text-2xl font-bold text-dark mt-2">₹ {formatIndianNumber(eps)}</p>
+                <p className="font-mono text-2xl font-bold text-dark mt-2">{formatIndianNumber(eps)}</p>
               </div>
               <div className="bg-dark border focus:border-focus p-5 rounded-md shadow-sm text-left">
                 <h3 className="text-xs font-bold text-light uppercase tracking-wider">Total Payable</h3>
-                <p className="font-mono text-2xl font-bold text-amber mt-2">₹ {formatIndianNumber(total)}</p>
+                <p className="font-mono text-2xl font-bold text-amber mt-2">{formatIndianNumber(total)}</p>
               </div>
             </div>
 

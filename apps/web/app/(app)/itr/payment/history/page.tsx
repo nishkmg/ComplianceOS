@@ -6,6 +6,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { assessmentYearFromFinancialYear } from "@/lib/assessment-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ITRPaymentHistoryPage() {
   const { activeFy } = useFiscalYear();
@@ -21,12 +22,12 @@ export default function ITRPaymentHistoryPage() {
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">AY {assessmentYear}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark mb-2">ITR Payment History</h1>
+          <PageHeader title="ITR Payment History" />
           <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">Advance tax and self-assessment payments recorded against this assessment year.</p>
         </div>
         <div className="bg-surface border border-border rounded-md px-6 py-4 shadow-sm text-right">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Total Paid</p>
-          <p className="font-mono text-xl font-bold text-success tabular-nums">₹ {formatIndianNumber(totalPaid)}</p>
+          <p className="font-mono text-xl font-bold text-success tabular-nums">{formatIndianNumber(totalPaid)}</p>
         </div>
       </div>
 
@@ -67,7 +68,7 @@ export default function ITRPaymentHistoryPage() {
                       </span>
                     </td>
                     <td className="py-4 px-6 text-mid">{p.installmentNumber ? `Instalment ${p.installmentNumber}` : "—"}</td>
-                    <td className="py-4 px-6 text-right font-bold text-dark">₹ {formatIndianNumber(p.amount)}</td>
+                    <td className="py-4 px-6 text-right font-bold text-dark">{formatIndianNumber(p.amount)}</td>
                     <td className="py-4 px-6 text-mid">{p.challanNumber ?? "—"}</td>
                     <td className="py-4 px-6 text-mid">{p.challanDate ? String(p.challanDate).slice(0, 10) : "—"}</td>
                     <td className="py-4 px-6 text-mid">{p.paidDate ? String(p.paidDate).slice(0, 10) : "—"}</td>

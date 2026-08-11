@@ -5,6 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function NewProductPage() {
     <div className="max-w-[600px] mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <button onClick={() => router.back()} aria-label="Go back" className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" ><Icon name="arrow_back" size={20} /></button>
-        <h1 className="font-ui text-display-lg font-semibold text-dark">New Product</h1>
+        <PageHeader title="New Product" />
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="grid grid-cols-2 gap-6">
@@ -64,7 +65,7 @@ export default function NewProductPage() {
           <div className="space-y-1.5"><label htmlFor="product-purchase-rate" className="font-ui text-ui-2xs text-light uppercase font-bold">Purchase Rate (₹)</label><input id="product-purchase-rate" type="number" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={purchaseRate} onChange={e => setPurchaseRate(e.target.value)} /></div>
           <div className="space-y-1.5"><label htmlFor="product-sales-rate" className="font-ui text-ui-2xs text-light uppercase font-bold">Sales Rate (₹)</label><input id="product-sales-rate" type="number" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={salesRate} onChange={e => setSalesRate(e.target.value)} /></div>
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">{saving ? "Creating…" : "Create Product"}</button>
+        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 btn btn-primary disabled:opacity-50">{saving ? "Creating…" : "Create Product"}</button>
       </div>
     </div>
   );

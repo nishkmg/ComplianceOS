@@ -3,13 +3,14 @@
 import { Icon } from "@/components/ui/icon";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function MyPayslipsPage() {
   const slips = api.payslips.listMyPayslips.useQuery(undefined, { staleTime: 15_000 });
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">
-      <h1 className="font-ui text-display-lg font-semibold text-dark">My Payslips</h1>
+      <PageHeader title="My Payslips" />
       {slips.isLoading ? (
         <div className="flex items-center justify-center py-24">
           <Icon name="hourglass" className="text-lighter animate-spin text-3xl" />

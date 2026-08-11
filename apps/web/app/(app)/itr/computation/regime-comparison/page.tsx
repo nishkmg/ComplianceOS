@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ITRRegimeComparisonPage() {
   const { activeFy } = useFiscalYear();
@@ -67,7 +68,7 @@ export default function ITRRegimeComparisonPage() {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">FY {activeFy}</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark mb-2">Regime Comparison</h1>
+          <PageHeader title="Regime Comparison" />
           <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">
             Tax liability under the Old and New regimes based on computed income for the current FY.
           </p>
@@ -123,7 +124,7 @@ export default function ITRRegimeComparisonPage() {
               </h3>
               <p className="font-ui text-ui-sm text-mid">
                 Opting for the {c.recommended === "new" ? "New" : "Old"} Regime saves{" "}
-                <span className="font-mono text-dark font-bold text-base">₹ {formatIndianNumber(c.savings)}</span> in total tax liability for the current assessment year.
+                <span className="font-mono text-dark font-bold text-base">{formatIndianNumber(c.savings)}</span> in total tax liability for the current assessment year.
               </p>
             </div>
           </div>
@@ -139,14 +140,14 @@ export default function ITRRegimeComparisonPage() {
                 {rows.map((row, i) => (
                   <div key={i} className="flex justify-between items-center p-6 hover:bg-surface-muted transition-colors">
                     <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
-                    <span className="text-dark">₹ {formatIndianNumber(row.old)}</span>
+                    <span className="text-dark">{formatIndianNumber(row.old)}</span>
                   </div>
                 ))}
               </div>
               <div className="p-8 bg-surface-muted border-t-2 focus:border-focus">
                 <div className="flex justify-between items-center">
                   <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-mid">Final Liability</span>
-                  <span className="font-mono text-xl font-bold text-dark">₹ {formatIndianNumber(c.oldRegime.total)}</span>
+                  <span className="font-mono text-xl font-bold text-dark">{formatIndianNumber(c.oldRegime.total)}</span>
                 </div>
               </div>
             </div>
@@ -166,14 +167,14 @@ export default function ITRRegimeComparisonPage() {
                 {rows.map((row, i) => (
                   <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-soft/50 transition-colors">
                     <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
-                    <span className={row.new === 0 ? "text-light opacity-50" : "text-dark"}>₹ {formatIndianNumber(row.new)}</span>
+                    <span className={row.new === 0 ? "text-light opacity-50" : "text-dark"}>{formatIndianNumber(row.new)}</span>
                   </div>
                 ))}
               </div>
               <div className="p-8 bg-amber-soft border-t-2 border-primary">
                 <div className="flex justify-between items-center">
                   <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-primary">Final Liability</span>
-                  <span className="font-mono text-xl font-bold text-primary">₹ {formatIndianNumber(c.newRegime.total)}</span>
+                  <span className="font-mono text-xl font-bold text-primary">{formatIndianNumber(c.newRegime.total)}</span>
                 </div>
               </div>
             </div>

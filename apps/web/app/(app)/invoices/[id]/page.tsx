@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface Invoice {
   id: string;
@@ -71,7 +72,7 @@ export default function InvoiceDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" aria-label="Go back"><Icon name="arrow_back" size={20} /></button>
-          <div><h1 className="font-ui text-display-lg font-semibold text-dark">{inv.invoiceNumber}</h1></div>
+          <div><PageHeader title={inv.invoiceNumber} /></div>
         </div>
         <Badge variant={inv.status === "posted" ? "success" : "amber"}>{inv.status}</Badge>
       </div>

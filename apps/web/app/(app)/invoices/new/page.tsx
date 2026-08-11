@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 import { useOptimisticCreate } from "@/lib/hooks/useOptimisticMutation";
+import { PageHeader } from "@/components/ui/page-header";
 
 interface ItemDraft {
   description: string;
@@ -126,9 +127,9 @@ export default function NewInvoicePage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} aria-label="Go back" className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" ><Icon name="arrow_back" size={20} /></button>
-          <h1 className="font-ui text-display-lg font-semibold text-dark">New Invoice</h1>
+          <PageHeader title="New Invoice" />
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-amber text-white dark:text-amber-ink text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover rounded-md border-none shadow-sm cursor-pointer disabled:opacity-50">
+        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 btn btn-primary disabled:opacity-50">
           {saving ? "Creating…" : "Create Invoice"}
         </button>
       </div>

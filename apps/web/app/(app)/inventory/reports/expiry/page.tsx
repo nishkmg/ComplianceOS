@@ -2,6 +2,7 @@
 
 import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function InventoryExpiryPage() {
   return (
@@ -9,7 +10,7 @@ export default function InventoryExpiryPage() {
       <header className="flex justify-between items-start px-8 py-6 border-b border-border bg-surface/80 -mx-8 -mt-8 mb-8">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">Inventory Reports</p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Inventory Expiry Report</h1>
+          <PageHeader title="Inventory Expiry Report" />
         </div>
       </header>
       <EmptyState

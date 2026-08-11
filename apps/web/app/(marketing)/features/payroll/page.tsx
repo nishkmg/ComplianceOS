@@ -143,7 +143,7 @@ export default function PayrollPage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-display text-marketing-xl text-dark mb-6">Stop computing payroll manually.</h2>
             <p className="font-ui text-ui-md text-mid mb-10">Auto-calculated PF, ESI, PT, and TDS for every employee, every month.</p>
-            <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-10 py-5 font-ui font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors no-underline rounded-sm shadow-sm inline-flex items-center gap-2">
+            <Link href="/signup" className="btn btn-primary px-10 py-5 no-underline">
               Start Free <span>→</span>
             </Link>
           </div>

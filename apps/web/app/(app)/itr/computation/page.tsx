@@ -10,6 +10,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 const ayLabel: Record<string, string> = {
   "2026-27": "AY 2027-28",
@@ -100,7 +101,7 @@ export default function ITRComputationPage() {
   if (errorMsg) {
     return (
       <div className="max-w-page mx-auto space-y-8 pb-12">
-        <h1 className="font-ui text-2xl font-semibold text-dark">ITR Computation</h1>
+        <PageHeader title="ITR Computation" />
         <Card className="bg-surface border border-border p-8 text-center">
           <p className="text-danger font-medium mb-4">Failed to load ITR computation: {errorMsg}</p>
           <Button onClick={() => { void breakdown.refetch(); void returns.refetch(); }}>Retry</Button>
@@ -167,25 +168,25 @@ export default function ITRComputationPage() {
               <Card className="border-t-2 border-t-amber rounded-none rounded-b-xl shadow-sm print:border-black">
                 <CardContent className="p-6">
                   <p className="text-ui-2xs text-mid font-bold uppercase tracking-widest mb-2">Gross Total Income</p>
-                  <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totalIncome)}</p>
+                  <p className="font-mono text-2xl font-bold text-dark tabular-nums">{formatIndianNumber(totalIncome)}</p>
                 </CardContent>
               </Card>
               <Card className="border-t-2 border-t-stone-800 rounded-none rounded-b-xl shadow-sm print:border-black">
                 <CardContent className="p-6">
                   <p className="text-ui-2xs text-mid font-bold uppercase tracking-widest mb-2">Total Deductions</p>
-                  <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(totalDeductions)}</p>
+                  <p className="font-mono text-2xl font-bold text-dark tabular-nums">{formatIndianNumber(totalDeductions)}</p>
                 </CardContent>
               </Card>
               <Card className="border-t-2 border-t-stone-800 rounded-none rounded-b-xl shadow-sm print:border-black">
                 <CardContent className="p-6">
                   <p className="text-ui-2xs text-mid font-bold uppercase tracking-widest mb-2">Net Taxable Income</p>
-                  <p className="font-mono text-2xl font-bold text-dark tabular-nums">₹ {formatIndianNumber(regime === "old" ? taxableIncomeOld : taxableIncomeNew)}</p>
+                  <p className="font-mono text-2xl font-bold text-dark tabular-nums">{formatIndianNumber(regime === "old" ? taxableIncomeOld : taxableIncomeNew)}</p>
                 </CardContent>
               </Card>
               <Card className="bg-sidebar text-white focus:border-focus border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-surface print:text-dark print:border-black">
                 <CardContent className="p-6">
                   <p className="text-ui-2xs text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
-                  <p className="font-mono text-2xl font-bold text-amber tabular-nums print:text-dark">₹ {formatIndianNumber(netTax)}</p>
+                  <p className="font-mono text-2xl font-bold text-amber tabular-nums print:text-dark">{formatIndianNumber(netTax)}</p>
                 </CardContent>
               </Card>
             </section>
@@ -233,13 +234,13 @@ export default function ITRComputationPage() {
                         return (
                           <div key={h.key} className="flex justify-between items-center px-6 py-3.5 hover:bg-surface-muted/50 transition-colors">
                             <span className="font-ui text-ui-sm text-dark">{h.label}</span>
-                            <span className="font-mono text-ui-sm tabular-nums text-dark">₹ {formatIndianNumber(amount)}</span>
+                            <span className="font-mono text-ui-sm tabular-nums text-dark">{formatIndianNumber(amount)}</span>
                           </div>
                         );
                       })}
                       <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
                         <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Gross Total Income</span>
-                        <span className="font-mono text-ui-md tabular-nums text-dark">₹ {formatIndianNumber(totalIncome)}</span>
+                        <span className="font-mono text-ui-md tabular-nums text-dark">{formatIndianNumber(totalIncome)}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -254,11 +255,11 @@ export default function ITRComputationPage() {
                     <div className="divide-y-[0.5px] divide-border-subtle">
                       <div className="flex justify-between items-center px-6 py-3.5">
                         <span className="font-ui text-ui-sm text-dark">Total deductions (schedule-level detail is captured during return preparation)</span>
-                        <span className="font-mono text-ui-sm tabular-nums text-danger">−₹ {formatIndianNumber(totalDeductions)}</span>
+                        <span className="font-mono text-ui-sm tabular-nums text-danger">−{formatIndianNumber(totalDeductions)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
                         <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Total Deductions</span>
-                        <span className="font-mono text-ui-md tabular-nums text-danger">−₹ {formatIndianNumber(totalDeductions)}</span>
+                        <span className="font-mono text-ui-md tabular-nums text-danger">−{formatIndianNumber(totalDeductions)}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -278,27 +279,27 @@ export default function ITRComputationPage() {
                     <div className="divide-y divide-lighter font-mono text-sm print:divide-black">
                       <div className="flex justify-between items-center px-6 py-4">
                         <span className="text-xs text-light uppercase tracking-wide print:text-mid">Net Taxable Income</span>
-                        <span className="tabular-nums">₹ {formatIndianNumber(regime === "old" ? taxableIncomeOld : taxableIncomeNew)}</span>
+                        <span className="tabular-nums">{formatIndianNumber(regime === "old" ? taxableIncomeOld : taxableIncomeNew)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
                         <span className="text-xs text-light uppercase tracking-wide print:text-mid">Tax on Normal Income</span>
-                        <span className="tabular-nums">₹ {formatIndianNumber(taxOnTotalIncome)}</span>
+                        <span className="tabular-nums">{formatIndianNumber(taxOnTotalIncome)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
                         <span className="text-xs text-light uppercase tracking-wide print:text-mid">Rebate u/s 87A</span>
-                        <span className="tabular-nums">₹ {formatIndianNumber(rebate87a)}</span>
+                        <span className="tabular-nums">{formatIndianNumber(rebate87a)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
                         <span className="text-xs text-light uppercase tracking-wide print:text-mid">Surcharge</span>
-                        <span className="tabular-nums">₹ {formatIndianNumber(surcharge)}</span>
+                        <span className="tabular-nums">{formatIndianNumber(surcharge)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
                         <span className="text-xs text-light uppercase tracking-wide print:text-mid">Health & Education Cess @ 4%</span>
-                        <span className="tabular-nums">₹ {formatIndianNumber(cess)}</span>
+                        <span className="tabular-nums">{formatIndianNumber(cess)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-6 bg-dark font-bold text-lg print:bg-surface-muted">
                         <span className="text-xs text-amber uppercase tracking-widest print:text-dark">Total Tax Liability</span>
-                        <span className="text-amber tabular-nums print:text-dark">₹ {formatIndianNumber(netTax)}</span>
+                        <span className="text-amber tabular-nums print:text-dark">{formatIndianNumber(netTax)}</span>
                       </div>
                     </div>
                   </CardContent>

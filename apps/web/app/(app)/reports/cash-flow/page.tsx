@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { useRealtimeSubscription } from "@/components/providers/realtime-provider";
+import { PageHeader } from "@/components/ui/page-header";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
@@ -53,7 +54,7 @@ export default function CashFlowPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+        <PageHeader title="Statement of Cash Flows" />
         <Card className="bg-surface border border-border p-8 text-center">
           <p className="text-danger font-medium mb-4">Failed to load cash flow statement</p>
           <Button onClick={() => utils.balances.cashFlow.invalidate()}>Retry</Button>
@@ -65,7 +66,7 @@ export default function CashFlowPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="font-ui text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+        <PageHeader title="Statement of Cash Flows" />
         <Card className="bg-surface border border-border p-8">
           <div className="space-y-3 animate-pulse">
             <div className="h-6 bg-surface-muted rounded w-1/3" />
@@ -87,7 +88,7 @@ export default function CashFlowPage() {
             <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
               Financial Report · FY {fiscalYear}
             </p>
-            <h1 className="font-ui text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+            <PageHeader title="Statement of Cash Flows" />
             <p className="text-ui-sm text-secondary font-ui mt-1">For the year ended March 31, {parseInt(fiscalYear.split('-')[1]) + 2000} (Indirect Method)</p>
           </div>
         </div>
@@ -108,7 +109,7 @@ export default function CashFlowPage() {
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2">
             Financial Report · FY {fiscalYear}
           </p>
-          <h1 className="font-ui text-2xl font-semibold text-dark">Statement of Cash Flows</h1>
+          <PageHeader title="Statement of Cash Flows" />
           <p className="text-ui-sm text-secondary font-ui mt-1">For the year ended March 31, {parseInt(fiscalYear.split('-')[1]) + 2000} (Indirect Method)</p>
         </div>
         <div className="flex gap-3 items-center">
