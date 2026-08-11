@@ -192,3 +192,17 @@ Screenshots pending (Evidence Collector pass runs after code fixes; findings abo
 - 12+ hand-rolled `fixed inset-0` overlays: no focus trap/Escape/aria-modal/scroll lock (invoices EWB, payables pay, hsn, advance-tax, fiscal-years, users, confirm-action, slide-over, mobile drawer)
 - no aria-current on any nav; 35 routes missing from a11y sweep (incl. all dynamic-param detail pages — exactly where modal bugs live); window.confirm ×4 + alert ×4
 - marketing skip-link visible text; raw palette bg-green-600/bg-red-600 in aging-table + close-fy dialog
+
+## Execution status
+- Phase 1 (canon P0 + top functionality P0s): DONE — b672581 (tokens vars, dark CTA ink,
+  dead-token codemod, popovers, sign-out, middleware, tRPC URL, palette, invoice lifecycle,
+  gstr PDFs, reports honesty, onboarding+team security)
+- Phase 2 conformance sweep: DONE — 2c4216a (PageHeader 62 pages, canon buttons 32 files,
+  single-₹ 27 files; noPageHeader 86→26, bannedColors 0, fakeSuccess 0)
+- Phase 3 remaining (registry-driven): Radix dialogs for 7+ hand-rolled modals; error
+  states + skeletons app-wide; shared components (MoneyCell, FormSection, LineItemsEditor,
+  PeriodPicker, FiscalYearSelect); GST month canonicalization + challan persistence +
+  gstr9 generate; ITR via commands (slab/87A fixes); payroll void/advance/EPS/payslips;
+  inventory FIFO transactions + config + product joins; onboarding CoA rebuild + jwt
+  update loop; marketing content honesty (32 fabricated flags incl. fake stats, blog
+  dynamic, security/privacy copy); a11y sweep +35 routes; Reality Checker gate; deploy.
