@@ -12,6 +12,7 @@ import { showToast } from "@/lib/toast";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { ErrorState } from "@/components/ui/error-state";
 
 interface JournalEntry {
   id: string;
@@ -112,8 +113,18 @@ export default function JournalPage() {
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
 
-  const { data, isLoading } = api.journalEntries.list.useQuery({ fiscalYear: activeFy, limit: 500 });
+  const { data, isLoading, isError } = api.journalEntries.list.useQuery({ fiscalYear: activeFy, limit: 500 });
   const entries = (data ?? []) as JournalEntry[];
+
+  if (isError) {
+    return (
+      <ErrorState
+        title="Could not load Journal"
+        description="The server did not respond. Retry or go back."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
 
   const filteredEntries = useMemo(
     () =>

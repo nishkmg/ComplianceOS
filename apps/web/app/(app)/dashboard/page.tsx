@@ -15,6 +15,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useSession } from "next-auth/react";
 import { api } from "@/lib/api";
+import { ErrorState } from "@/components/ui/error-state";
 
 interface JournalEntry {
   id: string; entryNumber: string; date: string; narration: string; debit: string; credit: string; status: "draft" | "posted" | "voided";
@@ -38,10 +39,20 @@ export default function DashboardPage() {
   const { activeFy } = useFiscalYear();
   const { data: session } = useSession();
 
-  const { data, isLoading } = api.journalEntries.list.useQuery(
+  const { data, isLoading, isError } = api.journalEntries.list.useQuery(
     { fiscalYear: activeFy, limit: 500 },
     { staleTime: 15_000 },
   );
+
+  if (isError) {
+    return (
+      <ErrorState
+        title="Could not load Dashboard"
+        description="The server did not respond. Retry or go back."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
   const allEntries = (data ?? []) as JournalEntry[];
   const entries = allEntries.slice(0, 8);
   const loading = isLoading;

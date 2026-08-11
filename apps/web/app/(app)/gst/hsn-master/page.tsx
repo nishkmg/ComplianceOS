@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { showToast } from "@/lib/toast";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
 
 export default function HsnMasterPage() {
@@ -100,9 +101,8 @@ export default function HsnMasterPage() {
         </div>
       </div>
 
-      {addOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setAddOpen(false)}>
-          <div className="w-full max-w-md rounded-lg border border-border bg-surface p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+      <DialogContent className="max-w-md">
             <h3 className="font-ui text-base font-semibold text-dark">Add HSN code</h3>
             <div className="mt-5 space-y-4">
               <div className="grid grid-cols-2 gap-3">
@@ -127,12 +127,13 @@ export default function HsnMasterPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setAddOpen(false)} className="btn btn-secondary">Cancel</button>
+              <DialogClose asChild>
+                <button className="btn btn-secondary">Cancel</button>
+              </DialogClose>
               <button onClick={submit} disabled={busy} className="btn btn-primary">Add Code</button>
             </div>
-          </div>
-        </div>
-      )}
+      </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { ErrorState } from "@/components/ui/error-state";
 
 interface Invoice {
   id: string;
@@ -34,8 +35,18 @@ const columns: ColumnDef<Invoice>[] = [
 ];
 
 export default function InvoicesPage() {
-  const { data, isLoading } = api.invoices.list.useQuery({ page: 1, pageSize: 50 });
+  const { data, isLoading, isError } = api.invoices.list.useQuery({ page: 1, pageSize: 50 });
   const invoices = (data?.invoices ?? []) as Invoice[];
+
+  if (isError) {
+    return (
+      <ErrorState
+        title="Could not load Invoices"
+        description="The server did not respond. Retry or go back."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
 
   if (isLoading) return <TableSkeleton rows={5} columns={5} />;
   return (

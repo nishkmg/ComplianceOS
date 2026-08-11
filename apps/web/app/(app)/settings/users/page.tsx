@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { Icon } from "@/components/ui/icon";
 import { showToast } from "@/lib/toast";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
 
 const ROLES = ["owner", "accountant", "manager", "employee"] as const;
@@ -170,9 +171,8 @@ export default function TeamSettingsPage() {
       </div>
 
       {/* Invite dialog */}
-      {inviteOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setInviteOpen(false)}>
-          <div className="w-full max-w-md rounded-lg border border-border bg-surface p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+      <DialogContent className="max-w-md">
             <h3 className="font-ui text-base font-semibold text-dark flex items-center gap-2">
               <Icon name="person_add" size={18} /> Invite a teammate
             </h3>
@@ -204,12 +204,13 @@ export default function TeamSettingsPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setInviteOpen(false)} className="btn btn-secondary">Cancel</button>
+              <DialogClose asChild>
+                <button className="btn btn-secondary">Cancel</button>
+              </DialogClose>
               <button onClick={confirmInvite} disabled={busy} className="btn btn-primary">Send Invite</button>
             </div>
-          </div>
-        </div>
-      )}
+      </DialogContent>
+      </Dialog>
     </div>
   );
 }

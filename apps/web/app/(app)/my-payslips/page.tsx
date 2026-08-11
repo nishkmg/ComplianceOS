@@ -4,9 +4,21 @@ import { Icon } from "@/components/ui/icon";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { ErrorState } from "@/components/ui/error-state";
 
 export default function MyPayslipsPage() {
   const slips = api.payslips.listMyPayslips.useQuery(undefined, { staleTime: 15_000 });
+  const isError = slips.isError;
+
+  if (isError) {
+    return (
+      <ErrorState
+        title="Could not load payslips"
+        description="The server did not respond. Retry or go back."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
 
   return (
     <div className="max-w-page mx-auto space-y-8 pb-40">

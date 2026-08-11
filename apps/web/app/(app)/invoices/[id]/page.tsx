@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
 
@@ -165,9 +166,8 @@ export default function InvoiceDetailPage() {
       </div>
 
       {/* EWB dialog */}
-      {ewbOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setEwbOpen(false)}>
-          <div className="w-full max-w-md rounded-lg border border-border bg-surface p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+      <Dialog open={ewbOpen} onOpenChange={setEwbOpen}>
+      <DialogContent className="max-w-md">
             <h3 className="font-ui text-base font-semibold text-dark">Generate e-way bill</h3>
             <p className="mt-1 font-ui text-ui-sm text-mid">NIC sandbox adapter — distance in km, vehicle number optional.</p>
             <div className="mt-5 space-y-4">
@@ -181,12 +181,13 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setEwbOpen(false)} className="btn btn-secondary">Cancel</button>
+              <DialogClose asChild>
+                <button className="btn btn-secondary">Cancel</button>
+              </DialogClose>
               <button onClick={confirmEwb} disabled={busy} className="btn btn-primary">Generate</button>
             </div>
-          </div>
-        </div>
-      )}
+      </DialogContent>
+      </Dialog>
     </div>
   );
 }

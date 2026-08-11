@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Icon } from "@/components/ui/icon";
 import { showToast } from "@/lib/toast";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
 
 const fmtDate = (d: string) =>
@@ -159,9 +160,8 @@ export default function BillDetailPage() {
       </div>
 
       {/* Payment dialog */}
-      {payOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setPayOpen(false)}>
-          <div className="w-full max-w-md rounded-lg border border-border bg-surface p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+      <Dialog open={payOpen} onOpenChange={setPayOpen}>
+      <DialogContent className="max-w-md">
             <h3 className="font-ui text-base font-semibold text-dark">Record payment</h3>
             <p className="mt-1 font-ui text-ui-sm text-mid">Outstanding: {inr(bill.outstanding)}</p>
             <div className="mt-5 space-y-4">
@@ -182,12 +182,13 @@ export default function BillDetailPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setPayOpen(false)} className="btn btn-secondary">Cancel</button>
+              <DialogClose asChild>
+                <button className="btn btn-secondary">Cancel</button>
+              </DialogClose>
               <button onClick={confirmPay} disabled={busy} className="btn btn-primary">Record Payment</button>
             </div>
-          </div>
-        </div>
-      )}
+      </DialogContent>
+      </Dialog>
     </div>
   );
 }
