@@ -6,8 +6,8 @@
     "fabricated": 32,
     "noPageHeader": 88,
     "bannedColors": 0,
-    "notSwept": 45,
-    "notInNav": 77,
+    "notSwept": 35,
+    "notInNav": 73,
     "noLoading": 108,
     "noError": 108,
     "fakeSuccess": 0
@@ -162,7 +162,7 @@
       "h1": false,
       "bannedColors": 0,
       "inNav": false,
-      "inA11y": false,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -178,8 +178,8 @@
       "pageHeader": true,
       "h1": false,
       "bannedColors": 0,
-      "inNav": false,
-      "inA11y": false,
+      "inNav": true,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -280,8 +280,8 @@
       "pageHeader": true,
       "h1": false,
       "bannedColors": 0,
-      "inNav": false,
-      "inA11y": false,
+      "inNav": true,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -536,7 +536,7 @@
       "h1": false,
       "bannedColors": 0,
       "inNav": false,
-      "inA11y": false,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -552,8 +552,8 @@
       "pageHeader": true,
       "h1": false,
       "bannedColors": 0,
-      "inNav": false,
-      "inA11y": false,
+      "inNav": true,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -1063,7 +1063,7 @@
       "h1": false,
       "bannedColors": 0,
       "inNav": false,
-      "inA11y": false,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -1079,8 +1079,8 @@
       "pageHeader": true,
       "h1": false,
       "bannedColors": 0,
-      "inNav": false,
-      "inA11y": false,
+      "inNav": true,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -1437,7 +1437,7 @@
       "h1": false,
       "bannedColors": 0,
       "inNav": false,
-      "inA11y": false,
+      "inA11y": true,
       "loading": false,
       "error": false
     },
@@ -1505,7 +1505,7 @@
       "h1": false,
       "bannedColors": 0,
       "inNav": true,
-      "inA11y": false,
+      "inA11y": true,
       "loading": true,
       "error": false
     },
@@ -1522,7 +1522,7 @@
       "h1": false,
       "bannedColors": 0,
       "inNav": false,
-      "inA11y": false,
+      "inA11y": true,
       "loading": false,
       "error": false
     },

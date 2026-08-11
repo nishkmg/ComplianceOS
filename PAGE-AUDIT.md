@@ -11,8 +11,8 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | fabricated | 32 |
 | noPageHeader | 88 |
 | bannedColors | 0 |
-| notSwept | 45 |
-| notInNav | 77 |
+| notSwept | 35 |
+| notInNav | 73 |
 | noLoading | 108 |
 | noError | 108 |
 | fakeSuccess | 0 |
@@ -35,9 +35,9 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /contact | 109 | fetch:/api/contact | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
 | /contact/success | 25 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /cookies | 70 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
-| /credit-notes | 79 | trpc:creditNotes.list | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /credit-notes | 79 | trpc:creditNotes.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /credit-notes/[id] | 138 | trpc:creditNotes.get | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
-| /credit-notes/new | 272 | trpc:accounts.list,invoices.list,creditNotes.create | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
+| /credit-notes/new | 272 | trpc:accounts.list,invoices.list,creditNotes.create | Y | 0 |  |  | Y | Y | 0 |  | Y |  |  |
 | /dashboard | 160 | trpc:journalEntries.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /employees | 41 | trpc:employees.list | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /employees/[id] | 192 | trpc:employees.get,advances.list,advances.create,advances.cancel | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
@@ -50,7 +50,7 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /features/itr | 105 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /features/payroll | 156 | none |  | 4 |  |  |  |  | 0 |  |  |  |  |
 | /forgot-password | 94 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
-| /gst/hsn-master | 139 | trpc:hsnMaster.list,hsnMaster.create,hsnMaster.deactivate | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
+| /gst/hsn-master | 139 | trpc:hsnMaster.list,hsnMaster.create,hsnMaster.deactivate | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /gst/ledger | 28 | none |  | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /gst/ledger/cash | 50 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /gst/ledger/itc | 51 | trpc:gstLedger.ledgerTransactions | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
@@ -66,8 +66,8 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /gst/returns/[period]/gstr3b | 95 | trpc:gstReturns.list | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /gst/returns/[period]/gstr9 | 87 | trpc:gstReturns.list | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /inventory | 259 | trpc:inventory.summary,inventory.layers,products.list | Y | 0 |  |  | Y | Y | 0 | Y | Y |  | Y |
-| /inventory/movements | 74 | trpc:inventory.movements | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
-| /inventory/operations | 154 | trpc:products.list,inventory.purchaseReceipt,inventory.salesDelivery,inventory.adjustStock | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
+| /inventory/movements | 74 | trpc:inventory.movements | Y | 0 |  |  |  | Y | 0 |  | Y |  |  |
+| /inventory/operations | 154 | trpc:products.list,inventory.purchaseReceipt,inventory.salesDelivery,inventory.adjustStock | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /inventory/products | 48 | trpc:products.list | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /inventory/products/new | 72 | trpc:products.create | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /inventory/reports | 199 | trpc:stockReports.valuationReport,inventory.movements | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
@@ -96,9 +96,9 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /login | 147 | none |  | 0 |  |  | Y |  | 0 | Y | Y |  |  |
 | /my-payslips | 52 | trpc:payslips.listMyPayslips | Y | 0 |  |  |  |  | 0 |  | Y |  |  |
 | /onboarding | 207 | fetch:/api/onboarding | Y | 0 |  |  |  |  | 0 |  | Y | Y |  |
-| /payables | 119 | trpc:payables.aging,payables.list | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /payables | 119 | trpc:payables.aging,payables.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /payables/[id] | 194 | trpc:payables.get,accounts.list,payables.pay | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
-| /payables/new | 190 | trpc:payables.vendorAccounts,accounts.list,payables.create | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
+| /payables/new | 190 | trpc:payables.vendorAccounts,accounts.list,payables.create | Y | 0 |  |  | Y | Y | 0 |  | Y |  |  |
 | /payments | 133 | trpc:payments.list | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /payments/new | 280 | trpc:payments.record | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
 | /payroll | 39 | trpc:payroll.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
@@ -123,12 +123,12 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /reports/trial-balance | 260 | trpc:balances.trialBalance | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /reset-password | 113 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /security | 61 | none |  | 0 |  |  |  |  | 0 |  | Y |  |  |
-| /settings | 73 | none |  | 0 |  |  |  | Y | 0 | Y |  | Y |  |
-| /settings/company | 189 | trpc:tenantConfig.get,tenantConfig.listStates,tenantConfig.update | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
+| /settings | 73 | none |  | 0 |  |  |  | Y | 0 | Y | Y | Y |  |
+| /settings/company | 189 | trpc:tenantConfig.get,tenantConfig.listStates,tenantConfig.update | Y | 0 |  |  | Y | Y | 0 |  | Y |  |  |
 | /settings/fiscal-years | 221 | trpc:fiscalYears.list,fiscalYears.close,fiscalYears.create | Y | 0 |  |  | Y | Y | 0 | Y | Y |  |  |
 | /settings/fiscal-years/[id] | 137 | trpc:fiscalYears.get,fiscalYears.close | Y | 0 |  |  |  |  | 0 |  |  |  |  |
 | /settings/invoices | 146 | trpc:invoiceConfig.get,invoiceConfig.save | Y | 0 |  |  | Y |  | 0 |  | Y |  |  |
-| /settings/users | 216 | trpc:team.list,team.invite,team.updateRole,team.remove | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
+| /settings/users | 216 | trpc:team.list,team.invite,team.updateRole,team.remove | Y | 0 |  |  | Y | Y | 0 |  | Y |  |  |
 | /signup | 148 | fetch:/api/auth/register | Y | 0 |  |  | Y |  | 0 | Y | Y |  |  |
 | /support | 43 | none |  | 0 |  |  | Y | Y | 0 | Y | Y |  | Y |
 | /terms | 83 | none |  | 0 |  |  |  |  | 0 |  | Y |  |  |

@@ -60,7 +60,9 @@ const navSections: NavSection[] = [
     label: 'Transactions',
     items: [
       { href: '/invoices',    label: 'Invoices',    icon: 'receipt_long',         moduleKey: 'invoicing' },
+      { href: '/credit-notes', label: 'Credit Notes', icon: 'receipt_long',       moduleKey: 'invoicing' },
       { href: '/receivables', label: 'Receivables', icon: 'account_balance',      moduleKey: 'invoicing' },
+      { href: '/payables',    label: 'Bills Payable', icon: 'account_balance_wallet' },
       { href: '/payments',    label: 'Payments',    icon: 'account_balance_wallet'},
     ],
   },
@@ -76,6 +78,7 @@ const navSections: NavSection[] = [
         moduleKey: 'gst',
         children: [
           { href: '/gst/returns',         label: 'Returns'        },
+          { href: '/gst/hsn-master',      label: 'HSN Master'     },
           { href: '/gst/reconciliation',  label: 'Reconciliation' },
           { href: '/gst/ledger',          label: 'Ledger'         },
           { href: '/gst/payment',         label: 'Payment'        },
@@ -99,9 +102,10 @@ const navSections: NavSection[] = [
   {
     label: 'Operations',
     items: [
-      { href: '/inventory', label: 'Inventory', icon: 'inventory_2', moduleKey: 'inventory' },
-      { href: '/payroll',   label: 'Payroll',   icon: 'payments',    moduleKey: 'payroll' },
-      { href: '/employees', label: 'Employees', icon: 'group',       moduleKey: 'payroll' },
+      { href: '/inventory',     label: 'Inventory',     icon: 'inventory_2', moduleKey: 'inventory' },
+      { href: '/inventory/operations', label: 'Stock Ops', icon: 'compare_arrows', moduleKey: 'inventory' },
+      { href: '/payroll',       label: 'Payroll',       icon: 'payments',    moduleKey: 'payroll' },
+      { href: '/employees',     label: 'Employees',     icon: 'group',       moduleKey: 'payroll' },
     ],
   },
   {

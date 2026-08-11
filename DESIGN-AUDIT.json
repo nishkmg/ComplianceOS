@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T18:44:50.578Z",
+  "generatedAt": "2026-08-11T10:18:39.972Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,22 +206,22 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 254,
+      "arbitraryValues": 281,
       "rawPaletteUtilities": 0,
       "hexLiterals": 16,
       "unpairedOutlineNone": 0,
-      "focusVisible": 125,
+      "focusVisible": 165,
       "darkClasses": 2,
       "distinctRadii": 9
     },
     "states": {
-      "routes": 97,
-      "loadingFiles": 4,
-      "pagesWithLoading": 57,
-      "pagesWithErrorHandling": 5,
-      "pagesWithEmptyState": 46,
+      "routes": 111,
+      "loadingFiles": 5,
+      "pagesWithLoading": 67,
+      "pagesWithErrorHandling": 6,
+      "pagesWithEmptyState": 54,
       "ariaLiveAnnouncers": 7,
-      "clientPages": 82,
+      "clientPages": 96,
       "serverPages": 15
     },
     "fonts": {
