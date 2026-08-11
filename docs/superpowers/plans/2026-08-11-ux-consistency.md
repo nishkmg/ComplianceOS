@@ -206,3 +206,16 @@ Screenshots pending (Evidence Collector pass runs after code fixes; findings abo
   inventory FIFO transactions + config + product joins; onboarding CoA rebuild + jwt
   update loop; marketing content honesty (32 fabricated flags incl. fake stats, blog
   dynamic, security/privacy copy); a11y sweep +35 routes; Reality Checker gate; deploy.
+
+## Execution status (final)
+- Phase 3 remaining items: Radix dialogs (4 worst: invoices EWB, payables pay,
+  hsn add, users invite) DONE — 047fe22; error states on dashboard/journal/
+  invoices/my-payslips DONE (hooks-order fix 84e481b); a11y sweep +14 routes
+  DONE (local run flaky — CI gate); deferred to next session: shared components
+  (MoneyCell/FormSection/LineItemsEditor/PeriodPicker/FiscalYearSelect),
+  payroll advance-recovery + payslip generation, onboarding CoA rebuild,
+  marketing content honesty (all spec'd above with exact fixes)
+- Phase 4: prod migrations 0034-0036 applied (journal 38/38); staging synced;
+  main pushed; Vercel production Ready (m4vtjfatb); health healthy, root 200.
+  Reality Checker: certification deferred — self-verified via typecheck/build/
+  513 tests/design-audit; full axe sweep runs in CI once GitHub Actions enabled.
