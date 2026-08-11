@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
 import { submitStep } from "@/lib/mock-mutation";
 import { showToast } from "@/lib/toast";
@@ -25,13 +25,20 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
 
-  const accounts: any[] = [
-    { id: "cash_bank", code: "11100", name: "Cash & Bank", kind: "asset", isLeaf: true },
-    { id: "receivables", code: "11200", name: "Trade Receivables", kind: "asset", isLeaf: true },
-    { id: "inventory", code: "11300", name: "Inventory", kind: "asset", isLeaf: true },
-    { id: "payables", code: "21100", name: "Trade Payables", kind: "liability", isLeaf: true },
-    { id: "gst_output", code: "21200", name: "GST Output", kind: "liability", isLeaf: true },
-  ];
+  const [accounts, setAccounts] = useState<any[]>([]);
+  useEffect(() => {
+    let alive = true;
+    fetch(`/api/onboarding?tenantId=${tenantId}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!alive) return;
+        const rows: any[] = d?.accounts ?? [];
+        // Only leaf accounts carry opening balances.
+        setAccounts(rows.filter((a) => a.isLeaf !== false));
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [tenantId]);
 
   const [saving, setSaving] = useState(false);
 

@@ -158,6 +158,7 @@ export async function seedCoa(
       const parentId = entry.parentCode ? codeToId.get(entry.parentCode) ?? null : null;
 
       await tx.insert(accounts).values({
+        id: codeToId.get(code)!,
         tenantId,
         code: entry.code,
         name: entry.name,

@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { getToken } from "next-auth/jwt";
-import { db, tenants, userTenants, tenantModuleConfig } from "@complianceos/db";
+import { db, tenants, accounts, userTenants, tenantModuleConfig } from "@complianceos/db";
 
 export const runtime = "nodejs";
 
@@ -42,7 +42,7 @@ function moduleActivationFromData(data: Record<string, unknown>): Array<{ module
 
 // ─── GET: fetch onboarding state ──────────────────────────────────────
 async function requireMembership(req: Request, tenantId: string | null): Promise<{ userId: string; tenantId: string }> {
-  const token = await getToken({ req });
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token?.sub) throw new Error("Unauthorized");
   if (!tenantId) throw new Error("tenantId is required");
   const [membership] = await db
@@ -60,6 +60,11 @@ export async function GET(req: Request) {
     const tenantId = url.searchParams.get("tenantId");
     if (!tenantId) {
       return Response.json({ error: "tenantId query param required" }, { status: 400 });
+    }
+    try {
+      await requireMembership(req, tenantId);
+    } catch {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const [t] = await db
@@ -96,8 +101,17 @@ export async function GET(req: Request) {
         ? moduleRows.map((r) => ({ module: r.module, enabled: r.enabled }))
         : moduleActivationFromData(onboardingData);
 
+    // Real chart of accounts for steps 4 (review) + 6 (opening balances) —
+    // the wizard was rendering hardcoded trees against an empty ledger.
+    const accountRows = await db
+      .select({ id: accounts.id, code: accounts.code, name: accounts.name, kind: accounts.kind, subType: accounts.subType, isLeaf: accounts.isLeaf })
+      .from(accounts)
+      .where(eq(accounts.tenantId, tenantId))
+      .orderBy(accounts.code);
+
     return Response.json({
       tenantId: t.id,
+      accounts: accountRows,
       onboardingStatus: t.onboardingStatus || "in_progress",
       currentStep: (onboardingData.current_step as number) || 1,
       businessProfile: {
@@ -211,6 +225,28 @@ export async function POST(req: Request) {
           return Response.json({ error: "templateId is required" }, { status: 400 });
         }
         await mergeOnboardingData(tenantId, { coa_template: templateId });
+        // Seed the chart of accounts NOW (was cosmetic — accounts page was empty
+        // after the wizard). Idempotent: skips tenants that already have accounts.
+        try {
+          const [tenantRow] = await db
+            .select({ businessType: tenants.businessType, industry: tenants.industry })
+            .from(tenants)
+            .where(eq(tenants.id, tenantId))
+            .limit(1);
+          if (tenantRow?.businessType && tenantRow.industry) {
+            const existing = await db
+              .select({ id: accounts.id })
+              .from(accounts)
+              .where(eq(accounts.tenantId, tenantId))
+              .limit(1);
+            if (!existing.length) {
+              const { seedCoa } = await import("@complianceos/server");
+              await seedCoa(tenantId, String(tenantRow.businessType), String(tenantRow.industry), undefined);
+            }
+          }
+        } catch (seedErr: any) {
+          console.error("[onboarding] CoA seed failed:", seedErr.message);
+        }
         return Response.json({ success: true });
       }
 
@@ -260,6 +296,34 @@ export async function POST(req: Request) {
           opening_balances_mode: mode,
           ...(mode === "migration" && d.balances ? { opening_balances: d.balances } : {}),
         });
+        // Create opening-balance JEs for migration mode (was cosmetic).
+        if (mode === "migration" && Array.isArray(d.balances) && d.balances.length) {
+          try {
+            const [tenantRow] = await db
+              .select({ onboardingData: tenants.onboardingData })
+              .from(tenants)
+              .where(eq(tenants.id, tenantId))
+              .limit(1);
+            const od = (tenantRow?.onboardingData ?? {}) as Record<string, unknown>;
+            const fyStart = od.fiscal_year_start as string | undefined;
+            const fyYear = fyStart ? new Date(fyStart).getFullYear() : new Date().getFullYear();
+            const fiscalYear = `${fyYear}-${String(fyYear + 1).slice(-2)}`;
+            const { setupOpeningBalances } = await import("@complianceos/server");
+            const membership = await requireMembership(req, tenantId);
+            // Wizard sends {accountId, debit, credit} — normalize to the command input.
+            const balances = (d.balances as Array<{ accountId: string; debit?: number; credit?: number }>)
+              .filter((b) => (b.debit ?? 0) !== 0 || (b.credit ?? 0) !== 0)
+              .map((b) => ({ ...b, openingBalance: (b.debit ?? 0) - (b.credit ?? 0) }));
+            if (balances.length) {
+              await setupOpeningBalances(tenantId, membership.userId, fiscalYear, {
+                mode: "migration",
+                balances: balances as never,
+              });
+            }
+          } catch (obErr: any) {
+            console.error("[onboarding] opening balances failed:", obErr.message);
+          }
+        }
         await db
           .update(tenants)
           .set({ onboardingStatus: "complete" })
