@@ -9,6 +9,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { PeriodPicker } from "@/components/ui/period-picker";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -60,16 +61,7 @@ export default function TeamSalaryPreviewPage() {
           <p className="text-ui-sm text-secondary font-ui mt-1">Review payroll runs for the selected period before final authorization.</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
-            <Icon name="calendar_month" className="text-light text-ui-xl mr-2" />
-            <input
-              aria-label="Payroll period"
-              type="month"
-              className="bg-transparent border-none text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-focus cursor-pointer"
-              value={period}
-              onChange={(e) => setPeriod(e.target.value)}
-            />
-          </div>
+          <PeriodPicker value={period} onChange={setPeriod} />
           <Button size="sm" className="gap-2" onClick={handleAuthorize} disabled={calculated.length === 0 || finalizeRun.isPending}>
             Finalize {calculated.length > 0 ? `(${calculated.length})` : ""} <Icon name="arrow_forward" className="text-sm" />
           </Button>

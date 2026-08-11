@@ -191,7 +191,11 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
 
         {/* Footer Actions */}
         <div className="md:col-span-2 flex justify-between items-center mt-6 pt-8 border-t border-border">
-          <button className="font-ui text-ui-sm text-ui-sm text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer" type="button">
+          <button
+            className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors py-2 px-4 -ml-4 border-none bg-transparent cursor-pointer"
+            type="button"
+            onClick={() => submitStep(0, { tenantId, data: { currentStep: 1 } }).catch(() => {})}
+          >
             Save as Draft
           </button>
           <button className="btn btn-primary py-3 px-8 group disabled:opacity-50" type="submit" disabled={isSubmitting}>

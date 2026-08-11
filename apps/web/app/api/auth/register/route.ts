@@ -15,8 +15,8 @@ export async function POST(req: Request) {
     }
 
     const emailNorm = email.toLowerCase().trim();
-    if (!emailNorm.includes("@") || password.length < 6) {
-      return Response.json({ error: "Invalid email or password too short (min 6 chars)" }, { status: 400 });
+    if (!emailNorm.includes("@") || password.length < 8) {
+      return Response.json({ error: "Invalid email or password too short (min 8 chars)" }, { status: 400 });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

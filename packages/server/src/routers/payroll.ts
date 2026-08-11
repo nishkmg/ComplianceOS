@@ -100,14 +100,15 @@ export const payrollRouter = router({
     }),
 
   pending: protectedProcedure
-    .query(async ({ ctx }) => {
+    .input(z.object({ month: z.string().optional(), year: z.string().optional() }).optional())
+    .query(async ({ ctx, input }) => {
       const { employees, payrollRuns } = await import("@complianceos/db");
       const { eq, and, sql, notInArray } = await import("drizzle-orm");
 
       const currentMonth = new Date().getMonth() + 1;
       const currentYear = new Date().getFullYear();
-      const monthStr = String(currentMonth).padStart(2, "0");
-      const yearStr = String(currentYear);
+      const monthStr = input?.month ?? String(currentMonth).padStart(2, "0");
+      const yearStr = input?.year ?? String(currentYear);
 
       const processedEmployeeIds = await ctx.db.select({
         employeeId: payrollRuns.employeeId,

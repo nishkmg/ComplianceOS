@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { PeriodPicker } from "@/components/ui/period-picker";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -19,7 +20,7 @@ export default function ProcessPayrollPage() {
   const [period, setPeriod] = useState(DEFAULT_MONTH);
   const [month, year] = period.split("-");
 
-  const pending = api.payroll.pending.useQuery(undefined, { staleTime: 15_000 });
+  const pending = api.payroll.pending.useQuery({ month, year }, { staleTime: 15_000 });
   const runs = api.payroll.list.useQuery({ month, year }, { staleTime: 15_000 });
 
   const processRun = api.payroll.process.useMutation({
@@ -49,16 +50,7 @@ export default function ProcessPayrollPage() {
           <PageHeader title="Process Payroll" />
           <p className="font-ui text-ui-sm text-mid mt-1">Run payroll per employee for the selected period, then finalize to post the salary journal.</p>
         </div>
-        <div className="flex items-center bg-surface-muted border border-border rounded-md h-9 px-3">
-          <Icon name="calendar_month" className="text-light text-ui-xl mr-2" />
-          <input
-            aria-label="Payroll period"
-            type="month"
-            className="bg-transparent border-none text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-focus cursor-pointer"
-            value={period}
-            onChange={(e) => setPeriod(e.target.value)}
-          />
-        </div>
+        <PeriodPicker value={period} onChange={setPeriod} />
       </div>
 
       {pending.isLoading ? (

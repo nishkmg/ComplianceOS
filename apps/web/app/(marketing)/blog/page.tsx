@@ -42,11 +42,10 @@ export default function BlogIndexPage() {
           <div className="bg-section-muted p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-left">
               <h3 className="font-display text-marketing-xl text-dark font-normal">Stay ahead of compliance changes.</h3>
-              <p className="text-ui-sm text-secondary mt-1">Get our weekly newsletter straight to your inbox.</p>
+              <p className="text-ui-sm text-secondary mt-1">Questions about a deadline or a workflow? Reach out — we answer.</p>
             </div>
             <div className="flex gap-2">
-              <input className="border border-border-subtle bg-surface px-4 py-3 font-ui text-ui-sm w-full md:w-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-primary" placeholder="professional@firm.com" type="email" />
-              <button className="bg-on-surface text-white px-8 py-3 font-ui uppercase tracking-widest whitespace-nowrap hover:bg-amber-hover transition-colors cursor-pointer border-none">Subscribe</button>
+              <a href="/contact" className="btn btn-primary whitespace-nowrap no-underline">Talk to us</a>
             </div>
           </div>
         </section>

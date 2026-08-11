@@ -102,13 +102,9 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {/* Password Strength Indicator */}
-              <div className="mt-2 flex gap-1 h-1.5 w-full rounded-full overflow-hidden">
-                <div className="w-1/3 bg-amber h-full"></div>
-                <div className="w-1/3 bg-border h-full"></div>
-                <div className="w-1/3 bg-border h-full"></div>
-              </div>
-              <p className="mt-1 font-ui text-ui-xs text-light text-right">Weak</p>
+              <p className="mt-1 font-ui text-ui-xs text-light">
+                {password.length >= 8 ? "Good — password meets the 8+ character requirement." : "Use at least 8 characters."}
+              </p>
             </div>
 
             {error && (
