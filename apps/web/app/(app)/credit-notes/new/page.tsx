@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/ui/page-header";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { formatIndianNumber } from "@/lib/format";
 
 interface LineDraft {
   accountId: string;
@@ -96,6 +97,11 @@ export default function NewCreditNotePage() {
     });
   };
 
+  // Live totals preview — the form shows real numbers before submit.
+  const previewLines = lines.filter((l) => l.rate);
+  const previewSubtotal = previewLines.reduce((sum, l) => sum + (Number(l.quantity) || 0) * (Number(l.rate) || 0), 0);
+  const previewTax = previewLines.reduce((sum, l) => sum + (Number(l.quantity) || 0) * (Number(l.rate) || 0) * (Number(l.gstRate) || 0) / 100, 0);
+  const previewGrand = previewSubtotal + previewTax;
   return (
     <div className="space-y-10 text-left max-w-4xl">
       <header className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
@@ -264,6 +270,20 @@ export default function NewCreditNotePage() {
           >
             + Add Line
           </button>
+        </div>
+      </div>
+      <div className="bg-surface border border-border rounded-md p-5 shadow-sm flex flex-wrap items-center justify-end gap-6 font-ui">
+        <div className="text-right">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Subtotal</p>
+          <p className="font-mono text-ui-sm text-dark mt-0.5">{formatIndianNumber(previewSubtotal)}</p>
+        </div>
+        <div className="text-right">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">GST</p>
+          <p className="font-mono text-ui-sm text-mid mt-0.5">{formatIndianNumber(previewTax)}</p>
+        </div>
+        <div className="text-right">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Grand total</p>
+          <p className="font-mono text-lg font-bold text-dark mt-0.5">{formatIndianNumber(previewGrand)}</p>
         </div>
       </div>
     </div>

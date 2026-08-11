@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 import { useOptimisticCreate } from "@/lib/hooks/useOptimisticMutation";
 import { PageHeader } from "@/components/ui/page-header";
+import { formatIndianNumber } from "@/lib/format";
 
 interface ItemDraft {
   description: string;
@@ -122,6 +123,11 @@ export default function NewInvoicePage() {
 
   const saving = submitting || hookSaving;
 
+  // Live totals preview — the form shows real numbers before submit.
+  const previewLines = items.filter((l) => l.rate);
+  const previewSubtotal = previewLines.reduce((sum, l) => sum + (Number(l.quantity) || 0) * (Number(l.rate) || 0), 0);
+  const previewTax = previewLines.reduce((sum, l) => sum + (Number(l.quantity) || 0) * (Number(l.rate) || 0) * (Number(l.gstRate) || 0) / 100, 0);
+  const previewGrand = previewSubtotal + previewTax;
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
@@ -162,6 +168,20 @@ export default function NewInvoicePage() {
           </div>
         ))}
         <button onClick={() => setItems([...items, { description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }])} className="text-amber text-ui-xs font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>
+      </div>
+      <div className="bg-surface border border-border rounded-md p-5 shadow-sm flex flex-wrap items-center justify-end gap-6 font-ui">
+        <div className="text-right">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Subtotal</p>
+          <p className="font-mono text-ui-sm text-dark mt-0.5">{formatIndianNumber(previewSubtotal)}</p>
+        </div>
+        <div className="text-right">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">GST</p>
+          <p className="font-mono text-ui-sm text-mid mt-0.5">{formatIndianNumber(previewTax)}</p>
+        </div>
+        <div className="text-right">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Grand total</p>
+          <p className="font-mono text-lg font-bold text-dark mt-0.5">{formatIndianNumber(previewGrand)}</p>
+        </div>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export function MarketingFooter() {
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/features">Features</Link></li>
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/pricing">Pricing</Link></li>
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/security">Security</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/api">API</Link></li>
+            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/features">Product</Link></li>
           </ul>
         </div>
 
@@ -25,8 +25,8 @@ export function MarketingFooter() {
           <h4 className="font-semibold text-dark mb-6 uppercase tracking-wider text-ui-xs">Company</h4>
           <ul className="space-y-4 list-none p-0">
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/about">About</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/careers">Careers</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/press">Press</Link></li>
+            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/about">About</Link></li>
+            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/blog">Blog</Link></li>
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/blog">Blog</Link></li>
           </ul>
         </div>
@@ -36,7 +36,7 @@ export function MarketingFooter() {
           <ul className="space-y-4 list-none p-0">
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/privacy">Privacy</Link></li>
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/terms">Terms</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/compliance">Compliance</Link></li>
+            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/security">Security</Link></li>
             <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/contact">Contact</Link></li>
           </ul>
         </div>

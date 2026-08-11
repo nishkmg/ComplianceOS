@@ -1,12 +1,17 @@
+"use client";
+
 
 import Link from 'next/link';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 
 import { blogPosts as posts } from "@/lib/blog-posts";
+import { useState } from "react";
 
 export default function BlogIndexPage() {
+  const [activeCategory, setActiveCategory] = useState("All");
   const featured = posts[0];
+  const visiblePosts = activeCategory === "All" ? posts : posts.filter((p) => p.category === activeCategory);
 
   return (
     <div className="bg-page-bg text-dark min-h-screen">
@@ -51,15 +56,19 @@ export default function BlogIndexPage() {
           <div className="flex justify-between items-end mb-12 border-b-2 border-border-subtle pb-4">
             <h2 className="font-display text-marketing-xl">Latest Despatches</h2>
             <div className="hidden md:flex gap-6 font-ui text-light uppercase tracking-widest">
-              <button className="text-dark font-bold cursor-pointer border-none bg-transparent">All</button>
-              <button className="hover:text-dark cursor-pointer border-none bg-transparent">Taxation</button>
-              <button className="hover:text-dark cursor-pointer border-none bg-transparent">Audit</button>
-              <button className="hover:text-dark cursor-pointer border-none bg-transparent">Payroll</button>
-              <button className="hover:text-dark cursor-pointer border-none bg-transparent">SME Guide</button>
+              {["All", "GST", "ITR", "Accounting", "Payroll", "Guides", "Audit"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={cat === activeCategory ? "text-dark font-bold cursor-pointer border-none bg-transparent" : "hover:text-dark cursor-pointer border-none bg-transparent"}
+                >
+                  {cat === "All" ? "All" : cat === "GST" ? "Taxation" : cat}
+                </button>
+              ))}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16">
-            {posts.slice(1).map((post) => (
+            {visiblePosts.slice(1).map((post) => (
               <article key={post.slug} className="group text-left">
                 <div className="aspect-[16/10] overflow-hidden mb-6 bg-surface border border-border-subtle">
                   <img className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-[filter,transform] duration-500" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
