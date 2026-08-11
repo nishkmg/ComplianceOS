@@ -1251,26 +1251,26 @@ function aggregateGstr9Schedules(
   returnLines: Array<{
     tableNumber: string;
     taxableValue: string;
-    igstAmount: string;
-    cgstAmount: string;
-    sgstAmount: string;
-    cessAmount: string;
+    igstAmount: string | null;
+    cgstAmount: string | null;
+    sgstAmount: string | null;
+    cessAmount: string | null;
     transactionType: string;
     placeOfSupply?: string;
-    gstin?: string;
-    partyName?: string;
-    sourceDocumentNumber?: string;
-    sourceDocumentDate?: string;
+    gstin?: string | null;
+    partyName?: string | null;
+    sourceDocumentNumber?: string | null;
+    sourceDocumentDate?: string | null;
   }>,
 ): Gstr9ScheduleRow[] {
   const schedules = new Map<string, Gstr9ScheduleRow>();
 
   for (const line of returnLines) {
     const tv = parseFloat(line.taxableValue) || 0;
-    const igst = parseFloat(line.igstAmount) || 0;
-    const cgst = parseFloat(line.cgstAmount) || 0;
-    const sgst = parseFloat(line.sgstAmount) || 0;
-    const cess = parseFloat(line.cessAmount) || 0;
+    const igst = parseFloat(line.igstAmount ?? "0") || 0;
+    const cgst = parseFloat(line.cgstAmount ?? "0") || 0;
+    const sgst = parseFloat(line.sgstAmount ?? "0") || 0;
+    const cess = parseFloat(line.cessAmount ?? "0") || 0;
 
     // Derive schedule code from table number
     let code = line.tableNumber;

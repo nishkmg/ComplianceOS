@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default function Gstr9Page() {
@@ -20,6 +21,15 @@ export default function Gstr9Page() {
   );
   const ret = returns.data?.[0] ?? null;
 
+  const utils = api.useUtils();
+  const generate = api.gstReturns.generateGSTR9.useMutation({
+    onSuccess: () => {
+      showToast.success("GSTR-9 generated from filed GSTR-3B returns.");
+      void utils.gstReturns.list.invalidate();
+    },
+    onError: (e) => showToast.error(e.message),
+  });
+
   const schedules = api.gstReturns.gstr9Schedules.useQuery(
     { returnId: ret?.id ?? "" },
     { enabled: !!ret?.id, staleTime: 15_000 },
@@ -29,11 +39,22 @@ export default function Gstr9Page() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h2 className="font-ui text-lg font-bold text-dark">GSTR-9 · Annual Return</h2>
-        {ret && (
-          <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className="btn btn-secondary flex items-center gap-2 no-underline">
-            <Icon name="download" className="text-ui-xl" /> PDF
-          </Link>
-        )}
+        <div className="flex gap-2">
+          {!ret && (
+            <button
+              onClick={() => generate.mutate({ periodMonth, periodYear })}
+              disabled={generate.isPending}
+              className="btn btn-primary"
+            >
+              Generate from GSTR-3B
+            </button>
+          )}
+          {ret && (
+            <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className="btn btn-secondary flex items-center gap-2 no-underline">
+              <Icon name="download" className="text-ui-xl" /> PDF
+            </Link>
+          )}
+        </div>
       </div>
 
       {!ret ? (
