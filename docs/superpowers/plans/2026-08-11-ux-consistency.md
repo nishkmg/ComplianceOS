@@ -219,3 +219,19 @@ Screenshots pending (Evidence Collector pass runs after code fixes; findings abo
   main pushed; Vercel production Ready (m4vtjfatb); health healthy, root 200.
   Reality Checker: certification deferred — self-verified via typecheck/build/
   513 tests/design-audit; full axe sweep runs in CI once GitHub Actions enabled.
+
+## Execution status (session 3)
+- Onboarding CoA rebuild: DONE — 06de165. REST step 3 seeds the CoA from the
+  businessType_industry template (was cosmetic — fresh tenants hit an empty
+  accounts page); GET returns real accounts; step-coa-review + step-opening-
+  balances render real data (were hardcoded fake trees); step 6 creates the
+  opening-balance JE. Fixed seedCoa FK bug (pre-assigned UUIDs never inserted)
+  + GET auth gap (was unprotected PII) + getToken secret (every POST 401'd).
+  E2E verified: 63 accounts + opening-balance JE, onboarding complete.
+- Payroll advance recovery + payslips: DONE — b92180b (monthReference gate,
+  void restore via advance_id, reprocess unblocked, generate payslips).
+- FiscalYearSelect + dynamic blog + security/pricing honesty: DONE — 6688786.
+- Totals previews ×3 forms + blog filters + footer links: DONE — 9e1e279.
+- Deployed to prod; /api/onboarding now 401s unauthenticated.
+- Remaining (small): PeriodPicker extraction, marketing newsletter fake form,
+  CI gate (GitHub Actions disabled by user choice).
