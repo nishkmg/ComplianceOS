@@ -4,7 +4,9 @@ const EnvSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 
   DATABASE_URL: z.string().url(),
-  REDIS_URL: z.string().url(),
+  // Redis is vestigial (health check only) and not present in every runtime —
+  // optional so missing REDIS_URL never blocks builds or deploys.
+  REDIS_URL: z.string().url().optional(),
 
   NEXTAUTH_SECRET: z.string().min(16),
   // NextAuth v5 derives the base URL from the request when unset (Vercel)

@@ -42,7 +42,14 @@ async function checkRedis(): Promise<{ status: string; latencyMs?: number; error
 }
 
 async function checkProjector(): Promise<{ status: string; url?: string; error?: string; projectors?: string[]; notifyLagMs?: number; lastEventAt?: string; listenerConnected?: boolean }> {
-  const projectorUrl = process.env.PROJECTOR_URL || "http://localhost:3100";
+  // No PROJECTOR_URL configured = no worker process in this runtime (e.g.
+  // serverless). Report as not_configured — NOT an error — so health stays
+  // green while a worker (VM/PM2 or Cloudflare Worker) is absent by design.
+  const configuredUrl = process.env.PROJECTOR_URL;
+  if (!configuredUrl) {
+    return { status: "not_configured" };
+  }
+  const projectorUrl = configuredUrl;
   try {
     const res = await fetch(`${projectorUrl}/health`, {
       method: "GET",

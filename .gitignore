@@ -20,3 +20,4 @@ apps/web/e2e/__baseline__/
 # Test artifacts
 apps/web/playwright-report/
 packages/server/data/
+.env.prod.pull

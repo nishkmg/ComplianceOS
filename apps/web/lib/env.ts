@@ -1,6 +1,5 @@
 const requiredServerEnvVars = [
   "DATABASE_URL",
-  "REDIS_URL",
   "NEXTAUTH_SECRET",
   "NEXTAUTH_URL",
 ] as const;
@@ -13,6 +12,7 @@ const optionalServerEnvVars = [
   "SENTRY_ORG",
   "SENTRY_PROJECT",
   "PROJECTOR_PORT",
+  "REDIS_URL",
 ] as const;
 
 type EnvResult = { ok: true } | { ok: false; missing: string[] };

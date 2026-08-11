@@ -4,7 +4,6 @@ import { eq, and, desc } from "drizzle-orm";
 import { router, protectedProcedure } from "../trpc";
 import * as _db from "../../../db/src/index";
 const { ocrScanResults } = _db;
-import { processScan, type ExtractedScan } from "../services/ocr-engine";
 import { createInvoice } from "../commands/create-invoice";
 import { createExpenseFromReceipt } from "../commands/create-expense-from-receipt";
 
@@ -32,58 +31,10 @@ export const ocrScanRouter = router({
         status: "processing",
       }).returning();
 
-      // Fire-and-forget OCR processing (provider: tesseract | llm, see ocr-engine)
-      processScan(fileUrl, scanType)
-        .then((extracted) => {
-          const parsed = extracted.parsed;
-          if (scanType === "receipt" && parsed.type === "receipt") {
-            return ctx.db.update(ocrScanResults)
-              .set({
-                rawText: extracted.rawText,
-                parsedVendorName: parsed.vendorName,
-                parsedVendorAddress: parsed.vendorAddress,
-                parsedVendorGstin: parsed.vendorGstin,
-                parsedInvoiceDate: parsed.receiptDate,
-                parsedTotal: parsed.total ? String(parsed.total) : null,
-                parsedExpenseCategory: parsed.expenseCategory,
-                confidenceScore: String(extracted.confidence),
-                status: "completed",
-                updatedAt: new Date(),
-              })
-              .where(eq(ocrScanResults.id, result.id));
-          }
-          if (scanType === "invoice" && parsed.type === "invoice") {
-            return ctx.db.update(ocrScanResults)
-              .set({
-                rawText: extracted.rawText,
-                parsedVendorName: parsed.vendorName,
-                parsedVendorGstin: parsed.vendorGstin,
-                parsedInvoiceNumber: parsed.invoiceNumber,
-                parsedInvoiceDate: parsed.invoiceDate,
-                parsedDueDate: parsed.dueDate,
-                parsedSubtotal: parsed.subtotal ? String(parsed.subtotal) : null,
-                parsedCgstTotal: parsed.cgstTotal ? String(parsed.cgstTotal) : null,
-                parsedSgstTotal: parsed.sgstTotal ? String(parsed.sgstTotal) : null,
-                parsedIgstTotal: parsed.igstTotal ? String(parsed.igstTotal) : null,
-                parsedTotal: parsed.total ? String(parsed.total) : null,
-                parsedLineItems: JSON.stringify(parsed.lineItems),
-                confidenceScore: String(extracted.confidence),
-                status: "completed",
-                updatedAt: new Date(),
-              })
-              .where(eq(ocrScanResults.id, result.id));
-          }
-          // Parser returned a shape mismatch — treat as failed
-          return ctx.db.update(ocrScanResults)
-            .set({ status: "failed", updatedAt: new Date() })
-            .where(eq(ocrScanResults.id, result.id));
-        })
-        .catch(() => {
-          return ctx.db.update(ocrScanResults)
-            .set({ status: "failed", updatedAt: new Date() })
-            .where(eq(ocrScanResults.id, result.id));
-        });
-
+      // OCR processing is queued, not fire-and-forget: the projector worker
+      // polls ocr_scan_results (status = 'processing', FOR UPDATE SKIP LOCKED)
+      // and writes the parsed result back. Durable across crashes/restarts —
+      // a stuck row is simply reprocessed on the next poll cycle.
       return { scanId: result.id, status: "processing" };
     }),
 

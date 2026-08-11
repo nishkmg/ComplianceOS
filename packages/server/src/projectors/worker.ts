@@ -12,9 +12,10 @@ try {
 }
 
 import * as _db from "../../../db/src/index";
-const { db, projectorState, eventStore, tenants } = _db;
+const { db, projectorState, eventStore, tenants, ocrScanResults } = _db;
 import { eq, and, sql } from "drizzle-orm";
 import postgres from "postgres";
+import { processScan, type ExtractedScan } from "../services/ocr-engine";
 import { accountBalanceProjector } from "./account-balance.js";
 import { inventoryValuationProjector } from "./inventory-valuation.js";
 import { journalEntryViewProjector } from "./journal-entry-view.js";
@@ -220,6 +221,85 @@ function updateLastProcessed() {
   }
 }
 
+/**
+ * OCR scans are queued in ocr_scan_results (status = 'processing') by the
+ * upload mutation. This poller drains that queue in the worker process:
+ * durable (no fire-and-forget work inside a request), crash-safe (SKIP LOCKED
+ * rows left in 'processing' are simply reprocessed next cycle), and it keeps
+ * heavy OCR work (tesseract WASM / LLM vision calls) out of the web process.
+ */
+async function processPendingOcrScans(): Promise<void> {
+  try {
+    const pending = await db
+      .select()
+      .from(ocrScanResults)
+      .where(eq(ocrScanResults.status, "processing"))
+      .orderBy(ocrScanResults.createdAt)
+      .limit(10)
+      .for("update", { skipLocked: true });
+
+    for (const row of pending) {
+      try {
+        const extracted: ExtractedScan = await processScan(row.fileUrl, row.scanType);
+        const parsed = extracted.parsed;
+
+        if (row.scanType === "receipt" && parsed.type === "receipt") {
+          await db.update(ocrScanResults)
+            .set({
+              rawText: extracted.rawText,
+              parsedVendorName: parsed.vendorName,
+              parsedVendorAddress: parsed.vendorAddress,
+              parsedVendorGstin: parsed.vendorGstin,
+              parsedInvoiceDate: parsed.receiptDate,
+              parsedTotal: parsed.total ? String(parsed.total) : null,
+              parsedExpenseCategory: parsed.expenseCategory,
+              confidenceScore: String(extracted.confidence),
+              status: "completed",
+              updatedAt: new Date(),
+            })
+            .where(eq(ocrScanResults.id, row.id));
+        } else if (row.scanType === "invoice" && parsed.type === "invoice") {
+          await db.update(ocrScanResults)
+            .set({
+              rawText: extracted.rawText,
+              parsedVendorName: parsed.vendorName,
+              parsedVendorGstin: parsed.vendorGstin,
+              parsedInvoiceNumber: parsed.invoiceNumber,
+              parsedInvoiceDate: parsed.invoiceDate,
+              parsedDueDate: parsed.dueDate,
+              parsedSubtotal: parsed.subtotal ? String(parsed.subtotal) : null,
+              parsedCgstTotal: parsed.cgstTotal ? String(parsed.cgstTotal) : null,
+              parsedSgstTotal: parsed.sgstTotal ? String(parsed.sgstTotal) : null,
+              parsedIgstTotal: parsed.igstTotal ? String(parsed.igstTotal) : null,
+              parsedTotal: parsed.total ? String(parsed.total) : null,
+              parsedLineItems: JSON.stringify(parsed.lineItems),
+              confidenceScore: String(extracted.confidence),
+              status: "completed",
+              updatedAt: new Date(),
+            })
+            .where(eq(ocrScanResults.id, row.id));
+        } else {
+          // Parser returned a shape mismatch — treat as failed
+          await db.update(ocrScanResults)
+            .set({ status: "failed", updatedAt: new Date() })
+            .where(eq(ocrScanResults.id, row.id));
+        }
+      } catch (err) {
+        logger.error("[Projector Worker] OCR scan failed", err as Error, {
+          scanId: row.id,
+          tenantId: row.tenantId,
+          fileName: row.fileName,
+        });
+        await db.update(ocrScanResults)
+          .set({ status: "failed", updatedAt: new Date() })
+          .where(eq(ocrScanResults.id, row.id));
+      }
+    }
+  } catch (err) {
+    logger.error("[Projector Worker] OCR poll cycle error", err as Error);
+  }
+}
+
 async function processAll(): Promise<void> {
   const allTenants = await db.select({ id: tenants.id }).from(tenants);
 
@@ -235,6 +315,8 @@ async function processAll(): Promise<void> {
       }
     }
   }
+
+  await processPendingOcrScans();
 
   updateLastProcessed();
 }
