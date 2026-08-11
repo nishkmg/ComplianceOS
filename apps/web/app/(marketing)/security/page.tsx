@@ -6,10 +6,10 @@ import Link from 'next/link';
 
 const features = [
   { icon: 'encryption', title: 'Encryption at Rest', desc: 'All data is encrypted using AES-256 encryption. Your financial records are stored with the same standards used by major financial institutions.' },
-  { icon: 'travel_explore', title: 'Data Residency', desc: 'Your data never leaves India. We operate exclusively through AWS Mumbai (ap-south-1) region, ensuring full compliance with Indian data localization laws.' },
-  { icon: 'vpn_key', title: 'Access Control', desc: 'Role-based access control (RBAC) with granular permissions. Multi-factor authentication (MFA) enforced for all administrative accounts.' },
+  { icon: 'travel_explore', title: 'Data Residency', desc: 'Your application data is stored on Supabase (AWS ap-northeast-1, Tokyo) with TLS in transit and encryption at rest. We are reviewing India-region hosting options as volumes grow.' },
+  { icon: 'vpn_key', title: 'Access Control', desc: 'Role-based access control (owner, accountant, manager, employee) with tenant-scoped data isolation enforced at the database layer. MFA for administrative accounts is on the roadmap.' },
   { icon: 'verified_user', title: 'Audit Trail', desc: 'Every action within the system is logged and immutable. Complete traceability for all journal entries, modifications, and data exports.' },
-  { icon: 'api', title: 'Secure API Gateway', desc: 'All API communications are encrypted via TLS 1.3. API access requires OAuth 2.0 authentication with short-lived access tokens.' },
+  { icon: 'api', title: 'Secure API Gateway', desc: 'All API communications are encrypted via TLS 1.2+. Sessions use signed JWTs via NextAuth credentials, and every mutation is recorded in an append-only audit log.' },
   { icon: 'shield', title: 'Compliance Framework', desc: 'Built to align with ICAI guidelines and IT Act 2000 requirements. Regular third-party security audits and penetration testing.' },
 ];
 

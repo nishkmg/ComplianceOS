@@ -1,79 +1,61 @@
-import "next/link";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
+import { blogPosts, BLOG_BODIES } from "@/lib/blog-posts";
 
-export default function BlogPostPage() {
-  // In real app, fetch by slug
+export function generateStaticParams() {
+  return blogPosts.map((post) => ({ slug: post.slug }));
+}
+
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
+  if (!post) notFound();
+
+  const body = BLOG_BODIES[post.slug] ?? [post.excerpt];
+  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+
   return (
     <div className="bg-page-bg text-dark min-h-screen">
       <MarketingNav />
       <main className="max-w-page mx-auto px-8 pt-space-128 pb-space-96">
         <article className="max-w-[680px] mx-auto text-left">
-          {/* Category & Date */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">Tax Compliance</span>
+            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">{post.category}</span>
             <span className="h-[1px] w-8 bg-border-subtle"></span>
-            <span className="font-mono text-ui-xs text-light">12 October 2024</span>
+            <span className="font-mono text-ui-xs text-light">{post.date}</span>
           </div>
 
-          {/* Title */}
-          <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8 leading-tight">
-            Navigating Section 43B(h): A New Era for MSME Payments in India
+          <h1 className="font-display text-4xl text-dark mb-8 leading-tight">
+            {post.title}
           </h1>
 
-          {/* Byline */}
           <div className="flex items-center gap-4 pb-space-48 border-b-[0.5px] border-border-subtle mb-space-48">
-            <div className="w-12 h-12 rounded-full overflow-hidden bg-lighter">
-              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="" />
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-lighter flex items-center justify-center">
+              <span className="font-ui font-bold text-mid">{post.author.slice(0, 2).toUpperCase()}</span>
             </div>
             <div>
-              <p className="font-ui font-bold text-dark">Vikram Patel</p>
-              <p className="font-ui text-light uppercase tracking-wider">Senior Tax Analyst</p>
+              <p className="font-ui font-bold text-dark">{post.author}</p>
+              <p className="font-ui text-light uppercase tracking-wider">Arthvahi Blog</p>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="space-y-8 leading-relaxed font-serif text-ui-xl text-dark">
-            <p>The recent introduction of Section 43B(h) in the Income Tax Act marks a significant shift in the compliance landscape for Indian businesses dealing with Micro and Small Enterprises (MSMEs).</p>
-            <p>This amendment, effective from April 1, 2023, aims to solve a perennial problem: the delayed payment cycle that stifles Micro and Small Enterprises (MSMEs).</p>
-
-            <h2 className="font-display text-display-xl mt-16 mb-6 text-dark">The 45-Day Mandate</h2>
-            <p>The crux of the matter lies in timing. Under the new regime, any sum payable by an assessee to a registered MSME must be cleared within the time limit specified in Section 15 of the MSMED Act, 2006. If no agreement exists, this is 15 days; if an agreement exists, it cannot exceed 45 days.</p>
-            <p>Failure to comply results in the expense being disallowed for that year and allowed only in the year of actual payment. This creates a permanent difference where the assessee loses the deduction forever.</p>
-
-            <div className="bg-section-muted border-l-4 border-amber p-6 my-10">
-              <p className="font-ui text-sm text-dark italic">"The MSME amendment under Section 43B(h) has been one of the most impactful compliance changes in recent years, directly influencing cash flow management strategies across the supply chain."</p>
-            </div>
-
-            <h2 className="font-display text-display-xl mt-16 mb-6 text-dark">What This Means for Your Business</h2>
-            <p>If your organization sources goods or services from MSME-registered vendors, you must now track these payments separately. Your accounting software should flag any MSME invoices approaching the 45-day threshold and prioritize them for processing.</p>
-            <p>Non-compliance is expensive — the disallowed expense is permanently lost, increasing your tax liability for the year. This is not a deferral; it is a forfeiture.</p>
-
-            <h2 className="font-display text-display-xl mt-16 mb-6 text-dark">How Arthvahi Handles This</h2>
-            <p>Our platform automatically flags MSME invoices and tracks payment timelines against the statutory deadline. You receive proactive notifications at 30 days, 40 days, and finally at 44 days, ensuring you never miss a deadline inadvertently.</p>
+          <div className="space-y-8 leading-relaxed font-display text-xl text-dark">
+            {body.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
           </div>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-border-subtle my-space-48"></div>
-
-          {/* Related Posts */}
-          <h3 className="font-display text-marketing-xl text-dark mb-8">Related Articles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="group cursor-pointer">
-              <div className="aspect-[16/10] overflow-hidden mb-6 bg-surface-muted border border-border-subtle">
-                <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400" alt="" />
-              </div>
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">GST</span>
-              <h4 className="font-display text-lg text-dark mt-2 mb-2 group-hover:text-primary transition-colors">GSTR-1 vs GSTR-3B: Understanding Mismatches</h4>
-              <p className="font-ui text-sm text-secondary">Common reasons for return mismatches and how to resolve them before notice.</p>
-            </div>
-            <div className="group cursor-pointer">
-              <div className="aspect-[16/10] overflow-hidden mb-6 bg-surface-muted border border-border-subtle">
-                <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400" alt="" />
-              </div>
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber font-bold">Payroll</span>
-              <h4 className="font-display text-lg text-dark mt-2 mb-2 group-hover:text-primary transition-colors">Auto-Calculating PF, ESI, PT and TDS</h4>
-              <p className="font-ui text-sm text-secondary">How Arthvahi automates statutory payroll calculations.</p>
+          <div className="mt-16 pt-8 border-t-[0.5px] border-border-subtle">
+            <h2 className="font-ui text-lg font-bold text-dark mb-6">Related reading</h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {related.map((r) => (
+                <Link key={r.slug} href={`/blog/${r.slug}`} className="block p-4 border border-border-subtle rounded-md hover:border-amber/40 transition-colors no-underline">
+                  <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold">{r.category}</p>
+                  <p className="font-ui text-ui-sm font-semibold text-dark mt-2">{r.title}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </article>

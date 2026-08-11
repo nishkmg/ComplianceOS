@@ -28,6 +28,7 @@ const incomeHeads = [
 
 export default function ITRComputationPage() {
   const { activeFy: selectedFY, setActiveFy: setSelectedFY } = useFiscalYear();
+  const { fiscalYears: fiscalYearsList } = useFiscalYear();
   const utils = api.useUtils();
 
   const breakdown = api.itrComputation.getIncomeBreakdown.useQuery(
@@ -125,9 +126,9 @@ export default function ITRComputationPage() {
             value={selectedFY}
             onChange={(e) => setSelectedFY(e.target.value)}
           >
-            <option value="2026-27">FY 2026-27</option>
-            <option value="2025-26">FY 2025-26</option>
-            <option value="2024-25">FY 2024-25</option>
+            {fiscalYearsList.map((fy) => (
+              <option key={fy.year} value={fy.year}>FY {fy.year}</option>
+            ))}
           </select>
           {activeReturn && (
             <Button

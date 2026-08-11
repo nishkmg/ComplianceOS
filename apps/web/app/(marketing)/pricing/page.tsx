@@ -42,7 +42,7 @@ const faqs = [
   { q: 'Can I import data from Tally or Zoho?', a: 'Absolutely. We offer one-click migration tools for Tally, Zoho Books, and Quickbooks, ensuring you can transition your entire financial history without losing a single entry.' },
   { q: 'Is the Pro plan MCA compliant?', a: 'Yes, our Pro and Business plans include the mandatory Audit Trail (edit log) feature as per the latest Ministry of Corporate Affairs (MCA) guidelines.' },
   { q: 'Do you offer support for GST filing?', a: 'We provide automated generation of GSTR-1, 2, and 3B reports. For the Pro plan and above, we also offer direct filing via our secure API gateway.' },
-  { q: 'What happens if I cancel my subscription?', a: 'You retain read-only access to your data for up to 7 years, as required by Indian tax laws. You can also export all your data in Excel or PDF formats at any time.' },
+  { q: 'What happens if I cancel my subscription?', a: 'You can export all your data at any time. After cancellation you have a 30-day window to download everything; the account is then archived per our terms.' },
   { q: 'Can my CA access my account for free?', a: 'Yes, every paid plan includes one complimentary "Auditor Seat" specifically designed for your Chartered Accountant to review books and pull reports.' },
 ];
 
