@@ -162,11 +162,22 @@ export function AppSidebar() {
   const toggleGroup = (key: string) =>
     setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
 
-  /** Returns true if a plain nav link should be highlighted. */
-  const isActive = (href: string) =>
-    href === '/dashboard'
-      ? pathname === href
-      : pathname === href || pathname.startsWith(href + '/');
+  /**
+   * Active-link rule: the nav entry whose href is the LONGEST prefix match
+   * wins. Exact matches beat prefixes; among prefixes, the deepest one wins.
+   * This prevents bleed (e.g. /inventory staying lit on /inventory/operations)
+   * while keeping parents lit on their detail subroutes (e.g. /gst/returns on
+   * /gst/returns/2026-04/gstr1, /invoices on /invoices/new).
+   */
+  const navHrefs = navSections.flatMap(section =>
+    section.items.flatMap(item =>
+      isCollapsible(item) ? item.children.map(c => c.href) : [item.href],
+    ),
+  );
+  const activeHref = navHrefs
+    .filter(h => pathname === h || pathname.startsWith(h + '/'))
+    .sort((a, b) => b.length - a.length)[0];
+  const isActive = (href: string) => href === activeHref;
 
   return (
     <aside
@@ -206,7 +217,7 @@ export function AppSidebar() {
                             'border-l-[3px] transition-colors border-none bg-transparent cursor-pointer group active:scale-[0.98]',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                             groupActive
-                              ? 'border-amber text-dark font-semibold'
+                              ? 'border-amber text-white font-semibold'
                               : 'border-transparent text-sidebar-muted hover:text-dark hover:bg-lighter/40',
                           ].join(' ')}
                           aria-expanded={isOpen}

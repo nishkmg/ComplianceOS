@@ -52,16 +52,19 @@ function AppShell({ children }: { children: ReactNode }) {
       {/* Fixed left sidebar — desktop only (lg+), z-40, cleared by topbar h-14 inside */}
       <AppSidebar />
 
-      {/*
-        Main content area
-        - Desktop: offset right of sidebar (ml-64) and below topbar (pt-14)
-        - Mobile:  no left margin, below topbar (pt-14), above mobile nav (pb-16)
-      */}
-        <main
-          id="main-content"
-          className="lg:ml-64 pt-14 pb-16 lg:pb-0 min-h-screen p-6 relative"
-          tabIndex={-1}
-        >
+  {/*
+    Main content area
+    - Desktop: offset right of sidebar (ml-64) and below topbar (pt-20)
+    - Mobile:  no left margin, below topbar (pt-20), above mobile nav (pb-16)
+    pt-20 = 80px = 56px topbar + 24px safe gap. pt-* must come AFTER p-6 in
+    the class list so the more-specific utility wins (Tailwind orders
+    padding-top after the shorthand — do not reorder).
+  */}
+    <main
+      id="main-content"
+      className="lg:ml-64 pb-16 lg:pb-0 min-h-screen p-6 pt-20 relative"
+      tabIndex={-1}
+    >
           <NavigationLoader />
           {children}
         </main>
