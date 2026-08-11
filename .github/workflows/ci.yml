@@ -17,7 +17,7 @@ concurrency:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/complianceos_test
   REDIS_URL: redis://localhost:6379
-  NEXTAUTH_SECRET: ci-test-secret
+  NEXTAUTH_SECRET: ci-test-secret-0123456789
   NEXTAUTH_URL: http://localhost:3000
   AUTH_TRUST_HOST: 'true'
 
