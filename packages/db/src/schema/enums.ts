@@ -50,7 +50,7 @@ export const tagEnum = pgEnum("tag", [
 export const reconciliationAccountEnum = pgEnum("reconciliation_account", ["bank", "none"]);
 
 export const referenceTypeEnum = pgEnum("reference_type", [
-  "invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "manual",
+  "invoice", "payment", "receipt", "journal", "payroll", "inventory", "opening_balance", "credit_note", "manual",
 ]);
 
 export const jeStatusEnum = pgEnum("je_status", ["draft", "posted", "voided"]);

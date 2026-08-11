@@ -29,6 +29,7 @@ import { tenantConfigRouter } from "./tenant-config";
 import { auditLogRouter } from "./audit-log";
 import { teamRouter } from "./team";
 import { authRouter } from "./auth";
+import { creditNotesRouter } from "./credit-notes";
 
 export const appRouter = router({
   accounts: accountsRouter,
@@ -61,6 +62,7 @@ export const appRouter = router({
   auditLog: auditLogRouter,
   team: teamRouter,
   auth: authRouter,
+  creditNotes: creditNotesRouter,
 });
 
 export type AppRouter = typeof appRouter;

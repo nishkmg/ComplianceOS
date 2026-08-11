@@ -6,15 +6,15 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 
 | metric | count |
 |---|---|
-| total | 101 |
+| total | 104 |
 | unwired | 31 |
-| fabricated | 27 |
+| fabricated | 28 |
 | noPageHeader | 87 |
 | bannedColors | 0 |
-| notSwept | 35 |
-| notInNav | 67 |
-| noLoading | 98 |
-| noError | 98 |
+| notSwept | 38 |
+| notInNav | 70 |
+| noLoading | 101 |
+| noError | 101 |
 | fakeSuccess | 0 |
 
 ## Routes
@@ -35,6 +35,9 @@ Generated: 2026-08-11 — re-run: `node scripts/page-audit.mjs`
 | /contact | 109 | fetch:/api/contact | Y | 0 |  |  | Y |  | 0 |  |  |  |  |
 | /contact/success | 25 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
 | /cookies | 70 | none |  | 0 |  |  |  |  | 0 |  |  |  |  |
+| /credit-notes | 79 | trpc:creditNotes.list | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /credit-notes/[id] | 136 | trpc:creditNotes.get | Y | 0 |  |  |  | Y | 0 |  |  |  |  |
+| /credit-notes/new | 272 | trpc:accounts.list,invoices.list,creditNotes.create | Y | 0 |  |  | Y | Y | 0 |  |  |  |  |
 | /dashboard | 160 | trpc:journalEntries.list | Y | 0 |  |  |  | Y | 0 | Y | Y |  |  |
 | /employees | 41 | trpc:employees.list | Y | 0 |  |  |  |  | 0 | Y | Y |  |  |
 | /employees/[id] | 192 | trpc:employees.get,advances.list,advances.create,advances.cancel | Y | 0 |  |  | Y |  | 0 |  |  |  |  |

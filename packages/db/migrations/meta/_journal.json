@@ -222,6 +222,13 @@
       "when": 1786437359472,
       "tag": "0029_password_reset_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1786440524318,
+      "tag": "0030_reference_type_credit_note",
+      "breakpoints": true
     }
   ]
 }

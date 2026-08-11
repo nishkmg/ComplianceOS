@@ -3,7 +3,7 @@ import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { creditNotes, invoiceLines, invoices, accounts, receivablesSummary, tenants } = _db;
 import * as _shared from "../../../shared/src/index";
-const { CreateCreditNoteInputSchema, getCurrentFiscalYear, stateCodeToGstPrefix } = _shared;
+const { CreateCreditNoteInputSchema, getCurrentFiscalYear, getStateName } = _shared;
 import { createJournalEntry } from "./create-journal-entry";
 import { appendEvent } from "../lib/event-store";
 import { getNextCreditNoteNumber } from "../services/invoice-number";
@@ -41,7 +41,11 @@ export async function createCreditNote(
   if (!tenant?.stateCode) {
     throw new Error("Tenant state code not configured. Update tenant config before creating credit notes.");
   }
-  const tenantState = stateCodeToGstPrefix(tenant.stateCode);
+  // State-name normalization, mirroring create-invoice: customerState is a
+  // state NAME ("karnataka"), the tenant stores a GST numeric code ("29").
+  // Comparing name-to-prefix directly would make every linked credit note
+  // inter-state (IGST) instead of intra-state (CGST+SGST).
+  const tenantStateName = (getStateName(tenant.stateCode) ?? "").toLowerCase();
 
   // If original invoice provided, fetch and validate
   if (validated.originalInvoiceId) {
@@ -58,12 +62,12 @@ export async function createCreditNote(
       throw new Error("Credit note customer must match original invoice customer");
     }
 
-    customerState = originalInvoice[0].customerState || tenantState;
+    customerState = originalInvoice[0].customerState || tenantStateName;
     customerGstin = originalInvoice[0].customerGstin || undefined;
     customerAddress = originalInvoice[0].customerAddress || undefined;
   } else {
     // Standalone credit note - require customer details
-    customerState = tenantState;
+    customerState = tenantStateName;
   }
 
   // Determine fiscal year from date
@@ -86,7 +90,7 @@ export async function createCreditNote(
     let sgstAmount = 0;
     let igstAmount = 0;
 
-    if (customerState === tenantState) {
+    if (String(customerState).toLowerCase() === tenantStateName) {
       // Intra-state: CGST + SGST each half of rate
       cgstAmount = amount * gstRate / 200;
       sgstAmount = amount * gstRate / 200;
