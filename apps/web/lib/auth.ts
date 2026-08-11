@@ -50,11 +50,17 @@ const nextAuth = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
+      // Re-read membership + onboarding state whenever the session updates
+      // (e.g. step 6 calling update()) — otherwise the token keeps
+      // onboardingComplete=false forever and /dashboard bounces back to
+      // /onboarding until the user re-logs-in.
+      const userId = (token.id ?? user?.id) as string | undefined;
       if (user) {
-        const userId = user.id;
+        token.id = user.id;
+      }
+      if (trigger === "update" || user || !token.tenantId) {
         if (!userId) return token;
-        token.id = userId;
         const [ut] = await db
           .select({ tenantId: userTenants.tenantId })
           .from(userTenants)
