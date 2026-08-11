@@ -235,3 +235,14 @@ Screenshots pending (Evidence Collector pass runs after code fixes; findings abo
 - Deployed to prod; /api/onboarding now 401s unauthenticated.
 - Remaining (small): PeriodPicker extraction, marketing newsletter fake form,
   CI gate (GitHub Actions disabled by user choice).
+
+## Execution status (session 4 — ALL CODE-LEVEL ITEMS COMPLETE)
+- PeriodPicker extraction (4 payroll pages): DONE — cdc86cd
+- payroll.pending period sync (pending list now follows the picker): DONE
+- blog newsletter fake form -> honest contact CTA; signup strength meter ->
+  real requirement text; register password min aligned 6->8; Save as Draft
+  wired; forgot-password no false "copied" claim: DONE — cdc86cd
+- Registry complete: every audited finding has landed code-level. The only
+  remaining item is operational, not code: GitHub Actions (disabled at repo
+  level — user choice). CI would run lint/typecheck/build/513+ tests/
+  design-audit/page-audit/axe sweep on push once enabled.
