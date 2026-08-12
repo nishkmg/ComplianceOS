@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, gte, lte } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { itrReturns, itrAnnualIncomeProjection, itrTaxSummaryProjection, itrAdvanceTaxProjection } = _db;
+const { itrReturns, itrAnnualIncomeProjection, itrTaxSummaryProjection, itrAdvanceTaxProjection, accounts, journalEntries, journalEntryLines, fiscalYears } = _db;
 import { appendEvent } from "../lib/event-store";
+import { itrAnnualIncomeProjector } from "../projectors/itr-annual-income";
 import * as _shared from "../../../shared/src/index";
 const { TaxRegime } = _shared;
 
@@ -195,6 +196,142 @@ export const itrComputationRouter = router({
         },
         recommended: oldRegimeWithCess < newRegimeWithCess ? "old" : "new",
         savings: Math.abs(oldRegimeWithCess - newRegimeWithCess),
+      };
+    }),
+
+  computeIncomeFromBooks: protectedProcedure
+    .input(z.object({
+      itrReturnId: z.string().uuid(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const returns = await ctx.db.select().from(itrReturns).where(
+        and(
+          eq(itrReturns.id, input.itrReturnId),
+          eq(itrReturns.tenantId, ctx.tenantId),
+        ),
+      );
+
+      if (!returns.length) {
+        throw new Error("ITR return not found");
+      }
+
+      const itrReturn = returns[0];
+
+      // Resolve the FY window (prefer the fiscal_years row, like create does).
+      const [fy] = await ctx.db
+        .select()
+        .from(fiscalYears)
+        .where(
+          and(
+            eq(fiscalYears.tenantId, ctx.tenantId),
+            eq(fiscalYears.year, itrReturn.financialYear),
+          ),
+        )
+        .limit(1);
+      const fyStart = fy ? fy.startDate : `${Number(itrReturn.financialYear.split("-")[0])}-04-01`;
+      const fyEnd = fy ? fy.endDate : `${Number(itrReturn.financialYear.split("-")[0]) + 1}-03-31`;
+
+      // Aggregate posted books within the return's financial-year window.
+      const rows = await ctx.db
+        .select({
+          accountKind: accounts.kind,
+          debit: journalEntryLines.debit,
+          credit: journalEntryLines.credit,
+        })
+        .from(journalEntryLines)
+        .innerJoin(journalEntries, eq(journalEntryLines.journalEntryId, journalEntries.id))
+        .innerJoin(accounts, eq(journalEntryLines.accountId, accounts.id))
+        .where(
+          and(
+            eq(journalEntries.tenantId, ctx.tenantId),
+            eq(journalEntries.status, "posted"),
+            gte(journalEntries.date, fyStart),
+            lte(journalEntries.date, fyEnd),
+          ),
+        );
+
+      let revenue = 0;
+      let expenses = 0;
+      for (const r of rows) {
+        const net = Number(r.credit) - Number(r.debit);
+        if (r.accountKind === "Revenue") {
+          revenue += net;
+        } else if (r.accountKind === "Expense") {
+          expenses += -net;
+        }
+      }
+      // ITR-3: business/profession profit from books; other heads stay 0
+      // until manually entered. Deductions (80C etc.) are personal, not ledger.
+      const businessProfit = Math.max(0, revenue - expenses);
+      const grossTotalIncome = businessProfit;
+      const totalDeductions = 0;
+      const totalIncome = grossTotalIncome - totalDeductions;
+
+      const payload = {
+        returnId: input.itrReturnId,
+        financialYear: itrReturn.financialYear,
+        incomeByHead: {
+          salary: 0,
+          houseProperty: 0,
+          businessProfit,
+          capitalGains: 0,
+          otherSources: 0,
+        },
+        grossTotalIncome,
+        totalDeductions,
+        totalIncome,
+        computedAt: new Date().toISOString(),
+      };
+
+      const { sequence } = await appendEvent(
+        ctx.db,
+        ctx.tenantId,
+        "itr_return",
+        input.itrReturnId,
+        "income_computed",
+        payload,
+        ctx.session!.user.id,
+      );
+
+      // Materialize the projection inline (the worker may not be running on
+      // serverless deploys) so computeIncome/read paths see fresh data.
+      await itrAnnualIncomeProjector.process(ctx.db, {
+        tenantId: ctx.tenantId,
+        eventType: "income_computed",
+        payload,
+        sequence,
+      });
+
+      const projections = await ctx.db.select().from(itrAnnualIncomeProjection)
+        .where(
+          and(
+            eq(itrAnnualIncomeProjection.tenantId, ctx.tenantId),
+            eq(itrAnnualIncomeProjection.financialYear, itrReturn.financialYear),
+          ),
+        );
+      const projection = projections[0];
+
+      const [updated] = await ctx.db.update(itrReturns)
+        .set({
+          grossTotalIncome: projection.grossTotalIncome,
+          totalDeductions: projection.totalDeductions,
+          totalIncome: projection.totalIncome,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(itrReturns.id, input.itrReturnId),
+            eq(itrReturns.tenantId, ctx.tenantId),
+          ),
+        )
+        .returning();
+
+      return {
+        itrReturnId: input.itrReturnId,
+        grossTotalIncome: updated?.grossTotalIncome ?? "0",
+        totalDeductions: updated?.totalDeductions ?? "0",
+        totalIncome: updated?.totalIncome ?? "0",
+        computedAt: new Date().toISOString(),
       };
     }),
 

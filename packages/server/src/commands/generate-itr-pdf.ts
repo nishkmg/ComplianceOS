@@ -13,6 +13,7 @@ export type ItrFormType = "ITR-1" | "ITR-2" | "ITR-3" | "ITR-4" | "ITR-5" | "ITR
 export interface GenerateItrPdfInput {
   returnId: string;
   formType: ItrFormType;
+  actorId?: string;
 }
 
 export interface GenerateItrPdfResult {
@@ -134,7 +135,7 @@ export async function generateItrPdf(
       storagePath,
       generatedAt: new Date().toISOString(),
     },
-    "system",
+    input.actorId ?? "00000000-0000-0000-0000-000000000000",
   );
 
   return { storagePath, signedUrl: url };

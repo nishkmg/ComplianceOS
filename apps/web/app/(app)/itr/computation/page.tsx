@@ -48,7 +48,7 @@ export default function ITRComputationPage() {
   );
   const taxData = taxQuery.data;
 
-  const computeIncome = api.itrComputation.computeIncome.useMutation({
+  const computeIncome = api.itrComputation.computeIncomeFromBooks.useMutation({
     onSuccess: () => {
       showToast.success("Income recomputed from current data.");
       void utils.itrComputation.getIncomeBreakdown.invalidate();
@@ -135,9 +135,9 @@ export default function ITRComputationPage() {
               variant="outline"
               size="sm"
               onClick={() => computeIncome.mutate({ itrReturnId: activeReturn.id })}
-              disabled={!hasProjection || computeIncome.isPending}
+              disabled={!activeReturn || computeIncome.isPending}
             >
-              {computeIncome.isPending ? "Recomputing…" : "Recompute Income"}
+              {computeIncome.isPending ? "Computing…" : hasProjection ? "Recompute Income" : "Compute Income"}
             </Button>
           )}
           <Link

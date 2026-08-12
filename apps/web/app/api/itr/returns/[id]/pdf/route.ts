@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import { streamPdf } from "@/lib/pdf-stream";
 import { eq, and } from "drizzle-orm";
 import { itrReturns, itrReturnLines } from "@complianceos/db";
+import { getToken } from "next-auth/jwt";
 export const runtime = "nodejs";
 
 type ItrFormType = "ITR-1" | "ITR-2" | "ITR-3" | "ITR-4" | "ITR-5" | "ITR-6" | "ITR-7";
@@ -15,13 +16,18 @@ function getIdFromPath(pathname: string): string {
 
 export async function GET(req: Request) {
   try {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.sub || !token.tenantId) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const tenantId = token.tenantId as string;
+
     const url = new URL(req.url);
-    const tenantId = url.searchParams.get("tenantId");
     const format = url.searchParams.get("format") || "summary";
     const id = getIdFromPath(url.pathname);
 
-    if (!tenantId || !id) {
-      return Response.json({ error: "tenantId and id required" }, { status: 400 });
+    if (!id) {
+      return Response.json({ error: "id required" }, { status: 400 });
     }
 
     const validFormats = ["summary", "itr-v", "json"];
@@ -55,6 +61,7 @@ export async function GET(req: Request) {
     const result = await generateItrPdf(db, tenantId, {
       returnId: id,
       formType,
+      actorId: token.sub,
     });
 
     const filename = `${itrReturn.returnType?.toUpperCase() || "ITR"}_${itrReturn.assessmentYear || "AY"}_${id.slice(0, 8)}.pdf`;

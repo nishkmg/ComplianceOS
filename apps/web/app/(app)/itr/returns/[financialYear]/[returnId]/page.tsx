@@ -52,12 +52,15 @@ export default function ITRReturnDetailPage() {
             <Icon name="chevron_right" className="text-ui-md" />
             <span className="text-dark font-bold">ITR Detail</span>
           </div>
-          <PageHeader title="Financial Year {fy}" />
+          <PageHeader title={`Financial Year ${fy}`} />
           <p className="font-ui text-ui-sm text-secondary mt-1">Assessment Year: {ay} · {data.returnType?.toUpperCase() ?? "ITR"}</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => window.open(`/api/itr/returns/${returnId}/pdf?format=summary`, "_blank")} className="border border-border text-dark px-3 py-2 font-ui text-ui-xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
             <Icon name="download" className="text-ui-md" /> Summary PDF
+          </button>
+          <button onClick={() => window.open(`/api/itr/returns/${returnId}/csv`, "_blank")} className="border border-border text-dark px-3 py-2 font-ui text-ui-xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
+            <Icon name="download" className="text-ui-md" /> Download CSV
           </button>
         </div>
       </header>

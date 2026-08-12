@@ -77,9 +77,11 @@ export const eventTypeEnum = pgEnum("event_type", [
   "payslip_generated",
   "advance_given", "advance_recovered",
   "gst_challan_created", "gst_payment_made", "itc_reconciled", "itc_utilized",
-  "purchase_posted", "purchase_voided", "itc_reversed", "gst_refund_claimed", "gstr3b_generated", "gstr9_generated",
+  "purchase_posted", "purchase_voided", "itc_reversed", "gst_refund_claimed", "gstr1_generated", "gstr2b_generated", "gstr3b_generated", "gstr9_generated",
   "purchase_bill_created", "purchase_bill_paid",
   "income_computed", "tax_computed", "itr_generated",
+  "itr_return_created", "itr_return_generated", "itr_return_amended", "itr_return_filed", "itr_return_voided",
+  "itr_pdf_generated",
 ]);
 
 export const cashFlowCategoryEnum = pgEnum("cash_flow_category", [

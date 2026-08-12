@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from "@/components/ui/icon";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
+import { showToast } from "@/lib/toast";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 
@@ -15,12 +18,61 @@ const typeLabels: Record<string, string> = {
   itr4: "ITR-4",
 };
 
+const createOptions: Array<{ value: "itr3" | "itr4"; label: string }> = [
+  { value: "itr3", label: "ITR-3 — Business & Profession" },
+  { value: "itr4", label: "ITR-4 — Presumptive Income (44AD/44ADA/44AE)" },
+];
+
 export default function ItrReturnsPage() {
   const params = useParams();
   const financialYear = params.financialYear as string;
+  const utils = api.useUtils();
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [returnType, setReturnType] = useState<"itr3" | "itr4">("itr3");
 
   const returns = api.itrReturns.list.useQuery({ financialYear }, { staleTime: 15_000 });
   const rows = returns.data ?? [];
+
+  const computeFromBooks = api.itrComputation.computeIncomeFromBooks.useMutation({
+    onSuccess: (data) => {
+      void utils.itrReturns.list.invalidate();
+      if (data.itrReturnId) {
+        computeTax.mutate({ itrReturnId: data.itrReturnId, taxRegime: "new" });
+      }
+    },
+    onError: (e) => showToast.error(e.message),
+  });
+
+  const computeTax = api.itrComputation.computeTax.useMutation({
+    onSuccess: (data) => {
+      void utils.itrReturns.list.invalidate();
+      if (data.itrReturnId) {
+        generateReturn.mutate({ itrReturnId: data.itrReturnId, returnType });
+      }
+    },
+    onError: (e) => showToast.error(e.message),
+  });
+
+  const createReturn = api.itrReturns.create.useMutation({
+    onSuccess: (data) => {
+      showToast.success("Return created — computing now.");
+      setCreateOpen(false);
+      void utils.itrReturns.list.invalidate();
+      if (data.itrReturnId) {
+        computeFromBooks.mutate({ itrReturnId: data.itrReturnId });
+      }
+    },
+    onError: (e) => showToast.error(e.message),
+  });
+
+  const generateReturn = api.itrReturns.generate.useMutation({
+    onSuccess: () => {
+      showToast.success("Return generated.");
+      void utils.itrReturns.list.invalidate();
+    },
+    onError: (e) => showToast.error(e.message),
+  });
 
   const totals = useMemo(() => {
     let income = 0, tax = 0;
@@ -35,7 +87,14 @@ export default function ItrReturnsPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center gap-4">
         <Link href="/itr/returns" aria-label="Go back" className="text-mid hover:text-dark"><Icon name="arrow_back" size={20} /></Link>
-        <PageHeader title="ITR Returns — {financialYear}" />
+        <PageHeader
+          title={`ITR Returns — ${financialYear}`}
+          actions={
+            <Button onClick={() => setCreateOpen(true)} className="gap-2">
+              Create Return <Icon name="add" className="text-sm" />
+            </Button>
+          }
+        />
       </div>
 
       {returns.isLoading ? (
@@ -43,7 +102,7 @@ export default function ItrReturnsPage() {
           <Icon name="hourglass" className="text-lighter animate-spin text-3xl" />
         </div>
       ) : rows.length === 0 ? (
-        <EmptyState icon="description" title="No returns yet" description="ITR returns for this year will appear once they are created from computation." />
+        <EmptyState icon="description" title="No returns yet" description="ITR returns for this year will appear once they are created." />
       ) : (
         <>
           <div className="grid grid-cols-2 gap-6">
@@ -67,6 +126,7 @@ export default function ItrReturnsPage() {
                     <th className="py-4 px-6 text-right">Total Income (₹)</th>
                     <th className="py-4 px-6 text-right">Tax Payable (₹)</th>
                     <th className="py-4 px-6">Status</th>
+                    <th className="py-4 px-6">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
@@ -85,6 +145,26 @@ export default function ItrReturnsPage() {
                           {r.status}
                         </span>
                       </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/api/itr/returns/${r.id}/pdf?format=summary`}
+                            target="_blank"
+                            className="inline-flex items-center gap-1 font-ui text-ui-xs font-bold uppercase tracking-widest text-amber hover:underline no-underline"
+                          >
+                            <Icon name="download" className="text-ui-md" /> Summary PDF
+                          </Link>
+                          {(r.returnType === "itr3" || r.returnType === "itr4") && r.status !== "filed" && r.status !== "voided" && (
+                            <button
+                              onClick={() => computeFromBooks.mutate({ itrReturnId: r.id })}
+                              disabled={generateReturn.isPending}
+                              className="font-ui text-ui-xs font-bold uppercase tracking-widest text-mid hover:text-dark border-none bg-transparent cursor-pointer disabled:opacity-50"
+                            >
+                              Regenerate
+                            </button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -93,6 +173,42 @@ export default function ItrReturnsPage() {
           </div>
         </>
       )}
+
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="max-w-md">
+          <h3 className="font-ui text-base font-semibold text-dark">Create ITR Return</h3>
+          <div className="mt-5 space-y-4">
+            <div>
+              <label htmlFor="itr-type" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Return type</label>
+              <select
+                id="itr-type"
+                value={returnType}
+                onChange={(e) => setReturnType(e.target.value as "itr3" | "itr4")}
+                className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+              >
+                {createOptions.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+            <p className="font-ui text-ui-xs text-mid">
+              Financial Year {financialYear} · The return will be computed immediately after creation.
+            </p>
+          </div>
+          <div className="mt-6 flex justify-end gap-2">
+            <DialogClose asChild>
+              <button className="btn btn-secondary">Cancel</button>
+            </DialogClose>
+            <button
+              onClick={() => createReturn.mutate({ financialYear, returnType })}
+              disabled={createReturn.isPending}
+              className="btn btn-primary"
+            >
+              {createReturn.isPending ? "Creating…" : "Create & Compute"}
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
