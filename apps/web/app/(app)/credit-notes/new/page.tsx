@@ -225,6 +225,7 @@ export default function NewCreditNotePage() {
                   <td className="py-4 px-6">
                     <input
                       type="number"
+                      aria-label="Quantity"
                       value={line.quantity}
                       onChange={(e) => { const n = [...lines]; n[i].quantity = e.target.value; setLines(n); }}
                       className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
@@ -233,6 +234,7 @@ export default function NewCreditNotePage() {
                   <td className="py-4 px-6">
                     <input
                       type="number"
+                      aria-label="Rate"
                       value={line.rate}
                       onChange={(e) => { const n = [...lines]; n[i].rate = e.target.value; setLines(n); }}
                       placeholder="0.00"

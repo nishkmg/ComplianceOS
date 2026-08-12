@@ -19,7 +19,7 @@ export default function SupportPage() {
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <PageHeader title="Support" />
       <p className="font-ui text-ui-sm text-mid">
-        Need help? Write to us at <a href={`mailto:${SUPPORT_EMAIL}`} className="text-amber hover:underline no-underline">{SUPPORT_EMAIL}</a> — or compose a message below and your email client will open pre-filled.
+        Need help? Write to us at <a href={`mailto:${SUPPORT_EMAIL}`} className="text-amber underline hover:no-underline">{SUPPORT_EMAIL}</a> — or compose a message below and your email client will open pre-filled.
       </p>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
         <div className="space-y-1.5">

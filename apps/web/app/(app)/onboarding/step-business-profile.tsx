@@ -109,7 +109,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
             </select>
             <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 text-mid pointer-events-none" />
           </div>
-          <p className="font-ui text-ui-xs text-ui-xs text-mid/70 leading-relaxed">
+          <p className="font-ui text-ui-xs text-ui-xs text-mid/80 leading-relaxed">
             Select <strong>Sole Proprietorship</strong> if you are an individual freelancer, consultant, or professional without a registered business entity.
           </p>
         </div>

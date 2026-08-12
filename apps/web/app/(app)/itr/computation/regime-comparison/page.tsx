@@ -167,7 +167,7 @@ export default function ITRRegimeComparisonPage() {
                 {rows.map((row, i) => (
                   <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-soft/50 transition-colors">
                     <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
-                    <span className={row.new === 0 ? "text-light opacity-50" : "text-dark"}>{formatIndianNumber(row.new)}</span>
+                    <span className={row.new === 0 ? "text-mid" : "text-dark"}>{formatIndianNumber(row.new)}</span>
                   </div>
                 ))}
               </div>

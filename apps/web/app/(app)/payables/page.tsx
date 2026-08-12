@@ -15,8 +15,8 @@ const BUCKETS = [
   { key: "current", label: "Current", tone: "bg-success-bg text-success-deep border-success/20" },
   { key: "1-30", label: "1–30 days", tone: "bg-amber-soft text-amber border-amber/30" },
   { key: "31-60", label: "31–60 days", tone: "bg-amber-soft text-amber border-amber/30" },
-  { key: "61-90", label: "61–90 days", tone: "bg-danger-bg text-danger border-danger/30" },
-  { key: "90+", label: "90+ days", tone: "bg-danger-bg text-danger border-danger/30" },
+  { key: "61-90", label: "61–90 days", tone: "bg-danger-bg text-danger-deep border-danger/30" },
+  { key: "90+", label: "90+ days", tone: "bg-danger-bg text-danger-deep border-danger/30" },
 ];
 
 export default function PayablesPage() {

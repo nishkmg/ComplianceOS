@@ -238,7 +238,7 @@ export default function ProfitLossPage() {
           <div className={`mt-8 px-8 py-6 flex justify-between items-center rounded-md print:rounded-none print:border-2 ${
             isProfit
               ? "bg-success-bg text-success border border-success/30 print:bg-transparent print:text-dark print:border-black"
-              : "bg-danger-bg text-danger border border-danger/30 print:bg-transparent print:text-dark print:border-black"
+              : "bg-danger-bg text-danger-deep border border-danger/30 print:bg-transparent print:text-dark print:border-black"
           }`}>
             <div>
               <h4 className={`font-ui text-ui-sm font-bold uppercase tracking-widest ${isProfit ? "text-success-deep" : "text-danger-deep"} print:text-dark`}>

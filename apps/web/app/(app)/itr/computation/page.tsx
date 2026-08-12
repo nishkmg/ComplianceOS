@@ -114,7 +114,7 @@ export default function ITRComputationPage() {
   return (
     <div className="space-y-0 text-left">
       {/* Sticky Header */}
-      <div className="px-8 py-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 -mx-8 -mt-8 mb-8 bg-surface/50 sticky top-0 z-20 backdrop-blur-sm print:static print:bg-surface print:border-black">
+      <div className="px-8 py-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 -mx-8 -mt-8 mb-8 bg-surface sticky top-0 z-20 backdrop-blur-sm print:static print:bg-surface print:border-black">
         <div>
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-2 print:text-dark">{ayLabel[selectedFY] ?? "AY 2027-28"} | Individual</p>
           <h1 className="font-ui text-2xl font-semibold text-dark print:text-dark">ITR Computation</h1>
@@ -186,8 +186,8 @@ export default function ITRComputationPage() {
               </Card>
               <Card className="bg-sidebar text-white focus:border-focus border-t-2 border-t-stone-700 rounded-none rounded-b-xl shadow-lg print:bg-surface print:text-dark print:border-black">
                 <CardContent className="p-6">
-                  <p className="text-ui-2xs text-light font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
-                  <p className="font-mono text-2xl font-bold text-amber tabular-nums print:text-dark">{formatIndianNumber(netTax)}</p>
+                  <p className="text-ui-2xs text-sidebar-muted font-bold uppercase tracking-widest mb-2 print:text-mid">Net Tax Payable</p>
+                  <p className="font-mono text-2xl font-bold text-amber-bright tabular-nums print:text-dark">{formatIndianNumber(netTax)}</p>
                 </CardContent>
               </Card>
             </section>
@@ -269,38 +269,38 @@ export default function ITRComputationPage() {
 
               {/* Right: Tax Computation */}
               <div className="space-y-6">
-                <Card className="bg-dark text-sidebar-dim overflow-hidden shadow-xl border focus:border-focus rounded-none print:bg-surface print:text-dark print:border-black">
+                <Card className="bg-sidebar text-sidebar-dim overflow-hidden shadow-xl border focus:border-focus rounded-none print:bg-surface print:text-dark print:border-black">
                   <CardHeader className="p-6 border-b focus:border-focus print:border-black">
-                    <h3 className="font-ui text-lg font-bold text-amber mb-1 print:text-dark">Tax Computation</h3>
-                    <p className="text-ui-2xs text-light font-bold uppercase tracking-widest print:text-mid">
+                    <h3 className="font-ui text-lg font-bold text-amber-bright mb-1 print:text-dark">Tax Computation</h3>
+                    <p className="text-ui-2xs text-sidebar-muted font-bold uppercase tracking-widest print:text-mid">
                       {regime === "old" ? "Old Tax Regime" : "New Tax Regime"} Applied
                     </p>
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="divide-y divide-lighter font-mono text-sm print:divide-black">
                       <div className="flex justify-between items-center px-6 py-4">
-                        <span className="text-xs text-light uppercase tracking-wide print:text-mid">Net Taxable Income</span>
+                        <span className="text-xs text-sidebar-muted uppercase tracking-wide print:text-mid">Net Taxable Income</span>
                         <span className="tabular-nums">{formatIndianNumber(regime === "old" ? taxableIncomeOld : taxableIncomeNew)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
-                        <span className="text-xs text-light uppercase tracking-wide print:text-mid">Tax on Normal Income</span>
+                        <span className="text-xs text-sidebar-muted uppercase tracking-wide print:text-mid">Tax on Normal Income</span>
                         <span className="tabular-nums">{formatIndianNumber(taxOnTotalIncome)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
-                        <span className="text-xs text-light uppercase tracking-wide print:text-mid">Rebate u/s 87A</span>
+                        <span className="text-xs text-sidebar-muted uppercase tracking-wide print:text-mid">Rebate u/s 87A</span>
                         <span className="tabular-nums">{formatIndianNumber(rebate87a)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
-                        <span className="text-xs text-light uppercase tracking-wide print:text-mid">Surcharge</span>
+                        <span className="text-xs text-sidebar-muted uppercase tracking-wide print:text-mid">Surcharge</span>
                         <span className="tabular-nums">{formatIndianNumber(surcharge)}</span>
                       </div>
                       <div className="flex justify-between items-center px-6 py-4">
-                        <span className="text-xs text-light uppercase tracking-wide print:text-mid">Health & Education Cess @ 4%</span>
+                        <span className="text-xs text-sidebar-muted uppercase tracking-wide print:text-mid">Health & Education Cess @ 4%</span>
                         <span className="tabular-nums">{formatIndianNumber(cess)}</span>
                       </div>
-                      <div className="flex justify-between items-center px-6 py-6 bg-dark font-bold text-lg print:bg-surface-muted">
-                        <span className="text-xs text-amber uppercase tracking-widest print:text-dark">Total Tax Liability</span>
-                        <span className="text-amber tabular-nums print:text-dark">{formatIndianNumber(netTax)}</span>
+                      <div className="flex justify-between items-center px-6 py-6 bg-sidebar font-bold text-lg print:bg-surface-muted">
+                        <span className="text-xs text-amber-bright uppercase tracking-widest print:text-dark">Total Tax Liability</span>
+                        <span className="text-amber-bright tabular-nums print:text-dark">{formatIndianNumber(netTax)}</span>
                       </div>
                     </div>
                   </CardContent>

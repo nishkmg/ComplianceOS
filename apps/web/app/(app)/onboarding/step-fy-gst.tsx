@@ -81,7 +81,7 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
                 </p>
               </div>
             </div>
-            <p className="font-ui text-ui-xs text-mid/70 mt-1">
+            <p className="font-ui text-ui-xs text-mid/80 mt-1">
               Fixed Indian fiscal year (April–March) per Income Tax Act. Not configurable.
             </p>
           </div>

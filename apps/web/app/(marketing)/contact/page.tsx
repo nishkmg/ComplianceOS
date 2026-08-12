@@ -57,8 +57,8 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 text-left">
-                    <label className="text-ui-xs font-ui text-secondary uppercase">Business Type</label>
-                    <select name="businessType" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none">
+                    <label htmlFor="businessType" className="text-ui-xs font-ui text-secondary uppercase">Business Type</label>
+                    <select id="businessType" name="businessType" className="border-b-[0.5px] border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 font-ui transition-colors outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none">
                       <option disabled selected value="">Select category</option>
                       <option value="ca">Chartered Accountant / Firm</option>
                       <option value="startup">Startup / SME</option>

@@ -1,6 +1,13 @@
 @import "../styles/tokens.css";
 @import "tailwindcss";
 
+/* Tailwind v4 `dark:` variant follows the app theme (data-theme on <html>),
+   NOT the OS prefers-color-scheme. Without this, dark:text-amber-ink fired off
+   the OS: OS-dark + app-light rendered black-on-amber buttons, OS-light +
+   app-dark rendered white-on-light-amber (2.0:1 contrast fail). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+
 /* ─────────────────────────────────────────────────────────────────────────────
    BASE STYLES
    ───────────────────────────────────────────────────────────────────────────── */

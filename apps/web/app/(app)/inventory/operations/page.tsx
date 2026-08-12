@@ -34,8 +34,8 @@ export default function InventoryOperationsPage() {
 
   const productSelect = (label: string, value: string, onChange: (v: string) => void) => (
     <div>
-      <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">{label}</label>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+      <label htmlFor={`sel-${label}`} className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">{label}</label>
+      <select id={`sel-${label}`} value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
         <option value="">Select product…</option>
         {opts.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
       </select>
@@ -66,21 +66,21 @@ export default function InventoryOperationsPage() {
             {productSelect("Product", receive.productId, (v) => setReceive({ ...receive, productId: v }))}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Quantity</label>
-                <input type="number" value={receive.quantity} onChange={(e) => setReceive({ ...receive, quantity: e.target.value })} className={inputCls} />
+                <label htmlFor="rcv-qty" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Quantity</label>
+                <input id="rcv-qty" type="number" value={receive.quantity} onChange={(e) => setReceive({ ...receive, quantity: e.target.value })} className={inputCls} />
               </div>
               <div>
-                <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Unit cost ₹</label>
-                <input type="number" value={receive.unitCost} onChange={(e) => setReceive({ ...receive, unitCost: e.target.value })} className={inputCls} />
+                <label htmlFor="rcv-cost" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Unit cost ₹</label>
+                <input id="rcv-cost" type="number" value={receive.unitCost} onChange={(e) => setReceive({ ...receive, unitCost: e.target.value })} className={inputCls} />
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Batch / narration</label>
-              <input value={receive.batchNumber} onChange={(e) => setReceive({ ...receive, batchNumber: e.target.value })} placeholder="Batch no." className={inputCls} />
+              <label htmlFor="rcv-batch" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Batch / narration</label>
+              <input id="rcv-batch" value={receive.batchNumber} onChange={(e) => setReceive({ ...receive, batchNumber: e.target.value })} placeholder="Batch no." className={inputCls} />
             </div>
             <div>
-              <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Date</label>
-              <input type="date" value={receive.receiptDate} onChange={(e) => setReceive({ ...receive, receiptDate: e.target.value })} className={inputCls} />
+              <label htmlFor="rcv-date" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Date</label>
+              <input id="rcv-date" type="date" value={receive.receiptDate} onChange={(e) => setReceive({ ...receive, receiptDate: e.target.value })} className={inputCls} />
             </div>
             <button
               onClick={() => { if (!receive.productId || !receive.quantity || !receive.unitCost) { showToast.error("Product, quantity and unit cost required."); return; } setBusy(true); receiveMutation.mutate({ productId: receive.productId, quantity: Number(receive.quantity), unitCost: Number(receive.unitCost), batchNumber: receive.batchNumber || undefined, receiptDate: receive.receiptDate, narration: receive.narration || undefined }); }}
@@ -100,12 +100,12 @@ export default function InventoryOperationsPage() {
           <div className="p-5 space-y-4">
             {productSelect("Product", deliver.productId, (v) => setDeliver({ ...deliver, productId: v }))}
             <div>
-              <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Quantity</label>
-              <input type="number" value={deliver.quantity} onChange={(e) => setDeliver({ ...deliver, quantity: e.target.value })} className={inputCls} />
+              <label htmlFor="dlv-qty" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Quantity</label>
+              <input id="dlv-qty" type="number" value={deliver.quantity} onChange={(e) => setDeliver({ ...deliver, quantity: e.target.value })} className={inputCls} />
             </div>
             <div>
-              <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Narration</label>
-              <input value={deliver.narration} onChange={(e) => setDeliver({ ...deliver, narration: e.target.value })} placeholder="e.g. Invoice INV-0001" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+              <label htmlFor="dlv-narr" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Narration</label>
+              <input id="dlv-narr" value={deliver.narration} onChange={(e) => setDeliver({ ...deliver, narration: e.target.value })} placeholder="e.g. Invoice INV-0001" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
             </div>
             <button
               onClick={() => { if (!deliver.productId || !deliver.quantity) { showToast.error("Product and quantity required."); return; } setBusy(true); deliverMutation.mutate({ productId: deliver.productId, quantity: Number(deliver.quantity), narration: deliver.narration || undefined }); }}
@@ -126,19 +126,19 @@ export default function InventoryOperationsPage() {
             {productSelect("Product", adjust.productId, (v) => setAdjust({ ...adjust, productId: v }))}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Qty change (±)</label>
-                <input type="number" value={adjust.quantity} onChange={(e) => setAdjust({ ...adjust, quantity: e.target.value })} placeholder="−2 or +3" className={inputCls} />
+                <label htmlFor="adj-qty" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Qty change (±)</label>
+                <input id="adj-qty" type="number" value={adjust.quantity} onChange={(e) => setAdjust({ ...adjust, quantity: e.target.value })} placeholder="−2 or +3" className={inputCls} />
               </div>
               <div>
-                <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Reason</label>
-                <select value={adjust.reason} onChange={(e) => setAdjust({ ...adjust, reason: e.target.value })} className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                <label htmlFor="adj-reason" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Reason</label>
+                <select id="adj-reason" value={adjust.reason} onChange={(e) => setAdjust({ ...adjust, reason: e.target.value })} className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
                   {["damage", "loss", "gain", "correction"].map((r) => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Narration</label>
-              <input value={adjust.narration} onChange={(e) => setAdjust({ ...adjust, narration: e.target.value })} placeholder="Optional" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+              <label htmlFor="adj-narr" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Narration</label>
+              <input id="adj-narr" value={adjust.narration} onChange={(e) => setAdjust({ ...adjust, narration: e.target.value })} placeholder="Optional" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
             </div>
             <button
               onClick={() => { if (!adjust.productId || !adjust.quantity || Number(adjust.quantity) === 0) { showToast.error("Product and a non-zero quantity required."); return; } setBusy(true); adjustMutation.mutate({ productId: adjust.productId, quantity: Number(adjust.quantity), reason: adjust.reason as any, narration: adjust.narration || undefined }); }}
