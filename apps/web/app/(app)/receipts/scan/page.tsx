@@ -160,7 +160,7 @@ export default function ReceiptScanPage() {
           </div>
 
           <Button className="w-full" onClick={handleCreate} disabled={!canCreate || createExpense.isPending}>
-            {createExpense.isPending ? "Creating…" : "Create Expense Entry"} <Icon name="arrow_forward" className="text-sm" />
+            {createExpense.isPending ? "Creating…" : "Create Expense Entry"} <Icon name="arrow_forward" />
           </Button>
         </div>
       )}

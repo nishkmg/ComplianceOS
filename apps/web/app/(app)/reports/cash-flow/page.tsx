@@ -122,8 +122,8 @@ export default function CashFlowPage() {
             <option>2026-27</option>
             <option>2025-26</option>
           </select>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.print()}>
-            <Icon name="print" size={14} /> Print
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Icon name="print" /> Print
           </Button>
           <Link
             href="/audit-log?report=cash-flow"

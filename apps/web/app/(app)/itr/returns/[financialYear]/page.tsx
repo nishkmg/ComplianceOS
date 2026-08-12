@@ -90,8 +90,8 @@ export default function ItrReturnsPage() {
         <PageHeader
           title={`ITR Returns — ${financialYear}`}
           actions={
-            <Button onClick={() => setCreateOpen(true)} className="gap-2">
-              Create Return <Icon name="add" className="text-sm" />
+            <Button onClick={() => setCreateOpen(true)}>
+              Create Return <Icon name="add" />
             </Button>
           }
         />

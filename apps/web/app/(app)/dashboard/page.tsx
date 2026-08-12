@@ -35,6 +35,88 @@ const entryColumns: ColumnDef<JournalEntry>[] = [
     render: (row) => <Badge variant={row.status === "posted" ? "success" : "amber"}>{row.status}</Badge> },
 ];
 
+interface ReturnsDueProps {
+  activeFy: string;
+}
+
+function ReturnsDue({ activeFy }: ReturnsDueProps) {
+  const periods = useMemo(() => {
+    const now = new Date();
+    return [1, 0].map((i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      return {
+        month: d.getMonth() + 1,
+        year: d.getFullYear(),
+        label: d.toLocaleDateString("en-IN", { month: "short", year: "numeric" }),
+      };
+    });
+  }, []);
+
+  const prev = api.gstReturns.liveSummary.useQuery(
+    { periodMonth: periods[0].month, periodYear: periods[0].year },
+    { staleTime: 15_000 },
+  );
+  const cur = api.gstReturns.liveSummary.useQuery(
+    { periodMonth: periods[1].month, periodYear: periods[1].year },
+    { staleTime: 15_000 },
+  );
+
+  const fyStart = Number(activeFy.split("-")[0]);
+  const ay = `${fyStart + 1}-${String(fyStart + 1).slice(-2)}`;
+
+  const gstCards = [prev, cur].map((q, i) => {
+    const period = periods[i];
+    const gstr3b = q.data?.gstr3b;
+    const isZero = gstr3b && gstr3b.outwardTaxable === 0 && gstr3b.itcAvailable === 0 && gstr3b.netPayable === 0;
+    return {
+      key: `${period.year}-${period.month}`,
+      period,
+      loading: q.isLoading,
+      payable: gstr3b?.netPayable ?? 0,
+      noTransactions: !q.isLoading && (!gstr3b || isZero),
+      href: `/gst/returns/${period.year}-${String(period.month).padStart(2, "0")}`,
+    };
+  });
+
+  return (
+    <div className="bg-surface border border-border rounded-md shadow-sm">
+      <div className="h-[2px] w-full bg-amber" />
+      <div className="px-6 py-4 bg-surface-muted border-b border-border flex items-center justify-between">
+        <h2 className="font-ui text-ui-xs text-dark font-bold uppercase tracking-widest">Compliance Status · Returns Due</h2>
+        <Link href="/gst/returns" className="text-amber text-ui-2xs font-bold uppercase tracking-widest hover:underline no-underline">GST Returns</Link>
+      </div>
+      <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {gstCards.map(({ key, period, loading, payable, noTransactions, href }) => (
+          <Link key={key} href={href} className="block bg-surface border border-border rounded-md p-5 shadow-sm hover:shadow-md transition-shadow no-underline">
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold">GSTR-3B</p>
+              <p className="font-ui text-ui-2xs text-mid">{period.label}</p>
+            </div>
+            <p className="font-mono text-2xl font-bold text-dark tabular-nums">{loading ? "—" : formatIndianNumber(payable)}</p>
+            <p className="font-ui text-ui-2xs text-light mt-1">
+              {noTransactions ? "No transactions yet" : "Net payable"}
+            </p>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="font-ui text-ui-2xs font-bold uppercase tracking-widest text-amber">Open →</span>
+            </div>
+          </Link>
+        ))}
+        <Link href={`/itr/returns/${activeFy}`} className="block bg-surface border border-border rounded-md p-5 shadow-sm hover:shadow-md transition-shadow no-underline">
+          <div className="flex items-center justify-between mb-2">
+            <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold">ITR-3</p>
+            <p className="font-ui text-ui-2xs text-mid">FY {activeFy}</p>
+          </div>
+          <p className="font-ui text-ui-sm font-semibold text-dark">Income tax return</p>
+          <p className="font-ui text-ui-2xs text-light mt-1">Assessment year {ay}</p>
+          <div className="mt-4 flex items-center justify-between">
+            <span className="font-ui text-ui-2xs font-bold uppercase tracking-widest text-amber">Open →</span>
+          </div>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { activeFy } = useFiscalYear();
   const { data: session } = useSession();
@@ -91,7 +173,7 @@ export default function DashboardPage() {
         actions={
           <Link href="/journal/new" className="no-underline">
             <Button size="sm">
-              <Icon name="add" className="text-ui-lg" />
+              <Icon name="add" />
               Add Entry
             </Button>
           </Link>
@@ -128,6 +210,9 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Returns due */}
+      <ReturnsDue activeFy={activeFy} />
+
       {/* Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-surface border border-border rounded-md shadow-sm p-6 flex items-center justify-between">
@@ -144,7 +229,7 @@ export default function DashboardPage() {
           <div>
             <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">Income Tax</p>
             <h3 className="font-ui text-lg font-semibold text-dark">Generate ITR</h3>
-            <p className="font-ui text-ui-xs text-mid mt-1">AY: {`${Number(activeFy.split('-')[0]) + 1}-${activeFy.split('-')[1]}`}</p>
+            <p className="font-ui text-ui-xs text-mid mt-1">AY: {`${Number(activeFy.split("-")[0]) + 1}-${String(Number(activeFy.split("-")[0]) + 2).slice(-2)}`}</p>
           </div>
           <Link href="/itr/returns" className="btn btn-primary px-4 py-2 no-underline">
             <Icon name="description" className="text-ui-md" /> Generate

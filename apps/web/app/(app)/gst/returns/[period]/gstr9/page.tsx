@@ -51,7 +51,7 @@ export default function Gstr9Page() {
           )}
           {ret && (
             <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className="btn btn-secondary flex items-center gap-2 no-underline">
-              <Icon name="download" className="text-ui-xl" /> PDF
+              <Icon name="download" size={14} /> PDF
             </Link>
           )}
         </div>

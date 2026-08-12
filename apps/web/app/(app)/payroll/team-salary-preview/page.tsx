@@ -62,8 +62,8 @@ export default function TeamSalaryPreviewPage() {
         </div>
         <div className="flex items-center gap-3">
           <PeriodPicker value={period} onChange={setPeriod} />
-          <Button size="sm" className="gap-2" onClick={handleAuthorize} disabled={calculated.length === 0 || finalizeRun.isPending}>
-            Finalize {calculated.length > 0 ? `(${calculated.length})` : ""} <Icon name="arrow_forward" className="text-sm" />
+          <Button size="sm" onClick={handleAuthorize} disabled={calculated.length === 0 || finalizeRun.isPending}>
+            Finalize {calculated.length > 0 ? `(${calculated.length})` : ""} <Icon name="arrow_forward" />
           </Button>
         </div>
       </div>

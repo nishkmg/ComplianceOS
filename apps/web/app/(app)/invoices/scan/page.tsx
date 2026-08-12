@@ -163,7 +163,7 @@ export default function ScanInvoicePage() {
           </div>
 
           <Button className="w-full" onClick={handleCreate} disabled={!canCreate || createInvoice.isPending}>
-            {createInvoice.isPending ? "Creating…" : "Create Invoice"} <Icon name="arrow_forward" className="text-sm" />
+            {createInvoice.isPending ? "Creating…" : "Create Invoice"} <Icon name="arrow_forward" />
           </Button>
         </div>
       )}

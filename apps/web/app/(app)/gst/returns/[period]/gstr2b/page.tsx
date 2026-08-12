@@ -24,10 +24,16 @@ export default function Gstr2bPage() {
   );
   const ret = returns.data?.[0] ?? null;
 
+  const live = api.gstReturns.liveSummary.useQuery(
+    { periodMonth, periodYear },
+    { enabled: !!fy && !!month, staleTime: 15_000 },
+  );
+
   const generate = api.gstReturns.generateGSTR2B.useMutation({
     onSuccess: () => {
       showToast.success("GSTR-2B generated.");
       void utils.gstReturns.list.invalidate();
+      void utils.gstReturns.liveSummary.invalidate();
     },
     onError: (e) => showToast.error(e.message),
   });
@@ -45,6 +51,27 @@ export default function Gstr2bPage() {
         <Link href={`/gst/returns/${period}`} className="text-mid hover:text-dark" aria-label="Go back"><Icon name="arrow_back" size={20} /></Link>
         <div><PageHeader title="GSTR-2B" /><p className="font-ui text-ui-sm text-mid mt-1">Inward Supply Details — {month}/{fy}</p></div>
       </div>
+
+      {!returns.isLoading && (!ret || ret.status === "draft") && live.data && (
+        <div className="bg-surface border border-dashed border-amber rounded-md p-6 shadow-sm">
+          <p className="font-ui text-ui-2xs uppercase tracking-widest text-amber font-bold mb-1">Live draft</p>
+          <p className="font-ui text-ui-sm text-mid mb-4">Computed from your posted transactions — not yet generated.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {[
+              ["Documents", String(live.data.gstr2b.count)],
+              ["Taxable value", formatIndianNumber(live.data.gstr2b.taxableValue)],
+              ["IGST", formatIndianNumber(live.data.gstr2b.igst)],
+              ["CGST", formatIndianNumber(live.data.gstr2b.cgst)],
+              ["SGST", formatIndianNumber(live.data.gstr2b.sgst)],
+            ].map(([label, value]) => (
+              <div key={label} className="bg-surface-muted border border-border-subtle rounded-md px-3 py-2">
+                <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">{label}</p>
+                <p className="font-mono text-ui-sm font-bold text-dark tabular-nums mt-0.5">{value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {returns.isLoading ? (
         <div className="flex items-center justify-center py-24">
@@ -67,7 +94,7 @@ export default function Gstr2bPage() {
             <div className="flex items-center gap-3">
               {(ret.status === "generated" || ret.status === "filed") && (
                 <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr2b`} target="_blank" className="btn btn-secondary flex items-center gap-2">
-                  <Icon name="download" className="text-ui-xl" /> PDF
+                  <Icon name="download" size={14} /> PDF
                 </Link>
               )}
               <button

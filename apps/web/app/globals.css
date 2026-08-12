@@ -116,7 +116,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
+  height: 2.25rem; /* 36px — matches the Button component (h-9) */
+  padding: 0 var(--space-4);
   font-family: var(--font-ui);
   font-size: var(--font-ui-sm);
   font-weight: 500;

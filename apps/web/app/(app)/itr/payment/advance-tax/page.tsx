@@ -92,10 +92,10 @@ export default function ITRAdvanceTaxPage() {
           <p className="font-ui text-ui-sm text-secondary max-w-2xl leading-relaxed">Ensure timely payment of advance tax instalments to avoid penal interest under Section 234B and 234C.</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" size="sm" onClick={handleExportLedger} disabled={installments.length === 0} className="gap-2">
-            <Icon name="download" className="text-ui-xl" /> Export Ledger
+          <Button variant="outline" size="sm" onClick={handleExportLedger} disabled={installments.length === 0}>
+            <Icon name="download" /> Export Ledger
           </Button>
-          <Button size="sm" className="gap-2" onClick={() => { setRecordForm({ installmentNumber: 1, amount: "", challanNumber: "", date: "" }); setErrors({}); setShowRecordModal(true); }}>
+          <Button size="sm" onClick={() => { setRecordForm({ installmentNumber: 1, amount: "", challanNumber: "", date: "" }); setErrors({}); setShowRecordModal(true); }}>
             Record Payment
           </Button>
         </div>

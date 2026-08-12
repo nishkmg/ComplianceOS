@@ -42,7 +42,7 @@ Rules:
 
 ## 4. Shape, elevation, motion
 
-- Radius scale: controls `8px` (`rounded-md`), cards `12px` (`rounded-lg`), pills full.
+- Radius scale: controls `4px` (`rounded-sm` / `--radius-sm`), cards `12px` (`rounded-lg`), pills full.
 - **Flat by default** — surfaces flat at rest; shadows only on hover/elevation (tokens: `shadow-sm/md/lg`).
 - Motion: 150ms, `ease-smooth` (`cubic-bezier(0.16,1,0.3,1)`), transform/opacity only, all gated by `prefers-reduced-motion`. Charts: animation off under reduced motion.
 

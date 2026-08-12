@@ -98,8 +98,8 @@ export default function GstPaymentPage() {
               onChange={(e) => { setPeriod(e.target.value); setChallan(null); }}
             />
           </div>
-          <Button size="sm" onClick={handleGenerate} disabled={createChallan.isPending} className="gap-2">
-            {createChallan.isPending ? "Computing…" : "Generate Challan"} <Icon name="receipt_long" className="text-sm" />
+          <Button size="sm" onClick={handleGenerate} disabled={createChallan.isPending}>
+            {createChallan.isPending ? "Computing…" : "Generate Challan"} <Icon name="receipt_long" />
           </Button>
         </div>
       </div>
@@ -190,8 +190,8 @@ export default function GstPaymentPage() {
                 </div>
               )}
             </div>
-            <Button onClick={handlePay} disabled={payGst.isPending} className="gap-2">
-              {payGst.isPending ? "Recording…" : "Record Payment"} <Icon name="check_circle" className="text-sm" />
+            <Button onClick={handlePay} disabled={payGst.isPending}>
+              {payGst.isPending ? "Recording…" : "Record Payment"} <Icon name="check_circle" />
             </Button>
           </div>
         </>

@@ -74,8 +74,8 @@ export default function EmployeeDetailPage() {
 
       <div className="flex gap-3">
         <Link href={`/employees/${e.id}/salary`} className="inline-flex items-center gap-2 px-4 py-2 btn btn-primary no-underline"><Icon name="payments" size={14} /> Salary Structure</Link>
-        <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowAdvanceForm(!showAdvanceForm)}>
-          <Icon name="add" className="text-ui-md" /> {showAdvanceForm ? "Close" : "New Advance"}
+        <Button variant="outline" size="sm" onClick={() => setShowAdvanceForm(!showAdvanceForm)}>
+          <Icon name="add" /> {showAdvanceForm ? "Close" : "New Advance"}
         </Button>
       </div>
 
