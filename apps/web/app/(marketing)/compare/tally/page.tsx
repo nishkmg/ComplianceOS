@@ -91,10 +91,10 @@ export default function CompareTallyPage() {
 
       <main id="main-content">
         <header className="pt-space-96 pb-space-64">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <div className="max-w-4xl">
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
-                The discipline of Tally, with returns that assemble themselves.
+              <h1 className="font-display text-hero text-dark tracking-tight text-balance mb-8">
+                The rigour of Tally, none of the return assembly.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
                 Tally earned its place in Indian accounting. Arthvahi keeps the discipline, and draws GSTR and ITR from the entries you already posted.
@@ -107,7 +107,7 @@ export default function CompareTallyPage() {
         </header>
 
         <section className="py-space-96 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 eyebrow="Honest comparison"
@@ -137,7 +137,7 @@ export default function CompareTallyPage() {
                         </th>
                       </tr>
                       {group.rows.map((row) => (
-                        <tr key={row.feature} className="border-b-[0.5px] border-border-subtle align-top">
+                        <tr key={row.feature} className="align-top">
                           <th scope="row" className="px-6 py-4 font-ui font-medium text-dark">
                             {row.feature}
                           </th>
@@ -155,7 +155,7 @@ export default function CompareTallyPage() {
         </section>
 
         <section className="py-space-96">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div>
@@ -188,7 +188,7 @@ export default function CompareTallyPage() {
         </section>
 
         <section className="py-space-96 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="Migration is guided setup, not an import"
@@ -204,7 +204,7 @@ export default function CompareTallyPage() {
         </section>
 
         <section className="py-space-96">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <BrowserFrame
                 src="/images/marketing/gst-hub.png"
@@ -216,7 +216,7 @@ export default function CompareTallyPage() {
 
         <CtaBand
           title="Bookkeeping you already know, returns you do not assemble by hand."
-          lede="Start free, post your first entry, and watch GSTR and ITR come together from the same ledger."
+          lede="Start free with the voucher-and-ledger workflow you know, and watch the returns assemble themselves."
         />
       </main>
 

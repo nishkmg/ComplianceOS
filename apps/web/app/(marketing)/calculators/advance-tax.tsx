@@ -28,10 +28,19 @@ export function AdvanceTax() {
     totalInterest: number;
     effective: number;
   } | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const compute = () => {
     const tax = Number(liability);
-    if (!Number.isFinite(tax) || tax < 0) return;
+    if (!Number.isFinite(tax) || tax <= 0) {
+      setValidationError('Enter an estimated tax liability above zero.');
+      return;
+    }
+    const annual = Number(income);
+    if (!Number.isFinite(annual) || annual <= 0) {
+      setValidationError('Enter an estimated annual income above zero.');
+      return;
+    }
     let cumDue = 0;
     let cumPaid = 0;
     const rows = INSTALMENTS.map((inst, i) => {
@@ -47,7 +56,7 @@ export function AdvanceTax() {
       };
     });
     const totalInterest = rows.reduce((s, r) => s + r.interest, 0);
-    const annual = Number(income);
+    setValidationError(null);
     setResult({ rows, totalInterest, effective: annual > 0 ? tax / annual : 0 });
   };
 
@@ -77,7 +86,10 @@ export function AdvanceTax() {
                 min="0"
                 step="any"
                 value={income}
-                onChange={(e) => setIncome(e.target.value)}
+                onChange={(e) => {
+                  setIncome(e.target.value);
+                  setValidationError(null);
+                }}
                 className={inputCls}
               />
             </div>
@@ -91,7 +103,10 @@ export function AdvanceTax() {
                 min="0"
                 step="any"
                 value={liability}
-                onChange={(e) => setLiability(e.target.value)}
+                onChange={(e) => {
+                  setLiability(e.target.value);
+                  setValidationError(null);
+                }}
                 className={inputCls}
               />
             </div>
@@ -107,7 +122,10 @@ export function AdvanceTax() {
                 min="0"
                 step="any"
                 value={paid[inst.key]}
-                onChange={(e) => setPaid({ ...paid, [inst.key]: e.target.value })}
+                onChange={(e) => {
+                  setPaid({ ...paid, [inst.key]: e.target.value });
+                  setValidationError(null);
+                }}
                 className={inputCls}
               />
             </div>
@@ -154,6 +172,11 @@ export function AdvanceTax() {
         <p className="font-mono text-mono-sm text-light mt-6">
           Indicative only, consult your CA. Section 234B and interest on excess TDS not included.
         </p>
+        {validationError && (
+          <p role="alert" className="text-danger font-ui text-ui-sm mt-3">
+            {validationError}
+          </p>
+        )}
       </div>
     </div>
   );

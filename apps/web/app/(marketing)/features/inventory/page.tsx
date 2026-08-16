@@ -48,12 +48,12 @@ export default function InventoryFeaturePage() {
 
       <main id="main-content">
         <header className="pt-space-128 pb-space-96">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <div className="max-w-4xl">
               <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6">
                 Inventory
               </p>
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
+              <h1 className="font-display text-hero text-dark tracking-tight text-balance mb-8">
                 Inventory valued the way your CA values it.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
@@ -67,7 +67,7 @@ export default function InventoryFeaturePage() {
         </header>
 
         <section className="pb-space-128">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <div className="md:-rotate-[0.5deg]">
                 <BrowserFrame
@@ -80,7 +80,7 @@ export default function InventoryFeaturePage() {
         </section>
 
         <section className="py-space-128 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="FIFO, from receipt to sale"
@@ -112,7 +112,7 @@ export default function InventoryFeaturePage() {
         </section>
 
         <section className="py-space-128">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="Movements traced, thresholds flagged"

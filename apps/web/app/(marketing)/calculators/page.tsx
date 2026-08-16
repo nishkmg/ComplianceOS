@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
 import { CtaBand } from '@/components/marketing/cta-band';
+import { Reveal } from '@/components/marketing/reveal';
 import { cn } from '@/lib/utils';
 import { GstLateFee } from './gst-late-fee';
 import { TdsCalculator } from './tds-calculator';
@@ -56,15 +57,16 @@ export default function CalculatorsPage() {
 
       <main id="main-content">
         <header className="pt-space-128 pb-space-64">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6">
               Statutory calculators
             </p>
-            <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance max-w-2xl mb-8">
-              The same statutory rates Arthvahi computes with, in your browser.
+            <h1 className="font-display text-hero text-dark leading-tight tracking-tight text-balance max-w-2xl mb-8">
+              The same statutory rates Arthvahi computes with.
             </h1>
             <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-6">
-              PF, ESI, TDS, advance tax and GST late interest, figured with the exact rates the product uses.
+              PF, ESI, TDS, advance tax and GST late interest, figured right in your browser with the exact rates the
+              product uses.
             </p>
             <p className="font-mono text-mono-sm text-light">
               Indicative figures only. Not a substitute for a filing.
@@ -73,7 +75,7 @@ export default function CalculatorsPage() {
         </header>
 
         <section className="pb-space-96">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <div role="tablist" aria-label="Statutory calculators" className="border-b border-border-subtle">
               {TABS.map((tab, i) => (
                 <button
@@ -133,16 +135,18 @@ export default function CalculatorsPage() {
         </section>
 
         <section className="py-space-96 bg-section-dark">
-          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-10">
-            {WHY_STEPS.map((step) => (
-              <div key={step.index}>
-                <p className="font-mono text-mono-sm text-sidebar-dim uppercase tracking-[0.14em] mb-3">
-                  {step.index} / {step.title}
-                </p>
-                <p className="font-ui text-ui-md text-sidebar-muted leading-relaxed">{step.copy}</p>
-              </div>
-            ))}
-          </div>
+          <Reveal delay={0.05}>
+            <div className="max-w-[1320px] mx-auto px-5 md:px-8 grid grid-cols-1 md:grid-cols-3 gap-10">
+              {WHY_STEPS.map((step) => (
+                <div key={step.index}>
+                  <p className="font-mono text-mono-sm text-sidebar-dim uppercase tracking-[0.14em] mb-3">
+                    {step.index} / {step.title}
+                  </p>
+                  <p className="font-ui text-ui-md text-sidebar-muted leading-relaxed">{step.copy}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </section>
 
         <CtaBand

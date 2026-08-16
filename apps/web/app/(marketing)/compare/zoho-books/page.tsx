@@ -97,10 +97,10 @@ export default function CompareZohoBooksPage() {
 
       <main id="main-content">
         <header className="pt-space-96 pb-space-64">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <div className="max-w-4xl">
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
-                The breadth of Zoho Books, the depth of Indian compliance.
+              <h1 className="font-display text-hero text-dark tracking-tight text-balance mb-8">
+                The breadth of Zoho, the depth of Indian compliance.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
                 Zoho Books is strong on global accounting and connections. Arthvahi goes deep where Indian compliance starts: returns from posted entries and ITR from closed books.
@@ -113,7 +113,7 @@ export default function CompareZohoBooksPage() {
         </header>
 
         <section className="py-space-96 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 eyebrow="Honest comparison"
@@ -143,7 +143,7 @@ export default function CompareZohoBooksPage() {
                         </th>
                       </tr>
                       {group.rows.map((row) => (
-                        <tr key={row.feature} className="border-b-[0.5px] border-border-subtle align-top">
+                        <tr key={row.feature} className="align-top">
                           <th scope="row" className="px-6 py-4 font-ui font-medium text-dark">
                             {row.feature}
                           </th>
@@ -161,7 +161,7 @@ export default function CompareZohoBooksPage() {
         </section>
 
         <section className="py-space-96">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div>
@@ -194,14 +194,14 @@ export default function CompareZohoBooksPage() {
         </section>
 
         <section className="py-space-96 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <Reveal>
               <SectionHeader
                 title="Moving over is a guided setup"
                 lede="Arthvahi does not import Zoho exports today. Export your chart of accounts and opening balances from Zoho, then map them during onboarding. The wizard walks the mapping one account at a time, and the ledger starts clean."
               />
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <MarketingButton href="/blog/moving-from-tally" variant="secondary">
+                <MarketingButton href="/blog" variant="secondary">
                   Read the migration guide
                 </MarketingButton>
               </div>
@@ -217,7 +217,7 @@ export default function CompareZohoBooksPage() {
 
         <CtaBand
           title="Global breadth or Indian depth. Try the depth on your own books."
-          lede="Start free and post your first entry; the returns compute themselves from there."
+          lede="Where Zoho spans an app ecosystem, Arthvahi covers the statutory depth. Start free and test the depth on your own books."
         />
       </main>
 

@@ -94,9 +94,9 @@ export default function HomePage() {
               </motion.p>
               <motion.h1
                 {...rise(0.15)}
-                className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance"
+                className="font-display text-hero-split text-dark leading-tight tracking-tight text-balance"
               >
-                Accounts that speak the language of Indian compliance.
+                Accounts that speak Indian compliance.
               </motion.h1>
               <motion.p
                 {...rise(0.25)}

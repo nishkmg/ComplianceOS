@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T07:05:43.041Z",
+  "generatedAt": "2026-08-16T08:31:15.324Z",
   "metrics": {
     "contrast": {
       "passing": 12,
@@ -206,7 +206,7 @@
       }
     },
     "tokens": {
-      "arbitraryValues": 378,
+      "arbitraryValues": 372,
       "rawPaletteUtilities": 0,
       "hexLiterals": 16,
       "unpairedOutlineNone": 0,
@@ -220,7 +220,7 @@
       "pagesWithLoading": 68,
       "pagesWithErrorHandling": 10,
       "pagesWithEmptyState": 54,
-      "ariaLiveAnnouncers": 11,
+      "ariaLiveAnnouncers": 12,
       "clientPages": 100,
       "serverPages": 19
     },

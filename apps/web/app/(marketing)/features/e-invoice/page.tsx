@@ -46,13 +46,13 @@ export default function EinvoiceFeaturePage() {
 
       <main id="main-content">
         <header className="pt-space-128 pb-space-128">
-          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6">
                 E-invoice
               </p>
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
-                E-invoices built to the NIC schema, ready for the IRP.
+              <h1 className="font-display text-hero-split text-dark tracking-tight text-balance mb-8">
+                E-invoices built to the NIC schema, IRP-ready.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
                 Every B2B invoice generates an IRN payload and QR per schema v1.03. Production portal submission is on the roadmap.
@@ -66,17 +66,15 @@ export default function EinvoiceFeaturePage() {
                 </MarketingButton>
               </div>
             </div>
-            <Reveal>
-              <BrowserFrame
-                src="/images/marketing/gstr1.png"
-                alt="GSTR-1 return preview in Arthvahi"
-              />
-            </Reveal>
+            <BrowserFrame
+              src="/images/marketing/gstr1.png"
+              alt="GSTR-1 return preview in Arthvahi"
+            />
           </div>
         </header>
 
         <section className="py-space-128 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="What an e-invoice carries"
@@ -102,28 +100,22 @@ export default function EinvoiceFeaturePage() {
         </section>
 
         <section className="py-space-128">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="From payload to portal"
                 lede="Three steps. The first is built today; the last is on the roadmap."
               />
             </Reveal>
-            <ol className="list-none p-0 m-0 mt-14 max-w-3xl border-l-[0.5px] border-border-subtle">
+            <ol className="list-none p-0 m-0 mt-14 max-w-3xl space-y-3">
               {roadmap.map((step) => (
                 <Reveal as="li" key={step.id}>
-                  <div className="relative pl-10 pb-12 last:pb-0">
-                    <span
-                      aria-hidden="true"
-                      className="absolute left-0 top-1.5 -translate-x-1/2 h-3 w-3 rounded-full bg-section-amber border border-border"
-                    />
-                    <div className="flex items-baseline gap-4 mb-2">
-                      <span className="font-mono text-ui-2xs text-amber">{step.id}</span>
-                      <h3 className="font-display text-display-lg text-dark leading-snug tracking-tight">
-                        {step.title}
-                      </h3>
-                    </div>
-                    <p className="font-ui text-ui-md text-mid leading-relaxed max-w-[55ch]">{step.desc}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 rounded-sm border border-border-subtle bg-surface px-4 py-3">
+                    <span className="font-mono text-ui-2xs text-amber">{step.id}</span>
+                    <h3 className="font-mono text-mono-md text-dark leading-relaxed">{step.title}</h3>
+                    <p className="font-ui text-ui-md text-mid leading-relaxed sm:ml-auto sm:max-w-[48ch]">
+                      {step.desc}
+                    </p>
                   </div>
                 </Reveal>
               ))}
@@ -135,7 +127,7 @@ export default function EinvoiceFeaturePage() {
         </section>
 
         <section className="py-space-128 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="How it fits"

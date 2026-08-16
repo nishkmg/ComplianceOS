@@ -61,11 +61,11 @@ export default function CaFirmsPage() {
       <MarketingNav />
       <main id="main-content">
         {/* Text-led hero */}
-        <header className="pt-space-64 pb-space-96 px-8 max-w-[1320px] mx-auto text-left">
+        <header className="pt-space-64 pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto text-left">
           <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold">
             For CA firms
           </p>
-          <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mt-4 max-w-[20ch]">
+          <h1 className="font-display text-hero text-dark tracking-tight text-balance mt-4">
             One ledger per client. Every return drawn from it.
           </h1>
           <p className="font-ui text-ui-lg text-mid leading-relaxed mt-6 max-w-xl">
@@ -83,7 +83,7 @@ export default function CaFirmsPage() {
         </header>
 
         {/* Firm workflow */}
-        <section className="pb-space-96 px-8 max-w-[1320px] mx-auto">
+        <section className="pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto">
           <div className="grid lg:grid-cols-[minmax(0,26rem)_1fr] gap-16 lg:gap-20">
             <div>
               <SectionHeader
@@ -97,7 +97,7 @@ export default function CaFirmsPage() {
                   <Reveal as="li" key={item.step} delay={i * 0.06} className="pl-8 pb-12 last:pb-0 relative">
                       <span
                         aria-hidden="true"
-                        className="absolute left-0 top-0 -translate-x-1/2 w-2 h-2 rounded-full bg-amber"
+                        className="absolute left-0 top-0 -translate-x-1/2 w-2 h-2 rounded-none bg-amber"
                       />
                       <p className="font-mono text-mono-sm text-amber">{item.step}</p>
                       <h3 className="font-display text-display-lg text-dark leading-snug text-balance mt-2">
@@ -114,7 +114,7 @@ export default function CaFirmsPage() {
         </section>
 
         {/* GST product shot */}
-        <section className="pb-space-96 px-8 max-w-[1320px] mx-auto">
+        <section className="pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto">
           <Reveal>
             <figure>
               <figcaption className="font-mono text-mono-sm text-mid mb-3">
@@ -131,7 +131,7 @@ export default function CaFirmsPage() {
         </section>
 
         {/* Review and evidence */}
-        <section className="pb-space-96 px-8 max-w-[1320px] mx-auto">
+        <section className="pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-start">
             <div className="lg:sticky lg:top-16">
               <SectionHeader
@@ -170,7 +170,7 @@ export default function CaFirmsPage() {
         </section>
 
         {/* Portal source of truth band */}
-        <section className="bg-section-amber py-space-64 px-8" aria-label="Where filing happens">
+        <section className="bg-section-amber py-space-64 px-5 md:px-8" aria-label="Where filing happens">
           <div className="max-w-[1320px] mx-auto">
             <Reveal>
               <div className="max-w-3xl">

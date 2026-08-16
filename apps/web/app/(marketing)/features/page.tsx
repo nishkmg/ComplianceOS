@@ -99,8 +99,8 @@ export default function FeaturesPage() {
               <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6">
                 Platform overview
               </p>
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
-                One ledger. Every compliance return drawn from it.
+              <h1 className="font-display text-hero-split text-dark leading-tight tracking-tight text-balance mb-8">
+                One ledger. Every return drawn from it.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
                 Accounting, GST, payroll and ITR that share a single set of books, so nothing is ever re-entered.

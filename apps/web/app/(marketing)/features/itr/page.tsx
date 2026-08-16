@@ -22,7 +22,7 @@ export default function ITRFeaturePage() {
         <header className="pt-space-128 pb-space-128">
           <div className="max-w-[1320px] mx-auto px-8">
             <div className="max-w-4xl">
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
+              <h1 className="font-display text-hero text-dark leading-tight tracking-tight text-balance mb-8">
                 The return, computed from your closed books.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">

@@ -22,12 +22,20 @@ export function GstLateFee() {
   const [dueDate, setDueDate] = useState('2026-07-20');
   const [paidDate, setPaidDate] = useState('2026-08-05');
   const [result, setResult] = useState<{ days: number; interest: number } | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const compute = () => {
     const tax = Number(taxAmount);
-    if (!Number.isFinite(tax) || tax <= 0) return;
+    if (!Number.isFinite(tax) || tax <= 0) {
+      setValidationError('Enter a tax amount greater than zero.');
+      return;
+    }
+    if (!dueDate || !paidDate) {
+      setValidationError('Enter both the due date and payment date.');
+      return;
+    }
     const days = daysBetween(dueDate, paidDate);
-    if (!dueDate || !paidDate) return;
+    setValidationError(null);
     setResult({ days, interest: tax * (0.18 / 365) * days });
   };
 
@@ -55,7 +63,10 @@ export function GstLateFee() {
               min="0"
               step="any"
               value={taxAmount}
-              onChange={(e) => setTaxAmount(e.target.value)}
+              onChange={(e) => {
+                setTaxAmount(e.target.value);
+                setValidationError(null);
+              }}
               className={inputCls}
             />
           </div>
@@ -67,7 +78,10 @@ export function GstLateFee() {
               id="gst-due"
               type="date"
               value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
+              onChange={(e) => {
+                setDueDate(e.target.value);
+                setValidationError(null);
+              }}
               className={inputCls}
             />
           </div>
@@ -79,7 +93,10 @@ export function GstLateFee() {
               id="gst-paid"
               type="date"
               value={paidDate}
-              onChange={(e) => setPaidDate(e.target.value)}
+              onChange={(e) => {
+                setPaidDate(e.target.value);
+                setValidationError(null);
+              }}
               className={inputCls}
             />
           </div>
@@ -116,6 +133,11 @@ export function GstLateFee() {
         <p className="font-mono text-mono-sm text-light mt-6">
           Indicative only. Interest liability is adjudicated on your actual return. Tax amount {inr0(Number(taxAmount) || 0)}.
         </p>
+        {validationError && (
+          <p role="alert" className="text-danger font-ui text-ui-sm mt-3">
+            {validationError}
+          </p>
+        )}
       </div>
     </div>
   );

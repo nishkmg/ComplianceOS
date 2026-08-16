@@ -84,9 +84,9 @@ export default function IntegrationsPage() {
 
       <main id="main-content">
         <header className="pt-space-96 pb-space-64">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <div className="max-w-4xl">
-              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
+              <h1 className="font-display text-hero text-dark tracking-tight text-balance mb-8">
                 What connects today, and what is mapped for next.
               </h1>
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
@@ -100,7 +100,7 @@ export default function IntegrationsPage() {
         </header>
 
         <section className="py-space-96 bg-section-muted border-y-[0.5px] border-border-subtle">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 eyebrow="Integration ledger"
@@ -109,13 +109,13 @@ export default function IntegrationsPage() {
               />
             </Reveal>
             <ul className="list-none p-0 m-0 mt-12">
-              {liveIntegrations.map((item) => (
-                <Reveal as="li" key={item.id}>
+              {liveIntegrations.map((item, index) => (
+                <Reveal as="li" key={item.id} delay={0.05 * index}>
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle items-baseline">
                     <span className="sm:col-span-1 font-mono text-ui-2xs text-amber pt-1">{item.id}</span>
-                    <h2 className="sm:col-span-3 font-display text-display-lg text-dark leading-snug tracking-tight">
+                    <h3 className="sm:col-span-3 font-display text-display-lg text-dark leading-snug tracking-tight">
                       {item.title}
-                    </h2>
+                    </h3>
                     <p className="sm:col-span-6 font-ui text-ui-md text-mid leading-relaxed">{item.desc}</p>
                     <span className="sm:col-span-2 font-mono text-ui-xs uppercase tracking-[0.18em] text-amber text-right">
                       {item.status}
@@ -128,25 +128,24 @@ export default function IntegrationsPage() {
         </section>
 
         <section className="py-space-96">
-          <div className="max-w-[1320px] mx-auto px-8">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8">
             <Reveal>
               <SectionHeader
                 title="On the roadmap"
                 lede="Six planned connections, each with a clear status. GSP and e-filing adapters run against sandbox mocks today; production connections are scheduled."
               />
             </Reveal>
-            <ul className="list-none p-0 m-0 mt-12">
-              {plannedIntegrations.map((item) => (
-                <Reveal as="li" key={item.id}>
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle items-baseline">
-                    <span className="sm:col-span-1 font-mono text-ui-2xs text-light pt-1">{item.id}</span>
-                    <h2 className="sm:col-span-3 font-display text-display-lg text-dark leading-snug tracking-tight">
-                      {item.title}
-                    </h2>
-                    <p className="sm:col-span-6 font-ui text-ui-md text-mid leading-relaxed">{item.desc}</p>
-                    <span className="sm:col-span-2 font-mono text-ui-xs uppercase tracking-[0.18em] text-light text-right">
+            <ul className="list-none p-0 m-0 mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {plannedIntegrations.map((item, index) => (
+                <Reveal as="li" key={item.id} delay={0.05 * index}>
+                  <div className="h-full rounded-sm border border-border-subtle bg-surface p-5 flex flex-col gap-2">
+                    <span className="font-mono text-ui-2xs uppercase tracking-[0.18em] text-light">
                       {item.status}
                     </span>
+                    <h3 className="font-display text-display-lg text-dark leading-snug tracking-tight">
+                      {item.title}
+                    </h3>
+                    <p className="font-ui text-ui-md text-mid leading-relaxed">{item.desc}</p>
                   </div>
                 </Reveal>
               ))}
@@ -155,7 +154,7 @@ export default function IntegrationsPage() {
         </section>
 
         <section className="py-space-96 bg-section-dark">
-          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="max-w-[1320px] mx-auto px-5 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <Reveal>
               <h2 className="font-display text-marketing-xl text-white leading-[1.08] tracking-tight text-balance mb-6">
                 How integrations are built

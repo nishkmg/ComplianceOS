@@ -856,3 +856,23 @@ PRINT STYLESHEET
     scroll-behavior: auto !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MARKETING DISPLAY SCALE
+   ───────────────────────────────────────────────────────────────────────────── */
+/* text-marketing-hero (64px) is fixed-size; at 480px a 64px serif h1 wraps to
+   4-6 lines. This clamp keeps the display at 64px on wide screens and scales
+   down to ~36px on phones (2-3 lines max). */
+.text-hero {
+  font-size: clamp(2.25rem, 4vw + 1rem, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+/* Split-hero h1s (copy next to a screenshot column) need a smaller cap —
+   64px in a ~620px column wraps to 3-5 lines. */
+.text-hero-split {
+  font-size: clamp(1.75rem, 3vw + 1rem, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}

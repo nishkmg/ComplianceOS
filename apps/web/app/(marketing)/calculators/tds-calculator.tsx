@@ -20,15 +20,20 @@ const inputCls =
 export function TdsCalculator() {
   const [salary, setSalary] = useState('1500000');
   const [result, setResult] = useState<{ rows: { min: number; max: number; rate: number; tax: number }[]; total: number; effective: number } | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const compute = () => {
     const annual = Number(salary);
-    if (!Number.isFinite(annual) || annual < 0) return;
+    if (!Number.isFinite(annual) || annual <= 0) {
+      setValidationError('Enter an annual salary above zero.');
+      return;
+    }
     const rows = SLABS.map((s) => {
       const taxable = Math.max(0, Math.min(annual, s.max) - s.min);
       return { ...s, tax: taxable * s.rate };
     });
     const total = rows.reduce((sum, r) => sum + r.tax, 0);
+    setValidationError(null);
     setResult({ rows, total, effective: annual > 0 ? total / annual : 0 });
   };
 
@@ -56,7 +61,10 @@ export function TdsCalculator() {
               min="0"
               step="any"
               value={salary}
-              onChange={(e) => setSalary(e.target.value)}
+              onChange={(e) => {
+                setSalary(e.target.value);
+                setValidationError(null);
+              }}
               className={inputCls}
             />
           </div>
@@ -97,6 +105,11 @@ export function TdsCalculator() {
         <p className="font-mono text-mono-sm text-light mt-6">
           Indicative only, consult your CA. Cess and surcharge not included.
         </p>
+        {validationError && (
+          <p role="alert" className="text-danger font-ui text-ui-sm mt-3">
+            {validationError}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -62,8 +62,8 @@ export default function AboutPage() {
             <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6 border-l-2 border-amber pl-4">
               About Arthvahi
             </p>
-            <h1 className="font-display text-marketing-xl text-dark leading-[1.08] tracking-tight text-balance mb-8">
-              We built the accounting software we wished existed when we started our businesses.
+            <h1 className="font-display text-hero text-dark tracking-tight text-balance mb-8">
+              The software we wished existed when we started out.
             </h1>
             <p className="font-ui text-ui-md text-mid leading-relaxed max-w-2xl">
               A rejection of generic SaaS in favour of editorial precision. Designed

@@ -15,7 +15,7 @@ const SUCCESS = 'Request received. We reply within one business day.';
 
 const labelCls = 'text-ui-2xs font-mono uppercase tracking-widest text-mid';
 const inputCls =
-  'border-b-[0.5px] border-border bg-transparent py-2 font-ui text-ui-sm text-dark transition-colors outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:border-amber placeholder:text-light';
+  'h-9 w-full rounded-sm border border-border-strong bg-surface px-3 text-sm text-dark shadow-sm placeholder:text-light focus-visible:outline-none focus-visible:border-amber focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
 
 const demoAgenda = [
   'GST returns generated from posted entries',
@@ -107,11 +107,11 @@ export default function DemoPage() {
       <MarketingNav />
       <main id="main-content">
         {/* Hero */}
-        <header className="pt-space-64 pb-space-64 px-8 max-w-[1320px] mx-auto text-left">
+        <header className="pt-space-64 pb-space-64 px-5 md:px-8 max-w-[1320px] mx-auto text-left">
           <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold">
             Book a demo
           </p>
-          <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mt-4">
+          <h1 className="font-display text-hero text-dark tracking-tight text-balance mt-4">
             Thirty minutes on your books. No setup, no obligation.
           </h1>
           <p className="font-ui text-ui-lg text-mid leading-relaxed mt-6 max-w-xl">
@@ -131,7 +131,7 @@ export default function DemoPage() {
         </header>
 
         {/* Form + what happens next */}
-        <section className="pb-space-96 px-8 max-w-[1320px] mx-auto">
+        <section className="pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Form card */}
             <div className="lg:col-span-7 bg-surface p-12 border border-border-subtle border-t-2 border-t-amber">
@@ -140,7 +140,7 @@ export default function DemoPage() {
               </p>
 
               {status === 'done' ? (
-                <div className="border border-border-subtle rounded-sm bg-section-muted p-8">
+                <div className="border border-border-subtle rounded-sm bg-section-muted p-8" role="status">
                   <p className="font-display text-display-lg text-dark text-balance">{SUCCESS}</p>
                   <p className="font-ui text-ui-sm text-mid leading-relaxed mt-3">
                     We will write to the email you gave us to schedule your walkthrough.
@@ -208,13 +208,13 @@ export default function DemoPage() {
                     />
                   </div>
                   {status === 'error' && (
-                    <p className="text-ui-sm font-mono text-amber" role="alert">
+                    <p className="text-ui-sm font-mono text-danger" role="alert">
                       {SUBMIT_ERROR}
                     </p>
                   )}
                   <div className="pt-4">
                     <MarketingButton type="submit" className="w-full" disabled={status === 'submitting'}>
-                      {status === 'submitting' ? 'Sending…' : 'Request Demo'}
+                      {status === 'submitting' ? 'Sending…' : 'Book a Demo'}
                       <span aria-hidden="true">→</span>
                     </MarketingButton>
                   </div>
@@ -232,12 +232,12 @@ export default function DemoPage() {
                   <Reveal as="li" key={s.step} delay={i * 0.08} className="pl-8 pb-10 last:pb-0 relative">
                       <span
                         aria-hidden="true"
-                        className="absolute left-0 top-0 -translate-x-1/2 w-2 h-2 rounded-full bg-amber"
+                        className="absolute left-0 top-0 -translate-x-1/2 w-2 h-2 rounded-none bg-amber"
                       />
                       <p className="font-mono text-mono-sm text-amber">{s.step}</p>
-                      <h3 className="font-display text-display-lg text-dark leading-snug text-balance mt-2">
+                      <h2 className="font-display text-display-lg text-dark leading-snug text-balance mt-2">
                         {s.title}
-                      </h3>
+                      </h2>
                       <p className="font-ui text-ui-sm text-mid leading-relaxed mt-2">{s.desc}</p>
                   </Reveal>
                 ))}
@@ -247,7 +247,7 @@ export default function DemoPage() {
         </section>
 
         {/* Product shot */}
-        <section className="pb-space-96 px-8 max-w-[1320px] mx-auto">
+        <section className="pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto">
           <Reveal>
             <figure>
               <figcaption className="font-mono text-mono-sm text-mid mb-3">
@@ -263,7 +263,7 @@ export default function DemoPage() {
         </section>
 
         {/* FAQ */}
-        <section className="pb-space-96 px-8 max-w-[1320px] mx-auto">
+        <section className="pb-space-96 px-5 md:px-8 max-w-[1320px] mx-auto">
           <Reveal>
             <div className="max-w-2xl">
               <h2 className="font-display text-marketing-xl text-dark leading-[1.08] tracking-tight text-balance">
@@ -272,7 +272,7 @@ export default function DemoPage() {
               <div className="mt-10 divide-y divide-border-subtle border-y border-border-subtle">
                 {faqs.map((f) => (
                   <details key={f.q} className="group py-6">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-display text-display-lg text-dark leading-snug text-balance">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-display text-display-lg text-dark leading-snug text-balance focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
                       {f.q}
                       <span
                         aria-hidden="true"

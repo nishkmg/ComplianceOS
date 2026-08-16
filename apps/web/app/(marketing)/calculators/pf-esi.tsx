@@ -32,11 +32,19 @@ export function PfEsi() {
     totalEmployee: number;
     totalEmployer: number;
   } | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const compute = () => {
     const b = Number(basic);
     const g = Number(gross);
-    if (!Number.isFinite(b) || !Number.isFinite(g) || b < 0 || g < 0) return;
+    if (!Number.isFinite(b) || b <= 0) {
+      setValidationError('Enter basic wages above zero.');
+      return;
+    }
+    if (!Number.isFinite(g) || g <= 0) {
+      setValidationError('Enter gross wages above zero.');
+      return;
+    }
     const pfWage = Math.min(b, PF_CEILING);
     const pfEmployee = pfWage * PF_EMPLOYEE_RATE;
     const pfEmployer = pfWage * PF_EMPLOYER_RATE;
@@ -55,6 +63,7 @@ export function PfEsi() {
       totalEmployee: pfEmployee + esiEmployee,
       totalEmployer: pfEmployer + esiEmployer,
     });
+    setValidationError(null);
   };
 
   return (
@@ -82,7 +91,10 @@ export function PfEsi() {
               min="0"
               step="any"
               value={basic}
-              onChange={(e) => setBasic(e.target.value)}
+              onChange={(e) => {
+                setBasic(e.target.value);
+                setValidationError(null);
+              }}
               className={inputCls}
             />
           </div>
@@ -96,7 +108,10 @@ export function PfEsi() {
               min="0"
               step="any"
               value={gross}
-              onChange={(e) => setGross(e.target.value)}
+              onChange={(e) => {
+                setGross(e.target.value);
+                setValidationError(null);
+              }}
               className={inputCls}
             />
           </div>
@@ -156,6 +171,11 @@ export function PfEsi() {
         <p className="font-mono text-mono-sm text-light mt-6">
           Indicative only, consult your CA. Rates as in force for FY 2026-27.
         </p>
+        {validationError && (
+          <p role="alert" className="text-danger font-ui text-ui-sm mt-3">
+            {validationError}
+          </p>
+        )}
       </div>
     </div>
   );

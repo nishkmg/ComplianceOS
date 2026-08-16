@@ -22,7 +22,7 @@ export default function SecurityPage() {
           {/* Hero */}
           <section className="text-center flex flex-col items-center gap-6">
             <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber border-b-[0.5px] border-border-subtle pb-2">Platform Security</span>
-            <h1 className="font-marketing-hero text-marketing-hero text-dark max-w-3xl leading-tight mt-6">
+            <h1 className="font-marketing-hero text-hero text-dark max-w-3xl leading-tight mt-6">
               Institutional-Grade Protection for Indian Enterprises.
             </h1>
             <p className="font-ui text-ui-lg text-secondary max-w-2xl mt-4 leading-relaxed">

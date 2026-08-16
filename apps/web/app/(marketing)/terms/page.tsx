@@ -11,7 +11,7 @@ export default function TermsPage() {
         {/* Header */}
         <header className="mb-space-64 text-left">
           <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Last Updated: August 16, 2026</p>
-          <h1 className="font-marketing-hero text-marketing-hero text-dark mb-6">Terms of Service</h1>
+          <h1 className="font-marketing-hero text-hero text-dark mb-6">Terms of Service</h1>
           <p className="font-ui text-ui-lg text-secondary max-w-2xl leading-relaxed">Please read these Terms of Service carefully before using the Arthvahi platform. These terms define your rights and obligations as an Indian accounting professional utilizing our infrastructure.</p>
         </header>
 
