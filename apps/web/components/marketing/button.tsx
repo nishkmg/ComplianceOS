@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 type Variant = 'primary' | 'secondary' | 'ghost';
 
 const base =
-  'group inline-flex items-center justify-center gap-1.5 font-ui text-sm font-medium rounded-sm transition-all no-underline cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none';
+  'group inline-flex items-center justify-center gap-1.5 h-9 px-4 font-ui text-sm font-medium rounded-sm transition-all no-underline cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none';
 
 const styles: Record<Variant, string> = {
   primary: `${base} bg-amber text-white dark:text-amber-ink hover:bg-amber-hover shadow-sm`,
