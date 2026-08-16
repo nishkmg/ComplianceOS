@@ -31,7 +31,7 @@ export default function BlogIndexPage() {
   return (
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
-      <main className="max-w-[1320px] mx-auto px-8">
+      <main id="main-content" className="max-w-[1320px] mx-auto px-8">
         {/* Featured post: wide split card */}
         <section className="pt-space-128 pb-space-64">
           <div className="grid grid-cols-1 md:grid-cols-2 bg-surface border border-border-subtle overflow-hidden">

@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <div className="bg-page-bg text-dark antialiased min-h-screen">
       <MarketingNav />
-      <main className="w-full max-w-[760px] mx-auto px-margin-mobile md:px-0 py-space-96">
+      <main id="main-content" className="w-full max-w-[760px] mx-auto px-margin-mobile md:px-0 py-space-96">
         {/* Header */}
         <header className="mb-space-64 text-left">
           <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Last Updated: October 24, 2024</p>

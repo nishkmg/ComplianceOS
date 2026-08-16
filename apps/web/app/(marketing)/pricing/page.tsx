@@ -86,7 +86,7 @@ export default function PricingPage() {
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
 
-      <main className="max-w-[1320px] mx-auto px-8">
+      <main id="main-content" className="max-w-[1320px] mx-auto px-8">
         {/* Hero */}
         <section className="pt-space-128 pb-space-64 text-center">
           <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6">

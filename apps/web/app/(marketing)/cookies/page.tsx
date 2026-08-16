@@ -7,7 +7,7 @@ export default function CookiesPage() {
   return (
     <div className="bg-page-bg text-dark antialiased min-h-screen">
       <MarketingNav />
-      <main className="w-full min-h-screen pt-space-96 pb-space-128">
+      <main id="main-content" className="w-full min-h-screen pt-space-96 pb-space-128">
         <article className="max-w-[800px] mx-auto px-gutter-desktop">
           <header className="mb-space-64 text-center">
             <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber block mb-4">Legal Information</span>

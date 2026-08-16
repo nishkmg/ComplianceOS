@@ -55,7 +55,7 @@ export default function AboutPage() {
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
 
-      <main className="max-w-[1320px] mx-auto px-8">
+      <main id="main-content" className="max-w-[1320px] mx-auto px-8">
         {/* Hero */}
         <section className="pt-space-128 pb-space-96">
           <div className="max-w-4xl">

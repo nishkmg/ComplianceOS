@@ -7,7 +7,7 @@ export default function ContactSuccessPage() {
   return (
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
-      <main className="flex flex-col items-center justify-center py-32 px-8 text-center">
+      <main id="main-content" className="flex flex-col items-center justify-center py-32 px-8 text-center">
         <Icon name="check_circle" className="text-[56px] text-amber mb-8" />
         <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-4">
           Message received

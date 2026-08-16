@@ -75,7 +75,7 @@ export default function PrivacyPage() {
   return (
     <div className="bg-page-bg text-dark min-h-screen">
       <MarketingNav />
-      <main className="w-full max-w-page mx-auto px-gutter-desktop py-space-96">
+      <main id="main-content" className="w-full max-w-page mx-auto px-gutter-desktop py-space-96">
         <header className="mb-space-64">
           <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Last Updated: October 24, 2024</p>
           <h1 className="font-display text-marketing-xl text-dark mb-6">Privacy Policy</h1>

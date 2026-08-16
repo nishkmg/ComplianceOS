@@ -23,7 +23,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
-      <main className="max-w-[1320px] mx-auto px-8 pt-space-128 pb-space-96">
+      <main id="main-content" className="max-w-[1320px] mx-auto px-8 pt-space-128 pb-space-96">
         <article className="max-w-[65ch] mx-auto text-left">
           <div className="flex items-center gap-4 mb-8">
             <span className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold">

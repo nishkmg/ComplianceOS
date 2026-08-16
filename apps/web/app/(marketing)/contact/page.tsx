@@ -47,7 +47,7 @@ export default function ContactPage() {
   return (
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <header className="pt-space-128 pb-space-64 px-8 max-w-[1320px] mx-auto text-left">
           <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold">

@@ -17,7 +17,7 @@ export default function SecurityPage() {
   return (
     <div className="bg-page-bg text-dark min-h-screen antialiased">
       <MarketingNav />
-      <main className="pt-space-128 pb-space-96 px-gutter-desktop">
+      <main id="main-content" className="pt-space-128 pb-space-96 px-gutter-desktop">
         <div className="max-w-6xl mx-auto space-y-space-96">
           {/* Hero */}
           <section className="text-center flex flex-col items-center gap-6">
