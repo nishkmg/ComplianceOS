@@ -25,6 +25,8 @@ export const tenantConfigRouter = router({
       bsrCode: tenants.bsrCode,
       pan: tenants.pan,
       gstin: tenants.gstin,
+      plan: tenants.plan,
+      planStatus: tenants.planStatus,
     }).from(tenants).where(eq(tenants.id, ctx.tenantId)).limit(1);
 
     if (!t) {

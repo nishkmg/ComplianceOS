@@ -63,6 +63,33 @@ export const invoicesRouter = router({
       };
     }),
 
+  usage: protectedProcedure
+    .query(async ({ ctx }) => {
+      const { tenantId } = ctx.session!.user;
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+      const start = `${year}-${String(month).padStart(2, "0")}-01`;
+      const end = `${year}-${String(month).padStart(2, "0")}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`;
+      const [{ count }] = await ctx.db
+        .select({ count: sql<number>`count(*)` })
+        .from(invoices)
+        .where(
+          and(
+            eq(invoices.tenantId, tenantId),
+            gte(invoices.date, sql`${start}`),
+            lte(invoices.date, sql`${end}`),
+          ),
+        );
+      const [t] = await ctx.db
+        .select({ plan: tenants.plan })
+        .from(tenants)
+        .where(eq(tenants.id, tenantId))
+        .limit(1);
+      const limit = t?.plan === "free" ? 25 : null;
+      return { month: start.slice(0, 7), count: Number(count), limit };
+    }),
+
   get: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .query(async ({ ctx, input }) => {

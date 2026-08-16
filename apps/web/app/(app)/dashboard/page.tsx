@@ -117,12 +117,40 @@ function ReturnsDue({ activeFy }: ReturnsDueProps) {
   );
 }
 
+function UsageMeter() {
+  const { data } = api.invoices.usage.useQuery();
+  if (!data) return null;
+  const pct = data.limit ? Math.min(100, Math.round((data.count / data.limit) * 100)) : null;
+  return (
+    <div className="rounded-sm border border-border-subtle bg-surface p-5">
+      <div className="flex items-baseline justify-between">
+        <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold">Invoices this month</p>
+        <p className="font-mono text-mono-md tabular-nums text-dark">
+          {data.count}{data.limit ? ` / ${data.limit}` : ""}
+        </p>
+      </div>
+      {pct !== null && (
+        <>
+          <div className="mt-3 h-1.5 w-full rounded-sm bg-section-muted">
+            <div className={`h-full rounded-sm ${pct >= 100 ? "bg-danger" : "bg-amber"}`} style={{ width: `${pct}%` }} />
+          </div>
+          {pct >= 100 && (
+            <p className="font-ui text-ui-sm text-danger mt-2">
+              Free plan limit reached — <Link className="text-amber hover:underline" href="/pricing">upgrade</Link> to keep invoicing.
+            </p>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { activeFy } = useFiscalYear();
   const { data: session } = useSession();
 
   const { data, isLoading, isError } = api.journalEntries.list.useQuery(
-    { fiscalYear: activeFy, limit: 500 },
+    { fiscalYear: activeFy, limit: 25 },
     { staleTime: 15_000 },
   );
 
@@ -211,7 +239,12 @@ export default function DashboardPage() {
       )}
 
       {/* Returns due */}
-      <ReturnsDue activeFy={activeFy} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <ReturnsDue activeFy={activeFy} />
+        </div>
+        <UsageMeter />
+      </div>
 
       {/* Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

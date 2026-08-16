@@ -1,6 +1,7 @@
-import { pgTable, uuid, text, timestamp, jsonb, date } from "drizzle-orm/pg-core";
+import { pgTable, pgEnum, uuid, text, timestamp, jsonb, date } from "drizzle-orm/pg-core";
 import { businessTypeEnum, stateEnum, industryEnum, gstRegistrationEnum, moduleEnum, setByEnum } from "./enums";
 
+export const tenantPlanEnum = pgEnum("tenant_plan", ["free", "pro", "business"]);
 export const tenants = pgTable("tenants", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
@@ -26,6 +27,8 @@ export const tenants = pgTable("tenants", {
   bankAccount: text("bank_account"),
   bankIfsc: text("bank_ifsc"),
   bsrCode: text("bsr_code"),
+  plan: tenantPlanEnum("plan").notNull().default("free"),
+  planStatus: text("plan_status").notNull().default("active"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
@@ -40,3 +43,4 @@ export const tenantModuleConfig = pgTable("tenant_module_config", {
 }, (table) => ({
   tenantModuleUnique: { fields: [table.tenantId, table.module], name: "tenant_module_config_tenant_id_module_unique" },
 }));
+

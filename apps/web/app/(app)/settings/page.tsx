@@ -3,6 +3,29 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Icon } from "@/components/ui/icon";
+import { api } from "@/lib/api";
+
+function PlanBadge() {
+  const { data } = api.tenantConfig.get.useQuery();
+  const plan = data?.plan ?? "free";
+  const label = plan === "pro" ? "Pro" : plan === "business" ? "Business" : "Free";
+  return (
+    <div className="flex items-center justify-between rounded-sm border border-border-subtle bg-surface p-5">
+      <div>
+        <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold mb-1">Plan</p>
+        <p className="font-ui text-ui-lg font-semibold text-dark">{label}</p>
+        <p className="font-ui text-ui-sm text-mid mt-1">
+          {plan === "free" ? "25 invoices per month · GSTR-1 + 3B" : plan === "pro" ? "Unlimited invoicing · 5 users · GSTR automations" : "Everything in Pro · TDS/TCS · API · MCA audit trail"}
+        </p>
+      </div>
+      {plan === "free" && (
+        <Link href="/pricing" className="inline-flex h-9 items-center rounded-sm bg-amber px-4 text-sm font-medium text-white dark:text-amber-ink hover:bg-amber-hover no-underline">
+          Upgrade
+        </Link>
+      )}
+    </div>
+  );
+}
 
 const cards = [
   {
@@ -41,6 +64,10 @@ export default function SettingsPage() {
           description="Company identity, access control and ledger configuration for your organization."
         />
       </header>
+
+      <div className="mb-8">
+        <PlanBadge />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {cards.map((card) => (
