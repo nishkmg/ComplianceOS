@@ -53,6 +53,24 @@ export const teamRouter = router({
       await assertOwner(ctx);
       const email = input.email.toLowerCase();
 
+      // Plan enforcement: Free = 1 member (the owner), Pro = 5, Business = unlimited.
+      const MEMBER_LIMITS: Record<string, number | null> = { free: 1, pro: 5, business: null };
+      const [planRow] = await ctx.db
+        .select({ plan: tenants.plan })
+        .from(tenants)
+        .where(eq(tenants.id, ctx.tenantId))
+        .limit(1);
+      const limit = MEMBER_LIMITS[planRow?.plan ?? "free"] ?? null;
+      if (limit !== null) {
+        const [{ members }] = await ctx.db
+          .select({ members: sql<number>`count(*)` })
+          .from(userTenants)
+          .where(eq(userTenants.tenantId, ctx.tenantId));
+        if (Number(members) >= limit) {
+          throw new Error(`Plan allows ${limit} member${limit === 1 ? "" : "s"}. Upgrade to add more.`);
+        }
+      }
+
       let [user] = await ctx.db.select().from(users).where(eq(users.email, email)).limit(1);
       if (!user) {
         [user] = await ctx.db.insert(users).values({ email }).returning();

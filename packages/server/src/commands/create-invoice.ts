@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and, gte, lte, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { invoices, invoiceLines, tenants } = _db;
@@ -74,6 +74,33 @@ export async function createInvoice(
   let igstTotal: number;
   let discountTotal: number;
   let grandTotal: number;
+
+  // Plan enforcement: the Free plan allows 25 invoices per calendar month.
+  const [planRow] = await db
+    .select({ plan: tenants.plan })
+    .from(tenants)
+    .where(eq(tenants.id, tenantId))
+    .limit(1);
+  if (planRow?.plan === "free") {
+    const now = new Date();
+    const m = now.getMonth() + 1;
+    const y = now.getFullYear();
+    const start = `${y}-${String(m).padStart(2, "0")}-01`;
+    const end = `${y}-${String(m).padStart(2, "0")}-${String(new Date(y, m, 0).getDate()).padStart(2, "0")}`;
+    const [{ count }] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(invoices)
+      .where(
+        and(
+          eq(invoices.tenantId, tenantId),
+          gte(invoices.date, sql`${start}`),
+          lte(invoices.date, sql`${end}`),
+        ),
+      );
+    if (Number(count) >= 25) {
+      throw new Error("Free plan limit reached (25 invoices/month). Upgrade to Pro to keep invoicing.");
+    }
+  }
 
   if (summaryOnly) {
     subtotal = Number(input.subtotal ?? 0);

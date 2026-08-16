@@ -41,9 +41,10 @@ export async function generateGSTR2B(
     throw new Error(`GSTR-2B for ${validated.periodMonth}/${validated.periodYear} already filed`);
   }
 
-  // Calculate period start/end dates
-  const periodStart = new Date(validated.periodYear, validated.periodMonth - 1, 1);
-  const periodEnd = new Date(validated.periodYear, validated.periodMonth, 0);
+  // Calculate period start/end dates — STRING form: postgres-js explodes on
+  // Date objects inside sql`` templates (unquoted toString garbage).
+  const periodStart = `${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}-01`;
+  const periodEnd = `${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}-${String(new Date(validated.periodYear, validated.periodMonth, 0).getDate()).padStart(2, "0")}`;
 
   // Load posted purchase invoices for the period
   // Filter: status = "sent" (received from supplier) AND not blocked by Section 17(5)

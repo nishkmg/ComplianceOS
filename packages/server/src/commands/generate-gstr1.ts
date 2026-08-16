@@ -32,8 +32,9 @@ export async function generateGSTR1(
   }
 
   // Calculate period start/end dates
-  const periodStart = new Date(validated.periodYear, validated.periodMonth - 1, 1);
-  const periodEnd = new Date(validated.periodYear, validated.periodMonth, 0);
+  // STRING form — postgres-js explodes on Date objects inside sql`` templates.
+  const periodStart = `${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}-01`;
+  const periodEnd = `${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}-${String(new Date(validated.periodYear, validated.periodMonth, 0).getDate()).padStart(2, "0")}`;
 
   // Load posted sales invoices for the period
   const salesInvoices = await db.select().from(invoices).where(
@@ -291,7 +292,7 @@ export async function generateGSTR1(
       totalTaxAmount: String(Number(b2csConsolidated.igst) + Number(b2csConsolidated.cgst) + Number(b2csConsolidated.sgst)),
       sourceDocumentType: "consolidated",
       sourceDocumentNumber: `B2CS-${validated.periodYear}-${String(validated.periodMonth).padStart(2, "0")}`,
-      sourceDocumentDate: periodEnd.toISOString().split("T")[0],
+      sourceDocumentDate: periodEnd,
       gstin: null,
       partyName: "Consolidated B2CS",
     });

@@ -34,6 +34,7 @@ describe("Password reset + team invite flow", () => {
       pan: `AAAPT${stamp.toUpperCase()}P`,
       address: "Test Address",
       state: "karnataka",
+      plan: "business", // invite tests must not hit the free-plan member limit
     });
     await db.insert(users).values({
       id: ownerId,

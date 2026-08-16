@@ -7,7 +7,7 @@ import { generateGSTR3B } from "../commands/generate-gstr3b";
 import { computeGstr1Summary, computeGstr2bSummary, computeGstr3bSummary } from "../services/gst-computation";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
-const { gstReturns, gstReturnLines, gstr9Schedules } = _db;
+const { gstReturns, gstReturnLines, gstr9Schedules, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
 const { GSTReturnStatus } = _shared;
@@ -140,6 +140,14 @@ export const gstReturnsRouter = router({
       periodYear: z.number().min(2000),
     }))
     .mutation(async ({ ctx, input }) => {
+      const [planRow] = await ctx.db
+        .select({ plan: tenants.plan })
+        .from(tenants)
+        .where(eq(tenants.id, ctx.tenantId))
+        .limit(1);
+      if (planRow?.plan === "free") {
+        throw new Error("GSTR-2B automation is a Pro feature. Upgrade to generate it.");
+      }
       const result = await generateGSTR2B(
         ctx.db,
         ctx.tenantId,
