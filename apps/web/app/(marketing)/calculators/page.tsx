@@ -76,7 +76,11 @@ export default function CalculatorsPage() {
 
         <section className="pb-space-96">
           <div className="max-w-[1320px] mx-auto px-5 md:px-8">
-            <div role="tablist" aria-label="Statutory calculators" className="border-b border-border-subtle">
+            <div
+              role="tablist"
+              aria-label="Statutory calculators"
+              className="inline-flex flex-wrap gap-1 rounded-sm bg-section-muted p-1"
+            >
               {TABS.map((tab, i) => (
                 <button
                   key={tab.id}
@@ -88,10 +92,10 @@ export default function CalculatorsPage() {
                   onClick={() => setActiveTab(tab.id)}
                   onKeyDown={(e) => onKeyDown(e, i)}
                   className={cn(
-                    'inline-block px-1 py-3 mr-8 font-mono text-mono-sm uppercase tracking-[0.14em] cursor-pointer bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber',
+                    'h-9 px-4 rounded-sm font-mono text-mono-sm uppercase tracking-[0.14em] cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber',
                     activeTab === tab.id
-                      ? 'text-amber border-b-2 border-amber'
-                      : 'text-mid hover:text-dark border-b-2 border-transparent',
+                      ? 'bg-surface shadow-sm text-dark'
+                      : 'bg-transparent text-mid hover:text-dark',
                   )}
                 >
                   {tab.label}

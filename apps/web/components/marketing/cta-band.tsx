@@ -27,7 +27,7 @@ export function CtaBand({
         </h2>
         {lede && <p className="font-ui text-ui-md text-mid leading-relaxed mt-5 max-w-[55ch] mx-auto">{lede}</p>}
         <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
-          <MarketingButton href="/signup">{ctaLabel} <span aria-hidden="true">→</span></MarketingButton>
+          <MarketingButton href="/signup">{ctaLabel} <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">→</span></MarketingButton>
           {secondaryHref && secondaryLabel && (
             <MarketingButton href={secondaryHref} variant="secondary">
               {secondaryLabel}

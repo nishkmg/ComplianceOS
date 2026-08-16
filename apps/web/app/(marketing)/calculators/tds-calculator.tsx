@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { MarketingButton } from '@/components/marketing/button';
+import { useEffect, useState } from 'react';
 
 const SLABS: { min: number; max: number; rate: number }[] = [
   { min: 0, max: 300000, rate: 0 },
@@ -15,7 +14,7 @@ const SLABS: { min: number; max: number; rate: number }[] = [
 const inr0 = (n: number) => `\u20B9${Math.round(n).toLocaleString('en-IN')}`;
 
 const inputCls =
-  'h-9 rounded-sm border border-border-strong bg-surface px-3 text-sm font-mono text-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber';
+  'h-9 w-full rounded-sm border border-border-strong bg-surface pl-8 pr-3 text-sm font-mono text-dark shadow-sm focus-visible:outline-none focus-visible:border-amber focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
 
 export function TdsCalculator() {
   const [salary, setSalary] = useState('1500000');
@@ -26,6 +25,7 @@ export function TdsCalculator() {
     const annual = Number(salary);
     if (!Number.isFinite(annual) || annual <= 0) {
       setValidationError('Enter an annual salary above zero.');
+      setResult(null);
       return;
     }
     const rows = SLABS.map((s) => {
@@ -37,60 +37,66 @@ export function TdsCalculator() {
     setResult({ rows, total, effective: annual > 0 ? total / annual : 0 });
   };
 
+  // Live recompute — debounced, no submit gate
+  useEffect(() => {
+    const t = setTimeout(compute, 150);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salary]);
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
       <div>
         <h2 className="font-display text-display-lg text-dark tracking-tight mb-2">TDS on salary, Section 192</h2>
         <p className="font-ui text-ui-md text-mid leading-relaxed mb-8">
           New regime slabs for FY 2026-27 applied to annual taxable salary. No standard deduction, no 80C.
         </p>
-        <form
-          className="space-y-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-            compute();
-          }}
-        >
+        <div className="space-y-5">
           <div>
             <label htmlFor="tds-salary" className="block font-ui text-ui-sm text-mid mb-2">
               Annual taxable salary
             </label>
-            <input
-              id="tds-salary"
-              type="number"
-              min="0"
-              step="any"
-              value={salary}
-              onChange={(e) => {
-                setSalary(e.target.value);
-                setValidationError(null);
-              }}
-              className={inputCls}
-            />
+            <div className="relative">
+              <span aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-mono-sm text-mid">
+                ₹
+              </span>
+              <input
+                id="tds-salary"
+                type="number"
+                min="0"
+                step="any"
+                value={salary}
+                onChange={(e) => {
+                  setSalary(e.target.value);
+                  setValidationError(null);
+                }}
+                className={inputCls}
+              />
+            </div>
           </div>
-          <MarketingButton type="submit">Compute</MarketingButton>
-        </form>
+          <p className="font-mono text-mono-xs text-light">Figures update as you type.</p>
+        </div>
       </div>
 
-      <div aria-live="polite" className="bg-surface border border-border-subtle rounded-sm p-8 self-start">
+      <div aria-live="polite" className="bg-surface border border-border-subtle border-t-2 border-t-amber rounded-sm shadow-sm p-8 self-start w-full">
         {result ? (
           <>
+            <p className="font-mono text-ui-2xs uppercase tracking-[0.18em] text-light mb-3">Total tax</p>
+            <p className="font-mono text-3xl md:text-4xl tabular-nums text-amber leading-tight mb-8">{inr0(result.total)}</p>
             <div className="divide-y divide-border-subtle">
               {result.rows.map((r) => (
-                <div key={r.min} className="flex items-baseline justify-between py-3">
+                <div key={r.min} className="flex items-baseline justify-between py-2.5">
                   <span className="font-mono text-mono-sm text-mid tabular-nums">
                     {inr0(r.min)} to {r.max === Infinity ? 'above' : inr0(r.max)} at {r.rate * 100}%
                   </span>
-                  <span className="font-mono text-mono-lg text-dark tabular-nums">{inr0(r.tax)}</span>
+                  <span className="font-mono text-mono-sm text-dark tabular-nums">{inr0(r.tax)}</span>
                 </div>
               ))}
-              <div className="flex items-baseline justify-between py-3">
-                <span className="font-ui text-ui-sm text-mid">Total tax</span>
-                <span className="font-mono text-mono-lg text-amber tabular-nums">{inr0(result.total)}</span>
-              </div>
-              <div className="flex items-baseline justify-between py-3">
+            </div>
+            <div className="mt-4 pt-4 border-t border-border-subtle space-y-2">
+              <div className="flex items-baseline justify-between">
                 <span className="font-ui text-ui-sm text-mid">Effective rate</span>
-                <span className="font-mono text-mono-lg text-dark tabular-nums">
+                <span className="font-mono text-mono-md text-dark tabular-nums">
                   {(result.effective * 100).toFixed(2)}%
                 </span>
               </div>
@@ -100,7 +106,9 @@ export function TdsCalculator() {
             </p>
           </>
         ) : (
-          <p className="font-mono text-mono-sm text-light">Enter a salary and press Compute.</p>
+          <div className="border border-dashed border-border rounded-sm px-6 py-14 text-center">
+            <p className="font-mono text-mono-sm text-light">Your figures appear here as you type</p>
+          </div>
         )}
         <p className="font-mono text-mono-sm text-light mt-6">
           Indicative only, consult your CA. Cess and surcharge not included.

@@ -6,7 +6,15 @@ import { SectionHeader } from '@/components/marketing/section-header';
 import { CtaBand } from '@/components/marketing/cta-band';
 import { Reveal } from '@/components/marketing/reveal';
 
-const comparisonGroups = [
+type ComparisonRow = {
+  feature: string;
+  zoho: string;
+  arthvahi: string;
+  note: string;
+  neutral?: 'zoho' | 'arthvahi' | 'both';
+};
+
+const comparisonGroups: { group: string; rows: ComparisonRow[] }[] = [
   {
     group: 'Core accounting',
     rows: [
@@ -20,12 +28,14 @@ const comparisonGroups = [
         feature: 'Multi-currency',
         zoho: 'Full support',
         arthvahi: 'INR-first today',
+        neutral: 'arthvahi',
         note: 'Arthvahi is built for Indian books first.',
       },
       {
         feature: 'Bank feeds',
         zoho: 'Bank feeds and reconciliation',
         arthvahi: 'On the roadmap',
+        neutral: 'arthvahi',
         note: 'Automatic statement import is planned for Arthvahi.',
       },
     ],
@@ -43,6 +53,7 @@ const comparisonGroups = [
         feature: 'ITR-3 and ITR-4',
         zoho: 'Not offered',
         arthvahi: 'Computed from closed books, both regimes',
+        neutral: 'zoho',
         note: 'The computation runs on actual ledger income.',
       },
       {
@@ -89,6 +100,14 @@ const arthvahiStrengths = [
   'Print-ready Schedule III statements',
   'Event-sourced audit trail with tenant isolation',
 ];
+
+function verdictGlyph(neutral: boolean) {
+  return (
+    <span aria-hidden="true" className={`${neutral ? 'text-mid' : 'text-amber'} mr-1.5`}>
+      {neutral ? '·' : '✓'}
+    </span>
+  );
+}
 
 export default function CompareZohoBooksPage() {
   return (
@@ -143,12 +162,18 @@ export default function CompareZohoBooksPage() {
                         </th>
                       </tr>
                       {group.rows.map((row) => (
-                        <tr key={row.feature} className="align-top">
+                        <tr key={row.feature} className="align-top hover:bg-section-muted/50 transition-colors">
                           <th scope="row" className="px-6 py-4 font-ui font-medium text-dark">
                             {row.feature}
                           </th>
-                          <td className="px-6 py-4 font-mono text-mono-sm text-mid">{row.zoho}</td>
-                          <td className="px-6 py-4 font-mono text-mono-sm text-amber">{row.arthvahi}</td>
+                          <td className="px-6 py-4 font-mono text-mono-sm text-mid">
+                            {verdictGlyph(row.neutral === 'zoho' || row.neutral === 'both')}
+                            {row.zoho}
+                          </td>
+                          <td className="px-6 py-4 font-mono text-mono-sm text-amber">
+                            {verdictGlyph(row.neutral === 'arthvahi' || row.neutral === 'both')}
+                            {row.arthvahi}
+                          </td>
                           <td className="px-6 py-4 font-ui text-ui-xs text-mid leading-relaxed">{row.note}</td>
                         </tr>
                       ))}
@@ -171,6 +196,7 @@ export default function CompareZohoBooksPage() {
                   <ul className="list-none p-0 m-0">
                     {zohoStrengths.map((item) => (
                       <li key={item} className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle py-3">
+                        <span aria-hidden="true" className="text-amber mr-1.5">✓</span>
                         {item}
                       </li>
                     ))}
@@ -183,6 +209,7 @@ export default function CompareZohoBooksPage() {
                   <ul className="list-none p-0 m-0">
                     {arthvahiStrengths.map((item) => (
                       <li key={item} className="font-mono text-mono-sm text-amber border-b-[0.5px] border-border-subtle py-3">
+                        <span aria-hidden="true" className="text-amber mr-1.5">✓</span>
                         {item}
                       </li>
                     ))}
@@ -210,6 +237,7 @@ export default function CompareZohoBooksPage() {
               <BrowserFrame
                 src="/images/marketing/journal.png"
                 alt="Journal entries screen in Arthvahi"
+                className="shadow-md"
               />
             </Reveal>
           </div>

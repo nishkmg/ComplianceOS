@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { MarketingButton } from '@/components/marketing/button';
+import { useEffect, useState } from 'react';
 
 const DUE_PERCENT = [0.15, 0.45, 0.75, 1.0];
 const INTEREST_MONTHS = [3, 3, 3, 1];
@@ -17,7 +16,7 @@ const inr2 = (n: number) =>
   `\u20B9${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const inputCls =
-  'h-9 rounded-sm border border-border-strong bg-surface px-3 text-sm font-mono text-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber';
+  'h-9 w-full rounded-sm border border-border-strong bg-surface pl-8 pr-3 text-sm font-mono text-dark shadow-sm focus-visible:outline-none focus-visible:border-amber focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
 
 export function AdvanceTax() {
   const [income, setIncome] = useState('1500000');
@@ -34,11 +33,13 @@ export function AdvanceTax() {
     const tax = Number(liability);
     if (!Number.isFinite(tax) || tax <= 0) {
       setValidationError('Enter an estimated tax liability above zero.');
+      setResult(null);
       return;
     }
     const annual = Number(income);
     if (!Number.isFinite(annual) || annual <= 0) {
       setValidationError('Enter an estimated annual income above zero.');
+      setResult(null);
       return;
     }
     let cumDue = 0;
@@ -60,55 +61,66 @@ export function AdvanceTax() {
     setResult({ rows, totalInterest, effective: annual > 0 ? tax / annual : 0 });
   };
 
+  // Live recompute — debounced, no submit gate
+  useEffect(() => {
+    const t = setTimeout(compute, 150);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [income, liability, paid]);
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
       <div>
         <h2 className="font-display text-display-lg text-dark tracking-tight mb-2">Advance tax, Section 234C</h2>
         <p className="font-ui text-ui-md text-mid leading-relaxed mb-8">
           Installments due on 15 June, 15 September, 15 December and 15 March at 15%, 45%, 75% and 100% of the tax
           liability. A 1% per month interest applies on each shortfall for the months delayed.
         </p>
-        <form
-          className="space-y-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-            compute();
-          }}
-        >
+        <div className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label htmlFor="at-income" className="block font-ui text-ui-sm text-mid mb-2">
                 Estimated annual income
               </label>
-              <input
-                id="at-income"
-                type="number"
-                min="0"
-                step="any"
-                value={income}
-                onChange={(e) => {
-                  setIncome(e.target.value);
-                  setValidationError(null);
-                }}
-                className={inputCls}
-              />
+              <div className="relative">
+                <span aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-mono-sm text-mid">
+                  ₹
+                </span>
+                <input
+                  id="at-income"
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={income}
+                  onChange={(e) => {
+                    setIncome(e.target.value);
+                    setValidationError(null);
+                  }}
+                  className={inputCls}
+                />
+              </div>
             </div>
             <div>
               <label htmlFor="at-tax" className="block font-ui text-ui-sm text-mid mb-2">
                 Estimated tax liability
               </label>
-              <input
-                id="at-tax"
-                type="number"
-                min="0"
-                step="any"
-                value={liability}
-                onChange={(e) => {
-                  setLiability(e.target.value);
-                  setValidationError(null);
-                }}
-                className={inputCls}
-              />
+              <div className="relative">
+                <span aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-mono-sm text-mid">
+                  ₹
+                </span>
+                <input
+                  id="at-tax"
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={liability}
+                  onChange={(e) => {
+                    setLiability(e.target.value);
+                    setValidationError(null);
+                  }}
+                  className={inputCls}
+                />
+              </div>
             </div>
           </div>
           {INSTALMENTS.map((inst) => (
@@ -116,47 +128,52 @@ export function AdvanceTax() {
               <label htmlFor={`at-paid-${inst.key}`} className="block font-ui text-ui-sm text-mid mb-2">
                 Paid by {inst.label} (cumulative)
               </label>
-              <input
-                id={`at-paid-${inst.key}`}
-                type="number"
-                min="0"
-                step="any"
-                value={paid[inst.key]}
-                onChange={(e) => {
-                  setPaid({ ...paid, [inst.key]: e.target.value });
-                  setValidationError(null);
-                }}
-                className={inputCls}
-              />
+              <div className="relative">
+                <span aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-mono-sm text-mid">
+                  ₹
+                </span>
+                <input
+                  id={`at-paid-${inst.key}`}
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={paid[inst.key]}
+                  onChange={(e) => {
+                    setPaid({ ...paid, [inst.key]: e.target.value });
+                    setValidationError(null);
+                  }}
+                  className={inputCls}
+                />
+              </div>
             </div>
           ))}
-          <MarketingButton type="submit">Compute</MarketingButton>
-        </form>
+          <p className="font-mono text-mono-xs text-light">Figures update as you type.</p>
+        </div>
       </div>
 
-      <div aria-live="polite" className="bg-surface border border-border-subtle rounded-sm p-8 self-start">
+      <div aria-live="polite" className="bg-surface border border-border-subtle border-t-2 border-t-amber rounded-sm shadow-sm p-8 self-start w-full">
         {result ? (
           <>
+            <p className="font-mono text-ui-2xs uppercase tracking-[0.18em] text-light mb-3">Total 234C interest</p>
+            <p className="font-mono text-3xl md:text-4xl tabular-nums text-amber leading-tight mb-8">{inr2(result.totalInterest)}</p>
             <div className="divide-y divide-border-subtle">
               {result.rows.map((r) => (
-                <div key={r.label} className="py-3">
+                <div key={r.label} className="py-2.5">
                   <div className="flex items-baseline justify-between">
                     <span className="font-ui text-ui-sm text-mid">Shortfall at {r.label}</span>
-                    <span className="font-mono text-mono-lg text-dark tabular-nums">{inr0(r.shortfall)}</span>
+                    <span className="font-mono text-mono-sm text-dark tabular-nums">{inr0(r.shortfall)}</span>
                   </div>
-                  <div className="flex items-baseline justify-between mt-1">
+                  <div className="flex items-baseline justify-between mt-0.5">
                     <span className="font-mono text-mono-sm text-light">1% interest for the months delayed</span>
                     <span className="font-mono text-mono-sm text-mid tabular-nums">{inr2(r.interest)}</span>
                   </div>
                 </div>
               ))}
-              <div className="flex items-baseline justify-between py-3">
-                <span className="font-ui text-ui-sm text-mid">Total 234C interest</span>
-                <span className="font-mono text-mono-lg text-amber tabular-nums">{inr2(result.totalInterest)}</span>
-              </div>
-              <div className="flex items-baseline justify-between py-3">
+            </div>
+            <div className="mt-4 pt-4 border-t border-border-subtle space-y-2">
+              <div className="flex items-baseline justify-between">
                 <span className="font-ui text-ui-sm text-mid">Tax on estimated income</span>
-                <span className="font-mono text-mono-lg text-dark tabular-nums">
+                <span className="font-mono text-mono-md text-dark tabular-nums">
                   {inr0(Number(liability) || 0)} ({(result.effective * 100).toFixed(2)}%)
                 </span>
               </div>
@@ -167,7 +184,9 @@ export function AdvanceTax() {
             </p>
           </>
         ) : (
-          <p className="font-mono text-mono-sm text-light">Enter values and press Compute.</p>
+          <div className="border border-dashed border-border rounded-sm px-6 py-14 text-center">
+            <p className="font-mono text-mono-sm text-light">Your figures appear here as you type</p>
+          </div>
         )}
         <p className="font-mono text-mono-sm text-light mt-6">
           Indicative only, consult your CA. Section 234B and interest on excess TDS not included.

@@ -6,7 +6,15 @@ import { SectionHeader } from '@/components/marketing/section-header';
 import { CtaBand } from '@/components/marketing/cta-band';
 import { Reveal } from '@/components/marketing/reveal';
 
-const comparisonGroups = [
+type ComparisonRow = {
+  feature: string;
+  tally: string;
+  arthvahi: string;
+  note: string;
+  neutral?: 'tally' | 'arthvahi' | 'both';
+};
+
+const comparisonGroups: { group: string; rows: ComparisonRow[] }[] = [
   {
     group: 'Core accounting',
     rows: [
@@ -55,6 +63,7 @@ const comparisonGroups = [
         feature: 'Portal filing',
         tally: 'Manual; portal is source of truth',
         arthvahi: 'Manual; portal is source of truth',
+        neutral: 'both',
         note: 'Neither path files automatically.',
       },
     ],
@@ -83,6 +92,14 @@ const arthvahiStrengths = [
   'ITR computed from closed books',
   'Event-sourced audit trail, immutable and replayable',
 ];
+
+function verdictGlyph(neutral: boolean) {
+  return (
+    <span aria-hidden="true" className={`${neutral ? 'text-mid' : 'text-amber'} mr-1.5`}>
+      {neutral ? '·' : '✓'}
+    </span>
+  );
+}
 
 export default function CompareTallyPage() {
   return (
@@ -137,12 +154,18 @@ export default function CompareTallyPage() {
                         </th>
                       </tr>
                       {group.rows.map((row) => (
-                        <tr key={row.feature} className="align-top">
+                        <tr key={row.feature} className="align-top hover:bg-section-muted/50 transition-colors">
                           <th scope="row" className="px-6 py-4 font-ui font-medium text-dark">
                             {row.feature}
                           </th>
-                          <td className="px-6 py-4 font-mono text-mono-sm text-mid">{row.tally}</td>
-                          <td className="px-6 py-4 font-mono text-mono-sm text-amber">{row.arthvahi}</td>
+                          <td className="px-6 py-4 font-mono text-mono-sm text-mid">
+                            {verdictGlyph(row.neutral === 'tally' || row.neutral === 'both')}
+                            {row.tally}
+                          </td>
+                          <td className="px-6 py-4 font-mono text-mono-sm text-amber">
+                            {verdictGlyph(row.neutral === 'arthvahi' || row.neutral === 'both')}
+                            {row.arthvahi}
+                          </td>
                           <td className="px-6 py-4 font-ui text-ui-xs text-mid leading-relaxed">{row.note}</td>
                         </tr>
                       ))}
@@ -165,6 +188,7 @@ export default function CompareTallyPage() {
                   <ul className="list-none p-0 m-0">
                     {tallyStrengths.map((item) => (
                       <li key={item} className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle py-3">
+                        <span aria-hidden="true" className="text-amber mr-1.5">✓</span>
                         {item}
                       </li>
                     ))}
@@ -177,6 +201,7 @@ export default function CompareTallyPage() {
                   <ul className="list-none p-0 m-0">
                     {arthvahiStrengths.map((item) => (
                       <li key={item} className="font-mono text-mono-sm text-amber border-b-[0.5px] border-border-subtle py-3">
+                        <span aria-hidden="true" className="text-amber mr-1.5">✓</span>
                         {item}
                       </li>
                     ))}
@@ -209,6 +234,7 @@ export default function CompareTallyPage() {
               <BrowserFrame
                 src="/images/marketing/gst-hub.png"
                 alt="GST hub in Arthvahi showing return status and due dates"
+                className="shadow-md"
               />
             </Reveal>
           </div>

@@ -73,6 +73,7 @@ export default function InventoryFeaturePage() {
                 <BrowserFrame
                   src="/images/marketing/inventory.png"
                   alt="Inventory overview in Arthvahi showing stock and valuation"
+                  className="shadow-md"
                 />
               </div>
             </Reveal>
@@ -90,7 +91,7 @@ export default function InventoryFeaturePage() {
             <ol className="list-none p-0 m-0 mt-14">
               {fifoSteps.map((step) => (
                 <Reveal as="li" key={step.id}>
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle hover:bg-section-muted/50 transition-colors">
                     <span className="sm:col-span-1 font-mono text-ui-2xs text-amber pt-0.5">{step.id}</span>
                     <h3 className="sm:col-span-4 font-mono text-mono-md text-dark leading-relaxed">
                       {step.title}
@@ -124,6 +125,7 @@ export default function InventoryFeaturePage() {
                 <ul className="list-none p-0 m-0 space-y-3 mb-10">
                   {stockOps.map((line) => (
                     <li key={line} className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                      <span aria-hidden="true" className="text-amber mr-2">▹</span>
                       {line}
                     </li>
                   ))}
@@ -131,12 +133,14 @@ export default function InventoryFeaturePage() {
                 <BrowserFrame
                   src="/images/marketing/stock.png"
                   alt="Stock movements in Arthvahi with batch and receipt details"
+                  className="shadow-md"
                 />
               </Reveal>
               <Reveal delay={0.1}>
                 <ul className="list-none p-0 m-0 space-y-3 mb-10">
                   {stockFlags.map((line) => (
                     <li key={line} className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                      <span aria-hidden="true" className="text-amber mr-2">▹</span>
                       {line}
                     </li>
                   ))}
@@ -144,6 +148,7 @@ export default function InventoryFeaturePage() {
                 <BrowserFrame
                   src="/images/marketing/products.png"
                   alt="Product list in Arthvahi with HSN codes and stock flags"
+                  className="shadow-md"
                 />
               </Reveal>
             </div>

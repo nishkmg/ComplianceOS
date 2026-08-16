@@ -256,7 +256,7 @@ export default function DemoPage() {
               <BrowserFrame
                 src="/images/marketing/dashboard.png"
                 alt="Arthvahi dashboard showing the books summary"
-                className="shadow-screenshot"
+                className="shadow-md"
               />
             </figure>
           </Reveal>
@@ -272,7 +272,7 @@ export default function DemoPage() {
               <div className="mt-10 divide-y divide-border-subtle border-y border-border-subtle">
                 {faqs.map((f) => (
                   <details key={f.q} className="group py-6">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-display text-display-lg text-dark leading-snug text-balance focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-display text-display-lg text-dark leading-snug text-balance hover:text-amber transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
                       {f.q}
                       <span
                         aria-hidden="true"

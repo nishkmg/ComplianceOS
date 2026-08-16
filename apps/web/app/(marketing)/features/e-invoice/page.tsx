@@ -69,6 +69,7 @@ export default function EinvoiceFeaturePage() {
             <BrowserFrame
               src="/images/marketing/gstr1.png"
               alt="GSTR-1 return preview in Arthvahi"
+              className="shadow-md"
             />
           </div>
         </header>
@@ -84,7 +85,7 @@ export default function EinvoiceFeaturePage() {
             <ol className="list-none p-0 m-0 mt-12 max-w-4xl">
               {payloadFields.map((item) => (
                 <Reveal as="li" key={item.field}>
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle hover:bg-section-muted/50 transition-colors">
                     <span className="sm:col-span-1 font-mono text-ui-2xs text-amber pt-0.5">
                       {String(payloadFields.indexOf(item) + 1).padStart(2, '0')}
                     </span>
@@ -110,7 +111,7 @@ export default function EinvoiceFeaturePage() {
             <ol className="list-none p-0 m-0 mt-14 max-w-3xl space-y-3">
               {roadmap.map((step) => (
                 <Reveal as="li" key={step.id}>
-                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 rounded-sm border border-border-subtle bg-surface px-4 py-3">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 rounded-sm border border-border-subtle bg-surface px-4 py-3 transition-all duration-200 hover:shadow-md hover:border-amber/40">
                     <span className="font-mono text-ui-2xs text-amber">{step.id}</span>
                     <h3 className="font-mono text-mono-md text-dark leading-relaxed">{step.title}</h3>
                     <p className="font-ui text-ui-md text-mid leading-relaxed sm:ml-auto sm:max-w-[48ch]">

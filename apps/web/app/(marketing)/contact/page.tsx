@@ -168,7 +168,7 @@ export default function ContactPage() {
                   mono: false,
                 },
               ].map((item) => (
-                <div key={item.label} className="bg-section-muted border border-border-subtle p-8 text-left">
+                <div key={item.label} className="bg-section-muted border border-border-subtle p-8 text-left shadow-sm">
                   <Icon name={item.icon} className="text-amber text-2xl mb-4" />
                   <h3 className="font-mono text-mono-sm uppercase tracking-wider text-mid mb-2">
                     {item.label}

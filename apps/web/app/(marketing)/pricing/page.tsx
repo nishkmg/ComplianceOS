@@ -106,7 +106,7 @@ export default function PricingPage() {
           <div
             role="group"
             aria-label="Billing period"
-            className="inline-flex bg-surface border border-border-subtle rounded-sm overflow-hidden"
+            className="relative inline-flex rounded-sm bg-section-muted p-1"
           >
             {(['monthly', 'annual'] as const).map((period) => (
               <button
@@ -114,9 +114,9 @@ export default function PricingPage() {
                 type="button"
                 aria-pressed={billing === period}
                 onClick={() => setBilling(period)}
-                className={`px-6 py-2.5 font-ui text-ui-sm uppercase tracking-wider transition-colors cursor-pointer border-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber ${
+                className={`px-6 py-2.5 rounded-sm font-ui text-ui-sm uppercase tracking-wider transition-colors cursor-pointer border-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber ${
                   billing === period
-                    ? 'bg-section-dark text-white font-semibold'
+                    ? 'bg-surface shadow-sm text-dark font-semibold'
                     : 'bg-transparent text-mid hover:text-dark'
                 }`}
               >
@@ -135,8 +135,10 @@ export default function PricingPage() {
             return (
               <div
                 key={plan.name}
-                className={`bg-surface border p-10 flex flex-col relative text-left ${
-                  plan.popular ? 'border-amber border-t-2' : 'border-border-subtle'
+                className={`bg-surface border p-10 flex flex-col relative text-left transition-all duration-200 hover:shadow-md ${
+                  plan.popular
+                    ? 'border-amber border-t-2 shadow-md'
+                    : 'border-border-subtle shadow-sm'
                 }`}
               >
                 {plan.popular && (
@@ -151,14 +153,14 @@ export default function PricingPage() {
 
                 <div className="mb-8">
                   {price === 0 ? (
-                    <div className="font-mono text-mono-lg text-dark">
-                      ₹0<span className="text-ui-sm text-light"> / forever</span>
+                    <div className="font-mono text-4xl tabular-nums text-dark leading-tight flex items-baseline gap-1.5">
+                      ₹0<span className="text-ui-sm text-mid"> / forever</span>
                     </div>
                   ) : (
                     <>
-                      <div className="font-mono text-mono-lg text-dark">
+                      <div className="font-mono text-4xl tabular-nums text-dark leading-tight flex items-baseline gap-1.5">
                         ₹{formatINR(price)}
-                        <span className="text-ui-sm text-light"> / {isAnnual ? 'yr' : 'mo'}</span>
+                        <span className="text-ui-sm text-mid"> / {isAnnual ? 'yr' : 'mo'}</span>
                       </div>
                       <div className="text-ui-2xs uppercase text-light tracking-widest font-semibold mt-1">
                         {isAnnual
@@ -204,8 +206,8 @@ export default function PricingPage() {
                 className="group bg-surface border border-border-subtle rounded-sm"
                 open={i === 0}
               >
-                <summary className="flex justify-between items-center p-6 cursor-pointer select-none text-left">
-                  <span className="font-ui text-ui-sm font-semibold text-dark">{faq.q}</span>
+                <summary className="flex justify-between items-center p-6 cursor-pointer select-none text-left transition-colors hover:text-amber focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
+                  <span className="font-ui text-ui-sm font-semibold text-dark group-hover:text-amber transition-colors">{faq.q}</span>
                   <Icon name="expand_more" className="transition-transform group-open:rotate-180 text-light" />
                 </summary>
                 <div className="px-6 pb-6 text-ui-sm text-mid text-left leading-relaxed">

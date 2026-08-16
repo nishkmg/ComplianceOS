@@ -17,7 +17,7 @@ const CAPABILITIES = [
 
 export function CapabilityTicker() {
   return (
-    <section aria-label="What Arthvahi covers" className="py-14 px-8 border-y-[0.5px] border-border-subtle bg-surface">
+    <section aria-label="What Arthvahi covers" className="py-20 px-8 border-y-[0.5px] border-border-subtle bg-surface">
       <div className="max-w-[1320px] mx-auto">
         <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-light text-center mb-8">
           One ledger, every Indian compliance

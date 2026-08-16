@@ -72,7 +72,7 @@ export default function PayrollPage() {
             <ol className="list-none p-0 m-0 lg:col-span-7">
               {statutory.map((item) => (
                 <Reveal as="li" key={item.id}>
-                  <div className="py-6 border-b-[0.5px] border-border-subtle first:pt-0 last:border-b-0">
+                  <div className="py-6 border-b-[0.5px] border-border-subtle first:pt-0 last:border-b-0 hover:bg-section-muted/50 transition-colors">
                     <div className="flex items-baseline gap-3 mb-2">
                       <span className="font-mono text-ui-2xs text-amber">{item.id}</span>
                       <h2 className="font-display text-display-lg text-dark leading-snug tracking-tight">
@@ -98,7 +98,7 @@ export default function PayrollPage() {
             <ol className="list-none p-0 m-0 mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-12">
               {steps.map((step) => (
                 <Reveal as="li" key={step.id}>
-                  <div className="py-6 border-b-[0.5px] border-border-subtle">
+                  <div className="py-6 border-b-[0.5px] border-border-subtle hover:bg-section-muted/50 transition-colors">
                     <div className="flex items-baseline gap-3 mb-2">
                       <span className="font-mono text-ui-2xs text-amber">{step.id}</span>
                       <h2 className="font-ui text-ui-sm font-semibold text-dark">{step.title}</h2>

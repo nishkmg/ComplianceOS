@@ -57,12 +57,15 @@ export default function AccountingPage() {
               </p>
               <ul className="list-none p-0 m-0 space-y-3">
                 <li className="font-mono text-mono-sm text-sidebar-muted">
+                  <span aria-hidden="true" className="text-amber mr-2">▹</span>
                   Debit and credit totals checked on every voucher
                 </li>
                 <li className="font-mono text-mono-sm text-sidebar-muted">
+                  <span aria-hidden="true" className="text-amber mr-2">▹</span>
                   Unbalanced entries rejected, not flagged for later
                 </li>
                 <li className="font-mono text-mono-sm text-sidebar-muted">
+                  <span aria-hidden="true" className="text-amber mr-2">▹</span>
                   Reversal and adjustment entries posted to the same rules
                 </li>
               </ul>
@@ -71,6 +74,7 @@ export default function AccountingPage() {
               <BrowserFrame
                 src="/images/marketing/journal.png"
                 alt="Journal entries screen in Arthvahi"
+                className="shadow-md"
               />
             </Reveal>
           </div>
@@ -87,7 +91,7 @@ export default function AccountingPage() {
             <ol className="list-none p-0 m-0 mt-12">
               {pillars.map((pillar) => (
                 <Reveal as="li" key={pillar.id}>
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle hover:bg-section-muted/50 transition-colors">
                     <span className="sm:col-span-1 font-mono text-ui-2xs text-amber pt-1">{pillar.id}</span>
                     <h2 className="sm:col-span-3 font-display text-display-lg text-dark leading-snug tracking-tight">
                       {pillar.title}

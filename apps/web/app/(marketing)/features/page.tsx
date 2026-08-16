@@ -105,8 +105,11 @@ export default function FeaturesPage() {
               <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
                 Accounting, GST, payroll and ITR that share a single set of books, so nothing is ever re-entered.
               </p>
-              <MarketingButton href="/signup">
-                Start Free <span aria-hidden="true">→</span>
+              <MarketingButton href="/signup" className="group">
+                Start Free{' '}
+                <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
               </MarketingButton>
             </div>
             <Reveal>
@@ -125,7 +128,7 @@ export default function FeaturesPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {cards.map((card, i) => (
                 <Reveal key={card.index} delay={i * 0.05} className={card.span}>
-                  <article className="h-full flex flex-col bg-surface border border-border-subtle rounded-sm p-8 lg:p-10">
+                  <article className="h-full flex flex-col bg-surface border border-border-subtle rounded-sm p-8 lg:p-10 shadow-sm transition-all duration-200 hover:shadow-md hover:border-amber/40 group">
                     <div className="flex items-baseline gap-3 mb-5">
                       <span className="font-mono text-ui-2xs text-amber">{card.index}</span>
                       <span className="font-mono text-ui-2xs text-light">
@@ -139,6 +142,9 @@ export default function FeaturesPage() {
                     <ul className="list-none p-0 m-0 mb-6 space-y-2">
                       {card.points.map((point) => (
                         <li key={point} className="font-mono text-mono-sm text-mid">
+                          <span aria-hidden="true" className="text-amber mr-2">
+                            ▹
+                          </span>
                           {point}
                         </li>
                       ))}
@@ -154,7 +160,10 @@ export default function FeaturesPage() {
                     )}
                     <div className="mt-auto">
                       <MarketingButton href={card.href} variant="ghost">
-                        {card.linkLabel} <span aria-hidden="true">→</span>
+                        {card.linkLabel}{' '}
+                        <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                          →
+                        </span>
                       </MarketingButton>
                     </div>
                   </article>

@@ -118,6 +118,7 @@ export default function IntegrationsPage() {
                     </h3>
                     <p className="sm:col-span-6 font-ui text-ui-md text-mid leading-relaxed">{item.desc}</p>
                     <span className="sm:col-span-2 font-mono text-ui-xs uppercase tracking-[0.18em] text-amber text-right">
+                      <span aria-hidden="true" className="inline-block w-1.5 h-1.5 rounded-full mr-2 bg-success" />
                       {item.status}
                     </span>
                   </div>
@@ -138,8 +139,9 @@ export default function IntegrationsPage() {
             <ul className="list-none p-0 m-0 mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {plannedIntegrations.map((item, index) => (
                 <Reveal as="li" key={item.id} delay={0.05 * index}>
-                  <div className="h-full rounded-sm border border-border-subtle bg-surface p-5 flex flex-col gap-2">
+                  <div className="h-full rounded-sm border border-border-subtle bg-surface p-5 flex flex-col gap-2 transition-all duration-200 hover:shadow-md hover:border-amber/40">
                     <span className="font-mono text-ui-2xs uppercase tracking-[0.18em] text-light">
+                      <span aria-hidden="true" className="inline-block w-1.5 h-1.5 rounded-full mr-2 bg-mid" />
                       {item.status}
                     </span>
                     <h3 className="font-display text-display-lg text-dark leading-snug tracking-tight">

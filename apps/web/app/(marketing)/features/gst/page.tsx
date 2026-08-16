@@ -78,6 +78,7 @@ export default function GSTFeaturePage() {
                 <BrowserFrame
                   src="/images/marketing/gst-hub.png"
                   alt="GST hub in Arthvahi showing return status and due dates"
+                  className="shadow-md"
                 />
               </div>
             </Reveal>
@@ -95,7 +96,7 @@ export default function GSTFeaturePage() {
             <ol className="list-none p-0 m-0 mt-12">
               {capabilities.map((cap) => (
                 <Reveal as="li" key={cap.id}>
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle hover:bg-section-muted/50 transition-colors">
                     <span className="sm:col-span-1 font-mono text-ui-2xs text-amber pt-1">{cap.id}</span>
                     <h2 className="sm:col-span-3 font-display text-display-lg text-dark leading-snug tracking-tight">
                       {cap.title}
@@ -123,6 +124,7 @@ export default function GSTFeaturePage() {
               <BrowserFrame
                 src="/images/marketing/gstr1.png"
                 alt="GSTR-1 return preview in Arthvahi"
+                className="shadow-md"
               />
             </Reveal>
           </div>

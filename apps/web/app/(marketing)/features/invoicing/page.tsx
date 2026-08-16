@@ -54,6 +54,7 @@ export default function InvoicingPage() {
               <BrowserFrame
                 src="/images/marketing/invoices.png"
                 alt="Invoice list in Arthvahi"
+                className="shadow-lg"
               />
             </Reveal>
           </div>
@@ -69,6 +70,7 @@ export default function InvoicingPage() {
               <ul className="list-none p-0 m-0 mt-10 space-y-3">
                 {rules.map((rule) => (
                   <li key={rule} className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                    <span aria-hidden="true" className="text-amber mr-2">▹</span>
                     {rule}
                   </li>
                 ))}
@@ -105,6 +107,7 @@ export default function InvoicingPage() {
               <ul className="list-none p-0 m-0 mt-10 space-y-3">
                 {entryShape.map((line) => (
                   <li key={line} className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                    <span aria-hidden="true" className="text-amber mr-2">▹</span>
                     {line}
                   </li>
                 ))}
@@ -114,6 +117,7 @@ export default function InvoicingPage() {
               <BrowserFrame
                 src="/images/marketing/journal.png"
                 alt="Journal entry created from an invoice"
+                className="shadow-md"
               />
             </Reveal>
           </div>

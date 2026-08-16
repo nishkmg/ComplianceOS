@@ -30,10 +30,10 @@ export function MarketingNav() {
   }, [pathname]);
 
   const linkCls = (href: string) =>
-    `font-ui text-sm font-medium transition-colors duration-200 no-underline ${
+    `font-ui text-sm font-medium transition-colors duration-200 no-underline border-b-2 pb-1 ${
       pathname === href || (href !== '/' && pathname.startsWith(href))
-        ? 'text-dark border-b-2 border-amber pb-1'
-        : 'text-mid hover:text-amber'
+        ? 'text-dark border-amber'
+        : 'text-mid border-transparent hover:text-amber hover:border-amber/40'
     }`;
 
   return (

@@ -106,8 +106,11 @@ export default function HomePage() {
                 businesses actually file.
               </motion.p>
               <motion.div {...rise(0.35)} className="flex flex-wrap gap-4 mt-10">
-                <MarketingButton href="/signup">
-                  Start Free <span aria-hidden="true">→</span>
+                <MarketingButton href="/signup" className="group">
+                  Start Free{' '}
+                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
                 </MarketingButton>
                 <MarketingButton href="/demo" variant="secondary">
                   Book a Demo
@@ -264,7 +267,7 @@ export default function HomePage() {
               {testimonials.map((t, i) => (
                 <Reveal key={t.author} delay={i * 0.1}>
                   <blockquote
-                    className={`bg-surface border border-border-subtle rounded-sm p-10 ${
+                    className={`bg-surface border border-border-subtle rounded-sm p-10 shadow-sm transition-all duration-200 hover:shadow-md hover:border-amber/40 ${
                       i === 1 ? 'lg:mt-16' : ''
                     }`}
                   >

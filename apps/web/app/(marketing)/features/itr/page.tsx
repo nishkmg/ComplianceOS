@@ -6,11 +6,11 @@ import { SectionHeader } from '@/components/marketing/section-header';
 import { CtaBand } from '@/components/marketing/cta-band';
 import { Reveal } from '@/components/marketing/reveal';
 
-const regimeRows = [
+const regimeRows: { line: string; old: string; neu: string; payable?: boolean }[] = [
   { line: 'Business income, from posted entries', old: '₹20,000', neu: '₹20,000' },
   { line: 'Deductions (80C, 80D, HRA)', old: 'Available', neu: 'Not available' },
   { line: 'Basic exemption limit', old: '₹3,00,000', neu: '₹3,00,000' },
-  { line: 'Tax payable', old: '₹0', neu: '₹0' },
+  { line: 'Tax payable', old: '₹0', neu: '₹0', payable: true },
 ];
 
 export default function ITRFeaturePage() {
@@ -62,8 +62,8 @@ export default function ITRFeaturePage() {
                         <th scope="row" className="px-6 py-4 font-ui font-medium text-dark">
                           {row.line}
                         </th>
-                        <td className="px-6 py-4 font-mono text-mono-sm text-mid text-right">{row.old}</td>
-                        <td className="px-6 py-4 font-mono text-mono-sm text-mid text-right">{row.neu}</td>
+                        <td className={`px-6 py-4 font-mono text-right ${row.payable ? 'text-mono-md text-amber tabular-nums' : 'text-mono-sm text-mid'}`}>{row.old}</td>
+                        <td className={`px-6 py-4 font-mono text-right ${row.payable ? 'text-mono-md text-amber tabular-nums' : 'text-mono-sm text-mid'}`}>{row.neu}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -85,12 +85,15 @@ export default function ITRFeaturePage() {
               />
               <ul className="list-none p-0 m-0 mt-10 space-y-3">
                 <li className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                  <span aria-hidden="true" className="text-amber mr-2">▹</span>
                   Income computed from the ledger, not from a spreadsheet
                 </li>
                 <li className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                  <span aria-hidden="true" className="text-amber mr-2">▹</span>
                   Deductions applied where the chosen regime allows them
                 </li>
                 <li className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                  <span aria-hidden="true" className="text-amber mr-2">▹</span>
                   Return generated as a document ready for the portal
                 </li>
               </ul>
@@ -99,6 +102,7 @@ export default function ITRFeaturePage() {
               <BrowserFrame
                 src="/images/marketing/itr-returns.png"
                 alt="ITR returns list in Arthvahi"
+                className="shadow-md"
               />
             </Reveal>
           </div>

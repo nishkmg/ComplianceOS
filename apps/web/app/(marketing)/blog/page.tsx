@@ -115,7 +115,7 @@ export default function BlogIndexPage() {
               return (
                 <article
                   key={post.slug}
-                  className={`group text-left ${wide ? 'md:col-span-7' : 'md:col-span-5'}`}
+                  className={`group text-left transition-all duration-200 hover:shadow-md ${wide ? 'md:col-span-7' : 'md:col-span-5'}`}
                 >
                   <div
                     className={`overflow-hidden mb-6 bg-section-muted border border-border-subtle ${
