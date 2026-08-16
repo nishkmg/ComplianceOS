@@ -1,82 +1,111 @@
-
-import Link from 'next/link';
-import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
+import { MarketingButton } from '@/components/marketing/button';
+import { BrowserFrame } from '@/components/marketing/browser-frame';
+import { SectionHeader } from '@/components/marketing/section-header';
+import { CtaBand } from '@/components/marketing/cta-band';
+import { Reveal } from '@/components/marketing/reveal';
+
+const pillars = [
+  {
+    id: '01',
+    title: 'Chart of accounts',
+    desc: 'A hierarchy mapped to Schedule III, with Indian account codes ready before the first entry.',
+  },
+  {
+    id: '02',
+    title: 'Journal entry engine',
+    desc: 'Fiscal-year sequencing, auto-numbering and balance validation at the point of entry.',
+  },
+  {
+    id: '03',
+    title: 'Financial reports',
+    desc: 'Schedule III P&L and balance sheet, typeset for print and for the bank.',
+  },
+];
 
 export default function AccountingPage() {
   return (
     <div className="bg-page-bg text-dark antialiased min-h-screen">
       <MarketingNav />
-      <main className="pt-32 pb-24">
-        {/* Hero */}
-        <section className="max-w-page mx-auto px-8 pt-16 pb-space-64">
-          <div className="max-w-4xl text-left">
-            <div className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">General Ledger Engine</div>
-            <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
-              Double-entry accounting that enforces what your CA has always asked for.
-            </h1>
-            <p className="font-ui text-ui-lg text-secondary max-w-2xl mb-10 leading-relaxed">
-              From journal entry to balance sheet — every rupee is validated at the point of entry. Not at month end.
-            </p>
-            <div className="flex gap-6">
-              <Link href="/signup" className="btn btn-primary px-8 py-4 no-underline">
-                Start Building <span className="inline-block ml-2">→</span>
-              </Link>
+
+      <main id="main-content">
+        <header className="pt-space-128 pb-space-128">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <div className="max-w-4xl">
+              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
+                One ledger, from the first entry to the closing balance sheet.
+              </h1>
+              <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
+                Every entry is validated for balance before it posts, so the books stay true without a month-end scramble.
+              </p>
+              <MarketingButton href="/signup">
+                Start Free <span aria-hidden="true">→</span>
+              </MarketingButton>
             </div>
+          </div>
+        </header>
+
+        <section className="bg-section-dark py-space-128">
+          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <Reveal>
+              <h2 className="font-display text-marketing-xl text-white leading-[1.08] tracking-tight text-balance mb-6">
+                Entries must balance before they post.
+              </h2>
+              <p className="font-ui text-ui-md text-sidebar-dim leading-relaxed mb-8 max-w-[52ch]">
+                A journal entry cannot be saved unless debits equal credits. The constraint is enforced at the point of entry, so an out-of-balance voucher never reaches the books.
+              </p>
+              <ul className="list-none p-0 m-0 space-y-3">
+                <li className="font-mono text-mono-sm text-sidebar-muted">
+                  Debit and credit totals checked on every voucher
+                </li>
+                <li className="font-mono text-mono-sm text-sidebar-muted">
+                  Unbalanced entries rejected, not flagged for later
+                </li>
+                <li className="font-mono text-mono-sm text-sidebar-muted">
+                  Reversal and adjustment entries posted to the same rules
+                </li>
+              </ul>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <BrowserFrame
+                src="/images/marketing/journal.png"
+                alt="Journal entries screen in Arthvahi"
+              />
+            </Reveal>
           </div>
         </section>
 
-        {/* Balance Constraint Demo */}
-        <section className="max-w-page mx-auto px-8 py-space-64">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-48 items-center">
-            <div className="text-left order-2 lg:order-1">
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber block font-bold">The Balance Constraint</span>
-              <h2 className="font-display text-marketing-xl text-dark mt-4 mb-6">Entries must balance before they post.</h2>
-              <p className="font-ui text-ui-md text-secondary leading-relaxed">Unlike spreadsheets, Arthvahi prevents unbalanced journal entries at the UI level. You cannot post until debits equal credits — no exceptions, no manual checks.</p>
-            </div>
-            <div className="order-1 lg:order-2 bg-surface border border-border-subtle p-8 shadow-sm">
-              <div className="flex items-center justify-center gap-8 mb-4">
-                <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Total Debit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
-                <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Total Credit</div><div className="font-mono text-lg font-bold text-dark">₹ 25,000.00</div></div>
-                <div><div className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold mb-1">Difference</div><div className="font-mono text-lg text-success font-bold">✓ ₹ 0.00</div></div>
-              </div>
-              <div className="bg-success-bg text-success-deep text-center py-2 font-ui text-ui-2xs uppercase font-bold tracking-widest">Voucher is balanced — Ready to Post</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Key Feature Modules */}
-        <section className="bg-section-muted py-space-64">
-          <div className="max-w-page mx-auto px-8 text-left">
-            <h2 className="font-display text-marketing-xl text-dark mb-16 text-center">Three pillars of ledger-first accounting.</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { icon: "account_tree", title: "Chart of Accounts", desc: "4-level hierarchical structure with Dr/Cr labels. Indian account codes pre-configured for Schedule III compliance." },
-                { icon: "receipt_long", title: "Journal Entry Engine", desc: "Auto-generated entry numbers, fiscal year sequencing, and arrow-key navigation for high-speed data entry." },
-                { icon: "analytics", title: "Financial Reports", desc: "Schedule III P&L and Balance Sheet. Typeset for print, not for a software screenshot." },
-              ].map((m) => (
-                <div key={m.title} className="bg-surface border border-border-subtle p-8 shadow-sm border-t-2 border-t-amber text-left">
-                  <Icon name={m.icon} className="text-amber text-3xl mb-6 block" />
-                  <h3 className="font-display text-lg font-bold text-dark mb-4">{m.title}</h3>
-                  <p className="font-ui text-sm text-secondary leading-relaxed">{m.desc}</p>
-                </div>
+        <section className="py-space-128">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <Reveal>
+              <SectionHeader
+                title="Three parts of the ledger"
+                lede="Everything else in Arthvahi, from invoices to ITR, runs on these."
+              />
+            </Reveal>
+            <ol className="list-none p-0 m-0 mt-12">
+              {pillars.map((pillar) => (
+                <Reveal as="li" key={pillar.id}>
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-6 py-6 border-b-[0.5px] border-border-subtle">
+                    <span className="sm:col-span-1 font-mono text-ui-2xs text-amber pt-1">{pillar.id}</span>
+                    <h2 className="sm:col-span-3 font-display text-display-lg text-dark leading-snug tracking-tight">
+                      {pillar.title}
+                    </h2>
+                    <p className="sm:col-span-8 font-ui text-ui-md text-mid leading-relaxed">{pillar.desc}</p>
+                  </div>
+                </Reveal>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-space-96 px-8 text-center">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="font-display text-marketing-xl text-dark mb-6">Start with the accounting module.</h2>
-            <p className="font-ui text-ui-md text-secondary mb-10">No modules to configure. No onboarding calls. The ledger is ready.</p>
-            <Link href="/signup" className="btn btn-primary px-10 py-5 no-underline">
-              Get started <span className="inline-block">→</span>
-            </Link>
-          </div>
-        </section>
+        <CtaBand
+          title="A ledger that never goes out of balance."
+          lede="Start free and post your first journal entry today."
+        />
       </main>
+
       <MarketingFooter />
     </div>
   );

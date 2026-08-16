@@ -1,20 +1,47 @@
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
-const base = `inline-flex items-center justify-center gap-1.5 font-ui text-ui-lg font-medium rounded-sm transition-all no-underline cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber`;
+type Variant = 'primary' | 'secondary' | 'ghost';
 
-// @ts-ignore
-export function MarketingButton({ href, variant = 'primary', children, className = '' }) {
-  const styles = {
-    primary: `${base} bg-amber text-white dark:text-amber-ink px-7 py-3.5 hover:bg-amber-hover active:scale-[0.98] ${className}`,
-    outline: `${base} bg-transparent text-dark border border-dark px-6 py-3.5 hover:bg-section-muted ${className}`,
-    ghost: `${base} bg-transparent text-mid hover:text-dark ${className}`,
-    amber: `${base} bg-transparent text-amber hover:underline px-1 ${className}`,
-  };
+const base =
+  'inline-flex items-center justify-center gap-1.5 font-ui text-sm font-medium rounded-sm transition-all no-underline cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber active:scale-[0.98]';
 
+const styles: Record<Variant, string> = {
+  primary: `${base} btn btn-primary`,
+  secondary: `${base} btn btn-secondary`,
+  ghost: `${base} bg-transparent text-mid hover:text-dark`,
+};
+
+export function MarketingButton({
+  href,
+  variant = 'primary',
+  children,
+  className,
+  onClick,
+  type,
+  disabled,
+  ariaLabel,
+}: {
+  href?: string;
+  variant?: Variant;
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  type?: 'button' | 'submit';
+  disabled?: boolean;
+  ariaLabel?: string;
+}) {
+  const cls = cn(styles[variant], className);
+  if (href) {
+    return (
+      <Link href={href} className={cls} aria-label={ariaLabel}>
+        {children}
+      </Link>
+    );
+  }
   return (
-// @ts-ignore
-    <Link href={href} className={styles[variant]}>
+    <button type={type ?? 'button'} onClick={onClick} disabled={disabled} className={cls} aria-label={ariaLabel}>
       {children}
-    </Link>
+    </button>
   );
 }

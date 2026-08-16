@@ -1,167 +1,222 @@
-
 import { MarketingNav } from '@/components/marketing/nav';
-import { Icon } from '@/components/ui/icon';
 import { MarketingFooter } from '@/components/marketing/footer';
-import 'next/link';
+import { CtaBand } from '@/components/marketing/cta-band';
+import { Reveal } from '@/components/marketing/reveal';
 
 const team = [
-  { 
-    name: 'Arjun Mehta', 
-    role: 'Co-Founder & CEO', 
-    bio: 'Former Big 4 auditor who spent a decade unravelling complex corporate structures before realizing the software was the bottleneck, not the legislation.',
-    image: '/images/about/arjun.jpg'
+  {
+    name: 'Arjun Mehta',
+    role: 'Co-Founder, CEO',
+    bio: 'Former Big 4 auditor who spent a decade unravelling complex corporate structures before concluding the software was the bottleneck, not the legislation.',
+    image: '/images/about/arjun.jpg',
   },
-  { 
-    name: 'Priya Sharma', 
-    role: 'Co-Founder & CTO', 
-    bio: 'Systems architect obsessed with data integrity. Led engineering teams at leading fintech firms before turning her focus to the foundational layer of compliance.',
-    image: '/images/about/priya.jpg'
+  {
+    name: 'Priya Sharma',
+    role: 'Co-Founder, CTO',
+    bio: 'Systems architect obsessed with data integrity. Led engineering teams at leading fintech firms before turning to the foundational layer of compliance.',
+    image: '/images/about/priya.jpg',
   },
-  { 
-    name: 'Rajiv Desai', 
-    role: 'Head of Tax Policy', 
-    bio: 'Over 30 years of experience navigating the Indian tax code. Ensures every feature we build accurately reflects the latest gazette notifications and tribunal rulings.',
-    image: '/images/about/rajiv.jpg'
+  {
+    name: 'Rajiv Desai',
+    role: 'Head of Tax Policy',
+    bio: 'Three decades navigating the Indian tax code. Ensures every feature we ship reflects the latest gazette notifications and tribunal rulings.',
+    image: '/images/about/rajiv.jpg',
   },
 ];
 
 const beliefs = [
-  { title: 'Compliance is a feature, not a friction.', desc: "When built correctly, tax compliance shouldn't be an end-of-month panic. It should be an invisible byproduct of standard business operations." },
-  { title: 'Data integrity is paramount.', desc: "We don't allow \"soft deletes\" or untraceable edits. Every action must have an indelible audit trail. Trust is built on immutable records." },
-  { title: 'Professionals deserve professional tools.', desc: "We reject \"gamified\" interfaces for financial software. CAs and accountants require power-user density and keyboard-centric workflows, not simplified dashboards." },
-  { title: 'Local nuance over global scale.', desc: "We will never compromise our deep integration with Indian tax structures just to launch in a new international market. Depth over breadth." },
+  {
+    title: 'Compliance is a feature, not friction',
+    desc: 'Built correctly, tax compliance is not an end-of-month panic. It is an invisible byproduct of standard business operations.',
+  },
+  {
+    title: 'Data integrity is paramount',
+    desc: 'We do not allow soft deletes or untraceable edits. Every action carries an indelible audit trail. Trust is built on immutable records.',
+  },
+  {
+    title: 'Professionals deserve professional tools',
+    desc: 'We reject gamified interfaces for financial software. CAs and accountants need power-user density and keyboard-centric workflows, not simplified dashboards.',
+  },
+  {
+    title: 'Local nuance over global scale',
+    desc: 'We will not compromise our integration with Indian tax structures to launch in another market. Depth over breadth, always.',
+  },
+];
+
+const principles = [
+  { index: '01', title: 'Monospaced precision', desc: 'Numeric integrity through fixed-width typography, on screen and in print.' },
+  { index: '02', title: 'Measured whitespace', desc: 'Cognitive relief for dense data sets. Ink and paper, not noise.' },
+  { index: '03', title: 'Tonal restraint', desc: 'Contrast, not color, establishes hierarchy. One amber accent for what matters.' },
+  { index: '04', title: 'Tabular alignment', desc: 'Figures line up in columns the way a ledger page demands.' },
 ];
 
 export default function AboutPage() {
   return (
     <div className="bg-page-bg text-dark font-ui antialiased min-h-screen">
       <MarketingNav />
-      
-      <main className="flex flex-col pt-16">
-        {/* Hero Section */}
-        <section className="pt-space-128 pb-space-96 px-gutter-desktop max-w-page mx-auto w-full">
+
+      <main className="max-w-[1320px] mx-auto px-8">
+        {/* Hero */}
+        <section className="pt-space-128 pb-space-96">
           <div className="max-w-4xl">
-            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 border-l-2 border-amber-text pl-4">Our Origin</p>
-            <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
-              We built the accounting software we wish existed when we started our businesses.
+            <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6 border-l-2 border-amber pl-4">
+              About Arthvahi
+            </p>
+            <h1 className="font-display text-marketing-xl text-dark leading-[1.08] tracking-tight text-balance mb-8">
+              We built the accounting software we wished existed when we started our businesses.
             </h1>
-            <p className="font-ui text-ui-lg text-secondary max-w-2xl leading-relaxed">
-              A rejection of generic SaaS in favor of editorial precision. Designed specifically for the nuances of Indian compliance and high-stakes fiscal management.
+            <p className="font-ui text-ui-md text-mid leading-relaxed max-w-2xl">
+              A rejection of generic SaaS in favour of editorial precision. Designed
+              around the nuances of Indian compliance and high-stakes fiscal
+              management, the way a ledger page is designed: for clarity and permanence.
             </p>
           </div>
         </section>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
+        <div className="h-px bg-border-subtle" />
 
-        {/* The Problem Section */}
-        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-            <div className="col-span-1 md:col-span-5 order-2 md:order-1 text-left">
-              <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4 text-left">The Problem</p>
-              <h2 className="font-display text-marketing-xl text-dark mb-6 text-left">Global tools ignore local realities.</h2>
-              <div className="space-y-6 font-ui text-ui-md text-secondary text-left">
-                <p>Most accounting platforms treat Indian compliance as an afterthought—a secondary module bolted onto a Western framework. This leads to convoluted workflows, manual GST reconciliations, and constant anxiety over audit trails.</p>
-                <p>We experienced this friction firsthand. The tools were either too simple to handle real complexity or too archaic to be usable.</p>
+        {/* Problem */}
+        <section className="py-space-96">
+          <Reveal>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+              <div className="md:col-span-5">
+                <h2 className="font-display text-display-xl text-dark mb-6 leading-tight text-balance">
+                  Global tools ignore local realities.
+                </h2>
+                <div className="space-y-6 text-ui-md text-mid leading-relaxed">
+                  <p>
+                    Most accounting platforms treat Indian compliance as an
+                    afterthought, a secondary module bolted onto a Western framework.
+                    The result is convoluted workflows, manual GST reconciliation and
+                    constant anxiety about audit trails.
+                  </p>
+                  <p>
+                    We felt that friction firsthand. The tools were either too simple
+                    for real complexity or too archaic to be usable. So we built the
+                    middle path: software that understands the Indian ledger.
+                  </p>
+                </div>
+              </div>
+              <div className="md:col-span-7">
+                <div className="bg-section-muted border border-border-subtle p-2">
+                  <div className="aspect-[4/3] bg-section-muted overflow-hidden">
+                    <img
+                      src="/images/about/problem.jpg"
+                      alt="A stack of paper financial documents on a desk"
+                      className="w-full h-full object-cover grayscale"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="col-span-1 md:col-span-7 order-1 md:order-2">
-              <div className="bg-surface-container border border-border-subtle p-2">
-                <div className="aspect-[4/3] bg-surface-variant overflow-hidden relative">
-                  <img 
-                    src="/images/about/problem.jpg" 
-                    alt="Complex financial documents" 
-                    className="w-full h-full object-cover grayscale opacity-90 mix-blend-multiply" 
-                  />
-                </div>
+          </Reveal>
+        </section>
+
+        <div className="h-px bg-border-subtle" />
+
+        {/* Philosophy */}
+        <section className="py-space-96 bg-section-muted">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+            <div className="md:col-span-5">
+              <h2 className="font-display text-display-xl text-dark mb-6 leading-tight text-balance">
+                A design philosophy rooted in print.
+              </h2>
+              <p className="font-ui text-ui-md text-mid leading-relaxed mb-6">
+                We deliberately set aside the vibrant, bubbly aesthetic of modern
+                SaaS. Accounting is a serious discipline that demands deep focus.
+              </p>
+              <p className="font-ui text-ui-md text-mid leading-relaxed">
+                Our interface draws on high-end financial publishing and the physical
+                ledger. The off-white surface reduces eye strain during long
+                reconciliation sessions; monospaced figures keep tabular data
+                perfectly aligned.
+              </p>
+            </div>
+            <div className="md:col-span-6 md:col-start-7">
+              <div className="border-t-2 border-dark">
+                {principles.map((p) => (
+                  <div
+                    key={p.index}
+                    className="grid grid-cols-12 gap-4 py-6 border-b border-border-subtle"
+                  >
+                    <span className="col-span-2 font-mono text-mono-sm text-amber">{p.index}</span>
+                    <div className="col-span-10">
+                      <h3 className="font-mono text-mono-md text-dark uppercase tracking-tighter mb-1">
+                        {p.title}
+                      </h3>
+                      <p className="text-ui-sm text-mid">{p.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
+        <div className="h-px bg-border-subtle" />
 
-        {/* The Team Section */}
-        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full">
-          <div className="mb-16 text-left">
-            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">The Team</p>
-            <h2 className="font-display text-marketing-xl text-dark">Built by CAs, for CAs.</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Team */}
+        <section className="py-space-96">
+          <h2 className="font-display text-display-xl text-dark mb-12 text-balance">
+            Built by people who have prepared books, not just sold software.
+          </h2>
+          <div className="divide-y divide-border-subtle border-y border-border-subtle">
             {team.map((member) => (
-              <div key={member.name} className="group border border-border-subtle bg-surface flex flex-col h-full hover:shadow-sm transition-shadow duration-300">
-                <div className="border-t-2 border-amber w-full"></div>
-                <div className="aspect-square w-full overflow-hidden border-b-[0.5px] border-border-subtle bg-surface-variant">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105 group-hover:grayscale-0" 
-                  />
+              <div key={member.name} className="grid grid-cols-1 md:grid-cols-12 gap-6 py-8 items-center">
+                <div className="md:col-span-2">
+                  <div className="aspect-square max-w-[120px] overflow-hidden bg-section-muted">
+                    <img
+                      src={member.image}
+                      alt={`Portrait of ${member.name}`}
+                      className="w-full h-full object-cover grayscale"
+                    />
+                  </div>
                 </div>
-                <div className="p-6 flex flex-col flex-grow text-left">
-                  <h3 className="font-display text-display-lg text-dark mb-1">{member.name}</h3>
-                  <p className="font-mono text-mono-md text-amber mb-4 uppercase tracking-tighter">{member.role}</p>
-                  <p className="font-ui text-ui-sm text-secondary flex-grow">{member.bio}</p>
+                <div className="md:col-span-4">
+                  <h3 className="font-display text-display-lg text-dark">{member.name}</h3>
+                  <p className="font-mono text-mono-sm text-amber uppercase tracking-tighter mt-1">
+                    {member.role}
+                  </p>
                 </div>
+                <p className="md:col-span-6 text-ui-sm text-mid leading-relaxed">{member.bio}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
+        <div className="h-px bg-border-subtle" />
 
-        {/* Why We Built It This Way */}
-        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full bg-section-muted">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div className="text-left">
-              <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Editorial Ledger</p>
-              <h2 className="font-display text-marketing-xl text-dark mb-6">A design philosophy rooted in print.</h2>
-              <p className="font-ui text-ui-md text-secondary mb-6 leading-relaxed">
-                We deliberately eschewed the vibrant, bubbly aesthetic of modern SaaS. Accounting is a serious discipline requiring deep focus. 
-              </p>
-              <p className="font-ui text-ui-md text-secondary leading-relaxed">
-                Our interface draws inspiration from high-end financial publishing and physical ledgers. The off-white backgrounds reduce eye strain during long reconciliation sessions, while monospaced typography ensures tabular data remains perfectly aligned and legible.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: 'format_align_left', title: 'Monospaced Precision', desc: 'Numeric integrity through fixed-width typography.' },
-                { icon: 'space_dashboard', title: 'Measured Whitespace', desc: 'Providing cognitive relief for complex data sets.' },
-                { icon: 'contrast', title: 'Tonal Restraint', desc: 'Using contrast, not color, to establish hierarchy.' },
-                { icon: 'gavel', title: 'Authoritative Focus', desc: 'Amber accents direct attention to critical actions.', accent: true },
-              ].map((item) => (
-                <div key={item.title} className={`border border-border-subtle bg-surface p-6 flex flex-col justify-center text-left ${item.accent ? 'border-t-2 border-t-amber' : ''}`}>
-                  <Icon name={item.icon} className="text-amber text-3xl mb-4" />
-                  <h4 className="font-mono text-mono-md text-dark mb-2">{item.title}</h4>
-                  <p className="font-ui text-ui-sm text-light">{item.desc}</p>
+        {/* Values: ledger-style list */}
+        <section className="py-space-96 mb-space-64">
+          <h2 className="font-display text-display-xl text-dark mb-12 text-balance">
+            What we believe
+          </h2>
+          <div>
+            {beliefs.map((b, i) => (
+              <div
+                key={b.title}
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 py-8 border-t border-border-subtle"
+              >
+                <span className="md:col-span-2 font-mono text-mono-sm text-amber">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div className="md:col-span-10">
+                  <h3 className="font-display text-display-lg text-dark mb-2 leading-tight">
+                    {b.title}
+                  </h3>
+                  <p className="font-ui text-ui-md text-mid leading-relaxed max-w-[60ch]">{b.desc}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-border-subtle max-w-page mx-auto"></div>
-
-        {/* What We Believe */}
-        <section className="py-space-96 px-gutter-desktop max-w-page mx-auto w-full mb-space-64">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
-            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Our Core Tenets</p>
-            <h2 className="font-display text-marketing-xl text-dark">What we believe</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-            {beliefs.map((b) => (
-              <div key={b.title} className="border-l-[0.5px] border-border-subtle pl-6 relative text-left">
-                <div className="absolute left-0 top-0 w-[2px] h-8 bg-amber -ml-[1px]"></div>
-                <h3 className="font-display text-display-lg text-dark mb-3 leading-tight">{b.title}</h3>
-                <p className="font-ui text-ui-md text-secondary leading-relaxed">{b.desc}</p>
               </div>
             ))}
           </div>
         </section>
       </main>
+
+      <CtaBand
+        title="Keep books the way you actually work."
+        lede="Start free, import your chart of accounts, and see whether the ledger fits your practice before you pay a rupee."
+        note="Free plan · no card required"
+      />
 
       <MarketingFooter />
     </div>

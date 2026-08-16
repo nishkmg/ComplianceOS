@@ -1,269 +1,302 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { motion, useReducedMotion } from 'motion/react';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
-import { Icon } from '@/components/ui/icon';
+import { MarketingButton } from '@/components/marketing/button';
+import { SectionHeader } from '@/components/marketing/section-header';
+import { CtaBand } from '@/components/marketing/cta-band';
+import { BrowserFrame } from '@/components/marketing/browser-frame';
+import { CapabilityTicker } from '@/components/marketing/capability-ticker';
+import { Reveal } from '@/components/marketing/reveal';
+
+const moduleTabs = [
+  {
+    id: 'gst',
+    label: 'GST',
+    title: 'Returns from the ledger, reconciled and ready',
+    desc: 'GSTR-1, 2B and 3B built from posted invoices, with purchase-side reconciliation for ITC claims.',
+    src: '/images/marketing/gst-hub.png',
+    alt: 'GST returns hub showing return types and filing status',
+  },
+  {
+    id: 'gstr1',
+    label: 'GSTR-1',
+    title: 'One return, section by section',
+    desc: 'A generated GSTR-1 with outward supplies organised the way the portal expects them.',
+    src: '/images/marketing/gstr1.png',
+    alt: 'Generated GSTR-1 return with outward supplies table',
+  },
+  {
+    id: 'itr',
+    label: 'ITR',
+    title: 'Income tax from the same books',
+    desc: 'ITR-3 and ITR-4 computed directly from posted revenue and expenses, with the annual projection in place.',
+    src: '/images/marketing/itr-returns.png',
+    alt: 'ITR returns list showing computation status',
+  },
+  {
+    id: 'invoicing',
+    label: 'Invoicing',
+    title: 'Invoices that carry the compliance forward',
+    desc: 'GST-compliant invoices with e-invoice IRN, printed or sent, with every line posting to the ledger.',
+    src: '/images/marketing/invoices.png',
+    alt: 'Invoice list with draft and issued statuses',
+  },
+];
+
+const testimonials = [
+  {
+    quote:
+      'My accountant\u2019s GSTR-1 matches the ledger I keep every day. Year end is now a review, not a rebuild.',
+    author: 'Rohan Deshpande',
+    role: 'CA in practice, Pune',
+  },
+  {
+    quote:
+      'We closed our first financial year with every balance tying to the bank statement. Arthvahi became our system of record.',
+    author: 'Ananya Iyer',
+    role: 'Founder, homeware brand, Jaipur',
+  },
+];
 
 export default function HomePage() {
-  const [demoTab, setDemoTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState(moduleTabs[0].id);
+  const reduce = useReducedMotion();
+  const active = moduleTabs.find((t) => t.id === activeTab) ?? moduleTabs[0];
 
-  const benefits = [
-    { icon: 'account_balance', title: 'Books balance', desc: 'Automated double-entry reconciliation that actually adds up to zero.' },
-    { icon: 'description', title: 'GST done', desc: 'One-click GSTR filing with auto-matching for ITC claims.' },
-    { icon: 'analytics', title: 'Reports look like reports', desc: 'Print-ready financial statements formatted for Indian bank compliance.' },
-    { icon: 'pin', title: 'Indian numbers', desc: 'Native support for lakhs, crores, and the Indian comma system.' },
-    { icon: 'event_available', title: 'FY closes', desc: 'Seamless financial year transition with zero data loss or duplication.' },
-  ];
-
-  const modules: Array<{ title: string; desc: string; points: string[]; image: string; alt: string; cta?: { label: string; href: string }; reverse?: boolean }> = [
-    {
-      title: 'Accounting & Ledger Management',
-      desc: 'Maintain a crystal clear audit trail. From journal entries to ledger balancing, Arthvahi ensures every rupee is accounted for with physical-ledger accuracy.',
-      points: ['Real-time double entry validation', 'Multi-entity consolidation'],
-      image: '/images/homepage/module-accounting.png',
-      alt: 'Detailed view of a financial ledger spreadsheet'
-    },
-    {
-      title: 'Smart Invoicing',
-      desc: 'Create professional, GST-compliant invoices in seconds. Manage receivables with automated payment reminders and multi-currency support.',
-      points: [],
-      image: '/images/homepage/module-invoicing.png',
-      alt: 'Professional invoice template',
-      cta: { label: 'Explore Invoicing', href: '/features/invoicing' }
-    }
-  ];
-
-  const testimonials = [
-    {
-      quote: "Arthvahi is the first tool that understands how Indian businesses actually operate. The GST reconciliation alone saves our team 20 hours a week.",
-      author: "Arjun Mehta",
-      role: "CEO, Bharat Logistics",
-      image: "/images/homepage/person-arjun.jpg"
-    },
-    {
-      quote: "As a CA, I recommend Arthvahi to all my clients. The audit trails are bulletproof and the reporting format is exactly what banks need.",
-      author: "Priya Sharma",
-      role: "Senior Partner, Sharma & Co.",
-      image: "/images/homepage/person-priya.jpg"
-    }
-  ];
+  const rise = (delay: number) =>
+    reduce
+      ? {}
+      : {
+          // translate-only on mount: opacity fades during load are caught
+          // mid-flight by automated contrast scanners (blended colors fail)
+          initial: { y: 24 },
+          animate: { y: 0 },
+          transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
+        };
 
   return (
-    <div className="bg-page-bg text-dark font-ui selection:bg-primary-fixed min-h-screen">
+    <div className="bg-page-bg text-dark font-ui selection:bg-amber-soft min-h-screen">
       <MarketingNav />
 
       <main id="main-content">
-        {/* ─── Hero Section ─── */}
-        <header className="px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto pt-24 pb-20 md:pt-32 md:pb-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div className="max-w-xl text-left">
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block">Made for India</span>
-              <h1 className="font-display text-marketing-hero text-dark mb-8 leading-tight font-semibold tracking-tight">
-                The accounting software that thinks in lakhs, not thousands.
-              </h1>
-              <p className="text-ui-lg font-ui text-secondary mb-10 max-w-lg leading-relaxed">
-                Rigorous accounting precision built specifically for Indian fiscal realities. GST, Payroll, and Audit trails that CAs actually trust.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link 
-                  href="/signup" 
-                  className="bg-amber text-white dark:text-amber-ink px-8 py-4 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1"
-                >
-                  Get Started Today <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-                </Link>
-                <Link 
-                  href="/contact" 
-                  className="border border-border-subtle text-dark px-8 py-4 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1"
-                >
+        {/* ─── Hero ─── */}
+        <header className="px-6 md:px-8 lg:px-12 max-w-[1320px] mx-auto pt-24 pb-24 md:pt-32 md:pb-28">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+            <div className="max-w-[34rem]">
+              <motion.p
+                {...rise(0.05)}
+                className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6"
+              >
+                Indian compliance · one ledger
+              </motion.p>
+              <motion.h1
+                {...rise(0.15)}
+                className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance"
+              >
+                Accounts that speak the language of Indian compliance.
+              </motion.h1>
+              <motion.p
+                {...rise(0.25)}
+                className="font-ui text-ui-lg text-mid leading-relaxed mt-6 max-w-lg"
+              >
+                Double-entry books, GST, ITR and payroll in one ledger, built for the way Indian
+                businesses actually file.
+              </motion.p>
+              <motion.div {...rise(0.35)} className="flex flex-wrap gap-4 mt-10">
+                <MarketingButton href="/signup">
+                  Start Free <span aria-hidden="true">→</span>
+                </MarketingButton>
+                <MarketingButton href="/contact" variant="secondary">
                   Book a Demo
-                </Link>
-              </div>
+                </MarketingButton>
+              </motion.div>
             </div>
-            <div className="relative">
-              <div className="shadow-screenshot overflow-hidden rounded-xl border border-border-subtle">
-                <div className="browser-chrome">
-                  <div className="browser-dot bg-traffic-red"></div>
-                  <div className="browser-dot bg-traffic-yellow"></div>
-                  <div className="browser-dot bg-traffic-green"></div>
-                </div>
-                <img 
-                  className="w-full h-auto" 
-                  src="/images/homepage/hero-dashboard.png" 
-                  alt="Arthvahi Main Dashboard" 
-                />
-              </div>
-              <div className="absolute -bottom-6 -left-6 bg-surface border border-border-subtle p-6 hidden lg:block shadow-lg">
-                <p className="font-mono text-ui-xl text-primary font-bold">₹ 1,45,00,000.00</p>
-                <p className="text-ui-xs font-ui text-light uppercase tracking-tighter">Current FY Revenue</p>
-              </div>
-            </div>
+            <motion.div {...rise(0.45)}>
+              <BrowserFrame
+                src="/images/marketing/dashboard.png"
+                alt="Arthvahi dashboard showing the books summary"
+                className="shadow-screenshot"
+              />
+            </motion.div>
           </div>
         </header>
 
-        {/* ─── Social Proof ─── */}
-        <section className="bg-section-muted py-16 border-y-[0.5px] border-border-subtle">
-          <div className="max-w-page mx-auto px-8 text-center">
-            <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber text-center mb-10">Trusted by India's leading firms &amp; CAs</p>
-            <div className="flex flex-wrap justify-center items-center gap-16 grayscale opacity-60 contrast-125">
-              <img className="h-8" src="/images/homepage/logo1.png" alt="Trusted Brand" />
-              <img className="h-8" src="/images/homepage/logo2.png" alt="Trusted Brand" />
-              <img className="h-8" src="/images/homepage/logo3.png" alt="Trusted Brand" />
-              <img className="h-8" src="/images/homepage/logo4.png" alt="Trusted Brand" />
-              <img className="h-8" src="/images/homepage/logo5.png" alt="Trusted Brand" />
-            </div>
-          </div>
-        </section>
+        <CapabilityTicker />
 
-        {/* ─── Core Benefits ─── */}
-        <section className="py-space-128 px-8 max-w-page mx-auto">
-          <div className="mb-16 text-left">
-            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Built for precision</span>
-            <h2 className="font-display text-marketing-xl mt-4 max-w-2xl font-semibold leading-snug tracking-tight">Ledger-first design for the modern Indian enterprise.</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {benefits.map((b) => (
-              <div key={b.title} className="bg-surface p-8 border border-border-subtle border-t-2 border-t-amber shadow-card transition-shadow hover:shadow-lg group rounded-none">
-                <Icon name={b.icon} className="text-primary mb-6 block group-hover:scale-110 transition-transform" size={32} />
-                <h3 className="font-ui text-ui-lg font-bold mb-4 text-dark">{b.title}</h3>
-                <p className="font-ui text-ui-sm text-secondary leading-relaxed">{b.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ─── Product Demo ─── */}
-        <section className="bg-section-dark py-space-128 overflow-hidden text-center">
-          <div className="max-w-page mx-auto px-8">
-            <div className="mb-16">
-              <h2 className="font-display text-marketing-xl text-white mb-6 font-semibold leading-snug tracking-tight">Experience the precision.</h2>
-              <div className="flex justify-center gap-8 border-b border-white/10">
-                {['Dashboard', 'New Entry', 'P&L', 'GST'].map((tab) => (
-                  <button 
-                    key={tab} 
-                    onClick={() => setDemoTab(tab)}
-                    className={`pb-4 text-ui-sm font-ui transition-colors cursor-pointer border-none bg-transparent ${demoTab === tab ? 'text-white border-b-2 border-amber px-4' : 'text-sidebar-muted px-4 hover:text-lighter'}`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="relative max-w-5xl mx-auto">
-              <div className="shadow-2xl overflow-hidden rounded-xl border border-white/10">
-                <div className="browser-chrome bg-dark">
-                  <div className="browser-dot bg-traffic-red"></div>
-                  <div className="browser-dot bg-traffic-yellow"></div>
-                  <div className="browser-dot bg-traffic-green"></div>
-                </div>
-                <img 
-                  className="w-full h-auto contrast-[1.1]" 
-                  src="/images/homepage/demo-frame.png" 
-                  alt="Arthvahi Live Demo" 
-                />
-              </div>
-              <div className="absolute -right-12 top-1/4 bg-amber p-6 hidden xl:block shadow-2xl">
-                <Icon name="lock_reset" className="text-white text-4xl block mb-2" />
-                <p className="text-white font-ui mt-2 uppercase tracking-widest font-bold">Bank-grade Security</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ─── Feature Grid ─── */}
-        <section className="py-space-128 px-gutter-desktop max-w-page mx-auto text-center">
-          <div className="mb-24">
-            <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Complete Control</span>
-            <h2 className="font-display text-marketing-xl mt-4 font-semibold leading-snug tracking-tight">Modules built for Indian scale.</h2>
-          </div>
-          <div className="space-y-space-96">
-            {modules.map((m, i) => (
-              <div key={m.title} className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center text-left">
-                <div className={m.reverse ? 'order-1 md:order-2' : ''}>
-                  <h3 className="font-display text-display-lg mb-6 font-semibold leading-snug">{m.title}</h3>
-                  <p className="text-ui-md text-secondary mb-8 leading-relaxed">{m.desc}</p>
-                  {m.points.length > 0 && (
-                    <ul className="space-y-4 list-none p-0 m-0">
-                      {m.points.map((p) => (
-                        <li key={p} className="flex items-center gap-3 font-ui text-ui-sm text-secondary">
-                          <Icon name="check_circle" className="text-primary text-sm" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {m.cta && (
-                    <Link 
-                      href={m.cta.href} 
-                      className="text-amber font-bold font-ui text-ui-sm flex items-center gap-2 group no-underline mt-8"
+        {/* ─── Modules ─── */}
+        <section className="py-space-128 px-6 md:px-8 max-w-[1320px] mx-auto">
+          <div className="grid lg:grid-cols-[minmax(0,26rem)_1fr] gap-16 lg:gap-20">
+            <div>
+              <SectionHeader
+                eyebrow="Built for the Indian fiscal code"
+                title="Every return, from one ledger."
+                lede="Each module starts from the same double-entry books, so the numbers you file match the numbers you book."
+              />
+              <div
+                role="tablist"
+                aria-label="Product modules"
+                className="mt-12 flex flex-col border-l border-border-subtle"
+              >
+                {moduleTabs.map((tab, i) => {
+                  const selected = tab.id === activeTab;
+                  return (
+                    <button
+                      key={tab.id}
+                      role="tab"
+                      id={`module-tab-${tab.id}`}
+                      aria-selected={selected}
+                      aria-controls={`module-panel-${tab.id}`}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`text-left group border-none bg-transparent cursor-pointer px-6 py-5 border-l-[3px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber ${
+                        selected
+                          ? 'border-amber'
+                          : 'border-transparent hover:border-border'
+                      }`}
                     >
-                      {m.cta.label} <span className="transition-transform group-hover:translate-x-1">→</span>
-                    </Link>
-                  )}
-                </div>
-                <div className={`bg-section-muted p-4 md:p-8 border border-border-subtle ${m.reverse ? 'order-2 md:order-1' : ''}`}>
-                  <div className="shadow-screenshot overflow-hidden rounded-lg">
-                    <div className="browser-chrome">
-                      <div className="browser-dot bg-traffic-red"></div>
-                      <div className="browser-dot bg-traffic-yellow"></div>
-                      <div className="browser-dot bg-traffic-green"></div>
-                    </div>
-                    <img 
-                      className="w-full h-auto" 
-                      src={m.image} 
-                      alt={m.alt} 
-                    />
-                  </div>
-                </div>
+                      <span
+                        className={`font-mono text-mono-sm mb-1.5 block transition-colors ${
+                          selected ? 'text-amber' : 'text-light group-hover:text-mid'
+                        }`}
+                      >
+                        {String(i + 1).padStart(2, '0')} / {tab.label}
+                      </span>
+                      <span
+                        className={`font-display text-display-lg block leading-snug text-balance transition-colors ${
+                          selected ? 'text-dark' : 'text-mid group-hover:text-dark'
+                        }`}
+                      >
+                        {tab.title}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            ))}
+            </div>
+
+            <div className="lg:pt-24">
+              <div
+                key={active.id}
+                role="tabpanel"
+                id={`module-panel-${active.id}`}
+                aria-labelledby={`module-tab-${active.id}`}
+                className="lg:sticky lg:top-16"
+              >
+                <motion.div
+                  {...(reduce
+                    ? {}
+                    : {
+                        initial: { opacity: 0, y: 16 },
+                        animate: { opacity: 1, y: 0 },
+                        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+                      })}
+                >
+                  <BrowserFrame
+                    src={active.src}
+                    alt={active.alt}
+                    className="shadow-screenshot"
+                    aspect="aspect-[16/11]"
+                  />
+                  <p className="font-ui text-ui-sm text-mid leading-relaxed mt-6 max-w-[52ch]">
+                    {active.desc}
+                  </p>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── Ledger strip ─── */}
+        <section className="bg-section-dark py-space-128 px-6 md:px-8">
+          <div className="max-w-[1320px] mx-auto">
+            <Reveal>
+              <div className="max-w-2xl">
+                <h2 className="font-display text-display-xl text-white leading-[1.08] tracking-tight text-balance">
+                  The ledger does the filing.
+                </h2>
+                <p className="font-ui text-ui-md text-sidebar-dim leading-relaxed mt-5 max-w-[60ch]">
+                  Returns draw directly from the same double-entry books, so what you file is what
+                  you booked.
+                </p>
+              </div>
+            </Reveal>
+            <div className="grid lg:grid-cols-2 gap-16 mt-16">
+              <Reveal>
+                <figure>
+                  <figcaption className="font-mono text-mono-sm text-sidebar-muted mb-3">
+                    Journal, every entry posted
+                  </figcaption>
+                  <BrowserFrame
+                    src="/images/marketing/journal.png"
+                    alt="Journal entries view with debit and credit lines"
+                    className="shadow-screenshot"
+                    url="app.arthvahi.in/ledger/journal"
+                  />
+                </figure>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <figure className="lg:mt-16">
+                  <figcaption className="font-mono text-mono-sm text-sidebar-muted mb-3">
+                    Receivables, aged and followed up
+                  </figcaption>
+                  <BrowserFrame
+                    src="/images/marketing/receivables.png"
+                    alt="Receivables view showing invoice age and outstanding amounts"
+                    className="shadow-screenshot"
+                    url="app.arthvahi.in/receivables"
+                  />
+                </figure>
+              </Reveal>
+            </div>
           </div>
         </section>
 
         {/* ─── Testimonials ─── */}
-        <section className="bg-section-muted px-8 border-y-[0.5px] border-border-subtle overflow-hidden pt-32 pb-32">
-          <div className="max-w-page mx-auto text-center">
-            <div className="mb-16 text-center">
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber">Testimonials</span>
-              <h2 className="font-display text-marketing-xl mt-4 font-semibold leading-snug tracking-tight">Loved by Founders &amp; CAs.</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-              {testimonials.map((t) => (
-                <div key={t.author} className="bg-surface p-12 border border-border-subtle relative group hover:border-amber transition-colors rounded-none">
-                  <Icon name="format_quote" className="text-amber text-6xl opacity-20 absolute top-8 left-8 select-none" />
-                  <p className="text-ui-lg italic font-display text-dark mb-8 relative z-10 leading-relaxed">
-                    "{t.quote}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-none bg-amber/10 flex items-center justify-center text-amber-hover font-bold text-lg font-display">{t.author.split(' ').map(n => n[0]).join('')}</div>
-                    <div>
-                      <p className="font-bold font-ui text-ui-sm">{t.author}</p>
-                      <p className="text-ui-xs font-ui text-light uppercase tracking-tighter">{t.role}</p>
-                    </div>
-                  </div>
-                </div>
+        <section className="py-space-128 px-6 md:px-8">
+          <div className="max-w-[1320px] mx-auto">
+            <SectionHeader
+              title="From the people who keep the books."
+              lede="Practising accountants and founders who run real Indian businesses on Arthvahi."
+            />
+            <div className="grid lg:grid-cols-2 gap-8 mt-16">
+              {testimonials.map((t, i) => (
+                <Reveal key={t.author} delay={i * 0.1}>
+                  <blockquote
+                    className={`bg-surface border border-border-subtle rounded-sm p-10 ${
+                      i === 1 ? 'lg:mt-16' : ''
+                    }`}
+                  >
+                    <p className="font-display text-display-lg text-dark leading-snug text-balance">
+                      &ldquo;{t.quote}&rdquo;
+                    </p>
+                    <footer className="flex items-center gap-4 mt-8">
+                      <span
+                        aria-hidden="true"
+                        className="w-10 h-10 rounded-sm bg-amber-soft text-amber flex items-center justify-center font-mono text-mono-sm font-semibold"
+                      >
+                        {t.author
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')}
+                      </span>
+                      <div>
+                        <p className="font-ui text-ui-sm font-semibold text-dark">{t.author}</p>
+                        <p className="font-mono text-mono-sm text-mid mt-0.5">{t.role}</p>
+                      </div>
+                    </footer>
+                  </blockquote>
+                </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ─── Conversion Section ─── */}
-        <section className="py-space-128 px-8 bg-section-amber">
-          <div className="max-w-[800px] mx-auto text-center border border-primary/20 p-16 bg-surface shadow-xl rounded-none">
-            <h2 className="font-display text-marketing-xl mb-6 font-semibold leading-snug tracking-tight">Ready to bring precision to your books?</h2>
-            <p className="text-ui-lg text-mid mb-10">Join 5,000+ Indian businesses managing their compliance with zero stress.</p>
-            <div className="flex flex-col md:flex-row justify-center gap-6">
-              <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-10 py-5 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-amber-hover active:scale-[0.98] transition-all group rounded-none inline-flex items-center gap-1">
-                Start Free Trial <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-              </Link>
-              <Link href="/contact" className="border border-border-subtle text-dark px-10 py-5 font-ui text-ui-md font-bold uppercase tracking-widest no-underline hover:bg-on-surface hover:text-white active:scale-[0.98] transition-all rounded-none inline-flex items-center gap-1">
-                Talk to Us
-              </Link>
-            </div>
-            <p className="text-ui-xs font-ui text-mid mt-8">No credit card required. Cancel anytime.</p>
-          </div>
-        </section>
+        <CtaBand
+          title="Start with one ledger. File everything from it."
+          lede="Free to start, no credit card required. Your chart of accounts is ready in minutes."
+        />
       </main>
 
       <MarketingFooter />

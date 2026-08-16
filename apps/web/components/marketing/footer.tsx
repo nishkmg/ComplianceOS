@@ -1,5 +1,34 @@
 import Link from 'next/link';
 
+const footerLink = "text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline";
+
+const COLUMNS: Array<{ title: string; links: Array<{ href: string; label: string }> }> = [
+  {
+    title: 'Product',
+    links: [
+      { href: '/features', label: 'Features' },
+      { href: '/pricing', label: 'Pricing' },
+      { href: '/security', label: 'Security' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { href: '/privacy', label: 'Privacy' },
+      { href: '/terms', label: 'Terms' },
+      { href: '/cookies', label: 'Cookies' },
+    ],
+  },
+];
+
 export function MarketingFooter() {
   return (
     <footer className="w-full py-24 border-t-[0.5px] border-border-subtle bg-page-bg font-ui text-sm">
@@ -10,36 +39,19 @@ export function MarketingFooter() {
           </Link>
           <p className="text-mid">© 2026 Arthvahi. Precision in Indian Accounting.</p>
         </div>
-        
-        <div>
-          <h4 className="font-semibold text-dark mb-6 uppercase tracking-wider text-ui-xs">Product</h4>
-          <ul className="space-y-4 list-none p-0">
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/features">Features</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/pricing">Pricing</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/security">Security</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/features">Product</Link></li>
-          </ul>
-        </div>
 
-        <div>
-          <h4 className="font-semibold text-dark mb-6 uppercase tracking-wider text-ui-xs">Company</h4>
-          <ul className="space-y-4 list-none p-0">
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/about">About</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/about">About</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/blog">Blog</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/blog">Blog</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-semibold text-dark mb-6 uppercase tracking-wider text-ui-xs">Legal & Support</h4>
-          <ul className="space-y-4 list-none p-0">
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/privacy">Privacy</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/terms">Terms</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/security">Security</Link></li>
-            <li><Link className="text-mid hover:text-amber hover:underline decoration-amber underline-offset-4 transition-colors no-underline" href="/contact">Contact</Link></li>
-          </ul>
-        </div>
+        {COLUMNS.map((col) => (
+          <div key={col.title}>
+            <h4 className="font-semibold text-dark mb-6 uppercase tracking-wider text-ui-xs">{col.title}</h4>
+            <ul className="space-y-4 list-none p-0">
+              {col.links.map((l) => (
+                <li key={l.href}>
+                  <Link className={footerLink} href={l.href}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </footer>
   );

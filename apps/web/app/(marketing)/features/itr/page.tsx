@@ -1,103 +1,115 @@
-
-import Link from 'next/link';
-import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
+import { MarketingButton } from '@/components/marketing/button';
+import { BrowserFrame } from '@/components/marketing/browser-frame';
+import { SectionHeader } from '@/components/marketing/section-header';
+import { CtaBand } from '@/components/marketing/cta-band';
+import { Reveal } from '@/components/marketing/reveal';
+
+const regimeRows = [
+  { line: 'Business income, from posted entries', old: '₹20,000', neu: '₹20,000' },
+  { line: 'Deductions (80C, 80D, HRA)', old: 'Available', neu: 'Not available' },
+  { line: 'Basic exemption limit', old: '₹3,00,000', neu: '₹3,00,000' },
+  { line: 'Tax payable', old: '₹0', neu: '₹0' },
+];
 
 export default function ITRFeaturePage() {
   return (
     <div className="bg-page-bg text-dark antialiased min-h-screen">
       <MarketingNav />
-      <main className="pt-32 pb-24">
-        {/* Hero */}
-        <section className="max-w-7xl mx-auto px-8 pt-16 pb-space-64 text-left">
-          <div className="max-w-4xl">
-            <h2 className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">ITR Compliance Hub</h2>
-            <h1 className="font-marketing-hero text-marketing-hero text-dark mb-8">
-              From P&L to ITR — without re-entering a single number.
-            </h1>
-            <p className="font-ui text-ui-lg text-secondary max-w-2xl mb-10 leading-relaxed">
-              Your tax computation is automatically derived from your closed books. Old vs new regime comparison built in, not bolted on.
-            </p>
-            <Link href="/signup" className="btn btn-primary px-8 py-4 no-underline inline-flex items-center gap-2">
-              Start Free <span className="inline-block ml-2">→</span>
-            </Link>
-          </div>
-        </section>
 
-        {/* ITR Types */}
-        <section className="max-w-page mx-auto px-8 pb-space-64">
-          <h2 className="font-display text-marketing-xl text-dark mb-12 text-left">ITR forms covered.</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "ITR-3", desc: "Business income from profession or business. Full P&L mapping with Schedule III compliance.", active: true },
-              { title: "ITR-4", desc: "Presumptive taxation under Sections 44AD, 44ADA, and 44AE. Simplified computation.", active: false },
-              { title: "ITR-6", desc: "Companies — direct integration with your balance sheet and P&L.", active: false },
-            ].map((form) => (
-              <div key={form.title} className={`bg-surface border border-border-subtle p-8 shadow-sm relative text-left ${form.active ? 'border-t-2 border-t-amber' : ''}`}>
-                <h3 className="font-display text-lg font-bold text-dark mb-4">{form.title}</h3>
-                <p className="font-ui text-sm text-secondary leading-relaxed mb-8">{form.desc}</p>
-                {form.active && <span className="text-primary font-ui text-ui-2xs uppercase font-bold tracking-widest">Currently Supported</span>}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Regime Comparison */}
-        <section className="bg-section-muted py-space-64">
-          <div className="max-w-page mx-auto px-8 text-left">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <h2 className="font-display text-marketing-xl text-dark mb-6">Old vs New — compare using your actual books.</h2>
-                <p className="font-ui text-ui-md text-secondary leading-relaxed mb-8">
-                  Not a generic calculator. Your actual income, deductions, and exemptions run through both tax regimes side-by-side. See exactly how much you save — in real numbers.
-                </p>
-                <ul className="space-y-4 font-ui text-sm">
-                  {['Actual P&L data, not estimate', 'Section-by-section regime comparison', 'One click to select the optimal regime'].map((item) => (
-                    <li key={item} className="flex items-center gap-3">
-                      <Icon name="check_circle" className="text-amber text-sm" />
-                      <span className="text-secondary">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-surface border border-border-subtle p-8 shadow-sm">
-                <div className="space-y-4 font-mono text-sm">
-                  <div className="flex justify-between font-bold border-b border-border-subtle pb-3">
-                    <span className="uppercase tracking-widest text-ui-xs font-ui">Tax Regime</span>
-                    <div className="flex gap-8">
-                      <span className="w-20 text-right">Old</span>
-                      <span className="w-20 text-right">New</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-ui text-secondary">Total Tax</span>
-                    <div className="flex gap-8">
-                      <span className="w-20 text-right">₹ 1,04,520</span>
-                      <span className="w-20 text-right text-success">₹ 1,00,000</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between bg-success-bg px-4 py-3 -mx-4 mt-2 font-bold">
-                    <span className="uppercase tracking-widest text-ui-xs font-ui text-success">Savings</span>
-                    <span className="text-success">₹ 4,520 ~ 4.3%</span>
-                  </div>
-                </div>
-              </div>
+      <main id="main-content">
+        <header className="pt-space-128 pb-space-128">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <div className="max-w-4xl">
+              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
+                The return, computed from your closed books.
+              </h1>
+              <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
+                Post entries, close the year, and ITR-3 or ITR-4 is computed from what the ledger already holds.
+              </p>
+              <MarketingButton href="/signup">
+                Start Free <span aria-hidden="true">→</span>
+              </MarketingButton>
             </div>
           </div>
-        </section>
+        </header>
 
-        {/* CTA */}
-        <section className="py-space-96 px-8 text-center">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="font-display text-marketing-xl text-dark mb-6">File with confidence this year.</h2>
-            <p className="font-ui text-ui-md text-secondary mb-10">From P&L to ITR — zero re-entry. No double data entry, no audit anxiety.</p>
-            <Link href="/signup" className="btn btn-primary px-10 py-5 no-underline">
-              Start Free <span className="inline-block">→</span>
-            </Link>
+        <section className="py-space-128 bg-section-muted border-y-[0.5px] border-border-subtle">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <Reveal>
+              <SectionHeader
+                title="Old regime or new, run on your actual income"
+                lede="The same income, run through both regimes side by side. Not a generic calculator."
+              />
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="mt-12 bg-surface border border-border-subtle rounded-sm overflow-x-auto">
+                <table className="w-full text-left font-ui text-ui-sm">
+                  <caption className="sr-only">
+                    Old versus new tax regime on a business income of ₹20,000
+                  </caption>
+                  <thead>
+                    <tr className="border-b border-border-subtle">
+                      <th scope="col" className="px-6 py-4 font-mono text-ui-xs text-light">Line item</th>
+                      <th scope="col" className="px-6 py-4 font-mono text-ui-xs text-light text-right">Old regime</th>
+                      <th scope="col" className="px-6 py-4 font-mono text-ui-xs text-light text-right">New regime</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border-subtle">
+                    {regimeRows.map((row) => (
+                      <tr key={row.line}>
+                        <th scope="row" className="px-6 py-4 font-ui font-medium text-dark">
+                          {row.line}
+                        </th>
+                        <td className="px-6 py-4 font-mono text-mono-sm text-mid text-right">{row.old}</td>
+                        <td className="px-6 py-4 font-mono text-mono-sm text-mid text-right">{row.neu}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-4 font-mono text-ui-xs text-light max-w-2xl">
+                Illustrative example: a business income of ₹20,000 sits below the exemption limit under both regimes, so the tax is ₹0 either way. The regimes diverge as income grows: the new regime lowers slab rates and drops most deductions, the old regime keeps the deductions.
+              </p>
+            </Reveal>
           </div>
         </section>
+
+        <section className="py-space-128">
+          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <Reveal>
+              <SectionHeader
+                title="One review, then file"
+                lede="The computation runs against the closed year's entries, and the return is generated for download in one step."
+              />
+              <ul className="list-none p-0 m-0 mt-10 space-y-3">
+                <li className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                  Income computed from the ledger, not from a spreadsheet
+                </li>
+                <li className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                  Deductions applied where the chosen regime allows them
+                </li>
+                <li className="font-mono text-mono-sm text-mid border-b-[0.5px] border-border-subtle pb-3">
+                  Return generated as a document ready for the portal
+                </li>
+              </ul>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <BrowserFrame
+                src="/images/marketing/itr-returns.png"
+                alt="ITR returns list in Arthvahi"
+              />
+            </Reveal>
+          </div>
+        </section>
+
+        <CtaBand
+          title="File this year from the ledger you already closed."
+          lede="Start free and compute a return from the year your books already hold."
+        />
       </main>
+
       <MarketingFooter />
     </div>
   );

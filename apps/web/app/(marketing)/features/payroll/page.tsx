@@ -1,154 +1,122 @@
-
-import Link from 'next/link';
-import { Icon } from '@/components/ui/icon';
 import { MarketingNav } from '@/components/marketing/nav';
 import { MarketingFooter } from '@/components/marketing/footer';
+import { MarketingButton } from '@/components/marketing/button';
+import { SectionHeader } from '@/components/marketing/section-header';
+import { CtaBand } from '@/components/marketing/cta-band';
+import { Reveal } from '@/components/marketing/reveal';
+
+const statutory = [
+  {
+    id: '01',
+    title: 'Provident fund',
+    desc: '12% of basic wages from the employee and the employer each, on wages up to the statutory ceiling.',
+  },
+  {
+    id: '02',
+    title: 'ESI',
+    desc: 'Health insurance for employees below the wage threshold: 0.75% from the employee and 3.25% from the employer.',
+  },
+  {
+    id: '03',
+    title: 'TDS on salary',
+    desc: 'Deducted under Section 192 at the slab rates in force, with investment declarations applied to the projection.',
+  },
+  {
+    id: '04',
+    title: 'Professional tax',
+    desc: 'A state levy with its own slab; the schedule is applied for the state the employee works in.',
+  },
+];
+
+const steps = [
+  { id: '01', title: 'Define salary structures', desc: 'Basic, allowances and perquisites per employee, with the statutory components attached once.' },
+  { id: '02', title: 'Run the month', desc: 'Salaries computed from attendance and arrears on the run date, in one pass.' },
+  { id: '03', title: 'Deductions applied', desc: 'PF, ESI, TDS and professional tax calculated per employee from the same structure.' },
+  { id: '04', title: 'Payslips and challans', desc: 'Slips generated for employees; PF ECR and ESI, TDS and PT challans prepared from the run totals.' },
+  { id: '05', title: 'Returns assembled', desc: 'Monthly and quarterly filings prepared from figures already computed, not re-keyed.' },
+];
 
 export default function PayrollPage() {
   return (
     <div className="bg-page-bg text-dark antialiased min-h-screen">
       <MarketingNav />
-      <main className="pt-32 pb-24">
-        {/* Hero */}
-        <header className="pt-space-128 pb-space-96 px-8 max-w-page mx-auto text-center">
-          <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">PAYROLL & COMPLIANCE</span>
-          <h1 className="font-marketing-hero text-marketing-hero text-dark max-w-4xl mx-auto mb-8">
-            Payroll that knows PF from PT, and both from TDS.
-          </h1>
-          <p className="font-ui text-ui-lg text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
-            Automate India's complex statutory landscape. From automated tax slabs to state-specific Professional Tax, we handle the math so you can focus on the mission.
-          </p>
-          <div className="flex justify-center gap-4">
-            <Link href="/signup" className="bg-amber text-white dark:text-amber-ink px-10 py-4 font-ui tracking-wider no-underline rounded-sm shadow-sm font-bold uppercase tracking-widest text-sm inline-flex items-center gap-2">
-              Schedule a Demo <span>→</span>
-            </Link>
+
+      <main id="main-content">
+        <header className="pt-space-128 pb-space-128">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <div className="max-w-4xl">
+              <p className="font-mono text-ui-2xs uppercase tracking-[0.22em] text-amber font-semibold mb-6">
+                Payroll
+              </p>
+              <h1 className="font-display text-marketing-hero text-dark leading-tight tracking-tight text-balance mb-8">
+                One payroll run, every statutory figure.
+              </h1>
+              <p className="font-ui text-ui-lg text-mid leading-relaxed max-w-xl mb-10">
+                PF, ESI, TDS and professional tax computed from salary structures, with challans and returns prepared after each run.
+              </p>
+              <MarketingButton href="/signup">
+                Start Free <span aria-hidden="true">→</span>
+              </MarketingButton>
+            </div>
           </div>
         </header>
 
-        {/* Salary Structure */}
-        <section className="py-space-96 px-8 bg-section-muted">
-          <div className="max-w-page mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-5 text-left">
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-6 block font-bold">Salary Structure</span>
-              <h2 className="font-display text-marketing-xl text-dark mb-6">Auto-calculated statutory components.</h2>
-              <p className="font-ui text-ui-md text-secondary leading-relaxed mb-8">PF at 12% of basic. ESI at 0.75% for eligible employees. Professional Tax auto-set by state. TDS projection updated every month based on current deductions. No manual lookups.</p>
-              <ul className="space-y-4">
-                {[
-                  "PF 12% of basic — auto-calculated",
-                  "ESI 0.75% for employees under ₹21,000",
-                  "Professional Tax by state — auto-set",
-                  "TDS projection updated monthly",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <Icon name="check_circle" className="text-amber" />
-                    <span className="font-ui text-sm text-secondary">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="lg:col-span-7 bg-surface border border-border-subtle p-8 shadow-sm">
-              <div className="space-y-4 font-mono text-sm">
-                <div className="flex justify-between py-2 border-b 50-border">
-                  <span className="font-ui text-secondary">Basic Salary</span>
-                  <span className="font-bold">₹45,000.00</span>
-                </div>
-                <div className="flex justify-between py-2 border-b 50-border">
-                  <span className="font-ui text-secondary">HRA</span>
-                  <span className="font-bold">₹18,000.00</span>
-                </div>
-                <div className="flex justify-between py-2 border-b 50-border">
-                  <span className="font-ui text-secondary">Conveyance Allowance</span>
-                  <span className="font-bold">₹5,000.00</span>
-                </div>
-                <div className="flex justify-between py-2 border-b 50-border">
-                  <span className="font-ui text-secondary">Special Allowance</span>
-                  <span className="font-bold">₹12,000.00</span>
-                </div>
-                <div className="flex justify-between border-b 50-border py-4 text-danger">
-                  <span className="font-ui font-bold">PF Deduction</span>
-                  <span className="font-bold">-₹1,800.00</span>
-                </div>
-                <div className="flex justify-between py-4 bg-section-dark text-white px-6 -mx-6 mt-4">
-                  <span className="font-ui font-bold uppercase tracking-widest text-xs">Gross Monthly CTC</span>
-                  <span className="font-bold">₹77,000.00</span>
-                </div>
-              </div>
-            </div>
+        <section className="py-space-128 bg-section-muted border-y-[0.5px] border-border-subtle">
+          <div className="max-w-[1320px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <Reveal className="lg:col-span-5">
+              <SectionHeader
+                title="The four deductions, spelled out"
+                lede="Rates and ceilings follow the current statutory schedule and are updated when notified."
+              />
+            </Reveal>
+            <ol className="list-none p-0 m-0 lg:col-span-7">
+              {statutory.map((item) => (
+                <Reveal as="li" key={item.id}>
+                  <div className="py-6 border-b-[0.5px] border-border-subtle first:pt-0 last:border-b-0">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="font-mono text-ui-2xs text-amber">{item.id}</span>
+                      <h2 className="font-display text-display-lg text-dark leading-snug tracking-tight">
+                        {item.title}
+                      </h2>
+                    </div>
+                    <p className="font-ui text-ui-md text-mid leading-relaxed max-w-[52ch]">{item.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </ol>
           </div>
         </section>
 
-        {/* Payslip */}
-        <section className="py-space-128 px-8">
-          <div className="max-w-page mx-auto">
-            <div className="text-center mb-16">
-              <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4 block font-bold">Employee Experience</span>
-              <h2 className="font-display text-marketing-xl text-dark mb-4">A payslip that speaks human.</h2>
-              <p className="font-ui text-ui-md text-secondary max-w-2xl mx-auto leading-relaxed">Reduce payroll queries by 60% with detailed tax breakups and investment declarations baked right into the slip.</p>
-            </div>
-            <div className="bg-surface border border-border-subtle p-12 max-w-4xl mx-auto shadow-sm">
-              <div className="flex justify-between items-start pb-8 mb-8 border-b border-border-subtle">
-                <div>
-                  <span className="font-display text-lg font-bold block">Arthvahi</span>
-                  <p className="text-xs text-light mt-1">Salary Slip — September 2024</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-ui font-bold">Rahul Sharma</p>
-                  <p className="text-xs text-light">EMP-2024-001 · Compliance</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <p className="font-ui text-ui-2xs uppercase text-light font-bold mb-4">Earnings</p>
-                  <div className="space-y-3">
-                    {[{ label: "Basic", val: "45,000" }, { label: "HRA", val: "18,000" }, { label: "Conveyance", val: "5,000" }, { label: "Special Allowance", val: "12,000" }].map(e => (
-                      <div key={e.label} className="flex justify-between text-sm">
-                        <span className="text-secondary">{e.label}</span>
-                        <span className="font-mono">₹{e.val}</span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between font-bold text-sm pt-4 border-t border-border-subtle">
-                      <span className="uppercase text-ui-2xs font-ui tracking-widest">Gross Pay</span>
-                      <span className="font-mono">₹80,000</span>
+        <section className="py-space-128">
+          <div className="max-w-[1320px] mx-auto px-8">
+            <Reveal>
+              <SectionHeader
+                title="How a payroll run works"
+                lede="Five steps, from structure to the filing documents. No payslip is typed by hand."
+              />
+            </Reveal>
+            <ol className="list-none p-0 m-0 mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-12">
+              {steps.map((step) => (
+                <Reveal as="li" key={step.id}>
+                  <div className="py-6 border-b-[0.5px] border-border-subtle">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="font-mono text-ui-2xs text-amber">{step.id}</span>
+                      <h2 className="font-ui text-ui-sm font-semibold text-dark">{step.title}</h2>
                     </div>
+                    <p className="font-ui text-ui-sm text-mid leading-relaxed max-w-[48ch]">{step.desc}</p>
                   </div>
-                </div>
-                <div>
-                  <p className="font-ui text-ui-2xs uppercase text-light font-bold mb-4">Deductions</p>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-secondary">Provident Fund</span>
-                      <span className="font-mono text-danger">-₹1,800</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-secondary">Professional Tax</span>
-                      <span className="font-mono text-danger">-₹200</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-secondary">TDS</span>
-                      <span className="font-mono text-danger">-₹4,500</span>
-                    </div>
-                    <div className="flex justify-between font-bold text-sm pt-4 border-t border-border-subtle">
-                      <span className="uppercase text-ui-2xs font-ui tracking-widest">Net Pay</span>
-                      <span className="font-mono text-success">₹73,500</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </Reveal>
+              ))}
+            </ol>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-space-96 px-8 text-center bg-section-amber">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="font-display text-marketing-xl text-dark mb-6">Stop computing payroll manually.</h2>
-            <p className="font-ui text-ui-md text-mid mb-10">Auto-calculated PF, ESI, PT, and TDS for every employee, every month.</p>
-            <Link href="/signup" className="btn btn-primary px-10 py-5 no-underline">
-              Start Free <span>→</span>
-            </Link>
-          </div>
-        </section>
+        <CtaBand
+          title="Payroll, without the lookup tables."
+          lede="Start free, define one salary structure, and run the month."
+        />
       </main>
+
       <MarketingFooter />
     </div>
   );
