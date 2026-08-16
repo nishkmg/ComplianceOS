@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { SystemThemeWatcher } from "@/components/app/system-theme-watcher";
 import {
   IBM_Plex_Sans,
   IBM_Plex_Mono,
@@ -54,7 +55,7 @@ export const viewport: Viewport = {
 
 // No-flash theme bootstrap: applies stored theme before first paint.
 // The toggle (components/app/theme-toggle.tsx) writes localStorage + data-theme.
-const themeBootstrap = `(function(){try{var t=localStorage.getItem("theme");var d=document.documentElement;if(!t)t="light";d.dataset.theme=t==="system"?(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):t;}catch(e){}})();`;
+const themeBootstrap = `(function(){try{var t=localStorage.getItem("theme");var d=document.documentElement;if(!t)t="system";d.dataset.theme=t==="system"?(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):t;}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -66,7 +67,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <SystemThemeWatcher />
+        {children}
+      </body>
     </html>
   );
 }

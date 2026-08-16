@@ -3,31 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { Icon } from "@/components/ui/icon";
 
-export type Theme = "light" | "dark" | "system";
-
-const STORAGE_KEY = "theme";
-
-function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-  const resolved =
-    theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : theme;
-  root.dataset.theme = resolved;
-}
-
-function currentTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored === "dark" || stored === "light" || stored === "system" ? stored : "light";
-}
+import { applyTheme, currentTheme, STORAGE_KEY, type Theme } from "@/lib/theme";
 
 const NEXT: Record<Theme, Theme> = { light: "dark", dark: "system", system: "light" };
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(() => currentTheme());
 
   useEffect(() => {
     setTheme(currentTheme());
