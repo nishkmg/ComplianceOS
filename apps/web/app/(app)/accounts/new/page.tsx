@@ -7,6 +7,9 @@ import { showToast } from "@/lib/toast";
 import { ACCOUNT_KINDS, ACCOUNT_SUB_TYPES } from "@/lib/constants";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function NewAccountPage() {
   const router = useRouter();
@@ -51,25 +54,25 @@ export default function NewAccountPage() {
         <PageHeader title="New Account" />
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-1.5"><label htmlFor="account-code" className="font-ui text-ui-2xs text-light uppercase font-bold">Code</label><input id="account-code" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={code} onChange={e => setCode(e.target.value)} /></div>
-          <div className="space-y-1.5"><label htmlFor="account-name" className="font-ui text-ui-2xs text-light uppercase font-bold">Name</label><input id="account-name" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={name} onChange={e => setName(e.target.value)} /></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-1.5"><label htmlFor="account-code" className="font-ui text-ui-2xs text-light uppercase font-bold">Code</label><Input id="account-code" className="font-mono" value={code} onChange={e => setCode(e.target.value)} /></div>
+          <div className="space-y-1.5"><label htmlFor="account-name" className="font-ui text-ui-2xs text-light uppercase font-bold">Name</label><Input id="account-name" value={name} onChange={e => setName(e.target.value)} /></div>
         </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-1.5">
             <label htmlFor="account-kind" className="font-ui text-ui-2xs text-light uppercase font-bold">Kind</label>
-            <select id="account-kind" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={kind} onChange={e => { setKind(e.target.value); setSubType(ACCOUNT_SUB_TYPES[e.target.value]?.[0] || ""); }}>
+            <Select id="account-kind" value={kind} onChange={e => { setKind(e.target.value); setSubType(ACCOUNT_SUB_TYPES[e.target.value]?.[0] || ""); }}>
               {ACCOUNT_KINDS.map(k => <option key={k} value={k}>{k}</option>)}
-            </select>
+            </Select>
           </div>
           <div className="space-y-1.5">
             <label htmlFor="account-subtype" className="font-ui text-ui-2xs text-light uppercase font-bold">Sub Type</label>
-            <select id="account-subtype" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={subType} onChange={e => setSubType(e.target.value)}>
+            <Select id="account-subtype" value={subType} onChange={e => setSubType(e.target.value)}>
               {(ACCOUNT_SUB_TYPES[kind] || []).map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
+            </Select>
           </div>
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="w-full py-3 btn btn-primary disabled:opacity-50">{saving ? "Creating…" : "Create Account"}</button>
+        <Button onClick={handleSubmit} disabled={saving} className="w-full">{saving ? "Creating…" : "Create Account"}</Button>
       </div>
     </div>
   );

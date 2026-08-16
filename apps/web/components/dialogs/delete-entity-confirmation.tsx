@@ -28,7 +28,7 @@ export function DeleteEntityDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-xl p-0 overflow-hidden border border-border-subtle shadow-xl flex flex-col relative text-left">
-        <div className="h-[2px] w-full bg-red-600 absolute top-0 left-0"></div>
+        <div className="h-[2px] w-full bg-danger absolute top-0 left-0"></div>
         
         <div className="p-10 flex flex-col gap-6">
           <DialogHeader className="flex items-start gap-4">
@@ -36,7 +36,7 @@ export function DeleteEntityDialog({
               <Icon name="warning" />
             </div>
             <div>
-              <DialogTitle className="font-display text-lg font-bold text-dark mb-2">Delete Entity</DialogTitle>
+              <DialogTitle className="font-ui text-ui-lg font-semibold text-dark mb-2">Delete Entity</DialogTitle>
               <p className="font-ui text-sm text-mid leading-relaxed">
                 You are about to delete <strong className="text-dark">{entityName}</strong> and all associated records. This action is irreversible.
               </p>
@@ -57,7 +57,7 @@ export function DeleteEntityDialog({
             </label>
             <input 
               autoComplete="off" 
-              className="w-full bg-white border border-border-subtle font-mono text-sm text-dark px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-colors rounded-sm" 
+              className="w-full bg-surface border border-border-subtle font-mono text-sm text-dark px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-danger focus:ring-1 focus:ring-danger transition-colors rounded-sm" 
               id="delete-confirmation" 
               placeholder="Type here..." 
               value={input}
@@ -66,12 +66,12 @@ export function DeleteEntityDialog({
           </div>
         </div>
 
-        <DialogFooter className="bg-section-muted px-10 py-6 border-t-[0.5px] border-border-subtle flex flex-row items-center justify-end gap-4">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={onConfirm}
             disabled={input !== 'DELETE'}
-            className="bg-red-600 text-white px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-red-700 transition-colors border-none shadow-sm cursor-pointer disabled:opacity-30"
+            className="bg-danger text-white px-8 py-3 font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-danger/90 transition-colors border-none shadow-sm cursor-pointer disabled:opacity-30"
           >
             Permanently Delete
           </button>

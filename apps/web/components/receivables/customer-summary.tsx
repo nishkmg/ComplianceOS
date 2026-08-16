@@ -38,7 +38,7 @@ export default function CustomerSummaryCard({
   return (
     <Link
       href={`/receivables/${encodeURIComponent(customerName)}`}
-      className="block bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 border 100-border"
+      className="block bg-surface rounded-lg shadow hover:shadow-md transition-shadow p-4 border 100-border"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">

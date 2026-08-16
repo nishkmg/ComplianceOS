@@ -110,10 +110,10 @@ export default function AgingTable({ data }: AgingTableProps) {
     bucket: "current" | "days31to60" | "days61to90" | "days90Plus";
   }) => {
     const colorMap = {
-      current: "bg-success-bg text-green-800",
-      days31to60: "bg-yellow-50 text-yellow-800",
-      days61to90: "bg-orange-50 text-orange-800",
-      days90Plus: "bg-red-100 text-red-900",
+      current: "bg-success-bg text-success",
+      days31to60: "bg-amber-soft text-amber-text",
+      days61to90: "bg-amber-soft text-amber-text",
+      days90Plus: "bg-danger-bg text-danger-deep",
     };
     const bgClass = colorMap[bucket];
 
@@ -137,7 +137,7 @@ export default function AgingTable({ data }: AgingTableProps) {
           <select
             value={filterBucket}
             onChange={(e) => setFilterBucket(e.target.value as FilterBucket)}
-            className="px-3 py-1.5 border rounded-md text-sm bg-white"
+            className="px-3 py-1.5 border rounded-md text-sm bg-surface"
           >
             <option value="all">All Customers</option>
             <option value="current">Current (0-30)</option>
@@ -234,16 +234,16 @@ export default function AgingTable({ data }: AgingTableProps) {
           <tfoot className="bg-lighter/40 border-t-2">
             <tr>
               <td className="px-4 py-3 font-semibold text-dark">Total</td>
-              <td className="px-4 py-3 text-right font-mono text-sm bg-green-100 font-semibold">
+              <td className="px-4 py-3 text-right font-mono text-sm bg-success-bg font-semibold">
                 {formatINR(totals.current)}
               </td>
-              <td className="px-4 py-3 text-right font-mono text-sm bg-yellow-100 font-semibold">
+              <td className="px-4 py-3 text-right font-mono text-sm bg-amber-soft font-semibold">
                 {formatINR(totals.days31to60)}
               </td>
-              <td className="px-4 py-3 text-right font-mono text-sm bg-orange-100 font-semibold">
+              <td className="px-4 py-3 text-right font-mono text-sm bg-amber-soft font-semibold">
                 {formatINR(totals.days61to90)}
               </td>
-              <td className="px-4 py-3 text-right font-mono text-sm bg-red-100 font-semibold">
+              <td className="px-4 py-3 text-right font-mono text-sm bg-danger-bg font-semibold">
                 {formatINR(totals.days90Plus)}
               </td>
               <td className="px-4 py-3 text-right font-mono font-bold text-dark">

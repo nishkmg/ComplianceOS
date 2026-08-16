@@ -7,12 +7,14 @@ import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 
 export default function AuditEntryPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
   const [showPayload, setShowPayload] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const entry = api.auditLog.get.useQuery(id, { staleTime: 15_000 });
 
@@ -27,6 +29,17 @@ export default function AuditEntryPage() {
 
   const e = entry.data;
   const payload = typeof e.payload === "string" ? JSON.parse(e.payload || "{}") : e.payload;
+  const prettyPayload = JSON.stringify(payload ?? {}, null, 2);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(prettyPayload);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard unavailable; leave button idle.
+    }
+  };
 
   return (
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
@@ -39,27 +52,32 @@ export default function AuditEntryPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">
-        <div className="px-6 py-4 bg-surface-muted border-b border-border grid grid-cols-2 gap-6">
+        <dl className="px-6 py-4 bg-surface-muted border-b border-border grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div>
-            <p className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Aggregate</p>
-            <p className="font-ui text-ui-sm text-dark mt-1">{e.aggregateType}</p>
+            <dt className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Aggregate</dt>
+            <dd className="font-ui text-ui-sm text-dark mt-1">{e.aggregateType}</dd>
           </div>
           <div>
-            <p className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Aggregate ID</p>
-            <p className="font-mono text-ui-xs text-mid mt-1 break-all">{e.aggregateId}</p>
+            <dt className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Aggregate ID</dt>
+            <dd className="font-mono text-ui-xs text-mid mt-1 break-all">{e.aggregateId}</dd>
           </div>
           <div>
-            <p className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Created</p>
-            <p className="font-mono text-ui-sm text-dark mt-1">{e.createdAt ? new Date(e.createdAt).toLocaleString("en-IN") : "—"}</p>
+            <dt className="font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Created</dt>
+            <dd className="font-mono text-ui-sm text-dark mt-1">{e.createdAt ? new Date(e.createdAt).toLocaleString("en-IN") : "—"}</dd>
           </div>
-        </div>
+        </dl>
         <div className="p-6">
-          <button onClick={() => setShowPayload(!showPayload)} className="border-none bg-transparent cursor-pointer font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold hover:underline">
-            {showPayload ? "Hide payload" : "Show payload"}
-          </button>
+          <div className="flex items-center justify-between gap-4">
+            <button onClick={() => setShowPayload(!showPayload)} className="border-none bg-transparent cursor-pointer font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold hover:underline">
+              {showPayload ? "Hide payload" : "Show payload"}
+            </button>
+            <Button variant="outline" size="sm" onClick={handleCopy} disabled={copied}>
+              {copied ? "Copied" : "Copy"}
+            </Button>
+          </div>
           {showPayload && (
-            <pre className="mt-4 p-4 bg-surface-muted border border-border rounded-md overflow-x-auto font-mono text-ui-xs text-dark whitespace-pre-wrap">
-              {JSON.stringify(payload ?? {}, null, 2)}
+            <pre className="mt-4 p-4 bg-section-muted rounded-sm overflow-x-auto font-mono text-ui-xs text-dark">
+              {prettyPayload}
             </pre>
           )}
         </div>

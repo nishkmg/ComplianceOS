@@ -66,17 +66,16 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Icon name="account_tree" className="text-amber" size={20} />
-        <div>
-          <h2 className="font-ui text-lg font-bold text-dark">Review your Chart of Accounts</h2>
-          <p className="font-ui text-ui-sm text-mid mt-1">
-            {accounts.length > 0
-              ? `${accounts.length} accounts created from your template. Uncheck any you don't need.`
-              : "Loading your chart of accounts…"}
-          </p>
-        </div>
+    <div className="flex flex-col gap-12 text-left">
+      {/* Section Header */}
+      <div>
+        <span className="font-ui text-ui-xs text-amber uppercase tracking-widest block mb-4">Chart of Accounts</span>
+        <h1 className="font-ui text-display-xl text-on-surface mb-4">Review your Chart of Accounts</h1>
+        <p className="font-ui text-sm font-medium text-ui-md text-mid max-w-2xl leading-relaxed">
+          {accounts.length > 0
+            ? `${accounts.length} accounts created from your template. Uncheck any you don't need.`
+            : "Loading your chart of accounts…"}
+        </p>
       </div>
 
       <div className="space-y-4">
@@ -109,12 +108,30 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
         )}
       </div>
 
-      <div className="flex justify-end gap-3 pt-4">
-        {onBack && (
-          <button onClick={onBack} className="btn btn-ghost">Back</button>
-        )}
-        <button onClick={save} disabled={saving} className="btn btn-primary">
+      <div className="flex justify-between items-center mt-6 pt-8 border-t border-border">
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              disabled={saving}
+              className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors flex items-center gap-1.5 border-none bg-transparent cursor-pointer disabled:opacity-50"
+            >
+              <Icon name="arrow_back" className="text-ui-xl" />
+              Back
+            </button>
+          )}
+          <p className="font-ui text-ui-xs text-light uppercase tracking-wider italic">
+            Your account selection can be amended later in the chart of accounts settings.
+          </p>
+        </div>
+        <button
+          onClick={save}
+          disabled={saving}
+          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
+        >
           {saving ? "Saving…" : "Continue"}
+          <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
         </button>
       </div>
     </div>

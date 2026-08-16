@@ -91,7 +91,7 @@ export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
       role="status"
       aria-label="Page loading"
     >
-      <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-surface/80 backdrop-blur-[2px]" />
       <div className="relative flex flex-col items-center gap-3">
         <svg className="animate-spin h-7 w-7 text-amber motion-reduce:animate-none" viewBox="0 0 24 24" fill="none">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />

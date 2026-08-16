@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
@@ -105,7 +106,9 @@ export default function ProcessPayrollPage() {
                     <div>
                       <p className="font-mono text-ui-xs text-amber">{run.payrollNumber}</p>
                       <p className="font-ui text-ui-sm text-dark mt-0.5">{run.employeeName} · Net {formatIndianNumber(run.netPay)}</p>
-                      <p className="font-ui text-ui-2xs text-mid capitalize">{run.status}</p>
+                      <StatusBadge variant={run.status === "finalized" ? "success" : run.status === "voided" ? "danger" : "amber"} className="mt-1">
+                        {run.status}
+                      </StatusBadge>
                     </div>
                     {run.status === "calculated" && (
                       <Button size="sm" variant="outline" onClick={() => finalizeRun.mutate(run.id)} disabled={finalizeRun.isPending}>

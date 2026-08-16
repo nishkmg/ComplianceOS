@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { PeriodPicker } from "@/components/ui/period-picker";
+import { StatusBadge } from "@/components/ui/badge";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -79,7 +80,8 @@ export default function PFChallanPage() {
             <div className="bg-surface border border-border p-6 shadow-sm flex items-start gap-3">
               <Icon name="info" className="text-amber" />
               <p className="font-ui text-ui-sm text-mid leading-relaxed">
-                {d?.paid ? "Marked as paid" : "Pending remittance"} · payable by {d?.payableByDate ?? "—"}. Employee-wise ECR (E-CR) file generation for EPFO upload is a separate export, not yet available.
+                <StatusBadge variant={d?.paid ? "success" : "amber"}>{d?.paid ? "Paid" : "Pending"}</StatusBadge>{" "}
+                · payable by {d?.payableByDate ?? "—"}. Employee-wise ECR (E-CR) file generation for EPFO upload is a separate export, not yet available.
               </p>
             </div>
           </>

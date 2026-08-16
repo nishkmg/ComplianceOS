@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Icon } from "@/components/ui/icon";
+import { buttonVariants } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 
 const fmtDate = (d: string) =>
@@ -41,7 +43,7 @@ export default function CreditNoteDetailPage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/credit-notes" className="btn btn-secondary no-underline">← All credit notes</Link>
+          <Link href="/credit-notes" className={buttonVariants({ variant: "outline" })}>← All credit notes</Link>
         </div>
       </header>
 
@@ -71,9 +73,9 @@ export default function CreditNoteDetailPage() {
               <div className="flex justify-between">
                 <dt className="text-mid">Status</dt>
                 <dd>
-                  <span className="inline-block px-2 py-0.5 text-ui-2xs uppercase font-bold tracking-widest border rounded-md bg-success-bg text-success-deep border-success/20">
+                  <StatusBadge variant="success">
                     {note.status}
-                  </span>
+                  </StatusBadge>
                 </dd>
               </div>
               {note.reason && (

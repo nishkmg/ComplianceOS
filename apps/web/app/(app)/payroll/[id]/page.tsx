@@ -4,7 +4,8 @@ import { Icon } from "@/components/ui/icon";
 import { useParams, useRouter } from "next/navigation";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
@@ -64,7 +65,9 @@ export default function PayrollDetailPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Status</p>
-          <p className="font-ui text-lg font-bold text-dark capitalize">{run.status}</p>
+          <StatusBadge variant={run.status === "finalized" ? "success" : run.status === "voided" ? "danger" : "amber"}>
+            {run.status}
+          </StatusBadge>
         </div>
         <div className="bg-surface border border-border rounded-md p-6 shadow-sm">
           <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-2">Gross Earnings</p>
@@ -106,17 +109,16 @@ export default function PayrollDetailPage() {
 
       <div className="flex gap-3">
         {payslip?.pdfUrl ? (
-          <a href={payslip.pdfUrl} target="_blank" rel="noreferrer" className="btn btn-secondary inline-flex items-center gap-2">
+          <a href={payslip.pdfUrl} target="_blank" rel="noreferrer" className={buttonVariants({ variant: "outline" })}>
             <Icon name="download" className="text-ui-xl" /> Download Payslip
           </a>
         ) : (
-          <button
+          <Button
             onClick={() => generatePayslip.mutate(runId)}
             disabled={generatePayslip.isPending}
-            className="btn btn-primary"
           >
             Generate Payslip
-          </button>
+          </Button>
         )}
       </div>
     </div>

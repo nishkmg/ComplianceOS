@@ -1,5 +1,6 @@
 "use client";
 
+import { CloseFiscalYearDialog } from "@/components/dialogs/close-fy-confirmation";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
@@ -19,6 +20,7 @@ export default function FiscalYearDetailPage() {
 
   const fyQuery = api.fiscalYears.get.useQuery({ id }, { staleTime: 15_000 });
   const [closing, setClosing] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const closeFy = api.fiscalYears.close.useMutation({
     onSuccess: () => {
@@ -117,12 +119,7 @@ export default function FiscalYearDetailPage() {
           </div>
           <div className="md:col-span-7 flex flex-col justify-center items-end">
             <button
-              onClick={() => {
-                if (window.confirm(`Close FY ${fy.year}? This locks all ledgers for the period.`)) {
-                  setClosing(true);
-                  closeFy.mutate({ id: fy.id });
-                }
-              }}
+              onClick={() => setConfirmOpen(true)}
               disabled={isClosed || closing}
               className={`bg-surface-muted border border-border text-mid px-12 py-4 font-ui text-ui-sm font-bold uppercase tracking-widest cursor-pointer ${isClosed ? "opacity-50" : "hover:bg-amber hover:text-white hover:border-amber transition-colors"}`}
             >
@@ -132,6 +129,17 @@ export default function FiscalYearDetailPage() {
           </div>
         </div>
       </section>
-    </div>
+    
+        <CloseFiscalYearDialog
+          isOpen={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          fiscalYear={fy.year}
+          onConfirm={() => {
+            setConfirmOpen(false);
+            setClosing(true);
+            closeFy.mutate({ id: fy.id });
+          }}
+        />
+</div>
   );
 }

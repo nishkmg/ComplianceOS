@@ -8,6 +8,7 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Employee { id: string; employeeCode: string; firstName: string; lastName: string | null; email: string | null; designation: string | null; department: string | null; status: string; }
 
@@ -29,7 +30,7 @@ export default function EmployeesPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <PageHeader title="Employees" />
-        <Link href="/employees/new" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline"><Icon name="add" size={14} /> New Employee</Link>
+        <Link href="/employees/new" className={buttonVariants()}><Icon name="add" size={14} /> New Employee</Link>
       </div>
       {employees.length === 0 ? (
         <EmptyState icon="group" title="No employees" description="Add your first employee to start payroll." />

@@ -32,7 +32,7 @@ export function FileGstReturnDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0 overflow-hidden border border-border-subtle rounded-lg shadow-sm">
         <DialogHeader className="px-6 py-5 border-b-[0.5px] border-border-subtle flex flex-row items-center justify-between">
-          <DialogTitle className="font-ui text-lg font-normal text-dark">
+          <DialogTitle className="font-ui text-ui-lg font-semibold text-dark">
             File {returnType} — {period}
           </DialogTitle>
         </DialogHeader>
@@ -71,7 +71,7 @@ export function FileGstReturnDialog({
           </div>
         </div>
 
-        <DialogFooter className="px-6 py-5 bg-section-muted border-t-[0.5px] border-border-subtle flex flex-row items-center justify-end gap-4 rounded-b-lg">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button
             onClick={onClose}
             className="font-ui text-sm text-mid hover:text-dark transition-colors px-4 py-2 border-none bg-transparent cursor-pointer"

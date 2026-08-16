@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/badge";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -103,9 +104,9 @@ export default function TeamSalaryPreviewPage() {
                       <td className="px-4 py-4 text-right text-dark tabular-nums">{formatIndianNumber(r.grossEarnings)}</td>
                       <td className="px-4 py-4 text-right font-bold text-dark tabular-nums">{formatIndianNumber(r.netPay)}</td>
                       <td className="px-4 py-4">
-                        <span className={`inline-block px-2 py-0.5 text-ui-2xs font-bold uppercase tracking-wider border rounded-md ${r.status === "finalized" ? "bg-success-bg text-success-deep border-success/20" : r.status === "calculated" ? "bg-amber-soft text-amber border-amber-bright/30" : "bg-surface-muted text-mid border-border"}`}>
+                        <StatusBadge variant={r.status === "finalized" ? "success" : r.status === "calculated" ? "amber" : "neutral"}>
                           {r.status}
-                        </span>
+                        </StatusBadge>
                       </td>
                     </tr>
                   ))}

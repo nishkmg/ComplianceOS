@@ -1,5 +1,6 @@
 "use client";
 
+import { VoidEntryDialog } from "@/components/dialogs/void-entry-confirmation";
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
 import { useParams, useRouter } from "next/navigation";
@@ -32,6 +33,7 @@ export default function InvoiceDetailPage() {
   const [ewbOpen, setEwbOpen] = useState(false);
   const [ewbForm, setEwbForm] = useState({ distance: "", vehicleNo: "" });
   const [busy, setBusy] = useState(false);
+  const [voidOpen, setVoidOpen] = useState(false);
 
   const utils = api.useUtils();
   const { data: invoice, isLoading } = api.invoices.get.useQuery({ id }, { enabled: !!id });
@@ -150,18 +152,23 @@ export default function InvoiceDetailPage() {
         )}
         {inv.status !== "draft" && inv.status !== "voided" && (
           <button
-            onClick={() => {
-              const reason = window.prompt("Reason for voiding this invoice?");
-              if (reason === null) return;
-              setBusy(true);
-              voidMutation.mutate({ id: inv.id, reason: reason || "Voided by user" });
-            }}
+            onClick={() => setVoidOpen(true)}
             disabled={busy}
             className="btn btn-ghost text-danger"
           >
             Void Invoice
           </button>
         )}
+        <VoidEntryDialog
+          isOpen={voidOpen}
+          entryNumber={inv.invoiceNumber ?? inv.id.slice(0, 8)}
+          onClose={() => setVoidOpen(false)}
+          onConfirm={(reason) => {
+            setVoidOpen(false);
+            setBusy(true);
+            voidMutation.mutate({ id: inv.id, reason: reason || "Voided by user" });
+          }}
+        />
         <Link href={`/invoices/${inv.id}/pdf`} className="btn btn-secondary no-underline">View PDF</Link>
       </div>
 

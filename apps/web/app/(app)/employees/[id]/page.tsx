@@ -1,11 +1,12 @@
 "use client";
 
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge, StatusBadge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
@@ -25,6 +26,7 @@ export default function EmployeeDetailPage() {
   const advances = api.advances.list.useQuery({ employeeId: id }, { staleTime: 15_000 });
 
   const [showAdvanceForm, setShowAdvanceForm] = useState(false);
+  const [cancelTarget, setCancelTarget] = useState<{ id: string; amount: string } | null>(null);
   const [advanceForm, setAdvanceForm] = useState({ totalAmount: "", installments: "3", advanceDate: new Date().toISOString().slice(0, 10), monthReference: CURRENT_MONTH, narration: "" });
 
   const createAdvance = api.advances.create.useMutation({
@@ -73,7 +75,7 @@ export default function EmployeeDetailPage() {
       </div>
 
       <div className="flex gap-3">
-        <Link href={`/employees/${e.id}/salary`} className="inline-flex items-center gap-2 px-4 py-2 btn btn-primary no-underline"><Icon name="payments" size={14} /> Salary Structure</Link>
+        <Link href={`/employees/${e.id}/salary`} className={buttonVariants()}><Icon name="payments" size={14} /> Salary Structure</Link>
         <Button variant="outline" size="sm" onClick={() => setShowAdvanceForm(!showAdvanceForm)}>
           <Icon name="add" /> {showAdvanceForm ? "Close" : "New Advance"}
         </Button>
@@ -165,14 +167,14 @@ export default function EmployeeDetailPage() {
                     <td className="py-3 px-6 text-right tabular-nums">{formatIndianNumber(a.monthlyDeduction)}</td>
                     <td className="py-3 px-6 text-center tabular-nums">{a.deductedInstallments}/{a.installments}</td>
                     <td className="py-3 px-6">
-                      <span className={`inline-block px-2 py-0.5 text-ui-2xs font-bold uppercase tracking-wider border rounded-md ${a.status === "active" ? "bg-amber-soft text-amber border-amber-bright/30" : a.status === "fully_recovered" ? "bg-success-bg text-success-deep border-success/20" : "bg-surface-muted text-mid border-border"}`}>
+                      <StatusBadge variant={a.status === "active" ? "amber" : a.status === "fully_recovered" ? "success" : "neutral"}>
                         {a.status.replace(/_/g, " ")}
-                      </span>
+                      </StatusBadge>
                     </td>
                     <td className="py-3 px-6 text-right">
                       {a.status === "active" && (
                         <button
-                          onClick={() => window.confirm("Cancel this advance?") && cancelAdvance.mutate(a.id)}
+                          onClick={() => setCancelTarget({ id: a.id, amount: a.totalAmount })}
                           disabled={cancelAdvance.isPending}
                           className="border-none bg-transparent cursor-pointer text-danger font-ui text-ui-2xs uppercase tracking-widest font-bold hover:underline disabled:opacity-50"
                         >
@@ -187,6 +189,18 @@ export default function EmployeeDetailPage() {
           </div>
         )}
       </div>
-    </div>
+    
+        <ConfirmDialog
+          open={!!cancelTarget}
+          title="Cancel this advance?"
+          message={cancelTarget ? `Advance of ${cancelTarget.amount} will be reversed.` : ""}
+          confirmLabel="Cancel Advance"
+          onCancel={() => setCancelTarget(null)}
+          onConfirm={() => {
+            if (cancelTarget) cancelAdvance.mutate(cancelTarget.id);
+            setCancelTarget(null);
+          }}
+        />
+</div>
   );
 }

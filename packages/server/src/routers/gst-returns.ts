@@ -4,6 +4,7 @@ import { generateGSTR1 } from "../commands/generate-gstr1";
 import { generateGstr9 } from "../commands/generate-gstr9";
 import { generateGSTR2B } from "../commands/generate-gstr2b";
 import { generateGSTR3B } from "../commands/generate-gstr3b";
+import { computeGstr1Summary, computeGstr2bSummary, computeGstr3bSummary } from "../services/gst-computation";
 import { eq, and } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { gstReturns, gstReturnLines, gstr9Schedules } = _db;
@@ -49,9 +50,22 @@ export const gstReturnsRouter = router({
       }));
     }),
 
-  get: protectedProcedure
-    .input(z.object({ returnId: z.string().uuid() }))
+  liveSummary: protectedProcedure
+    .input(z.object({
+      periodMonth: z.number().min(1).max(12),
+      periodYear: z.number().min(2000),
+    }))
     .query(async ({ ctx, input }) => {
+      const [gstr1, gstr2b, gstr3b] = await Promise.all([
+        computeGstr1Summary(ctx.db, ctx.tenantId, input.periodMonth, input.periodYear),
+        computeGstr2bSummary(ctx.db, ctx.tenantId, input.periodMonth, input.periodYear),
+        computeGstr3bSummary(ctx.db, ctx.tenantId, input.periodMonth, input.periodYear),
+      ]);
+      return { gstr1, gstr2b, gstr3b };
+    }),
+
+  get: protectedProcedure
+    .input(z.object({ returnId: z.string().uuid() }))    .query(async ({ ctx, input }) => {
       const returns = await ctx.db.select().from(gstReturns).where(
         and(
           eq(gstReturns.id, input.returnId),

@@ -58,7 +58,7 @@ export function ThemeToggle() {
       onClick={cycle}
       aria-label={label}
       title={label}
-      className="flex w-full items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-muted hover:text-dark hover:bg-lighter/40 transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+      className="flex w-full items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-muted hover:text-sidebar-dim hover:bg-lighter/40 transition-colors border-none bg-transparent cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
     >
       <Icon name={theme === "dark" ? "dark_mode" : theme === "light" ? "light_mode" : "brightness_auto"} className="text-lg" />
       <span className="flex-1 text-left">

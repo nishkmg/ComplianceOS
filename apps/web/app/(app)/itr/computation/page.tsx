@@ -1,12 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useFiscalYear } from "@/hooks/use-fiscal-year";
+import { FiscalYearSelect } from "@/components/ui/fiscal-year-select";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -27,8 +28,8 @@ const incomeHeads = [
 ] as const;
 
 export default function ITRComputationPage() {
-  const { activeFy: selectedFY, setActiveFy: setSelectedFY } = useFiscalYear();
-  const { fiscalYears: fiscalYearsList } = useFiscalYear();
+  const { activeFy: selectedFY } = useFiscalYear();
+  const router = useRouter();
   const utils = api.useUtils();
 
   const breakdown = api.itrComputation.getIncomeBreakdown.useQuery(
@@ -120,16 +121,7 @@ export default function ITRComputationPage() {
           <h1 className="font-ui text-2xl font-semibold text-dark print:text-dark">ITR Computation</h1>
         </div>
         <div className="flex flex-wrap gap-3 items-center print:hidden">
-          <select
-            aria-label="Financial year"
-            className="bg-surface border border-border px-3 py-2 text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-md"
-            value={selectedFY}
-            onChange={(e) => setSelectedFY(e.target.value)}
-          >
-            {fiscalYearsList.map((fy) => (
-              <option key={fy.year} value={fy.year}>FY {fy.year}</option>
-            ))}
-          </select>
+          <FiscalYearSelect className="font-ui text-ui-xs" />
           {activeReturn && (
             <Button
               variant="outline"
@@ -140,12 +132,14 @@ export default function ITRComputationPage() {
               {computeIncome.isPending ? "Computing…" : hasProjection ? "Recompute Income" : "Compute Income"}
             </Button>
           )}
-          <Link
-            href={`/itr/returns/${selectedFY}`}
-            className="inline-flex items-center gap-2 rounded-md bg-amber px-4 py-2 text-ui-sm font-bold text-white no-underline shadow-sm transition-colors hover:bg-amber-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => router.push(`/itr/returns/${selectedFY}`)}
+            className="gap-1.5"
           >
             {activeReturn ? "View Return" : "Create Return"} <Icon name="arrow_forward" className="text-sm" />
-          </Link>
+          </Button>
         </div>
       </div>
 
@@ -254,12 +248,8 @@ export default function ITRComputationPage() {
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="divide-y-[0.5px] divide-border-subtle">
-                      <div className="flex justify-between items-center px-6 py-3.5">
-                        <span className="font-ui text-ui-sm text-dark">Total deductions (schedule-level detail is captured during return preparation)</span>
-                        <span className="font-mono text-ui-sm tabular-nums text-danger">−{formatIndianNumber(totalDeductions)}</span>
-                      </div>
                       <div className="flex justify-between items-center px-6 py-4 bg-surface-muted font-bold border-t border-border">
-                        <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Total Deductions</span>
+                        <span className="font-ui text-ui-xs uppercase tracking-widest text-dark">Total Deductions (schedule-level detail captured during return preparation)</span>
                         <span className="font-mono text-ui-md tabular-nums text-danger">−{formatIndianNumber(totalDeductions)}</span>
                       </div>
                     </div>

@@ -23,7 +23,7 @@ export function AccountPreviewSlideOver({
       <div className="fixed inset-0 bg-on-background/20 backdrop-blur-sm z-[60] transition-opacity" onClick={onClose}></div>
       
       {/* Slide-over Panel */}
-      <aside className={`fixed right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl z-[70] flex flex-col border-l border-border-subtle transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <aside className={`fixed right-0 top-0 h-full w-full max-w-lg bg-surface shadow-2xl z-[70] flex flex-col border-l border-border-subtle transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* Header */}
         <header className="px-8 py-6 border-b border-border-subtle flex justify-between items-start bg-section-muted">
           <div className="text-left">
@@ -88,7 +88,7 @@ export function AccountPreviewSlideOver({
         {/* Footer Actions */}
         <footer className="px-8 py-6 border-t border-border-subtle bg-section-muted flex gap-4">
 // @ts-ignore
-          <Link href={`/accounts/${account.id}`} className="flex-1 bg-white border border-border-subtle text-dark py-3 text-center font-ui text-xs font-bold uppercase tracking-widest no-underline hover:bg-surface-muted transition-colors rounded-sm shadow-sm">
+          <Link href={`/accounts/${account.id}`} className="flex-1 bg-surface border border-border-subtle text-dark py-3 text-center font-ui text-xs font-bold uppercase tracking-widest no-underline hover:bg-surface-muted transition-colors rounded-sm shadow-sm">
             Full History
 // @ts-ignore
           </Link>

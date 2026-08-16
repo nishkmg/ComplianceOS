@@ -56,7 +56,7 @@ export function AppTopBar({ onSearchFocus }: AppTopBarProps) {
         {/* Notifications */}
         <button
           aria-label="Notifications"
-          className="text-sidebar-muted hover:text-dark transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70 rounded-sm hover:bg-lighter/40"
+          className="text-sidebar-muted hover:text-sidebar-dim transition-colors p-2 cursor-pointer border-none bg-transparent active:opacity-70 rounded-sm hover:bg-lighter/40"
         >
           <Icon name="notifications" size={18} />
         </button>

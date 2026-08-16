@@ -132,7 +132,7 @@ const navSections: NavSection[] = [
     label: 'System',
     items: [
       { href: '/audit-log',              label: 'Audit Log', icon: 'history'  },
-      { href: '/settings/fiscal-years',  label: 'Settings',  icon: 'settings' },
+      { href: '/settings',               label: 'Settings',  icon: 'settings' },
     ],
   },
 ];
@@ -219,14 +219,14 @@ export function AppSidebar() {
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                             groupActive
                               ? 'border-amber text-white font-semibold'
-                              : 'border-transparent text-sidebar-muted hover:text-dark hover:bg-lighter/40',
+                              : 'border-transparent text-sidebar-muted hover:text-sidebar-dim hover:bg-lighter/40',
                           ].join(' ')}
                           aria-expanded={isOpen}
                         >
                           <Icon
                             name={item.icon}
                             size={16}
-                            className={groupActive ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-dark'}
+                            className={groupActive ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-sidebar-dim'}
                           />
                           <span className="flex-1 text-ui-sm">{item.label}</span>
                           <Icon
@@ -250,7 +250,7 @@ export function AppSidebar() {
                                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                                     childActive
                                       ? 'text-amber-bright font-semibold bg-section-amber'
-                                      : 'text-sidebar-muted hover:text-dark hover:bg-lighter/40',
+                                      : 'text-sidebar-muted hover:text-sidebar-dim hover:bg-lighter/40',
                                   ].join(' ')}
                                 >
                                   {child.label}
@@ -275,14 +275,14 @@ export function AppSidebar() {
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar',
                         active
                           ? 'border-amber text-white font-semibold'
-                          : 'border-transparent text-sidebar-muted hover:text-dark hover:bg-lighter/40',
+                          : 'border-transparent text-sidebar-muted hover:text-sidebar-dim hover:bg-lighter/40',
                       ].join(' ')}
                     >
                       {item.icon && (
                         <Icon
                           name={item.icon}
                           size={16}
-                          className={active ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-dark'}
+                          className={active ? 'text-amber-bright' : 'text-sidebar-muted group-hover:text-sidebar-dim'}
                         />
                       )}
                       <span>{item.label}</span>
@@ -394,7 +394,7 @@ export function AppSidebar() {
         <ThemeToggle />
         <Link
           href="/support"
-          className="flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-muted hover:bg-lighter/40 hover:text-dark transition-colors no-underline active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+          className="flex items-center gap-3 px-3 py-2 rounded-sm text-ui-sm text-sidebar-muted hover:bg-lighter/40 hover:text-sidebar-dim transition-colors no-underline active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
         >
           <Icon name="contact_support" size={16} />
           <span>Support</span>

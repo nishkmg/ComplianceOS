@@ -10,6 +10,8 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 
 const VOUCHER_TYPES = ["Journal Entry", "Receipt Voucher", "Payment Voucher", "Contra Voucher"] as const;
 
@@ -319,10 +321,10 @@ export default function NewJournalEntryPage() {
         <div className="md:col-span-4 space-y-6">
           <div className="space-y-1.5">
             <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Posting Date</label>
-            <input
+            <Input
               type="date"
+              className="font-mono"
               aria-label="Entry date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               max={new Date().toISOString().split("T")[0]}
@@ -330,23 +332,18 @@ export default function NewJournalEntryPage() {
           </div>
           <div className="space-y-1.5">
             <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Voucher Type</label>
-            <div className="relative">
-              <select
-                aria-label="Voucher type"
-                className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-ui-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
-                value={voucherType}
-                onChange={(e) => setVoucherType(e.target.value)}
-              >
-                {VOUCHER_TYPES.map(vt => <option key={vt}>{vt}</option>)}
-              </select>
-              <Icon name="expand_more" size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-mid pointer-events-none" />
-            </div>
+            <Select
+              aria-label="Voucher type"
+              value={voucherType}
+              onChange={(e) => setVoucherType(e.target.value)}
+            >
+              {VOUCHER_TYPES.map(vt => <option key={vt}>{vt}</option>)}
+            </Select>
           </div>
           <div className="space-y-1.5">
             <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Reference</label>
-            <input
+            <Input
               type="text"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-ui-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
               placeholder="Invoice #, Bill ref, etc."
               value={reference}
               onChange={(e) => setReference(e.target.value)}
@@ -357,7 +354,7 @@ export default function NewJournalEntryPage() {
         <div className="md:col-span-8 space-y-1.5">
           <label className="block font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Narration / Description</label>
           <textarea
-            className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-ui text-ui-sm text-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
+            className="w-full rounded-sm border border-border-strong bg-surface px-3 font-ui text-sm text-dark shadow-sm placeholder:text-light focus-visible:outline-none focus-visible:border-amber focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-1 focus-visible:ring-offset-surface resize-none"
             placeholder="Enter detailed accounting narration for this entry…"
             rows={5}
             value={narration}
@@ -400,9 +397,9 @@ export default function NewJournalEntryPage() {
                 {lines.map((line, index) => (
                   <tr key={line.id} className="hover:bg-surface-muted/50 transition-colors">
                     <td className="p-0">
-                      <select
+                      <Select
                         aria-label={`Account for line ${index + 1}`}
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-ui-sm text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus appearance-none"
+                        className="h-8 rounded-none border-none bg-transparent px-5 font-ui text-ui-sm shadow-none focus:ring-1 focus:ring-amber appearance-none"
                         value={line.accountId}
                         onChange={(e) => updateLine(index, "accountId", e.target.value)}
                       >
@@ -410,20 +407,20 @@ export default function NewJournalEntryPage() {
                         {availableAccounts.map(a => (
                           <option key={a.id} value={a.id}>{a.code} · {a.name}</option>
                         ))}
-                      </select>
+                      </Select>
                     </td>
                     <td className="p-0">
-                      <input
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-ui text-ui-sm text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                      <Input
+                        className="h-8 rounded-none border-none bg-transparent px-5 font-ui text-ui-sm shadow-none focus:ring-1 focus:ring-amber"
                         placeholder="Line description…"
                         value={line.description}
                         onChange={(e) => updateLine(index, "description", e.target.value)}
                       />
                     </td>
                     <td className="p-0">
-                      <input
+                      <Input
                         inputMode="decimal"
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-ui-sm text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-2 focus-visible:ring-focus"
+                        className="h-8 rounded-none border-none bg-transparent px-5 font-mono text-ui-sm text-right shadow-none focus:ring-1 focus:ring-amber"
                         placeholder="0.00"
                         value={line.debit}
                         onChange={(e) => updateLine(index, "debit", e.target.value)}
@@ -431,9 +428,9 @@ export default function NewJournalEntryPage() {
                       />
                     </td>
                     <td className="p-0">
-                      <input
+                      <Input
                         inputMode="decimal"
-                        className="w-full h-full border-none bg-transparent px-5 py-3.5 font-mono text-ui-sm text-right text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                        className="h-8 rounded-none border-none bg-transparent px-5 font-mono text-ui-sm text-right shadow-none focus:ring-1 focus:ring-amber"
                         placeholder="0.00"
                         value={line.credit}
                         onChange={(e) => updateLine(index, "credit", e.target.value)}

@@ -38,7 +38,7 @@ export function PaymentAllocationDialog({
       <DialogContent className="max-w-3xl p-0 overflow-hidden border border-border-subtle shadow-lg rounded-sm flex flex-col max-h-[90vh]">
         <DialogHeader className="px-8 py-6 border-b border-border-subtle flex flex-row items-start justify-between bg-section-muted">
           <div className="text-left">
-            <DialogTitle className="font-display text-lg font-normal text-dark mb-2">Allocate Payment</DialogTitle>
+            <DialogTitle className="font-ui text-ui-lg font-semibold text-dark mb-2">Allocate Payment</DialogTitle>
             <p className="font-ui text-sm text-mid">Assign recorded funds to outstanding invoices for {customerName}.</p>
           </div>
         </DialogHeader>
@@ -101,7 +101,7 @@ export function PaymentAllocationDialog({
                   <div className="relative w-full max-w-[140px]">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-ui-xs text-light">₹</span>
                     <input 
-                      className="w-full bg-white border border-border rounded-sm py-2 pl-8 pr-3 font-mono text-ui-sm text-right text-dark focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
+                      className="w-full bg-surface border border-border rounded-sm py-2 pl-8 pr-3 font-mono text-ui-sm text-right text-dark focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
                       type="number"
                       value={allocations[inv.id] || ''}
                       onChange={(e) => {
@@ -117,7 +117,7 @@ export function PaymentAllocationDialog({
           </div>
         </div>
 
-        <DialogFooter className="px-8 py-6 border-t border-border-subtle bg-section-muted flex flex-row items-center justify-between">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button className="font-ui text-xs text-mid hover:text-dark transition-colors flex items-center gap-2 border-none bg-transparent cursor-pointer font-bold uppercase tracking-widest">
             <Icon name="auto_fix_high" className="text-sm" />
             Auto-Allocate (FIFO)

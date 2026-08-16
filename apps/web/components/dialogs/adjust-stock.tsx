@@ -37,7 +37,7 @@ export function AdjustStockDialog({
       <DialogContent className="max-w-lg p-0 overflow-hidden border border-border-subtle shadow-2xl rounded-sm flex flex-col text-left">
         <DialogHeader className="px-8 pt-8 pb-6 border-b-[0.5px] border-border-subtle flex flex-row items-start justify-between">
           <div className="text-left">
-            <DialogTitle className="font-display text-lg font-bold text-dark">Adjust Stock</DialogTitle>
+            <DialogTitle className="font-ui text-ui-lg font-semibold text-dark">Adjust Stock</DialogTitle>
             <p className="font-ui text-sm text-mid">Record inventory corrections or shrinkage.</p>
           </div>
         </DialogHeader>
@@ -60,7 +60,7 @@ export function AdjustStockDialog({
             <div className="flex gap-6">
               <div className="flex-1">
                 <label className="block font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold mb-2">Adjustment Qty (+/-)</label>
-                <div className="relative flex items-center border border-border bg-white focus-within:border-amber h-12 rounded-sm">
+                <div className="relative flex items-center border border-border bg-surface focus-within:border-amber h-12 rounded-sm">
                   <Icon name="calculate" className="text-light pl-4 pr-2 text-[20px]" />
                   <input 
                     className="w-full bg-transparent border-none p-0 font-mono text-sm text-dark focus:ring-0 outline-none focus-visible:ring-2 focus-visible:ring-focus" 
@@ -75,7 +75,7 @@ export function AdjustStockDialog({
                 <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold mb-2">Warehouse</label>
                 <div className="relative h-12">
                   <select 
-                    className="w-full h-full bg-white border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                    className="w-full h-full bg-surface border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                     value={formData.warehouse}
                     onChange={(e) => setFormData({ ...formData, warehouse: e.target.value })}
                   >
@@ -91,7 +91,7 @@ export function AdjustStockDialog({
               <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold mb-2">Reason Code</label>
               <div className="relative h-12">
                 <select 
-                  className="w-full h-full bg-white border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                  className="w-full h-full bg-surface border border-border rounded-sm px-4 py-2 font-ui text-sm text-dark appearance-none focus:border-amber outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                 >
@@ -105,7 +105,7 @@ export function AdjustStockDialog({
           </div>
         </div>
 
-        <DialogFooter className="px-8 py-6 border-t border-border-subtle bg-section-muted flex flex-row items-center justify-end gap-4 rounded-b-sm">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button onClick={onClose} className="font-ui text-xs font-bold uppercase tracking-widest text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={() => onConfirm(formData)}

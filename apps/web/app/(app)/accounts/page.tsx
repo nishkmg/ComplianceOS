@@ -7,6 +7,7 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Account {
   id: string;
@@ -33,7 +34,7 @@ export default function AccountsPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <div><PageHeader title="Accounts" /></div>
-        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline">
+        <Link href="/accounts/new" className={buttonVariants()}>
           <Icon name="add" size={14} /> New Account
         </Link>
       </div>

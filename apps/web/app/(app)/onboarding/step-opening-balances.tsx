@@ -21,6 +21,12 @@ interface StepOpeningBalancesProps {
   onBack?: () => void;
 }
 
+function getIndianFYLabel(): string {
+  const now = new Date();
+  const fyStartYear = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+  return `FY ${fyStartYear}-${String(fyStartYear + 1).slice(2)}`;
+}
+
 export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpeningBalancesProps) {
   const [mode, setMode] = useState<"fresh_start" | "migration">("fresh_start");
   const [balances, setBalances] = useState<Record<string, { debit: number, credit: number }>>({});
@@ -41,6 +47,18 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
   }, [tenantId]);
 
   const [saving, setSaving] = useState(false);
+  const [query, setQuery] = useState("");
+  const fyLabel = useMemo(() => getIndianFYLabel(), []);
+
+  const filteredAccounts = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return accounts;
+    return (accounts as any[]).filter(
+      (a: any) =>
+        String(a.name ?? "").toLowerCase().includes(q) ||
+        String(a.code ?? "").toLowerCase().includes(q)
+    );
+  }, [accounts, query]);
 
   const totals = useMemo(() => {
     let dr = 0;
@@ -129,6 +147,19 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
 
       {mode === "migration" && accounts && (
         <div className="space-y-8 animate-in">
+          <div className="max-w-sm">
+            <label htmlFor="ob-account-filter" className="mb-1.5 block font-ui text-ui-xs font-bold uppercase tracking-widest text-light">
+              Filter accounts
+            </label>
+            <input
+              id="ob-account-filter"
+              type="search"
+              placeholder="Search by name or code"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="h-9 w-full rounded-sm bg-surface border border-border px-3 font-ui text-sm text-on-surface placeholder:text-light outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            />
+          </div>
           <div className="bg-surface border-[0.5px] border-border shadow-sm overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -139,7 +170,7 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
                 </tr>
               </thead>
               <tbody className="divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
-                {(accounts as any[]).filter((a: any) => a.isLeaf).map((a: any, idx: number) => (
+                {filteredAccounts.filter((a: any) => a.isLeaf).map((a: any, idx: number) => (
                   <tr key={a.id} className="hover:bg-surface-muted transition-colors">
                     <td className="py-4 px-6">
                       <div className="font-ui text-ui-sm font-bold text-on-surface">{a.name}</div>
@@ -208,17 +239,27 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
             </button>
           )}
           <p className="font-ui text-ui-xs text-ui-xs text-light uppercase tracking-wider italic">
-            Opening balances set here will form the Q1 starting position for FY 2024-25.
+            Opening balances set here will form the Q1 starting position for {fyLabel}.
           </p>
         </div>
-        <button
-          onClick={handleContinue}
-          disabled={saving || (mode === "migration" && totals.diff > 0.01)}
-          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
-        >
-          {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
-          <Icon name="rocket_launch" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={onComplete}
+            disabled={saving}
+            className="font-ui text-ui-sm text-mid hover:text-on-surface transition-colors border-none bg-transparent cursor-pointer disabled:opacity-50"
+          >
+            Skip for now
+          </button>
+          <button
+            onClick={handleContinue}
+            disabled={saving || (mode === "migration" && totals.diff > 0.01)}
+            className="btn btn-primary py-3 px-8 group disabled:opacity-50"
+          >
+            {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
+            <Icon name="rocket_launch" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
+          </button>
+        </div>
       </div>
     </div>
   );

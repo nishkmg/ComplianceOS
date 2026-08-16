@@ -7,6 +7,8 @@ import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 import { useOptimisticCreate } from "@/lib/hooks/useOptimisticMutation";
 import { PageHeader } from "@/components/ui/page-header";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { formatIndianNumber } from "@/lib/format";
 
 interface ItemDraft {
@@ -135,36 +137,36 @@ export default function NewInvoicePage() {
           <button onClick={() => router.back()} aria-label="Go back" className="text-mid hover:text-dark border-none bg-transparent cursor-pointer" ><Icon name="arrow_back" size={20} /></button>
           <PageHeader title="New Invoice" />
         </div>
-        <button onClick={handleSubmit} disabled={saving} className="px-5 py-2 btn btn-primary disabled:opacity-50">
+        <Button onClick={handleSubmit} disabled={saving}>
           {saving ? "Creating…" : "Create Invoice"}
-        </button>
+        </Button>
       </div>
       <div className="bg-surface border border-border rounded-md p-6 shadow-sm space-y-6">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-1.5">
             <label htmlFor="invoice-customer-name" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer Name</label>
-            <input id="invoice-customer-name" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={customerName} onChange={e => setCustomerName(e.target.value)} />
+            <Input id="invoice-customer-name" value={customerName} onChange={e => setCustomerName(e.target.value)} />
           </div>
           <div className="space-y-1.5">
             <label htmlFor="invoice-customer-state" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer State (optional)</label>
-            <input id="invoice-customer-state" className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={customerState} onChange={e => setCustomerState(e.target.value)} placeholder="e.g. Maharashtra" />
+            <Input id="invoice-customer-state" value={customerState} onChange={e => setCustomerState(e.target.value)} placeholder="e.g. Maharashtra" />
           </div>
           <div className="space-y-1.5">
             <label htmlFor="invoice-date" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Date</label>
-            <input id="invoice-date" type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={date} onChange={e => { setDate(e.target.value); setDueDate(addDays(e.target.value, 30)); }} />
+            <Input id="invoice-date" type="date" className="font-mono" value={date} onChange={e => { setDate(e.target.value); setDueDate(addDays(e.target.value, 30)); }} />
           </div>
           <div className="space-y-1.5">
             <label htmlFor="invoice-due-date" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Due Date</label>
-            <input id="invoice-due-date" type="date" className="w-full border border-border rounded-md px-4 py-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" value={dueDate} onChange={e => setDueDate(e.target.value)} />
+            <Input id="invoice-due-date" type="date" className="font-mono" value={dueDate} onChange={e => setDueDate(e.target.value)} />
           </div>
         </div>
         {items.map((it, i) => (
           <div key={i} className="grid grid-cols-12 gap-3">
-            <input className="col-span-4 border border-border rounded-md px-3 py-2 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" aria-label={`Item description (line ${i + 1})`} placeholder="Description" value={it.description} onChange={e => { const n = [...items]; n[i].description = e.target.value; setItems(n); }} />
-            <input type="number" className="col-span-1 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" aria-label={`Quantity (line ${i + 1})`} placeholder="Qty" value={it.quantity} onChange={e => { const n = [...items]; n[i].quantity = e.target.value; setItems(n); }} />
-            <input type="number" className="col-span-2 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" placeholder="Rate" value={it.rate} onChange={e => { const n = [...items]; n[i].rate = e.target.value; setItems(n); }} />
-            <input className="col-span-3 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" placeholder="HSN Code" value={it.hsnCode} onChange={e => { const n = [...items]; n[i].hsnCode = e.target.value; setItems(n); }} />
-            <input type="number" className="col-span-2 border border-border rounded-md px-3 py-2 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber" placeholder="GST%" value={it.gstRate} onChange={e => { const n = [...items]; n[i].gstRate = e.target.value; setItems(n); }} />
+            <Input className="col-span-4 h-8" aria-label={`Item description (line ${i + 1})`} placeholder="Description" value={it.description} onChange={e => { const n = [...items]; n[i].description = e.target.value; setItems(n); }} />
+            <Input type="number" className="col-span-1 h-8 font-mono" aria-label={`Quantity (line ${i + 1})`} placeholder="Qty" value={it.quantity} onChange={e => { const n = [...items]; n[i].quantity = e.target.value; setItems(n); }} />
+            <Input type="number" className="col-span-2 h-8 font-mono" placeholder="Rate" value={it.rate} onChange={e => { const n = [...items]; n[i].rate = e.target.value; setItems(n); }} />
+            <Input className="col-span-3 h-8 font-mono" placeholder="HSN Code" value={it.hsnCode} onChange={e => { const n = [...items]; n[i].hsnCode = e.target.value; setItems(n); }} />
+            <Input type="number" className="col-span-2 h-8 font-mono" placeholder="GST%" value={it.gstRate} onChange={e => { const n = [...items]; n[i].gstRate = e.target.value; setItems(n); }} />
           </div>
         ))}
         <button onClick={() => setItems([...items, { description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }])} className="text-amber text-ui-xs font-bold uppercase tracking-widest hover:underline border-none bg-transparent cursor-pointer">+ Add Line</button>

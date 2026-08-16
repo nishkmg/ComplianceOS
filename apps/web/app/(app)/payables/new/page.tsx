@@ -7,6 +7,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 interface LineDraft {
   accountId: string;
@@ -78,8 +81,6 @@ export default function NewBillPage() {
     });
   };
 
-  const inputCls = "w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus";
-
   // Live totals preview — the form shows real numbers before submit.
   const previewLines = lines.filter((l) => l.rate);
   const previewSubtotal = previewLines.reduce((sum, l) => sum + (Number(l.quantity) || 0) * (Number(l.rate) || 0), 0);
@@ -97,7 +98,7 @@ export default function NewBillPage() {
         </div>
         <div className="flex gap-3 shrink-0">
           <Link href="/payables" className="btn btn-secondary no-underline">Cancel</Link>
-          <button onClick={submit} disabled={busy} className="btn btn-primary">Record Bill</button>
+          <Button onClick={submit} disabled={busy}>Record Bill</Button>
         </div>
       </header>
 
@@ -109,30 +110,30 @@ export default function NewBillPage() {
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label htmlFor="bill-vendor" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Vendor (payable account)</label>
-            <select id="bill-vendor" value={vendorAccountId} onChange={(e) => selectVendor(e.target.value)} className={inputCls}>
+            <Select id="bill-vendor" value={vendorAccountId} onChange={(e) => selectVendor(e.target.value)}>
               <option value="">Select vendor…</option>
               {vendorOptions.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
-            </select>
+            </Select>
           </div>
           <div>
             <label htmlFor="bill-number" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Bill number</label>
-            <input id="bill-number" value={billNumber} onChange={(e) => setBillNumber(e.target.value)} placeholder="INV-2026-001" className={inputCls} />
+            <Input id="bill-number" value={billNumber} onChange={(e) => setBillNumber(e.target.value)} placeholder="INV-2026-001" />
           </div>
           <div>
             <label htmlFor="bill-vendor-state" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Vendor state (GST name, e.g. maharashtra)</label>
-            <input id="bill-vendor-state" value={vendorState} onChange={(e) => setVendorState(e.target.value)} className={inputCls} />
+            <Input id="bill-vendor-state" value={vendorState} onChange={(e) => setVendorState(e.target.value)} />
           </div>
           <div>
             <label htmlFor="bill-vendor-gstin" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Vendor GSTIN</label>
-            <input id="bill-vendor-gstin" value={vendorGstin} onChange={(e) => setVendorGstin(e.target.value)} className={`${inputCls} font-mono`} />
+            <Input id="bill-vendor-gstin" value={vendorGstin} onChange={(e) => setVendorGstin(e.target.value)} className="font-mono" />
           </div>
           <div>
             <label htmlFor="bill-date" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Bill date</label>
-            <input id="bill-date" type="date" value={billDate} onChange={(e) => setBillDate(e.target.value)} className={inputCls} />
+            <Input id="bill-date" type="date" className="font-mono" value={billDate} onChange={(e) => setBillDate(e.target.value)} />
           </div>
           <div>
             <label htmlFor="bill-due" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Due date</label>
-            <input id="bill-due" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className={inputCls} />
+            <Input id="bill-due" type="date" className="font-mono" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
         </div>
       </div>
@@ -159,24 +160,24 @@ export default function NewBillPage() {
               {lines.map((line, i) => (
                 <tr key={i}>
                   <td className="py-4 px-6">
-                    <select value={line.accountId} onChange={(e) => { const n = [...lines]; n[i].accountId = e.target.value; setLines(n); }} aria-label={`Line ${i + 1} account`} className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                    <Select value={line.accountId} onChange={(e) => { const n = [...lines]; n[i].accountId = e.target.value; setLines(n); }} aria-label={`Line ${i + 1} account`} className="h-8 px-2">
                       <option value="">Select account…</option>
                       {expenseAccounts.map((a: { id: string; name: string }) => <option key={a.id} value={a.id}>{a.name}</option>)}
-                    </select>
+                    </Select>
                   </td>
                   <td className="py-4 px-6">
-                    <input value={line.description} onChange={(e) => { const n = [...lines]; n[i].description = e.target.value; setLines(n); }} placeholder="Description" className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+                    <Input value={line.description} onChange={(e) => { const n = [...lines]; n[i].description = e.target.value; setLines(n); }} placeholder="Description" className="h-8 px-2" />
                   </td>
                   <td className="py-4 px-6">
-                    <input type="number" aria-label="Quantity" value={line.quantity} onChange={(e) => { const n = [...lines]; n[i].quantity = e.target.value; setLines(n); }} className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+                    <Input type="number" aria-label="Quantity" value={line.quantity} onChange={(e) => { const n = [...lines]; n[i].quantity = e.target.value; setLines(n); }} className="h-8 px-2 font-mono" />
                   </td>
                   <td className="py-4 px-6">
-                    <input type="number" aria-label="Rate" value={line.rate} onChange={(e) => { const n = [...lines]; n[i].rate = e.target.value; setLines(n); }} placeholder="0.00" className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
+                    <Input type="number" aria-label="Rate" value={line.rate} onChange={(e) => { const n = [...lines]; n[i].rate = e.target.value; setLines(n); }} placeholder="0.00" className="h-8 px-2 font-mono" />
                   </td>
                   <td className="py-4 px-6">
-                    <select value={line.gstRate} onChange={(e) => { const n = [...lines]; n[i].gstRate = e.target.value; setLines(n); }} aria-label={`Line ${i + 1} GST rate`} className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                    <Select value={line.gstRate} onChange={(e) => { const n = [...lines]; n[i].gstRate = e.target.value; setLines(n); }} aria-label={`Line ${i + 1} GST rate`} className="h-8 px-2">
                       {["0", "5", "12", "18", "28"].map((r) => <option key={r} value={r}>{r}%</option>)}
-                    </select>
+                    </Select>
                   </td>
                   <td className="py-4 px-6 text-right">
                     <button onClick={() => setLines(lines.filter((_, j) => j !== i))} disabled={lines.length === 1} className="text-danger hover:text-danger-bg font-bold uppercase text-ui-2xs tracking-widest border-none bg-transparent cursor-pointer disabled:opacity-40">Remove</button>

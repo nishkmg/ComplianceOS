@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Icon } from "@/components/ui/icon";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
@@ -75,9 +76,9 @@ export default function BillDetailPage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/payables" className="btn btn-secondary no-underline">← All bills</Link>
+          <Link href="/payables" className={buttonVariants({ variant: "outline" })}>← All bills</Link>
           {bill.status !== "paid" && (
-            <button onClick={() => setPayOpen(true)} className="btn btn-primary">Record Payment</button>
+            <Button onClick={() => setPayOpen(true)}>Record Payment</Button>
           )}
         </div>
       </header>
@@ -183,9 +184,9 @@ export default function BillDetailPage() {
             </div>
             <div className="mt-6 flex justify-end gap-2">
               <DialogClose asChild>
-                <button className="btn btn-secondary">Cancel</button>
+                <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <button onClick={confirmPay} disabled={busy} className="btn btn-primary">Record Payment</button>
+              <Button onClick={confirmPay} disabled={busy}>Record Payment</Button>
             </div>
       </DialogContent>
       </Dialog>

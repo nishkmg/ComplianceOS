@@ -2,6 +2,8 @@
 
 import { useState, useMemo, ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { EmptyState } from '@/components/ui/empty-state';
+import { TableSkeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 export interface ColumnDef<T> {
@@ -79,7 +81,7 @@ export function DataTable<T>({
 
   if (loading) {
     return (
-      <div className={cn('bg-surface border border-border shadow-sm rounded-xl overflow-hidden', className)}>
+      <div className={cn('bg-surface border border-border shadow-sm rounded-sm overflow-hidden', className)}>
         <div className="p-6">
           <TableSkeleton rows={8} columns={columns.length} />
         </div>
@@ -89,19 +91,14 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className={cn('bg-surface border border-border shadow-sm rounded-xl overflow-hidden', className)}>
-        {emptyState || (
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <Icon name="table_rows" className="text-4xl text-lighter mb-4" />
-            <p className="font-ui text-sm font-medium text-mid">No data to display</p>
-          </div>
-        )}
+      <div className={cn('bg-surface border border-border shadow-sm rounded-sm overflow-hidden', className)}>
+        {emptyState || <EmptyState icon="table_rows" title="No data yet" />}
       </div>
     );
   }
 
   return (
-    <div className={cn('bg-surface border border-border shadow-sm rounded-xl overflow-hidden flex flex-col', className)}>
+    <div className={cn('bg-surface border border-border shadow-sm rounded-sm overflow-hidden flex flex-col', className)}>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -250,30 +247,4 @@ export function DataTable<T>({
   );
 }
 
-/**
- * Table row skeleton for loading state
- */
-export function TableSkeleton({ rows = 8, columns = 5 }: { rows?: number; columns?: number }) {
-  return (
-    <div className="w-full animate-pulse">
-      <div className="flex border-b border-border pb-3 mb-3">
-        {Array.from({ length: columns }).map((_, i) => (
-          <div key={i} className="flex-1 h-3 bg-lighter rounded mr-4 last:mr-0" />
-        ))}
-      </div>
-      {Array.from({ length: rows }).map((_, r) => (
-        <div key={r} className="flex border-b border-border py-3">
-          {Array.from({ length: columns }).map((_, c) => (
-            <div
-              key={c}
-              className={cn(
-                'flex-1 h-3 bg-lighter rounded mr-4 last:mr-0',
-                c === columns - 1 && 'w-24 flex-none'
-              )}
-            />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
+

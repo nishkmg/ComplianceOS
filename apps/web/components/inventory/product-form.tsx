@@ -81,7 +81,7 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="p-4 bg-danger-bg border border-danger/20 rounded-lg text-sm text-red-800">
+        <div className="p-4 bg-danger-bg border border-danger/20 rounded-lg text-sm text-danger-deep">
           {error}
         </div>
       )}
@@ -135,7 +135,7 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
             placeholder="e.g. 610910"
           />
           {showSuggestions && (
-            <div className="absolute z-10 w-full mt-1 bg-white border border-border-subtle rounded shadow-lg max-h-48 overflow-auto">
+            <div className="absolute z-10 w-full mt-1 bg-surface border border-border-subtle rounded shadow-lg max-h-48 overflow-auto">
               {hsnSuggestions.map((s) => (
                 <button
                   key={s.hsnCode}

@@ -1,13 +1,11 @@
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import type { ReactNode } from 'react';
 
 interface EmptyStateProps {
   title: string;
   description?: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
+  action?: { label: string; onClick: () => void } | ReactNode;
   icon?: string;
 }
 
@@ -21,11 +19,14 @@ export function EmptyState({ title, description, action, icon = "inbox" }: Empty
       {description && (
         <p className="mt-1.5 max-w-md font-ui text-ui-sm leading-relaxed text-mid">{description}</p>
       )}
-      {action && (
-        <Button onClick={action.onClick} className="mt-6">
-          {action.label}
-        </Button>
-      )}
+      {action &&
+        (typeof action === "object" && action !== null && "label" in action ? (
+          <Button onClick={action.onClick} className="mt-6">
+            {action.label}
+          </Button>
+        ) : (
+          <div className="mt-6">{action}</div>
+        ))}
     </div>
   );
 }

@@ -29,19 +29,19 @@ export function ExportDataDialog({
       <DialogContent className="max-w-2xl p-0 overflow-hidden border border-border-subtle rounded-sm shadow-lg">
         <DialogHeader className="px-8 py-6 border-b-[0.5px] border-border-subtle flex flex-row items-start justify-between bg-section-muted">
           <div className="text-left">
-            <DialogTitle className="font-display text-lg font-normal text-dark mb-1">Export Data</DialogTitle>
+            <DialogTitle className="font-ui text-ui-lg font-semibold text-dark mb-1">Export Data</DialogTitle>
             <p className="font-ui text-sm text-mid">Generate ledgers and compliance reports for offline review.</p>
           </div>
         </DialogHeader>
 
-        <div className="p-8 flex flex-col gap-8 bg-white overflow-y-auto max-h-[70vh] text-left">
+        <div className="p-8 flex flex-col gap-8 bg-surface overflow-y-auto max-h-[70vh] text-left">
           {/* Section: FY */}
           <div className="flex flex-col gap-4">
             <label className="font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold">Select Period</label>
             <div className="grid grid-cols-2 gap-4">
               <div className="relative">
                 <select 
-                  className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none"
+                  className="w-full bg-surface border border-border-subtle rounded-sm px-4 py-3 font-ui text-sm text-dark appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber outline-none"
                   value={fiscalYear}
                   onChange={(e) => setFiscalYear(e.target.value)}
                 >
@@ -95,7 +95,7 @@ export function ExportDataDialog({
           </div>
         </div>
 
-        <DialogFooter className="px-8 py-6 border-t-[0.5px] border-border-subtle bg-section-muted flex flex-row items-center justify-end gap-4">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button onClick={onClose} className="font-ui text-sm text-mid hover:text-dark transition-colors px-4 py-2 border-none bg-transparent cursor-pointer">Cancel</button>
           <button 
             onClick={() => format === 'pdf' ? window.open('/api/export?format=pdf', '_blank') : onExport({ fiscalYear, format })}

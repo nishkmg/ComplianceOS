@@ -147,7 +147,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-surface rounded-lg shadow p-6">
         <h2 className="text-lg font-semibold mb-4">Payment Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -212,7 +212,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
       </div>
 
       {customerName && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-surface rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Outstanding Invoices</h2>
             {customerData && (
@@ -290,7 +290,7 @@ export function PaymentAllocation({ onSuccess }: PaymentAllocationProps) {
       )}
 
       {(allocations.length > 0 || typeof paymentAmount === "number") && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-surface rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Allocation Summary</h2>
             <div className="text-right">

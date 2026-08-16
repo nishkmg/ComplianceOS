@@ -134,19 +134,19 @@ export default function ITRRegimeComparisonPage() {
             {/* Old Regime Card */}
             <div className="bg-surface border border-border shadow-sm flex flex-col">
               <div className="p-6 border-b-[0.5px] border-border bg-surface-muted">
-                <h3 className="font-ui text-lg font-bold text-mid uppercase tracking-widest text-xs">Old Tax Regime</h3>
+                <h3 className="font-ui text-lg font-bold text-mid uppercase tracking-widest">Old Tax Regime</h3>
               </div>
               <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
                 {rows.map((row, i) => (
                   <div key={i} className="flex justify-between items-center p-6 hover:bg-surface-muted transition-colors">
-                    <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
+                    <span className="font-ui text-ui-sm text-mid uppercase tracking-wider">{row.label}</span>
                     <span className="text-dark">{formatIndianNumber(row.old)}</span>
                   </div>
                 ))}
               </div>
               <div className="p-8 bg-surface-muted border-t-2 focus:border-focus">
                 <div className="flex justify-between items-center">
-                  <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-mid">Final Liability</span>
+                  <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-mid">Final Liability</span>
                   <span className="font-mono text-xl font-bold text-dark">{formatIndianNumber(c.oldRegime.total)}</span>
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function ITRRegimeComparisonPage() {
               <div className="absolute top-0 left-0 w-full h-[2px] bg-amber"></div>
               <div className={`p-6 border-b-[0.5px] ${c.recommended === "new" ? "border-amber/20 bg-amber-soft" : "border-border bg-surface-muted"}`}>
                 <div className="flex justify-between items-center">
-                  <h3 className="font-ui text-lg font-bold text-primary uppercase tracking-widest text-xs">New Tax Regime</h3>
+                  <h3 className="font-ui text-lg font-bold text-primary uppercase tracking-widest">New Tax Regime</h3>
                   {c.recommended === "new" && (
                     <span className="bg-primary text-white dark:text-amber-ink px-2 py-0.5 rounded-md text-ui-2xs font-bold uppercase tracking-widest">Recommended</span>
                   )}
@@ -166,14 +166,14 @@ export default function ITRRegimeComparisonPage() {
               <div className="flex-1 divide-y-[0.5px] divide-border-subtle font-mono text-ui-sm">
                 {rows.map((row, i) => (
                   <div key={i} className="flex justify-between items-center p-6 hover:bg-amber-soft/50 transition-colors">
-                    <span className="font-ui text-ui-sm text-mid text-xs uppercase tracking-wider">{row.label}</span>
+                    <span className="font-ui text-ui-sm text-mid uppercase tracking-wider">{row.label}</span>
                     <span className={row.new === 0 ? "text-mid" : "text-dark"}>{formatIndianNumber(row.new)}</span>
                   </div>
                 ))}
               </div>
               <div className="p-8 bg-amber-soft border-t-2 border-primary">
                 <div className="flex justify-between items-center">
-                  <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-xs text-primary">Final Liability</span>
+                  <span className="font-ui text-ui-sm font-bold uppercase tracking-widest text-primary">Final Liability</span>
                   <span className="font-mono text-xl font-bold text-primary">{formatIndianNumber(c.newRegime.total)}</span>
                 </div>
               </div>

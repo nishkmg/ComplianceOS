@@ -10,6 +10,7 @@ import { StepFyGst } from "./step-fy-gst";
 import { StepOpeningBalances } from "./step-opening-balances";
 import { StepCoaReview } from "./step-coa-review";
 import { useOnboarding } from "./use-onboarding";
+import { Icon } from "@/components/ui/icon";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { submitStep } from "@/lib/mock-mutation";
 
@@ -130,21 +131,45 @@ export default function OnboardingPage() {
             </div>
           </div>
 
-          <div className="flex gap-2 w-full h-2">
-            {STEPS.map((s) => {
-              const isActive = currentStep >= s.number;
-              const isCompleted = completedSteps.includes(s.number);
-              return (
-                <div
-                  key={s.number}
-                  title={`${s.title}${isCompleted ? " (click to revisit)" : ""}`}
-                  onClick={() => isCompleted && handleGoToStep(s.number)}
-                  className={`flex-1 rounded-sm transition-[width] duration-500 ${
-                    isActive ? "bg-amber" : "bg-border-subtle"
-                  } ${isCompleted ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
-                />
-              );
-            })}
+          <div className="w-full">
+            <div className="flex gap-2 w-full h-2">
+              {STEPS.map((s) => {
+                const isActive = currentStep >= s.number;
+                const isCompleted = completedSteps.includes(s.number);
+                return (
+                  <div
+                    key={s.number}
+                    title={`${s.title}${isCompleted ? " (click to revisit)" : ""}`}
+                    onClick={() => isCompleted && handleGoToStep(s.number)}
+                    className={`flex-1 rounded-sm transition-[width] duration-500 ${
+                      isActive ? "bg-amber" : "bg-border-subtle"
+                    } ${isCompleted ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex gap-2 w-full mt-1.5">
+              {STEPS.map((s) => {
+                const isActive = currentStep >= s.number;
+                const isCompleted = completedSteps.includes(s.number);
+                return (
+                  <div
+                    key={s.number}
+                    className={`flex-1 flex items-center gap-1 font-mono text-ui-2xs truncate ${
+                      isActive ? "text-amber" : "text-mid"
+                    }`}
+                  >
+                    {isCompleted && (
+                      <>
+                        <span className="sr-only">Completed </span>
+                        <Icon name="check" size={12} className="shrink-0 text-amber" aria-hidden="true" />
+                      </>
+                    )}
+                    <span className="truncate">{s.title}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </header>
 

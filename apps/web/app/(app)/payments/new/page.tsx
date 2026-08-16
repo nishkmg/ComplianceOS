@@ -8,6 +8,9 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { useModules } from "@/hooks/use-modules";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function NewPaymentPage() {
   const { activeFy } = useFiscalYear();
@@ -123,13 +126,12 @@ export default function NewPaymentPage() {
           >
             Discard
           </button>
-          <button
+          <Button
             onClick={handleRecord}
             disabled={saving || !paymentAmount}
-            className="px-5 py-2 btn btn-primary disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? "Saving…" : "Commit to Ledger"}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -168,7 +170,7 @@ export default function NewPaymentPage() {
                   className={type === opt.value ? "text-amber shrink-0" : "text-lighter shrink-0"}
                 />
               </div>
-              <p className="font-ui text-ui-xs text-ui-xs text-mid leading-relaxed">{opt.desc}</p>
+              <p className="font-ui text-ui-xs text-mid leading-relaxed">{opt.desc}</p>
             </div>
           ))}
         </div>
@@ -179,8 +181,7 @@ export default function NewPaymentPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <div className="space-y-1">
             <label htmlFor="payment-party" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Entity / Party Name</label>
-            <input id="payment-party"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-ui-sm font-ui text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+            <Input id="payment-party"
               placeholder="Search customer or vendor..."
               value={customerName}
               onChange={e => setCustomerName(e.target.value)}
@@ -189,30 +190,29 @@ export default function NewPaymentPage() {
           </div>
           <div className="space-y-1">
             <label htmlFor="payment-date" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Date</label>
-            <input
+            <Input
               id="payment-date"
               type="date"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+              className="font-mono"
               value={paymentDate}
               onChange={e => setPaymentDate(e.target.value)}
             />
           </div>
           <div className="space-y-1">
             <label htmlFor="payment-mode" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Payment Mode</label>
-            <select id="payment-mode"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 text-ui-sm font-ui text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+            <Select id="payment-mode"
               value={paymentMethod}
               onChange={e => setPaymentMethod(e.target.value)}
             >
               <option value="online">Online Transfer / NEFT</option>
               <option value="bank">Cheque Deposit</option>
               <option value="cash">Cash in Hand</option>
-            </select>
+            </Select>
           </div>
           <div className="space-y-1">
             <label htmlFor="payment-ref" className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">Reference / UTR</label>
-            <input id="payment-ref"
-              className="w-full bg-surface border border-border rounded-md px-4 py-2.5 font-mono text-ui-sm uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
+            <Input id="payment-ref"
+              className="font-mono uppercase"
               placeholder="T241024…"
               value={referenceNumber}
               onChange={e => setReferenceNumber(e.target.value)}
@@ -221,11 +221,11 @@ export default function NewPaymentPage() {
           </div>
           <div className="md:col-span-2 space-y-1">
             <label htmlFor="payment-amount" className="block font-ui text-ui-2xs text-amber uppercase tracking-widest font-bold">Amount Transacted (₹)</label>
-            <input
+            <Input
               id="payment-amount"
               type="number"
               min="0"
-              className="w-full bg-surface border border-amber rounded-md px-4 py-3.5 font-mono text-xl font-bold text-dark focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
+              className="h-11 font-mono text-xl font-bold"
               placeholder="0.00"
               value={paymentAmount}
               onChange={e => setPaymentAmount(e.target.value)}
@@ -240,10 +240,10 @@ export default function NewPaymentPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1">
                 <label className="block font-ui text-ui-2xs text-mid uppercase tracking-widest font-bold">TDS Amount (₹)</label>
-                <input
+                <Input
                   type="number"
                   min="0"
-                  className="w-full bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm focus:ring-1 focus:ring-amber outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                  className="font-mono"
                   placeholder="0.00"
                   value={tdsAmount}
                   onChange={e => setTdsAmount(e.target.value)}
@@ -266,7 +266,7 @@ export default function NewPaymentPage() {
         <div className="bg-amber-soft border border-amber/30 p-6 flex flex-col md:flex-row justify-between items-center gap-4 rounded-md shadow-sm">
           <div>
             <h4 className="font-ui text-ui-2xs font-bold text-amber uppercase tracking-widest mb-1">Allocation Required</h4>
-            <p className="font-ui text-ui-sm text-ui-xs text-amber leading-relaxed">
+            <p className="font-ui text-ui-xs text-amber leading-relaxed">
               This {type} will be recorded as an unallocated credit/debit on the party ledger until matched against specific invoices.
             </p>
           </div>

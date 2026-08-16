@@ -6,6 +6,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { api } from "@/lib/api";
 
+function payloadSnippet(payload: unknown): string {
+  if (payload == null) return "{}";
+  const raw = typeof payload === "string" ? payload : JSON.stringify(payload);
+  return raw.length > 80 ? `${raw.slice(0, 80)}…` : raw;
+}
+
 export default function AuditLogPage() {
   const { data, isLoading } = api.auditLog.list.useQuery({ limit: 100 }, { staleTime: 15_000 });
   const entries = data ?? [];
@@ -22,6 +28,8 @@ export default function AuditLogPage() {
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Event Type</th>
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Aggregate</th>
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">ID</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Actor</th>
+              <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Payload</th>
               <th className="py-3 px-6 font-ui text-ui-2xs text-light uppercase tracking-widest">Created</th>
             </tr></thead>
             <tbody className="divide-y divide-border-subtle">
@@ -31,7 +39,9 @@ export default function AuditLogPage() {
                     <Link href={`/audit-log/${e.id}`} className="hover:underline no-underline text-inherit">{e.eventType?.replace(/_/g, " ")}</Link>
                   </td>
                   <td className="py-3 px-6 font-ui text-ui-xs text-dark">{e.aggregateType}</td>
-                  <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.aggregateId?.substring(0, 8)}…</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid" title={e.aggregateId}>{e.aggregateId?.substring(0, 8)}…</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid" title={e.actorId}>{e.actorId?.substring(0, 8)}…</td>
+                  <td className="py-3 px-6 font-mono text-ui-xs text-mid" title={typeof e.payload === "string" ? e.payload : JSON.stringify(e.payload)}>{payloadSnippet(e.payload)}</td>
                   <td className="py-3 px-6 font-mono text-ui-xs text-mid">{e.createdAt ? new Date(e.createdAt).toLocaleString("en-IN") : "—"}</td>
                 </tr>
               ))}

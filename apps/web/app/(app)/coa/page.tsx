@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { api } from "@/lib/api";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Account { id: string; code: string; name: string; kind: string; subType: string; isLeaf: boolean; isActive: boolean; }
 
@@ -23,7 +24,7 @@ export default function CoAPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <PageHeader title="Chart of Accounts" />
-        <Link href="/accounts/new" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline"><Icon name="add" size={14} /> New Account</Link>
+        <Link href="/accounts/new" className={buttonVariants()}><Icon name="add" size={14} /> New Account</Link>
       </div>
       {accounts.length === 0 ? <EmptyState icon="account_tree" title="No accounts" description="Create your first account." /> : (
         <div className="space-y-8">

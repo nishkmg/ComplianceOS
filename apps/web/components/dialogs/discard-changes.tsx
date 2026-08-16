@@ -31,7 +31,7 @@ export function DiscardChangesDialog({
               <Icon name="warning" className="text-amber" size={32} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-dark leading-tight">
+              <h3 className="font-ui text-ui-lg font-semibold text-dark">
                 Discard unsaved changes?
               </h3>
             </div>
@@ -43,7 +43,7 @@ export function DiscardChangesDialog({
             </p>
           </div>
 
-          <DialogFooter className="flex flex-row items-center justify-end gap-3 mt-4 pt-4 border-t-[0.5px] 200-border">
+          <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
             <button
               onClick={onConfirm}
               className="px-4 py-2 text-sm font-semibold text-dark bg-transparent border border-border rounded-sm hover:bg-lighter transition-colors cursor-pointer"

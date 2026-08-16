@@ -21,6 +21,13 @@ export default function ITRReturnDetailPage() {
   const [ackNumber, setAckNumber] = useState("");
   const [verificationMode, setVerificationMode] = useState("e_verify");
 
+  const verifyModeLabels: Record<string, string> = {
+    e_verify: "E-Verify (Aadhaar OTP)",
+    net_banking: "Net Banking",
+    demand_draft: "Demand Draft",
+    digital_signature: "Digital Signature",
+  };
+
   const fileReturn = api.itrReturns.file.useMutation({
     onSuccess: () => {
       showToast.success("Return filed — acknowledgment recorded.");
@@ -38,6 +45,7 @@ export default function ITRReturnDetailPage() {
     return <div className="max-w-page mx-auto py-20"><EmptyState icon="error" title="Return not found" description="This ITR return does not exist for your tenant." /></div>;
   }
 
+  const canFile = data.status === "computed" || data.status === "generated";
   const ay = data.assessmentYear ?? `${Number(fy.split("-")[0]) + 1}-${fy.split("-")[1]}`;
 
   return (
@@ -56,12 +64,12 @@ export default function ITRReturnDetailPage() {
           <p className="font-ui text-ui-sm text-secondary mt-1">Assessment Year: {ay} · {data.returnType?.toUpperCase() ?? "ITR"}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => window.open(`/api/itr/returns/${returnId}/pdf?format=summary`, "_blank")} className="border border-border text-dark px-3 py-2 font-ui text-ui-xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
+          <Button variant="outline" size="sm" onClick={() => window.open(`/api/itr/returns/${returnId}/pdf?format=summary`, "_blank")}>
             <Icon name="download" className="text-ui-md" /> Summary PDF
-          </button>
-          <button onClick={() => window.open(`/api/itr/returns/${returnId}/csv`, "_blank")} className="border border-border text-dark px-3 py-2 font-ui text-ui-xs font-bold uppercase tracking-widest hover:bg-surface-muted transition-colors flex items-center gap-1.5 cursor-pointer bg-transparent rounded-sm">
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => window.open(`/api/itr/returns/${returnId}/csv`, "_blank")}>
             <Icon name="download" className="text-ui-md" /> Download CSV
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -123,6 +131,30 @@ export default function ITRReturnDetailPage() {
           </div>
         )}
 
+        {/* Filed summary */}
+        {data.status === "filed" && (
+          <div className="bg-success-bg border border-success/20 p-6 rounded-md shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <Icon name="check_circle" className="text-success" />
+              <h3 className="font-ui text-ui-xs font-bold text-success-deep uppercase tracking-widest">Return Filed</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-ui-sm">
+              <div>
+                <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-1">Acknowledgment Number</p>
+                <p className="text-dark tabular-nums">{data.itrAckNumber ?? "-"}</p>
+              </div>
+              <div>
+                <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-1">Verification Mode</p>
+                <p className="text-dark">{verifyModeLabels[data.verificationMode ?? ""] ?? data.verificationMode ?? "-"}</p>
+              </div>
+              <div>
+                <p className="font-ui text-ui-2xs uppercase tracking-widest text-mid font-bold mb-1">Filed On</p>
+                <p className="text-dark">{data.filedAt ? new Date(data.filedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-"}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* File Return */}
         {data.status !== "filed" && (
           <div className="bg-surface border border-border p-6 rounded-md shadow-sm space-y-4">
@@ -140,15 +172,23 @@ export default function ITRReturnDetailPage() {
                   <option value="demand_draft">Demand Draft</option>
                   <option value="digital_signature">Digital Signature</option>
                 </select>
+                <p className="font-ui text-ui-xs text-mid">
+                  E-Verify uses Aadhaar OTP; Net Banking signs through your bank login; Demand Draft and Digital Signature are offline options.
+                </p>
               </div>
             </div>
             <Button
               onClick={() => ackNumber.trim() && fileReturn.mutate({ itrReturnId: returnId, acknowledgmentNumber: ackNumber.trim(), verificationMode })}
-              disabled={!ackNumber.trim() || fileReturn.isPending}
+              disabled={!canFile || !ackNumber.trim() || fileReturn.isPending}
               className="gap-2"
             >
               {fileReturn.isPending ? "Filing…" : "Record Filing"} <Icon name="arrow_forward" className="text-sm" />
             </Button>
+            <p className="font-ui text-ui-xs text-mid">
+              {!canFile
+                ? "Only computed or generated returns can be filed. Generate the return before filing."
+                : "Enter the acknowledgment number from the income tax portal to record the filing."}
+            </p>
           </div>
         )}
       </div>

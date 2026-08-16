@@ -8,12 +8,14 @@ import { Reveal } from '@/components/marketing/reveal';
 import { cn } from '@/lib/utils';
 import { GstLateFee } from './gst-late-fee';
 import { TdsCalculator } from './tds-calculator';
+import { TdsProperty } from './tds-property';
 import { PfEsi } from './pf-esi';
 import { AdvanceTax } from './advance-tax';
 
 const TABS = [
   { id: 'gst-late-interest', label: 'GST Late Interest' },
   { id: 'tds-sec-192', label: 'TDS Sec 192' },
+  { id: 'tds-property', label: 'TDS on Property' },
   { id: 'pf-esi', label: 'PF & ESI' },
   { id: 'advance-tax', label: 'Advance Tax' },
 ];
@@ -125,13 +127,21 @@ export default function CalculatorsPage() {
               aria-labelledby={`tab-${TABS[2].id}`}
               className={cn('pt-space-64', activeTab !== TABS[2].id && 'hidden')}
             >
-              <PfEsi />
+              <TdsProperty />
             </div>
             <div
               id={`panel-${TABS[3].id}`}
               role="tabpanel"
               aria-labelledby={`tab-${TABS[3].id}`}
               className={cn('pt-space-64', activeTab !== TABS[3].id && 'hidden')}
+            >
+              <PfEsi />
+            </div>
+            <div
+              id={`panel-${TABS[4].id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${TABS[4].id}`}
+              className={cn('pt-space-64', activeTab !== TABS[4].id && 'hidden')}
             >
               <AdvanceTax />
             </div>

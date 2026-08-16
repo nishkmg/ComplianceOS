@@ -7,6 +7,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { formatIndianNumber } from "@/lib/format";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 interface LineDraft {
   accountId: string;
@@ -114,7 +117,7 @@ export default function NewCreditNotePage() {
         </div>
         <div className="flex gap-3 shrink-0">
           <Link href="/credit-notes" className="btn btn-secondary no-underline">Cancel</Link>
-          <button onClick={submit} disabled={busy} className="btn btn-primary">Create Credit Note</button>
+          <Button onClick={submit} disabled={busy}>Create Credit Note</Button>
         </div>
       </header>
 
@@ -126,55 +129,52 @@ export default function NewCreditNotePage() {
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label htmlFor="cn-invoice" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Original invoice (optional)</label>
-            <select
+            <Select
               id="cn-invoice"
               value={originalInvoiceId}
               onChange={(e) => selectInvoice(e.target.value)}
-              className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             >
               <option value="">Standalone credit note…</option>
               {invoiceOptions.map((i) => (
                 <option key={i.id} value={i.id}>{i.invoiceNumber} — {i.customerName}</option>
               ))}
-            </select>
+            </Select>
           </div>
           <div>
             <label htmlFor="cn-date" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Date</label>
-            <input
+            <Input
               id="cn-date"
               type="date"
+              className="font-mono"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             />
           </div>
           <div>
             <label htmlFor="cn-customer" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Customer name</label>
-            <input
+            <Input
               id="cn-customer"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             />
           </div>
           <div>
             <label htmlFor="cn-gstin" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Customer GSTIN</label>
-            <input
+            <Input
               id="cn-gstin"
               value={customerGstin}
               onChange={(e) => setCustomerGstin(e.target.value)}
               placeholder="15 characters"
-              className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+              className="font-mono"
             />
           </div>
           <div className="sm:col-span-2">
             <label htmlFor="cn-reason" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Reason</label>
-            <input
+            <Input
               id="cn-reason"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="e.g. Return of goods, price correction"
-              className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             />
           </div>
         </div>
@@ -202,54 +202,54 @@ export default function NewCreditNotePage() {
               {lines.map((line, i) => (
                 <tr key={i}>
                   <td className="py-4 px-6">
-                    <select
+                    <Select
                       value={line.accountId}
                       onChange={(e) => { const n = [...lines]; n[i].accountId = e.target.value; setLines(n); }}
                       aria-label={`Line ${i + 1} account`}
-                      className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                      className="h-8 px-2"
                     >
                       <option value="">Select account…</option>
                       {revenueAccounts.map((a: { id: string; name: string }) => (
                         <option key={a.id} value={a.id}>{a.name}</option>
                       ))}
-                    </select>
+                    </Select>
                   </td>
                   <td className="py-4 px-6">
-                    <input
+                    <Input
                       value={line.description}
                       onChange={(e) => { const n = [...lines]; n[i].description = e.target.value; setLines(n); }}
                       placeholder="Description"
-                      className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                      className="h-8 px-2"
                     />
                   </td>
                   <td className="py-4 px-6">
-                    <input
+                    <Input
                       type="number"
                       aria-label="Quantity"
                       value={line.quantity}
                       onChange={(e) => { const n = [...lines]; n[i].quantity = e.target.value; setLines(n); }}
-                      className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                      className="h-8 px-2 font-mono"
                     />
                   </td>
                   <td className="py-4 px-6">
-                    <input
+                    <Input
                       type="number"
                       aria-label="Rate"
                       value={line.rate}
                       onChange={(e) => { const n = [...lines]; n[i].rate = e.target.value; setLines(n); }}
                       placeholder="0.00"
-                      className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                      className="h-8 px-2 font-mono"
                     />
                   </td>
                   <td className="py-4 px-6">
-                    <select
+                    <Select
                       value={line.gstRate}
                       onChange={(e) => { const n = [...lines]; n[i].gstRate = e.target.value; setLines(n); }}
                       aria-label={`Line ${i + 1} GST rate`}
-                      className="w-full rounded-md border border-border-strong bg-surface px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                      className="h-8 px-2"
                     >
                       {["0", "5", "12", "18", "28"].map((r) => <option key={r} value={r}>{r}%</option>)}
-                    </select>
+                    </Select>
                   </td>
                   <td className="py-4 px-6 text-right">
                     <button

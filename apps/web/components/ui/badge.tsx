@@ -28,4 +28,29 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   return <span className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
-export { Badge, badgeVariants };
+const statusBadgeVariants = cva(
+  "inline-block px-2 py-0.5 rounded-sm text-ui-2xs font-bold uppercase tracking-wider border",
+  {
+    variants: {
+      variant: {
+        success: "bg-success-bg text-success-deep border-success/20",
+        danger: "bg-danger-bg text-danger-deep border-danger/20",
+        amber: "bg-amber-soft text-amber border-amber-bright/30",
+        neutral: "bg-surface-muted text-mid border-border",
+      },
+    },
+    defaultVariants: {
+      variant: "neutral",
+    },
+  }
+);
+
+export interface StatusBadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof statusBadgeVariants> {}
+
+function StatusBadge({ className, variant, ...props }: StatusBadgeProps) {
+  return <span className={cn(statusBadgeVariants({ variant }), className)} {...props} />;
+}
+
+export { Badge, badgeVariants, StatusBadge, statusBadgeVariants };

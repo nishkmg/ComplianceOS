@@ -7,9 +7,9 @@ const base =
   'group inline-flex items-center justify-center gap-1.5 font-ui text-sm font-medium rounded-sm transition-all no-underline cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none';
 
 const styles: Record<Variant, string> = {
-  primary: `${base} btn btn-primary`,
-  secondary: `${base} btn btn-secondary`,
-  ghost: `${base} bg-transparent text-mid hover:text-dark`,
+  primary: `${base} bg-amber text-white dark:text-amber-ink hover:bg-amber-hover shadow-sm`,
+  secondary: `${base} border border-border-strong bg-surface text-dark shadow-sm hover:border-amber hover:text-amber`,
+  ghost: `${base} bg-transparent text-mid hover:bg-surface-muted hover:text-dark`,
 };
 
 export function MarketingButton({

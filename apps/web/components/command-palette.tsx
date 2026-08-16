@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Icon } from "@/components/ui/icon";
 
 interface CommandItem {
   id: string;
   name: string;
+  icon: string;
   shortcut?: string;
-  category: "screen" | "action" | "entry" | "account" | "report";
+  category: "screen" | "action" | "report";
   onSelect: () => void;
 }
 
@@ -22,26 +24,25 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
 
   const commands = useMemo<CommandItem[]>(() => [
-    { id: "dashboard", name: "Dashboard", category: "screen", onSelect: () => router.push("/dashboard") },
-    { id: "journal", name: "Journal Entries", category: "screen", onSelect: () => router.push("/journal") },
-    { id: "accounts", name: "Chart of Accounts", category: "screen", onSelect: () => router.push("/accounts") },
-    { id: "invoices", name: "Invoices", category: "screen", onSelect: () => router.push("/invoices") },
-    { id: "payments", name: "Payments", category: "screen", onSelect: () => router.push("/payments") },
-    { id: "inventory", name: "Inventory", category: "screen", onSelect: () => router.push("/inventory") },
-    { id: "gst", name: "GST", category: "screen", onSelect: () => router.push("/gst/returns") },
-    { id: "itr", name: "ITR", category: "screen", onSelect: () => router.push("/itr/returns") },
-    { id: "payroll", name: "Payroll", category: "screen", onSelect: () => router.push("/payroll") },
-    { id: "reports", name: "Reports", category: "screen", onSelect: () => router.push("/reports/ledger") },
-    { id: "settings", name: "Settings", category: "screen", onSelect: () => router.push("/settings") },
-    { id: "new-entry", name: "New Journal Entry", category: "action", shortcut: "N", onSelect: () => router.push("/journal/new") },
-    { id: "pl", name: "Profit & Loss", category: "report", onSelect: () => router.push("/reports/pl") },
-    { id: "balance-sheet", name: "Balance Sheet", category: "report", onSelect: () => router.push("/reports/balance-sheet") },
-    { id: "trial-balance", name: "Trial Balance", category: "report", onSelect: () => router.push("/reports/trial-balance") },
-    { id: "cash-flow", name: "Cash Flow", category: "report", onSelect: () => router.push("/reports/cash-flow") },
-    { id: "ledger", name: "Ledger", category: "report", onSelect: () => router.push("/reports/ledger") },
+    { id: "dashboard", name: "Dashboard", icon: "dashboard", category: "screen", onSelect: () => router.push("/dashboard") },
+    { id: "journal", name: "Journal Entries", icon: "menu_book", category: "screen", onSelect: () => router.push("/journal") },
+    { id: "accounts", name: "Chart of Accounts", icon: "account_tree", category: "screen", onSelect: () => router.push("/accounts") },
+    { id: "invoices", name: "Invoices", icon: "receipt_long", category: "screen", onSelect: () => router.push("/invoices") },
+    { id: "payments", name: "Payments", icon: "account_balance_wallet", category: "screen", onSelect: () => router.push("/payments") },
+    { id: "inventory", name: "Inventory", icon: "inventory_2", category: "screen", onSelect: () => router.push("/inventory") },
+    { id: "gst", name: "GST", icon: "gavel", category: "screen", onSelect: () => router.push("/gst/returns") },
+    { id: "itr", name: "ITR", icon: "description", category: "screen", onSelect: () => router.push("/itr/returns") },
+    { id: "payroll", name: "Payroll", icon: "payments", category: "screen", onSelect: () => router.push("/payroll") },
+    { id: "reports", name: "Reports", icon: "insert_chart", category: "screen", onSelect: () => router.push("/reports/ledger") },
+    { id: "settings", name: "Settings", icon: "settings", category: "screen", onSelect: () => router.push("/settings") },
+    { id: "new-entry", name: "New Journal Entry", icon: "add", category: "action", shortcut: "N", onSelect: () => router.push("/journal/new") },
+    { id: "pl", name: "Profit & Loss", icon: "trending_up", category: "report", onSelect: () => router.push("/reports/pl") },
+    { id: "balance-sheet", name: "Balance Sheet", icon: "account_balance", category: "report", onSelect: () => router.push("/reports/balance-sheet") },
+    { id: "trial-balance", name: "Trial Balance", icon: "scale", category: "report", onSelect: () => router.push("/reports/trial-balance") },
+    { id: "cash-flow", name: "Cash Flow", icon: "trending_up", category: "report", onSelect: () => router.push("/reports/cash-flow") },
+    { id: "ledger", name: "Ledger", icon: "list_alt", category: "report", onSelect: () => router.push("/reports/ledger") },
   ], [router]);
 
   const filteredCommands = useMemo(() => {
@@ -77,20 +78,6 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         e.preventDefault();
         onClose();
         break;
-      case "Tab": {
-        e.preventDefault();
-        const focusable = getFocusableElements(overlayRef.current);
-        if (focusable.length === 0) return;
-        const currentIndex = focusable.indexOf(document.activeElement as HTMLElement);
-        if (e.shiftKey) {
-          const prevIndex = currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1;
-          focusable[prevIndex]?.focus();
-        } else {
-          const nextIndex = currentIndex >= focusable.length - 1 ? 0 : currentIndex + 1;
-          focusable[nextIndex]?.focus();
-        }
-        break;
-      }
     }
   }, [isOpen, filteredCommands, selectedIndex, onClose]);
 
@@ -111,7 +98,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   if (!isOpen) return null;
 
   const categoryLabels: Record<string, string> = {
-    screen: "Screens", action: "Actions", entry: "Recent Entries", account: "Accounts", report: "Reports",
+    screen: "Screens", action: "Actions", report: "Reports",
   };
 
   const groupedCommands = filteredCommands.reduce((acc, cmd) => {
@@ -124,7 +111,6 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   return (
     <div
-      ref={overlayRef}
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
@@ -190,11 +176,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       id={`cmd-${cmd.id}`}
                       role="option"
                       aria-selected={isSelected}
-                      className={`command-palette-item ${isSelected ? "selected" : ""}`}
+                      className={`command-palette-item group ${isSelected ? "selected" : ""}`}
                       onClick={() => { cmd.onSelect(); onClose(); }}
                       onMouseEnter={() => setSelectedIndex(currentIndex)}
                     >
-                      <span className="command-palette-item-name">{cmd.name}</span>
+                      <span className="flex items-center gap-3 min-w-0">
+                        <Icon name={cmd.icon} size={16} className="text-mid group-hover:text-white shrink-0" />
+                        <span className="command-palette-item-name truncate">{cmd.name}</span>
+                      </span>
                       {cmd.shortcut && <span className="command-palette-item-hint">{cmd.shortcut}</span>}
                     </div>
                   );
@@ -203,16 +192,16 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             ))
           )}
         </div>
+        <div className="px-5 py-2.5 border-t border-border-subtle flex items-center gap-2.5 text-ui-2xs font-mono text-mid select-none">
+          <span>{filteredCommands.length} {filteredCommands.length === 1 ? "result" : "results"}</span>
+          <span aria-hidden="true">·</span>
+          <span><kbd className="px-1 rounded-sm border border-border-subtle bg-section-muted">↑↓</kbd> navigate</span>
+          <span aria-hidden="true">·</span>
+          <span><kbd className="px-1 rounded-sm border border-border-subtle bg-section-muted">↵</kbd> open</span>
+          <span aria-hidden="true">·</span>
+          <span><kbd className="px-1 rounded-sm border border-border-subtle bg-section-muted">esc</kbd> close</span>
+        </div>
       </div>
     </div>
-  );
-}
-
-function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
-  if (!container) return [];
-  return Array.from(
-    container.querySelectorAll<HTMLElement>(
-      'input:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
   );
 }

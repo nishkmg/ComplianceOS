@@ -32,7 +32,7 @@ export function PostEntryDialog({
           <div className="flex-shrink-0 bg-section-amber p-2 rounded-full border border-amber-200">
             <Icon name="warning" className="text-amber" />
           </div>
-          <DialogTitle className="font-display text-lg font-bold text-dark tracking-tight">Confirm Post Entry</DialogTitle>
+          <DialogTitle className="font-ui text-ui-lg font-semibold text-dark">Confirm Post Entry</DialogTitle>
         </DialogHeader>
 
         <div className="p-6 flex-grow">
@@ -61,7 +61,7 @@ export function PostEntryDialog({
           </div>
         </div>
 
-        <DialogFooter className="px-6 py-4 border-t-[0.5px] 200-border bg-section-muted flex flex-row items-center justify-end gap-3 rounded-b-sm">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button onClick={onClose} className="px-5 py-2.5 text-sm font-bold uppercase tracking-widest text-mid bg-transparent border border-border rounded-sm hover:bg-surface-muted hover:text-dark transition-colors border-none cursor-pointer">
             Cancel
           </button>

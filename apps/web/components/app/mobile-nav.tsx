@@ -107,7 +107,7 @@ export function MobileNav() {
       {drawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-          <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl max-h-[70vh] overflow-y-auto shadow-lg">
+          <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-sm max-h-[70vh] overflow-y-auto shadow-lg">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle sticky top-0 bg-surface z-10">
               <span className="font-ui font-bold text-dark">Navigation</span>
               <button
@@ -135,7 +135,7 @@ export function MobileNav() {
                           className={cn(
                             'flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm transition-colors no-underline',
                             isActive
-                              ? 'bg-amber text-white dark:text-amber-ink font-semibold'
+                              ? 'text-amber font-semibold'
                               : 'text-mid hover:bg-surface-muted'
                           )}
                         >

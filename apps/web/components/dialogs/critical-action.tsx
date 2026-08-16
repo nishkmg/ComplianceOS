@@ -36,7 +36,7 @@ export function CriticalActionDialog({
       <DialogContent className="max-w-2xl p-8 overflow-hidden border border-border-subtle rounded-sm shadow-lg text-left">
         <DialogHeader className="mb-8">
           <div className="flex flex-col gap-2">
-            <DialogTitle className="font-display text-2xl text-danger font-bold">{title}</DialogTitle>
+            <DialogTitle className="font-ui text-ui-lg font-semibold text-dark">{title}</DialogTitle>
             <p className="font-ui text-sm text-mid leading-relaxed">{description}</p>
           </div>
         </DialogHeader>
@@ -59,21 +59,21 @@ export function CriticalActionDialog({
           </label>
           <input 
             autoComplete="off" 
-            className="w-full bg-white border border-border-subtle rounded-sm px-4 py-3 font-mono text-lg text-dark uppercase tracking-widest focus:border-red-600 outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
+            className="w-full bg-surface border border-border-subtle rounded-sm px-4 py-3 font-mono text-lg text-dark uppercase tracking-widest focus:border-danger outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface" 
             placeholder={`Type ${confirmText} here...`}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value.toUpperCase())}
           />
         </div>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row justify-end gap-4 border-t border-border-subtle pt-6">
+        <DialogFooter className="flex items-center justify-end gap-3 border-t border-border-subtle bg-section-muted px-6 py-4 rounded-b-sm">
           <button onClick={onClose} className="px-6 py-3 font-ui text-sm text-mid hover:text-dark transition-colors border-none bg-transparent cursor-pointer">
             Cancel Operation
           </button>
           <button 
             onClick={onConfirm}
             disabled={inputValue !== confirmText}
-            className="bg-red-600 text-white font-ui text-sm px-8 py-3 rounded-sm hover:bg-red-700 transition-colors shadow-sm border-none cursor-pointer disabled:opacity-30"
+            className="bg-danger text-white font-ui text-sm px-8 py-3 rounded-sm hover:bg-danger/90 transition-colors shadow-sm border-none cursor-pointer disabled:opacity-30"
           >
             Confirm & Proceed
           </button>

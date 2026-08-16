@@ -8,6 +8,7 @@ import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
@@ -141,9 +142,12 @@ export default function ItrReturnsPage() {
                       <td className="py-4 px-6 text-right text-dark tabular-nums">{formatIndianNumber(r.totalIncome ?? "0")}</td>
                       <td className="py-4 px-6 text-right text-dark tabular-nums">{formatIndianNumber(r.taxPayable ?? "0")}</td>
                       <td className="py-4 px-6">
-                        <span className={`inline-block px-2 py-0.5 text-ui-2xs font-bold uppercase tracking-wider border rounded-md ${r.status === "filed" ? "bg-success-bg text-success-deep border-success/20" : r.status === "computed" ? "bg-amber-soft text-amber border-amber-bright/30" : "bg-surface-muted text-mid border-border"}`}>
+                        <Badge
+                          variant={r.status === "filed" ? "success" : r.status === "computed" ? "amber" : "neutral"}
+                          className="uppercase tracking-wider"
+                        >
                           {r.status}
-                        </span>
+                        </Badge>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
@@ -155,13 +159,15 @@ export default function ItrReturnsPage() {
                             <Icon name="download" className="text-ui-md" /> Summary PDF
                           </Link>
                           {(r.returnType === "itr3" || r.returnType === "itr4") && r.status !== "filed" && r.status !== "voided" && (
-                            <button
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => computeFromBooks.mutate({ itrReturnId: r.id })}
                               disabled={generateReturn.isPending}
-                              className="font-ui text-ui-xs font-bold uppercase tracking-widest text-mid hover:text-dark border-none bg-transparent cursor-pointer disabled:opacity-50"
+                              className="font-ui text-ui-xs font-bold uppercase tracking-widest px-0"
                             >
                               Regenerate
-                            </button>
+                            </Button>
                           )}
                         </div>
                       </td>

@@ -7,6 +7,7 @@ import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
 interface PayrollRun { id: string; payrollNumber: string; month: string; year: string; status: string; netPay: string | null; }
@@ -26,7 +27,7 @@ export default function PayrollPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <PageHeader title="Payroll" />
-        <Link href="/payroll/process" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline"><Icon name="add" size={14} /> Process Payroll</Link>
+        <Link href="/payroll/process" className={buttonVariants()}><Icon name="add" size={14} /> Process Payroll</Link>
       </div>
       {isLoading ? <TableSkeleton rows={6} /> : runs.length === 0 ? (
         <EmptyState icon="payments" title="No payroll runs" description="Process payroll to create runs." />

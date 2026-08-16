@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function PaymentHistoryPage() {
   const { data, isLoading } = api.gstPayment.paymentHistory.useQuery(undefined, { staleTime: 15_000 });
@@ -16,7 +17,7 @@ export default function PaymentHistoryPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <PageHeader title="Payment History" />
-        <Link href="/gst/payment" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline"><Icon name="add" size={14} /> New Payment</Link>
+        <Link href="/gst/payment" className={buttonVariants()}><Icon name="add" size={14} /> New Payment</Link>
       </div>
       {payments.length === 0 ? <EmptyState icon="payments" title="No payments yet" description="GST challan payments will appear here." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">

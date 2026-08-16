@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { PeriodPicker } from "@/components/ui/period-picker";
+import { StatusBadge } from "@/components/ui/badge";
 
 const now = new Date();
 const DEFAULT_MONTH = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -64,7 +65,7 @@ export default function ESIChallanPage() {
             </div>
             <div className="bg-surface p-5 border border-border shadow-sm">
               <p className="text-xs font-bold text-mid uppercase mb-1">Status</p>
-              <p className="text-lg font-mono font-bold mt-1">{d?.paid ? "Paid" : "Pending"}</p>
+              <StatusBadge variant={d?.paid ? "success" : "amber"} className="mt-1">{d?.paid ? "Paid" : "Pending"}</StatusBadge>
             </div>
           </div>
           <div className="bg-surface border border-border p-6 shadow-sm flex items-start gap-3">

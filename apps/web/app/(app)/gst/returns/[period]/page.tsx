@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 type FormType = "gstr1" | "gstr2b" | "gstr3b" | "gstr9";
 
@@ -108,15 +109,15 @@ function FormCard({
       )}
 
       <div className="flex items-center gap-3 mt-auto">
-        <button
+        <Button
+          size="sm"
           onClick={onGenerate}
           disabled={generating}
-          className="btn btn-primary flex items-center gap-2"
         >
-          {generating ? "Generating…" : "Generate"} <Icon name="refresh" className="text-ui-xl" />
-        </button>
+          {generating ? "Generating…" : "Generate"} <Icon name="refresh" size={14} />
+        </Button>
         {ret && (ret.status === "generated" || ret.status === "filed") && (
-          <Link href={`/api/gst/returns/${ret.id}/pdf?type=${form.id}`} target="_blank" className="btn btn-secondary flex items-center gap-2">
+          <Link href={`/api/gst/returns/${ret.id}/pdf?type=${form.id}`} target="_blank" className={buttonVariants({ variant: "outline", size: "sm" })}>
             <Icon name="download" size={14} /> PDF
           </Link>
         )}

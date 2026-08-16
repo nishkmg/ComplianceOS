@@ -7,6 +7,15 @@ import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
+import { Button, buttonVariants } from "@/components/ui/button";
+
+function statusPill(status: string): string {
+  const base = "inline-block px-2 py-0.5 rounded-sm text-ui-2xs font-bold uppercase tracking-wider border";
+  if (status === "filed") return `${base} bg-success-bg text-success-deep border-transparent`;
+  if (status === "generated") return `${base} bg-amber-soft text-amber border-amber-bright/30`;
+  return `${base} bg-surface-muted text-mid border-border`;
+}
 
 export default function Gstr9Page() {
   const params = useParams();
@@ -36,21 +45,21 @@ export default function Gstr9Page() {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="font-ui text-lg font-bold text-dark">GSTR-9 · Annual Return</h2>
+    <div className="max-w-[1320px] mx-auto px-5 md:px-8 space-y-8 pb-40">
+      <div className="flex items-center gap-4">
+        <Link href="/gst/returns" className="text-mid hover:text-dark" aria-label="Go back"><Icon name="arrow_back" size={20} /></Link>
+        <div className="flex-1">
+          <PageHeader title="GSTR-9" />
+          <p className="font-ui text-ui-sm text-mid mt-1">Annual Return — {month}/{fy}</p>
+        </div>
         <div className="flex gap-2">
           {!ret && (
-            <button
-              onClick={() => generate.mutate({ periodMonth, periodYear })}
-              disabled={generate.isPending}
-              className="btn btn-primary"
-            >
-              Generate from GSTR-3B
-            </button>
+            <Button size="sm" onClick={() => generate.mutate({ periodMonth, periodYear })} disabled={generate.isPending}>
+              {generate.isPending ? "Generating…" : "Generate from GSTR-3B"}
+            </Button>
           )}
           {ret && (
-            <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className="btn btn-secondary flex items-center gap-2 no-underline">
+            <Link href={`/api/gst/returns/${ret.id}/pdf?type=gstr9`} target="_blank" className={buttonVariants({ variant: "outline", size: "sm" })}>
               <Icon name="download" size={14} /> PDF
             </Link>
           )}
@@ -65,13 +74,12 @@ export default function Gstr9Page() {
       ) : (
         <>
           <div className="bg-surface border border-border rounded-md p-6 shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-6">
-            <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Status</span><p className="font-ui text-ui-sm text-dark mt-1">{ret.status}</p></div>
+            <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Status</span><p className="mt-1"><span className={statusPill(ret.status)}>{ret.status}</span></p></div>
             <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Period</span><p className="font-mono text-ui-sm text-dark mt-1">{ret.taxPeriodMonth}/{ret.taxPeriodYear}</p></div>
-            <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Return id</span><p className="font-mono text-ui-2xs text-mid mt-1 break-all">{ret.id}</p></div>
+            <div><span className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Return id</span><p className="font-mono text-ui-2xs text-mid mt-1">{ret.id.slice(0, 8)}…</p></div>
           </div>
 
-          <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm relative">
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-amber" />
+          <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm">
             <div className="p-6 border-b border-border-subtle bg-surface-muted/50">
               <h3 className="font-ui text-lg font-bold text-dark">Schedules</h3>
               <p className="font-ui text-ui-2xs text-light uppercase tracking-widest mt-1">
