@@ -15,7 +15,7 @@ const capabilities = [
   {
     id: '02',
     title: 'GSTR-2B reconciliation',
-    desc: 'Purchase register matched against the portal statement; unmatched input tax flagged with drill-down to source documents.',
+    desc: 'Purchase register reconciled against your books, with unmatched input tax flagged and traceable to source documents. Portal 2B import is on the roadmap.',
   },
   {
     id: '03',
@@ -30,12 +30,12 @@ const capabilities = [
   {
     id: '05',
     title: 'E-invoice IRN',
-    desc: 'IRN and QR generated for B2B supplies above the notified turnover threshold, without leaving the invoice screen.',
+    desc: 'IRN payloads prepared for B2B supplies per the NIC schema, with the QR generated alongside. Production IRP connection is on the roadmap.',
   },
   {
     id: '06',
     title: 'E-way bills',
-    desc: 'Generated from sales invoices for consignments above the value threshold, pre-populated from the same data.',
+    desc: 'E-way bill payloads prepared from sales invoices for consignments above the value threshold. Portal connection is on the roadmap.',
   },
   {
     id: '07',

@@ -7,11 +7,11 @@ import { CtaBand } from '@/components/marketing/cta-band';
 import { Reveal } from '@/components/marketing/reveal';
 
 const rules = [
-  'GSTIN verified against the portal before save',
+  'GSTIN format checked at entry',
   'HSN codes checked against the tax-rate master',
   'Invoice numbers gapless within the financial year',
   'CGST, SGST and IGST split by place of supply',
-  'E-invoice IRN generated for registered buyers',
+  'E-invoice IRN payloads prepared per the NIC schema (sandbox until production IRP is wired)',
 ];
 
 const flow = [

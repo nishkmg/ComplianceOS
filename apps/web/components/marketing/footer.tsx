@@ -8,7 +8,8 @@ const COLUMNS: Array<{ title: string; links: Array<{ href: string; label: string
     links: [
       { href: '/features', label: 'Features' },
       { href: '/pricing', label: 'Pricing' },
-      { href: '/security', label: 'Security' },
+      { href: '/calculators', label: 'Calculators' },
+      { href: '/demo', label: 'Book a Demo' },
     ],
   },
   {

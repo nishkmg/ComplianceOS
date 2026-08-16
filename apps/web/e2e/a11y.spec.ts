@@ -94,7 +94,7 @@ const APP_ROUTES = [
   '/itr/payment/recording',
 ];
 
-const PUBLIC_ROUTES = ['/login', '/signup', '/', '/pricing', '/features', '/privacy', '/terms', '/security'];
+const PUBLIC_ROUTES = ['/login', '/signup', '/', '/pricing', '/features', '/privacy', '/terms', '/security', '/features/inventory', '/features/e-invoice', '/demo', '/use-cases/ca-firms', '/compare/tally', '/compare/zoho-books', '/integrations', '/calculators'];
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 

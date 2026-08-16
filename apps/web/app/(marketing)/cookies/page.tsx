@@ -12,7 +12,7 @@ export default function CookiesPage() {
           <header className="mb-space-64 text-center">
             <span className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber block mb-4">Legal Information</span>
             <h1 className="font-display text-marketing-xl text-dark mb-6">Cookie Policy</h1>
-            <p className="font-ui text-ui-lg text-secondary max-w-2xl mx-auto">Last updated: October 15, 2024. This policy explains how Arthvahi uses cookies and similar technologies to recognize you when you visit our website.</p>
+            <p className="font-ui text-ui-lg text-secondary max-w-2xl mx-auto">Last updated: August 16, 2026. This policy explains how Arthvahi uses cookies and similar technologies to recognize you when you visit our website.</p>
           </header>
 
           <div className="space-y-space-48 border-t-[0.5px] border-border-subtle pt-space-48 text-left">

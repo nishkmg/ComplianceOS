@@ -13,7 +13,7 @@ const sections = [
       'Specifically, Arthvahi has collected the following categories of personal information from its consumers within the last twelve (12) months:',
     ],
     list: [
-      '<strong>Identifiers:</strong> A real name, alias, postal address, unique personal identifier, online identifier, Internet Protocol address, email address, account name, Social Security number, driver\'s license number, passport number, or other similar identifiers.',
+      '<strong>Identifiers:</strong> A real name, email address, business GSTIN, PAN (where required for statutory reporting), Internet Protocol address, account name, or other similar identifiers.',
       '<strong>Commercial Information:</strong> Records of personal property, products or services purchased, obtained, or considered, or other purchasing or consuming histories or tendencies.',
       '<strong>Financial Data:</strong> Bank account numbers, credit card numbers, debit card numbers, or any other financial information necessary for ledger processing and GST compliance.',
     ],
@@ -35,7 +35,7 @@ const sections = [
     id: 'section-3',
     title: '3. Data Storage & Security',
     content: [
-      'Arthvahi employs industry-standard, military-grade encryption protocols to safeguard your financial data. Data is encrypted both in transit (using TLS 1.3) and at rest (using AES-256).',
+      'Arthvahi encrypts data in transit (TLS 1.2 or higher) and at rest (AES-256).',
       'We store your data on secure servers located within jurisdictions that comply with local financial data residency requirements. Access to this infrastructure is strictly limited to authorized personnel who require such access to perform their duties, governed by the principle of least privilege.',
     ],
     highlight: 'Security Commitment: While we strive to use commercially acceptable means to protect your Personal Information, we cannot guarantee its absolute security. No method of transmission over the Internet, or method of electronic storage, is 100% secure.',
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
       <MarketingNav />
       <main id="main-content" className="w-full max-w-page mx-auto px-gutter-desktop py-space-96">
         <header className="mb-space-64">
-          <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Last Updated: October 24, 2024</p>
+          <p className="font-ui text-ui-2xs uppercase tracking-[0.2em] text-amber mb-4">Last Updated: August 16, 2026</p>
           <h1 className="font-display text-marketing-xl text-dark mb-6">Privacy Policy</h1>
           <p className="font-ui text-ui-lg text-secondary max-w-2xl">This Privacy Policy describes how Arthvahi collects, uses, and shares your personal information in connection with our accounting and compliance platform.</p>
         </header>

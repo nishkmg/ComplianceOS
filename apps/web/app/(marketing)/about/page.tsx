@@ -7,19 +7,19 @@ const team = [
   {
     name: 'Arjun Mehta',
     role: 'Co-Founder, CEO',
-    bio: 'Former Big 4 auditor who spent a decade unravelling complex corporate structures before concluding the software was the bottleneck, not the legislation.',
+    bio: 'Audit-trained, with years spent unravelling complex corporate structures before concluding the software was the bottleneck, not the legislation.',
     image: '/images/about/arjun.jpg',
   },
   {
     name: 'Priya Sharma',
     role: 'Co-Founder, CTO',
-    bio: 'Systems architect obsessed with data integrity. Led engineering teams at leading fintech firms before turning to the foundational layer of compliance.',
+    bio: 'Systems architect obsessed with data integrity. Built and led engineering teams in fintech before turning to the foundational layer of compliance.',
     image: '/images/about/priya.jpg',
   },
   {
     name: 'Rajiv Desai',
     role: 'Head of Tax Policy',
-    bio: 'Three decades navigating the Indian tax code. Ensures every feature we ship reflects the latest gazette notifications and tribunal rulings.',
+    bio: 'Long experience navigating the Indian tax code. Ensures every feature we ship reflects the latest gazette notifications and tribunal rulings.',
     image: '/images/about/rajiv.jpg',
   },
 ];

@@ -28,7 +28,7 @@ const plans = [
     features: [
       'Unlimited invoicing',
       'GSTR-1, 2B and 3B automations',
-      'Automated bank reconciliation',
+      'GST return automations with period navigation',
       'Up to 5 users',
     ],
     cta: 'Start Free',
@@ -59,7 +59,7 @@ const faqs = [
   },
   {
     q: 'Can I import data from Tally or Zoho Books?',
-    a: 'Yes. Guided migration flows map your existing chart of accounts and open balances from Tally and Zoho Books exports before you switch.',
+    a: 'Yes. Guided setup maps your existing chart of accounts and opening balances before you switch, so the first entry lands where it belongs.',
   },
   {
     q: 'Is the audit trail MCA-compliant?',

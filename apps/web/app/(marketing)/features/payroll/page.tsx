@@ -32,8 +32,8 @@ const steps = [
   { id: '01', title: 'Define salary structures', desc: 'Basic, allowances and perquisites per employee, with the statutory components attached once.' },
   { id: '02', title: 'Run the month', desc: 'Salaries computed from attendance and arrears on the run date, in one pass.' },
   { id: '03', title: 'Deductions applied', desc: 'PF, ESI, TDS and professional tax calculated per employee from the same structure.' },
-  { id: '04', title: 'Payslips and challans', desc: 'Slips generated for employees; PF ECR and ESI, TDS and PT challans prepared from the run totals.' },
-  { id: '05', title: 'Returns assembled', desc: 'Monthly and quarterly filings prepared from figures already computed, not re-keyed.' },
+  { id: '04', title: 'Payslips and challan data', desc: 'Slips generated for employees; PF ECR and ESI, TDS and PT challan figures prepared from the run totals.' },
+  { id: '05', title: 'Returns assembled', desc: 'Monthly and quarterly filing figures assembled from what was already computed, not re-keyed.' },
 ];
 
 export default function PayrollPage() {
@@ -66,7 +66,7 @@ export default function PayrollPage() {
             <Reveal className="lg:col-span-5">
               <SectionHeader
                 title="The four deductions, spelled out"
-                lede="Rates and ceilings follow the current statutory schedule and are updated when notified."
+                lede="Rates and ceilings follow the current statutory schedule, kept current in the codebase as notifications are published."
               />
             </Reveal>
             <ol className="list-none p-0 m-0 lg:col-span-7">

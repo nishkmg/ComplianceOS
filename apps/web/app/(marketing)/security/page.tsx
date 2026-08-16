@@ -10,7 +10,7 @@ const features = [
   { icon: 'vpn_key', title: 'Access Control', desc: 'Role-based access control (owner, accountant, manager, employee) with tenant-scoped data isolation enforced at the database layer. MFA for administrative accounts is on the roadmap.' },
   { icon: 'verified_user', title: 'Audit Trail', desc: 'Every action within the system is logged and immutable. Complete traceability for all journal entries, modifications, and data exports.' },
   { icon: 'api', title: 'Secure API Gateway', desc: 'All API communications are encrypted via TLS 1.2+. Sessions use signed JWTs via NextAuth credentials, and every mutation is recorded in an append-only audit log.' },
-  { icon: 'shield', title: 'Compliance Framework', desc: 'Built to align with ICAI guidelines and IT Act 2000 requirements. Regular third-party security audits and penetration testing.' },
+  { icon: 'shield', title: 'Compliance Framework', desc: 'Built to align with ICAI guidelines and IT Act 2000 requirements. Third-party security audits and penetration testing are planned as the platform matures.' },
 ];
 
 export default function SecurityPage() {
@@ -26,7 +26,7 @@ export default function SecurityPage() {
               Institutional-Grade Protection for Indian Enterprises.
             </h1>
             <p className="font-ui text-ui-lg text-secondary max-w-2xl mt-4 leading-relaxed">
-              We approach data security with the rigorous precision of a financial ledger. Designed specifically for CTOs overseeing sensitive Indian compliance data, our architecture guarantees zero compromise on confidentiality and integrity.
+              We approach data security with the rigor of a financial ledger. Designed for teams overseeing sensitive Indian compliance data, our architecture keeps confidentiality and integrity at the center of every decision.
             </p>
           </section>
 

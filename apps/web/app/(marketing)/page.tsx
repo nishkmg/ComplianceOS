@@ -40,7 +40,7 @@ const moduleTabs = [
     id: 'invoicing',
     label: 'Invoicing',
     title: 'Invoices that carry the compliance forward',
-    desc: 'GST-compliant invoices with e-invoice IRN, printed or sent, with every line posting to the ledger.',
+    desc: 'GST-compliant invoices with e-invoice IRN payloads, printed or sent, with every line posting to the ledger.',
     src: '/images/marketing/invoices.png',
     alt: 'Invoice list with draft and issued statuses',
   },
@@ -109,7 +109,7 @@ export default function HomePage() {
                 <MarketingButton href="/signup">
                   Start Free <span aria-hidden="true">→</span>
                 </MarketingButton>
-                <MarketingButton href="/contact" variant="secondary">
+                <MarketingButton href="/demo" variant="secondary">
                   Book a Demo
                 </MarketingButton>
               </motion.div>
@@ -258,7 +258,7 @@ export default function HomePage() {
           <div className="max-w-[1320px] mx-auto">
             <SectionHeader
               title="From the people who keep the books."
-              lede="Practising accountants and founders who run real Indian businesses on Arthvahi."
+              lede="Illustrative accounts from practising accountants and founders."
             />
             <div className="grid lg:grid-cols-2 gap-8 mt-16">
               {testimonials.map((t, i) => (
