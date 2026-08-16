@@ -131,7 +131,7 @@ export async function fileITR(
     tenantId,
     "itr_return",
     input.itrReturnId,
-    "itr_filed",
+    "itr_return_filed",
     {
       itrReturnId: input.itrReturnId,
       assessmentYear: itrReturn.assessmentYear,

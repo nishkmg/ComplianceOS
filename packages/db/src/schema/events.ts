@@ -32,3 +32,15 @@ export const snapshots = pgTable("snapshots", {
 }, (table) => [
   uniqueIndex("snapshots_aggregate_id_sequence_unique").on(table.aggregateId, table.sequence),
 ]);
+
+/**
+ * Atomic per-tenant event sequence counter.
+ * appendEvent computes the next global-per-tenant sequence via a single
+ * `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` — gapless and race-free
+ * (MAX(sequence)+1 had a read-then-write race that silently dropped events).
+ * Backfilled from event_store in migration 0041.
+ */
+export const eventSequences = pgTable("event_sequences", {
+  tenantId: uuid("tenant_id").primaryKey(),
+  lastSequence: bigint("last_sequence", { mode: "bigint" }).notNull(),
+});

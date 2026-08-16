@@ -155,17 +155,20 @@ export const invoicesRouter = router({
             const discountPct = Number(line.discountPercent ?? 0);
             const beforeDiscount = qty * unitPrice;
             const discountAmount = beforeDiscount * (discountPct / 100);
-            const amount = beforeDiscount - discountAmount;
+            // amount stored GROSS; GST on the discounted base; discount
+            // subtracted exactly once in grandTotal (matches create-invoice).
+            const amount = beforeDiscount;
+            const taxableBase = beforeDiscount - discountAmount;
 
             let cgstAmount = "0";
             let sgstAmount = "0";
             let igstAmount = "0";
 
             if (data.customerState === tenantState) {
-              cgstAmount = String((amount * gstRate / 200).toFixed(2));
-              sgstAmount = String((amount * gstRate / 200).toFixed(2));
+              cgstAmount = String((taxableBase * gstRate / 200).toFixed(2));
+              sgstAmount = String((taxableBase * gstRate / 200).toFixed(2));
             } else {
-              igstAmount = String((amount * gstRate / 100).toFixed(2));
+              igstAmount = String((taxableBase * gstRate / 100).toFixed(2));
             }
 
             return {

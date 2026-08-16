@@ -82,7 +82,7 @@ export async function voidITR(
     tenantId,
     "itr_return",
     input.itrReturnId,
-    "itr_voided",
+    "itr_return_voided",
     {
       itrReturnId: input.itrReturnId,
       assessmentYear: itrReturn.assessmentYear,

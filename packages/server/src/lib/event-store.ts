@@ -1,4 +1,4 @@
-import { eq, and, gt, max, sql } from "drizzle-orm";
+import { eq, and, gt, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as schema from "../../../db/src/index";
 
@@ -9,10 +9,11 @@ type Tx = Parameters<Parameters<Database["transaction"]>[0]>[0];
 export type DbOrTx = Database | Tx;
 
 /**
- * Append an event to the event store, computing the next sequence number
- * for the given aggregate. Idempotent: if called via retry and the event
- * was already appended (detected by unique constraint on aggregateId + sequence),
- * the existing event is returned instead of creating a duplicate.
+ * Append an event to the event store. Sequence allocation is atomic per
+ * tenant (event_sequences counter) — concurrent appends never collide and
+ * never silently drop events. The 23505 path below is a safety net only:
+ * if a true duplicate insert somehow occurs (same aggregate + sequence +
+ * eventType + payload), the existing event is returned.
  */
 export async function appendEvent(
   db: DbOrTx,
@@ -26,11 +27,22 @@ export async function appendEvent(
   // Sequence is global per tenant (cross-aggregate order must be defined —
   // projectors track a single per-tenant cursor; per-aggregate sequences
   // made payment_recorded/invoice_posted order arbitrary).
-  const maxResult = await db
-    .select({ maxSeq: max(eventStore.sequence) })
-    .from(eventStore)
-    .where(eq(eventStore.tenantId, tenantId));
-  const nextSequence = (maxResult[0]?.maxSeq ?? 0n) + 1n;
+  //
+  // Allocation is atomic: a single INSERT ... ON CONFLICT DO UPDATE ...
+  // RETURNING on the event_sequences counter. The old MAX(sequence)+1
+  // read-then-write raced — concurrent appends computed the same sequence,
+  // and the naive 23505 fallback returned the OTHER command's event,
+  // silently dropping ours (projectors never fired for it). The 23505 path
+  // below remains as a safety net for true duplicate retries only.
+  const counter = await db
+    .insert(schema.eventSequences)
+    .values({ tenantId, lastSequence: 1n })
+    .onConflictDoUpdate({
+      target: schema.eventSequences.tenantId,
+      set: { lastSequence: sql`${schema.eventSequences.lastSequence} + 1` },
+    })
+    .returning({ lastSequence: schema.eventSequences.lastSequence });
+  const nextSequence = counter[0].lastSequence;
 
   try {
     const result = await db.insert(eventStore).values({
@@ -45,12 +57,13 @@ export async function appendEvent(
 
     return result[0];
   } catch (err: unknown) {
-    // If unique constraint on (tenant_id, sequence) was violated,
-    // a retry tried to re-append the same sequence. Return existing event.
-    const pgErr = err as { code?: string };
-    if (pgErr?.code === '23505') {
+    // drizzle wraps the driver PostgresError ("Failed query: insert into…")
+    // with the real error on `cause` — check both surfaces.
+    const pgErr = err as { code?: string; cause?: { code?: string } };
+    const code = pgErr?.code ?? pgErr?.cause?.code;
+    if (code === '23505') {
       const existing = await db
-        .select({ id: eventStore.id, sequence: eventStore.sequence })
+        .select({ id: eventStore.id, sequence: eventStore.sequence, aggregateId: eventStore.aggregateId, eventType: eventStore.eventType, payload: eventStore.payload })
         .from(eventStore)
         .where(
           and(
@@ -59,8 +72,17 @@ export async function appendEvent(
           ),
         )
         .limit(1);
+
       if (existing.length > 0) {
-        return existing[0];
+        const row = existing[0];
+        if (
+          row.aggregateId === aggregateId &&
+          row.eventType === eventType &&
+          JSON.stringify(row.payload) === JSON.stringify(payload)
+        ) {
+          // True idempotent retry of the same event — safe to return.
+          return { id: row.id, sequence: row.sequence };
+        }
       }
     }
     throw err;

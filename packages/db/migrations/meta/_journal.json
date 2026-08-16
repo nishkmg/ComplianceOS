@@ -292,6 +292,34 @@
       "when": 1786515063402,
       "tag": "0039_event_type_itr_return",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1786885253981,
+      "tag": "0040_event_type_remaining",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1786886054349,
+      "tag": "0041_event_sequences_counter",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1786953100000,
+      "tag": "0042_rls_remaining_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1786952900000,
+      "tag": "0043_login_attempts",
+      "breakpoints": true
     }
   ]
 }
