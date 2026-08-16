@@ -1,16 +1,15 @@
-import { eq, and } from "drizzle-orm";
-import type { Database } from "../../../db/src/index";
+import { eq, and, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { entryNumberCounters } = _db;
-import { sql } from "drizzle-orm";
+import type { DbOrTx } from "./event-store";
 
 export async function getNextEntryNumber(
-  db: Database,
+  db: DbOrTx,
   tenantId: string,
   fiscalYear: string,
 ): Promise<string> {
-  return await db.transaction(async (tx) => {
-    const counter = await tx.select()
+  const allocate = async (executor: DbOrTx) => {
+    const counter = await executor.select()
       .from(entryNumberCounters)
       .where(and(
         eq(entryNumberCounters.tenantId, tenantId),
@@ -19,7 +18,7 @@ export async function getNextEntryNumber(
       .for("update");
 
     if (counter.length === 0) {
-      await tx.insert(entryNumberCounters).values({
+      await executor.insert(entryNumberCounters).values({
         tenantId,
         fiscalYear,
         nextVal: "2",
@@ -31,10 +30,16 @@ export async function getNextEntryNumber(
     const currentNum = parseInt(current.nextVal, 10);
     const nextNum = currentNum + 1;
 
-    await tx.update(entryNumberCounters)
+    await executor.update(entryNumberCounters)
       .set({ nextVal: String(nextNum) })
       .where(eq(entryNumberCounters.id, current.id));
 
     return `JE-${fiscalYear}-${String(currentNum).padStart(3, "0")}`;
-  });
+  };
+
+  if (!("$client" in db)) {
+    // Already inside a caller-owned transaction — reuse it (no nesting).
+    return allocate(db);
+  }
+  return db.transaction((tx) => allocate(tx));
 }

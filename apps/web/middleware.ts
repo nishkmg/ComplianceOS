@@ -59,8 +59,6 @@ export default async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, secureCookie });
   const pathname = req.nextUrl.pathname;
 
-  console.log("[middleware]", pathname, "protocol:", req.nextUrl.protocol, "secureCookie:", secureCookie, "token:", token ? "present" : "null", "secret:", process.env.NEXTAUTH_SECRET ? "set" : "missing");
-
   // ─── Rate limiting ───────────────────────────────────────────────────────
   const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
 

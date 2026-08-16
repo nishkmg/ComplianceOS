@@ -1,15 +1,14 @@
 import { eq, and, inArray } from "drizzle-orm";
-import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { accounts, journalEntries, journalEntryLines } = _db;
 import { validateBalance } from "../lib/balance-validator";
 import { getNextEntryNumber } from "../lib/entry-number";
-import { appendEvent } from "../lib/event-store";
+import { appendEvent, type DbOrTx } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
 const { CreateJournalEntryInputSchema } = _shared;
 
 export async function createJournalEntry(
-  db: Database,
+  db: DbOrTx,
   tenantId: string,
   actorId: string,
   fiscalYear: string,
@@ -59,8 +58,8 @@ export async function createJournalEntry(
 
   const entryNumber = await getNextEntryNumber(db, tenantId, fiscalYear);
 
-  const result = await db.transaction(async (tx) => {
-    const entry = await tx.insert(journalEntries).values({
+  const insert = async (executor: DbOrTx) => {
+    const entry = await executor.insert(journalEntries).values({
       tenantId,
       entryNumber,
       date: validated.date,
@@ -72,7 +71,7 @@ export async function createJournalEntry(
       createdBy: actorId,
     }).returning({ id: journalEntries.id });
 
-    await tx.insert(journalEntryLines).values(
+    await executor.insert(journalEntryLines).values(
       validated.lines.map((l) => ({
         journalEntryId: entry[0].id,
         accountId: l.accountId,
@@ -82,7 +81,7 @@ export async function createJournalEntry(
       })),
     );
 
-    await appendEvent(tx, tenantId, "journal_entry", entry[0].id, "journal_entry_created", {
+    await appendEvent(executor, tenantId, "journal_entry", entry[0].id, "journal_entry_created", {
       entryId: entry[0].id,
       entryNumber,
       date: validated.date,
@@ -92,7 +91,12 @@ export async function createJournalEntry(
     }, actorId);
 
     return { entryId: entry[0].id, entryNumber };
-  });
+  };
 
-  return result;
+  if (!("$client" in db)) {
+    // Already inside a caller-owned transaction (e.g. finalizePayroll) — reuse
+    // it so the journal entry, run update and event commit atomically.
+    return insert(db);
+  }
+  return db.transaction((tx) => insert(tx));
 }

@@ -173,64 +173,66 @@ export const itrPaymentRouter = router({
       const installmentNumberStr = AdvanceTaxInstallmentNumber[installmentKey];
       const dueDate = ADVANCE_TAX_DUE_DATES[installmentNumberStr];
 
-      const [existing] = await ctx.db.select().from(advanceTaxLedger)
-        .where(
-          and(
-            eq(advanceTaxLedger.tenantId, ctx.tenantId),
-            eq(advanceTaxLedger.assessmentYear, input.assessmentYear),
-            eq(advanceTaxLedger.installmentNumber, installmentNumberStr),
-          ),
-        );
+      let result: typeof advanceTaxLedger.$inferSelect | undefined;
+      await ctx.db.transaction(async (tx) => {
+        const [existing] = await tx.select().from(advanceTaxLedger)
+          .where(
+            and(
+              eq(advanceTaxLedger.tenantId, ctx.tenantId),
+              eq(advanceTaxLedger.assessmentYear, input.assessmentYear),
+              eq(advanceTaxLedger.installmentNumber, installmentNumberStr),
+            ),
+          )
+          .for("update");
 
-      let result;
-      if (existing) {
-        const newBalance = Math.max(0, Number(existing.payableAmount ?? "0") - input.amount);
-        [result] = await ctx.db.update(advanceTaxLedger)
-          .set({
+        if (existing) {
+          const newBalance = Math.max(0, Number(existing.payableAmount ?? "0") - input.amount);
+          [result] = await tx.update(advanceTaxLedger)
+            .set({
+              paidAmount: String(input.amount),
+              paidDate,
+              challanNumber: input.challanNumber,
+              challanDate: input.challanDate,
+              balance: String(newBalance),
+            })
+            .where(eq(advanceTaxLedger.id, existing.id))
+            .returning();
+        } else {
+          const financialYear = `${Number(input.assessmentYear.split("-")[0]) - 1}-${input.assessmentYear.split("-")[1]}`;
+          [result] = await tx.insert(advanceTaxLedger).values({
+            tenantId: ctx.tenantId,
+            assessmentYear: input.assessmentYear,
+            installmentNumber: installmentNumberStr,
+            dueDate: `${financialYear.split("-")[0]}-${dueDate}`,
+            payableAmount: String(input.amount),
             paidAmount: String(input.amount),
             paidDate,
             challanNumber: input.challanNumber,
             challanDate: input.challanDate,
-            balance: String(newBalance),
-          })
-          .where(eq(advanceTaxLedger.id, existing.id))
-          .returning();
-      } else {
-        const financialYear = `${Number(input.assessmentYear.split("-")[0]) - 1}-${input.assessmentYear.split("-")[1]}`;
-        [result] = // -ignore - drizzle type
-      await ctx.db.insert(advanceTaxLedger).values({
-          tenantId: ctx.tenantId,
-          assessmentYear: input.assessmentYear,
-          installmentNumber: installmentNumberStr,
-          dueDate: `${financialYear.split("-")[0]}-${dueDate}`,
-          payableAmount: String(input.amount),
-          paidAmount: String(input.amount),
-          paidDate,
-          challanNumber: input.challanNumber,
-          challanDate: input.challanDate,
-          balance: "0",
-        }).returning();
-      }
+            balance: "0",
+          }).returning();
+        }
 
-      await appendEvent(
-        ctx.db,
-        ctx.tenantId,
-        "itr_return",
-        `${ctx.tenantId}-${input.assessmentYear}`,
-        "advance_tax_paid",
-        {
-          aggregateId: `${ctx.tenantId}-${input.assessmentYear}`,
-          installmentId: result!.id,
-          tenantId: ctx.tenantId,
-          assessmentYear: input.assessmentYear,
-          installmentNumber: installmentNumberStr,
-          amount: input.amount,
-          challanNumber: input.challanNumber,
-          challanDate: input.challanDate,
-          paidAt: new Date(paidDate),
-        },
-        ctx.session!.user.id,
-      );
+        await appendEvent(
+          tx,
+          ctx.tenantId,
+          "itr_return",
+          `${ctx.tenantId}-${input.assessmentYear}`,
+          "advance_tax_paid",
+          {
+            aggregateId: `${ctx.tenantId}-${input.assessmentYear}`,
+            installmentId: result!.id,
+            tenantId: ctx.tenantId,
+            assessmentYear: input.assessmentYear,
+            installmentNumber: installmentNumberStr,
+            amount: input.amount,
+            challanNumber: input.challanNumber,
+            challanDate: input.challanDate,
+            paidAt: new Date(paidDate),
+          },
+          ctx.session!.user.id,
+        );
+      });
 
       return {
         success: true,
@@ -251,62 +253,64 @@ export const itrPaymentRouter = router({
     .mutation(async ({ ctx, input }) => {
       const paidDate = input.challanDate;
 
-      const [existing] = await ctx.db.select().from(selfAssessmentLedger)
-        .where(
-          and(
-            eq(selfAssessmentLedger.tenantId, ctx.tenantId),
-            eq(selfAssessmentLedger.assessmentYear, input.assessmentYear),
-          ),
-        );
+      let result: typeof selfAssessmentLedger.$inferSelect | undefined;
+      await ctx.db.transaction(async (tx) => {
+        const [existing] = await tx.select().from(selfAssessmentLedger)
+          .where(
+            and(
+              eq(selfAssessmentLedger.tenantId, ctx.tenantId),
+              eq(selfAssessmentLedger.assessmentYear, input.assessmentYear),
+            ),
+          )
+          .for("update");
 
-      let result;
-      if (existing) {
-        const newBalance = Math.max(0, Number(existing.balancePayable ?? "0") - input.amount);
-        [result] = await ctx.db.update(selfAssessmentLedger)
-          .set({
-            paidAmount: sql`${selfAssessmentLedger.paidAmount} + ${input.amount}`,
+        if (existing) {
+          const newBalance = Math.max(0, Number(existing.balancePayable ?? "0") - input.amount);
+          [result] = await tx.update(selfAssessmentLedger)
+            .set({
+              paidAmount: sql`${selfAssessmentLedger.paidAmount} + ${input.amount}`,
+              challanNumber: input.challanNumber,
+              challanDate: input.challanDate,
+              paidDate,
+              balancePayable: String(newBalance),
+            })
+            .where(eq(selfAssessmentLedger.id, existing.id))
+            .returning();
+        } else {
+          [result] = await tx.insert(selfAssessmentLedger).values({
+            tenantId: ctx.tenantId,
+            assessmentYear: input.assessmentYear,
+            taxPayable: String(input.amount),
+            advanceTaxPaid: "0",
+            tdsTcsCredit: "0",
+            balancePayable: "0",
+            paidAmount: String(input.amount),
             challanNumber: input.challanNumber,
             challanDate: input.challanDate,
             paidDate,
-            balancePayable: String(newBalance),
-          })
-          .where(eq(selfAssessmentLedger.id, existing.id))
-          .returning();
-      } else {
-        [result] = // -ignore - drizzle type
-      await ctx.db.insert(selfAssessmentLedger).values({
-          tenantId: ctx.tenantId,
-          assessmentYear: input.assessmentYear,
-          taxPayable: String(input.amount),
-          advanceTaxPaid: "0",
-          tdsTcsCredit: "0",
-          balancePayable: "0",
-          paidAmount: String(input.amount),
-          challanNumber: input.challanNumber,
-          challanDate: input.challanDate,
-          paidDate,
-        }).returning();
-      }
+          }).returning();
+        }
 
-      await appendEvent(
-        ctx.db,
-        ctx.tenantId,
-        "itr_return",
-        `${ctx.tenantId}-${input.assessmentYear}`,
-        "self_assessment_tax_paid",
-        {
-          aggregateId: `${ctx.tenantId}-${input.assessmentYear}`,
-          paymentId: result!.id,
-          tenantId: ctx.tenantId,
-          assessmentYear: input.assessmentYear,
-          amount: input.amount,
-          challanNumber: input.challanNumber,
-          challanDate: input.challanDate,
-          balanceAfterPayment: Number(result!.balancePayable ?? "0"),
-          paidAt: new Date(paidDate),
-        },
-        ctx.session!.user.id,
-      );
+        await appendEvent(
+          tx,
+          ctx.tenantId,
+          "itr_return",
+          `${ctx.tenantId}-${input.assessmentYear}`,
+          "self_assessment_tax_paid",
+          {
+            aggregateId: `${ctx.tenantId}-${input.assessmentYear}`,
+            paymentId: result!.id,
+            tenantId: ctx.tenantId,
+            assessmentYear: input.assessmentYear,
+            amount: input.amount,
+            challanNumber: input.challanNumber,
+            challanDate: input.challanDate,
+            balanceAfterPayment: Number(result!.balancePayable ?? "0"),
+            paidAt: new Date(paidDate),
+          },
+          ctx.session!.user.id,
+        );
+      });
 
       return {
         success: true,

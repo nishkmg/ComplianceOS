@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "Invalid email or password too short (min 8 chars)" }, { status: 400 });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 12);
 
     const db = getDb();
     const { bootstrapTenant } = await import("@complianceos/server");

@@ -180,40 +180,44 @@ export const gstReturnsRouter = router({
       arn: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const [updated] = await ctx.db.update(gstReturns)
-        .set({
-          status: GSTReturnStatus.FILED,
-          filingDate: new Date().toISOString().split("T")[0],
-          arn: input.arn,
-          filedBy: ctx.session!.user.id,
-          updatedAt: new Date(),
-        })
-        .where(
-          and(
-            eq(gstReturns.id, input.returnId),
-            eq(gstReturns.tenantId, ctx.tenantId),
-          ),
-        )
-        .returning();
+      const [updated] = await ctx.db.transaction(async (tx) => {
+        const [updated] = await tx.update(gstReturns)
+          .set({
+            status: GSTReturnStatus.FILED,
+            filingDate: new Date().toISOString().split("T")[0],
+            arn: input.arn,
+            filedBy: ctx.session!.user.id,
+            updatedAt: new Date(),
+          })
+          .where(
+            and(
+              eq(gstReturns.id, input.returnId),
+              eq(gstReturns.tenantId, ctx.tenantId),
+            ),
+          )
+          .returning();
 
-      if (!updated) {
-        throw new Error("GST return not found");
-      }
+        if (!updated) {
+          throw new Error("GST return not found");
+        }
 
-      await appendEvent(
-        ctx.db,
-        ctx.tenantId,
-        "gst_return",
-        input.returnId,
-        "gst_return_filed",
-        {
-          returnId: input.returnId,
-          arn: input.arn,
-          status: GSTReturnStatus.FILED,
-          filedAt: new Date().toISOString(),
-        },
-        ctx.session!.user.id,
-      );
+        await appendEvent(
+          tx,
+          ctx.tenantId,
+          "gst_return",
+          input.returnId,
+          "gst_return_filed",
+          {
+            returnId: input.returnId,
+            arn: input.arn,
+            status: GSTReturnStatus.FILED,
+            filedAt: new Date().toISOString(),
+          },
+          ctx.session!.user.id,
+        );
+
+        return [updated];
+      });
 
       return {
         success: true,
@@ -241,68 +245,70 @@ export const gstReturnsRouter = router({
       const original = originalReturns[0];
 
       // Create amended return
-      const [amendedReturn] = // -ignore - drizzle type
-      await ctx.db.insert(gstReturns).values({
-        tenantId: ctx.tenantId,
-        returnNumber: `${original.returnNumber}-AMD`,
-        returnType: original.returnType,
-        taxPeriodMonth: original.taxPeriodMonth,
-        taxPeriodYear: original.taxPeriodYear,
-        fiscalYear: original.fiscalYear,
-        status: GSTReturnStatus.AMENDED,
-        dueDate: original.dueDate,
-        totalOutwardSupplies: original.totalOutwardSupplies,
-        totalEligibleItc: original.totalEligibleItc,
-        totalTaxPayable: original.totalTaxPayable,
-        totalTaxPaid: original.totalTaxPaid,
-        createdBy: ctx.session!.user.id,
-      }).returning();
-
-      // Copy lines from original return
-      const originalLines = await ctx.db.select().from(gstReturnLines).where(
-        eq(gstReturnLines.gstReturnId, input.returnId),
-      );
-
-      if (originalLines.length > 0) {
-        const newLines = originalLines.map(line => ({
-          gstReturnId: amendedReturn.id,
-          tableNumber: line.tableNumber,
-          tableDescription: line.tableDescription,
-          transactionType: line.transactionType,
-          placeOfSupply: line.placeOfSupply,
-          taxableValue: line.taxableValue,
-          igstAmount: line.igstAmount,
-          cgstAmount: line.cgstAmount,
-          sgstAmount: line.sgstAmount,
-          cessAmount: line.cessAmount,
-          totalTaxAmount: line.totalTaxAmount,
-          sourceDocumentType: line.sourceDocumentType,
-          sourceDocumentNumber: line.sourceDocumentNumber,
-          sourceDocumentDate: line.sourceDocumentDate,
-          gstin: line.gstin,
-          partyName: line.partyName,
-          remarks: line.remarks,
-        }));
-
-        // -ignore - drizzle type
-      await ctx.db.insert(gstReturnLines).values(newLines);
-      }
-
-      await appendEvent(
-        ctx.db,
-        ctx.tenantId,
-        "gst_return",
-        amendedReturn.id,
-        "gst_return_amended",
-        {
-          returnId: amendedReturn.id,
-          originalReturnId: input.returnId,
-          changes: input.changes,
+      const [amendedReturn] = await ctx.db.transaction(async (tx) => {
+        const [amendedReturn] = await tx.insert(gstReturns).values({
+          tenantId: ctx.tenantId,
+          returnNumber: `${original.returnNumber}-AMD`,
+          returnType: original.returnType,
+          taxPeriodMonth: original.taxPeriodMonth,
+          taxPeriodYear: original.taxPeriodYear,
+          fiscalYear: original.fiscalYear,
           status: GSTReturnStatus.AMENDED,
-          amendedAt: new Date().toISOString(),
-        },
-        ctx.session!.user.id,
-      );
+          dueDate: original.dueDate,
+          totalOutwardSupplies: original.totalOutwardSupplies,
+          totalEligibleItc: original.totalEligibleItc,
+          totalTaxPayable: original.totalTaxPayable,
+          totalTaxPaid: original.totalTaxPaid,
+          createdBy: ctx.session!.user.id,
+        }).returning();
+
+        // Copy lines from original return
+        const originalLines = await tx.select().from(gstReturnLines).where(
+          eq(gstReturnLines.gstReturnId, input.returnId),
+        );
+
+        if (originalLines.length > 0) {
+          const newLines = originalLines.map(line => ({
+            gstReturnId: amendedReturn.id,
+            tableNumber: line.tableNumber,
+            tableDescription: line.tableDescription,
+            transactionType: line.transactionType,
+            placeOfSupply: line.placeOfSupply,
+            taxableValue: line.taxableValue,
+            igstAmount: line.igstAmount,
+            cgstAmount: line.cgstAmount,
+            sgstAmount: line.sgstAmount,
+            cessAmount: line.cessAmount,
+            totalTaxAmount: line.totalTaxAmount,
+            sourceDocumentType: line.sourceDocumentType,
+            sourceDocumentNumber: line.sourceDocumentNumber,
+            sourceDocumentDate: line.sourceDocumentDate,
+            gstin: line.gstin,
+            partyName: line.partyName,
+            remarks: line.remarks,
+          }));
+
+          await tx.insert(gstReturnLines).values(newLines);
+        }
+
+        await appendEvent(
+          tx,
+          ctx.tenantId,
+          "gst_return",
+          amendedReturn.id,
+          "gst_return_amended",
+          {
+            returnId: amendedReturn.id,
+            originalReturnId: input.returnId,
+            changes: input.changes,
+            status: GSTReturnStatus.AMENDED,
+            amendedAt: new Date().toISOString(),
+          },
+          ctx.session!.user.id,
+        );
+
+        return [amendedReturn];
+      });
 
       return {
         amendedReturnId: amendedReturn.id,

@@ -147,7 +147,7 @@ export const documentTypeEnum = pgEnum("document_type", [
 
 export const gstReturnTypeEnum = pgEnum("gst_return_type", ["gstr1", "gstr2b", "gstr3b", "gstr9", "gstr4", "itc_reconciliation"]);
 export const gstReturnStatusEnum = pgEnum("gst_return_status", ["draft", "generated", "filed", "amended", "completed"]);
-export const gstTaxTypeEnum = pgEnum("gst_tax_type", ["igst", "cgst", "sgst", "cess"]);
+export const gstTaxTypeEnum = pgEnum("gst_tax_type", ["igst", "cgst", "sgst", "cess", "interest", "penalty"]);
 export const gstTransactionTypeEnum = pgEnum("gst_transaction_type", ["payment", "interest", "penalty", "refund", "itc_utilization"]);
 
 export const itrReturnTypeEnum = pgEnum("itr_return_type", ["itr3", "itr4", "itr5", "itr1", "itr2"]);

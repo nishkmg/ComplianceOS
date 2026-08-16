@@ -12,7 +12,7 @@ try {
 }
 
 import * as _db from "../../../db/src/index";
-const { db, projectorState, eventStore, tenants, ocrScanResults } = _db;
+const { db, projectorState, projectorErrors, eventStore, tenants, ocrScanResults } = _db;
 import { eq, and, sql } from "drizzle-orm";
 import postgres from "postgres";
 import { processScan, type ExtractedScan } from "../services/ocr-engine";
@@ -52,6 +52,7 @@ const projectors: Projector[] = [
 ];
 
 const BATCH_SIZE = 50;
+const MAX_PROJECTOR_ATTEMPTS = 3;
 const SAFETY_POLL_MS = 5_000;
 const RECONNECT_BACKOFF_MS = [1_000, 2_000, 4_000, 8_000, 16_000, 30_000];
 
@@ -68,11 +69,14 @@ async function ensureProjectorState(projector: Projector, tenantId: string): Pro
     .limit(1);
 
   if (!stateRow.length) {
-    await db.insert(projectorState).values({
-      tenantId,
-      projectorName: projector.name,
-      lastProcessedSequence: "0",
-    });
+    await db
+      .insert(projectorState)
+      .values({
+        tenantId,
+        projectorName: projector.name,
+        lastProcessedSequence: "0",
+      })
+      .onConflictDoNothing();
   }
 }
 
@@ -92,35 +96,38 @@ async function processProjector(projector: Projector, tenantId: string): Promise
 
   const lastSeq = BigInt(stateRow[0]?.lastProcessedSequence ?? "0");
 
-  const events = await db.execute(
-    sql`
-      SELECT * FROM event_store
-      WHERE tenant_id = ${tenantId}
-        AND sequence > ${lastSeq}
-      ORDER BY sequence ASC
-      LIMIT ${BATCH_SIZE}
-      FOR UPDATE SKIP LOCKED
-    `
-  );
-
-  const eventRows = ((events as { rows?: Record<string, unknown>[] }).rows ?? (events as unknown as Record<string, unknown>[])) as Array<{
-    id: string;
-    tenant_id: string;
-    aggregate_type: string;
-    aggregate_id: string;
-    event_type: string;
-    payload: unknown;
-    sequence: string | number | bigint;
-    actor_id: string;
-    created_at: string | Date;
-  }>;
-  if (!eventRows || eventRows.length === 0) return;
-
-  let processingError = null;
+  let processingError: unknown = null;
   let lastProcessedEventId: string | null = null;
 
+  // Claim (FOR UPDATE SKIP LOCKED) and process must share one transaction:
+  // postgres-js autocommits standalone queries, so locks taken outside a tx
+  // release immediately and concurrent workers reprocess the same events.
   await db.transaction(async (tx) => {
     const txDb = tx as any;
+
+    const events = await txDb.execute(
+      sql`
+        SELECT * FROM event_store
+        WHERE tenant_id = ${tenantId}
+          AND sequence > ${lastSeq}
+        ORDER BY sequence ASC
+        LIMIT ${BATCH_SIZE}
+        FOR UPDATE SKIP LOCKED
+      `
+    );
+
+    const eventRows = ((events as { rows?: Record<string, unknown>[] }).rows ?? (events as unknown as Record<string, unknown>[])) as Array<{
+      id: string;
+      tenant_id: string;
+      aggregate_type: string;
+      aggregate_id: string;
+      event_type: string;
+      payload: unknown;
+      sequence: string | number | bigint;
+      actor_id: string;
+      created_at: string | Date;
+    }>;
+    if (!eventRows || eventRows.length === 0) return;
 
     for (const eventRow of eventRows) {
       const event = {
@@ -145,12 +152,62 @@ async function processProjector(projector: Projector, tenantId: string): Promise
         await projector.process(txDb, event);
         lastProcessedEventId = event.id;
       } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
         logger.error(`[${projector.name}] Error processing event`, err as Error, {
           projector: projector.name,
           eventId: event.id,
           eventType: event.eventType,
           aggregateId: event.aggregateId,
         });
+
+        await txDb
+          .insert(projectorErrors)
+          .values({
+            projectorName: projector.name,
+            tenantId,
+            eventId: event.id,
+            error: errorMessage,
+            attempts: 1,
+          })
+          .onConflictDoUpdate({
+            target: [projectorErrors.projectorName, projectorErrors.tenantId, projectorErrors.eventId],
+            set: {
+              attempts: sql`${projectorErrors.attempts} + 1`,
+              error: errorMessage,
+            },
+          });
+
+        const [errorRow] = await txDb
+          .select({ attempts: projectorErrors.attempts })
+          .from(projectorErrors)
+          .where(
+            and(
+              eq(projectorErrors.projectorName, projector.name),
+              eq(projectorErrors.tenantId, tenantId),
+              eq(projectorErrors.eventId, event.id),
+            ),
+          )
+          .limit(1);
+
+        if ((errorRow?.attempts ?? 1) >= MAX_PROJECTOR_ATTEMPTS) {
+          // Poison event: retried every cycle forever, wedging the projector.
+          // After 3 consecutive failures, advance past it and keep the row in
+          // projector_errors for investigation instead of blocking the batch.
+          logger.error(
+            `[${projector.name}] POISON EVENT — advancing past event ${event.id} after ${MAX_PROJECTOR_ATTEMPTS} consecutive failures (kept in projector_errors for investigation)`,
+            err as Error,
+            {
+              projector: projector.name,
+              tenantId,
+              eventId: event.id,
+              eventType: event.eventType,
+              attempts: errorRow?.attempts ?? MAX_PROJECTOR_ATTEMPTS,
+            },
+          );
+          lastProcessedEventId = event.id;
+          continue;
+        }
+
         processingError = err;
         break;
       }

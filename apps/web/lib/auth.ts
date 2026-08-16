@@ -1,27 +1,36 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
 import {
   db,
   users,
   userTenants,
   tenants,
+  loginAttempts,
 } from "@complianceos/db";
+import { and, eq, sql } from "drizzle-orm";
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const DEMO_EMAIL = "demo@complianceos.test";
 
 const nextAuth = NextAuth({
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: Number(process.env.AUTH_SESSION_MAX_AGE) || 7 * 24 * 60 * 60, // 7 days
+    updateAge: 24 * 60 * 60, // sliding refresh every 24h
+  },
   providers: [
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email) return null;
+        // NextAuth v5 beta passes the request — pull the client IP for
+        // per-IP throttling (Vercel: x-forwarded-for).
+        const fwd = req?.headers?.get?.("x-forwarded-for");
+        const ip = typeof fwd === "string" ? fwd.split(",")[0].trim() : "";
 
         const [user] = await db
           .select({
@@ -41,10 +50,52 @@ const nextAuth = NextAuth({
         }
 
         if (!credentials.password) return null;
-        if (user.passwordHash) {
-          const valid = await bcrypt.compare(String(credentials.password), user.passwordHash);
-          if (!valid) return null;
+
+        // DB-backed brute-force guard (serverless-safe; the old in-memory map
+        // was per-instance and useless on Vercel).
+        const now = new Date();
+        const [attemptRow] = await db
+          .select()
+          .from(loginAttempts)
+          .where(
+            and(
+              eq(loginAttempts.email, String(credentials.email)),
+              eq(loginAttempts.ip, ip),
+            ),
+          )
+          .limit(1);
+        if (
+          attemptRow &&
+          attemptRow.attemptCount >= 5 &&
+          now.getTime() - new Date(attemptRow.lastAttemptAt).getTime() < 15 * 60 * 1000
+        ) {
+          throw new Error("Too many attempts. Try again later.");
         }
+
+        let valid = false;
+        if (user.passwordHash) {
+          valid = await bcrypt.compare(String(credentials.password), user.passwordHash);
+        }
+        if (!valid) {
+          await db
+            .insert(loginAttempts)
+            .values({ email: String(credentials.email), ip, attemptCount: 1, lastAttemptAt: now })
+            .onConflictDoUpdate({
+              target: [loginAttempts.email, loginAttempts.ip],
+              set: {
+                attemptCount: sql`${loginAttempts.attemptCount} + 1`,
+                lastAttemptAt: now,
+              },
+            });
+          return null;
+        }
+        // Success — clear the throttle.
+        await db.delete(loginAttempts).where(
+          and(
+            eq(loginAttempts.email, String(credentials.email)),
+            eq(loginAttempts.ip, ip),
+          ),
+        );
         return { id: user.id, email: user.email, name: user.name };
       },
     }),

@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "This link is invalid or has expired. Request a new one." }, { status: 400 });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 12);
     await db.update(users).set({ passwordHash }).where(eq(users.id, res.userId));
 
     return Response.json({ ok: true });

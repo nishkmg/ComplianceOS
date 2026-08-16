@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 const EXIT_DURATION = 200;
+const SAFETY_TIMEOUT = 4000;
 
 export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
   const pathname = usePathname();
@@ -12,15 +13,19 @@ export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
   const prevPathnameRef = useRef(pathname);
   const loadingRef = useRef(false);
   const exitTimerRef = useRef(0);
+  const hideTimerRef = useRef(0);
 
   const show = (from: string) => {
     if (loadingRef.current) return;
     loadingRef.current = true;
     setExiting(false);
     setVisible(true);
+    window.clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = window.setTimeout(hide, SAFETY_TIMEOUT);
   };
 
   const hide = () => {
+    window.clearTimeout(hideTimerRef.current);
     if (!loadingRef.current) return;
     loadingRef.current = false;
     setExiting(true);
@@ -73,6 +78,13 @@ export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
   }, []);
 
   useEffect(() => {
+    return () => {
+      window.clearTimeout(exitTimerRef.current);
+      window.clearTimeout(hideTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
     if (pathname !== prevPathnameRef.current) {
       hide();
       prevPathnameRef.current = pathname;
@@ -86,7 +98,7 @@ export function NavigationLoader({ fullScreen }: { fullScreen?: boolean }) {
       className={`fixed z-50 flex items-center justify-center transition-opacity duration-200 ${
         exiting ? "opacity-0" : "opacity-100"
       } ${fullScreen ? "inset-0" : "top-14 left-0 right-0 bottom-0 lg:left-64"}`}
-      style={{ pointerEvents: exiting ? "none" : "auto" }}
+      style={{ pointerEvents: "none" }}
       aria-hidden="true"
       role="status"
       aria-label="Page loading"

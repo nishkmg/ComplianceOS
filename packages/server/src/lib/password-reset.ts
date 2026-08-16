@@ -1,5 +1,10 @@
 // packages/server/src/lib/password-reset.ts
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
+
+// Tokens are stored hashed (SHA-256) — a DB leak never exposes usable reset links.
+function hashToken(raw: string): string {
+  return createHash("sha256").update(raw).digest("hex");
+}
 import { eq, and, isNull, gt } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { passwordResetTokens, users } = _db;
@@ -19,7 +24,7 @@ export async function createPasswordResetToken(
   const token = randomBytes(24).toString("hex");
   await db.insert(passwordResetTokens).values({
     userId,
-    token,
+    token: hashToken(token),
     expiresAt: new Date(Date.now() + ttlMs),
   });
   return token;
@@ -44,7 +49,7 @@ export async function consumePasswordResetToken(
     .innerJoin(users, eq(users.id, passwordResetTokens.userId))
     .where(
       and(
-        eq(passwordResetTokens.token, rawToken),
+        eq(passwordResetTokens.token, hashToken(rawToken)),
         isNull(passwordResetTokens.usedAt),
         gt(passwordResetTokens.expiresAt, new Date()),
       ),

@@ -56,7 +56,7 @@ export const authRouter = router({
     .mutation(async ({ ctx, input }) => {
       const res = await consumePasswordResetToken(ctx.db, input.token);
       if (!res) throw new Error("This link is invalid or has expired. Request a new one.");
-      const passwordHash = await bcrypt.hash(input.password, 10);
+      const passwordHash = await bcrypt.hash(input.password, 12);
       await ctx.db.update(users).set({ passwordHash }).where(eq(users.id, res.userId));
       return { ok: true };
     }),

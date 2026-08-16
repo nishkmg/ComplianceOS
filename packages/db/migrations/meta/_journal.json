@@ -219,106 +219,120 @@
     {
       "idx": 30,
       "version": "7",
-      "when": 1786437359472,
+      "when": 1700000030000,
       "tag": "0029_password_reset_tokens",
       "breakpoints": true
     },
     {
       "idx": 31,
       "version": "7",
-      "when": 1786440524318,
+      "when": 1700000031000,
       "tag": "0030_reference_type_credit_note",
       "breakpoints": true
     },
     {
       "idx": 32,
       "version": "7",
-      "when": 1786441992025,
+      "when": 1700000032000,
       "tag": "0031_purchase_bills",
       "breakpoints": true
     },
     {
       "idx": 33,
       "version": "7",
-      "when": 1786442232628,
+      "when": 1700000033000,
       "tag": "0032_aggregate_type_purchase_bill",
       "breakpoints": true
     },
     {
       "idx": 34,
       "version": "7",
-      "when": 1786442796152,
+      "when": 1700000034000,
       "tag": "0033_event_type_purchase_bill",
       "breakpoints": true
     },
     {
       "idx": 35,
       "version": "7",
-      "when": 1786458707821,
+      "when": 1700000035000,
       "tag": "0034_gst_month_pad_backfill",
       "breakpoints": true
     },
     {
       "idx": 36,
       "version": "7",
-      "when": 1786459288932,
+      "when": 1700000036000,
       "tag": "0035_payroll_runs_eps",
       "breakpoints": true
     },
     {
       "idx": 37,
       "version": "7",
-      "when": 1786460469869,
+      "when": 1700000037000,
       "tag": "0036_event_type_gstr9",
       "breakpoints": true
     },
     {
       "idx": 38,
       "version": "7",
-      "when": 1786465864406,
+      "when": 1700000038000,
       "tag": "0037_payroll_lines_advance_id",
       "breakpoints": true
     },
     {
       "idx": 39,
       "version": "7",
-      "when": 1786514134373,
+      "when": 1700000039000,
       "tag": "0038_event_type_gstr_generated",
       "breakpoints": true
     },
     {
       "idx": 40,
       "version": "7",
-      "when": 1786515063402,
+      "when": 1700000040000,
       "tag": "0039_event_type_itr_return",
       "breakpoints": true
     },
     {
       "idx": 41,
       "version": "7",
-      "when": 1786885253981,
+      "when": 1700000041000,
       "tag": "0040_event_type_remaining",
       "breakpoints": true
     },
     {
       "idx": 42,
       "version": "7",
-      "when": 1786886054349,
+      "when": 1700000042000,
       "tag": "0041_event_sequences_counter",
       "breakpoints": true
     },
     {
       "idx": 44,
       "version": "7",
-      "when": 1786953100000,
+      "when": 1700000043000,
       "tag": "0042_rls_remaining_tables",
       "breakpoints": true
     },
     {
       "idx": 43,
       "version": "7",
-      "when": 1786952900000,
+      "when": 1700000044000,
       "tag": "0043_login_attempts",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1700000045000,
+      "tag": "0044_projector_errors",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1700000046000,
+      "tag": "0045_gst_tax_type_interest_penalty",
       "breakpoints": true
     }
   ]

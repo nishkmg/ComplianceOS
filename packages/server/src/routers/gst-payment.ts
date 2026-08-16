@@ -8,6 +8,33 @@ import { getCurrentFiscalYear } from "@complianceos/shared";
 
 const currentFiscalYear = getCurrentFiscalYear();
 
+const CHALLAN_TAX_TYPES = ["igst", "cgst", "sgst", "interest", "penalty"] as const;
+
+const gstChallanBreakdownSchema = z.object({
+  taxType: z.enum(CHALLAN_TAX_TYPES),
+  taxableValue: z.number().finite(),
+  interestAmount: z.number().finite(),
+  penaltyAmount: z.number().finite(),
+  totalAmount: z.number().finite().positive(),
+});
+
+const gstChallanSchema = z.object({
+  challanNumber: z.string().min(1),
+  challanDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  taxPeriod: z.object({
+    month: z.number().int().min(1).max(12),
+    year: z.number().int().min(2000).max(2100),
+  }),
+  fiscalYear: z.string().min(1),
+  totalAmount: z.number().finite().positive(),
+  breakdown: z.array(gstChallanBreakdownSchema),
+  paymentMode: z.enum(["online", "offline"]).nullable().optional(),
+  bankName: z.string().nullable().optional(),
+  cin: z.string().nullable().optional(),
+  paymentDate: z.string().nullable().optional(),
+  status: z.enum(["generated", "paid", "failed"]).optional(),
+});
+
 export const gstPaymentRouter = router({
   createChallan: protectedProcedure
     .input(
@@ -122,15 +149,18 @@ export const gstPaymentRouter = router({
     .mutation(async ({ ctx, input }) => {
       const paymentDate = new Date().toISOString().split("T")[0];
 
-      // In a real implementation, this would:
-      // 1. Load the challan aggregate
-      // 2. Validate payment details
-      // 3. Create cash ledger entries
-      // 4. Update liability ledger
-      // 5. Append payment event
+      let rawChallanData: unknown;
+      try {
+        rawChallanData = JSON.parse(Buffer.from(input.challanId, "base64").toString("utf8"));
+      } catch {
+        throw new Error("Invalid challan data provided");
+      }
 
-      // For demonstration, create cash ledger entries
-      const challanData = JSON.parse(Buffer.from(input.challanId, "base64").toString());
+      const parsedChallan = gstChallanSchema.safeParse(rawChallanData);
+      if (!parsedChallan.success) {
+        throw new Error("Invalid challan data provided");
+      }
+      const challanData = parsedChallan.data;
 
       await ctx.db.transaction(async (tx) => {
         // Create cash ledger entries for each tax type

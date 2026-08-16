@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { db, tenants, users, userTenants, passwordResetTokens } from "../../../db/src/index";
 import { eq, and, like } from "drizzle-orm";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash } from "crypto";
 import { appRouter } from "../routers";
 import { createPasswordResetToken, consumePasswordResetToken } from "../lib/password-reset";
 import bcrypt from "bcryptjs";
@@ -114,10 +114,12 @@ describe("Password reset + team invite flow", () => {
     const token = await createPasswordResetToken(db, ownerId);
     const res = await consumePasswordResetToken(db, token);
     expect(res?.userId).toBe(ownerId);
+    // Tokens are stored hashed (SHA-256) — look up by the hash.
+    const hashed = createHash("sha256").update(token).digest("hex");
     const [row] = await db
       .select()
       .from(passwordResetTokens)
-      .where(eq(passwordResetTokens.token, token))
+      .where(eq(passwordResetTokens.token, hashed))
       .limit(1);
     expect(row.usedAt).not.toBeNull();
     expect(await consumePasswordResetToken(db, token)).toBeNull();

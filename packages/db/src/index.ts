@@ -21,6 +21,7 @@ export const fySummaries = schema.fySummaries;
 export const fiscalYears = schema.fiscalYears;
 export const entryNumberCounters = schema.entryNumberCounters;
 export const projectorState = schema.projectorState;
+export const projectorErrors = schema.projectorErrors;
 export const reportCacheVersions = schema.reportCacheVersions;
 export const eventStore = schema.eventStore;
 export const eventSequences = schema.eventSequences;
