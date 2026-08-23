@@ -1,27 +1,112 @@
 "use client";
 
+import { useState } from "react";
+
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Icon } from "@/components/ui/icon";
 import { api } from "@/lib/api";
 
 function PlanBadge() {
+  const utils = api.useUtils();
   const { data } = api.tenantConfig.get.useQuery();
   const plan = data?.plan ?? "free";
   const label = plan === "pro" ? "Pro" : plan === "business" ? "Business" : "Free";
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
+
+  const startCheckout = async () => {
+    setBusy(true);
+    setNotice(null);
+    try {
+      const res = await fetch("/api/billing/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "pro", period: "annual" }),
+      });
+      if (res.status === 501) {
+        setNotice({ kind: "err", msg: "Online payments are not configured yet. Write to hello@arthvahi.in to upgrade." });
+        return;
+      }
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        setNotice({ kind: "err", msg: j.error ?? "Could not start checkout." });
+        return;
+      }
+      const order = await res.json();
+      // Load Razorpay checkout.js on demand.
+      await new Promise<void>((resolve, reject) => {
+        if ((window as any).Razorpay) { resolve(); return; }
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Failed to load Razorpay"));
+        document.head.appendChild(script);
+      });
+      await new Promise<void>((resolve) => {
+        const rzp = new (window as any).Razorpay({
+          key: order.keyId,
+          amount: order.amount,
+          currency: order.currency,
+          name: "Arthvahi",
+          description: `Arthvahi ${order.plan} plan (${order.period})`,
+          order_id: order.orderId,
+          handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
+            try {
+              const verifyRes = await fetch("/api/billing/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  orderId: response.razorpay_order_id,
+                  paymentId: response.razorpay_payment_id,
+                  signature: response.razorpay_signature,
+                  plan: order.plan,
+                  period: order.period,
+                }),
+              });
+              if (!verifyRes.ok) throw new Error();
+              setNotice({ kind: "ok", msg: "Upgraded — your plan is now active." });
+              void utils.tenantConfig.get.invalidate();
+            } catch {
+              setNotice({ kind: "err", msg: "Payment succeeded but confirmation failed. Write to hello@arthvahi.in." });
+            }
+            resolve();
+          },
+          modal: { ondismiss: () => resolve() },
+        });
+        rzp.open();
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-between rounded-sm border border-border-subtle bg-surface p-5">
       <div>
         <p className="font-ui text-ui-2xs uppercase tracking-widest text-light font-bold mb-1">Plan</p>
         <p className="font-ui text-ui-lg font-semibold text-dark">{label}</p>
         <p className="font-ui text-ui-sm text-mid mt-1">
-          {plan === "free" ? "25 invoices per month · GSTR-1 + 3B" : plan === "pro" ? "Unlimited invoicing · 5 users · GSTR automations" : "Everything in Pro · TDS/TCS · API · MCA audit trail"}
+          {plan === "free"
+            ? "25 invoices per month · GSTR-1 + 3B · 1 user"
+            : plan === "pro"
+              ? "Unlimited invoicing · 5 users · GSTR-1, 2B and 3B"
+              : "Everything in Pro · MCA-aligned audit trail · Priority support"}
         </p>
+        {notice && (
+          <p role={notice.kind === "ok" ? "status" : "alert"} className={`mt-2 font-ui text-ui-sm ${notice.kind === "ok" ? "text-success-deep" : "text-danger"}`}>
+            {notice.msg}
+          </p>
+        )}
       </div>
       {plan === "free" && (
-        <Link href="/pricing" className="inline-flex h-9 items-center rounded-sm bg-amber px-4 text-sm font-medium text-white dark:text-amber-ink hover:bg-amber-hover no-underline">
-          Upgrade
-        </Link>
+        <button
+          onClick={startCheckout}
+          disabled={busy}
+          className="inline-flex h-9 items-center rounded-sm bg-amber px-4 text-sm font-medium text-white dark:text-amber-ink hover:bg-amber-hover transition-colors cursor-pointer disabled:opacity-50"
+        >
+          Upgrade to Pro
+        </button>
       )}
     </div>
   );

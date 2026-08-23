@@ -15,10 +15,16 @@ const plans = [
     monthly: 0,
     annual: 0,
     desc: 'For individual proprietors getting started with clean books.',
-    features: ['Up to 25 invoices / month', 'GSTR-1 and GSTR-3B report generation', 'Single user'],
+    features: [
+      'Up to 25 invoices / month',
+      'GSTR-1 and GSTR-3B generation',
+      '1 user (owner)',
+      'Double-entry ledger, invoicing, receivables, inventory, payroll run, ITR-3/4 computation',
+    ],
     cta: 'Start Free',
     href: '/signup',
     popular: false,
+    note: '',
   },
   {
     name: 'Pro',
@@ -28,27 +34,24 @@ const plans = [
     features: [
       'Unlimited invoicing',
       'GSTR-1, 2B and 3B automations',
-      'GST return automations with period navigation',
       'Up to 5 users',
+      'Everything in Free',
     ],
     cta: 'Start Free',
     href: '/signup',
     popular: true,
+    note: 'Already on Arthvahi? Upgrade from Settings → Plan.',
   },
   {
     name: 'Business',
     monthly: 2400,
     annual: 24000,
     desc: 'Compliance at scale for larger operations.',
-    features: [
-      'TDS and TCS reporting',
-      'Audit trail (MCA-aligned edit log)',
-      'API integration support',
-      'Dedicated support desk',
-    ],
+    features: ['Everything in Pro', 'MCA-aligned audit trail', 'Priority support'],
     cta: 'Contact Sales',
     href: '/contact',
     popular: false,
+    note: 'Already on Arthvahi? Upgrade from Settings → Plan.',
   },
 ];
 
@@ -67,7 +70,7 @@ const faqs = [
   },
   {
     q: 'What happens if I cancel my subscription?',
-    a: 'You can export your data at any time. After cancellation your books stay readable for 30 days, then the account is archived.',
+    a: 'You can export your data at any time. There is no archive flow today — if you cancel a paid plan you simply drop back to the Free plan and its limits.'
   },
   {
     q: 'Is there a free plan?',
