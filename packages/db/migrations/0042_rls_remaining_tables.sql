@@ -29,7 +29,7 @@ DO $$
 DECLARE t text;
 BEGIN
   FOREACH t IN ARRAY ARRAY[
-    'user_tenants','tenants','credit_notes','payments','receivables_summary',
+    'user_tenants','credit_notes','payments','receivables_summary',
     'products','product_tax_categories','employees','payroll_runs',
     'salary_components','payslips','gst_config','gst_returns',
     'gstr_table_mappings','advance_tax_ledger','itr_returns','itr_config',
