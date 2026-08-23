@@ -24,6 +24,7 @@ export {
   OpeningBalancesInputSchema,
 };
 
+export * from "./validation";
 export * from "./types/events";
 export * from "./types/reports";
 export * from "./types/onboarding";
