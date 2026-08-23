@@ -335,6 +335,34 @@
       "when": 1787100001000,
       "tag": "0046_plans_subscriptions",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1787100002000,
+      "tag": "0047_hot_path_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1787100003000,
+      "tag": "0048_invoice_number_fy_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1787100004000,
+      "tag": "0049_login_attempts_kind",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1787100005000,
+      "tag": "0050_child_table_rls",
+      "breakpoints": true
     }
   ]
 }

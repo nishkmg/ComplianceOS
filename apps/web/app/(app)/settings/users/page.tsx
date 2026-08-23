@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { showToast } from "@/lib/toast";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
@@ -87,9 +88,9 @@ export default function TeamSettingsPage() {
             description="Invite teammates, assign roles and control access to this workspace."
           />
         </div>
-        <button onClick={() => setInviteOpen(true)} className="btn btn-primary flex items-center gap-2 group">
+        <Button onClick={() => setInviteOpen(true)} className="group">
           Invite Member <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
-        </button>
+        </Button>
       </header>
 
       <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm relative">
@@ -205,9 +206,9 @@ export default function TeamSettingsPage() {
             </div>
             <div className="mt-6 flex justify-end gap-2">
               <DialogClose asChild>
-                <button className="btn btn-secondary">Cancel</button>
+                <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <button onClick={confirmInvite} disabled={busy} className="btn btn-primary">Send Invite</button>
+              <Button onClick={confirmInvite} disabled={busy}>Send Invite</Button>
             </div>
       </DialogContent>
       </Dialog>

@@ -21,6 +21,7 @@ interface LineDraft {
 
 export default function NewBillPage() {
   const router = useRouter();
+  const utils = api.useUtils();
   const { data: vendors } = api.payables.vendorAccounts.useQuery(undefined, { staleTime: 30_000 });
   const { data: accounts } = api.accounts.list.useQuery(undefined, { staleTime: 30_000 });
 
@@ -42,6 +43,7 @@ export default function NewBillPage() {
     onSuccess: (res) => {
       setBusy(false);
       showToast.success(`Bill recorded for ${inr(res.grandTotal)}.`);
+      void utils.payables.list.invalidate();
       router.push(`/payables/${res.billId}`);
     },
     onError: (e) => { setBusy(false); showToast.error(e.message); },
@@ -97,7 +99,7 @@ export default function NewBillPage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/payables" className="btn btn-secondary no-underline">Cancel</Link>
+          <Button variant="outline" onClick={() => router.push("/payables")}>Cancel</Button>
           <Button onClick={submit} disabled={busy}>Record Bill</Button>
         </div>
       </header>

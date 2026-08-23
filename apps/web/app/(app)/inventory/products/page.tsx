@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from '@/components/ui/icon';
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { EmptyState } from "@/components/ui/empty-state";
 import { api } from "@/lib/api";
@@ -17,7 +18,7 @@ export default function ProductsPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <PageHeader title="Products" />
-        <Link href="/inventory/products/new" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline"><Icon name="add" size={14} /> New Product</Link>
+        <Link href="/inventory/products/new" className={buttonVariants({})}><Icon name="add" size={14} /> New Product</Link>
       </div>
       {products.length === 0 ? <EmptyState icon="inventory_2" title="No products" description="Add your first product." /> : (
         <div className="bg-surface border border-border rounded-md shadow-sm overflow-hidden">

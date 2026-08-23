@@ -8,6 +8,7 @@ import { useFiscalYear } from "@/hooks/use-fiscal-year";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 
 type ReportType = "valuation" | "movement" | "expiry";
 
@@ -76,12 +77,12 @@ export default function InventoryReportsPage() {
           <p className="text-ui-sm text-secondary font-ui mt-1 max-w-2xl leading-relaxed">{reportMeta[reportType].desc}</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => window.print()} className="btn btn-secondary flex items-center gap-2">
+          <Button variant="outline" onClick={() => window.print()}>
             <Icon name="print" className="text-ui-xl" /> Print Report
-          </button>
-          <button onClick={handleExportCSV} className="btn btn-primary flex items-center gap-2">
+          </Button>
+          <Button onClick={handleExportCSV}>
             <Icon name="download" className="text-ui-xl" /> Export CSV
-          </button>
+          </Button>
         </div>
       </div>
 

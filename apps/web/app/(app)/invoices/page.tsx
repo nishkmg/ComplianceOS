@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { formatIndianNumber } from "@/lib/format";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
 
 interface Invoice {
@@ -54,7 +55,7 @@ export default function InvoicesPage() {
     <div className="max-w-page mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <PageHeader title="Invoices" />
-        <Link href="/invoices/new" className="flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline">
+        <Link href="/invoices/new" className={buttonVariants({})}>
           <Icon name="add" size={14} /> New Invoice
         </Link>
       </div>

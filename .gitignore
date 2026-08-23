@@ -21,3 +21,4 @@ apps/web/e2e/__baseline__/
 apps/web/playwright-report/
 packages/server/data/
 .env.prod.pull
+apps/web/data/storage/**

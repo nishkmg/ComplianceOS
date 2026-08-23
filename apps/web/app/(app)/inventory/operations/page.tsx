@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 
@@ -82,11 +83,11 @@ export default function InventoryOperationsPage() {
               <label htmlFor="rcv-date" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Date</label>
               <input id="rcv-date" type="date" value={receive.receiptDate} onChange={(e) => setReceive({ ...receive, receiptDate: e.target.value })} className={inputCls} />
             </div>
-            <button
+            <Button
               onClick={() => { if (!receive.productId || !receive.quantity || !receive.unitCost) { showToast.error("Product, quantity and unit cost required."); return; } setBusy(true); receiveMutation.mutate({ productId: receive.productId, quantity: Number(receive.quantity), unitCost: Number(receive.unitCost), batchNumber: receive.batchNumber || undefined, receiptDate: receive.receiptDate, narration: receive.narration || undefined }); }}
               disabled={busy}
-              className="btn btn-primary w-full"
-            >Receive Stock</button>
+              className="w-full"
+            >Receive Stock</Button>
           </div>
         </div>
 
@@ -107,11 +108,11 @@ export default function InventoryOperationsPage() {
               <label htmlFor="dlv-narr" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Narration</label>
               <input id="dlv-narr" value={deliver.narration} onChange={(e) => setDeliver({ ...deliver, narration: e.target.value })} placeholder="e.g. Invoice INV-0001" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
             </div>
-            <button
+            <Button
               onClick={() => { if (!deliver.productId || !deliver.quantity) { showToast.error("Product and quantity required."); return; } setBusy(true); deliverMutation.mutate({ productId: deliver.productId, quantity: Number(deliver.quantity), narration: deliver.narration || undefined }); }}
               disabled={busy}
-              className="btn btn-primary w-full"
-            >Deliver Stock</button>
+              className="w-full"
+            >Deliver Stock</Button>
           </div>
         </div>
 
@@ -140,11 +141,11 @@ export default function InventoryOperationsPage() {
               <label htmlFor="adj-narr" className="mb-1.5 block font-ui text-ui-xs font-medium text-dark">Narration</label>
               <input id="adj-narr" value={adjust.narration} onChange={(e) => setAdjust({ ...adjust, narration: e.target.value })} placeholder="Optional" className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" />
             </div>
-            <button
+            <Button
               onClick={() => { if (!adjust.productId || !adjust.quantity || Number(adjust.quantity) === 0) { showToast.error("Product and a non-zero quantity required."); return; } setBusy(true); adjustMutation.mutate({ productId: adjust.productId, quantity: Number(adjust.quantity), reason: adjust.reason as any, narration: adjust.narration || undefined }); }}
               disabled={busy}
-              className="btn btn-primary w-full"
-            >Apply Adjustment</button>
+              className="w-full"
+            >Apply Adjustment</Button>
           </div>
         </div>
       </div>

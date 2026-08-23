@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import { submitStep } from "@/lib/mock-mutation";
 import { BUSINESS_TYPES, INDUSTRIES, STATES } from "@/lib/constants";
 
@@ -198,10 +199,10 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
           >
             Save as Draft
           </button>
-          <button className="btn btn-primary py-3 px-8 group disabled:opacity-50" type="submit" disabled={isSubmitting}>
+          <Button className="group" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Establishing Profile..." : "Continue to Setup"}
             <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
-          </button>
+          </Button>
         </div>
       </form>
     </div>

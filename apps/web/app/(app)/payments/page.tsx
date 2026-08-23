@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
@@ -105,9 +106,9 @@ export default function PaymentsPage() {
             <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-mid text-ui-lg" />
             <input className="pl-8 pr-3 py-2 w-48 bg-surface border border-border rounded-md text-ui-xs font-ui outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber transition-colors" placeholder="Search payments…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 btn btn-secondary">
+          <Button variant="outline" onClick={handleExport}>
             <Icon name="download" size={14} /> Export
-          </button>
+          </Button>
           <Link href="/payments/new" className="flex items-center gap-1.5 px-4 py-2 bg-amber text-white text-ui-2xs font-bold uppercase tracking-widest hover:bg-amber-hover transition-colors rounded-md shadow-sm no-underline">
             <Icon name="add" size={14} /> Record Payment
           </Link>

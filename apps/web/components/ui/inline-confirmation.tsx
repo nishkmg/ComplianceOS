@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Button } from './button';
+import { Input } from './input';
 
 interface InlineConfirmationProps {
   /** The action button that triggers confirmation */
@@ -85,11 +86,11 @@ export function InlineConfirmation({
               <label className="block font-ui text-xs text-light mb-2">
                 Type "{confirmText}" to confirm:
               </label>
-              <input
+              <Input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                className="input-field w-full max-w-xs font-ui"
+                className="w-full max-w-xs font-ui"
                 placeholder={`Type "${confirmText}"`}
                 autoFocus
               />
@@ -185,7 +186,7 @@ export function InlineConfirmationWithReason({
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="input-field w-full font-ui min-h-[80px]"
+              className="flex w-full rounded-sm border border-border-strong bg-surface px-3 py-2 font-ui text-sm text-dark shadow-sm placeholder:text-light focus-visible:outline-none focus-visible:border-amber focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-1 focus-visible:ring-offset-surface resize-none min-h-[80px]"
               placeholder={reasonPlaceholder}
               autoFocus
             />

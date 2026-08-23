@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -113,7 +114,7 @@ export default function JournalPage() {
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
 
-  const { data, isLoading, isError } = api.journalEntries.list.useQuery({ fiscalYear: activeFy, limit: 500 });
+  const { data, isLoading, isError } = api.journalEntries.list.useQuery({ fiscalYear: activeFy, limit: 50 });
   const entries = (data ?? []) as JournalEntry[];
 
 
@@ -180,12 +181,12 @@ export default function JournalPage() {
           <PageHeader eyebrow="General Ledger" title="Journal Entries" />
         </div>
         <div className="flex gap-3">
-          <button className="btn btn-secondary" onClick={handleExportCSV}>
+          <Button variant="outline" onClick={handleExportCSV}>
             <Icon name="download" size={14} className="mr-1.5 inline" />Export CSV
-          </button>
+          </Button>
           <Link
             href="/journal/new"
-            className="btn btn-primary no-underline inline-flex items-center gap-1"
+            className={buttonVariants({})}
           >
             Add Entry <Icon name="add" size={14} />
           </Link>

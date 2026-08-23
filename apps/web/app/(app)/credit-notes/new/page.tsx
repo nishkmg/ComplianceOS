@@ -28,6 +28,7 @@ interface InvoiceOption {
 
 export default function NewCreditNotePage() {
   const router = useRouter();
+  const utils = api.useUtils();
   const { data: accounts } = api.accounts.list.useQuery(undefined, { staleTime: 30_000 });
   const { data: invoices } = api.invoices.list.useQuery({ page: 1, pageSize: 100 }, { staleTime: 30_000 });
 
@@ -60,6 +61,7 @@ export default function NewCreditNotePage() {
     onSuccess: (res) => {
       setBusy(false);
       showToast.success(`Credit note ${res.creditNoteNumber} created.`);
+      void utils.creditNotes.list.invalidate();
       router.push(`/credit-notes/${res.creditNoteId}`);
     },
     onError: (e) => {
@@ -116,7 +118,7 @@ export default function NewCreditNotePage() {
           />
         </div>
         <div className="flex gap-3 shrink-0">
-          <Link href="/credit-notes" className="btn btn-secondary no-underline">Cancel</Link>
+          <Button variant="outline" onClick={() => router.push("/credit-notes")}>Cancel</Button>
           <Button onClick={submit} disabled={busy}>Create Credit Note</Button>
         </div>
       </header>

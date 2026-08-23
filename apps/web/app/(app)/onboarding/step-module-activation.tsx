@@ -4,6 +4,7 @@ import { useState } from "react";
 import { showToast } from "@/lib/toast";
 import { submitStep } from "@/lib/mock-mutation";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import { MODULES } from "@/lib/constants";
 
 interface StepModuleActivationProps {
@@ -89,14 +90,14 @@ export function StepModuleActivation({ tenantId, onComplete, onBack }: StepModul
             Accounting module is always active as the system core.
           </p>
         </div>
-        <button
+        <Button
           onClick={handleContinue}
           disabled={saving}
-          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
+          className="group w-full"
         >
           {saving ? "Saving..." : "Establish Framework"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
+        </Button>
       </div>
     </div>
   );

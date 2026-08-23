@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
 const fmtDate = (d: string) =>
@@ -35,7 +36,7 @@ export default function PayablesPage() {
             description="Vendor bills with due dates, aging and payment allocation — the mirror of receivables."
           />
         </div>
-        <Link href="/payables/new" className="btn btn-primary flex items-center gap-2 group no-underline">
+        <Link href="/payables/new" className={`${buttonVariants({})} group`}>
           New Bill <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
         </Link>
       </header>

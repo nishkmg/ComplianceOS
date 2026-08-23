@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
@@ -65,9 +66,9 @@ export default function CompanySettingsPage() {
             description="Legal identity used on invoices, GST returns, challans and payslips."
           />
         </div>
-        <button onClick={save} disabled={busy || isLoading} className="btn btn-primary flex items-center gap-2">
+        <Button onClick={save} disabled={busy || isLoading}>
           Save Changes
-        </button>
+        </Button>
       </header>
 
       {isLoading ? (

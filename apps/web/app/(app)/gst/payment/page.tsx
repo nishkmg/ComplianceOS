@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { formatIndianNumber } from "@/lib/format";
 import { showToast } from "@/lib/toast";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
@@ -79,7 +79,7 @@ export default function GstPaymentPage() {
     <div className="max-w-[800px] mx-auto space-y-8 pb-40">
       <div className="flex items-center justify-between">
         <PageHeader title="GST Payment" />
-        <Link href="/gst/payment/history" className="inline-flex items-center gap-1.5 px-4 py-2 btn btn-primary no-underline">
+        <Link href="/gst/payment/history" className={buttonVariants({})}>
           <Icon name="history" className="text-ui-md" /> Payment History
         </Link>
       </div>

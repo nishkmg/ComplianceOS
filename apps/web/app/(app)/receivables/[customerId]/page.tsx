@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -82,9 +83,9 @@ export default function CustomerDetailPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => router.push("/payments/new")} className="px-4 py-2 btn btn-primary">
+          <Button onClick={() => router.push("/payments/new")}>
             <Icon name="add" size={14} /> Record Payment
-          </button>
+          </Button>
         </div>
       </div>
 

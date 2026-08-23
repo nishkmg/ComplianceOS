@@ -118,25 +118,28 @@ export async function createInvoice(
     // tenant state NAME — the old GST-prefix comparison ("IN-27" vs name)
     // made every sale inter-state (IGST).
     const tenantState = (getStateName(tenant.stateCode) ?? "").toLowerCase();
+    // Integer-paise arithmetic per line: discount/GST computed on rounded
+    // paise, converted back to rupees once — no float accumulation.
+    const toPaise = (rupees: number): number => Math.round(rupees * 100);
     lineCalculations = lines.map((line: { quantity: string | number; unitPrice: string | number; gstRate: string | number; discountPercent?: string | number; accountId: string; description: string }) => {
       const qty = Number(line.quantity);
       const unitPrice = Number(line.unitPrice);
       const gstRate = Number(line.gstRate);
       const discountPct = Number(line.discountPercent ?? 0);
 
-      const beforeDiscount = qty * unitPrice;
-      const discountAmount = beforeDiscount * (discountPct / 100);
-      const amount = beforeDiscount - discountAmount;
+      const beforeDiscountPaise = toPaise(qty * unitPrice);
+      const discountAmountPaise = Math.round(beforeDiscountPaise * (discountPct / 100));
+      const amountPaise = beforeDiscountPaise - discountAmountPaise;
 
       let cgstAmount = "0";
       let sgstAmount = "0";
       let igstAmount = "0";
 
       if (String(validated.customerState).toLowerCase() === tenantState) {
-        cgstAmount = String((amount * gstRate / 200).toFixed(2));
-        sgstAmount = String((amount * gstRate / 200).toFixed(2));
+        cgstAmount = String((Math.round(amountPaise * gstRate / 200) / 100).toFixed(2));
+        sgstAmount = String((Math.round(amountPaise * gstRate / 200) / 100).toFixed(2));
       } else {
-        igstAmount = String((amount * gstRate / 100).toFixed(2));
+        igstAmount = String((Math.round(amountPaise * gstRate / 100) / 100).toFixed(2));
       }
 
       return {
@@ -144,23 +147,30 @@ export async function createInvoice(
         description: line.description,
         quantity: String(qty),
         unitPrice: String(unitPrice),
-        amount: String(amount.toFixed(2)),
+        amount: String((amountPaise / 100).toFixed(2)),
         gstRate: String(gstRate),
         cgstAmount,
         sgstAmount,
         igstAmount,
         discountPercent: String(discountPct),
-        discountAmount: String(discountAmount.toFixed(2)),
+        discountAmount: String((discountAmountPaise / 100).toFixed(2)),
       };
     });
 
-    subtotal = lineCalculations.reduce((sum, l) => sum + Number(l.amount), 0);
-    cgstTotal = lineCalculations.reduce((sum, l) => sum + Number(l.cgstAmount), 0);
-    sgstTotal = lineCalculations.reduce((sum, l) => sum + Number(l.sgstAmount), 0);
-    igstTotal = lineCalculations.reduce((sum, l) => sum + Number(l.igstAmount), 0);
-    discountTotal = lineCalculations.reduce((sum, l) => sum + Number(l.discountAmount), 0);
-    const gstTotal = cgstTotal + sgstTotal + igstTotal;
-    grandTotal = subtotal + gstTotal - discountTotal;
+    // Totals sum the exact paise values of the stored line strings, then
+    // convert to rupees once at the end — accumulate-then-round drift is gone.
+    const sumLinePaise = (key: "amount" | "cgstAmount" | "sgstAmount" | "igstAmount" | "discountAmount") =>
+      lineCalculations.reduce((sum, l) => sum + Math.round(Number(l[key]) * 100), 0);
+
+    subtotal = sumLinePaise("amount") / 100;
+    cgstTotal = sumLinePaise("cgstAmount") / 100;
+    sgstTotal = sumLinePaise("sgstAmount") / 100;
+    igstTotal = sumLinePaise("igstAmount") / 100;
+    discountTotal = sumLinePaise("discountAmount") / 100;
+    const gstTotalPaise =
+      sumLinePaise("cgstAmount") + sumLinePaise("sgstAmount") + sumLinePaise("igstAmount");
+    grandTotal =
+      (sumLinePaise("amount") + gstTotalPaise - sumLinePaise("discountAmount")) / 100;
   }
 
   const result = await db.transaction(async (tx) => {

@@ -25,6 +25,7 @@ export const projectorErrors = schema.projectorErrors;
 export const reportCacheVersions = schema.reportCacheVersions;
 export const eventStore = schema.eventStore;
 export const eventSequences = schema.eventSequences;
+export const subscriptions = schema.subscriptions;
 export const snapshots = schema.snapshots;
 export const invoices = schema.invoices;
 export const invoiceLines = schema.invoiceLines;

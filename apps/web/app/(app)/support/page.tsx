@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 
 const SUPPORT_EMAIL = "support@arthvahi.com";
 
@@ -30,9 +31,9 @@ export default function SupportPage() {
           <label htmlFor="support-message" className="font-ui text-ui-2xs text-light uppercase font-bold">Message</label>
           <textarea id="support-message" rows={6} className="w-full border border-border rounded-md px-4 py-3 font-ui text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus:border-amber resize-none" value={message} onChange={e => setMessage(e.target.value)} placeholder="Describe your issue in detail…" />
         </div>
-        <button onClick={handleSubmit} disabled={!subject.trim() || !message.trim()} className="w-full py-3 btn btn-primary disabled:opacity-40">
+        <Button onClick={handleSubmit} disabled={!subject.trim() || !message.trim()} className="w-full">
           Compose in Email Client
-        </button>
+        </Button>
         <p className="font-ui text-ui-2xs text-light">
           This opens your default email app with the message pre-filled — nothing is sent until you press send there.
         </p>

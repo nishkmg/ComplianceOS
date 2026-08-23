@@ -63,12 +63,12 @@ describe("calculatePF", () => {
     expect(result.wageCeiling).toBe(15000);
   });
 
-  it("does not round fractional wages (raw float arithmetic)", () => {
+  it("rounds fractional wages to 2 decimals at the return boundary", () => {
     const result = calculatePF(12345.67, DEFAULT_CONFIG);
-    expect(result.ee).toBeCloseTo(1481.4804, 6);
-    expect(result.er).toBeCloseTo(1481.4804, 6);
-    expect(result.eps).toBeCloseTo(1028.394311, 6);
-    expect(result.epf).toBeCloseTo(453.086089, 6);
+    expect(result.ee).toBe(1481.48);
+    expect(result.er).toBe(1481.48);
+    expect(result.eps).toBe(1028.39);
+    expect(result.epf).toBe(453.09);
   });
 
   it("honors a custom wage ceiling while keeping the EPS base at 15000", () => {

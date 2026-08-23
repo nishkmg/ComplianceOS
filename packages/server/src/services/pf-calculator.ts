@@ -1,5 +1,9 @@
 import type { PFCalculationResult } from "../../../shared/src/index";
 
+// Round at the return boundary only — the raw math stays untouched so
+// callers always receive clean 2-decimal money values.
+const toMoney = (x: number) => Math.round(x * 100) / 100;
+
 interface PFConfig {
   pfErPercentage: number;
   pfEePercentage: number;
@@ -25,10 +29,10 @@ export function calculatePF(
   const epf = er - epsCapped;
 
   return {
-    ee,
-    er,
-    eps: epsCapped,
-    epf,
+    ee: toMoney(ee),
+    er: toMoney(er),
+    eps: toMoney(epsCapped),
+    epf: toMoney(epf),
     grossSalary,
     wageCeiling,
   };

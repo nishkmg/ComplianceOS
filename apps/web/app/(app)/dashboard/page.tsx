@@ -7,7 +7,7 @@ import { KpiTile } from "@/components/ui/kpi-tile";
 import { PageHeader } from "@/components/ui/page-header";
 import { TrendArea } from "@/components/charts";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { TableSkeleton, KPISkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -254,7 +254,7 @@ export default function DashboardPage() {
             <h3 className="font-ui text-lg font-semibold text-dark">File GSTR-3B</h3>
             <p className="font-ui text-ui-xs text-mid mt-1">Period: {today.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</p>
           </div>
-          <Link href="/gst/returns" className="btn btn-primary px-4 py-2 no-underline">
+          <Link href="/gst/returns" className={buttonVariants({})}>
             <Icon name="download" className="text-ui-md" /> File Now
           </Link>
         </div>
@@ -264,7 +264,7 @@ export default function DashboardPage() {
             <h3 className="font-ui text-lg font-semibold text-dark">Generate ITR</h3>
             <p className="font-ui text-ui-xs text-mid mt-1">AY: {`${Number(activeFy.split("-")[0]) + 1}-${String(Number(activeFy.split("-")[0]) + 2).slice(-2)}`}</p>
           </div>
-          <Link href="/itr/returns" className="btn btn-primary px-4 py-2 no-underline">
+          <Link href="/itr/returns" className={buttonVariants({})}>
             <Icon name="description" className="text-ui-md" /> Generate
           </Link>
         </div>

@@ -120,12 +120,12 @@ export default function NewPaymentPage() {
           </div>
         </div>
         <div className="flex gap-3">
-          <button
+          <Button
+            variant="outline"
             onClick={handleDiscard}
-            className="px-4 py-2 btn btn-secondary"
           >
             Discard
-          </button>
+          </Button>
           <Button
             onClick={handleRecord}
             disabled={saving || !paymentAmount}

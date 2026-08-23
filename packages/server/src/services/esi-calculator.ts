@@ -1,5 +1,9 @@
 import type { ESICalculationResult } from "../../../shared/src/index";
 
+// Round at the return boundary only — the raw math stays untouched so
+// callers always receive clean 2-decimal money values.
+const toMoney = (x: number) => Math.round(x * 100) / 100;
+
 interface ESIConfig {
   esiErPercentage: number;
   esiEePercentage: number;
@@ -17,8 +21,8 @@ export function calculateESI(
   const er = (esiWage * config.esiErPercentage) / 100;
 
   return {
-    ee,
-    er,
+    ee: toMoney(ee),
+    er: toMoney(er),
     grossSalary,
     wageCeiling,
   };

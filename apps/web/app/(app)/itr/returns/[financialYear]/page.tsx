@@ -203,15 +203,11 @@ export default function ItrReturnsPage() {
           </div>
           <div className="mt-6 flex justify-end gap-2">
             <DialogClose asChild>
-              <button className="btn btn-secondary">Cancel</button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <button
-              onClick={() => createReturn.mutate({ financialYear, returnType })}
-              disabled={createReturn.isPending}
-              className="btn btn-primary"
-            >
+            <Button onClick={() => createReturn.mutate({ financialYear, returnType })} disabled={createReturn.isPending}>
               {createReturn.isPending ? "Creating…" : "Create & Compute"}
-            </button>
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

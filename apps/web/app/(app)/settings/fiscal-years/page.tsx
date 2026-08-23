@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { CloseFiscalYearDialog } from "@/components/dialogs/close-fy-confirmation";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
 const fmtDate = (d: string) =>
@@ -92,19 +93,19 @@ export default function FiscalYearsPage() {
           <p className="text-ui-sm text-secondary font-ui mt-1 max-w-2xl leading-relaxed">Manage accounting periods, statutory boundaries, and ledger lifecycle constraints for your organization.</p>
         </div>
         <div className="flex gap-3 shrink-0">
-          <button
+          <Button
+            variant="outline"
             onClick={() => {
               const open = fiscalYears.find((f) => f.status === "open");
               if (open) setCloseFy({ id: open.id, year: open.name.replace("FY ", "") });
             }}
             disabled={busy}
-            className="btn btn-secondary"
           >
             Close FY
-          </button>
-          <button onClick={() => setCreateOpen(true)} className="btn btn-primary flex items-center gap-2 group">
+          </Button>
+          <Button onClick={() => setCreateOpen(true)} className="group">
             Create FY <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -209,8 +210,8 @@ export default function FiscalYearsPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setCreateOpen(false)} className="btn btn-secondary">Cancel</button>
-              <button onClick={confirmCreateFy} disabled={busy} className="btn btn-primary">Create FY</button>
+              <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+              <Button onClick={confirmCreateFy} disabled={busy}>Create FY</Button>
             </div>
           </div>
         </div>

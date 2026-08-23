@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
@@ -41,9 +42,9 @@ export default function HsnMasterPage() {
             description="Shared GSTN-style harmonized code catalog used by products, invoices and GSTR-1 HSN summaries."
           />
         </div>
-        <button onClick={() => setAddOpen(true)} className="btn btn-primary flex items-center gap-2 group">
+        <Button onClick={() => setAddOpen(true)} className="group">
           Add HSN Code <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
-        </button>
+        </Button>
       </header>
 
       <div className="bg-surface border border-border rounded-md overflow-hidden shadow-sm relative">
@@ -128,9 +129,9 @@ export default function HsnMasterPage() {
             </div>
             <div className="mt-6 flex justify-end gap-2">
               <DialogClose asChild>
-                <button className="btn btn-secondary">Cancel</button>
+                <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <button onClick={submit} disabled={busy} className="btn btn-primary">Add Code</button>
+              <Button onClick={submit} disabled={busy}>Add Code</Button>
             </div>
       </DialogContent>
       </Dialog>

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export default function NewEmployeePage() {
   const router = useRouter();
+  const utils = api.useUtils();
   const savingRef = useRef(false);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -40,6 +41,7 @@ export default function NewEmployeePage() {
   const createEmployee = api.employees.create.useMutation({
     onSuccess: () => {
       showToast.success("Employee record created successfully");
+      void utils.employees.list.invalidate();
       router.push("/employees");
     },
     onError: (e) => {

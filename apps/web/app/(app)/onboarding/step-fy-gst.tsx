@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { showToast } from "@/lib/toast";
 import { submitStep } from "@/lib/mock-mutation";
@@ -181,14 +182,14 @@ export function StepFyGst({ tenantId, onComplete, onBack }: StepFyGstProps) {
             These settings can be amended later in the tax settings panel.
           </p>
         </div>
-        <button
+        <Button
           onClick={handleContinue}
           disabled={saving}
-          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
+          className="group w-full"
         >
           {saving ? "Validating..." : "Finalize Config"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
+        </Button>
       </div>
     </div>
   );

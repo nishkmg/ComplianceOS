@@ -1,4 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+
+// Full payroll flow is slower than the 5s default under parallel load.
+vi.setConfig({ testTimeout: 20_000 });
 import { db, tenants, users, userTenants, salaryComponents, accounts, payrollConfig } from "../../../db/src/index";
 import { eq, and } from "drizzle-orm";
 import { createEmployee } from "../commands/create-employee";

@@ -42,7 +42,15 @@ export interface Gstr3bSummary {
 
 const POSTED_INVOICE_STATUSES = ["sent", "partially_paid", "paid"] as const;
 
-const round2 = (n: number) => Math.round(n * 100) / 100;
+// Money is aggregated in integer paise internally; rupee floats are only
+// reconstructed at the return boundaries. This kills paise-level drift on
+// large multi-row sums.
+const roundPaise = (n: number) => Math.round(n);
+/** Convert a DB rupee value to integer paise at read time. */
+const toPaise = (rupees: string | number | null | undefined): number =>
+  roundPaise(Number(rupees ?? 0) * 100);
+/** Convert accumulated integer paise back to a rupee number at a return boundary. */
+const toRupees = (paise: number): number => paise / 100;
 
 function periodRange(periodMonth: number, periodYear: number) {
   // postgres-js requires STRING values for date columns — Date objects
@@ -74,27 +82,27 @@ async function outwardAggregates(
     )
     .orderBy(invoices.date);
 
-  let taxableValue = 0;
-  let igst = 0;
-  let cgst = 0;
-  let sgst = 0;
-  let cess = 0;
+  let taxableValuePaise = 0;
+  let igstPaise = 0;
+  let cgstPaise = 0;
+  let sgstPaise = 0;
+  let cessPaise = 0;
   for (const invoice of rows) {
     // subtotal is stored GROSS; taxable base = gross − discounts
-    taxableValue += Number(invoice.subtotal) - Number(invoice.discountTotal ?? 0);
-    igst += Number(invoice.igstTotal);
-    cgst += Number(invoice.cgstTotal);
-    sgst += Number(invoice.sgstTotal);
-    cess += Number(invoice.cessAmount ?? 0);
+    taxableValuePaise += toPaise(invoice.subtotal) - toPaise(invoice.discountTotal);
+    igstPaise += toPaise(invoice.igstTotal);
+    cgstPaise += toPaise(invoice.cgstTotal);
+    sgstPaise += toPaise(invoice.sgstTotal);
+    cessPaise += toPaise(invoice.cessAmount);
   }
 
   return {
     count: rows.length,
-    taxableValue: round2(taxableValue),
-    igst: round2(igst),
-    cgst: round2(cgst),
-    sgst: round2(sgst),
-    cess: round2(cess),
+    taxableValue: toRupees(taxableValuePaise),
+    igst: toRupees(igstPaise),
+    cgst: toRupees(cgstPaise),
+    sgst: toRupees(sgstPaise),
+    cess: toRupees(cessPaise),
   };
 }
 
@@ -131,27 +139,27 @@ async function purchaseAggregates(
     );
 
   let count = bills.length + receipts.length;
-  let taxableValue = 0;
-  let igst = 0;
-  let cgst = 0;
-  let sgst = 0;
+  let taxableValuePaise = 0;
+  let igstPaise = 0;
+  let cgstPaise = 0;
+  let sgstPaise = 0;
   for (const bill of bills) {
-    taxableValue += Number(bill.subtotal);
-    igst += Number(bill.igstTotal);
-    cgst += Number(bill.cgstTotal);
-    sgst += Number(bill.sgstTotal);
+    taxableValuePaise += toPaise(bill.subtotal);
+    igstPaise += toPaise(bill.igstTotal);
+    cgstPaise += toPaise(bill.cgstTotal);
+    sgstPaise += toPaise(bill.sgstTotal);
   }
   // Purchase receipts carry no GST breakdown — they only add taxable value.
   for (const receipt of receipts) {
-    taxableValue += Number(receipt.totalValue ?? 0);
+    taxableValuePaise += toPaise(receipt.totalValue);
   }
 
   return {
     count,
-    taxableValue: round2(taxableValue),
-    igst: round2(igst),
-    cgst: round2(cgst),
-    sgst: round2(sgst),
+    taxableValue: toRupees(taxableValuePaise),
+    igst: toRupees(igstPaise),
+    cgst: toRupees(cgstPaise),
+    sgst: toRupees(sgstPaise),
   };
 }
 
@@ -193,24 +201,24 @@ export async function computeGstr3bSummary(
     ),
   );
 
-  let itcAvailable = 0;
+  let itcAvailablePaise = 0;
   for (const row of itcRows) {
-    itcAvailable += Number(row.itcAvailable ?? 0) - Number(row.itcUtilized ?? 0);
+    itcAvailablePaise += toPaise(row.itcAvailable) - toPaise(row.itcUtilized);
   }
 
   // No ITC ledger entries for the period yet — fall back to the purchases side.
   if (itcRows.length === 0) {
     const purchases = await purchaseAggregates(db, tenantId, periodMonth, periodYear);
-    itcAvailable = purchases.igst + purchases.cgst + purchases.sgst;
+    itcAvailablePaise = toPaise(purchases.igst) + toPaise(purchases.cgst) + toPaise(purchases.sgst);
   }
 
-  const totalOutward = outward.igst + outward.cgst + outward.sgst;
+  const totalOutwardPaise = toPaise(outward.igst) + toPaise(outward.cgst) + toPaise(outward.sgst);
   return {
     outwardTaxable: outward.taxableValue,
     outwardIgst: outward.igst,
     outwardCgst: outward.cgst,
     outwardSgst: outward.sgst,
-    itcAvailable: round2(itcAvailable),
-    netPayable: round2(Math.max(0, totalOutward - itcAvailable)),
+    itcAvailable: toRupees(itcAvailablePaise),
+    netPayable: toRupees(Math.max(0, totalOutwardPaise - itcAvailablePaise)),
   };
 }

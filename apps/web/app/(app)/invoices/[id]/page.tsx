@@ -3,6 +3,7 @@
 import { VoidEntryDialog } from "@/components/dialogs/void-entry-confirmation";
 import { useState } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -140,24 +141,24 @@ export default function InvoiceDetailPage() {
       <div className="flex gap-3">
         {inv.status === "draft" && (
           <>
-            <button
+            <Button
               onClick={() => { setBusy(true); postMutation.mutate({ id: inv.id }); }}
               disabled={busy}
-              className="btn btn-primary"
             >
               Post to Ledger
-            </button>
-            <Link href={`/invoices/${inv.id}/edit`} className="btn btn-secondary no-underline">Edit</Link>
+            </Button>
+            <Button variant="outline" onClick={() => router.push(`/invoices/${inv.id}/edit`)}>Edit</Button>
           </>
         )}
         {inv.status !== "draft" && inv.status !== "voided" && (
-          <button
+          <Button
+            variant="ghost"
+            className="text-danger"
             onClick={() => setVoidOpen(true)}
             disabled={busy}
-            className="btn btn-ghost text-danger"
           >
             Void Invoice
-          </button>
+          </Button>
         )}
         <VoidEntryDialog
           isOpen={voidOpen}
@@ -169,7 +170,7 @@ export default function InvoiceDetailPage() {
             voidMutation.mutate({ id: inv.id, reason: reason || "Voided by user" });
           }}
         />
-        <Link href={`/invoices/${inv.id}/pdf`} className="btn btn-secondary no-underline">View PDF</Link>
+        <Button variant="outline" onClick={() => router.push(`/invoices/${inv.id}/pdf`)}>View PDF</Button>
       </div>
 
       {/* EWB dialog */}
@@ -189,9 +190,9 @@ export default function InvoiceDetailPage() {
             </div>
             <div className="mt-6 flex justify-end gap-2">
               <DialogClose asChild>
-                <button className="btn btn-secondary">Cancel</button>
+                <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <button onClick={confirmEwb} disabled={busy} className="btn btn-primary">Generate</button>
+              <Button onClick={confirmEwb} disabled={busy}>Generate</Button>
             </div>
       </DialogContent>
       </Dialog>

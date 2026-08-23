@@ -5,11 +5,16 @@ import { useState } from "react";
 import { showToast } from "@/lib/toast";
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 
 export default function EmployeeSalaryPage() {
   const params = useParams();
   const router = useRouter();
   const employeeId = params.id as string;
+  const utils = api.useUtils();
   const [saving, setSaving] = useState(false);
 
   const [components, setComponents] = useState<Array<{ componentCode: string; amount?: string; percentageOfBasic?: string }>>([
@@ -20,6 +25,7 @@ export default function EmployeeSalaryPage() {
   const createStructure = api.salaryStructure.create.useMutation({
     onSuccess: () => {
       showToast.success("Salary structure saved.");
+      void utils.employees.get.invalidate();
       router.push(`/employees/${employeeId}`);
     },
     onError: (e) => {
@@ -72,16 +78,16 @@ export default function EmployeeSalaryPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 max-w-4xl">
-        <div className="card p-5">
+        <Card className="p-5">
           <div className="flex flex-col gap-1">
             <label className="font-ui text-ui-2xs uppercase tracking-wide text-light">Effective From <span className="text-danger">*</span></label>
-            <input required type="date" value={effectiveFrom} onChange={(e) => setEffectiveFrom(e.target.value)} className="input-field font-ui w-48" />
+            <Input required type="date" value={effectiveFrom} onChange={(e) => setEffectiveFrom(e.target.value)} className="font-ui w-48" />
           </div>
-        </div>
+        </Card>
 
-        <div className="card overflow-hidden">
+        <Card className="overflow-hidden">
           <div className="px-4 py-3 border-b border-border font-ui text-ui-md font-normal text-dark">Components</div>
-          <table className="table table-dense">
+          <table className="w-full text-left border-collapse">
             <thead>
               <tr>
                 <th className="font-ui text-ui-2xs uppercase tracking-wide text-left">Component</th>
@@ -94,16 +100,16 @@ export default function EmployeeSalaryPage() {
               {components.map((comp, idx) => (
                 <tr key={idx} className="border-b border-border">
                   <td className="px-4 py-3">
-                    <select value={comp.componentCode} onChange={(e) => updateComponent(idx, "componentCode", e.target.value)} className="input-field font-ui w-full">
+                    <Select value={comp.componentCode} onChange={(e) => updateComponent(idx, "componentCode", e.target.value)} className="font-ui w-full">
                       <option value="">Select Component</option>
                       {salaryComponents.map((c) => (<option key={c.code} value={c.code}>{c.label}</option>))}
-                    </select>
+                    </Select>
                   </td>
                   <td className="px-4 py-3">
-                    <input type="number" step="0.01" value={comp.amount || ""} onChange={(e) => updateComponent(idx, "amount", e.target.value)} className="input-field font-mono w-full text-right" placeholder="0.00" />
+                    <Input type="number" step="0.01" value={comp.amount || ""} onChange={(e) => updateComponent(idx, "amount", e.target.value)} className="font-mono w-full text-right" placeholder="0.00" />
                   </td>
                   <td className="px-4 py-3">
-                    <input type="number" step="0.01" value={comp.percentageOfBasic || ""} onChange={(e) => updateComponent(idx, "percentageOfBasic", e.target.value)} className="input-field font-mono w-full text-right" placeholder="% of Basic" />
+                    <Input type="number" step="0.01" value={comp.percentageOfBasic || ""} onChange={(e) => updateComponent(idx, "percentageOfBasic", e.target.value)} className="font-mono w-full text-right" placeholder="% of Basic" />
                   </td>
                   <td className="px-4 py-3">
                     <button type="button" onClick={() => removeComponent(idx)} className="font-ui text-ui-xs text-danger hover:underline">Remove</button>
@@ -112,14 +118,14 @@ export default function EmployeeSalaryPage() {
               ))}
             </tbody>
           </table>
-          <button type="button" onClick={addComponent} className="font-ui text-ui-sm text-amber hover:underline m-3 inline-block">+ Add Component</button>
-        </div>
+          <Button type="button" onClick={addComponent} variant="ghost" className="m-3">+ Add Component</Button>
+        </Card>
 
         <div className="flex gap-3">
-          <button type="submit" disabled={saving} className="filter-tab active disabled:opacity-50">
+          <Button type="submit" disabled={saving}>
             {saving ? "Saving..." : "Save Salary Structure"}
-          </button>
-          <button type="button" onClick={() => router.back()} className="filter-tab" aria-label="Go back">Cancel</button>
+          </Button>
+          <Button type="button" onClick={() => router.back()} variant="outline" aria-label="Go back">Cancel</Button>
         </div>
       </form>
     </div>

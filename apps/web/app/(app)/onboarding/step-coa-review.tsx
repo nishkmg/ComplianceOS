@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { submitStep } from "@/lib/mock-mutation";
 
@@ -125,14 +126,14 @@ export function StepCoaReview({ tenantId, onComplete, onBack }: StepCoaReviewPro
             Your account selection can be amended later in the chart of accounts settings.
           </p>
         </div>
-        <button
+        <Button
           onClick={save}
           disabled={saving}
-          className="btn btn-primary py-3 px-8 group disabled:opacity-50"
+          className="group w-full"
         >
           {saving ? "Saving…" : "Continue"}
           <Icon name="arrow_forward" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
+        </Button>
       </div>
     </div>
   );

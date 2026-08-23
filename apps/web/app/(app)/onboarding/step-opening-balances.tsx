@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Icon } from '@/components/ui/icon';
+import { Button } from "@/components/ui/button";
 import { submitStep } from "@/lib/mock-mutation";
 import { showToast } from "@/lib/toast";
 import { formatIndianNumber } from "@/lib/format";
@@ -251,14 +252,14 @@ export function StepOpeningBalances({ tenantId, onComplete, onBack }: StepOpenin
           >
             Skip for now
           </button>
-          <button
+          <Button
             onClick={handleContinue}
             disabled={saving || (mode === "migration" && totals.diff > 0.01)}
-            className="btn btn-primary py-3 px-8 group disabled:opacity-50"
+            className="group"
           >
             {saving ? "Syncing Balances..." : mode === "fresh_start" ? "Finalize & Launch" : "Migrate Balances"}
             <Icon name="rocket_launch" className="text-ui-xl group-hover:translate-x-1 transition-transform duration-200" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>
