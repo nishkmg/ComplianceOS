@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { isValidGSTIN } from "@complianceos/shared";
 import { Icon } from '@/components/ui/icon';
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
@@ -39,6 +40,8 @@ export default function NewInvoicePage() {
   const router = useRouter();
   const [customerName, setCustomerName] = useState("");
   const [customerState, setCustomerState] = useState("");
+  const [customerGstin, setCustomerGstin] = useState("");
+  const [customerGstinTouched, setCustomerGstinTouched] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [dueDate, setDueDate] = useState(addDays(new Date().toISOString().split("T")[0], 30));
   const [items, setItems] = useState<ItemDraft[]>([{ description: "", quantity: "1", rate: "", hsnCode: "", gstRate: "18" }]);
@@ -99,6 +102,7 @@ export default function NewInvoicePage() {
     if (!customerName.trim()) { showToast.error("Customer name is required."); return; }
     const validItems = items.filter(i => i.description.trim() && i.rate);
     if (validItems.length === 0) { showToast.error("At least one line with description and rate is required."); return; }
+    if (customerGstinInvalid) { showToast.error("Customer GSTIN is invalid."); return; }
     submittingRef.current = true;
     setSubmitting(true);
     try {
@@ -107,6 +111,7 @@ export default function NewInvoicePage() {
         dueDate,
         customerName: customerName.trim(),
         ...(customerState.trim() ? { customerState: customerState.trim() } : {}),
+        ...(customerGstinNormalized ? { customerGstin: customerGstinNormalized } : {}),
         items: validItems.map(i => ({
           description: i.description.trim(),
           quantity: Number(i.quantity) || 1,
@@ -124,6 +129,9 @@ export default function NewInvoicePage() {
   };
 
   const saving = submitting || hookSaving;
+
+  const customerGstinNormalized = customerGstin.trim().toUpperCase();
+  const customerGstinInvalid = customerGstinNormalized !== "" && !isValidGSTIN(customerGstinNormalized);
 
   // Live totals preview — the form shows real numbers before submit.
   const previewLines = items.filter((l) => l.rate);
@@ -150,6 +158,20 @@ export default function NewInvoicePage() {
           <div className="space-y-1.5">
             <label htmlFor="invoice-customer-state" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer State (optional)</label>
             <Input id="invoice-customer-state" value={customerState} onChange={e => setCustomerState(e.target.value)} placeholder="e.g. Maharashtra" />
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="invoice-customer-gstin" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Customer GSTIN (optional)</label>
+            <Input
+              id="invoice-customer-gstin"
+              className="font-mono"
+              value={customerGstin}
+              onChange={e => { setCustomerGstin(e.target.value.toUpperCase()); setCustomerGstinTouched(true); }}
+              onBlur={() => setCustomerGstinTouched(true)}
+              placeholder="e.g. 27AAPFU0939F1ZV"
+            />
+            {customerGstinInvalid && customerGstinTouched && (
+              <p className="text-danger text-ui-2xs uppercase font-bold tracking-wider mt-1">Invalid GSTIN: 15 chars, valid checksum required</p>
+            )}
           </div>
           <div className="space-y-1.5">
             <label htmlFor="invoice-date" className="font-ui text-ui-2xs text-light uppercase tracking-widest font-bold">Date</label>

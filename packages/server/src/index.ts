@@ -49,3 +49,6 @@ export { EmailQueueService } from "./services/email-queue";
 
 export { seedCoa } from "./commands/seed-coa";
 export { setupOpeningBalances } from "./commands/setup-opening-balances";
+
+export { runProjectorsForTenant } from "./projectors/worker";
+export { buildTallyXml } from "./services/tally-export";

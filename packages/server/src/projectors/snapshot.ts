@@ -2,7 +2,7 @@ import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { snapshots, eventStore } = _db;
 import { sql, eq, and, desc } from "drizzle-orm";
-import type { Projector } from "./types.js";
+import type { Projector } from "./types";
 
 const SNAPSHOT_INTERVAL = 10;
 const MAX_EVENTS_PER_AGGREGATE = 50;

@@ -4,7 +4,7 @@ import * as _db from "../../../db/src/index";
 const { invoices, invoiceLines, tenants } = _db;
 import { appendEvent } from "../lib/event-store";
 import * as _shared from "../../../shared/src/index";
-const { CreateInvoiceInputSchema, getCurrentFiscalYear, getStateName } = _shared;
+const { CreateInvoiceInputSchema, getCurrentFiscalYear, getStateName, isValidGSTIN } = _shared;
 import { getNextInvoiceNumber } from "../services/invoice-number";
 
 type CreateInvoiceInput = {
@@ -47,6 +47,16 @@ export async function createInvoice(
     : CreateInvoiceInputSchema.parse(input);
 
   const dateStr = validated.date;
+
+  if (validated.customerGstin && validated.customerGstin.trim() !== "") {
+    const customerGstin = validated.customerGstin.trim().toUpperCase();
+    if (!/^[0-9]{2}[A-Z]{4}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9A-Z]{1}$/.test(customerGstin)) {
+      throw new Error("Invalid GSTIN format: must be 15 characters in format 11AAAAA1111A1Z1");
+    }
+    if (!isValidGSTIN(customerGstin)) {
+      throw new Error("Invalid GSTIN checksum");
+    }
+  }
   const fy = getCurrentFiscalYear(new Date(dateStr));
 
   const invoiceNumber = await getNextInvoiceNumber(db, tenantId, fy);

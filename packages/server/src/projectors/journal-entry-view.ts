@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { journalEntryView } = _db;
-import type { Projector } from "./types.js";
+import type { Projector } from "./types";
 
 export const journalEntryViewProjector: Projector = {
   name: "JournalEntryViewProjector",

@@ -16,22 +16,22 @@ const { db, projectorState, projectorErrors, eventStore, tenants, ocrScanResults
 import { eq, and, sql } from "drizzle-orm";
 import postgres from "postgres";
 import { processScan, type ExtractedScan } from "../services/ocr-engine";
-import { accountBalanceProjector } from "./account-balance.js";
-import { inventoryValuationProjector } from "./inventory-valuation.js";
-import { journalEntryViewProjector } from "./journal-entry-view.js";
-import { snapshotProjector } from "./snapshot.js";
-import { fySummaryProjector } from "./fy-summary.js";
-import { InvoiceViewProjector } from "./invoice-view.js";
-import { ReceivablesProjector } from "./receivables-summary.js";
-import { payrollSummaryProjector } from "./payroll-summary.js";
-import { statutoryLiabilitiesProjector } from "./statutory-liabilities.js";
-import { gstLiabilityProjector } from "./gst-liability.js";
-import { gstItcAvailableProjector } from "./gst-itc-available.js";
-import { gstCashBalanceProjector } from "./gst-cash-balance.js";
-import { itrAnnualIncomeProjector } from "./itr-annual-income.js";
-import { itrTaxSummaryProjector } from "./itr-tax-summary.js";
-import { itrAdvanceTaxProjector } from "./itr-advance-tax.js";
-import type { Projector } from "./types.js";
+import { accountBalanceProjector } from "./account-balance";
+import { inventoryValuationProjector } from "./inventory-valuation";
+import { journalEntryViewProjector } from "./journal-entry-view";
+import { snapshotProjector } from "./snapshot";
+import { fySummaryProjector } from "./fy-summary";
+import { InvoiceViewProjector } from "./invoice-view";
+import { ReceivablesProjector } from "./receivables-summary";
+import { payrollSummaryProjector } from "./payroll-summary";
+import { statutoryLiabilitiesProjector } from "./statutory-liabilities";
+import { gstLiabilityProjector } from "./gst-liability";
+import { gstItcAvailableProjector } from "./gst-itc-available";
+import { gstCashBalanceProjector } from "./gst-cash-balance";
+import { itrAnnualIncomeProjector } from "./itr-annual-income";
+import { itrTaxSummaryProjector } from "./itr-tax-summary";
+import { itrAdvanceTaxProjector } from "./itr-advance-tax";
+import type { Projector } from "./types";
 
 const projectors: Projector[] = [
   accountBalanceProjector,
@@ -97,7 +97,7 @@ async function processProjector(projector: Projector, tenantId: string): Promise
   const lastSeq = BigInt(stateRow[0]?.lastProcessedSequence ?? "0");
 
   let processingError: unknown = null;
-  let lastProcessedEventId: string | null = null;
+  let lastProcessedEventId: string | undefined = undefined;
 
   // Claim (FOR UPDATE SKIP LOCKED) and process must share one transaction:
   // postgres-js autocommits standalone queries, so locks taken outside a tx
@@ -205,16 +205,16 @@ async function processProjector(projector: Projector, tenantId: string): Promise
             },
           );
           lastProcessedEventId = event.id;
-          continue;
+        } else {
+          processingError = err;
+          break;
         }
-
-        processingError = err;
-        break;
       }
     }
 
     if (lastProcessedEventId && !processingError) {
       const lastEvent = eventRows.find(r => r.id === lastProcessedEventId);
+      if (!lastEvent) return;
       await tx
         .update(projectorState)
         .set({

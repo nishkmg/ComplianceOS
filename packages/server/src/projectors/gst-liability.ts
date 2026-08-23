@@ -1,4 +1,4 @@
-import type { Projector } from "./types.js";
+import type { Projector } from "./types";
 import { eq, and, sql, sum } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { gstLiabilityLedger, gstReturnLines, gstReturns, gstConfig } = _db;

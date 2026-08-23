@@ -1,4 +1,4 @@
-import type { Projector } from "./types.js";
+import type { Projector } from "./types";
 import { eq, and, asc } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { gstCashLedger } = _db;
@@ -149,7 +149,7 @@ export const gstCashBalanceProjector: Projector = {
         ),
       );
 
-      await db.insert(gstCashLedger).values({
+      await (db as any).insert(gstCashLedger).values({
         tenantId,
         transactionType: entry.transactionType,
         taxType: entry.taxType as any,

@@ -2,7 +2,7 @@ import { eq, and, sql } from "drizzle-orm";
 import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { inventoryValuation, products } = _db;
-import type { Projector } from "./types.js";
+import type { Projector } from "./types";
 
 export const inventoryValuationProjector: Projector = {
   name: "InventoryValuationProjector",

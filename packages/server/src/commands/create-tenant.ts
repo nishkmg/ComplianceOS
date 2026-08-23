@@ -2,6 +2,8 @@ import type { Database } from "../../../db/src/index";
 import * as _db from "../../../db/src/index";
 const { tenants, userTenants, tenantModuleConfig, moduleEnum } = _db;
 
+import { isValidPAN, isValidGSTIN } from "@complianceos/shared";
+
 export interface BusinessProfileInput {
   name: string;
   legalName: string;
@@ -42,14 +44,22 @@ function getModuleActivationMatrix(businessType: string, industry: string): Reco
 }
 
 function validatePan(pan: string): void {
-  if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) {
-    throw new Error("PAN must match AAAAA9999A format");
+  const normalized = pan.trim().toUpperCase();
+  if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(normalized)) {
+    throw new Error("Invalid PAN format: must match AAAAA9999A");
+  }
+  if (!isValidPAN(normalized)) {
+    throw new Error("Invalid PAN entity type: 4th character must be one of P, C, H, F, A, T, B, L, J, G");
   }
 }
 
 function validateGstin(gstin: string): void {
-  if (!/^[0-9]{2}[A-Z]{4}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9]{1}$/.test(gstin)) {
-    throw new Error("GSTIN must be 15 characters in format 11AAAAA1111A1Z1A");
+  const normalized = gstin.trim().toUpperCase();
+  if (!/^[0-9]{2}[A-Z]{4}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9A-Z]{1}$/.test(normalized)) {
+    throw new Error("Invalid GSTIN format: must be 15 characters in format 11AAAAA1111A1Z1");
+  }
+  if (!isValidGSTIN(normalized)) {
+    throw new Error("Invalid GSTIN checksum");
   }
 }
 
@@ -72,8 +82,8 @@ export async function createTenant(
       name: input.name,
       legalName: input.legalName,
       businessType: input.businessType as "sole_proprietorship" | "partnership" | "llp" | "private_limited" | "public_limited" | "huf",
-      pan: input.pan,
-      gstin: input.gstin || null,
+      pan: input.pan.trim().toUpperCase(),
+      gstin: (input.gstin || "").trim().toUpperCase() || null,
       address: input.address,
       state: input.state as "andhra_pradesh" | "arunachal_pradesh" | "assam" | "bihar" | "chhattisgarh" | "goa" | "gujarat" | "haryana" | "himachal_pradesh" | "jharkhand" | "karnataka" | "kerala" | "madhya_pradesh" | "maharashtra" | "manipur" | "meghalaya" | "mizoram" | "nagaland" | "odisha" | "punjab" | "rajasthan" | "sikkim" | "tamil_nadu" | "telangana" | "tripura" | "uttar_pradesh" | "uttarakhand" | "west_bengal" | "andaman_nicobar" | "chandigarh" | "dadra_nagar_haveli_daman_diu" | "delhi" | "jammu_kashmir" | "ladakh" | "lakshadweep" | "puducherry",
       industry: input.industry as "retail_trading" | "manufacturing" | "services_professional" | "freelancer_consultant" | "regulated_professional",

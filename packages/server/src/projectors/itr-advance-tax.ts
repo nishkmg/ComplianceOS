@@ -1,4 +1,4 @@
-import type { Projector } from "./types.js";
+import type { Projector } from "./types";
 import { eq, and, sql } from "drizzle-orm";
 import * as _db from "../../../db/src/index";
 const { itrAdvanceTaxProjection } = _db;

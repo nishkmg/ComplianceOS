@@ -4,12 +4,26 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // @ts-ignore
-import { BusinessProfileInputSchema, type BusinessProfileInput } from "@complianceos/shared";
+import { BusinessProfileInputSchema, isValidGSTIN, type BusinessProfileInput } from "@complianceos/shared";
 import { showToast } from "@/lib/toast";
 import { Icon } from '@/components/ui/icon';
 import { Button } from "@/components/ui/button";
 import { submitStep } from "@/lib/mock-mutation";
 import { BUSINESS_TYPES, INDUSTRIES, STATES } from "@/lib/constants";
+
+// Extends the shared schema with real identifier checks: PAN entity-type
+// character and GSTIN mod-36 checksum. Runs on blur/change via RHF revalidate
+// defaults; errors render through the existing text-danger pattern.
+const BusinessProfileSchemaWithChecksums = BusinessProfileInputSchema.superRefine((val, ctx) => {
+  const pan = (val.pan ?? "").trim().toUpperCase();
+  if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan) && !"PCHFATBLGJ".includes(pan[3])) {
+    ctx.addIssue({ code: "custom", path: ["pan"], message: "Invalid PAN: 4th char must be P, C, H, F, A, T, B, L, J or G" });
+  }
+  const gstin = (val.gstin ?? "").trim().toUpperCase();
+  if (gstin !== "" && /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(gstin) && !isValidGSTIN(gstin)) {
+    ctx.addIssue({ code: "custom", path: ["gstin"], message: "Invalid GSTIN checksum" });
+  }
+});
 
 export function StepBusinessProfile({ tenantId, initialData, onComplete }: { tenantId: string; initialData?: Record<string, string>; onComplete: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +34,7 @@ export function StepBusinessProfile({ tenantId, initialData, onComplete }: { ten
     formState: { errors },
     setValue,
   } = useForm<BusinessProfileInput>({
-    resolver: zodResolver(BusinessProfileInputSchema),
+    resolver: zodResolver(BusinessProfileSchemaWithChecksums),
     defaultValues: {
       businessType: "private_limited",
       industry: "services_professional",
